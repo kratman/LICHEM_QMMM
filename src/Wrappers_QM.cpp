@@ -16,8 +16,9 @@ void ExternalGaussian(int& argc, char**& argv)
 {
   //This function is an "external script" that can be called by
   //Gaussian's external interface
-  vector<QMMMAtom> Struct;
-  QMMMSettings QMMMOpts;
+  double Eqm,Emm; //Stores partial energies
+  vector<QMMMAtom> Struct; //Atomic data
+  QMMMSettings QMMMOpts; //Simulation settings
   int sys,DerType,ct;
   stringstream call;
   string dummy,Stub;
@@ -409,8 +410,26 @@ void ExternalGaussian(int& argc, char**& argv)
   call << Stub << "_extern.log";
   QMlog.open(call.str().c_str(),ios_base::in);
   
-  //Write output for g09
-  
+  //Write formatted output for g09
+  GauOutput << fixed; //Formatting
+  GauOutput << setw(20); //Formatting
+  GauOutput << setprecision(12); //Formatting
+  GauOutput << Eqm; //QM+MM partial energy
+  GauOutput << 0.0 << 0.0 << 0.0; //Dipole moment
+  GauOutput << '\n';
+  for (int i=0;i<(Nqm+Npseudo);i++)
+  {
+    GauOutput << Forces[i].x;
+    GauOutput << Forces[i].y;
+    GauOutput << Forces[i].z;
+    GauOutput << '\n';
+  }
+  GauOutput << 0.0 << 0.0 << 0.0; //Polarizability
+  GauOutput << '\n';
+  GauOutput << 0.0 << 0.0 << 0.0; //Polarizability
+  GauOutput << '\n';
+  GauOutput.flush();
+  GauOutput.close();
   //Clean up output external
   call.str("");
   call << "rm -f ";
