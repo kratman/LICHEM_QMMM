@@ -12,6 +12,6 @@ Available QM wrappers: Gaussian, PSI4
 
 Available MM wrappers: TINKER, Amber, LAMMPS
 
-Note: This software is still in alpha, not all features will work properly.
+Note: This software is still in alpha. Not all features will work properly.
 Please report all bugs or missing features so that the code can be updated
 quickly.

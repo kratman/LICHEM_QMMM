@@ -423,7 +423,51 @@ pressure to be constant by adjusting the size of the simulation box.
 Empirical force fields are classical potentials which can estimate the
 potential energy of a system. Although any functional form could be employed
 for the force field, the potentials are often derived from experiments,
-classical physics or quantum theory.
+classical physics, or quantum theory. \\
+
+Non-bonded interactions of atoms are typically modeled using point-charges
+and Lennard-Jones potentials or other van der Waals potentials. The non-bonded
+potential is given by
+\begin{equation}
+ V(R) = V_{coul}(R)+V_{vdW}(R) \; ,
+\end{equation} 
+\begin{equation}
+ V_{coul}(R) = C\sum \frac{q_iq_j}{r_{ij}} \; ,
+\end{equation}
+and
+\begin{equation}
+ V_{vdW}(R) = \sum \frac{A_{ij}}{r_{ij}^{12}}
+              -\frac{B_{ij}}{r_{ij}^{6}} \; ,
+\end{equation}
+where $R$ is a vector representing the coordinates of the system, $V(R)$ is the
+potential, $V_{coul}(R)$ is the Coulomb potential for point-charges ($q$),
+$C$ is a constant, $r_{ij}$ is the distance between atoms $i$ and $j$,
+$V_{vdW}(R)$ is the van der Waals potential (in this case, the Lennard-Jones
+potential), $A_{ij}$ is a parameter representing the exchange interaction, and
+$B_{ij}$ is a parameter representing the dispersion interaction. \\
+
+Bonded interactions are often represented by the harmonic potential. Harmonic
+bonds behave as idealized springs that never weaken or break. The harmonic
+potential is given by
+\begin{equation}
+ V_{harm}(r_{ij}) = \frac{K_{ij}}{2}r_{ij}^2 \; ,
+\end{equation}
+where $K_{ij}$ is the spring constant. Similarly, bond angles can be described
+by a harmonic potential
+\begin{equation}
+ V_{harm}(\theta_{ijk}) = \frac{K_{ijk}}{2}\theta_{ijk}^2 \; ,
+\end{equation}
+where $\theta$ is the angle between atoms $i$, $j$, and $k$. More complicated
+potentials can be constructed for the bonded interactions, but these are two
+of the most common potentials. Typically, large molecules require potentials
+for dihedral angles and improper dihedral angles. \\
+
+The parameters for force fields are determined in a very systematic fashion.
+Typically, the charges are determined from electronic structure calculations
+and bonded parameters are determined by matching the molecular vibrational
+modes. The van der Waals parameters are usually adjusted to reproduce
+the density, enthalpy of freezing, or other experimentally determined
+properties.
 
 \subsection{Polarizable force fields}
 
@@ -826,7 +870,7 @@ the MM calculation ($\hat V_{mm}$) and the QM calculation ($\hat H_{qm}$).
  PA-PA & FF & PP+$\rho_{el}$ \\
  BA-BA & FF & Zero \\
  QM-MM & FF-\{$q_{qm}$\} & $\rho_{el}$+\{$q_{mm}$\} \\
- QM-PA & Zero & PP+$\rho_{el}$ \\
+ QM-PA & Bonds & PP+$\rho_{el}$ \\
  QM-BA & FF-\{$q_{qm}$\} & Zero \\
  MM-PA & FF & PP+$\rho_{el}$+\{$q_{mm}$\} \\
  MM-BA & FF & Zero \\
@@ -836,9 +880,10 @@ the MM calculation ($\hat V_{mm}$) and the QM calculation ($\hat H_{qm}$).
  wrappers during single-point energy calculations. Interactions were 
  abreviated as follows: force field (FF), electron density ($\rho_{el}$),
  pseudopotential (PP), no interaction (Zero), QM point charges 
- (\{$q_{qm}$\}), and MM point charges (\{$q_{mm}$\}). A "-" sign is used if
- the interaction is removed instead of added (i.e. FF-\{$q_{qm}$\} denotes the
- force field with no charges on the QM atoms).} 
+ (\{$q_{qm}$\}), MM bond potentials (Bonds), and MM point charges
+ (\{$q_{mm}$\}). A "-" sign is used if the interaction is removed instead of
+ added (i.e. FF-\{$q_{qm}$\} denotes the force field with no charges on the
+ QM atoms).} 
  \label{tab:IntTable}
 \end{table}
 
