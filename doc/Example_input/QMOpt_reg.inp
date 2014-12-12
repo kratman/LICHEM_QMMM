@@ -1,0 +1,14 @@
+Potential_Type: QM
+QM_Type: Psi4
+QM_Functional: PBE0-D
+QM_Basis: 6-31++G**
+QM_Memory: 2.0
+QM_Charge: 0
+QM_Spin: 1
+Calculation_Type: Opt
+PBC: No
+QM_atoms: 6
+0 1 2 3 4 5
+Pseudo_atoms: 0
+ZC_atoms: 0
+Frozen_atoms: 0
