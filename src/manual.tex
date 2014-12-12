@@ -420,7 +420,21 @@ pressure to be constant by adjusting the size of the simulation box.
 
 \subsection{Force fields}
 
+Empirical force fields are classical potentials which can estimate the
+potential energy of a system. Although any functional form could be employed
+for the force field, the potentials are often derived from experiments,
+classical physics or quantum theory.
 
+\subsection{Polarizable force fields}
+
+
+
+\subsection{Frozen density force fields}
+
+Frozen denisty force fields are a special class of polarizable force fields
+where the electron density is represented by Gaussian functions. These
+potentials can greatly imporve the calculations of the electrostatic field and
+can include exchange and charge penetration effects.
 
 \FloatBarrier
 
@@ -968,7 +982,22 @@ the amount of kinetic energy absorbed by centroid harmonic bonds.
 
 \subsection{Ergodicity}
 
+Classical Monte Carlo simulations typically scale as $N_a^2$ due to the
+pairwise force field interactions of the atoms. Since path-integral
+simulations have $N_p$ simulations that run in tandem, the overall scaling is
+$N_pN_a^2$. In addition to making the energy calculations computationally more
+expensive, the efficiencies of the Monte Carlo moves tend to decrease. Monte
+Carlo moves typically consist of changes to the positions of a single atom or
+possibly more complicated moves where bond angles are shifted. This leads to
+large systems changing very slowly and the path-integral formalism essentially
+increases the size of the system. \\
 
+Another problem introduced by the path-integral formalism comes from the
+harmonic constraints between the beads. The force constants for the
+path-integral springs is proportional to the mass of the particle, which means
+that heavy atoms can experience very strong forces holding the centroid
+close together. The presense of strong potentials restricts the movement of
+the atoms, and reduces $P_{acc}$.
 
 \FloatBarrier
 
