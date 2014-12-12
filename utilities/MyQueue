@@ -1,0 +1,8 @@
+#!/bin/bash
+
+MyUName=$(whoami)
+qstat -u ${MyUName} \
+  | sed 's/\.vpbs1//g' \
+  | sed 's/Job ID         /Job ID   /g' \
+  | sed 's/---------------/---------/g' \
+  | sed 's/              Req/        Req/g' | sed '/vpbs1/d'
