@@ -1,0 +1,15 @@
+FLUKE: Fields Layered Under Kohn-Sham Electrons
+A QMMM interface for polarizable force fields
+
+This package is designed to be an interface between QM and MM software
+so that QMMM calculations can be performed with polarizable and frozen
+density force fields.
+
+Available calculations: single-point energies, optimized geometries,
+classical Monte Carlo, path-integral Monte Carlo, and reaction pathways
+
+Available QM wrappers: Gaussian, PSI4
+
+Available MM wrappers: TINKER, Amber, LAMMPS
+
+Note: This software is still in alpha, not all features will work properly.
