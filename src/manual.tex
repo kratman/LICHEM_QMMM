@@ -60,19 +60,25 @@ required to compile the code. An approximate list of packages is given
 below.
 \begin{quote}
  \normalfont{
- FLUKE binary: g++, OpenMP, Eigen3 \\
- FLUKE manual: latex, pdflatex, bibtex}
+ FLUKE binary: OpenMP, Eigen3 \\
+ FLUKE manual: \LaTeX, bibtex}
 \end{quote}
 
-Unpack FLUKE\_tarbomb.tgz as follows. \\
+Clone the git repository or unpack FLUKE\_tarbomb.tgz \\
+
+user:\$ mkdir FLUKE \\
+user:\$ git clone https://github.com/kratman/FLUKE\_QMMM.git ./FLUKE/ \\
+
+or \\
+
 user:\$ mkdir FLUKE \\
 user:\$ cd FLUKE/ \\
 user:\$ tar -xvf FLUKE\_tarbomb.tgz \\
 
-The FLUKE binary is included with teh source code, however, modified versions
-can be compiled with the script provided with FLUKE. On Ubuntu boxes the
-compile script should function without modifications. However, with other
-operating systems it may be necessary to change the path to the
+The FLUKE binary is included with the tgz source code, however, modified or
+git versions can be compiled with the script provided with FLUKE. On Ubuntu
+boxes the compile script should function without modifications. However, with
+other operating systems it may be necessary to change the path to the
 \textit{Eigen3} package.
 
 Default: -I/usr/include/eigen3/ \\

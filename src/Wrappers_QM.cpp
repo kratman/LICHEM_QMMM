@@ -453,6 +453,117 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   double Eself = 0.0; //Field self-energy
   int sys;
   call.str("");
+  if (RunTyp == "Opt")
+  {
+    //Write a new XYZ
+    
+    //Write Gaussian input
+    if (Bead == -1)
+    {
+      ofile.open("QMMM.com",ios_base::out);
+    }
+    if (Bead != -1)
+    {
+      call.str("");
+      call << "QMMM_" << Bead << ".com";
+      ofile.open(call.str().c_str(),ios_base::out);
+    }
+    call.str("");
+    call << "%chk=QMMM";
+    if (Bead == -1)
+    {
+      call << ".chk";
+    }
+    if (Bead != -1)
+    {
+      call << "_" << Bead << ".chk";
+    }
+    call << '\n';
+    call << "%Mem=" << QMMMOpts.RAM << "GB" << '\n';
+    call << "%NprocShared=" << Ncpus << '\n';
+    call << "%NoSave" << '\n'; //Deletes files
+    call << "#T " << "external=\"FLUKE -GauExtern ";
+    call << "QMMM";
+    if (Bead == -1)
+    {
+      call << ".xyz";
+    }
+    if (Bead != -1)
+    {
+      call << "_" << Bead << ".xyz";
+    }
+    call << " -c " << confilename;
+    call << " -r " << regfilename;
+    call << "\"" << '\n';
+    call << "Opt=(Redundant,";
+    call << QMMMOpts.MaxOptStep;
+    call << ")" << '\n';
+    call << '\n'; //Blank line
+    call << "QMMM" << '\n' << '\n'; //Dummy title
+    call << QMMMOpts.Charge << " " << QMMMOpts.Spin << '\n';
+    //Add atoms
+    for (int i=0;i<Natoms;i++)
+    {
+      if (Struct[i].QMregion == 1)
+      {
+        call << Struct[i].QMTyp;
+        if (Bead == -1)
+        {
+          call << fixed; //Forces numbers to be floats
+          call << " " << setprecision(12) << Struct[i].x;
+          call << " " << setprecision(12) << Struct[i].y;
+          call << " " << setprecision(12) << Struct[i].z;
+        }
+        if (Bead != -1)
+        {
+          call << fixed; //Forces numbers to be floats
+          call << " " << setprecision(12) << Struct[i].P[Bead].x;
+          call << " " << setprecision(12) << Struct[i].P[Bead].y;
+          call << " " << setprecision(12) << Struct[i].P[Bead].z;
+        }
+        call.copyfmt(cout);
+        call << '\n';
+      }
+      if (Struct[i].PAregion == 1)
+      {
+        call << "F";
+        if (Bead == -1)
+        {
+          call << fixed; //Forces numbers to be floats
+          call << " " << setprecision(12) << Struct[i].x;
+          call << " " << setprecision(12) << Struct[i].y;
+          call << " " << setprecision(12) << Struct[i].z;
+        }
+        if (Bead != -1)
+        {
+          call << fixed; //Forces numbers to be floats
+          call << " " << setprecision(12) << Struct[i].P[Bead].x;
+          call << " " << setprecision(12) << Struct[i].P[Bead].y;
+          call << " " << setprecision(12) << Struct[i].P[Bead].z;
+        }
+        call.copyfmt(cout);
+        call << '\n';
+      }
+    }
+    call << '\n'; //Blank line needed
+    //Write Gaussian input
+    ofile << call.str();
+    ofile.close();
+    //Run Optimization
+    call.str("");
+    call << "g09 ";
+    if (Bead == -1)
+    {
+      call << "QMMM";
+    }
+    if (Bead != -1)
+    {
+      call << "QMMM_" << Bead;
+    }
+    sys = system(call.str().c_str());
+    //Read new structure and charges
+    
+  }
   if (RunTyp == "Enrg")
   {
     if (Bead == -1)

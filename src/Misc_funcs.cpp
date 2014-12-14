@@ -250,14 +250,17 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     }
     if (dummy == "-x")
     {
+      xyzfilename = string(argv[i+1]);
       xyzfile.open(argv[i+1],ios_base::in);
     }
     if (dummy == "-c")
     {
+      confilename = string(argv[i+1]);
       connectfile.open(argv[i+1],ios_base::in);
     }
     if (dummy == "-r")
     {
+      regfilename = string(argv[i+1]);
       regionfile.open(argv[i+1],ios_base::in);
     }
     if (dummy == "-o")
