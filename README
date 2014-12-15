@@ -16,3 +16,16 @@ Available MM wrappers: TINKER, Amber, LAMMPS
 Note: This software is still in alpha. Not all features will work properly.
 Please report all bugs or missing features so that the code can be updated
 quickly.
+
+Force-field wrapper timeline and checklist:
+ Point-charge force fields: Done (TINKER only)
+ Polarizable force fields: In progress (TINKER only)
+ Polarizable force fields: Future (Amber)
+ Frozen density force fields: Future (Amber)
+
+Simulation mode timeline and checklist:
+ Single-point energy: Done
+ NVT/NPT Monte Carlo: Done
+ NVT/NPT PI Monte Carlo: Done
+ Geometry optimizations: In progress
+ Reaction pathways: Future

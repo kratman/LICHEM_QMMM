@@ -66,7 +66,7 @@ void ExternalGaussian(int& argc, char**& argv)
   line >> dummy >> DerType;
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion == 1)
+    if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
     {
       //Save atom information
       getline(GauInput,dummy);
@@ -75,9 +75,17 @@ void ExternalGaussian(int& argc, char**& argv)
       line >> Struct[i].x;
       line >> Struct[i].y;
       line >> Struct[i].z;
+      //Change units
+      Struct[i].x *= BohrRad;
+      Struct[i].y *= BohrRad;
+      Struct[i].z *= BohrRad;
     }
   }
+  GauInput.close();
   //Construct g09 input
+  call.str("");
+  call << Stub << "_extern.com";
+  ofile.open(call.str().c_str(),ios_base::out);
   call.str("");
   call << "%chk=" << Stub;
   call << "_extern.chk";
@@ -85,8 +93,8 @@ void ExternalGaussian(int& argc, char**& argv)
   call << "%Mem=" << QMMMOpts.RAM << "GB" << '\n';
   call << "%NprocShared=" << Ncpus << '\n';
   call << "%NoSave" << '\n'; //Deletes files
-  call << "#T " << QMMMOpts.Func << "/";
-  call << QMMMOpts.Basis << " Force NoSymm" << '\n';
+  call << "#P " << QMMMOpts.Func << "/";
+  call << QMMMOpts.Basis << " Force Symmetry=None" << '\n';
   if (Npseudo > 0)
   {
     //Read pseudo potential
@@ -153,6 +161,7 @@ void ExternalGaussian(int& argc, char**& argv)
     call << '\n'; //Blank line needed
   }
   ofile << call.str();
+  ofile.flush();
   ofile.close();
   //Construct MM input
   if (Tinker == 1)
@@ -238,7 +247,7 @@ void ExternalGaussian(int& argc, char**& argv)
     for (int i=0;i<Natoms;i++)
     {
       //Add group 1 atoms
-      if ((Struct[i].MMregion == 1) and (Struct[i].BAregion == 1))
+      if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1))
       {
         if (ct == 0)
         {
@@ -350,7 +359,7 @@ void ExternalGaussian(int& argc, char**& argv)
   {
     call.str("");
     call << "testgrad " << Stub;
-    call << "_extern.xyz Y N > QMMM.grad";
+    call << "_extern.xyz Y N > QMMM_extern.grad";
     sys = system(call.str().c_str());
   }
   call.str("");
@@ -386,7 +395,7 @@ void ExternalGaussian(int& argc, char**& argv)
       if (dummy == "Type")
       {
         line >> dummy >> dummy;
-        if (dummy == "dE/dx")
+        if (dummy == "dE/dX")
         {
           GradDone = 1; //Not grad school, that lasts forever
           getline(MMgrad,dummy);
@@ -409,6 +418,22 @@ void ExternalGaussian(int& argc, char**& argv)
     }
   }
   MMgrad.close();
+  //Save MM forces to log file
+  call.str("");
+  call << Stub << "_extern.grad";
+  MMgrad.open(call.str().c_str(),ios_base::in);
+  if (MMgrad.good())
+  {
+    call.str("");
+    while (!MMgrad.eof())
+    {
+      //Copy log line by line
+      getline(MMgrad,dummy);
+      call << dummy << '\n';
+    }
+    MMgrad.close();
+    GauMsg << call.str();
+  }
   //QM forces
   call.str("");
   call << Stub << "_extern.log";
@@ -419,25 +444,26 @@ void ExternalGaussian(int& argc, char**& argv)
     getline(QMlog,dummy);
     stringstream line(dummy);
     line >> dummy;
-    if (dummy == "Center")
+    if (dummy == "Variable")
     {
-      line >> dummy >> dummy;
-      if (dummy == "Forces")
+      line >> dummy >> dummy >> dummy;
+      if (dummy == "-DE/DX")
       {
         GradDone = 1; //Not grad school, that lasts forever
         getline(QMlog,dummy); //Clear junk
-        getline(QMlog,dummy); //Clear more junk
         for (int i=0;i<(Nqm+Npseudo);i++)
         {
           double Fx,Fy,Fz;
-          //Convoluted, but "easy"
+          //Extract forces; Convoluted, but "easy"
           getline(QMlog,dummy);
-          stringstream line(dummy);
-          line >> dummy >> dummy; //Clear junk
-          //Extract forces
-          line >> Fx;
-          line >> Fy;
-          line >> Fz;
+          stringstream linex(dummy);
+          linex >> dummy >> dummy >> Fx;
+          getline(QMlog,dummy);
+          stringstream liney(dummy);
+          liney >> dummy >> dummy >> Fy;
+          getline(QMlog,dummy);
+          stringstream linez(dummy);
+          linez >> dummy >> dummy >> Fz;
           //Save forces
           Forces[i].x += Fx;
           Forces[i].y += Fy;
@@ -445,28 +471,71 @@ void ExternalGaussian(int& argc, char**& argv)
         }
       }
     }
+    if (dummy == "SCF")
+    {
+      line >> dummy;
+      if (dummy == "Done:")
+      {
+        line >> dummy; //Clear junk
+        line >> dummy; //Ditto
+        line >> Eqm;
+      }
+    }
   }
   QMlog.close();
   //Write formatted output for g09
   GauOutput << fixed; //Formatting
-  GauOutput << setw(20); //Formatting
-  GauOutput << setprecision(12); //Formatting
-  GauOutput << Eqm; //QM+MM partial energy
-  GauOutput << 0.0 << 0.0 << 0.0; //Dipole moment
+  GauOutput.precision(12);
+  GauOutput << setw(20) << Eqm; //QM+MM partial energy
+  GauOutput << setw(20) << 0.0; //Dipole moment
+  GauOutput << setw(20) << 0.0; //Dipole moment
+  GauOutput << setw(20) << 0.0; //Dipole moment
   GauOutput << '\n';
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
-    GauOutput << Forces[i].x;
-    GauOutput << Forces[i].y;
-    GauOutput << Forces[i].z;
+    GauOutput << setw(20) << Forces[i].x;
+    GauOutput << setw(20) << Forces[i].y;
+    GauOutput << setw(20) << Forces[i].z;
     GauOutput << '\n';
   }
-  GauOutput << 0.0 << 0.0 << 0.0; //Polarizability
+  GauOutput << setw(20) << 0.0; //Polarizability
+  GauOutput << setw(20) << 0.0; //Polarizability
+  GauOutput << setw(20) << 0.0; //Polarizability
   GauOutput << '\n';
-  GauOutput << 0.0 << 0.0 << 0.0; //Polarizability
+  GauOutput << setw(20) << 0.0; //Polarizability
+  GauOutput << setw(20) << 0.0; //Polarizability
+  GauOutput << setw(20) << 0.0; //Polarizability
   GauOutput << '\n';
+  for (int i=0;i<(Nqm+Npseudo);i++)
+  {
+    //Dipole derivatives
+    GauOutput << setw(20) << 0.0;
+    GauOutput << setw(20) << 0.0;
+    GauOutput << setw(20) << 0.0;
+    GauOutput << '\n';
+  }
   GauOutput.flush();
   GauOutput.close();
+  //Save QM force calculations to log file
+  call.str("");
+  call << Stub << "_extern.log";
+  QMlog.open(call.str().c_str(),ios_base::in);
+  if (QMlog.good())
+  {
+    call.str("");
+    while (!QMlog.eof())
+    {
+      //Copy log line by line
+      getline(QMlog,dummy);
+      call << dummy << '\n';
+    }
+    QMlog.close();
+    GauMsg << call.str();
+  }
+  GauMsg.flush();
+  GauMsg.close();
+  //Write new XYZ for recovery of failed optimizations
+  
   //Clean up output external
   call.str("");
   call << "rm -f ";
@@ -493,7 +562,36 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   if (RunTyp == "Opt")
   {
     //Write a new XYZ
-    
+    if (Bead == -1)
+    {
+      ofile.open("QMMM.xyz",ios_base::out);
+    }
+    if (Bead != -1)
+    {
+      call.str("");
+      call << "QMMM_" << Bead << ".xyz";
+      ofile.open(call.str().c_str(),ios_base::out);
+    }
+    ofile << Natoms << '\n' << '\n';
+    for (int i=0;i<Natoms;i++)
+    {
+      if (Bead == -1)
+      {
+        ofile << Struct[i].QMTyp << " ";
+        ofile << Struct[i].x << " ";
+        ofile << Struct[i].y << " ";
+        ofile << Struct[i].z << '\n';
+      }
+      if (Bead != -1)
+      {
+        ofile << Struct[i].QMTyp << " ";
+        ofile << Struct[i].P[Bead].x << " ";
+        ofile << Struct[i].P[Bead].y << " ";
+        ofile << Struct[i].P[Bead].z << '\n';
+      }
+    }
+    ofile.flush();
+    ofile.close();
     //Write Gaussian input
     if (Bead == -1)
     {
@@ -519,22 +617,20 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     call << "%Mem=" << QMMMOpts.RAM << "GB" << '\n';
     call << "%NprocShared=" << Ncpus << '\n';
     call << "%NoSave" << '\n'; //Deletes files
-    call << "#T " << "external=\"FLUKE -GauExtern ";
-    call << "QMMM";
-    if (Bead == -1)
-    {
-      call << ".xyz";
-    }
+    call << "#P " << "external=\"FLUKE -GauExtern ";
+    call << "QMMM"; //Just the stub
     if (Bead != -1)
     {
-      call << "_" << Bead << ".xyz";
+      //Only needed for path calculations
+      call << "_" << Bead;
     }
+    call << " -n " << Ncpus;
     call << " -c " << confilename;
     call << " -r " << regfilename;
     call << "\"" << '\n';
-    call << "Opt=(Redundant,";
+    call << "Symmetry=None Opt=(MaxCycles=";
     call << QMMMOpts.MaxOptSteps;
-    call << ")" << '\n';
+    call << ",MaxStep=15)" << '\n';
     call << '\n'; //Blank line
     call << "QMMM" << '\n' << '\n'; //Dummy title
     call << QMMMOpts.Charge << " " << QMMMOpts.Spin << '\n';
@@ -627,8 +723,8 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     call << "%Mem=" << QMMMOpts.RAM << "GB" << '\n';
     call << "%NprocShared=" << Ncpus << '\n';
     call << "%NoSave" << '\n'; //Deletes files
-    call << "#T " << QMMMOpts.Func << "/";
-    call << QMMMOpts.Basis << " SP NoSymm" << '\n';
+    call << "#P " << QMMMOpts.Func << "/";
+    call << QMMMOpts.Basis << " SP Symmetry=None" << '\n';
     if (QMMM == 1)
     {
       if (Npseudo > 0)
@@ -725,9 +821,9 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     {
       while (!ifile.eof())
       {
-         //Copy BASIS line by line, if BASIS exists
-         getline(ifile,dummy);
-         call << dummy << '\n';
+        //Copy BASIS line by line, if BASIS exists
+        getline(ifile,dummy);
+        call << dummy << '\n';
       }
       ifile.close();
       call << '\n'; //Blank line needed
