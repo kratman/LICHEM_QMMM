@@ -7,8 +7,7 @@
 #                                                                            #
 ##############################################################################
 
- MM wrappers and utility functions for FLUKE. The MM wrappers must be added
- before the QM wrappers. This allows the QM wrappers to call MM functions.
+ FLUKE wrapper functions for TINKER.
 
 */
 
@@ -363,20 +362,6 @@ double TinkerWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     call << " QMMM.key";
   }
   sys = system(call.str().c_str());
-  //Change units
-  E *= kcal2eV;
-  return E;
-};
-
-double AmberWrapper(string RunTyp, vector<QMMMAtom>& Struct,
-       QMMMSettings& QMMMOpts, int Bead)
-{
-  //Runs Amber
-  fstream ofile,ifile;
-  string dummy;
-  stringstream call;
-  double E = 0.0;
-  int sys;
   //Change units
   E *= kcal2eV;
   return E;

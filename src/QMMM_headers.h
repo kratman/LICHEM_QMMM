@@ -189,6 +189,8 @@ double TinkerWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
 double AmberWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
+double LammpsWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
+
 double GaussianWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
 void ExternalGaussian(int&,char**&);
@@ -226,10 +228,16 @@ void GetQuotes(vector<string>&);
 
 //Function definitions
 #include "Core_funcs.cpp"
-#include "Wrappers_MM.cpp"
-#include "Wrappers_QM.cpp"
-#include "Lepton_eng.cpp"
+#include "Misc_funcs.cpp"
 #include "PathIntegral.cpp"
 #include "ReactionPath.cpp"
 #include "Tink2FLUKE.cpp"
-#include "Misc_funcs.cpp"
+
+//Wrapper definitions
+#include "Lepton_eng.cpp"
+#include "Gaussian.cpp"
+#include "TINKER.cpp"
+#include "LAMMPS.cpp"
+#include "Amber.cpp"
+#include "PSI4.cpp"
+
