@@ -169,7 +169,7 @@ struct QMMMSettings
   int Nprint; //Number of steps before printing
   string PrintMode; //Print all beads or just centroids
   //Input needed for optimizations
-  int MaxOptStep; //Maximum iterative optimization steps
+  int MaxOptSteps; //Maximum iterative optimization steps
 };
 
 //Function declarations

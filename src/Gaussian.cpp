@@ -8,6 +8,7 @@
 ##############################################################################
 
  FLUKE wrapper functions for Gaussian. These routines are written for g09.
+ Note that the external function needs to interface with all MM codes.
 
 */
 
@@ -368,6 +369,7 @@ void ExternalGaussian(int& argc, char**& argv)
     tmp.z = 0;
     Forces.push_back(tmp);
   }
+  //MM forces
   if (Tinker == 1)
   {
     //Open files
@@ -406,10 +408,45 @@ void ExternalGaussian(int& argc, char**& argv)
       }
     }
   }
+  MMgrad.close();
+  //QM forces
   call.str("");
   call << Stub << "_extern.log";
   QMlog.open(call.str().c_str(),ios_base::in);
-  
+  bool GradDone = 0;
+  while ((!QMlog.eof()) and (!GradDone))
+  {
+    getline(QMlog,dummy);
+    stringstream line(dummy);
+    line >> dummy;
+    if (dummy == "Center")
+    {
+      line >> dummy >> dummy;
+      if (dummy == "Forces")
+      {
+        GradDone = 1; //Not grad school, that lasts forever
+        getline(QMlog,dummy); //Clear junk
+        getline(QMlog,dummy); //Clear more junk
+        for (int i=0;i<(Nqm+Npseudo);i++)
+        {
+          double Fx,Fy,Fz;
+          //Convoluted, but "easy"
+          getline(QMlog,dummy);
+          stringstream line(dummy);
+          line >> dummy >> dummy; //Clear junk
+          //Extract forces
+          line >> Fx;
+          line >> Fy;
+          line >> Fz;
+          //Save forces
+          Forces[i].x += Fx;
+          Forces[i].y += Fy;
+          Forces[i].z += Fz;
+        }
+      }
+    }
+  }
+  QMlog.close();
   //Write formatted output for g09
   GauOutput << fixed; //Formatting
   GauOutput << setw(20); //Formatting
@@ -496,7 +533,7 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     call << " -r " << regfilename;
     call << "\"" << '\n';
     call << "Opt=(Redundant,";
-    call << QMMMOpts.MaxOptStep;
+    call << QMMMOpts.MaxOptSteps;
     call << ")" << '\n';
     call << '\n'; //Blank line
     call << "QMMM" << '\n' << '\n'; //Dummy title

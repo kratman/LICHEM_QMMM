@@ -6,6 +6,7 @@ QM_Memory: 2.0
 QM_Charge: 0
 QM_Spin: 1
 Calculation_Type: Opt
+Max_Opt_Steps: 200
 PBC: No
 QM_atoms: 6
 0 1 2 3 4 5

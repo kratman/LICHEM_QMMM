@@ -545,6 +545,7 @@ void ReadFlukeInput(fstream& xyzfile, fstream& connectfile,
     QMMMOpts.Nprint = 0;
     QMMMOpts.PrintMode = "COM";
     QMMMOpts.Ensemble = "N/A";
+    regionfile >> dummy >> QMMMOpts.MaxOptSteps;
   }
   if ((dummy == "SP") or (dummy == "sp") or
   (dummy == "energy") or (dummy == "Energy"))
