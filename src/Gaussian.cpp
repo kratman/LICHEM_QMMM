@@ -22,6 +22,7 @@ void ExternalGaussian(int& argc, char**& argv)
   QMMMSettings QMMMOpts; //Simulation settings
   int sys,DerType,ct;
   stringstream call;
+  call.copyfmt(cout);
   string dummy,Stub;
   fstream xyzfile,connectfile,regionfile;
   fstream GauInput,GauOutput,GauMsg,GauFchk,GauMatrix;
@@ -408,10 +409,10 @@ void ExternalGaussian(int& argc, char**& argv)
             line >> Forces[i].x;
             line >> Forces[i].y;
             line >> Forces[i].z;
-            //Switch to a.u.
-            Forces[i].x *= (kcal2eV*BohrRad)/Har2eV;
-            Forces[i].y *= (kcal2eV*BohrRad)/Har2eV;
-            Forces[i].z *= (kcal2eV*BohrRad)/Har2eV;
+            //Switch to a.u. and change sign
+            Forces[i].x *= -1*(kcal2eV*BohrRad)/Har2eV;
+            Forces[i].y *= -1*(kcal2eV*BohrRad)/Har2eV;
+            Forces[i].z *= -1*(kcal2eV*BohrRad)/Har2eV;
           }
         }
       }
@@ -438,32 +439,32 @@ void ExternalGaussian(int& argc, char**& argv)
   call.str("");
   call << Stub << "_extern.log";
   QMlog.open(call.str().c_str(),ios_base::in);
-  bool GradDone = 0;
+  bool GradDone = 0; //Check if the gradient finished
   while ((!QMlog.eof()) and (!GradDone))
   {
+    //Parse file line by line
     getline(QMlog,dummy);
     stringstream line(dummy);
     line >> dummy;
-    if (dummy == "Variable")
+    //This only works with #P
+    if (dummy == "Center")
     {
-      line >> dummy >> dummy >> dummy;
-      if (dummy == "-DE/DX")
+      line >> dummy >> dummy;
+      if (dummy == "Forces")
       {
         GradDone = 1; //Not grad school, that lasts forever
         getline(QMlog,dummy); //Clear junk
+        getline(QMlog,dummy); //Clear more junk
         for (int i=0;i<(Nqm+Npseudo);i++)
         {
           double Fx,Fy,Fz;
           //Extract forces; Convoluted, but "easy"
           getline(QMlog,dummy);
-          stringstream linex(dummy);
-          linex >> dummy >> dummy >> Fx;
-          getline(QMlog,dummy);
-          stringstream liney(dummy);
-          liney >> dummy >> dummy >> Fy;
-          getline(QMlog,dummy);
-          stringstream linez(dummy);
-          linez >> dummy >> dummy >> Fz;
+          stringstream line(dummy);
+          line >> dummy >> dummy; //Clear junk
+          line >> Fx;
+          line >> Fy;
+          line >> Fz;
           //Save forces
           Forces[i].x += Fx;
           Forces[i].y += Fy;
@@ -471,6 +472,7 @@ void ExternalGaussian(int& argc, char**& argv)
         }
       }
     }
+    //Check for partial QMMM energy
     if (dummy == "SCF")
     {
       line >> dummy;
@@ -628,7 +630,7 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     call << " -c " << confilename;
     call << " -r " << regfilename;
     call << "\"" << '\n';
-    call << "Symmetry=None Opt=(MaxCycles=";
+    call << "Symmetry=None IOp(1/28=-2) Opt=(Redundant,MaxCycles=";
     call << QMMMOpts.MaxOptSteps;
     call << ",MaxStep=15)" << '\n';
     call << '\n'; //Blank line

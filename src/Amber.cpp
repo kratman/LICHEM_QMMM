@@ -22,6 +22,7 @@ double AmberWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   fstream ofile,ifile;
   string dummy;
   stringstream call;
+  call.copyfmt(cout);
   double E = 0.0;
   int sys;
   //Change units

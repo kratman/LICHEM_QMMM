@@ -95,6 +95,7 @@ double TinkerWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   fstream ofile,ifile;
   string dummy;
   stringstream call;
+  call.copyfmt(cout);
   string TinkKeyFile = "tinker.key";
   int MaxTinkerNum = 3500;
   int MaxTinkerClass = 100;

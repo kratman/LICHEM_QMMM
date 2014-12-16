@@ -416,6 +416,7 @@ int main(int argc, char* argv[])
   {
     //Clear any remaining Gaussian files
     stringstream call;
+    call.copyfmt(cout);
     call.str("");
     call << "rm -f Gau-*"; //Produced if there is a crash
     int sys = system(call.str().c_str());
@@ -428,6 +429,7 @@ int main(int argc, char* argv[])
   {
     //Clear worthless output xyz file
     stringstream call;
+    call.copyfmt(cout);
     call.str("");
     call << "rm -f ";
     for (int i=0;i<argc;i++)
