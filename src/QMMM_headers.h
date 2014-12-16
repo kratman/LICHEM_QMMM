@@ -232,6 +232,7 @@ void GetQuotes(vector<string>&);
 #include "PathIntegral.cpp"
 #include "ReactionPath.cpp"
 #include "Tink2FLUKE.cpp"
+#include "Multipoles.cpp"
 
 //Wrapper definitions
 #include "Lepton_eng.cpp"
