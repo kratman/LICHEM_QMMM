@@ -77,7 +77,7 @@ user:\$ tar -xvf FLUKE\_tarbomb.tgz \\
 
 The FLUKE binary is included with the tgz source code, however, modified or
 git versions can be compiled with the script provided with FLUKE. On Ubuntu
-boxes the compile script should function without modifications. However, with
+boxes, the compile script should function without modifications. However, with
 other operating systems it may be necessary to change the path to the
 \textit{Eigen3} package.
 
@@ -180,9 +180,9 @@ B  X$_B$  Y$_B$  Z$_B$ \\
 
 Here N is the number of atoms and (X$_i$,Y$_i$,Z$_i$) is the position of
 particle $i$. Note that the atom types given in the XYZ file need to be the
-true atom types from the periodic table. Additionally, FLUKE reads the XYZ
-file item-by-item, which means that having additional values on a line will
-cause (silent) errors.
+atomic symbols from the periodic table, not the MM atom types. Additionally,
+FLUKE reads the XYZ file item-by-item, which means that having additional
+values on a line will cause (silent) errors.
 
 \section{Connectivity input files}
 
@@ -195,12 +195,11 @@ id MMTyp NumTyp q Nbonds [connectivity] \\
 Here id is the index of the atom (0 to N-1), MMTyp is the force field atom
 type (i.e. Amber atom types), NumTyp is a numerical atom type (i.e. TINKER
 atom types), q is the force field charge on the atom, Nbonds is the number of
-bonds to the atom, and [connectivity] is a list for ids for the atoms bonded
-to the atom. The length of the connectivity list must match Nbonds and the
-information in the connectivity file must be given for all atoms, even if
-there are no MM atoms in the system. An additional caveat is that the atoms
-must be listed in order. This is part of an internal check to make sure
-correct input files were provided.
+bonds to the atom, and [connectivity] is the bond list . The length of the
+connectivity list must match Nbonds and the information in the connectivity
+file must be given for all atoms, even if there are no MM atoms in the system.
+An additional caveat is that the atoms must be listed in order. This is part
+of an internal check to make sure correct input files were provided.
 
 \section{Region input files}
 
@@ -209,7 +208,7 @@ and frozen atoms) as well as miscellaneous input needed to define the type
 of calculations that will be performed. This is the most complicated input
 file required by FLUKE and currently the input keywords must be given in the
 correct order. The keywords themselves are only guides for making the files
-human readable, only the values after the keywords are read. Blank templates
+human readable and only the values after the keywords are read. Blank templates
 of region files are provided in the documentation directory.
 
 The first line of the input file should read: \\
@@ -223,7 +222,7 @@ follow.
 
 Input that is not specific to the wrappers is mostly case insensitive,
 however, users may find exceptions to this rule of thumb. Future versions of
-FLUKE will have a more robust input reader. In the mean time, please report
+FLUKE will have a more robust input reader. In the mean-time, please report
 any bugs that are found.
 
 \subsection{QM input}
@@ -244,7 +243,7 @@ values for the memory.
 
 \subsection{MM input}
 
-If the potential type is MM or QMMMM, several keywords are required to define
+If the potential type is MM or QMMM, several keywords are required to define
 the MM wrapper. \\
 
 MM\_type: $<$TINKER or Amber or LAMMPS$>$ \\
@@ -254,8 +253,7 @@ correct input for the MM package.
 
 \subsection{QMMM input}
 
-QMMM input is essentially just a combination of the QM and MM input described
-above. \\
+QMMM input is a combination of the QM and MM input described above. \\
 
 QM\_type: $<$Gaussian or PSI4$>$ \\
 QM\_functional: $<$functional$>$ \\
@@ -274,7 +272,7 @@ integer values for the memory.
 Input for the calculation types directly follows the wrapper input. Each type
 of calculation requires slightly different input. FLUKE can perform
 single-point energies (SP), optimizations (Opt), and path-integral Monte Carlo
-simuations (PIMC). Classical Monte Carlo simulations are performed as PIMC
+simulations (PIMC). Classical Monte Carlo simulations are performed as PIMC
 simulations with a single bead. All calculation types are documented below. \\
 
 Calculation\_type: $<$SP or Energy$>$ \\
@@ -305,7 +303,7 @@ Frozen\_atoms: Ninact [list of ids] \\
 Definitions of the QM, pseudo-atoms, and boundary atoms can be found in
 Chapter \ref{chap:Theory}. Frozen atoms are atoms that should remain
 stationary during optimizations or Monte Carlo simulations. Frozen atoms are
-useful optimizing small regions of large periodic systems. \\
+useful for optimizing small regions of large periodic systems. \\
 
 Note that in pure QM and pure MM simulations, \{Nqm,Npseudo,Nbound\} can all
 be set to zero. This is because these regions are not relevant unless FLUKE is
@@ -336,8 +334,8 @@ LAMMPS:
 
 Most of the FLUKE output is sent through the c++ std output stream. However,
 trajectories and optimized structures are printed into the file defined
-by the -o flag. In single-point energy calculations the output XYZ file
-is deleted after the calculation is completed since the geometry does not
+by the -o flag. In single-point energy calculations, the output XYZ file
+is deleted after the calculation is completed, since the geometry does not
 change during the calculation.
 
 \section{Additional input for wrappers}
@@ -390,19 +388,19 @@ and terminology.
 
 \subsection{Newton's laws of motion}
 
-Much of classical physics can be described in terms of Newtons three laws of
+Much of classical physics can be described in terms of Newton's three laws of
 motion.
 \begin{quote} 
  \normalfont{
  1) An object in motion tends to stay in motion unless it is acted upon by a
  force. \\
  2) The force on an object is equal to its mass times its acceleration
- $F=ma$. \\
- 3) For every action there is an equal and opposite reaction.}
+ ($F=ma$). \\
+ 3) For every action, there is an equal and opposite reaction.}
 \end{quote}
 Newton's second law can be employed in calculations to predict the position
-and velocity of objects moving in a potential field. A simplifed alogorithm
-for the discritized equations of motion can be written as
+and velocity of objects moving in a potential field. A simplified algorithm
+for the discretized equations of motion can be written as
 \begin{equation}
  F_{n} = -\nabla V_{n} = m\ddot r_{n} \; ,
 \end{equation}
@@ -414,12 +412,12 @@ and
  r_{n+1} = r_{n}+\dot r_{n}\Delta t+\frac{\ddot r_{n}\Delta t^2}{2} \; ,
 \end{equation}
 where $F$ is the force, $V$ is the potential energy, $r$ is a vector
-representing the potions of all atoms in the system, and $\Delta t$ is the
+representing the positions of all atoms in the system, and $\Delta t$ is the
 time interval between time step $n$ and $n+1$. The natural ensemble for
-molecular dynamics is the mircocanonical ensemble (NVE), where the number of
+molecular dynamics is the microcanonical ensemble (NVE), where the number of
 particles and energy are conserved inside a constant volume simulation box.
 Although the NVE simulations are the native result of propagating Newton's
-equations, most experiments are typically performed in the canonical (NVT) or
+equations, most experiments are performed in the canonical (NVT) or
 isothermal-isobaric (NPT) ensembles. In the NVT ensemble, the temperature is
 held constant instead of the energy, and the NPT ensemble also holds the
 pressure to be constant by adjusting the size of the simulation box.
@@ -481,9 +479,9 @@ properties.
 
 \subsection{Frozen density force fields}
 
-Frozen denisty force fields are a special class of polarizable force fields
+Frozen density force fields are a special class of polarizable force fields
 where the electron density is represented by Gaussian functions. These
-potentials can greatly imporve the calculations of the electrostatic field and
+potentials can greatly improve the calculations of the electrostatic field and
 can include exchange and charge penetration effects.
 
 \FloatBarrier
@@ -502,7 +500,7 @@ energy operator. The Schr\"{o}dinger equation is given by
 \begin{equation}
  \hat H\psi = E\psi \to E = \int \psi^*\hat H\psi d\tau \; ,
 \end{equation}
-where $\psi$ is the wavefunction, $E$ is the energy, $^*$ denotes the complex
+where $\psi$ is the wave function, $E$ is the energy, $^*$ denotes the complex
 conjugate, and $\int d\tau$ is the integral over all space. The
 Schr\"{o}dinger equation can also be written in terms of a determinant,
 \begin{equation}
@@ -519,7 +517,7 @@ state $j$.
 
 If there is a complicated system and we want to solve the Schr\"{o}dinger 
 equation, a good starting point is often to use a system for which the exact
-solution is known. In chemistry, this is often the hydrogen atom and in solid
+solution is known. In chemistry, this is often the hydrogen atom, and in solid
 state physics, it is often the "homogeneous electron gas". For example, helium
 can be approximated as two electrons interacting with a nucleus, but not with
 each other (i.e. solving the hydrogen problem twice with a nuclear charge of
@@ -539,11 +537,11 @@ simple system,
  \hat H_0\psi_0=E_0\psi_0 \; .
 \end{equation}
 
-Perturbation theory adds the $i$th-order Hamiltonians to the zeroith-order
+Perturbation theory adds the $i$th-order Hamiltonians to the zeroth-order
 energy as the average interactions (based on the probability from the
-wavefunction). This is easiest to understand for first-order perturbation
+wave function). This is easiest to understand for first-order perturbation
 theory, however, the higher-order corrections are systematic and
-straight-forward. The perturbed Schr\"{o}dinger equation is given as
+straightforward. The perturbed Schr\"{o}dinger equation is given as
 \begin{equation}
  \hat H\psi=E\psi \to (\hat H_0 + \hat H_1)\psi = E\psi \; , 
 \end{equation}
@@ -552,37 +550,37 @@ and
  E \approx E_0 + E_1 \approx E_0 + \langle\psi_0|\hat H_1|\psi_0\rangle \; .
 \end{equation}
 
-Note that first-order perturbation theory uses the zeroith-order wave 
+Note that first-order perturbation theory uses the zeroth-order wave 
 function for the averages. This can be seen as both an advantage and a
-disadvantage in the calculations. It speeds up the calculation to use a
-lower-order wavefunction since the higher order terms have no effect on the
-solution of the simpler system. The disadvantage is that wavefunction itself
-does not respond to the higher-order interactions. For helium with a
-first-order perturbation, the electrons are too close to the nucleus since
-there is a strong nuclear attraction with no repulsion due to the second
-electron. \\
+disadvantage in the calculations. The advantage is that it speeds up the
+calculation to use a lower-order wave function since the higher order terms
+have no effect on the solution of the simpler system. The disadvantage is that
+wave function itself does not respond to the higher-order interactions. For
+helium with a first-order perturbation, the electrons are too close to the
+nucleus since there is a strong nuclear attraction with no repulsion due to
+the second electron. \\
 
-It should be noted that perturbation theory can correct both the wavefunction
-and the energy. However, the corrections to the wavefunction can be two orders
-lower than the corrections to the energy. So a third-order correction to the
-energy requires a first-order correction to the wavefunction.
+It should be noted that perturbation theory can correct both the wave function
+and the energy. However, the corrections to the wave function can be two orders
+lower than the corrections to the energy. A third-order correction to the
+energy would require a first-order correction to the wave function.
 
 \subsection{Variational theorem}
 
 Another method for solving the Schr\"{o}dinger equation involves approximating
-the wavefunction for a complex system. If the Hamiltonian for a system is
-known, but not the wavefunction, we can often make an educated guess. Since
+the wave function for a complex system. If the Hamiltonian for a system is
+known, but not the wave function, we can often make an educated guess. Since
 the ground-state of a system is the one with the lowest energy, any
-guess-wavefunction, $\phi$, must have an energy that is greater-than or
+guess-wave function, $\phi$, must have an energy that is greater-than or
 equal-to the ground-state energy. If the energy calculated using $\phi$ is
 equal-to the true ground-state energy, then $\phi$ is the true ground-state
-wavefunction. If $\hat H\phi=E\phi$ predicts an energy lower than the
+wave function. If $\hat H\phi=E\phi$ predicts an energy lower than the
 ground-state energy, then the ground-state is not the lowest energy state
 (impossible by definition). This theorem can be proven mathematically,
 however, it is conceptually intuitive. \\
 
 While the variational theorem may sound useful since a reasonable guess
-wavefunction must be provided, we can often employ the properties of linear
+wave function must be provided, we can often employ the properties of linear
 combinations and the solutions of $\hat H_0\psi_0=E_0\psi_0$. When solving
 differential equations, any linear combination of the solutions to the
 equation is also a solution. For example, the 1s ground-state of the hydrogen
@@ -596,22 +594,22 @@ atomic orbitals (LCAO) wave function.
 
 \subsection{Basis sets}
 
-In principle, any set of functions (a basis set) can be chosen as a guess then
-the linear combination coefficients ($c_1$ and $c_2$ above) can be adjusted
-to lower the energy. The more functions that are included in the basis set,
-the closer the guess-wavefunction can get to the true wavefunction of the
-system. A logical choice would be to use hydrogen-like wavefunctions for the
-individual atoms in a molecule as the basis set, however, the integrals are
-not easy to calculate. \\
+In principle, any set of functions (a basis set) can be chosen as a guess and
+then the linear combination coefficients ($c_1$ and $c_2$ above) can be
+adjusted to lower the energy. The more functions that are included in the
+basis set, the closer the guess-wave function can get to the true wave
+function of the system. A logical choice would be to use hydrogen-like wave
+functions for the individual atoms in a molecule as the basis set, however,
+the integrals are not easy to calculate. \\
 
 A more practical solution is to choose a large set of functions that we can
-easily integrate, for instance, Gaussian functions have great properties that
+easily integrate. For instance, Gaussian functions have great properties that
 simplify integration. The STO-3G basis set provides a good example of how this
 is done. A Slater-type orbital (STO) is a systematic hydrogen-like orbital for
 any atomic state. The STO-3G basis set represents the STOs of the atoms as the
 combination of 3 Gaussian functions. This produces approximate "hydrogen-like"
 orbitals that have still have the mathematical properties of Gaussians. For
-the hydrogen molecule, the wavefunction would be given by
+the hydrogen molecule, the wave function would be given by
 \begin{equation}
  \psi \approx c_a\phi_{a,1s}+c_b\phi_{b,1s} \; ,
 \end{equation}
@@ -629,7 +627,7 @@ two relatively easy to integrate orbitals made of three Gaussians each. \\
 Next, let's consider the Pople basis sets which are written as w-xyzG. This
 notation indicates how many Gaussians are used to represent the atomic
 orbitals. For now, we can just use the lithium atom as the example for the
-wavefunction,
+wave function,
 \begin{equation}
  \psi = c_1\phi_{1s} + c_2\phi_{2s} + c_3\phi_{2p,x} +
  c_4\phi_{2p,y} + c_5\phi_{2p,z} \; .
@@ -694,8 +692,8 @@ basis functions have a difficult time modeling the core region, and they can
 be designed to include relativistic effects. \\
 
 Real pseudopotentials do not change the nuclear charge, but rather add an
-electrostatic potential with the same spatial distribtion as the electrons
-they replace. A futher advantage of pseudopotentials, which is employed in
+electrostatic potential with the same spatial distribution as the electrons
+they replace. A further advantage of pseudopotentials, which is employed in
 QMMM calculations, is that the potentials can replace entire atoms. For
 instance, a methyl group can be modeled as a fluorine atom combined with a
 pseudopotential.
@@ -705,7 +703,7 @@ pseudopotential.
 Density functional theory (DFT) is an elegant solution to problems in quantum
 theory and is distinct from the other formalisms (matrix mechanics
 (Heisenberg), wave mechanics (Schr\"{o}dinger), and the path-integral approach
-(Feynman)). The idea is that you do not need to know the wavefunction, only
+(Feynman)). The idea is that you do not need to know the wave function, only
 the electron density of the system, to calculate the energy. It can be proven
 that there is a one-to-one relationship between a given electron density and
 the energy of the system. This greatly simplifies the problem the problem
@@ -727,7 +725,7 @@ electron-electron and electron-nucleus parts of the functional are much more
 accurate than the kinetic energy functional. In fact, the simplest functional
 for the potential (LDA) is still used, but the simplest kinetic energy
 functional (Thomas-Fermi, TF) cannot even predict chemical bonding. A more
-accurate approximation for the kinetic energy are discussed below.
+accurate approximation for the kinetic energy is discussed below.
 
 \subsection{Self-consistent field methods}
 
@@ -741,7 +739,7 @@ equations using the Fock operator, $F$,
 \begin{equation}
  \hat F = \hat H_0+\langle\phi|\hat H_1|\phi\rangle \; ,
 \end{equation}
-until the variational wavefunction no-longer changes. The problem converges
+until the variational wave function no-longer changes. The problem converges
 since the Fock operator depends on the average electron-electron repulsion
 from the previous iteration. The result is an approximate first-order energy
 and a first-order wave function. \\
@@ -767,7 +765,7 @@ interactions. The second bit of terminology is the "exchange interaction",
 which is included in $\hat F$ through $\hat H_1$. The solution of the
 Schr\"{o}dinger equation for electrons should be anti-symmetric with respects
 to the exchange of two electrons. The exchange interaction is added to the
-$\hat H_1$ operator to force the variational wavefunction to have the correct
+$\hat H_1$ operator to force the variational wave function to have the correct
 symmetry. \\
 
 Hartree-Fock calculations capture the exchange, but miss the higher-order
@@ -840,7 +838,7 @@ solving the Schr\"odinger equation is essentially trivial.
 \subsection{QM-MM interactions}
 
 When the QM and MM regions are not connected by covalent bonds, the QM-MM
-interactions are reasonably straight-forward. The interaction between the
+interactions are reasonably straightforward. The interaction between the
 electric field of the MM region (point charges or multipoles) and the QM
 region is calculated by adding point charges to the QM calculations. This
 allows for electrostatic repulsion and polarization, but neglects exchange
@@ -860,7 +858,7 @@ the MM calculation ($\hat V_{mm}$) and the QM calculation ($\hat H_{qm}$).
 \begin{figure}[hbt]
  \centering
  \includegraphics[scale=0.50]{../doc/images/QMMM_2.png}
- \caption{Schematic of a QMMM simulation box with the boundary region show in
+ \caption{Schematic of a QMMM simulation box with the boundary region shown in
  green between the QM and MM regions.}
  \label{fig:QMMM2}
 \end{figure} 
@@ -884,7 +882,7 @@ the MM calculation ($\hat V_{mm}$) and the QM calculation ($\hat H_{qm}$).
  \end{tabular}
  \caption{The treatment of region-region interactions in the MM and QM 
  wrappers during single-point energy calculations. Interactions were 
- abreviated as follows: force field (FF), electron density ($\rho_{el}$),
+ abbreviated as follows: force field (FF), electron density ($\rho_{el}$),
  pseudopotential (PP), no interaction (Zero), QM point charges 
  (\{$q_{qm}$\}), MM bond potentials (Bonds), and MM point charges
  (\{$q_{mm}$\}). A "-" sign is used if the interaction is removed instead of
@@ -919,14 +917,14 @@ the QM and MM regions. \\
 For the MM part of the calculation, the pseudo-atoms and boundary atoms retain
 their force field charges, and the MM bonding interactions are added for the
 pseudo-atoms. The treatment of different interaction types are given in Table
-\ref{tab:IntTable} for single-point energy calcuations. In the pseudo-bond
+\ref{tab:IntTable} for single-point energy calculations. In the pseudo-bond
 approach, only some of the bonded interactions are calculated for the QMMM
 interface. Further detials on which bonded interactions are included can be
 found in the literature. \\
 
 So far we have discussed systems similar to the one shown in Figure
 \ref{fig:QMMM2}, where the boundary atoms only surround the covalent bonds.
-This is due to the primative treatment of the QM-MM boundaries. A more
+This is due to the primitive treatment of the QM-MM boundaries. A more
 complicated scheme can be employed where the boundary atoms are represented by
 a polarizable frozen density force field. The QM and frozen density
 interactions are more natural than interactions between the QM and point
@@ -954,7 +952,7 @@ be tailored to the system and focus on the randomly changing the most important
 features of a system. \\
 
 If the moving atoms and/or type of random change are chosen randomly, this
-proceedure satisfies "detailed balance." I.e. the move from configuration $i$
+procedure satisfies "detailed balance." I.e. the move from configuration $i$
 to configuration $j$ can be reversed by a move from configuration $j$ to
 configuration $i$.
 
@@ -973,14 +971,14 @@ change in energy, and $\beta$ is the inverse temperature,
 This proceedure leads to biased sampling of the lower energy states. \\
 
 Unlike molecular dynamics simulations, the natural ensemble for Monte Carlo
-simulations is the canonical enemble (NVT). This is advantageous since there
+simulations is the canonical ensemble (NVT). This is advantageous since there
 is no need to couple the simulation to a thermostat.
 
 \subsection{Isobaric-isothermal ensemble}
 
 Although NVT simulations are natural for Monte Carlo, it is relatively easy to
 change to the NPT ensemble. NPT simulations are performed by randomly changing
-the volume of the simulation box. This proceedure produces a slightly
+the volume of the simulation box. This procedure produces a slightly
 different expression for the probabilities,
 \begin{equation}
  P_{acc} \propto e^{-(P\Delta V+\Delta E)\beta+N\Delta ln(V)} \; ,
@@ -1015,7 +1013,7 @@ where the spring energy is given by
 \end{equation}
 Here the $N_a$ is the total number of atoms, $N_p$ is the number of beads,
 $r_i$ is the position of bead $i$, and $E_{pot}$ is the potential energy. The
-acceptence probability is given by
+acceptance probability is given by
 \begin{equation}
  P_{acc} \propto e^{\Delta E_{eff}\beta} \; .
 \end{equation}
@@ -1047,7 +1045,7 @@ Another problem introduced by the path-integral formalism comes from the
 harmonic constraints between the beads. The force constants for the
 path-integral springs is proportional to the mass of the particle, which means
 that heavy atoms can experience very strong forces holding the centroid
-close together. The presense of strong potentials restricts the movement of
+close together. The presence of strong potentials restricts the movement of
 the atoms, and reduces $P_{acc}$.
 
 \FloatBarrier
