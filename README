@@ -29,3 +29,24 @@ Simulation mode timeline and checklist:
  NVT/NPT PI Monte Carlo: Done
  Geometry optimizations: In progress (debugging)
  Reaction pathways: Future
+
+Currently, the binary and user's manual are not included in the repository.
+The compile script can be used to generate both files. Since FLUKE is
+designed to be simple, only a small number of packages are required to
+compile the code. An approximate list of packages is given below. 
+  FLUKE binary: OpenMP, Eigen3
+  FLUKE manual: LaTeX, BibTeX
+
+Clone the git repository
+user:$ mkdir FLUKE
+user:$ git clone https://github.com/kratman/FLUKE_QMMM.git ./FLUKE/
+
+On Ubuntu boxes, the compile script should function without modifications.
+However, with other operating systems it may be necessary to change the path
+to the Eigen3 package.
+
+Default: -I/usr/include/eigen3/
+
+The compile script produces both the documentation and the source code.
+
+user:$ ./compile
