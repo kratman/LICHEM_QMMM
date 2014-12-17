@@ -537,7 +537,19 @@ void ExternalGaussian(int& argc, char**& argv)
   GauMsg.flush();
   GauMsg.close();
   //Write new XYZ for recovery of failed optimizations
-  
+  call.str("");
+  call << Stub << ".xyz";
+  ofile.open(call.str().c_str(),ios_base::out);
+  ofile << Natoms << '\n' << '\n';
+  for (int i=0;i<Natoms;i++)
+  {
+    ofile << Struct[i].QMTyp << " ";
+    ofile << setprecision(12) << Struct[i].x << " ";
+    ofile << setprecision(12) << Struct[i].y << " ";
+    ofile << setprecision(12) << Struct[i].z << '\n';
+  }
+  ofile.flush();
+  ofile.close();
   //Clean up output external
   call.str("");
   call << "rm -f ";
@@ -580,16 +592,16 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
       if (Bead == -1)
       {
         ofile << Struct[i].QMTyp << " ";
-        ofile << Struct[i].x << " ";
-        ofile << Struct[i].y << " ";
-        ofile << Struct[i].z << '\n';
+        ofile << setprecision(12) << Struct[i].x << " ";
+        ofile << setprecision(12) << Struct[i].y << " ";
+        ofile << setprecision(12) << Struct[i].z << '\n';
       }
       if (Bead != -1)
       {
-        ofile << Struct[i].QMTyp << " ";
-        ofile << Struct[i].P[Bead].x << " ";
-        ofile << Struct[i].P[Bead].y << " ";
-        ofile << Struct[i].P[Bead].z << '\n';
+        ofile << setprecision(12) << Struct[i].QMTyp << " ";
+        ofile << setprecision(12) << Struct[i].P[Bead].x << " ";
+        ofile << setprecision(12) << Struct[i].P[Bead].y << " ";
+        ofile << setprecision(12) << Struct[i].P[Bead].z << '\n';
       }
     }
     ofile.flush();
