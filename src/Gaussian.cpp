@@ -17,7 +17,9 @@ void ExternalGaussian(int& argc, char**& argv)
 {
   //This function is an "external script" that can be called by
   //Gaussian's external interface
-  double Eqm,Emm; //Stores partial energies
+  double Eqm = 0; //Stores partial energies
+  double Emm = 0; //Stores partial energies
+  double Eself = 0; //Stores partial energies
   vector<QMMMAtom> Struct; //Atomic data
   QMMMSettings QMMMOpts; //Simulation settings
   int sys,DerType,ct;
@@ -95,15 +97,18 @@ void ExternalGaussian(int& argc, char**& argv)
   call << "%NprocShared=" << Ncpus << '\n';
   call << "%NoSave" << '\n'; //Deletes files
   call << "#P " << QMMMOpts.Func << "/";
-  call << QMMMOpts.Basis << " Force Symmetry=None" << '\n';
-  if (Npseudo > 0)
+  call << QMMMOpts.Basis << " Force=NoStep Symmetry=None" << '\n';
+  if (QMMM == 1)
   {
-    //Read pseudo potential
-    call << "Pseudo=Read ";
+    if (Npseudo > 0)
+    {
+      //Read pseudo potential
+      call << "Pseudo=Read ";
+    }
+    call << "Charge=angstroms "; //Read charges
+    call << "Population=(MK,ReadRadii)" << '\n';
   }
-  call << "Charge=angstroms "; //Read charges
-  call << "Population=(MK,ReadRadii)" << '\n';
-  call << '\n';
+  call << '\n'; //Blank line
   call << "QMMM" << '\n' << '\n'; //Dummy title
   call << QMMMOpts.Charge << " " << QMMMOpts.Spin << '\n';
   for (int i=0;i<Natoms;i++)
@@ -457,7 +462,9 @@ void ExternalGaussian(int& argc, char**& argv)
         getline(QMlog,dummy); //Clear more junk
         for (int i=0;i<(Nqm+Npseudo);i++)
         {
-          double Fx,Fy,Fz;
+          double Fx = 0;
+          double Fy = 0;
+          double Fz = 0;
           //Extract forces; Convoluted, but "easy"
           getline(QMlog,dummy);
           stringstream line(dummy);
@@ -472,6 +479,18 @@ void ExternalGaussian(int& argc, char**& argv)
         }
       }
     }
+    if (dummy == "Self")
+    {
+      line >> dummy;
+      if (dummy == "energy")
+      {
+        line >> dummy; //Clear junk
+        line >> dummy; //Ditto
+        line >> dummy; //Ditto
+        line >> dummy; //Ditto
+        line >> Eself;
+      }
+    }
     //Check for partial QMMM energy
     if (dummy == "SCF")
     {
@@ -484,11 +503,14 @@ void ExternalGaussian(int& argc, char**& argv)
       }
     }
   }
+  Eqm -= Eself;
   QMlog.close();
   //Write formatted output for g09
+  double E = Eqm+Emm; //Calculate
   GauOutput << fixed; //Formatting
+  GauOutput << left; //More formatting
   GauOutput.precision(12);
-  GauOutput << setw(20) << Eqm; //QM+MM partial energy
+  GauOutput << setw(20) << E; //QM+MM partial energy
   GauOutput << setw(20) << 0.0; //Dipole moment
   GauOutput << setw(20) << 0.0; //Dipole moment
   GauOutput << setw(20) << 0.0; //Dipole moment
@@ -508,7 +530,7 @@ void ExternalGaussian(int& argc, char**& argv)
   GauOutput << setw(20) << 0.0; //Polarizability
   GauOutput << setw(20) << 0.0; //Polarizability
   GauOutput << '\n';
-  for (int i=0;i<(Nqm+Npseudo);i++)
+  for (int i=0;i<(3*(Nqm+Npseudo));i++)
   {
     //Dipole derivatives
     GauOutput << setw(20) << 0.0;
@@ -642,9 +664,9 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     call << " -c " << confilename;
     call << " -r " << regfilename;
     call << "\"" << '\n';
-    call << "Symmetry=None IOp(1/28=-2) Opt=(Redundant,MaxCycles=";
+    call << "Symmetry=None Opt=(Redundant,MaxCycles=";
     call << QMMMOpts.MaxOptSteps;
-    call << ",MaxStep=15)" << '\n';
+    call << ",MaxStep=30)" << '\n';
     call << '\n'; //Blank line
     call << "QMMM" << '\n' << '\n'; //Dummy title
     call << QMMMOpts.Charge << " " << QMMMOpts.Spin << '\n';
@@ -709,7 +731,10 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     }
     sys = system(call.str().c_str());
     //Read new structure and charges
-    
+    cout << '\n';
+    cout << "Exiting to debug...";
+    cout << endl;
+    exit(0);
   }
   if (RunTyp == "Enrg")
   {
