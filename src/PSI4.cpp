@@ -12,7 +12,14 @@
 */
 
 //QM utility functions
-
+vector<Coord> PsiForces(vector<QMMMAtom>& Struct,
+              QMMMSettings& QMMMOpts, int Bead)
+{
+  //Function for calculating the forces on a set of atoms
+  vector<Coord> Forces;
+  
+  return Forces;
+};
 
 //QM wrapper functions
 double PsiWrapper(string RunTyp, vector<QMMMAtom>& Struct,

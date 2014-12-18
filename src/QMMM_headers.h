@@ -48,7 +48,8 @@ const double StepMin = 0.01; //Minimum step size
 const double StepMax = 1.0; //Maximum step size
 const double Centratio= 5.0; //Scales 'step' for centroids
 const int Acc_Check = 5000; //Eq steps before checking accratio
-const double OptTol = 1e-6; //Criteria to end the optimization
+const double OptTol = 1e-4; //Criteria to end the optimization
+const double SteepStep = 0.075; //Steepest descent step size (Ang)
 
 //Move Probabilities for PIMC
 //Note: These probabilities allow for multi-particle moves
@@ -187,6 +188,8 @@ void FindTinkerClasses(vector<QMMMAtom>&);
 
 double TinkerWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
+vector<Coord> TinkerForces(vector<QMMMAtom>&,QMMMSettings&,int);
+
 double AmberWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
 double LammpsWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
@@ -195,7 +198,11 @@ double GaussianWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
 void ExternalGaussian(int&,char**&);
 
+vector<Coord> GaussianForces(vector<QMMMAtom>&,QMMMSettings&,int);
+
 double PsiWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
+
+vector<Coord> PsiForces(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double SpringEnergy(double,double);
 
@@ -233,6 +240,7 @@ void GetQuotes(vector<string>&);
 #include "ReactionPath.cpp"
 #include "Tink2FLUKE.cpp"
 #include "Multipoles.cpp"
+#include "Optimizers.cpp"
 
 //Wrapper definitions
 #include "Lepton_eng.cpp"

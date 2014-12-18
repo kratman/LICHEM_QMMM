@@ -13,6 +13,15 @@
 */
 
 //QM utility functions
+vector<Coord> GaussianForces(vector<QMMMAtom>& Struct,
+              QMMMSettings& QMMMOpts, int Bead)
+{
+  //Function for calculating the forces on a set of atoms
+  vector<Coord> Forces;
+  
+  return Forces;
+};
+
 void ExternalGaussian(int& argc, char**& argv)
 {
   //This function is an "external script" that can be called by
@@ -653,7 +662,7 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     call << "%Mem=" << QMMMOpts.RAM << "GB" << '\n';
     call << "%NprocShared=" << Ncpus << '\n';
     call << "%NoSave" << '\n'; //Deletes files
-    call << "#P " << "external=\"FLUKE -GauExtern ";
+    call << "#P " << "external=(\"FLUKE -GauExtern ";
     call << "QMMM"; //Just the stub
     if (Bead != -1)
     {
@@ -663,10 +672,10 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     call << " -n " << Ncpus;
     call << " -c " << confilename;
     call << " -r " << regfilename;
-    call << "\"" << '\n';
-    call << "Symmetry=None Opt=(Redundant,MaxCycles=";
+    call << "\",IOFchk)" << '\n';
+    call << "Symmetry=None Opt=(MaxCycles=";
     call << QMMMOpts.MaxOptSteps;
-    call << ",MaxStep=30)" << '\n';
+    call << ",MaxStep=15)" << '\n';
     call << '\n'; //Blank line
     call << "QMMM" << '\n' << '\n'; //Dummy title
     call << QMMMOpts.Charge << " " << QMMMOpts.Spin << '\n';
