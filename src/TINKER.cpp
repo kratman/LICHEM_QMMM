@@ -12,13 +12,13 @@
 */
 
 //MM utility functions
-vector<Coord> TinkerForces(vector<QMMMAtom>& Struct,
-              QMMMSettings& QMMMOpts, int Bead)
+double TinkerForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
+       QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the forces on a set of atoms
-  vector<Coord> Forces;
+  double Emm;
   
-  return Forces;
+  return Emm;
 };
 
 void FindTinkerClasses(vector<QMMMAtom>& Struct)

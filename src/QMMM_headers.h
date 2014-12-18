@@ -188,7 +188,7 @@ void FindTinkerClasses(vector<QMMMAtom>&);
 
 double TinkerWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
-vector<Coord> TinkerForces(vector<QMMMAtom>&,QMMMSettings&,int);
+double TinkerForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
 double AmberWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
@@ -198,11 +198,11 @@ double GaussianWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
 void ExternalGaussian(int&,char**&);
 
-vector<Coord> GaussianForces(vector<QMMMAtom>&,QMMMSettings&,int);
+double GaussianForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
 double PsiWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
-vector<Coord> PsiForces(vector<QMMMAtom>&,QMMMSettings&,int);
+double PsiForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
 double SpringEnergy(double,double);
 
