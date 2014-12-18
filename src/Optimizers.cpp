@@ -12,14 +12,16 @@
 
 */
 
-void FLUKESteepest()
+void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
+     int Bead)
 {
   //Steepest descent optimizer
   
   return;
 };
 
-void FLUKEBFGS()
+void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
+     int Bead)
 {
   //BFGS optimizer
   

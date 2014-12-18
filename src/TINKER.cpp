@@ -15,9 +15,302 @@
 double TinkerForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
-  //Function for calculating the forces on a set of atoms
-  double Emm;
-  
+  //Function for calculating the MM forces on a set of QM atoms
+  fstream ofile,ifile;
+  string dummy;
+  stringstream call;
+  call.copyfmt(cout);
+  string TinkKeyFile = "tinker.key";
+  int MaxTinkerNum = 3500;
+  int MaxTinkerClass = 100;
+  double Emm = 0.0;
+  int ct;
+  int sys;
+  call.str("");
+  //Construct MM forces input for TINKER
+  call.str("");
+  call << "cp " << TinkKeyFile << " ";
+  call << "QMMM";
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+  }
+  call << ".key";
+  sys = system(call.str().c_str());
+  //Save new keyfile name
+  call.str("");
+  call << "QMMM";
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+  }
+  call << ".key";
+  TinkKeyFile = call.str(); //Save the new name
+  //Add QM atoms to force field parameters list
+  ofile.open(TinkKeyFile.c_str(),ios_base::app|ios_base::out);
+  ofile << '\n';
+  ofile << "#QM force field parameters"; //Marks the changes
+  ofile << '\n';
+  ct = 0; //Generic counter
+  for (int i=0;i<Natoms;i++)
+  {
+    //Add active atoms
+    if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+    {
+      if (ct == 0)
+      {
+        //Start a new active line
+        ofile << "active ";
+      }
+      else
+      {
+        //Place a space to separate values
+        ofile << " ";
+      }
+      ofile << (Struct[i].id+1);
+      ct += 1;
+      if (ct == 10)
+      {
+        //terminate an active line
+        ct = 0;
+        ofile << '\n';
+      }
+    }
+  }
+  if (ct != 0)
+  {
+    //Terminate trailing actives line
+    ofile << '\n';
+  }
+  ofile << "group-inter" << '\n'; //Modify interactions
+  ct = 0; //Generic counter
+  for (int i=0;i<Natoms;i++)
+  {
+    //Add group 1 atoms
+    if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+    {
+      if (ct == 0)
+      {
+        //Start a new group line
+        ofile << "group 1 ";
+      }
+      else
+      {
+        //Place a space to separate values
+        ofile << " ";
+      }
+      ofile << (Struct[i].id+1);
+      ct += 1;
+      if (ct == 10)
+      {
+        //terminate a group line
+        ct = 0;
+        ofile << '\n';
+      }
+    }
+  }
+  if (ct != 0)
+  {
+    //Terminate trailing group line
+    ofile << '\n';
+  }
+  ct = 0; //Generic counter
+  for (int i=0;i<Natoms;i++)
+  {
+    //Add group 1 atoms
+    if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1))
+    {
+      if (ct == 0)
+      {
+        //Start a new group line
+        ofile << "group 2 ";
+      }
+      else
+      {
+        //Place a space to separate values
+        ofile << " ";
+      }
+      ofile << (Struct[i].id+1);
+      ct += 1;
+      if (ct == 10)
+      {
+        //terminate a group line
+        ct = 0;
+        ofile << '\n';
+      }
+    }
+  }
+  if (ct != 0)
+  {
+    //Terminate trailing group line
+    ofile << '\n';
+  }
+  ct = 0;
+  for (int i=0;i<Natoms;i++)
+  {
+    //Add atom types
+    if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+    {
+      ofile << "atom " << (MaxTinkerNum+ct) << " ";
+      ofile << Struct[i].NumClass << " ";
+      ofile << Struct[i].MMTyp << " ";
+      ofile << "\"Dummy QM atom type\" ";
+      ofile << RevTyping(Struct[i].QMTyp) << " ";
+      ofile << Struct[i].m << " ";
+      ofile << Struct[i].Bonds.size();
+      ofile << '\n';
+      ct += 1;
+    }
+  }
+  if (CHRG == 1)
+  {
+    ct = 0;
+    for (int i=0;i<Natoms;i++)
+    {
+      //Add nuclear charges
+      if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+      {
+        ofile << "charge " << (MaxTinkerNum+ct) << " ";
+        ofile << 0.0; //Delete charges
+        ofile << '\n';
+        ct += 1;
+      }
+    }
+  }
+  ofile.flush();
+  ofile.close();
+  //Create Tinker xyz file from the structure
+  call.str("");
+  call << "QMMM";
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+  }
+  call << ".xyz";
+  ofile.open(call.str().c_str(),ios_base::out);
+  //Write atoms to the xyz file
+  ofile << Natoms << '\n';
+  if (PBCon == 1)
+  {
+    //Write box size
+    ofile << Lx << " " << Ly << " " << Lz;
+    ofile << " 90.0 90.0 90.0";
+    ofile << '\n';
+  }
+  ct = 0; //Counter for QM atoms
+  for (int i=0;i<Natoms;i++)
+  {
+    ofile << setw(6) << (Struct[i].id+1);
+    ofile << " ";
+    ofile << setw(3) << Struct[i].MMTyp;
+    ofile << " ";
+    if (Bead == -1)
+    {
+      ofile << setw(12) << Struct[i].x;
+      ofile << " ";
+      ofile << setw(12) << Struct[i].y;
+      ofile << " ";
+      ofile << setw(12) << Struct[i].z;
+    }
+    if (Bead != -1)
+    {
+      ofile << setw(12) << Struct[i].P[Bead].x;
+      ofile << " ";
+      ofile << setw(12) << Struct[i].P[Bead].y;
+      ofile << " ";
+      ofile << setw(12) << Struct[i].P[Bead].z;
+    }
+    ofile << " ";
+    if ((Struct[i].QMregion != 1) and (Struct[i].PAregion != 1))
+    {
+      ofile << setw(4) << Struct[i].NumTyp;
+    }
+    if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+    {
+      ofile << setw(4) << (MaxTinkerNum+ct);
+      ct += 1; //Count number of qm atoms
+    }
+    for (int j=0;j<Struct[i].Bonds.size();j++)
+    {
+      ofile << " "; //Avoids trailing spaces
+      ofile << setw(6) << (Struct[i].Bonds[j]+1);
+    }
+    ofile.copyfmt(cout);
+    ofile << '\n';
+  }
+  ofile.flush();
+  ofile.close();
+  //Run MM
+  call.str("");
+  call << "testgrad " << "QMMM";
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+  }
+  call << ".xyz Y N > QMMM";
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+  }
+  call << ".grad";
+  sys = system(call.str().c_str());
+  //Collect MM forces
+  fstream MMgrad; //QMMM output
+  //Open files
+  call.str("");
+  call << "QMMM";
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+  }
+  call << ".grad";
+  MMgrad.open(call.str().c_str(),ios_base::in);
+  //Read derivatives
+  bool GradDone = 0;
+  while ((!MMgrad.eof()) and (!GradDone))
+  {
+    getline(MMgrad,dummy);
+    stringstream line(dummy);
+    line >> dummy;
+    if (dummy == "Type")
+    {
+      line >> dummy >> dummy;
+      if (dummy == "dE/dX")
+      {
+        GradDone = 1; //Not grad school, that lasts forever
+        getline(MMgrad,dummy);
+        for (int i=0;i<(Nqm+Npseudo);i++)
+        {
+          double Fx = 0;
+          double Fy = 0;
+          double Fz = 0;
+          //Convoluted, but "easy"
+          getline(MMgrad,dummy);
+          stringstream line(dummy);
+          line >> dummy >> dummy; //Clear junk
+          line >> Fx;
+          line >> Fy;
+          line >> Fz;
+          //Switch to a.u. and change sign
+          Forces[i].x += -1*Fx*kcal2eV;
+          Forces[i].y += -1*Fy*kcal2eV;
+          Forces[i].z += -1*Fz*kcal2eV;
+        }
+      }
+    }
+  }
+  MMgrad.close();
+  //Clean up files
+  call.str("");
+  call << "rm -f ";
+  call << "QMMM";
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+  }
+  call << ".*";
+  sys = system(call.str().c_str());
+  //Return
   return Emm;
 };
 

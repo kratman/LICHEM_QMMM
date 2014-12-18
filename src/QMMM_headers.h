@@ -48,7 +48,8 @@ const double StepMin = 0.01; //Minimum step size
 const double StepMax = 1.0; //Maximum step size
 const double Centratio= 5.0; //Scales 'step' for centroids
 const int Acc_Check = 5000; //Eq steps before checking accratio
-const double OptTol = 1e-4; //Criteria to end the optimization
+const double MMOptTol = 1e-4; //Criteria to end the optimization
+const double QMOptTol = 1e-6; //Criteria to end the optimization
 const double SteepStep = 0.075; //Steepest descent step size (Ang)
 
 //Move Probabilities for PIMC
@@ -203,6 +204,10 @@ double GaussianForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 double PsiWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
 double PsiForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+
+void FLUKESteepest(vector<QMMMAtom>&,QMMMSettings&,int);
+
+void FLUKEBFGS(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double SpringEnergy(double,double);
 

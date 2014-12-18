@@ -397,7 +397,7 @@ int main(int argc, char* argv[])
         }
       }
       RMSdiff /= 3*Natoms;
-      if (RMSdiff <= OptTol)
+      if (RMSdiff <= MMOptTol)
       {
         RMSdiff = 0.0;
         OptDone = 1;
