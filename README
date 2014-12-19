@@ -27,7 +27,7 @@ Simulation mode timeline and checklist:
  Single-point energy: Done
  NVT/NPT Monte Carlo: Done
  NVT/NPT PI Monte Carlo: Done
- Geometry optimizations: In progress (debugging)
+ Geometry optimizations: Done (debugging)
  Reaction pathways: Future
 
 Currently, the binary and user's manual are not included in the repository.
