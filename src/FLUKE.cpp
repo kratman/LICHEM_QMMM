@@ -282,7 +282,6 @@ int main(int argc, char* argv[])
   //Optimize structure (optional)
   if (OptSim == 1)
   {
-    cout << '\n';
     int optct = 0; //Counter for optimization steps
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
@@ -416,7 +415,6 @@ int main(int argc, char* argv[])
   //Steepest descent optimization
   if (SteepSim == 1)
   {
-    cout << '\n';
     int optct = 0; //Counter for optimization steps
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);

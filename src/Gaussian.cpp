@@ -1159,11 +1159,80 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
       call << "QMMM_" << Bead;
     }
     sys = system(call.str().c_str());
-    //Read new structure and charges
-    cout << '\n';
-    cout << "Exiting to debug...";
-    cout << endl;
-    exit(0);
+    //Read new structure
+    call.str("");
+    call << "QMMM";
+    if (Bead != -1)
+    {
+      call << "_" << Bead;
+    }
+    call << ".log";
+    ifile.open(call.str().c_str(),ios_base::in);
+    bool Optfinished = 0;
+    while (!ifile.eof())
+    {
+      //This loop will find the last geometry even if the calculation
+      //did not complete
+      getline(ifile,dummy);
+      stringstream line(dummy);
+      line >> dummy;
+      if (dummy == "Center")
+      {
+        line >> dummy >> dummy;
+        line >> dummy;
+        if (dummy == "Coordinates")
+        {
+          //Clear junk
+          getline(ifile,dummy);
+          getline(ifile,dummy);
+          for (int i=0;i<Natoms;i++)
+          {
+            if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+            {
+              //Get new coordinates
+              getline(ifile,dummy);
+              stringstream line(dummy);
+              line >> dummy >> dummy;
+              line >> dummy;
+              line >> Struct[i].x;
+              line >> Struct[i].y;
+              line >> Struct[i].z;
+            }
+          }
+        }
+      }
+      if (dummy == "--")
+      {
+        line >> dummy;
+        if (dummy == "Stationary")
+        {
+          Optfinished = 1;
+        }
+      }
+    }
+    //Clean up files
+    call.str("");
+    call << "rm -f QMMM";
+    if (Bead != -1)
+    {
+      call << "_" << Bead;
+    }
+    call << ".com ";
+    call << "QMMM";
+    if (Bead != -1)
+    {
+      call << "_" << Bead;
+    }
+    call << ".log";
+    sys = system(call.str().c_str());
+    //Calculate new point-charges
+    GaussianCharges(Struct,QMMMOpts,Bead);
+    if (Optfinished == 0)
+    {
+      cout << "Warning: Optimization did not converge!!!";
+      cout << '\n';
+      E = 10000.0; //Large number to reject step
+    }
   }
   if (RunTyp == "Enrg")
   {

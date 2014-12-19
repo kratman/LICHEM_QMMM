@@ -123,12 +123,15 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     RMSforce = sqrt(RMSforce);
     stepct += 1;
     //Print progress
+    call.copyfmt(cout); //Save settings
+    cout << setprecision(8);
     cout << "    QM Step: " << (stepct-1);
     cout << " | RMS Disp: " << RMSdiff;
     cout << '\n';
     cout << "    Max force: " << MAXforce;
     cout << " | RMS force: " << RMSforce;
     cout << '\n' << endl;
+    cout.copyfmt(call); //Return to previous settings
   }
   //Calculate new point charges
   if (QMMM == 1)

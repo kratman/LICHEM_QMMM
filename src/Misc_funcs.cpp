@@ -789,7 +789,7 @@ void FlukePrintSettings(QMMMSettings& QMMMOpts)
     }
     cout << " Monte Carlo" << '\n' << '\n';
   }
-  if ((OptSim == 1) or (SteepSim == 1)
+  if ((OptSim == 1) or (SteepSim == 1))
   {
     cout << '\n';
     cout << "Simulation mode: ";
