@@ -48,9 +48,6 @@ const double StepMin = 0.01; //Minimum step size
 const double StepMax = 1.0; //Maximum step size
 const double Centratio= 5.0; //Scales 'step' for centroids
 const int Acc_Check = 5000; //Eq steps before checking accratio
-const double MMOptTol = 1e-4; //Criteria to end the optimization
-const double QMOptTol = 1e-6; //Criteria to end the optimization
-const double SteepStep = 0.075; //Steepest descent step size (Ang)
 
 //Move Probabilities for PIMC
 //Note: These probabilities allow for multi-particle moves
@@ -108,6 +105,7 @@ bool QMMM = 0; //Flag for the type of wrapper
 bool MMonly = 0; //Flag for the type of wrapper
 bool QMonly = 0; //Flag for the type of wrapper
 bool OptSim = 0; //Flag for energy minimization
+bool SteepSim = 0; //Flag for steepest descent minimization
 bool PIMCSim = 0; //Flag for Monte Carlo
 bool SinglePoint = 0; //Flag for energy calculation
 bool GauExternal = 0; //Runs Gaussian with External
@@ -172,6 +170,9 @@ struct QMMMSettings
   string PrintMode; //Print all beads or just centroids
   //Input needed for optimizations
   int MaxOptSteps; //Maximum iterative optimization steps
+  double MMOptTol; //Criteria to end the optimization
+  double QMOptTol; //Criteria to end the optimization
+  double SteepStep; //Steepest descent step size (Ang)
 };
 
 //Function declarations

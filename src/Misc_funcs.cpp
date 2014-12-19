@@ -484,6 +484,7 @@ void ReadFlukeInput(fstream& xyzfile, fstream& connectfile,
     //Read MC and PIMC options
     OptSim = 0;
     PIMCSim = 1;
+    SteepSim = 0;
     SinglePoint = 0;
     regionfile >> dummy >> dummy; //Ensemble
     if ((dummy == "NVT") or (dummy == "nvt"))
@@ -534,6 +535,7 @@ void ReadFlukeInput(fstream& xyzfile, fstream& connectfile,
     //Read energy minimization options
     OptSim = 1;
     PIMCSim = 0;
+    SteepSim = 0;
     SinglePoint = 0;
     QMMMOpts.Temp = 0;
     QMMMOpts.Beta = 0;
@@ -545,6 +547,30 @@ void ReadFlukeInput(fstream& xyzfile, fstream& connectfile,
     QMMMOpts.Nprint = 0;
     QMMMOpts.PrintMode = "COM";
     QMMMOpts.Ensemble = "N/A";
+    regionfile >> dummy >> QMMMOpts.QMOptTol;
+    regionfile >> dummy >> QMMMOpts.MMOptTol;
+    regionfile >> dummy >> QMMMOpts.MaxOptSteps;
+  }
+  if ((dummy == "Steep") or (dummy == "steep") or
+  (dummy == "SD") or (dummy == "sd"))
+  {
+    //Read energy minimization options
+    OptSim = 0;
+    PIMCSim = 0;
+    SteepSim = 1;
+    SinglePoint = 0;
+    QMMMOpts.Temp = 0;
+    QMMMOpts.Beta = 0;
+    QMMMOpts.Press = 0;
+    QMMMOpts.Neq = 0;
+    QMMMOpts.Nsteps = 0;
+    QMMMOpts.Nbeads = 0;
+    QMMMOpts.accratio = 0;
+    QMMMOpts.Nprint = 0;
+    QMMMOpts.PrintMode = "COM";
+    QMMMOpts.Ensemble = "N/A";
+    regionfile >> dummy >> QMMMOpts.QMOptTol;
+    regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
   }
   if ((dummy == "SP") or (dummy == "sp") or
@@ -553,6 +579,7 @@ void ReadFlukeInput(fstream& xyzfile, fstream& connectfile,
     //Read energy minimization options
     OptSim = 0;
     PIMCSim = 0;
+    SteepSim = 0;
     SinglePoint = 1;
     QMMMOpts.Temp = 0;
     QMMMOpts.Beta = 0;

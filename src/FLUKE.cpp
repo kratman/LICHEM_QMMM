@@ -397,7 +397,8 @@ int main(int argc, char* argv[])
         }
       }
       RMSdiff /= 3*Natoms;
-      if (RMSdiff <= MMOptTol)
+      RMSdiff = sqrt(RMSdiff);
+      if (RMSdiff <= QMMMOpts.MMOptTol)
       {
         RMSdiff = 0.0;
         OptDone = 1;
@@ -410,6 +411,126 @@ int main(int argc, char* argv[])
     cout << endl;
   }
   //End of section
+
+  //Steepest descent optimization
+  if (SteepSim == 1)
+  {
+    int optct = 0; //Counter for optimization steps
+    //Print initial structure
+    Print_traj(Struct,outfile,QMMMOpts);
+    //Calculate initial energy
+    SumE = 0; //Clear old energies
+    if (Gaussian == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,-1);
+      QMTime += (unsigned)time(0)-tstart;
+    }
+    if (Psi4 == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += PsiWrapper("Enrg",Struct,QMMMOpts,-1);
+      QMTime += (unsigned)time(0)-tstart;
+      //Clean up annoying useless files
+      int sys = system("rm -f psi.*");
+    }
+    if (Tinker == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += TinkerWrapper("Enrg",Struct,QMMMOpts,-1);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    if (Amber == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += AmberWrapper("Enrg",Struct,QMMMOpts,-1);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    cout << " | Step: ";
+    cout << optct << " | Energy: ";
+    cout << SumE << " eV";
+    cout << endl; //Print progress
+    //Run optimization
+    bool OptDone = 0;
+    while (OptDone == 0)
+    {
+      optct += 1;
+      //Copy structure
+      OldStruct = Struct;
+      //Run optimization
+      FLUKESteepest(Struct,QMMMOpts,-1);
+      if (Tinker == 1)
+      {
+        int tstart = (unsigned)time(0);
+        SumE = TinkerWrapper("Opt",Struct,QMMMOpts,-1);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      if (Amber == 1)
+      {
+        int tstart = (unsigned)time(0);
+        SumE = AmberWrapper("Opt",Struct,QMMMOpts,-1);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      //Print Optimized geometry
+      Print_traj(Struct,outfile,QMMMOpts);
+      //Calculate energy
+      SumE = 0; //Clear old energies
+      if (Gaussian == 1)
+      {
+        int tstart = (unsigned)time(0);
+        SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,-1);
+        QMTime += (unsigned)time(0)-tstart;
+      }
+      if (Psi4 == 1)
+      {
+        int tstart = (unsigned)time(0);
+        SumE += PsiWrapper("Enrg",Struct,QMMMOpts,-1);
+        QMTime += (unsigned)time(0)-tstart;
+        //Clean up annoying useless files
+        int sys = system("rm -f psi.*");
+      }
+      if (Tinker == 1)
+      {
+        int tstart = (unsigned)time(0);
+        SumE += TinkerWrapper("Enrg",Struct,QMMMOpts,-1);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      if (Amber == 1)
+      {
+        int tstart = (unsigned)time(0);
+        SumE += AmberWrapper("Enrg",Struct,QMMMOpts,-1);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      //Check convergance of the MM region
+      cout << " | Step: ";
+      cout << optct << " | Energy: ";
+      cout << SumE << " eV ";
+      double RMSdiff = 0;
+      for (int i=0;i<Natoms;i++)
+      {
+        if (Struct[i].MMregion == 1)
+        {
+          double dx = Struct[i].x-OldStruct[i].x;
+          double dy = Struct[i].y-OldStruct[i].y;
+          double dz = Struct[i].z-OldStruct[i].z;
+          RMSdiff += dx*dx+dy*dy+dz*dz;
+        }
+      }
+      RMSdiff /= 3*Natoms;
+      RMSdiff = sqrt(RMSdiff);
+      if (RMSdiff <= QMMMOpts.MMOptTol)
+      {
+        RMSdiff = 0.0;
+        OptDone = 1;
+      }
+      cout << " | RMSdev: " << RMSdiff;
+      cout << '\n';
+    }
+    cout << '\n';
+    cout << "Optimization complete.";
+    cout << endl;
+  }
+  //End of sections
 
   //Clean up
   if (Gaussian == 1)
