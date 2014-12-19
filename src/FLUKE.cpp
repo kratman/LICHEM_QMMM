@@ -408,7 +408,7 @@ int main(int argc, char* argv[])
     }
     cout << '\n';
     cout << "Optimization complete.";
-    cout << endl;
+    cout << '\n' << endl;
   }
   //End of section
 
@@ -528,7 +528,7 @@ int main(int argc, char* argv[])
     }
     cout << '\n';
     cout << "Optimization complete.";
-    cout << endl;
+    cout << '\n' << endl;
   }
   //End of sections
 

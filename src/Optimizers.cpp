@@ -16,12 +16,20 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
   //Steepest descent optimizer
+  int sys;
+  stringstream call;
+  call.copyfmt(cout);
+  string dummy;
   double RMSdiff = 1;
   double RMSforce = 1;
+  double MAXforce = 1;
   int stepct = 0;
+  fstream qmfile;
+  qmfile.open("QMOpt.xyz",ios_base::out);
   //Optimize structure
-  while (((RMSdiff >= QMMMOpts.QMOptTol) and (RMSforce >= QMMMOpts.QMOptTol))
-        or (stepct > QMMMOpts.MaxOptSteps))
+  while (((RMSdiff >= QMMMOpts.QMOptTol) and (RMSforce >= QMMMOpts.QMOptTol)
+        and (MAXforce >= QMMMOpts.QMOptTol)) and
+        (stepct <= QMMMOpts.MaxOptSteps))
   {
     double E = 0;
     RMSforce = 0;
@@ -73,13 +81,28 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         ct += 1;
       }
     }
+    //Print structure
+    Print_traj(Struct,qmfile,QMMMOpts);
     //Check convergence
+    MAXforce = 0;
     for (int i=0;i<(Nqm+Npseudo);i++)
     {
       //Calculate RMS forces
       double Fx = Forces[i].x;
       double Fy = Forces[i].y;
       double Fz = Forces[i].z;
+      if (abs(Fx) > MAXforce)
+      {
+        MAXforce = abs(Fx);
+      }
+      if (abs(Fy) > MAXforce)
+      {
+        MAXforce = abs(Fy);
+      }
+      if (abs(Fz) > MAXforce)
+      {
+        MAXforce = abs(Fz);
+      }
       RMSforce += Fx*Fx+Fy*Fy+Fz*Fz;
     }
     for (int i=0;i<Natoms;i++)
@@ -98,7 +121,19 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     RMSforce /= 3*(Nqm+Npseudo);
     RMSforce = sqrt(RMSforce);
     stepct += 1;
+    //Print progress
+    cout << "    QM Step: " << (stepct-1);
+    cout << " | RMS Disp: " << RMSdiff;
+    cout << '\n';
+    cout << "    Max force: " << MAXforce;
+    cout << " | RMS force: " << RMSforce;
+    cout << '\n' << endl;
   }
+  //Clean up files
+  call.str("");
+  call << "rm -f QMOpt.xyz";
+  sys = system(call.str().c_str());
+  //Return for MM optimization
   return;
 };
 

@@ -162,6 +162,14 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     tmp.z = 0;
     Forces.push_back(tmp);
   }
+  call.str("");
+  call << "QMMM";
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+  }
+  call << ".log";
+  QMlog.open(call.str().c_str(),ios_base::in);
   bool GradDone = 0;
   while ((!QMlog.eof()) and (!GradDone))
   {
@@ -741,9 +749,9 @@ void ExternalGaussian(int& argc, char**& argv)
   GauOutput << '\n';
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
-    GauOutput << setw(20) << Forces[i].x;
-    GauOutput << setw(20) << Forces[i].y;
-    GauOutput << setw(20) << Forces[i].z;
+    GauOutput << setw(20) << (-1*Forces[i].x);
+    GauOutput << setw(20) << (-1*Forces[i].y);
+    GauOutput << setw(20) << (-1*Forces[i].z);
     GauOutput << '\n';
   }
   GauOutput << setw(20) << 0.0; //Polarizability
@@ -877,7 +885,7 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     call << "%Mem=" << QMMMOpts.RAM << "GB" << '\n';
     call << "%NprocShared=" << Ncpus << '\n';
     call << "%NoSave" << '\n'; //Deletes files
-    call << "#P " << "external=(\"FLUKE -GauExtern ";
+    call << "#P " << "external=\"FLUKE -GauExtern ";
     call << "QMMM"; //Just the stub
     if (Bead != -1)
     {
@@ -887,10 +895,11 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     call << " -n " << Ncpus;
     call << " -c " << confilename;
     call << " -r " << regfilename;
-    call << "\",IOFchk)" << '\n';
+    call << "\"" << '\n';
     call << "Symmetry=None Opt=(MaxCycles=";
     call << QMMMOpts.MaxOptSteps;
-    call << ",MaxStep=15)" << '\n';
+    call << ",MaxStep=" << (30*QMMMOpts.SteepStep);
+    call << ")" << '\n';
     call << '\n'; //Blank line
     call << "QMMM" << '\n' << '\n'; //Dummy title
     call << QMMMOpts.Charge << " " << QMMMOpts.Spin << '\n';

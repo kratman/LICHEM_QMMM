@@ -547,6 +547,7 @@ void ReadFlukeInput(fstream& xyzfile, fstream& connectfile,
     QMMMOpts.Nprint = 0;
     QMMMOpts.PrintMode = "COM";
     QMMMOpts.Ensemble = "N/A";
+    regionfile >> dummy >> QMMMOpts.SteepStep;
     regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
@@ -569,6 +570,7 @@ void ReadFlukeInput(fstream& xyzfile, fstream& connectfile,
     QMMMOpts.Nprint = 0;
     QMMMOpts.PrintMode = "COM";
     QMMMOpts.Ensemble = "N/A";
+    regionfile >> dummy >> QMMMOpts.SteepStep;
     regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
