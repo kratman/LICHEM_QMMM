@@ -21,6 +21,25 @@ double PsiForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   return Eqm;
 };
 
+void PsiCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
+{
+  //Function to update QM point charges
+  int sys;
+  fstream ofile,ifile;
+  string dummy;
+  stringstream call;
+  call.copyfmt(cout);
+  //Construct input
+  
+  //Run QM calculation
+  
+  //Extract charges
+  
+  //Clean up files
+  
+  return;
+};
+
 //QM wrapper functions
 double PsiWrapper(string RunTyp, vector<QMMMAtom>& Struct,
        QMMMSettings& QMMMOpts, int Bead)

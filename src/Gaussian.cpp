@@ -53,8 +53,8 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
       //Read pseudo potential
       call << "Pseudo=Read ";
     }
-    call << "Charge=angstroms "; //Read charges
-    call << "Population=(MK,ReadRadii)" << '\n';
+    call << "Charge=angstroms"; //Read charges
+    call << '\n';
   }
   call << '\n'; //Blank line
   call << "QMMM" << '\n' << '\n'; //Dummy title
@@ -337,8 +337,8 @@ void ExternalGaussian(int& argc, char**& argv)
       //Read pseudo potential
       call << "Pseudo=Read ";
     }
-    call << "Charge=angstroms "; //Read charges
-    call << "Population=(MK,ReadRadii)" << '\n';
+    call << "Charge=angstroms"; //Read charges
+    call << '\n';
   }
   call << '\n'; //Blank line
   call << "QMMM" << '\n' << '\n'; //Dummy title
@@ -814,6 +814,202 @@ void ExternalGaussian(int& argc, char**& argv)
   return;
 };
 
+void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
+     int Bead)
+{
+  //Function to update QM point charges
+  int sys;
+  fstream ofile,ifile;
+  string dummy;
+  stringstream call;
+  call.copyfmt(cout);
+  //Construct input
+  call.str("");
+  call << "QMMM";
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+  }
+  call << ".com";
+  ofile.open(call.str().c_str(),ios_base::out);
+  call.str("");
+  call << "%chk=QMMM";
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+  }
+  call << ".chk";
+  call << '\n';
+  call << "%Mem=" << QMMMOpts.RAM << "GB" << '\n';
+  call << "%NprocShared=" << Ncpus << '\n';
+  call << "%NoSave" << '\n'; //Deletes files
+  call << "#P " << QMMMOpts.Func << "/";
+  call << QMMMOpts.Basis << " SP Symmetry=None" << '\n';
+  if (QMMM == 1)
+  {
+    if (Npseudo > 0)
+    {
+      //Read pseudo potential
+      call << "Pseudo=Read ";
+    }
+    call << "Charge=angstroms "; //Read charges
+    call << "Population(MK,ReadRadii)";
+    call << '\n';
+  }
+  call << '\n';
+  call << "QMMM" << '\n' << '\n'; //Dummy title
+  call << QMMMOpts.Charge << " " << QMMMOpts.Spin << '\n';
+  for (int i=0;i<Natoms;i++)
+  {
+    if (Struct[i].QMregion == 1)
+    {
+      call << Struct[i].QMTyp;
+      if (Bead == -1)
+      {
+        call << fixed; //Forces numbers to be floats
+        call << " " << setprecision(12) << Struct[i].x;
+        call << " " << setprecision(12) << Struct[i].y;
+        call << " " << setprecision(12) << Struct[i].z;
+      }
+      if (Bead != -1)
+      {
+        call << fixed; //Forces numbers to be floats
+        call << " " << setprecision(12) << Struct[i].P[Bead].x;
+        call << " " << setprecision(12) << Struct[i].P[Bead].y;
+        call << " " << setprecision(12) << Struct[i].P[Bead].z;
+      }
+      call.copyfmt(cout);
+      call << '\n';
+    }
+    if (Struct[i].PAregion == 1)
+    {
+      call << "F";
+      if (Bead == -1)
+      {
+        call << fixed; //Forces numbers to be floats
+        call << " " << setprecision(12) << Struct[i].x;
+        call << " " << setprecision(12) << Struct[i].y;
+        call << " " << setprecision(12) << Struct[i].z;
+      }
+      if (Bead != -1)
+      {
+        call << fixed; //Forces numbers to be floats
+        call << " " << setprecision(12) << Struct[i].P[Bead].x;
+        call << " " << setprecision(12) << Struct[i].P[Bead].y;
+        call << " " << setprecision(12) << Struct[i].P[Bead].z;
+      }
+      call.copyfmt(cout);
+      call << '\n';
+    }
+  }
+  call << '\n'; //Blank line needed
+  //Add the MM field
+  if ((CHRG == 1) and (QMMM == 1))
+  {
+    for (int i=0;i<Natoms;i++)
+    {
+      if (Struct[i].MMregion == 1)
+      {
+        if (Bead == -1)
+        {
+          call << fixed; //Forces numbers to be floats
+          call << " " << setprecision(12) << Struct[i].x;
+          call << " " << setprecision(12) << Struct[i].y;
+          call << " " << setprecision(12) << Struct[i].z;
+        }
+        if (Bead != -1)
+        {
+          call << fixed; //Forces numbers to be floats
+          call << " " << setprecision(12) << Struct[i].P[Bead].x;
+          call << " " << setprecision(12) << Struct[i].P[Bead].y;
+          call << " " << setprecision(12) << Struct[i].P[Bead].z;
+        }
+        call << " " << setprecision(12) << Struct[i].q;
+        call.copyfmt(cout);
+        call << '\n';
+      }
+    }
+    call << '\n'; //Blank line needed
+  }
+  //Add basis set information from the BASIS file
+  ifile.open("BASIS",ios_base::in);
+  if (ifile.good())
+  {
+    while (!ifile.eof())
+    {
+      //Copy BASIS line by line, if BASIS exists
+      getline(ifile,dummy);
+      call << dummy << '\n';
+    }
+    ifile.close();
+    call << '\n'; //Blank line needed
+  }
+  //Write Gaussian input
+  ofile << call.str();
+  ofile.close();
+  //Run QM calculation
+  call.str("");
+  call << "g09 QMMM";
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+  }
+  sys = system(call.str().c_str());
+  //Extract charges
+  call.str("");
+  call << "QMMM";
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+  }
+  call << ".log";
+  ifile.open(call.str().c_str(),ios_base::in);
+  while (!ifile.eof())
+  {
+    getline(ifile,dummy);
+    stringstream line(dummy);
+    line >> dummy;
+    if (dummy == "ESP")
+    {
+      line >> dummy;
+      if (dummy == "charges:")
+      {
+        getline(ifile,dummy);
+        for (int i=0;i<Natoms;i++)
+        {
+          if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+          {
+            //Count through all atoms in the QM calculations
+            getline(ifile,dummy);
+            if (Struct[i].QMregion == 1)
+            {
+              //Only collect charges for QM atoms
+              stringstream line(dummy);
+              line >> dummy >> dummy;
+              line >> Struct[i].q;
+            }
+          }
+        }
+      }
+    }
+  }
+  //Clean up files
+  call.str("");
+  call << "rm -f QMMM";
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+  }
+  call << ".com QMMM";
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+  }
+  call << ".log";
+  sys = system(call.str().c_str());
+  return;
+};
+
 //QM wrappers
 double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
        QMMMSettings& QMMMOpts, int Bead)
@@ -1004,8 +1200,8 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
         //Read pseudo potential
         call << "Pseudo=Read ";
       }
-      call << "Charge=angstroms "; //Read charges
-      call << "Population=(MK,ReadRadii)" << '\n';
+      call << "Charge=angstroms"; //Read charges
+      call << '\n';
     }
     call << '\n';
     call << "QMMM" << '\n' << '\n'; //Dummy title
@@ -1014,11 +1210,6 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     {
       if (Struct[i].QMregion == 1)
       {
-        if (QMMM == 1)
-        {
-          //Hack to calculate QMMM energies
-          Struct[i].q = 0;
-        }
         call << Struct[i].QMTyp;
         if (Bead == -1)
         {

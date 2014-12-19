@@ -27,8 +27,9 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   fstream qmfile;
   qmfile.open("QMOpt.xyz",ios_base::out);
   //Optimize structure
-  while (((RMSdiff >= QMMMOpts.QMOptTol) and (RMSforce >= QMMMOpts.QMOptTol)
-        and (MAXforce >= QMMMOpts.QMOptTol)) and
+  while (((RMSdiff >= QMMMOpts.QMOptTol) or
+        (RMSforce >= (100*QMMMOpts.QMOptTol)) or
+        (MAXforce >= (200*QMMMOpts.QMOptTol))) and
         (stepct <= QMMMOpts.MaxOptSteps))
   {
     double E = 0;
@@ -50,13 +51,13 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (Gaussian == 1)
     {
       int tstart = (unsigned)time(0);
-      E += GaussianForces(Struct,Forces,QMMMOpts,-1);
+      E += GaussianForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
     }
     if (Psi4 == 1)
     {
       int tstart = (unsigned)time(0);
-      E += PsiForces(Struct,Forces,QMMMOpts,-1);
+      E += PsiForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
@@ -65,7 +66,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (Tinker == 1)
     {
       int tstart = (unsigned)time(0);
-      E += TinkerForces(Struct,Forces,QMMMOpts,-1);
+      E += TinkerForces(Struct,Forces,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
     //Determine new structure
@@ -128,6 +129,24 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cout << "    Max force: " << MAXforce;
     cout << " | RMS force: " << RMSforce;
     cout << '\n' << endl;
+  }
+  //Calculate new point charges
+  if (QMMM == 1)
+  {
+    if (Gaussian == 1)
+    {
+      int tstart = (unsigned)time(0);
+      GaussianCharges(Struct,QMMMOpts,Bead);
+      QMTime += (unsigned)time(0)-tstart;
+    }
+    if (Psi4 == 1)
+    {
+      int tstart = (unsigned)time(0);
+      PsiCharges(Struct,QMMMOpts,Bead);
+      QMTime += (unsigned)time(0)-tstart;
+      //Clean up annoying useless files
+      int sys = system("rm -f psi.*");
+    }
   }
   //Clean up files
   call.str("");

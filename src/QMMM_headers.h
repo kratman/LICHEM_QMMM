@@ -202,9 +202,13 @@ void ExternalGaussian(int&,char**&);
 
 double GaussianForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
+void GaussianCharges(vector<QMMMAtom>&,QMMMSettings&,int);
+
 double PsiWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
 double PsiForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+
+void PsiCharges(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void FLUKESteepest(vector<QMMMAtom>&,QMMMSettings&,int);
 

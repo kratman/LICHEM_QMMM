@@ -282,6 +282,7 @@ int main(int argc, char* argv[])
   //Optimize structure (optional)
   if (OptSim == 1)
   {
+    cout << '\n';
     int optct = 0; //Counter for optimization steps
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
@@ -313,7 +314,7 @@ int main(int argc, char* argv[])
       SumE += AmberWrapper("Enrg",Struct,QMMMOpts,-1);
       MMTime += (unsigned)time(0)-tstart;
     }
-    cout << " | Step: ";
+    cout << " | Opt. Step: ";
     cout << optct << " | Energy: ";
     cout << SumE << " eV";
     cout << endl; //Print progress
@@ -382,7 +383,7 @@ int main(int argc, char* argv[])
         MMTime += (unsigned)time(0)-tstart;
       }
       //Check convergance of the MM region
-      cout << " | Step: ";
+      cout << " | Opt. Step: ";
       cout << optct << " | Energy: ";
       cout << SumE << " eV ";
       double RMSdiff = 0;
@@ -415,6 +416,7 @@ int main(int argc, char* argv[])
   //Steepest descent optimization
   if (SteepSim == 1)
   {
+    cout << '\n';
     int optct = 0; //Counter for optimization steps
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
@@ -446,7 +448,7 @@ int main(int argc, char* argv[])
       SumE += AmberWrapper("Enrg",Struct,QMMMOpts,-1);
       MMTime += (unsigned)time(0)-tstart;
     }
-    cout << " | Step: ";
+    cout << " | Opt. Step: ";
     cout << optct << " | Energy: ";
     cout << SumE << " eV";
     cout << endl; //Print progress
@@ -502,7 +504,7 @@ int main(int argc, char* argv[])
         MMTime += (unsigned)time(0)-tstart;
       }
       //Check convergance of the MM region
-      cout << " | Step: ";
+      cout << " | Opt. Step: ";
       cout << optct << " | Energy: ";
       cout << SumE << " eV ";
       double RMSdiff = 0;

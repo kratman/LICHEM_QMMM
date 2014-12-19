@@ -491,7 +491,14 @@ double TinkerWrapper(string RunTyp, vector<QMMMAtom>& Struct,
         if (Struct[i].QMregion == 1)
         {
           ofile << "charge " << (MaxTinkerNum+ct) << " ";
-          ofile << Struct[i].q;
+          if (RunTyp == "Opt")
+          {
+            ofile << Struct[i].q;
+          }
+          if (RunTyp == "Enrg")
+          {
+            ofile << 0.0;
+          }
           ofile << '\n';
           ct += 1;
         }
