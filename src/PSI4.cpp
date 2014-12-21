@@ -23,7 +23,180 @@ double PsiForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call.copyfmt(cout);
   call.str("");
   double Eqm = 0;
-  
+  //Set up memory
+  call << "memory " << QMMMOpts.RAM;
+  call << " gb" << '\n' << '\n';
+  //Set up globals
+  call << "set globals {" << '\n';
+  call << "  basis ";
+  call << QMMMOpts.Basis << '\n';
+  call << "  guess sad" << '\n';
+  call << "  ints_tolerance 1.0E-10" << '\n';
+  call << "  scf_type df" << '\n';
+  call << "}" << '\n' << '\n';
+  //Set up molecules
+  call << "molecule QMregion {" << '\n';
+  call << "    " << QMMMOpts.Charge;
+  call << " " << QMMMOpts.Spin << '\n';
+  for (int i=0;i<Natoms;i++)
+  {
+    if (Struct[i].QMregion == 1)
+    {
+      call << "    " << Struct[i].QMTyp;
+      if (Bead == -1)
+      {
+        call << "    " << Struct[i].x;
+        call << "    " << Struct[i].y;
+        call << "    " << Struct[i].z;
+        call << '\n';
+      }
+      if (Bead != -1)
+      {
+        call << "    " << Struct[i].P[Bead].x;
+        call << "    " << Struct[i].P[Bead].y;
+        call << "    " << Struct[i].P[Bead].z;
+        call << '\n';
+      }
+    }
+  }
+  call << "    symmetry c1" << '\n';
+  call << "    no_reorient" << '\n';
+  call << "    no_com" << '\n';
+  call << "}" << '\n' << '\n';
+  //Set up MM field
+  if ((QMMM == 1) and (CHRG == 1))
+  {
+    call << "Chrgfield = QMMM()" << '\n';
+    for (int i=0;i<Natoms;i++)
+    {
+      if (Struct[i].MMregion == 1)
+      {
+        call << "Chrgfield.extern.addCharge(";
+        call << Struct[i].q << ",";
+        if (Bead == -1)
+        {
+          call << Struct[i].x << ",";
+          call << Struct[i].y << ",";
+          call << Struct[i].z;
+        }
+        if (Bead != -1)
+        {
+          call << Struct[i].P[Bead].x << ",";
+          call << Struct[i].P[Bead].y << ",";
+          call << Struct[i].P[Bead].z;
+        }
+        call << ")" << '\n';
+      }
+    }
+    call << "psi4.set_global_option_python(\'EXTERN\',Chrgfield.extern)";
+    call << '\n';
+    call << '\n';
+  }
+  //Set up charge calculation
+  call << "energy('" << QMMMOpts.Func << "')" << '\n';
+  call << "oeprop('MULLIKEN_CHARGES')" << '\n';
+  //Print file and call psi4
+  if (Bead == -1)
+  {
+    ofile.open("QMMM.dat",ios_base::out);
+    ofile << call.str() << endl;
+    ofile.close();
+  }
+  if (Bead != -1)
+  {
+    dummy = call.str();
+    call.str("");
+    call << "QMMM_" << Bead << ".dat";
+    ofile.open(call.str().c_str(),ios_base::out);
+    ofile << dummy << endl;
+    ofile.close();
+  }
+  call.str("");
+  call << "psi4 -n " << Ncpus;
+  call << "-u QMMM";
+  if (Bead == -1)
+  {
+    call << ".dat -o QMMM.out > QMMM.log";
+  }
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+    call << ".dat -o QMMM";
+    call << "_" << Bead;
+    call << ".out > QMMM";
+    call << "_" << Bead;
+    call << ".log";
+  }
+  sys = system(call.str().c_str());
+  //Extract charges
+  if (Bead == -1)
+  {
+    ifile.open("QMMM.out",ios_base::in);
+  }
+  if (Bead != -1)
+  {
+    call.str("");
+    call << "QMMM_" << Bead << ".out";
+    ifile.open(call.str().c_str(),ios_base::in);
+  }
+  while (!ifile.eof())
+  {
+    getline(ifile,dummy);
+    stringstream line(dummy);
+    line >> dummy;
+    if (dummy == "-Total")
+    {
+      line >> dummy;
+      if (dummy == "Gradient")
+      {
+        getline(ifile,dummy);
+	getline(ifile,dummy);
+        for (int i=0;i<(Nqm+Npseudo);i++)
+        {
+          double Fx = 0;
+          double Fy = 0;
+          double Fz = 0;
+          //Extract forces; Convoluted, but "easy"
+          getline(ifile,dummy);
+          stringstream line(dummy);
+          line >> dummy; //Clear junk
+          line >> Fx;
+          line >> Fy;
+          line >> Fz;
+          //Save forces
+          Forces[i].x += Fx*Har2eV/BohrRad;
+          Forces[i].y += Fy*Har2eV/BohrRad;
+          Forces[i].z += Fz*Har2eV/BohrRad;
+        }
+      }
+    }
+    line >> dummy;
+    if (dummy == "Final")
+    {
+      line >> dummy;
+      if (dummy == "Energy:")
+      {
+        line >> Eqm;
+      }
+    }
+  }
+  ifile.close();
+  //Clean up files
+  call.str("");
+  call << "rm -f ";
+  if (Bead == -1)
+  {
+    call << "QMMM.dat QMMM.out QMMM.log";
+  }
+  if (Bead != -1)
+  {
+    call << "QMMM_" << Bead << ".dat ";
+    call << "QMMM_" << Bead << ".out ";
+    call << "QMMM_" << Bead << ".log";
+  }
+  sys = system(call.str().c_str());
+  //Change units
+  Eqm *= Har2eV;
   return Eqm;
 };
 
