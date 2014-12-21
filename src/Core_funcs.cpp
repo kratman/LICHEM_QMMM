@@ -203,7 +203,7 @@ int RevTyping(string AtName)
   Typs.push_back("Te");
   Typs.push_back("I");
   Typs.push_back("Xe");
-  if (PIMCSim != 1)
+  if (FullParallel == 1)
   {
     //Optionally make loop parallel
     #pragma omp parallel for

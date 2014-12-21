@@ -101,6 +101,9 @@ user:\$ ./compile
  QM opt. & Yes & Yes & No & No & No \\
  MM opt. & No & No & Yes & Yes & Yes \\
  QMMM opt. & Yes & No & Yes & Yes & Yes \\ \hline
+ QM SD & Yes & Yes & No & No & No \\
+ MM SD & No & No & No & No & No \\
+ QMMM SD & Yes & Yes & Yes & Yes & Yes \\ \hline
  QM MC & Yes & Yes & No & No & No \\
  MM MC & No & No & Yes & Yes & Yes \\
  QMMM MC & Yes & Yes & Yes & Yes & Yes \\ \hline
@@ -112,8 +115,8 @@ user:\$ ./compile
  QMMM RP & Yes & No & Yes & Yes & Yes \\ \hline
  \end{tabular}
  \caption{Wrapper capabilities for single-point energy, geometry optimization,
- Monte Carlo (MC), path-integral Monte Carlo (PIMC) and reaction path (RP)
- calculations.}
+ steepest descent (SD), Monte Carlo (MC), path-integral Monte Carlo (PIMC) and
+ reaction path (RP) calculations.}
  \label{tab:WrapCap}
 \end{table}
 
@@ -130,11 +133,12 @@ relatively little effort.
 
 \subsection{Types of calculations}
 
-Single-point energies, geometry optimizations, reaction pathways, classical
-Monte Carlo, and path-integral Monte Carlo calculations can be performed using
-the QM and MM wrappers. Due to limitations of the software packages, not all
-calculations can currently be performed with all combinations of wrappers. For
-convenience, the capabilities are summarized in Table \ref{tab:WrapCap}. \\
+Single-point energies, geometry optimizations, steepest descent minimizations
+reaction pathways, classical Monte Carlo, and path-integral Monte Carlo
+calculations can be performed using the QM and MM wrappers. Due to limitations
+of the software packages, not all calculations can currently be performed with
+all combinations of wrappers. For convenience, the capabilities are summarized
+in Table \ref{tab:WrapCap}. \\
 
 Some additional restrictions are also present when there are bonds between
 the QM and MM regions. Currently only Gaussian can be used as a QM wrapper
@@ -285,7 +289,7 @@ MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
 Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
 
 Calculation\_type: Steep \\
-Opt\_step\_size: $<$Size of the maximum step size$>$ \\
+Opt\_step\_size: $<$Size of the maximum step size (ang.)$>$ \\
 QM\_opt\_tolerance: $<$Criteria to stop the QM optimization$>$\\
 MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
 Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
@@ -486,7 +490,11 @@ properties.
 
 \subsection{Polarizable force fields}
 
-
+Point-charges are often inadequate for representing the electrostatic field
+around a molecule. The field can be improved by assigning point-charges,
+dipoles, quadrapoles, and polarizabilities to the atoms. These force fields
+are more computationally expensive than standard point-charge force fields,
+however, the results can be much more accurate.
 
 \subsection{Frozen density force fields}
 

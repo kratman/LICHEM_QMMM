@@ -107,8 +107,10 @@ bool QMonly = 0; //Flag for the type of wrapper
 bool OptSim = 0; //Flag for energy minimization
 bool SteepSim = 0; //Flag for steepest descent minimization
 bool PIMCSim = 0; //Flag for Monte Carlo
+bool PathSim = 0; //Flag for reaction paths
 bool SinglePoint = 0; //Flag for energy calculation
 bool GauExternal = 0; //Runs Gaussian with External
+bool FullParallel = 1; //Flag to avoid OpenMP for PIMC and RP
 
 //Timers
 int StartTime = 0; //Time the calculation starts
@@ -249,6 +251,12 @@ void GetQuotes(vector<string>&);
 #include "PathIntegral.cpp"
 #include "ReactionPath.cpp"
 #include "Tink2FLUKE.cpp"
+#ifdef DEVCOMP
+#include "Real_Multipoles.cpp"
+#endif
+#ifndef DEVCOMP
+#include "Multipoles.cpp"
+#endif
 #include "Multipoles.cpp"
 #include "Optimizers.cpp"
 

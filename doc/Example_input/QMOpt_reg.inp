@@ -6,6 +6,9 @@ QM_Memory: 2.0
 QM_Charge: 0
 QM_Spin: 1
 Calculation_Type: Opt
+Opt_step_size: 0.01
+QM_opt_tolerance: 1e-4
+MM_opt_tolerance: 1e-2
 Max_Opt_Steps: 200
 PBC: No
 QM_atoms: 6

@@ -481,6 +481,7 @@ void ReadFlukeInput(fstream& xyzfile, fstream& connectfile,
   regionfile >> dummy >> dummy; //Calculation type
   if ((dummy == "PIMC") or (dummy == "pimc"))
   {
+    FullParallel = 0;
     //Read MC and PIMC options
     OptSim = 0;
     PIMCSim = 1;
@@ -706,9 +707,9 @@ void FlukeErrorChecker(QMMMSettings& QMMMOpts)
   {
     if (OptSim == 1)
     {
-      cout << " Error: Psi4 can only be used in pure QM calculations";
+      cout << " Error: QMMM PSI4 optimizations can only be performed with";
       cout << '\n';
-      cout << " or QMMM PIMC calculations.";
+      cout << " the native steepest descent or BFGS.";
       cout << '\n';
       DoQuit = 1;
     }
