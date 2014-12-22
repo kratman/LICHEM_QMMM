@@ -16,7 +16,7 @@
 void TINK2FLUKE(int& argc, char**& argv)
 {
   //Local variables
-  fstream tinkxyz, tinkkey, paramfile; //Input
+  fstream TINKxyz, TINKkey, paramfile; //Input
   fstream posfile, confile, regfile; //Output
   stringstream line;
   string dummy;
@@ -38,13 +38,13 @@ void TINK2FLUKE(int& argc, char**& argv)
     dummy = string(argv[i]);
     if (dummy == "-t")
     {
-      tinkxyz.open(argv[i+1],ios_base::in);
+      TINKxyz.open(argv[i+1],ios_base::in);
       cout << argv[i+1];
       cout << " ";
     }
     if (dummy == "-k")
     {
-      tinkkey.open(argv[i+1],ios_base::in);
+      TINKkey.open(argv[i+1],ios_base::in);
       cout << argv[i+1];
       cout << " ";
     }
@@ -66,7 +66,7 @@ void TINK2FLUKE(int& argc, char**& argv)
   }
   cout << "...";
   cout << '\n';
-  getline(tinkxyz,dummy);
+  getline(TINKxyz,dummy);
   line.str(dummy);
   line >> Natoms;
   line >> Nqm;
@@ -117,17 +117,17 @@ void TINK2FLUKE(int& argc, char**& argv)
     Froz.push_back(0); //Define all as active
   }
   //Find parameter file, active atoms, and inactive atoms
-  if (!tinkkey.good())
+  if (!TINKkey.good())
   {
     cout << '\n';
     cout << "Error: Could not read TINKER key file!";
     cout << '\n' << endl;
     exit(0);
   }
-  while (!tinkkey.eof())
+  while (!TINKkey.eof())
   {
     //Read key file line by line
-    getline(tinkkey,dummy);
+    getline(TINKkey,dummy);
     stringstream line(dummy);
     //Read string item by item
     line >> dummy;
@@ -224,7 +224,7 @@ void TINK2FLUKE(int& argc, char**& argv)
   if (PBCon == 1)
   {
     //Grab whole line
-    getline(tinkxyz,dummy);
+    getline(TINKxyz,dummy);
     stringstream line(dummy);
     //Read box lengths
     line >> Lx >> Ly >> Lz;
@@ -359,7 +359,7 @@ void TINK2FLUKE(int& argc, char**& argv)
   posfile << Natoms << '\n' << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    getline(tinkxyz,dummy);
+    getline(TINKxyz,dummy);
     stringstream line(dummy);
     vector<string> fullline;
     while (line >> dummy)
@@ -460,8 +460,8 @@ void TINK2FLUKE(int& argc, char**& argv)
   cout << "Conversion complete.";
   cout << '\n';
   cout << endl;
-  tinkxyz.close();
-  tinkkey.close();
+  TINKxyz.close();
+  TINKkey.close();
   paramfile.close();
   posfile.close();
   confile.close();
