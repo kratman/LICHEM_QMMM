@@ -261,9 +261,9 @@ void ExternalGaussian(int& argc, char**& argv)
   fstream xyzfile,connectfile,regionfile;
   fstream GauInput,GauOutput,GauMsg,GauFchk,GauMatrix;
   fstream ofile,ifile;
-  string TinkKeyFile = "tinker.key";
-  int MaxTinkerNum = 3500;
-  int MaxTinkerClass = 100;
+  string TINKKeyFile = "TINKER.key";
+  int MaxTINKERNum = 3500;
+  int MaxTINKERClass = 100;
   //Read arguments
   for (int i=0;i<argc;i++)
   {
@@ -294,7 +294,7 @@ void ExternalGaussian(int& argc, char**& argv)
   GauOutput.open(argv[11],ios_base::out);
   GauMsg.open(argv[12],ios_base::out);
   //Read FLUKE input
-  ReadFlukeInput(xyzfile,connectfile,regionfile,Struct,QMMMOpts);
+  ReadFLUKEInput(xyzfile,connectfile,regionfile,Struct,QMMMOpts);
   //Read g09 input for new QM atom positions
   getline(GauInput,dummy);
   stringstream line(dummy);
@@ -402,19 +402,19 @@ void ExternalGaussian(int& argc, char**& argv)
   ofile.flush();
   ofile.close();
   //Construct MM input
-  if (Tinker == 1)
+  if (TINKER == 1)
   {
     //Forces input for TINKER
     call.str("");
-    call << "cp " << TinkKeyFile << " ";
+    call << "cp " << TINKKeyFile << " ";
     call << Stub << "_extern.key";
     sys = system(call.str().c_str());
     //Save new keyfile name
     call.str("");
     call << Stub << "_extern.key";
-    TinkKeyFile = call.str(); //Save the new name
+    TINKKeyFile = call.str(); //Save the new name
     //Add QM atoms to force field parameters list
-    ofile.open(TinkKeyFile.c_str(),ios_base::app|ios_base::out);
+    ofile.open(TINKKeyFile.c_str(),ios_base::app|ios_base::out);
     ofile << '\n';
     ofile << "#QM force field parameters"; //Marks the changes
     ofile << '\n';
@@ -518,7 +518,7 @@ void ExternalGaussian(int& argc, char**& argv)
       //Add atom types
       if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
       {
-        ofile << "atom " << (MaxTinkerNum+ct) << " ";
+        ofile << "atom " << (MaxTINKERNum+ct) << " ";
         ofile << Struct[i].NumClass << " ";
         ofile << Struct[i].MMTyp << " ";
         ofile << "\"Dummy QM atom type\" ";
@@ -537,7 +537,7 @@ void ExternalGaussian(int& argc, char**& argv)
         //Add nuclear charges
         if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
         {
-          ofile << "charge " << (MaxTinkerNum+ct) << " ";
+          ofile << "charge " << (MaxTINKERNum+ct) << " ";
           ofile << 0.0; //Delete charges
           ofile << '\n';
           ct += 1;
@@ -546,7 +546,7 @@ void ExternalGaussian(int& argc, char**& argv)
     }
     ofile.flush();
     ofile.close();
-    //Create Tinker xyz file from the structure
+    //Create TINKER xyz file from the structure
     call.str("");
     call << Stub << "_extern.xyz";
     ofile.open(call.str().c_str(),ios_base::out);
@@ -578,7 +578,7 @@ void ExternalGaussian(int& argc, char**& argv)
       }
       if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
       {
-        ofile << setw(4) << (MaxTinkerNum+ct);
+        ofile << setw(4) << (MaxTINKERNum+ct);
         ct += 1; //Count number of qm atoms
       }
       for (int j=0;j<Struct[i].Bonds.size();j++)
@@ -593,7 +593,7 @@ void ExternalGaussian(int& argc, char**& argv)
     ofile.close();
   }
   //Run g09 and MM
-  if (Tinker == 1)
+  if (TINKER == 1)
   {
     call.str("");
     call << "testgrad " << Stub;
@@ -617,7 +617,7 @@ void ExternalGaussian(int& argc, char**& argv)
     Forces.push_back(tmp);
   }
   //MM forces
-  if (Tinker == 1)
+  if (TINKER == 1)
   {
     //Open files
     call.str("");

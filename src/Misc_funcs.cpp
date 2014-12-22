@@ -185,7 +185,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     dummy = string(argv[2]);
     if (dummy == "-t")
     {
-      Tink2FLUKE(argc,argv);
+      TINK2FLUKE(argc,argv);
     }
     else
     {
@@ -345,7 +345,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
   return;
 };
 
-void ReadFlukeInput(fstream& xyzfile, fstream& connectfile,
+void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
      fstream& regionfile, vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
 {
   //Read input
@@ -410,9 +410,10 @@ void ReadFlukeInput(fstream& xyzfile, fstream& connectfile,
     MMonly = 0;
     QMMM = 0;
     regionfile >> dummy >> dummy;
-    if ((dummy == "psi4") or (dummy == "Psi4"))
+    if ((dummy == "psi4") or (dummy == "Psi4")
+       or (dummy == "PSI4"))
     {
-      Psi4 = 1;
+      PSI4 = 1;
     }
     if ((dummy == "gaussian") or (dummy == "Gaussian"))
     {
@@ -439,9 +440,10 @@ void ReadFlukeInput(fstream& xyzfile, fstream& connectfile,
     QMonly = 0;
     MMonly = 0;
     regionfile >> dummy >> dummy;
-    if ((dummy == "psi4") or (dummy == "Psi4"))
+    if ((dummy == "psi4") or (dummy == "Psi4")
+       or (dummy == "PSI4"))
     {
-      Psi4 = 1;
+      PSI4 = 1;
     }
     if ((dummy == "gaussian") or (dummy == "Gaussian"))
     {
@@ -453,9 +455,10 @@ void ReadFlukeInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.Charge;
     regionfile >> dummy >> QMMMOpts.Spin;
     regionfile >> dummy >> dummy; //MM wrapper
-    if ((dummy == "Tinker") or (dummy == "TINKER"))
+    if ((dummy == "Tinker") or (dummy == "TINKER")
+       or (dummy == "tinker"))
     {
-      Tinker = 1;
+      TINKER = 1;
     }
     if ((dummy == "Amber") or (dummy == "AMBER"))
     {
@@ -469,9 +472,10 @@ void ReadFlukeInput(fstream& xyzfile, fstream& connectfile,
     QMonly = 0;
     QMMM = 0;
     regionfile >> dummy >> dummy; //MM wrapper
-    if ((dummy == "Tinker") or (dummy == "TINKER"))
+    if ((dummy == "Tinker") or (dummy == "TINKER")
+       or (dummy == "tinker"))
     {
-      Tinker = 1;
+      TINKER = 1;
     }
     if ((dummy == "Amber") or (dummy == "AMBER"))
     {
@@ -647,19 +651,19 @@ void ReadFlukeInput(fstream& xyzfile, fstream& connectfile,
       }
     }
   }
-  //Collect additonal tinker input
-  if (Tinker == 1)
+  //Collect additonal TINKER input
+  if (TINKER == 1)
   {
-    FindTinkerClasses(Struct);
+    FindTINKERClasses(Struct);
   }
   return;
 };
 
-void FlukeErrorChecker(QMMMSettings& QMMMOpts)
+void FLUKEErrorChecker(QMMMSettings& QMMMOpts)
 {
   //Checks for basic errors and conflicts
   bool DoQuit = 0; //Bool, quit with error
-  if (((Tinker+Amber) != 1) and (QMonly != 1))
+  if (((TINKER+Amber) != 1) and (QMonly != 1))
   {
     //Check the MM wrappers
     cout << " Error: No valid MM wrapper selected.";
@@ -669,7 +673,7 @@ void FlukeErrorChecker(QMMMSettings& QMMMOpts)
     cout << '\n';
     DoQuit = 1;
   }
-  if (((Psi4+Gaussian) != 1) and (MMonly != 1))
+  if (((PSI4+Gaussian) != 1) and (MMonly != 1))
   {
     //Check the QM wrappers
     cout << " Error: No valid QM wrapper selected.";
@@ -703,7 +707,7 @@ void FlukeErrorChecker(QMMMSettings& QMMMOpts)
     cout << '\n';
     Ncpus = 1;
   }
-  if ((Psi4 == 1) and (QMMM == 1))
+  if ((PSI4 == 1) and (QMMM == 1))
   {
     if (OptSim == 1)
     {
@@ -715,7 +719,7 @@ void FlukeErrorChecker(QMMMSettings& QMMMOpts)
     }
     if ((Npseudo != 0) or (Nbound != 0))
     {
-      cout << " Error: The psi4 wrapper can only use QM and MM atoms.";
+      cout << " Error: The PSI4 wrapper can only use QM and MM atoms.";
       cout << '\n';
       cout << " Remove the pseudo-atoms and boundary-atoms.";
       cout << '\n';
@@ -743,7 +747,7 @@ void FlukeErrorChecker(QMMMSettings& QMMMOpts)
   return;
 };
 
-void FlukePrintSettings(QMMMSettings& QMMMOpts)
+void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
 {
   //Prints out the simulation details
   cout << "Setting up simulation..." << '\n';

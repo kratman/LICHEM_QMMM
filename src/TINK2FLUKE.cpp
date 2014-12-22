@@ -13,14 +13,14 @@
 
 
 //Parsers
-void Tink2FLUKE(int& argc, char**& argv)
+void TINK2FLUKE(int& argc, char**& argv)
 {
   //Local variables
   fstream tinkxyz, tinkkey, paramfile; //Input
   fstream posfile, confile, regfile; //Output
   stringstream line;
   string dummy;
-  bool TinkQMMM = 0;
+  bool TINKQMMM = 0;
   int Ninact = 0;
   bool SomeFroz = 0;
   bool SomeAct = 0;
@@ -84,7 +84,7 @@ void Tink2FLUKE(int& argc, char**& argv)
   Nmm = Natoms-Nqm-Npseudo-Nbound;
   if (Natoms != Nmm)
   {
-    TinkQMMM = 1;
+    TINKQMMM = 1;
     cout << '\n';
     cout << "Auto-detected file type: ";
     cout << "TINKER QMMM xyz";
@@ -120,7 +120,7 @@ void Tink2FLUKE(int& argc, char**& argv)
   if (!tinkkey.good())
   {
     cout << '\n';
-    cout << "Error: Could not read tinker key file!";
+    cout << "Error: Could not read TINKER key file!";
     cout << '\n' << endl;
     exit(0);
   }
@@ -158,7 +158,7 @@ void Tink2FLUKE(int& argc, char**& argv)
   if (!paramfile.good())
   {
     cout << '\n';
-    cout << "Error: Could not open tinker parameter file!";
+    cout << "Error: Could not open TINKER parameter file!";
     cout << '\n' << endl;
     exit(0);
   }

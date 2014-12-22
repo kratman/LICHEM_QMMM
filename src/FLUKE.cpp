@@ -46,12 +46,12 @@ int main(int argc, char* argv[])
   //End of section
 
   //Read input and check for errors
-  ReadFlukeInput(xyzfile,connectfile,regionfile,Struct,QMMMOpts);
+  ReadFLUKEInput(xyzfile,connectfile,regionfile,Struct,QMMMOpts);
   //End of section
 
   //Check input for even more errors
-  FlukeErrorChecker(QMMMOpts);
-  FlukePrintSettings(QMMMOpts);
+  FLUKEErrorChecker(QMMMOpts);
+  FLUKEPrintSettings(QMMMOpts);
   //End of section
 
   //Calculate single-point energy (optional)
@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
       Eqm += GaussianWrapper("Enrg",Struct,QMMMOpts,-1);
       QMTime += (unsigned)time(0)-tstart;
     }
-    if (Psi4 == 1)
+    if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
       Eqm += PsiWrapper("Enrg",Struct,QMMMOpts,-1);
@@ -80,10 +80,10 @@ int main(int argc, char* argv[])
       cout << "QM energy: " << Eqm << " eV";
       cout << endl;
     }
-    if (Tinker == 1)
+    if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);
-      Emm += TinkerWrapper("Enrg",Struct,QMMMOpts,-1);
+      Emm += TINKERWrapper("Enrg",Struct,QMMMOpts,-1);
       MMTime += (unsigned)time(0)-tstart;
     }
     if (Amber == 1)
@@ -293,7 +293,7 @@ int main(int argc, char* argv[])
       SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,-1);
       QMTime += (unsigned)time(0)-tstart;
     }
-    if (Psi4 == 1)
+    if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
       SumE += PsiWrapper("Enrg",Struct,QMMMOpts,-1);
@@ -301,10 +301,10 @@ int main(int argc, char* argv[])
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
     }
-    if (Tinker == 1)
+    if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += TinkerWrapper("Enrg",Struct,QMMMOpts,-1);
+      SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,-1);
       MMTime += (unsigned)time(0)-tstart;
     }
     if (Amber == 1)
@@ -331,7 +331,7 @@ int main(int argc, char* argv[])
         SumE = GaussianWrapper("Opt",Struct,QMMMOpts,-1);
         QMTime += (unsigned)time(0)-tstart;
       }
-      if (Psi4 == 1)
+      if (PSI4 == 1)
       {
         int tstart = (unsigned)time(0);
         SumE = PsiWrapper("Opt",Struct,QMMMOpts,-1);
@@ -339,10 +339,10 @@ int main(int argc, char* argv[])
         //Clean up annoying useless files
         int sys = system("rm -f psi.*");
       }
-      if (Tinker == 1)
+      if (TINKER == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE = TinkerWrapper("Opt",Struct,QMMMOpts,-1);
+        SumE = TINKERWrapper("Opt",Struct,QMMMOpts,-1);
         MMTime += (unsigned)time(0)-tstart;
       }
       if (Amber == 1)
@@ -361,7 +361,7 @@ int main(int argc, char* argv[])
         SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,-1);
         QMTime += (unsigned)time(0)-tstart;
       }
-      if (Psi4 == 1)
+      if (PSI4 == 1)
       {
         int tstart = (unsigned)time(0);
         SumE += PsiWrapper("Enrg",Struct,QMMMOpts,-1);
@@ -369,10 +369,10 @@ int main(int argc, char* argv[])
         //Clean up annoying useless files
         int sys = system("rm -f psi.*");
       }
-      if (Tinker == 1)
+      if (TINKER == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE += TinkerWrapper("Enrg",Struct,QMMMOpts,-1);
+        SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,-1);
         MMTime += (unsigned)time(0)-tstart;
       }
       if (Amber == 1)
@@ -426,7 +426,7 @@ int main(int argc, char* argv[])
       SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,-1);
       QMTime += (unsigned)time(0)-tstart;
     }
-    if (Psi4 == 1)
+    if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
       SumE += PsiWrapper("Enrg",Struct,QMMMOpts,-1);
@@ -434,10 +434,10 @@ int main(int argc, char* argv[])
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
     }
-    if (Tinker == 1)
+    if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += TinkerWrapper("Enrg",Struct,QMMMOpts,-1);
+      SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,-1);
       MMTime += (unsigned)time(0)-tstart;
     }
     if (Amber == 1)
@@ -459,10 +459,10 @@ int main(int argc, char* argv[])
       OldStruct = Struct;
       //Run optimization
       FLUKESteepest(Struct,QMMMOpts,-1);
-      if (Tinker == 1)
+      if (TINKER == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE = TinkerWrapper("Opt",Struct,QMMMOpts,-1);
+        SumE = TINKERWrapper("Opt",Struct,QMMMOpts,-1);
         MMTime += (unsigned)time(0)-tstart;
       }
       if (Amber == 1)
@@ -481,7 +481,7 @@ int main(int argc, char* argv[])
         SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,-1);
         QMTime += (unsigned)time(0)-tstart;
       }
-      if (Psi4 == 1)
+      if (PSI4 == 1)
       {
         int tstart = (unsigned)time(0);
         SumE += PsiWrapper("Enrg",Struct,QMMMOpts,-1);
@@ -489,10 +489,10 @@ int main(int argc, char* argv[])
         //Clean up annoying useless files
         int sys = system("rm -f psi.*");
       }
-      if (Tinker == 1)
+      if (TINKER == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE += TinkerWrapper("Enrg",Struct,QMMMOpts,-1);
+        SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,-1);
         MMTime += (unsigned)time(0)-tstart;
       }
       if (Amber == 1)

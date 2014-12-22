@@ -12,7 +12,7 @@
 */
 
 //MM utility functions
-double TinkerForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
+double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the MM forces on a set of QM atoms
@@ -20,16 +20,16 @@ double TinkerForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   string dummy;
   stringstream call;
   call.copyfmt(cout);
-  string TinkKeyFile = "tinker.key";
-  int MaxTinkerNum = 3500;
-  int MaxTinkerClass = 100;
+  string TINKKeyFile = "TINKER.key";
+  int MaxTINKERNum = 3500;
+  int MaxTINKERClass = 100;
   double Emm = 0.0;
   int ct;
   int sys;
   call.str("");
   //Construct MM forces input for TINKER
   call.str("");
-  call << "cp " << TinkKeyFile << " ";
+  call << "cp " << TINKKeyFile << " ";
   call << "QMMM";
   if (Bead != -1)
   {
@@ -45,9 +45,9 @@ double TinkerForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     call << "_" << Bead;
   }
   call << ".key";
-  TinkKeyFile = call.str(); //Save the new name
+  TINKKeyFile = call.str(); //Save the new name
   //Add QM atoms to force field parameters list
-  ofile.open(TinkKeyFile.c_str(),ios_base::app|ios_base::out);
+  ofile.open(TINKKeyFile.c_str(),ios_base::app|ios_base::out);
   ofile << '\n';
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
@@ -151,7 +151,7 @@ double TinkerForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     //Add atom types
     if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
     {
-      ofile << "atom " << (MaxTinkerNum+ct) << " ";
+      ofile << "atom " << (MaxTINKERNum+ct) << " ";
       ofile << Struct[i].NumClass << " ";
       ofile << Struct[i].MMTyp << " ";
       ofile << "\"Dummy QM atom type\" ";
@@ -170,7 +170,7 @@ double TinkerForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
       //Add nuclear charges
       if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
       {
-        ofile << "charge " << (MaxTinkerNum+ct) << " ";
+        ofile << "charge " << (MaxTINKERNum+ct) << " ";
         ofile << 0.0; //Delete charges
         ofile << '\n';
         ct += 1;
@@ -179,7 +179,7 @@ double TinkerForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   }
   ofile.flush();
   ofile.close();
-  //Create Tinker xyz file from the structure
+  //Create TINKER xyz file from the structure
   call.str("");
   call << "QMMM";
   if (Bead != -1)
@@ -227,7 +227,7 @@ double TinkerForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     }
     if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
     {
-      ofile << setw(4) << (MaxTinkerNum+ct);
+      ofile << setw(4) << (MaxTINKERNum+ct);
       ct += 1; //Count number of qm atoms
     }
     for (int j=0;j<Struct[i].Bonds.size();j++)
@@ -314,17 +314,17 @@ double TinkerForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   return Emm;
 };
 
-void FindTinkerClasses(vector<QMMMAtom>& Struct)
+void FindTINKERClasses(vector<QMMMAtom>& Struct)
 {
-  //Parses tinker parameter files to find atom classes
+  //Parses TINKER parameter files to find atom classes
   fstream ifile;
   string dummy;
-  string TinkKeyFile = "tinker.key";
-  ifile.open(TinkKeyFile.c_str(),ios_base::in);
+  string TINKKeyFile = "TINKER.key";
+  ifile.open(TINKKeyFile.c_str(),ios_base::in);
   if (!ifile.good())
   {
     //Exit if files do not exist
-    cout << "Error: Missing tinker.key file.";
+    cout << "Error: Missing TINKER.key file.";
     cout << endl;
     exit(0);
   }
@@ -344,14 +344,14 @@ void FindTinkerClasses(vector<QMMMAtom>& Struct)
   if (!FileFound)
   {
     //Exit if parameter file is not found
-    cout << "Error: Cannot find tinker parameter file.";
+    cout << "Error: Cannot find TINKER parameter file.";
     cout << endl;
     exit(0);
   }
   if (!ifile.good())
   {
     //Exit if parameter file does not exist
-    cout << "Error: Cannot read tinker ";
+    cout << "Error: Cannot read TINKER ";
     cout << dummy;
     cout << " parameter file.";
     cout << endl;
@@ -380,7 +380,7 @@ void FindTinkerClasses(vector<QMMMAtom>& Struct)
   }
   if (ct < Natoms)
   {
-    cout << "Error: Atom type not found in Tinker parameters.";
+    cout << "Error: Atom type not found in TINKER parameters.";
     cout << '\n';
     cout << " Please check the input.";
     cout << endl;
@@ -390,17 +390,17 @@ void FindTinkerClasses(vector<QMMMAtom>& Struct)
 }
 
 //MM wrappers
-double TinkerWrapper(string RunTyp, vector<QMMMAtom>& Struct,
+double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
        QMMMSettings& QMMMOpts, int Bead)
 {
-  //Runs Tinker MM
+  //Runs TINKER MM
   fstream ofile,ifile;
   string dummy;
   stringstream call;
   call.copyfmt(cout);
-  string TinkKeyFile = "tinker.key";
-  int MaxTinkerNum = 3500;
-  int MaxTinkerClass = 100;
+  string TINKKeyFile = "TINKER.key";
+  int MaxTINKERNum = 3500;
+  int MaxTINKERClass = 100;
   double E = 0.0;
   int ct;
   int sys;
@@ -409,7 +409,7 @@ double TinkerWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   if (QMMM == 1)
   {
     call.str("");
-    call << "cp " << TinkKeyFile << " QMMM";
+    call << "cp " << TINKKeyFile << " QMMM";
     if (Bead != -1)
     {
       call << "_" << Bead;
@@ -424,9 +424,9 @@ double TinkerWrapper(string RunTyp, vector<QMMMAtom>& Struct,
       call << "_" << Bead;
     }
     call << ".key";
-    TinkKeyFile = call.str(); //Save the new name
+    TINKKeyFile = call.str(); //Save the new name
     //Add QM atoms to force field parameters list
-    ofile.open(TinkKeyFile.c_str(),ios_base::app|ios_base::out);
+    ofile.open(TINKKeyFile.c_str(),ios_base::app|ios_base::out);
     ofile << '\n';
     ofile << "#QM force field parameters"; //Marks the changes
     ofile << '\n';
@@ -471,7 +471,7 @@ double TinkerWrapper(string RunTyp, vector<QMMMAtom>& Struct,
       //Add atom types
       if (Struct[i].QMregion == 1)
       {
-        ofile << "atom " << (MaxTinkerNum+ct) << " ";
+        ofile << "atom " << (MaxTINKERNum+ct) << " ";
         ofile << Struct[i].NumClass << " ";
         ofile << Struct[i].MMTyp << " ";
         ofile << "\"Dummy QM atom type\" ";
@@ -490,7 +490,7 @@ double TinkerWrapper(string RunTyp, vector<QMMMAtom>& Struct,
         //Add nuclear charges
         if (Struct[i].QMregion == 1)
         {
-          ofile << "charge " << (MaxTinkerNum+ct) << " ";
+          ofile << "charge " << (MaxTINKERNum+ct) << " ";
           if (RunTyp == "Opt")
           {
             ofile << Struct[i].q;
@@ -507,7 +507,7 @@ double TinkerWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     ofile.flush();
     ofile.close();
   }
-  //Create Tinker xyz file from the structure
+  //Create TINKER xyz file from the structure
   if (Bead == -1)
   {
     ofile.open("QMMM.xyz",ios_base::out);
@@ -557,7 +557,7 @@ double TinkerWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     }
     if (Struct[i].QMregion == 1)
     {
-      ofile << setw(4) << (MaxTinkerNum+ct);
+      ofile << setw(4) << (MaxTINKERNum+ct);
       ct += 1; //Count number of qm atoms
     }
     for (int j=0;j<Struct[i].Bonds.size();j++)
@@ -573,7 +573,7 @@ double TinkerWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   //Run optimization
   if (RunTyp == "Opt")
   {
-    //Run tinker
+    //Run TINKER
     call.str("");
     call << "newton QMMM.xyz A A 0.01 > QMMM.log";
     sys = system(call.str().c_str());
@@ -611,7 +611,7 @@ double TinkerWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   //Calculate MM potential energy
   if (RunTyp == "Enrg")
   {
-    //Run tinker
+    //Run TINKER
     if (Bead != -1)
     {
       call.str("");

@@ -97,9 +97,9 @@ int GEM = 0; //Flag for frozen density QMMM potential
 int AMOEBA = 0; //Flag for polarizable QMMM potential
 int CHRG = 1; //Flag for point charge QMMM potential
 int PBCon = 0; //Flag for the boundary conditions
-int Psi4 = 0; //Wrapper flag
+int PSI4 = 0; //Wrapper flag
 int Gaussian = 0; //Wrapper flag
-int Tinker = 0; //Wrapper flag
+int TINKER = 0; //Wrapper flag
 int Amber = 0; //Wrapper flag
 bool QMMM = 0; //Flag for the type of wrapper
 bool MMonly = 0; //Flag for the type of wrapper
@@ -188,15 +188,17 @@ string Typing(int);
 
 int RevTyping(string);
 
-void FindTinkerClasses(vector<QMMMAtom>&);
+void FindTINKERClasses(vector<QMMMAtom>&);
 
-double TinkerWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
+double TINKERWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
-double TinkerForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+double TINKERForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
 double AmberWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
-double LammpsWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
+double LAMMPSWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
+
+double LAMMPSForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
 double GaussianWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
@@ -228,7 +230,7 @@ void Get_Centroid(QMMMAtom&,QMMMSettings&);
 
 Coord Get_COM(vector<QMMMAtom>&,QMMMSettings&);
 
-void Tink2FLUKE(int&,char**&);
+void TINK2FLUKE(int&,char**&);
 
 void Remove_COM(vector<QMMMAtom>&,QMMMSettings&);
 
@@ -236,12 +238,12 @@ void Print_traj(vector<QMMMAtom>&,fstream&,QMMMSettings&);
 
 void ReadArgs(int&,char**&,fstream&,fstream&,fstream&,fstream&);
 
-void ReadFlukeInput(fstream&,fstream&,fstream&,
+void ReadFLUKEInput(fstream&,fstream&,fstream&,
      vector<QMMMAtom>&,QMMMSettings&);
 
-void FlukeErrorChecker(QMMMSettings&);
+void FLUKEErrorChecker(QMMMSettings&);
 
-void FlukePrintSettings(QMMMSettings&);
+void FLUKEPrintSettings(QMMMSettings&);
 
 void GetQuotes(vector<string>&);
 
@@ -250,7 +252,7 @@ void GetQuotes(vector<string>&);
 #include "Misc_funcs.cpp"
 #include "PathIntegral.cpp"
 #include "ReactionPath.cpp"
-#include "Tink2FLUKE.cpp"
+#include "TINK2FLUKE.cpp"
 #ifdef DEVCOMP
 #include "Real_Multipoles.cpp"
 #endif

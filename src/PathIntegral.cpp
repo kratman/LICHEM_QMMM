@@ -78,7 +78,7 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
       Es[i] += GaussianWrapper("Enrg",parts,QMMMOpts,i);
       Times_qm[i] += (unsigned)time(0)-t_qm_start;
     }
-    if (Psi4 == 1)
+    if (PSI4 == 1)
     {
       t_qm_start = (unsigned)time(0);
       Es[i] += PsiWrapper("Enrg",parts,QMMMOpts,i);
@@ -86,10 +86,10 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
     }
-    if (Tinker == 1)
+    if (TINKER == 1)
     {
       t_mm_start = (unsigned)time(0);
-      Es[i] += TinkerWrapper("Enrg",parts,QMMMOpts,i);
+      Es[i] += TINKERWrapper("Enrg",parts,QMMMOpts,i);
       Times_mm[i] += (unsigned)time(0)-t_mm_start;
     }
     if (Amber == 1)

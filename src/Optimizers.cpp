@@ -54,7 +54,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       E += GaussianForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
     }
-    if (Psi4 == 1)
+    if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
       E += PsiForces(Struct,Forces,QMMMOpts,Bead);
@@ -63,10 +63,10 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       int sys = system("rm -f psi.*");
     }
     //Calculate forces (MM part)
-    if (Tinker == 1)
+    if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);
-      E += TinkerForces(Struct,Forces,QMMMOpts,Bead);
+      E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
     //Determine new structure
@@ -142,7 +142,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       GaussianCharges(Struct,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
     }
-    if (Psi4 == 1)
+    if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
       PsiCharges(Struct,QMMMOpts,Bead);
