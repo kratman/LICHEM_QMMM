@@ -20,7 +20,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   string dummy;
   stringstream call;
   call.copyfmt(cout);
-  string TINKKeyFile = "TINKER.key";
+  string TINKKeyFile = "tinker.key";
   int MaxTINKERNum = 3500;
   int MaxTINKERClass = 100;
   double Emm = 0.0;
@@ -319,12 +319,12 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
   //Parses TINKER parameter files to find atom classes
   fstream ifile;
   string dummy;
-  string TINKKeyFile = "TINKER.key";
+  string TINKKeyFile = "tinker.key";
   ifile.open(TINKKeyFile.c_str(),ios_base::in);
   if (!ifile.good())
   {
     //Exit if files do not exist
-    cout << "Error: Missing TINKER.key file.";
+    cout << "Error: Missing tinker.key file.";
     cout << endl;
     exit(0);
   }
@@ -398,7 +398,7 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   string dummy;
   stringstream call;
   call.copyfmt(cout);
-  string TINKKeyFile = "TINKER.key";
+  string TINKKeyFile = "tinker.key";
   int MaxTINKERNum = 3500;
   int MaxTINKERClass = 100;
   double E = 0.0;

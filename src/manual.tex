@@ -336,7 +336,7 @@ TINKER: The file converter for TINKER can be used on standard
 TINKER XYZ files, TINKER QMMM XYZ files (Q-CHEM), and TINKER XYZ files
 with periodic boundary conditions. \\
 
-user:\$ FLUKE -convert -t TINKER.xyz -k TINKER.key ( -p Yes) \\
+user:\$ FLUKE -convert -t TINKER.xyz -k tinker.key ( -p Yes) \\
 
 The -p flag is optional and tells FLUKE to read the lattice constants from
 the second line of the XYZ file. \\
@@ -363,12 +363,12 @@ found in the documentation directory.
 
 \subsection{TINKER}
 
-The TINKER wrapper checks the working directory for a file called TINKER.key
+The TINKER wrapper checks the working directory for a file called tinker.key
 and will read additional force field information (e.g. atom classes,
 multipoles, etc) based on the keywords listed in that file. Any keyword
-defined in TINKER.key will be passed into the TINKER key file used by the
+defined in tinker.key will be passed into the TINKER key file used by the
 wrapper. For somewhat obvious reasons, the user must also provide the force
-field parameter files defined in the TINKER.key file.
+field parameter files defined in the tinker.key file.
 
 \subsection{Gaussian}
 
