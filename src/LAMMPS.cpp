@@ -190,6 +190,7 @@ double LAMMPSWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   }
   if (RunTyp == "Opt")
   {
+    //FIX THIS!!!!
     call << "min_style cg" << '\n';
     call << "minimize ";
     //Energy tolerance
@@ -224,8 +225,13 @@ double LAMMPSWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   }
   call << ".txt";
   sys = system(call.str().c_str());
-  //Extract data
+  //Extract energy
   
+  //Extract new geometry
+  if (RunTyp == "Opt")
+  {
+    
+  }
   //Clean up files
   call.str("");
   call << "rm -f QMMM";
