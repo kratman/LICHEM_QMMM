@@ -41,7 +41,61 @@ double LAMMPSWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   double E = 0.0;
   int sys,ct;
   //Construct LAMMPS data file
-
+  call.str("");
+  call << "QMMM";
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+  }
+  call << ".data";
+  ifile.open("DATA",ios_base::in);
+  while (!ifile.eof())
+  {
+     //Copy the potential line by line
+     getline(ifile,dummy);
+     call << dummy << '\n';
+  }
+  ifile.close();
+  call << '\n';
+  call << "Atoms";
+  call << '\n' << '\n';
+  for (int i=0;i<Natoms;i++)
+  {
+    call << (Struct[i].id+1);
+    call << " 1 "; //Dummy molecule ID
+    call << Struct[i].NumTyp << " ";
+    if (((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1)) and
+       (RunTyp == "Enrg"))
+    {
+      //Add zero charge
+      call << 0.0 << " ";
+    }
+    else
+    {
+      call << Struct[i].q << " ";
+    }
+    if (Bead == -1)
+    {
+      call << Struct[i].x;
+      call << " ";
+      call << Struct[i].y;
+      call << " ";
+      call << Struct[i].z;
+      call << '\n';
+    }
+    if (Bead != -1)
+    {
+      call << Struct[i].P[Bead].x;
+      call << " ";
+      call << Struct[i].P[Bead].y;
+      call << " ";
+      call << Struct[i].P[Bead].z;
+      call << '\n';
+    }
+  }
+  ofile << call.str();
+  ofile.flush();
+  ofile.close();
   //Construct input file
   call.str("");
   call << "QMMM";
@@ -130,7 +184,24 @@ double LAMMPSWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   call << "thermo_style step etotal" << '\n';
   call << "compute mme mm pe" << '\n';
   call << "compute qmmme mm group/group qm" << '\n';
-  call << "run 1" << '\n';
+  if (RunTyp == "Enrg")
+  {
+    call << "run 1" << '\n';
+  }
+  if (RunTyp == "Opt")
+  {
+    call << "min_style cg" << '\n';
+    call << "minimize ";
+    //Energy tolerance
+    call << QMMMOpts.MMOptTol << " ";
+    //Force tolerance
+    call << QMMMOpts.MMOptTol << " ";
+    //Max steps
+    call << QMMMOpts.MaxOptSteps << " ";
+    //Max force iterations
+    call << (3*Natoms*QMMMOpts.MaxOptSteps);
+    call << '\n';
+  }
   ofile << call.str();
   ofile.flush();
   ofile.close();
@@ -146,7 +217,7 @@ double LAMMPSWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   {
     call << "_" << Bead;
   }
-  call << ".in > log";
+  call << ".in > QMMMlog";
   if (Bead != -1)
   {
     call << "_" << Bead;
@@ -155,8 +226,24 @@ double LAMMPSWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   sys = system(call.str().c_str());
   //Extract data
   
-  //Change units
-  E *= kcal2eV;
+  //Clean up files
+  call.str("");
+  call << "rm -f QMMM";
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+  }
+  call << ".in QMMM";
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+  }
+  call << ".data QMMM";
+  if (Bead != -1)
+  {
+    call << "_" << Bead;
+  }
+  call << ".log QMMMlog.txt";
   return E;
 };
 
