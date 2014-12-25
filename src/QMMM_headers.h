@@ -126,6 +126,53 @@ struct Coord
   double z; //z position
 };
 
+struct Mpole
+{
+  //Cartesian multipoles
+  //Monopole moment
+  double q;
+  //Cartesian dipole moments
+  double Dx;
+  double Dy;
+  double Dz;
+  //Cartesian induced dipole moments
+  double IDx;
+  double IDy;
+  double IDz;
+  //Cartesian quadrupole moments
+  double Qxx;
+  double Qyy;
+  double Qzz;
+  double Qxy;
+  double Qxz;
+  double Qyz;
+};
+
+struct RedMpole
+{
+  //Reduced multipole from sph. harm. and diagonalization
+  //Monopole
+  double Q00;
+  //Dipole moments
+  double Q10;
+  double Q11c;
+  double Q11s;
+  //Quadrupole moments
+  double Q20;
+  double Q22c;
+};
+
+struct OctCharges
+{
+  //A grid of point-charges which replaces multipoles
+  double q1; //Charge in the +x direction
+  double q2; //Charge in the +y direction
+  double q3; //Charge in the +z direction
+  double q4; //Charge in the -x direction
+  double q5; //Charge in the -y direction
+  double q6; //Charge in the -z direction
+};
+
 struct QMMMAtom
 {
   double x; //Position, x
@@ -187,6 +234,10 @@ double CoordDist2(Coord&,Coord&);
 string Typing(int);
 
 int RevTyping(string);
+
+RedMpole CartMP2SphHarm(Mpole&);
+
+OctCharges SphHarmMP2Charges(RedMpole&);
 
 void FindTINKERClasses(vector<QMMMAtom>&);
 
