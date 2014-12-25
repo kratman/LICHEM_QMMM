@@ -192,8 +192,6 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     }
     Hess(i,i) = 0;
   }
-  //Perform initial steepest descent step
-  vector<QMMMAtom> OldStruct = Struct;
   vector<Coord> Forces;
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
@@ -231,70 +229,14 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   int ct2 = 0; //Secondary counter
   for (int i=0;i<Natoms;i++)
   {
-    //Move QM atoms
-    if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
-    {
-      Struct[i].x += QMMMOpts.SteepStep*Forces[ct].x;
-      Struct[i].y += QMMMOpts.SteepStep*Forces[ct].y;
-      Struct[i].z += QMMMOpts.SteepStep*Forces[ct].z;
-      NGrad(ct2) = Forces[ct].x;
-      NGrad(ct2+1) = Forces[ct].y;
-      NGrad(ct2+2) = Forces[ct].z;
-      ct += 1;
-      ct2 += 3;
-    }
+    //Change forces array
+    NGrad(ct2) = Forces[ct].x;
+    NGrad(ct2+1) = Forces[ct].y;
+    NGrad(ct2+2) = Forces[ct].z;
+    ct += 1;
+    ct2 += 3;
   }
-  //Print structure
-  Print_traj(Struct,qmfile,QMMMOpts);
-  //Check convergence
-  MAXforce = 0;
-  for (int i=0;i<(Nqm+Npseudo);i++)
-  {
-    //Calculate RMS forces
-    double Fx = Forces[i].x;
-    double Fy = Forces[i].y;
-    double Fz = Forces[i].z;
-    if (abs(Fx) > MAXforce)
-    {
-      MAXforce = abs(Fx);
-    }
-    if (abs(Fy) > MAXforce)
-    {
-      MAXforce = abs(Fy);
-    }
-    if (abs(Fz) > MAXforce)
-    {
-      MAXforce = abs(Fz);
-    }
-    RMSforce += Fx*Fx+Fy*Fy+Fz*Fz;
-  }
-  for (int i=0;i<Natoms;i++)
-  {
-    //Calculate RMS displacement
-    if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
-    {
-      double dx = Struct[i].x-OldStruct[i].x;
-      double dy = Struct[i].y-OldStruct[i].y;
-      double dz = Struct[i].z-OldStruct[i].z;
-      RMSdiff += dx*dx+dy*dy+dz*dz;
-    }
-  }
-  RMSdiff /= 3*(Nqm+Npseudo);
-  RMSdiff = sqrt(RMSdiff);
-  RMSforce /= 3*(Nqm+Npseudo);
-  RMSforce = sqrt(RMSforce);
-  stepct += 1;
-  //Print progress
-  call.copyfmt(cout); //Save settings
-  cout << setprecision(8);
-  cout << "    QM Step: " << (stepct-1);
-  cout << " | RMS Disp: " << RMSdiff;
-  cout << '\n';
-  cout << "    Max force: " << MAXforce;
-  cout << " | RMS force: " << RMSforce;
-  cout << '\n' << endl;
-  cout.copyfmt(call); //Return to previous settings
-  //Fully optimize structure
+  //Optimize structure
   while (((RMSdiff >= QMMMOpts.QMOptTol) or
         (RMSforce >= (100*QMMMOpts.QMOptTol)) or
         (MAXforce >= (200*QMMMOpts.QMOptTol))) and
@@ -303,14 +245,14 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     RMSforce = 0;
     RMSdiff = 0;
     //Copy old structure and delete old forces force array
-    OldStruct = Struct;
+    vector<QMMMAtom> OldStruct = Struct;
     ct = 0; //Counter
     for (int i=0;i<(Nqm+Npseudo);i++)
     {
       //Reinitialize the change in the gradient
-      GradDiff(ct) = Forces[i].x;
-      GradDiff(ct+1) = Forces[i].y;
-      GradDiff(ct+2) = Forces[i].z;
+      GradDiff(ct) = NGrad[ct];
+      GradDiff(ct+1) = NGrad[ct+1];
+      GradDiff(ct+2) = NGrad[ct+2];
       ct += 3;
       //Delete old forces
       Forces[i].x = 0;

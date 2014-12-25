@@ -310,7 +310,6 @@ void GetQuotes(vector<string>&);
 #ifndef DEVCOMP
 #include "Multipoles.cpp"
 #endif
-#include "Multipoles.cpp"
 #include "Optimizers.cpp"
 
 //Wrapper definitions
