@@ -403,6 +403,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     FullParallel = 0;
     //Read MC and PIMC options
     OptSim = 0;
+    BFGSSim = 0;
     PIMCSim = 1;
     SteepSim = 0;
     SinglePoint = 0;
@@ -457,6 +458,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   {
     //Read energy minimization options
     OptSim = 1;
+    BFGSSim = 0;
     PIMCSim = 0;
     SteepSim = 0;
     SinglePoint = 0;
@@ -479,8 +481,31 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   {
     //Read energy minimization options
     OptSim = 0;
+    BFGSSim = 0;
     PIMCSim = 0;
     SteepSim = 1;
+    SinglePoint = 0;
+    QMMMOpts.Temp = 0;
+    QMMMOpts.Beta = 0;
+    QMMMOpts.Press = 0;
+    QMMMOpts.Neq = 0;
+    QMMMOpts.Nsteps = 0;
+    QMMMOpts.Nbeads = 1;
+    QMMMOpts.accratio = 0;
+    QMMMOpts.Nprint = 0;
+    QMMMOpts.Ensemble = "N/A";
+    regionfile >> dummy >> QMMMOpts.SteepStep;
+    regionfile >> dummy >> QMMMOpts.QMOptTol;
+    regionfile >> dummy >> QMMMOpts.MMOptTol;
+    regionfile >> dummy >> QMMMOpts.MaxOptSteps;
+  }
+  if ((dummy == "bfgs") or (dummy == "BFGS"))
+  {
+    //Read energy minimization options
+    OptSim = 0;
+    BFGSSim = 1;
+    PIMCSim = 0;
+    SteepSim = 0;
     SinglePoint = 0;
     QMMMOpts.Temp = 0;
     QMMMOpts.Beta = 0;
@@ -501,6 +526,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   {
     //Read energy minimization options
     OptSim = 0;
+    BFGSSim = 0;
     PIMCSim = 0;
     SteepSim = 0;
     SinglePoint = 1;
