@@ -464,6 +464,24 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     {
       Amber = 1;
     }
+    regionfile >> dummy >> dummy; //Potential type
+    if ((dummy == "AMOEBA") or (dummy == "amoeba"))
+    {
+      //AMOEBA polarizable force field
+      AMOEBA = 1;
+    }
+    if ((dummy == "Charges") or (dummy == "charges") or
+       (dummy == "Charge") or (dummy == "charge") or
+       (dummy == "point-charge"))
+    {
+      //Point-charge force fields
+      CHRG = 1;
+    }
+    if ((dummy == "GEM") or (dummy == "gem") or (dummy == "Gem"))
+    {
+      //Frozen density
+      GEM = 1;
+    }
   }
   if ((dummy == "MM") or (dummy == "mm"))
   {
@@ -480,6 +498,24 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     if ((dummy == "Amber") or (dummy == "AMBER"))
     {
       Amber = 1;
+    }
+    regionfile >> dummy >> dummy; //Potential type
+    if ((dummy == "AMOEBA") or (dummy == "amoeba"))
+    {
+      //AMOEBA polarizable force field
+      AMOEBA = 1;
+    }
+    if ((dummy == "Charges") or (dummy == "charges") or
+       (dummy == "Charge") or (dummy == "charge") or
+       (dummy == "point-charge"))
+    {
+      //Point-charge force fields
+      CHRG = 1;
+    }
+    if ((dummy == "GEM") or (dummy == "gem") or (dummy == "Gem"))
+    {
+      //Frozen density
+      GEM = 1;
     }
   }
   regionfile >> dummy >> dummy; //Calculation type

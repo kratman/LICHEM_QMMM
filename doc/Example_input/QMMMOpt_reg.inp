@@ -5,7 +5,8 @@ QM_basis: 6-31G*
 QM_memory: 2
 QM_charge: 0
 QM_spin: 1
-MM_type: Tinker
+MM_type: TINKER
+Electrostatics: Charges
 Calculation_type: Steep
 Opt_step_size: 0.01
 QM_opt_tolerance: 1e-4

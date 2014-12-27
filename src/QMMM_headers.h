@@ -95,7 +95,7 @@ double Lz = 500.0; //Box length
 //Flags for simulation options
 int GEM = 0; //Flag for frozen density QMMM potential
 int AMOEBA = 0; //Flag for polarizable QMMM potential
-int CHRG = 1; //Flag for point charge QMMM potential
+int CHRG = 0; //Flag for point charge QMMM potential
 int PBCon = 0; //Flag for the boundary conditions
 int PSI4 = 0; //Wrapper flag
 int Gaussian = 0; //Wrapper flag
@@ -129,6 +129,12 @@ struct Coord
 struct Mpole
 {
   //Cartesian multipoles
+  //Atoms for the local frame of reference
+  bool Chiral; //
+  int Atom1; //
+  int Atom2; //
+  int Atom3; //
+  int Atom4; //
   //Monopole moment
   double q;
   //Cartesian dipole moments
@@ -234,6 +240,8 @@ double CoordDist2(Coord&,Coord&);
 string Typing(int);
 
 int RevTyping(string);
+
+void RotateCharges(vector<QMMMAtom>&,Mpole&,OctCharges&);
 
 RedMpole CartMP2SphHarm(Mpole&);
 
