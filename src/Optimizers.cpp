@@ -309,7 +309,10 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       NGrad(ct+1) = Forces[i].y;
       NGrad(ct+2) = Forces[i].z;
     }
-    
+    //Start really long "line"
+    Hess = Hess+((GradDiff*GradDiff.transpose())/(GradDiff.transpose()*
+    OptVec))-((Hess*OptVec*OptVec.transpose()*Hess)/(OptVec.transpose()*
+    Hess*OptVec)); //End really long line
     //Check convergence
     MAXforce = 0;
     for (int i=0;i<(Nqm+Npseudo);i++)
