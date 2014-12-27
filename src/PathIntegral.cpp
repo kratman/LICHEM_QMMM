@@ -137,50 +137,6 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
     double dx = 2*(randx-0.5)*step*Centratio;
     double dy = 2*(randy-0.5)*step*Centratio;
     double dz = 2*(randz-0.5)*step*Centratio;
-    double x = parts2[p].x+dx;
-    double y = parts2[p].y+dy;
-    double z = parts2[p].z+dz;
-    if (PBCon == 1)
-    {
-      bool check = 1;
-      while (check == 1)
-      {
-        check = 0;
-        if (x > Lx)
-        {
-          x -= Lx;
-          check = 1;
-        }
-        if (x < 0.0)
-        {
-          x += Lx;
-          check = 1;
-        }
-        if (y > Ly)
-        {
-          y -= Ly;
-          check = 1;
-        }
-        if (y < 0.0)
-        {
-          y += Ly;
-          check = 1;
-        }
-        if (z > Lz)
-        {
-          z -= Lz;
-          check = 1;
-        }
-        if (z < 0.0)
-        {
-          z += Lz;
-          check = 1;
-        }
-      }
-    }
-    parts2[p].x = x;
-    parts2[p].y = y;
-    parts2[p].z = z;
     #pragma omp parallel for
     for (int i=0;i<QMMMOpts.Nbeads;i++)
     {
@@ -354,9 +310,6 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
         parts2[i].P[j].y *= Ly/Lytmp;
         parts2[i].P[j].z *= Lz/Lztmp;
       }
-      parts2[i].x *= Lx/Lxtmp;
-      parts2[i].y *= Ly/Lytmp;
-      parts2[i].z *= Lz/Lztmp;
     }
     #pragma omp barrier
     Eold += QMMMOpts.Press*Lxtmp*Lytmp*Lztmp*atm2eV;
@@ -369,10 +322,6 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
   if (QMMMOpts.Ensemble == "NPT")
   {
     dE -= Natoms*log((Lx*Ly*Lz)/(Lxtmp*Lytmp*Lztmp))/QMMMOpts.Beta;
-  }
-  if ((dE == 0.0) and (Debug == 1))
-  {
-    cout << "Warning two structures have identical energies." << '\n';
   }
   double Prob = exp(-1*dE*QMMMOpts.Beta);
   randnum = (((double)rand())/((double)RAND_MAX));
@@ -388,54 +337,5 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
     Lz = Lztmp;
   }
   return acc;
-};
-
-void Get_Centroid(QMMMAtom& part, QMMMSettings& QMMMOpts)
-{
-  //Finds the center of mass for the PI ring
-  if (QMMMOpts.Nbeads != 0)
-  {
-    double x=0,y=0,z=0;
-    for (int i=0;i<QMMMOpts.Nbeads;i++)
-    {
-      x += part.P[i].x;
-      y += part.P[i].y;
-      z += part.P[i].z;
-    }
-    x /= QMMMOpts.Nbeads;
-    y /= QMMMOpts.Nbeads;
-    z /= QMMMOpts.Nbeads;
-    part.x = x;
-    part.y = y;
-    part.z = z;
-    return;
-  }
-};
-
-Coord Get_COM(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
-{
-  //Finds the center of mass for the entire system
-  double x=0,y=0,z=0,M=0;
-  Coord com;
-  //Gather all atom centroids
-  #pragma omp parallel for
-  for (int i=0;i<Natoms;i++)
-  {
-    Get_Centroid(parts[i],QMMMOpts);
-  }
-  #pragma omp barrier
-  //Calculate COM
-  for (int i=0;i<Natoms;i++)
-  {
-    //Atoms
-    x += parts[i].m*parts[i].x;
-    y += parts[i].m*parts[i].y;
-    z += parts[i].m*parts[i].z;
-    M += parts[i].m;
-  }
-  com.x = x/M;
-  com.y = y/M;
-  com.z = z/M;
-  return com;
 };
 

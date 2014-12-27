@@ -41,8 +41,6 @@ using namespace std;
 //Compile options
 const bool Jokes = 1; //Print humorous comments
 const bool Debug = 0; //Turn debugging on/off
-const bool RCOM = 0; //Remove center of mass
-const bool RCOMQM = 0; //Center the QM region
 const bool Isotrop = 1; //Force isotropic expansion
 const double StepMin = 0.01; //Minimum step size
 const double StepMax = 1.0; //Maximum step size
@@ -134,7 +132,6 @@ struct Mpole
   int Atom1; //
   int Atom2; //
   int Atom3; //
-  int Atom4; //
   //Monopole moment
   double q;
   //Cartesian dipole moments
@@ -181,10 +178,6 @@ struct OctCharges
 
 struct QMMMAtom
 {
-  double x; //Position, x
-  double y; //Position, y
-  double z; //Position, z
-  double q; //Nuclear charge
   double m; //Mass of atom
   bool QMregion; //QM, MM, pseudo-atom, or boundary-atom
   bool MMregion; //QM, MM, pseudo-atom, or boundary-atom
@@ -199,6 +192,8 @@ struct QMMMAtom
   vector<int> Bonds; //Connectivity
   double Ep; //Storage for PI energies
   vector<Coord> P; //Array of PI beads
+  vector<Mpole> MP; //Multipoles
+  vector<OctCharges> PC; //Point-charge multipoles
 };
 
 struct QMMMSettings
@@ -222,7 +217,6 @@ struct QMMMSettings
   int Nbeads; //Number of time-slices or beads
   double accratio; //Target acceptance ratio
   int Nprint; //Number of steps before printing
-  string PrintMode; //Print all beads or just centroids
   //Input needed for optimizations
   int MaxOptSteps; //Maximum iterative optimization steps
   double MMOptTol; //Criteria to end the optimization

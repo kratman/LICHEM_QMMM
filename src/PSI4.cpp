@@ -43,20 +43,10 @@ double PsiForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     if (Struct[i].QMregion == 1)
     {
       call << "    " << Struct[i].QMTyp;
-      if (Bead == -1)
-      {
-        call << "    " << Struct[i].x;
-        call << "    " << Struct[i].y;
-        call << "    " << Struct[i].z;
-        call << '\n';
-      }
-      if (Bead != -1)
-      {
-        call << "    " << Struct[i].P[Bead].x;
-        call << "    " << Struct[i].P[Bead].y;
-        call << "    " << Struct[i].P[Bead].z;
-        call << '\n';
-      }
+      call << "    " << Struct[i].P[Bead].x;
+      call << "    " << Struct[i].P[Bead].y;
+      call << "    " << Struct[i].P[Bead].z;
+      call << '\n';
     }
   }
   call << "    symmetry c1" << '\n';
@@ -72,19 +62,10 @@ double PsiForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
       if (Struct[i].MMregion == 1)
       {
         call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].q << ",";
-        if (Bead == -1)
-        {
-          call << Struct[i].x << ",";
-          call << Struct[i].y << ",";
-          call << Struct[i].z;
-        }
-        if (Bead != -1)
-        {
-          call << Struct[i].P[Bead].x << ",";
-          call << Struct[i].P[Bead].y << ",";
-          call << Struct[i].P[Bead].z;
-        }
+        call << Struct[i].MP[Bead].q << ",";
+        call << Struct[i].P[Bead].x << ",";
+        call << Struct[i].P[Bead].y << ",";
+        call << Struct[i].P[Bead].z;
         call << ")" << '\n';
       }
     }
@@ -95,50 +76,28 @@ double PsiForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   //Set up charge calculation
   call << "energy('" << QMMMOpts.Func << "')" << '\n';
   call << "oeprop('MULLIKEN_CHARGES')" << '\n';
-  //Print file and call psi4
-  if (Bead == -1)
-  {
-    ofile.open("QMMM.dat",ios_base::out);
-    ofile << call.str() << endl;
-    ofile.close();
-  }
-  if (Bead != -1)
-  {
-    dummy = call.str();
-    call.str("");
-    call << "QMMM_" << Bead << ".dat";
-    ofile.open(call.str().c_str(),ios_base::out);
-    ofile << dummy << endl;
-    ofile.close();
-  }
+  //Print file
+  dummy = call.str(); //Store file as a temporary variable
+  call.str("");
+  call << "QMMM_" << Bead << ".dat";
+  ofile.open(call.str().c_str(),ios_base::out);
+  ofile << dummy << endl;
+  ofile.close();
+  //Call PSI4
   call.str("");
   call << "psi4 -n " << Ncpus;
   call << "-u QMMM";
-  if (Bead == -1)
-  {
-    call << ".dat -o QMMM.out > QMMM.log";
-  }
-  if (Bead != -1)
-  {
-    call << "_" << Bead;
-    call << ".dat -o QMMM";
-    call << "_" << Bead;
-    call << ".out > QMMM";
-    call << "_" << Bead;
-    call << ".log";
-  }
+  call << "_" << Bead;
+  call << ".dat -o QMMM";
+  call << "_" << Bead;
+  call << ".out > QMMM";
+  call << "_" << Bead;
+  call << ".log";
   sys = system(call.str().c_str());
   //Extract charges
-  if (Bead == -1)
-  {
-    ifile.open("QMMM.out",ios_base::in);
-  }
-  if (Bead != -1)
-  {
-    call.str("");
-    call << "QMMM_" << Bead << ".out";
-    ifile.open(call.str().c_str(),ios_base::in);
-  }
+  call.str("");
+  call << "QMMM_" << Bead << ".out";
+  ifile.open(call.str().c_str(),ios_base::in);
   while (!ifile.eof())
   {
     getline(ifile,dummy);
@@ -184,16 +143,9 @@ double PsiForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   //Clean up files
   call.str("");
   call << "rm -f ";
-  if (Bead == -1)
-  {
-    call << "QMMM.dat QMMM.out QMMM.log";
-  }
-  if (Bead != -1)
-  {
-    call << "QMMM_" << Bead << ".dat ";
-    call << "QMMM_" << Bead << ".out ";
-    call << "QMMM_" << Bead << ".log";
-  }
+  call << "QMMM_" << Bead << ".dat ";
+  call << "QMMM_" << Bead << ".out ";
+  call << "QMMM_" << Bead << ".log";
   sys = system(call.str().c_str());
   //Change units
   Eqm *= Har2eV;
@@ -229,20 +181,10 @@ void PsiCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     if (Struct[i].QMregion == 1)
     {
       call << "    " << Struct[i].QMTyp;
-      if (Bead == -1)
-      {
-        call << "    " << Struct[i].x;
-        call << "    " << Struct[i].y;
-        call << "    " << Struct[i].z;
-        call << '\n';
-      }
-      if (Bead != -1)
-      {
-        call << "    " << Struct[i].P[Bead].x;
-        call << "    " << Struct[i].P[Bead].y;
-        call << "    " << Struct[i].P[Bead].z;
-        call << '\n';
-      }
+      call << "    " << Struct[i].P[Bead].x;
+      call << "    " << Struct[i].P[Bead].y;
+      call << "    " << Struct[i].P[Bead].z;
+      call << '\n';
     }
   }
   call << "    symmetry c1" << '\n';
@@ -258,19 +200,10 @@ void PsiCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       if (Struct[i].MMregion == 1)
       {
         call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].q << ",";
-        if (Bead == -1)
-        {
-          call << Struct[i].x << ",";
-          call << Struct[i].y << ",";
-          call << Struct[i].z;
-        }
-        if (Bead != -1)
-        {
-          call << Struct[i].P[Bead].x << ",";
-          call << Struct[i].P[Bead].y << ",";
-          call << Struct[i].P[Bead].z;
-        }
+        call << Struct[i].MP[Bead].q << ",";
+        call << Struct[i].P[Bead].x << ",";
+        call << Struct[i].P[Bead].y << ",";
+        call << Struct[i].P[Bead].z;
         call << ")" << '\n';
       }
     }
@@ -281,50 +214,28 @@ void PsiCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Set up charge calculation
   call << "energy('" << QMMMOpts.Func << "')" << '\n';
   call << "oeprop('MULLIKEN_CHARGES')" << '\n';
-  //Print file and call psi4
-  if (Bead == -1)
-  {
-    ofile.open("QMMM.dat",ios_base::out);
-    ofile << call.str() << endl;
-    ofile.close();
-  }
-  if (Bead != -1)
-  {
-    dummy = call.str();
-    call.str("");
-    call << "QMMM_" << Bead << ".dat";
-    ofile.open(call.str().c_str(),ios_base::out);
-    ofile << dummy << endl;
-    ofile.close();
-  }
+  //Print file
+  dummy = call.str(); //Store as a temporary variable
+  call.str("");
+  call << "QMMM_" << Bead << ".dat";
+  ofile.open(call.str().c_str(),ios_base::out);
+  ofile << dummy << endl;
+  ofile.close();
+  //Call PSI4
   call.str("");
   call << "psi4 -n " << Ncpus;
   call << "-u QMMM";
-  if (Bead == -1)
-  {
-    call << ".dat -o QMMM.out > QMMM.log";
-  }
-  if (Bead != -1)
-  {
-    call << "_" << Bead;
-    call << ".dat -o QMMM";
-    call << "_" << Bead;
-    call << ".out > QMMM";
-    call << "_" << Bead;
-    call << ".log";
-  }
+  call << "_" << Bead;
+  call << ".dat -o QMMM";
+  call << "_" << Bead;
+  call << ".out > QMMM";
+  call << "_" << Bead;
+  call << ".log";
   sys = system(call.str().c_str());
   //Extract charges
-  if (Bead == -1)
-  {
-    ifile.open("QMMM.out",ios_base::in);
-  }
-  if (Bead != -1)
-  {
-    call.str("");
-    call << "QMMM_" << Bead << ".out";
-    ifile.open(call.str().c_str(),ios_base::in);
-  }
+  call.str("");
+  call << "QMMM_" << Bead << ".out";
+  ifile.open(call.str().c_str(),ios_base::in);
   while (!ifile.eof())
   {
     getline(ifile,dummy);
@@ -347,7 +258,7 @@ void PsiCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
               line >> dummy >> dummy;
               line >> dummy >> dummy;
               line >> dummy;
-              line >> Struct[i].q;
+              line >> Struct[i].MP[Bead].q;
             }
           }
         }
@@ -358,16 +269,10 @@ void PsiCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Clean up files
   call.str("");
   call << "rm -f ";
-  if (Bead == -1)
-  {
-    call << "QMMM.dat QMMM.out QMMM.log";
-  }
-  if (Bead != -1)
-  {
-    call << "QMMM_" << Bead << ".dat ";
-    call << "QMMM_" << Bead << ".out ";
-    call << "QMMM_" << Bead << ".log";
-  }
+  call << "QMMM.dat QMMM.out QMMM.log";
+  call << "QMMM_" << Bead << ".dat ";
+  call << "QMMM_" << Bead << ".out ";
+  call << "QMMM_" << Bead << ".log";
   sys = system(call.str().c_str());
   return;
 };
@@ -404,20 +309,10 @@ double PsiWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     if (Struct[i].QMregion == 1)
     {
       call << "    " << Struct[i].QMTyp;
-      if (Bead == -1)
-      {
-        call << "    " << Struct[i].x;
-        call << "    " << Struct[i].y;
-        call << "    " << Struct[i].z;
-        call << '\n';
-      }
-      if (Bead != -1)
-      {
-        call << "    " << Struct[i].P[Bead].x;
-        call << "    " << Struct[i].P[Bead].y;
-        call << "    " << Struct[i].P[Bead].z;
-        call << '\n';
-      }
+      call << "    " << Struct[i].P[Bead].x;
+      call << "    " << Struct[i].P[Bead].y;
+      call << "    " << Struct[i].P[Bead].z;
+      call << '\n';
     }
   }
   call << "    symmetry c1" << '\n';
@@ -433,19 +328,10 @@ double PsiWrapper(string RunTyp, vector<QMMMAtom>& Struct,
       if (Struct[i].MMregion == 1)
       {
         call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].q << ",";
-        if (Bead == -1)
-        {
-          call << Struct[i].x << ",";
-          call << Struct[i].y << ",";
-          call << Struct[i].z;
-        }
-        if (Bead != -1)
-        {
-          call << Struct[i].P[Bead].x << ",";
-          call << Struct[i].P[Bead].y << ",";
-          call << Struct[i].P[Bead].z;
-        }
+        call << Struct[i].MP[Bead].q << ",";
+        call << Struct[i].P[Bead].x << ",";
+        call << Struct[i].P[Bead].y << ",";
+        call << Struct[i].P[Bead].z;
         call << ")" << '\n';
       }
     }
@@ -463,50 +349,28 @@ double PsiWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   {
     call << "optimize('" << QMMMOpts.Func << "')" << '\n';
   }
-  //Print file and call psi4
-  if (Bead == -1)
-  {
-    ofile.open("QMMM.dat",ios_base::out);
-    ofile << call.str() << endl;
-    ofile.close();
-  }
-  if (Bead != -1)
-  {
-    dummy = call.str();
-    call.str("");
-    call << "QMMM_" << Bead << ".dat";
-    ofile.open(call.str().c_str(),ios_base::out);
-    ofile << dummy << endl;
-    ofile.close();
-  }
+  //Print file
+  dummy = call.str(); //Store as a temporary variable
+  call.str("");
+  call << "QMMM_" << Bead << ".dat";
+  ofile.open(call.str().c_str(),ios_base::out);
+  ofile << dummy << endl;
+  ofile.close();
+  //Call PSI4
   call.str("");
   call << "psi4 -n " << Ncpus;
   call << "-u QMMM";
-  if (Bead == -1)
-  {
-    call << ".dat -o QMMM.out > QMMM.log";
-  }
-  if (Bead != -1)
-  {
-    call << "_" << Bead;
-    call << ".dat -o QMMM";
-    call << "_" << Bead;
-    call << ".out > QMMM";
-    call << "_" << Bead;
-    call << ".log";
-  }
+  call << "_" << Bead;
+  call << ".dat -o QMMM";
+  call << "_" << Bead;
+  call << ".out > QMMM";
+  call << "_" << Bead;
+  call << ".log";
   sys = system(call.str().c_str());
   //Read energy and/or structure
-  if (Bead == -1)
-  {
-    ifile.open("QMMM.out",ios_base::in);
-  }
-  if (Bead != -1)
-  {
-    call.str("");
-    call << "QMMM_" << Bead << ".out";
-    ifile.open(call.str().c_str(),ios_base::in);
-  }
+  call.str("");
+  call << "QMMM_" << Bead << ".out";
+  ifile.open(call.str().c_str(),ios_base::in);
   bool QMfinished = 0;
   bool Optfinished = 0;
   while (!ifile.eof())
@@ -533,18 +397,9 @@ double PsiWrapper(string RunTyp, vector<QMMMAtom>& Struct,
           line >> dummy; //Clear atom type
           double x,y,z;
           line >> x >> y >> z;
-          if (Bead == -1)
-          {
-            Struct[i].x = x;
-            Struct[i].y = y;
-            Struct[i].z = z;
-          }
-          if (Bead != -1)
-          {
-            Struct[i].P[Bead].x = x;
-            Struct[i].P[Bead].y = y;
-            Struct[i].P[Bead].z = z;
-          }
+          Struct[i].P[Bead].x = x;
+          Struct[i].P[Bead].y = y;
+          Struct[i].P[Bead].z = z;
         }
       }
     }
@@ -581,16 +436,9 @@ double PsiWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   //Clean up files
   call.str("");
   call << "rm -f ";
-  if (Bead == -1)
-  {
-    call << "QMMM.dat QMMM.out QMMM.log";
-  }
-  if (Bead != -1)
-  {
-    call << "QMMM_" << Bead << ".dat ";
-    call << "QMMM_" << Bead << ".out ";
-    call << "QMMM_" << Bead << ".log";
-  }
+  call << "QMMM_" << Bead << ".dat ";
+  call << "QMMM_" << Bead << ".out ";
+  call << "QMMM_" << Bead << ".log";
   sys = system(call.str().c_str());
   //Change units
   E *= Har2eV;

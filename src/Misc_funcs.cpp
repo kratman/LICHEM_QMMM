@@ -13,145 +13,18 @@
 */
 
 //Misc. functions
-void Remove_COM(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
-{
-  //Places the system at the center of the simulation box
-  Coord com = Get_COM(parts,QMMMOpts);
-  //Subtract COM for atoms
-  #pragma omp parallel for
-  for (int i=0;i<Natoms;i++)
-  {
-    double x = parts[i].x-com.x-0.5*Lx;
-    double y = parts[i].y-com.y-0.5*Ly;
-    double z = parts[i].z-com.z-0.5*Lz;
-    bool check = 1;
-    while (check == 1)
-    {
-      check = 0;
-      if (x > Lx)
-      {
-        x -= Lx;
-        check = 1;
-      }
-      if (x < 0.0)
-      {
-        x += Lx;
-        check = 1;
-      }
-      if (y > Ly)
-      {
-        y -= Ly;
-        check = 1;
-      }
-      if (y < 0.0)
-      {
-        y += Ly;
-        check = 1;
-      }
-      if (z > Lz)
-      {
-        z -= Lz;
-        check = 1;
-      }
-      if (z < 0.0)
-      {
-        z += Lz;
-        check = 1;
-      }
-    }
-    parts[i].x = x;
-    parts[i].y = y;
-    parts[i].z = z;
-    for (int j=0;j<QMMMOpts.Nbeads;j++)
-    {
-      x = parts[i].P[j].x-com.x-0.5*Lx;
-      y = parts[i].P[j].y-com.y-0.5*Ly;
-      z = parts[i].P[j].z-com.z-0.5*Lz;
-      check = 1;
-      while (check == 1)
-      {
-        check = 0;
-        if (x > Lx)
-        {
-          x -= Lx;
-          check = 1;
-        }
-        if (x < 0.0)
-        {
-          x += Lx;
-          check = 1;
-        }
-        if (y > Ly)
-        {
-          y -= Ly;
-          check = 1;
-        }
-        if (y < 0.0)
-        {
-          y += Ly;
-          check = 1;
-        }
-        if (z > Lz)
-        {
-          z -= Lz;
-          check = 1;
-        }
-        if (z < 0.0)
-        {
-          z += Lz;
-          check = 1;
-        }
-      }
-      parts[i].P[j].x = x;
-      parts[i].P[j].y = y;
-      parts[i].P[j].z = z;
-    }
-  }
-  #pragma omp barrier
-  return;
-};
-
 void Print_traj(vector<QMMMAtom>& parts, fstream& traj, QMMMSettings& QMMMOpts)
 {
-  if (RCOM == 1)
+  int Ntot = QMMMOpts.Nbeads*Natoms;
+  traj << Ntot << '\n' << '\n';
+  for (int i=0;i<Natoms;i++)
   {
-    //Removes the center of mass and finds centroids
-    Remove_COM(parts,QMMMOpts);
-  }
-  if (RCOM == 0)
-  {
-    //Finds centroids when the system is moved to the center of the box
-    #pragma omp parallel for
-    for (int i=0;i<Natoms;i++)
-    {
-      Get_Centroid(parts[i],QMMMOpts);
-    }
-    #pragma omp barrier
-  }
-  if ((QMMMOpts.PrintMode == "All") or (QMMMOpts.PrintMode == "all"))
-  {
-    int Ntot = QMMMOpts.Nbeads*Natoms;
-    traj << Ntot << '\n' << '\n';
-    for (int i=0;i<Natoms;i++)
-    {
-      for (int j=0;j<QMMMOpts.Nbeads;j++)
-      {
-        traj << parts[i].MMTyp << " ";
-        traj << parts[i].P[j].x << " ";
-        traj << parts[i].P[j].y << " ";
-        traj << parts[i].P[j].z << '\n';
-      }
-    }
-  }
-  if ((QMMMOpts.PrintMode == "COM") or (QMMMOpts.PrintMode == "com"))
-  {
-    traj << Natoms << '\n' << '\n';
-    for (int i=0;i<Natoms;i++)
+    for (int j=0;j<QMMMOpts.Nbeads;j++)
     {
       traj << parts[i].MMTyp << " ";
-      traj << parts[i].x << " ";
-      traj << parts[i].y << " ";
-      traj << parts[i].z << '\n';
+      traj << parts[i].P[j].x << " ";
+      traj << parts[i].P[j].y << " ";
+      traj << parts[i].P[j].z << '\n';
     }
   }
   traj.flush();
@@ -358,13 +231,19 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
       //Save atom information
       QMMMAtom tmp;
       xyzfile >> tmp.QMTyp;
-      xyzfile >> tmp.x >> tmp.y >> tmp.z;
+      Coord tmp2;
+      xyzfile >> tmp2.x >> tmp2.y >> tmp2.z;
+      tmp.P.push_back(tmp2); //Set up zeroth replica
       tmp.id = i;
       tmp.QMregion = 0;
       tmp.MMregion = 1;
       tmp.PAregion = 0;
       tmp.BAregion = 0;
       tmp.Frozen = 0;
+      Mpole tmp3; //Initialize charges and multipoles
+      OctCharges tmp4; //Initialize charges and multipoles
+      tmp.MP.push_back(tmp3);
+      tmp.PC.push_back(tmp4);
       Struct.push_back(tmp);
     }
   }
@@ -382,7 +261,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
       exit(0); //Escape
     }
     connectfile >> Struct[i].MMTyp >> Struct[i].NumTyp;
-    connectfile >> Struct[i].m >> Struct[i].q;
+    connectfile >> Struct[i].m >> Struct[i].MP[0].q;
     connectfile >> tmp; //Number of bonds
     for (int j=0;j<tmp;j++)
     {
@@ -544,11 +423,10 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.Nbeads;
     regionfile >> dummy >> QMMMOpts.accratio;
     regionfile >> dummy >> QMMMOpts.Nprint;
-    regionfile >> dummy >> QMMMOpts.PrintMode;
     for (int i=0;i<Natoms;i++)
     {
       //Create path-integral beads
-      for (int j=0;j<QMMMOpts.Nbeads;j++)
+      for (int j=0;j<(QMMMOpts.Nbeads-1);j++)
       {
         //Pick random displacements
         double randx = (((double)rand())/((double)RAND_MAX));
@@ -563,10 +441,14 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
         }
         Coord temp; //Bead coordinates
         //Set random bead displacements
-        temp.x = Struct[i].x+(randx-0.5)*step;
-        temp.y = Struct[i].y+(randy-0.5)*step;
-        temp.z = Struct[i].z+(randz-0.5)*step;
+        temp.x = Struct[i].P[0].x+(randx-0.5)*step;
+        temp.y = Struct[i].P[0].y+(randy-0.5)*step;
+        temp.z = Struct[i].P[0].z+(randz-0.5)*step;
         Struct[i].P.push_back(temp);
+        Mpole temp2 = Struct[i].MP[0];
+        Struct[i].MP.push_back(temp2);
+        OctCharges temp3 = Struct[i].PC[0];
+        Struct[i].PC.push_back(temp3);
       }
     }
   }
@@ -583,10 +465,9 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     QMMMOpts.Press = 0;
     QMMMOpts.Neq = 0;
     QMMMOpts.Nsteps = 0;
-    QMMMOpts.Nbeads = 0;
+    QMMMOpts.Nbeads = 1;
     QMMMOpts.accratio = 0;
     QMMMOpts.Nprint = 0;
-    QMMMOpts.PrintMode = "COM";
     QMMMOpts.Ensemble = "N/A";
     regionfile >> dummy >> QMMMOpts.SteepStep;
     regionfile >> dummy >> QMMMOpts.QMOptTol;
@@ -606,10 +487,9 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     QMMMOpts.Press = 0;
     QMMMOpts.Neq = 0;
     QMMMOpts.Nsteps = 0;
-    QMMMOpts.Nbeads = 0;
+    QMMMOpts.Nbeads = 1;
     QMMMOpts.accratio = 0;
     QMMMOpts.Nprint = 0;
-    QMMMOpts.PrintMode = "COM";
     QMMMOpts.Ensemble = "N/A";
     regionfile >> dummy >> QMMMOpts.SteepStep;
     regionfile >> dummy >> QMMMOpts.QMOptTol;
@@ -629,10 +509,9 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     QMMMOpts.Press = 0;
     QMMMOpts.Neq = 0;
     QMMMOpts.Nsteps = 0;
-    QMMMOpts.Nbeads = 0;
+    QMMMOpts.Nbeads = 1;
     QMMMOpts.accratio = 0;
     QMMMOpts.Nprint = 0;
-    QMMMOpts.PrintMode = "COM";
     QMMMOpts.Ensemble = "N/A";
   }
   regionfile >> dummy >> dummy; //PBC options
@@ -681,9 +560,9 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
       //Frozen atoms must be purely classical
       for (int j=0;j<QMMMOpts.Nbeads;j++)
       {
-        Struct[AtomID].P[j].x = Struct[AtomID].x;
-        Struct[AtomID].P[j].y = Struct[AtomID].y;
-        Struct[AtomID].P[j].z = Struct[AtomID].z;
+        Struct[AtomID].P[j].x = Struct[AtomID].P[0].x;
+        Struct[AtomID].P[j].y = Struct[AtomID].P[0].y;
+        Struct[AtomID].P[j].z = Struct[AtomID].P[0].z;
       }
     }
   }

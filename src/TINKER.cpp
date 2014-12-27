@@ -31,19 +31,13 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call.str("");
   call << "cp " << TINKKeyFile << " ";
   call << "QMMM";
-  if (Bead != -1)
-  {
-    call << "_" << Bead;
-  }
+  call << "_" << Bead;
   call << ".key";
   sys = system(call.str().c_str());
   //Save new keyfile name
   call.str("");
   call << "QMMM";
-  if (Bead != -1)
-  {
-    call << "_" << Bead;
-  }
+  call << "_" << Bead;
   call << ".key";
   TINKKeyFile = call.str(); //Save the new name
   //Add QM atoms to force field parameters list
@@ -182,10 +176,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   //Create TINKER xyz file from the structure
   call.str("");
   call << "QMMM";
-  if (Bead != -1)
-  {
-    call << "_" << Bead;
-  }
+  call << "_" << Bead;
   call << ".xyz";
   ofile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
@@ -204,22 +195,11 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    if (Bead == -1)
-    {
-      ofile << setw(12) << Struct[i].x;
-      ofile << " ";
-      ofile << setw(12) << Struct[i].y;
-      ofile << " ";
-      ofile << setw(12) << Struct[i].z;
-    }
-    if (Bead != -1)
-    {
-      ofile << setw(12) << Struct[i].P[Bead].x;
-      ofile << " ";
-      ofile << setw(12) << Struct[i].P[Bead].y;
-      ofile << " ";
-      ofile << setw(12) << Struct[i].P[Bead].z;
-    }
+    ofile << setw(12) << Struct[i].P[Bead].x;
+    ofile << " ";
+    ofile << setw(12) << Struct[i].P[Bead].y;
+    ofile << " ";
+    ofile << setw(12) << Struct[i].P[Bead].z;
     ofile << " ";
     if ((Struct[i].QMregion != 1) and (Struct[i].PAregion != 1))
     {
@@ -243,15 +223,9 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   //Run MM
   call.str("");
   call << "testgrad " << "QMMM";
-  if (Bead != -1)
-  {
-    call << "_" << Bead;
-  }
+  call << "_" << Bead;
   call << ".xyz Y N > QMMM";
-  if (Bead != -1)
-  {
-    call << "_" << Bead;
-  }
+  call << "_" << Bead;
   call << ".grad";
   sys = system(call.str().c_str());
   //Collect MM forces
@@ -259,10 +233,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   //Open files
   call.str("");
   call << "QMMM";
-  if (Bead != -1)
-  {
-    call << "_" << Bead;
-  }
+  call << "_" << Bead;
   call << ".grad";
   MMgrad.open(call.str().c_str(),ios_base::in);
   //Read derivatives
@@ -304,10 +275,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call.str("");
   call << "rm -f ";
   call << "QMMM";
-  if (Bead != -1)
-  {
-    call << "_" << Bead;
-  }
+  call << "_" << Bead;
   call << ".*";
   sys = system(call.str().c_str());
   //Return
@@ -410,19 +378,13 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   {
     call.str("");
     call << "cp " << TINKKeyFile << " QMMM";
-    if (Bead != -1)
-    {
-      call << "_" << Bead;
-    }
+    call << "_" << Bead;
     call << ".key";
     sys = system(call.str().c_str());
     //Save new keyfile name
     call.str("");
     call << "QMMM";
-    if (Bead != -1)
-    {
-      call << "_" << Bead;
-    }
+    call << "_" << Bead;
     call << ".key";
     TINKKeyFile = call.str(); //Save the new name
     //Add QM atoms to force field parameters list
@@ -493,7 +455,7 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
           ofile << "charge " << (MaxTINKERNum+ct) << " ";
           if (RunTyp == "Opt")
           {
-            ofile << Struct[i].q;
+            ofile << Struct[i].MP[Bead].q;
           }
           if (RunTyp == "Enrg")
           {
@@ -508,16 +470,9 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     ofile.close();
   }
   //Create TINKER xyz file from the structure
-  if (Bead == -1)
-  {
-    ofile.open("QMMM.xyz",ios_base::out);
-  }
-  if (Bead != -1)
-  {
-    call.str("");
-    call << "QMMM_" << Bead << ".xyz";
-    ofile.open(call.str().c_str(),ios_base::out);
-  }
+  call.str("");
+  call << "QMMM_" << Bead << ".xyz";
+  ofile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   ofile << Natoms << '\n';
   if (PBCon == 1)
@@ -534,22 +489,11 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    if (Bead == -1)
-    {
-      ofile << setw(12) << Struct[i].x;
-      ofile << " ";
-      ofile << setw(12) << Struct[i].y;
-      ofile << " ";
-      ofile << setw(12) << Struct[i].z;
-    }
-    if (Bead != -1)
-    {
-      ofile << setw(12) << Struct[i].P[Bead].x;
-      ofile << " ";
-      ofile << setw(12) << Struct[i].P[Bead].y;
-      ofile << " ";
-      ofile << setw(12) << Struct[i].P[Bead].z;
-    }
+    ofile << setw(12) << Struct[i].P[Bead].x;
+    ofile << " ";
+    ofile << setw(12) << Struct[i].P[Bead].y;
+    ofile << " ";
+    ofile << setw(12) << Struct[i].P[Bead].z;
     ofile << " ";
     if (Struct[i].QMregion != 1)
     {
@@ -589,22 +533,11 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     {
       getline(ifile,dummy);
       stringstream line(dummy);
-      if (Bead == -1)
-      {
-        //Read new positions
-        line >> dummy >> dummy;
-        line >> Struct[i].x;
-        line >> Struct[i].y;
-        line >> Struct[i].z;
-      }
-      if (Bead != -1)
-      {
-        //Read new positions
-        line >> dummy >> dummy;
-        line >> Struct[i].P[Bead].x;
-        line >> Struct[i].P[Bead].y;
-        line >> Struct[i].P[Bead].z;
-      }
+      //Read new positions
+      line >> dummy >> dummy;
+      line >> Struct[i].P[Bead].x;
+      line >> Struct[i].P[Bead].y;
+      line >> Struct[i].P[Bead].z;
     }
     ifile.close();
   }
@@ -612,22 +545,14 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   if (RunTyp == "Enrg")
   {
     //Run TINKER
-    if (Bead != -1)
-    {
-      call.str("");
-      call << "analyze QMMM_";
-      call << Bead << ".xyz E > QMMM_";
-      call << Bead << ".log";
-      sys = system(call.str().c_str());
-      call.str("");
-      call << "QMMM_" << Bead << ".log";
-      ifile.open(call.str().c_str(),ios_base::in);
-    }
-    if (Bead == -1)
-    {
-      sys = system("analyze QMMM.xyz E > QMMM.log");
-      ifile.open("QMMM.log",ios_base::in);
-    }
+    call.str("");
+    call << "analyze QMMM_";
+    call << Bead << ".xyz E > QMMM_";
+    call << Bead << ".log";
+    sys = system(call.str().c_str());
+    call.str("");
+    call << "QMMM_" << Bead << ".log";
+    ifile.open(call.str().c_str(),ios_base::in);
     //Read MM potential energy
     bool contread = 1;
     while ((!ifile.eof()) and (contread == 1))
@@ -657,20 +582,10 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   //Clean up files
   call.str("");
   call << "rm -f";
-  if (Bead != -1)
-  {
-    call << " QMMM_" << Bead << ".xyz";
-    call << " QMMM_" << Bead << ".log";
-    call << " QMMM_" << Bead << ".xyz_*";
-    call << " QMMM_" << Bead << ".key";
-  }
-  if (Bead == -1)
-  {
-    call << " QMMM.xyz";
-    call << " QMMM.log";
-    call << " QMMM.xyz_*";
-    call << " QMMM.key";
-  }
+  call << " QMMM_" << Bead << ".xyz";
+  call << " QMMM_" << Bead << ".log";
+  call << " QMMM_" << Bead << ".xyz_*";
+  call << " QMMM_" << Bead << ".key";
   sys = system(call.str().c_str());
   //Change units
   E *= kcal2eV;

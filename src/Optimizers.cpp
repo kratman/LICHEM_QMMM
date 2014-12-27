@@ -76,9 +76,9 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Move QM atoms
       if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
       {
-        Struct[i].x += QMMMOpts.SteepStep*Forces[ct].x;
-        Struct[i].y += QMMMOpts.SteepStep*Forces[ct].y;
-        Struct[i].z += QMMMOpts.SteepStep*Forces[ct].z;
+        Struct[i].P[0].x += QMMMOpts.SteepStep*Forces[ct].x;
+        Struct[i].P[0].y += QMMMOpts.SteepStep*Forces[ct].y;
+        Struct[i].P[0].z += QMMMOpts.SteepStep*Forces[ct].z;
         ct += 1;
       }
     }
@@ -111,9 +111,9 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Calculate RMS displacement
       if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
       {
-        double dx = Struct[i].x-OldStruct[i].x;
-        double dy = Struct[i].y-OldStruct[i].y;
-        double dz = Struct[i].z-OldStruct[i].z;
+        double dx = Struct[i].P[0].x-OldStruct[i].P[0].x;
+        double dy = Struct[i].P[0].y-OldStruct[i].P[0].y;
+        double dz = Struct[i].P[0].z-OldStruct[i].P[0].z;
         RMSdiff += dx*dx+dy*dy+dz*dz;
       }
     }
@@ -268,9 +268,9 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Move QM atoms
       if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
       {
-        Struct[i].x += OptVec(ct);
-        Struct[i].y += OptVec(ct+1);
-        Struct[i].z += OptVec(ct+2);
+        Struct[i].P[0].x += OptVec(ct);
+        Struct[i].P[0].y += OptVec(ct+1);
+        Struct[i].P[0].z += OptVec(ct+2);
         ct += 3;
       }
     }
@@ -337,9 +337,9 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Calculate RMS displacement
       if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
       {
-        double dx = Struct[i].x-OldStruct[i].x;
-        double dy = Struct[i].y-OldStruct[i].y;
-        double dz = Struct[i].z-OldStruct[i].z;
+        double dx = Struct[i].P[0].x-OldStruct[i].P[0].x;
+        double dy = Struct[i].P[0].y-OldStruct[i].P[0].y;
+        double dz = Struct[i].P[0].z-OldStruct[i].P[0].z;
         RMSdiff += dx*dx+dy*dy+dz*dz;
       }
     }

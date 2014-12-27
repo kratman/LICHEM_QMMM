@@ -63,13 +63,13 @@ int main(int argc, char* argv[])
     if (Gaussian == 1)
     {
       int tstart = (unsigned)time(0);
-      Eqm += GaussianWrapper("Enrg",Struct,QMMMOpts,-1);
+      Eqm += GaussianWrapper("Enrg",Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
     }
     if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
-      Eqm += PsiWrapper("Enrg",Struct,QMMMOpts,-1);
+      Eqm += PsiWrapper("Enrg",Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
@@ -83,13 +83,13 @@ int main(int argc, char* argv[])
     if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);
-      Emm += TINKERWrapper("Enrg",Struct,QMMMOpts,-1);
+      Emm += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     if (Amber == 1)
     {
       int tstart = (unsigned)time(0);
-      Emm += AmberWrapper("Enrg",Struct,QMMMOpts,-1);
+      Emm += AmberWrapper("Enrg",Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     if ((QMMM == 1) or (MMonly == 1))
@@ -137,42 +137,12 @@ int main(int argc, char* argv[])
     double Nacc = 0;
     double Nrej = 0;
     bool acc;
-    if (RCOM == 1)
-    {
-      Remove_COM(Struct,QMMMOpts);
-    }
     cout << "Starting equilibration..." << endl;
-    if (Debug == 1)
-    {
-      Print_traj(Struct,outfile,QMMMOpts);
-    }
     Nct = 0;
     while (Nct < QMMMOpts.Neq) //Equilibration
     {
       if(ct == Acc_Check)
       {
-        if (Debug == 1)
-        {
-          cout << " | Step: ";
-          cout << Nct;
-          cout << " | Energy: ";
-          double Veff = Ek; //Kinetic energy
-          //Add atom-atom interactions
-          Veff += Get_PI_Epot(Struct,QMMMOpts);
-          Veff -= Get_PI_Espring(Struct,QMMMOpts);
-          if (QMMMOpts.Ensemble == "NPT")
-          {
-            Veff += QMMMOpts.Press*Lx*Ly*Lz*atm2eV;
-          }
-          cout << Veff;
-          cout << '\n';
-          cout << " | Accept ratio: ";
-          cout << (Nacc/(Nrej+Nacc));
-          cout << " | Step size: ";
-          cout << step << '\n';
-          cout << '\n';
-          Print_traj(Struct,outfile,QMMMOpts);
-        }
         if ((Nacc/(Nrej+Nacc)) > QMMMOpts.accratio)
         {
           step *= 1.10;
@@ -290,13 +260,13 @@ int main(int argc, char* argv[])
     if (Gaussian == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,-1);
+      SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
     }
     if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += PsiWrapper("Enrg",Struct,QMMMOpts,-1);
+      SumE += PsiWrapper("Enrg",Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
@@ -304,13 +274,13 @@ int main(int argc, char* argv[])
     if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,-1);
+      SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     if (Amber == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += AmberWrapper("Enrg",Struct,QMMMOpts,-1);
+      SumE += AmberWrapper("Enrg",Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     cout << " | Opt. Step: ";
@@ -328,13 +298,13 @@ int main(int argc, char* argv[])
       if (Gaussian == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE = GaussianWrapper("Opt",Struct,QMMMOpts,-1);
+        SumE = GaussianWrapper("Opt",Struct,QMMMOpts,0);
         QMTime += (unsigned)time(0)-tstart;
       }
       if (PSI4 == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE = PsiWrapper("Opt",Struct,QMMMOpts,-1);
+        SumE = PsiWrapper("Opt",Struct,QMMMOpts,0);
         QMTime += (unsigned)time(0)-tstart;
         //Clean up annoying useless files
         int sys = system("rm -f psi.*");
@@ -342,13 +312,13 @@ int main(int argc, char* argv[])
       if (TINKER == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE = TINKERWrapper("Opt",Struct,QMMMOpts,-1);
+        SumE = TINKERWrapper("Opt",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       if (Amber == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE = AmberWrapper("Opt",Struct,QMMMOpts,-1);
+        SumE = AmberWrapper("Opt",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       //Print Optimized geometry
@@ -358,13 +328,13 @@ int main(int argc, char* argv[])
       if (Gaussian == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,-1);
+        SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,0);
         QMTime += (unsigned)time(0)-tstart;
       }
       if (PSI4 == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE += PsiWrapper("Enrg",Struct,QMMMOpts,-1);
+        SumE += PsiWrapper("Enrg",Struct,QMMMOpts,0);
         QMTime += (unsigned)time(0)-tstart;
         //Clean up annoying useless files
         int sys = system("rm -f psi.*");
@@ -372,13 +342,13 @@ int main(int argc, char* argv[])
       if (TINKER == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,-1);
+        SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       if (Amber == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE += AmberWrapper("Enrg",Struct,QMMMOpts,-1);
+        SumE += AmberWrapper("Enrg",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       //Check convergance of the MM region
@@ -390,9 +360,9 @@ int main(int argc, char* argv[])
       {
         if (Struct[i].MMregion == 1)
         {
-          double dx = Struct[i].x-OldStruct[i].x;
-          double dy = Struct[i].y-OldStruct[i].y;
-          double dz = Struct[i].z-OldStruct[i].z;
+          double dx = Struct[i].P[0].x-OldStruct[i].P[0].x;
+          double dy = Struct[i].P[0].y-OldStruct[i].P[0].y;
+          double dz = Struct[i].P[0].z-OldStruct[i].P[0].z;
           RMSdiff += dx*dx+dy*dy+dz*dz;
         }
       }
@@ -423,13 +393,13 @@ int main(int argc, char* argv[])
     if (Gaussian == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,-1);
+      SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
     }
     if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += PsiWrapper("Enrg",Struct,QMMMOpts,-1);
+      SumE += PsiWrapper("Enrg",Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
@@ -437,13 +407,13 @@ int main(int argc, char* argv[])
     if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,-1);
+      SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     if (Amber == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += AmberWrapper("Enrg",Struct,QMMMOpts,-1);
+      SumE += AmberWrapper("Enrg",Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     cout << " | Opt. Step: ";
@@ -458,17 +428,17 @@ int main(int argc, char* argv[])
       //Copy structure
       OldStruct = Struct;
       //Run optimization
-      FLUKESteepest(Struct,QMMMOpts,-1);
+      FLUKESteepest(Struct,QMMMOpts,0);
       if (TINKER == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE = TINKERWrapper("Opt",Struct,QMMMOpts,-1);
+        SumE = TINKERWrapper("Opt",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       if (Amber == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE = AmberWrapper("Opt",Struct,QMMMOpts,-1);
+        SumE = AmberWrapper("Opt",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       //Print Optimized geometry
@@ -478,13 +448,13 @@ int main(int argc, char* argv[])
       if (Gaussian == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,-1);
+        SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,0);
         QMTime += (unsigned)time(0)-tstart;
       }
       if (PSI4 == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE += PsiWrapper("Enrg",Struct,QMMMOpts,-1);
+        SumE += PsiWrapper("Enrg",Struct,QMMMOpts,0);
         QMTime += (unsigned)time(0)-tstart;
         //Clean up annoying useless files
         int sys = system("rm -f psi.*");
@@ -492,13 +462,13 @@ int main(int argc, char* argv[])
       if (TINKER == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,-1);
+        SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       if (Amber == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE += AmberWrapper("Enrg",Struct,QMMMOpts,-1);
+        SumE += AmberWrapper("Enrg",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       //Check convergance of the MM region
@@ -510,9 +480,9 @@ int main(int argc, char* argv[])
       {
         if (Struct[i].MMregion == 1)
         {
-          double dx = Struct[i].x-OldStruct[i].x;
-          double dy = Struct[i].y-OldStruct[i].y;
-          double dz = Struct[i].z-OldStruct[i].z;
+          double dx = Struct[i].P[0].x-OldStruct[i].P[0].x;
+          double dy = Struct[i].P[0].y-OldStruct[i].P[0].y;
+          double dz = Struct[i].P[0].z-OldStruct[i].P[0].z;
           RMSdiff += dx*dx+dy*dy+dz*dz;
         }
       }
@@ -570,13 +540,13 @@ int main(int argc, char* argv[])
   EndTime = (unsigned)time(0); //Time the program completes
   double TotalHours = (double(EndTime)-double(StartTime));
   double TotalQM = double(QMTime);
-  if (QMMMOpts.Nbeads > 0)
+  if (QMMMOpts.Nbeads > 1)
   {
     //Average over the number of beads
     TotalQM /= QMMMOpts.Nbeads;
   }
   double TotalMM = double(MMTime);
-  if (QMMMOpts.Nbeads > 0)
+  if (QMMMOpts.Nbeads > 1)
   {
     //Average over the number of beads
     TotalMM /= QMMMOpts.Nbeads;
