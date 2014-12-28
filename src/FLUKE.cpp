@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 {
   //Misc. initialization
   StartTime = (unsigned)time(0); //Time the program starts
-  cout.precision(16);
+  cout.precision(10);
   //End of section
 
   //Initialize local variables
@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
     if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
-      Eqm += PsiWrapper("Enrg",Struct,QMMMOpts,0);
+      Eqm += PSIWrapper("Enrg",Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
@@ -266,7 +266,7 @@ int main(int argc, char* argv[])
     if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += PsiWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += PSIWrapper("Enrg",Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
@@ -304,7 +304,7 @@ int main(int argc, char* argv[])
       if (PSI4 == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE = PsiWrapper("Opt",Struct,QMMMOpts,0);
+        SumE = PSIWrapper("Opt",Struct,QMMMOpts,0);
         QMTime += (unsigned)time(0)-tstart;
         //Clean up annoying useless files
         int sys = system("rm -f psi.*");
@@ -334,7 +334,7 @@ int main(int argc, char* argv[])
       if (PSI4 == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE += PsiWrapper("Enrg",Struct,QMMMOpts,0);
+        SumE += PSIWrapper("Enrg",Struct,QMMMOpts,0);
         QMTime += (unsigned)time(0)-tstart;
         //Clean up annoying useless files
         int sys = system("rm -f psi.*");
@@ -399,7 +399,7 @@ int main(int argc, char* argv[])
     if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += PsiWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += PSIWrapper("Enrg",Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
@@ -454,7 +454,7 @@ int main(int argc, char* argv[])
       if (PSI4 == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE += PsiWrapper("Enrg",Struct,QMMMOpts,0);
+        SumE += PSIWrapper("Enrg",Struct,QMMMOpts,0);
         QMTime += (unsigned)time(0)-tstart;
         //Clean up annoying useless files
         int sys = system("rm -f psi.*");
@@ -519,7 +519,7 @@ int main(int argc, char* argv[])
     if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += PsiWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += PSIWrapper("Enrg",Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
@@ -574,7 +574,7 @@ int main(int argc, char* argv[])
       if (PSI4 == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE += PsiWrapper("Enrg",Struct,QMMMOpts,0);
+        SumE += PSIWrapper("Enrg",Struct,QMMMOpts,0);
         QMTime += (unsigned)time(0)-tstart;
         //Clean up annoying useless files
         int sys = system("rm -f psi.*");

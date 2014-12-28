@@ -160,7 +160,9 @@ FLUKE can only be invoked from a command line interface.
 user:\$ FLUKE -n Ncpus -x xyzfile.xyz -c confile.inp
  -r regfile.inp -o output.xyz \\
 
--n: Number of CPUs used in the calculations. \\
+-n: Number of CPUs used in the calculations. Note that during PIMC and
+reaction path calculations each replica uses this many CPUs. A reaction
+path calculation with 8 points and Ncpus=2 would require 16 CPUs. \\
 
 -x: File name for the input structure in XYZ or PDB format. The XYZ input
 should be in the standard format and have a blank comment line. \\

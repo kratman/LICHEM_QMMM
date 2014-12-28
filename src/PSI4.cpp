@@ -12,7 +12,7 @@
 */
 
 //QM utility functions
-double PsiForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
+double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the forces on a set of atoms
@@ -75,7 +75,7 @@ double PsiForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   }
   //Set up charge calculation
   call << "energy('" << QMMMOpts.Func << "')" << '\n';
-  call << "oeprop('MULLIKEN_CHARGES')" << '\n';
+  call << "gradient('" << QMMMOpts.Func << "')" << '\n';
   //Print file
   dummy = call.str(); //Store file as a temporary variable
   call.str("");
@@ -86,7 +86,7 @@ double PsiForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   //Call PSI4
   call.str("");
   call << "psi4 -n " << Ncpus;
-  call << "-u QMMM";
+  call << "-i QMMM";
   call << "_" << Bead;
   call << ".dat -o QMMM";
   call << "_" << Bead;
@@ -106,7 +106,7 @@ double PsiForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     if (dummy == "-Total")
     {
       line >> dummy;
-      if (dummy == "Gradient")
+      if (dummy == "Gradient:")
       {
         getline(ifile,dummy);
 	getline(ifile,dummy);
@@ -152,7 +152,7 @@ double PsiForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   return Eqm;
 };
 
-void PsiCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
+void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Function to update QM point charges
   int sys;
@@ -224,7 +224,7 @@ void PsiCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Call PSI4
   call.str("");
   call << "psi4 -n " << Ncpus;
-  call << "-u QMMM";
+  call << "-i QMMM";
   call << "_" << Bead;
   call << ".dat -o QMMM";
   call << "_" << Bead;
@@ -244,7 +244,7 @@ void PsiCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     if (dummy == "Mulliken")
     {
       line >> dummy;
-      if (dummy == "Charges")
+      if (dummy == "Charges:")
       {
         getline(ifile,dummy);
         for (int i=0;i<Natoms;i++)
@@ -269,7 +269,6 @@ void PsiCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Clean up files
   call.str("");
   call << "rm -f ";
-  call << "QMMM.dat QMMM.out QMMM.log";
   call << "QMMM_" << Bead << ".dat ";
   call << "QMMM_" << Bead << ".out ";
   call << "QMMM_" << Bead << ".log";
@@ -278,7 +277,7 @@ void PsiCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 };
 
 //QM wrapper functions
-double PsiWrapper(string RunTyp, vector<QMMMAtom>& Struct,
+double PSIWrapper(string RunTyp, vector<QMMMAtom>& Struct,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs psi4 for energy calculations

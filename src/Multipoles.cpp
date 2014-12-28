@@ -11,6 +11,13 @@
 
 */
 
+void ExtractTINKpoles(vector<QMMMAtom>& Struct)
+{
+  //Parses TINKER parameter files to find multipoles and local frames
+  
+  return;
+};
+
 void RotateCharges(vector<QMMMAtom>& Struct, Mpole& poles, OctCharges& grid)
 {
   //Switches from the local frame of reference to the global frame

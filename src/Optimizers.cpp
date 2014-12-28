@@ -57,7 +57,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
-      E += PsiForces(Struct,Forces,QMMMOpts,Bead);
+      E += PSIForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
@@ -76,9 +76,9 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Move QM atoms
       if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
       {
-        Struct[i].P[0].x += QMMMOpts.SteepStep*Forces[ct].x;
-        Struct[i].P[0].y += QMMMOpts.SteepStep*Forces[ct].y;
-        Struct[i].P[0].z += QMMMOpts.SteepStep*Forces[ct].z;
+        Struct[i].P[Bead].x += QMMMOpts.SteepStep*Forces[ct].x;
+        Struct[i].P[Bead].y += QMMMOpts.SteepStep*Forces[ct].y;
+        Struct[i].P[Bead].z += QMMMOpts.SteepStep*Forces[ct].z;
         ct += 1;
       }
     }
@@ -111,9 +111,9 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Calculate RMS displacement
       if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
       {
-        double dx = Struct[i].P[0].x-OldStruct[i].P[0].x;
-        double dy = Struct[i].P[0].y-OldStruct[i].P[0].y;
-        double dz = Struct[i].P[0].z-OldStruct[i].P[0].z;
+        double dx = Struct[i].P[Bead].x-OldStruct[i].P[Bead].x;
+        double dy = Struct[i].P[Bead].y-OldStruct[i].P[Bead].y;
+        double dz = Struct[i].P[Bead].z-OldStruct[i].P[Bead].z;
         RMSdiff += dx*dx+dy*dy+dz*dz;
       }
     }
@@ -145,7 +145,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
-      PsiCharges(Struct,QMMMOpts,Bead);
+      PSICharges(Struct,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
@@ -179,18 +179,18 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   VectorXd GradDiff(3*(Nqm+Npseudo));
   VectorXd NGrad(3*(Nqm+Npseudo));
   MatrixXd Hess(3*(Nqm+Npseudo),3*(Nqm+Npseudo));
-  for (int i=0;i<(Nqm+Npseudo);i++)
+  for (int i=0;i<(3*(Nqm+Npseudo));i++)
   {
     //Initialize arrays
     OptVec(i) = 0;
     GradDiff(i) = 0;
     NGrad(i) = 0;
-    //Create identity matrix for the initial Hessian
-    for (int j=0;j<(Nqm+Npseudo);j++)
+    //Create matrix for the initial Hessian
+    for (int j=0;j<(3*(Nqm+Npseudo));j++)
     {
-      Hess(i,j) = 0;
+      Hess(i,j) = 0.0;
     }
-    Hess(i,i) = 0;
+    Hess(i,i) = 1; //Diagonal identity matrix
   }
   vector<Coord> Forces;
   for (int i=0;i<(Nqm+Npseudo);i++)
@@ -212,7 +212,7 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (PSI4 == 1)
   {
     int tstart = (unsigned)time(0);
-    E += PsiForces(Struct,Forces,QMMMOpts,Bead);
+    E += PSIForces(Struct,Forces,QMMMOpts,Bead);
     QMTime += (unsigned)time(0)-tstart;
     //Clean up annoying useless files
     int sys = system("rm -f psi.*");
@@ -227,7 +227,7 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Determine new structure
   int ct = 0; //Counter
   int ct2 = 0; //Secondary counter
-  for (int i=0;i<Natoms;i++)
+  for (int i=0;i<(Nqm+Npseudo);i++)
   {
     //Change forces array
     NGrad(ct2) = Forces[ct].x;
@@ -250,9 +250,9 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     for (int i=0;i<(Nqm+Npseudo);i++)
     {
       //Reinitialize the change in the gradient
-      GradDiff(ct) = NGrad[ct];
-      GradDiff(ct+1) = NGrad[ct+1];
-      GradDiff(ct+2) = NGrad[ct+2];
+      GradDiff(ct) = NGrad(ct);
+      GradDiff(ct+1) = NGrad(ct+1);
+      GradDiff(ct+2) = NGrad(ct+2);
       ct += 3;
       //Delete old forces
       Forces[i].x = 0;
@@ -268,9 +268,9 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Move QM atoms
       if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
       {
-        Struct[i].P[0].x += OptVec(ct);
-        Struct[i].P[0].y += OptVec(ct+1);
-        Struct[i].P[0].z += OptVec(ct+2);
+        Struct[i].P[Bead].x += OptVec(ct);
+        Struct[i].P[Bead].y += OptVec(ct+1);
+        Struct[i].P[Bead].z += OptVec(ct+2);
         ct += 3;
       }
     }
@@ -286,7 +286,7 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
-      E += PsiForces(Struct,Forces,QMMMOpts,Bead);
+      E += PSIForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
@@ -308,6 +308,7 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       NGrad(ct) = Forces[i].x;
       NGrad(ct+1) = Forces[i].y;
       NGrad(ct+2) = Forces[i].z;
+      ct += 3;
     }
     //Start really long "line"
     Hess = Hess+((GradDiff*GradDiff.transpose())/(GradDiff.transpose()*
@@ -340,9 +341,9 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Calculate RMS displacement
       if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
       {
-        double dx = Struct[i].P[0].x-OldStruct[i].P[0].x;
-        double dy = Struct[i].P[0].y-OldStruct[i].P[0].y;
-        double dz = Struct[i].P[0].z-OldStruct[i].P[0].z;
+        double dx = Struct[i].P[Bead].x-OldStruct[i].P[Bead].x;
+        double dy = Struct[i].P[Bead].y-OldStruct[i].P[Bead].y;
+        double dz = Struct[i].P[Bead].z-OldStruct[i].P[Bead].z;
         RMSdiff += dx*dx+dy*dy+dz*dz;
       }
     }
@@ -374,7 +375,7 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
-      PsiCharges(Struct,QMMMOpts,Bead);
+      PSICharges(Struct,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");

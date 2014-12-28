@@ -519,11 +519,14 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   {
     //Run TINKER
     call.str("");
-    call << "newton QMMM.xyz A A 0.01 > QMMM.log";
+    call << "newton QMMM_";
+    call << Bead << ".xyz A A 0.01 > QMMM_";
+    call << Bead << ".log";
     sys = system(call.str().c_str());
     //Read new structure
-    fstream ifile;
-    ifile.open("QMMM.xyz_2",ios_base::in);
+    call.str("");
+    call << "QMMM_" << Bead << ".xyz_2";
+    ifile.open(call.str().c_str(),ios_base::in);
     getline(ifile,dummy);
     if (PBCon == 1)
     {

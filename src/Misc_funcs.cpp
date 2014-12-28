@@ -34,7 +34,9 @@ void Print_traj(vector<QMMMAtom>& parts, fstream& traj, QMMMSettings& QMMMOpts)
 void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
      fstream& connectfile, fstream& regionfile, fstream& outfile)
 {
+  int sys;
   string dummy;
+  stringstream call;
   //Read command line arguments
   if (argc == 1)
   {
@@ -120,6 +122,9 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     if (dummy == "-n")
     {
       Ncpus = atoi(argv[i+1]);
+      call.str("");
+      call << "export OMP_NUM_THREADS=" << Ncpus;
+      sys = system(call.str().c_str());
     }
     if (dummy == "-x")
     {
@@ -735,7 +740,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     }
     cout << " Monte Carlo" << '\n' << '\n';
   }
-  if ((OptSim == 1) or (SteepSim == 1))
+  if ((OptSim == 1) or (SteepSim == 1) or (BFGSSim == 1))
   {
     cout << '\n';
     cout << "Simulation mode: ";
@@ -752,6 +757,30 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       cout << "Pure MM";
     }
     cout << " energy minimization" << '\n';
+    if ((QMMM == 1) or (QMonly == 1))
+    {
+      cout << "  QM minimizer: ";
+      if (OptSim == 1)
+      {
+        if (Gaussian == 1)
+        {
+          cout << "Gaussian";
+        }
+        if (PSI4 == 1)
+        {
+          cout << "PSI4";
+        }
+        cout << " optimizer" << '\n';
+      }
+      if (SteepSim == 1)
+      {
+        cout << "FLUKE steepest descent" << '\n';
+      }
+      if (BFGSSim == 1)
+      {
+        cout << "FLUKE BFGS" << '\n';
+      }
+    }
     cout << '\n';
   }
   if (SinglePoint == 1)

@@ -236,6 +236,8 @@ string Typing(int);
 
 int RevTyping(string);
 
+void ExtractTINKpoles(vector<QMMMAtom>& Struct);
+
 void RotateCharges(vector<QMMMAtom>&,Mpole&,OctCharges&);
 
 RedMpole CartMP2SphHarm(Mpole&);
@@ -262,11 +264,11 @@ double GaussianForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
 void GaussianCharges(vector<QMMMAtom>&,QMMMSettings&,int);
 
-double PsiWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
+double PSIWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
-double PsiForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+double PSIForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
-void PsiCharges(vector<QMMMAtom>&,QMMMSettings&,int);
+void PSICharges(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void FLUKESteepest(vector<QMMMAtom>&,QMMMSettings&,int);
 

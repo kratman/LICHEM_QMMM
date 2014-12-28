@@ -81,7 +81,7 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
     if (PSI4 == 1)
     {
       t_qm_start = (unsigned)time(0);
-      Es[i] += PsiWrapper("Enrg",parts,QMMMOpts,i);
+      Es[i] += PSIWrapper("Enrg",parts,QMMMOpts,i);
       Times_qm[i] += (unsigned)time(0)-t_qm_start;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
