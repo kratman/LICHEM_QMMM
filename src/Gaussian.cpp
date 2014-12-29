@@ -523,15 +523,16 @@ void ExternalGaussian(int& argc, char**& argv)
     ct = 0; //Counter for QM atoms
     for (int i=0;i<Natoms;i++)
     {
+      ofile.precision(8);
       ofile << setw(6) << (Struct[i].id+1);
       ofile << " ";
       ofile << setw(3) << Struct[i].MMTyp;
       ofile << " ";
-      ofile << setw(12) << Struct[i].P[0].x;
+      ofile << setw(10) << Struct[i].P[0].x;
       ofile << " ";
-      ofile << setw(12) << Struct[i].P[0].y;
+      ofile << setw(10) << Struct[i].P[0].y;
       ofile << " ";
-      ofile << setw(12) << Struct[i].P[0].z;
+      ofile << setw(10) << Struct[i].P[0].z;
       ofile << " ";
       if ((Struct[i].QMregion != 1) and (Struct[i].PAregion != 1))
       {

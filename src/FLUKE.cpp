@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 {
   //Misc. initialization
   StartTime = (unsigned)time(0); //Time the program starts
-  cout.precision(10);
+  cout.precision(12);
   //End of section
 
   //Initialize local variables

@@ -188,9 +188,10 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Create matrix for the initial Hessian
     for (int j=0;j<(3*(Nqm+Npseudo));j++)
     {
+      //Set off diagonal terms
       Hess(i,j) = 0.0;
     }
-    Hess(i,i) = 1; //Diagonal identity matrix
+    Hess(i,i) = 10.0; //Scale diagonal identity matrix for small initial steps
   }
   vector<Coord> Forces;
   for (int i=0;i<(Nqm+Npseudo);i++)
@@ -230,10 +231,9 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
     //Change forces array
-    NGrad(ct2) = Forces[ct].x;
-    NGrad(ct2+1) = Forces[ct].y;
-    NGrad(ct2+2) = Forces[ct].z;
-    ct += 1;
+    NGrad(ct2) = Forces[i].x;
+    NGrad(ct2+1) = Forces[i].y;
+    NGrad(ct2+2) = Forces[i].z;
     ct2 += 3;
   }
   //Optimize structure
@@ -244,6 +244,7 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     RMSforce = 0;
     RMSdiff = 0;
+    MAXforce = 0;
     //Copy old structure and delete old forces force array
     vector<QMMMAtom> OldStruct = Struct;
     ct = 0; //Counter
@@ -315,7 +316,6 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     OptVec))-((Hess*OptVec*OptVec.transpose()*Hess)/(OptVec.transpose()*
     Hess*OptVec)); //End really long line
     //Check convergence
-    MAXforce = 0;
     for (int i=0;i<(Nqm+Npseudo);i++)
     {
       //Calculate RMS forces

@@ -358,7 +358,7 @@ double PSIWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   //Call PSI4
   call.str("");
   call << "psi4 -n " << Ncpus;
-  call << "-u QMMM";
+  call << "-i QMMM";
   call << "_" << Bead;
   call << ".dat -o QMMM";
   call << "_" << Bead;

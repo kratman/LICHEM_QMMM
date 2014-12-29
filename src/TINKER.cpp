@@ -191,15 +191,16 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
+    ofile.precision(8);
     ofile << setw(6) << (Struct[i].id+1);
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << setw(12) << Struct[i].P[Bead].x;
+    ofile << setw(10) << Struct[i].P[Bead].x;
     ofile << " ";
-    ofile << setw(12) << Struct[i].P[Bead].y;
+    ofile << setw(10) << Struct[i].P[Bead].y;
     ofile << " ";
-    ofile << setw(12) << Struct[i].P[Bead].z;
+    ofile << setw(10) << Struct[i].P[Bead].z;
     ofile << " ";
     if ((Struct[i].QMregion != 1) and (Struct[i].PAregion != 1))
     {
@@ -485,15 +486,16 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
+    ofile.precision(8);
     ofile << setw(6) << (Struct[i].id+1);
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << setw(12) << Struct[i].P[Bead].x;
+    ofile << setw(10) << Struct[i].P[Bead].x;
     ofile << " ";
-    ofile << setw(12) << Struct[i].P[Bead].y;
+    ofile << setw(10) << Struct[i].P[Bead].y;
     ofile << " ";
-    ofile << setw(12) << Struct[i].P[Bead].z;
+    ofile << setw(10) << Struct[i].P[Bead].z;
     ofile << " ";
     if (Struct[i].QMregion != 1)
     {
