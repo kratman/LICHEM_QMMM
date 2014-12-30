@@ -18,10 +18,10 @@ void ExtractTINKpoles(vector<QMMMAtom>& Struct)
   return;
 };
 
-void RotateCharges(vector<QMMMAtom>& Struct, Mpole& poles, OctCharges& grid)
+void RotateCharges(vector<QMMMAtom>& Struct, int Bead)
 {
   //Switches from the local frame of reference to the global frame
-  //Frame of reference
+  //of reference
   
   return;
 };

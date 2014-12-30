@@ -353,6 +353,10 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     {
       //AMOEBA polarizable force field
       AMOEBA = 1;
+      if (TINKER == 1)
+      {
+        ExtractTINKpoles(Struct);
+      }
     }
     if ((dummy == "Charges") or (dummy == "charges") or
        (dummy == "Charge") or (dummy == "charge") or
@@ -388,6 +392,10 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     {
       //AMOEBA polarizable force field
       AMOEBA = 1;
+      if (TINKER == 1)
+      {
+        ExtractTINKpoles(Struct);
+      }
     }
     if ((dummy == "Charges") or (dummy == "charges") or
        (dummy == "Charge") or (dummy == "charge") or

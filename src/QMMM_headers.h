@@ -129,10 +129,11 @@ struct Mpole
 {
   //Cartesian multipoles
   //Atoms for the local frame of reference
-  bool Chiral; //
-  int Atom1; //
-  int Atom2; //
-  int Atom3; //
+  bool Chiral; //Chiral molecules need an atom for the y axis
+  string Type; //Bisector or Z-then-X
+  int Atom1; //Atom which defines the z axis
+  int Atom2; //Atom which defines the x axis
+  int Atom3; //Atom which defines the y axis (chiral only)
   //Monopole moment
   double q;
   //Cartesian dipole moments
@@ -238,7 +239,7 @@ int RevTyping(string);
 
 void ExtractTINKpoles(vector<QMMMAtom>& Struct);
 
-void RotateCharges(vector<QMMMAtom>&,Mpole&,OctCharges&);
+void RotateCharges(vector<QMMMAtom>&,int);
 
 RedMpole CartMP2SphHarm(Mpole&);
 
