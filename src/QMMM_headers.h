@@ -176,6 +176,25 @@ struct OctCharges
   double q4; //Charge in the -x direction
   double q5; //Charge in the -y direction
   double q6; //Charge in the -z direction
+  //Positions of the charges in the global frame
+  double x1;
+  double y1;
+  double z1;
+  double x2;
+  double y2;
+  double z2;
+  double x3;
+  double y3;
+  double z3;
+  double x4;
+  double y4;
+  double z4;
+  double x5;
+  double y5;
+  double z5;
+  double x6;
+  double y6;
+  double z6;
 };
 
 struct QMMMAtom
@@ -241,9 +260,9 @@ void ExtractTINKpoles(vector<QMMMAtom>& Struct);
 
 void RotateCharges(vector<QMMMAtom>&,int);
 
-RedMpole CartMP2SphHarm(Mpole&);
+RedMpole Cart2SphHarm(Mpole&);
 
-OctCharges SphHarmMP2Charges(RedMpole&);
+OctCharges SphHarm2Charges(RedMpole);
 
 void FindTINKERClasses(vector<QMMMAtom>&);
 

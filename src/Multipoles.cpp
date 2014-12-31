@@ -26,7 +26,7 @@ void RotateCharges(vector<QMMMAtom>& Struct, int Bead)
   return;
 };
 
-RedMpole CartMP2SphHarm(Mpole& poles)
+RedMpole Cart2SphHarm(Mpole& poles)
 {
   //Converts cartesian multipoles to spherical harmonic multipoles
   RedMpole SHpoles; //Spherical harmonic multipoles
@@ -34,7 +34,7 @@ RedMpole CartMP2SphHarm(Mpole& poles)
   return SHpoles;
 };
 
-OctCharges SphHarmMP2Charges(RedMpole& poles)
+OctCharges SphHarm2Charges(RedMpole poles)
 {
   //Converts spherical harmonic multipoles to point charges
   OctCharges PCgrid; //New point charge multipoles
