@@ -53,7 +53,7 @@ double BeadProb = 0.55; //Probability to move a single bead
 double CentProb = 0.55; //Probability to move a centroid
 double VolProb = 0.10; //Volume change probability
 
-//Physical Constants
+//Global constants
 const double k = 8.6173324e-5; //Boltzmann constant (eV)
 const double hbar = 6.58211928e-16; //Reduced Planck Constant (eV)
 const double hbarSI = 1.054571726e-34; //Reduced Planck Constant (SI)
@@ -73,6 +73,8 @@ const double Har2eV = 27.21138386; //Hartrees to eV
 const double atm2eV = SI2eV*1.01325e-25; //atmA^3 to eV
 const double Na = 6.02214179e23; //Avogadro's number
 const double kcal2eV = 4184*SI2eV/Na; //kcal/mol to eV
+const double sqrt2 = pow(2,0.5); //Square root of 2
+const double HugeNum = 100000.0; //Large number to reject step
 
 //Globals
 string xyzfilename; //Saves the filename given in the arguments

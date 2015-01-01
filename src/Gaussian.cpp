@@ -1074,7 +1074,7 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     {
       cout << "Warning: Optimization did not converge!!!";
       cout << '\n';
-      E = 10000.0; //Large number to reject step
+      E = HugeNum; //Large number to reject step
     }
   }
   if (RunTyp == "Enrg")
@@ -1210,7 +1210,7 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
       cout << '\n';
       cout << " The calculation attempt will continue...";
       cout << '\n';
-      E = 10000.0; //Large number to reject step
+      E = HugeNum; //Large number to reject step
     }
   }
   //Remove files

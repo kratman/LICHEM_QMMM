@@ -421,7 +421,7 @@ double PSIWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     cout << '\n';
     cout << " The calculation attempt will continue...";
     cout << '\n';
-    E = 10000.0; //Large number to reject step
+    E = HugeNum; //Large number to reject step
   }
   if ((Optfinished == 0) and (RunTyp == "Opt"))
   {
@@ -430,7 +430,7 @@ double PSIWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     cout << " The calculation attempt will continue with the";
     cout << " old structure...";
     cout << '\n';
-    E = 10000.0; //Large number to reject step
+    E = HugeNum; //Large number to reject step
   }
   //Clean up files
   call.str("");
