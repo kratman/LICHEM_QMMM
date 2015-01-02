@@ -344,9 +344,15 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     {
       TINKER = 1;
     }
-    if ((dummy == "Amber") or (dummy == "AMBER"))
+    if ((dummy == "Amber") or (dummy == "AMBER") or
+       (dummy == "amber"))
     {
       Amber = 1;
+    }
+    if ((dummy == "LAMMPS") or (dummy == "lammps") or
+       (dummy == "Lammps"))
+    {
+      LAMMPS = 1;
     }
     regionfile >> dummy >> dummy; //Potential type
     if ((dummy == "AMOEBA") or (dummy == "amoeba"))
@@ -383,9 +389,15 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     {
       TINKER = 1;
     }
-    if ((dummy == "Amber") or (dummy == "AMBER"))
+    if ((dummy == "Amber") or (dummy == "AMBER") or
+       (dummy == "amber"))
     {
       Amber = 1;
+    }
+    if ((dummy == "LAMMPS") or (dummy == "lammps") or
+       (dummy == "Lammps"))
+    {
+      LAMMPS = 1;
     }
     regionfile >> dummy >> dummy; //Potential type
     if ((dummy == "AMOEBA") or (dummy == "amoeba"))
@@ -617,7 +629,7 @@ void FLUKEErrorChecker(QMMMSettings& QMMMOpts)
 {
   //Checks for basic errors and conflicts
   bool DoQuit = 0; //Bool, quit with error
-  if (((TINKER+Amber) != 1) and (QMonly != 1))
+  if (((TINKER+Amber+LAMMPS) == 0) and (QMonly != 1))
   {
     //Check the MM wrappers
     cout << " Error: No valid MM wrapper selected.";
@@ -627,7 +639,7 @@ void FLUKEErrorChecker(QMMMSettings& QMMMOpts)
     cout << '\n';
     DoQuit = 1;
   }
-  if (((PSI4+Gaussian) != 1) and (MMonly != 1))
+  if (((PSI4+Gaussian) == 0) and (MMonly != 1))
   {
     //Check the QM wrappers
     cout << " Error: No valid QM wrapper selected.";

@@ -100,6 +100,7 @@ int PBCon = 0; //Flag for the boundary conditions
 int PSI4 = 0; //Wrapper flag
 int Gaussian = 0; //Wrapper flag
 int TINKER = 0; //Wrapper flag
+int LAMMPS = 0; //Wrapper flag
 int Amber = 0; //Wrapper flag
 bool QMMM = 0; //Flag for the type of wrapper
 bool MMonly = 0; //Flag for the type of wrapper
