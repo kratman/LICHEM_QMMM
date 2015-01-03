@@ -7,7 +7,10 @@
 #                                                                            #
 ##############################################################################
 
- FLUKE wrapper functions for Amber.
+ FLUKE wrapper functions for AMBER.
+
+ Citation for AMBER:
+ Case et al. AMBER 14, 2014
 
 */
 
@@ -15,10 +18,10 @@
 
 
 //MM wrapper functions
-double AmberWrapper(string RunTyp, vector<QMMMAtom>& Struct,
+double AMBERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
        QMMMSettings& QMMMOpts, int Bead)
 {
-  //Runs Amber
+  //Runs AMBER
   fstream ofile,ifile;
   string dummy;
   stringstream call;

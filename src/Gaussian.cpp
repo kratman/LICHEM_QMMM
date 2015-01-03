@@ -10,6 +10,9 @@
  FLUKE wrapper functions for Gaussian. These routines are written for g09.
  Note that the external function needs to interface with all MM codes.
 
+ Citation for Gaussian:
+ Frisch et al. Gaussian 09 Rev D.01 2009
+
 */
 
 //QM utility functions

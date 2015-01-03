@@ -9,6 +9,9 @@
 
  FLUKE wrapper functions for PSI4.
 
+ Citation for PSI4:
+ Turney et al. WIREs Comp. Mol. Sci. 2, 4, 556, 2012
+
 */
 
 //QM utility functions

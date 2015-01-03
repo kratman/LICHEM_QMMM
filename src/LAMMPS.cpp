@@ -9,6 +9,9 @@
 
  FLUKE wrapper functions for LAMMPS.
 
+ Citation for LAMMPS:
+ Plimpton, Steve J. Comp. Phys. 1, 117, 1, 1995
+
 */
 
 //MM utility functions

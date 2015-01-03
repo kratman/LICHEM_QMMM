@@ -101,7 +101,7 @@ int PSI4 = 0; //Wrapper flag
 int Gaussian = 0; //Wrapper flag
 int TINKER = 0; //Wrapper flag
 int LAMMPS = 0; //Wrapper flag
-int Amber = 0; //Wrapper flag
+int AMBER = 0; //Wrapper flag
 bool QMMM = 0; //Flag for the type of wrapper
 bool MMonly = 0; //Flag for the type of wrapper
 bool QMonly = 0; //Flag for the type of wrapper
@@ -273,7 +273,7 @@ double TINKERWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
 double TINKERForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
-double AmberWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
+double AMBERWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
 double LAMMPSWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
@@ -345,6 +345,6 @@ void GetQuotes(vector<string>&);
 #include "Gaussian.cpp"
 #include "TINKER.cpp"
 #include "LAMMPS.cpp"
-#include "Amber.cpp"
+#include "AMBER.cpp"
 #include "PSI4.cpp"
 

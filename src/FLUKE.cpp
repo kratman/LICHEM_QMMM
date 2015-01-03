@@ -87,10 +87,10 @@ int main(int argc, char* argv[])
       Emm += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (Amber == 1)
+    if (AMBER == 1)
     {
       int tstart = (unsigned)time(0);
-      Emm += AmberWrapper("Enrg",Struct,QMMMOpts,0);
+      Emm += AMBERWrapper("Enrg",Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     if ((QMMM == 1) or (MMonly == 1))
@@ -278,10 +278,10 @@ int main(int argc, char* argv[])
       SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (Amber == 1)
+    if (AMBER == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += AmberWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += AMBERWrapper("Enrg",Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     cout << " | Opt. Step: ";
@@ -316,10 +316,10 @@ int main(int argc, char* argv[])
         SumE = TINKERWrapper("Opt",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
-      if (Amber == 1)
+      if (AMBER == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE = AmberWrapper("Opt",Struct,QMMMOpts,0);
+        SumE = AMBERWrapper("Opt",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       //Print Optimized geometry
@@ -346,10 +346,10 @@ int main(int argc, char* argv[])
         SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
-      if (Amber == 1)
+      if (AMBER == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE += AmberWrapper("Enrg",Struct,QMMMOpts,0);
+        SumE += AMBERWrapper("Enrg",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       //Check convergance of the MM region
@@ -411,10 +411,10 @@ int main(int argc, char* argv[])
       SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (Amber == 1)
+    if (AMBER == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += AmberWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += AMBERWrapper("Enrg",Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     cout << " | Opt. Step: ";
@@ -436,10 +436,10 @@ int main(int argc, char* argv[])
         SumE = TINKERWrapper("Opt",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
-      if (Amber == 1)
+      if (AMBER == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE = AmberWrapper("Opt",Struct,QMMMOpts,0);
+        SumE = AMBERWrapper("Opt",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       //Print Optimized geometry
@@ -466,10 +466,10 @@ int main(int argc, char* argv[])
         SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
-      if (Amber == 1)
+      if (AMBER == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE += AmberWrapper("Enrg",Struct,QMMMOpts,0);
+        SumE += AMBERWrapper("Enrg",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       //Check convergance of the MM region
@@ -531,10 +531,10 @@ int main(int argc, char* argv[])
       SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (Amber == 1)
+    if (AMBER == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += AmberWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += AMBERWrapper("Enrg",Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     cout << " | Opt. Step: ";
@@ -556,10 +556,10 @@ int main(int argc, char* argv[])
         SumE = TINKERWrapper("Opt",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
-      if (Amber == 1)
+      if (AMBER == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE = AmberWrapper("Opt",Struct,QMMMOpts,0);
+        SumE = AMBERWrapper("Opt",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       //Print Optimized geometry
@@ -586,10 +586,10 @@ int main(int argc, char* argv[])
         SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
-      if (Amber == 1)
+      if (AMBER == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE += AmberWrapper("Enrg",Struct,QMMMOpts,0);
+        SumE += AMBERWrapper("Enrg",Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       //Check convergance of the MM region

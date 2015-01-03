@@ -92,10 +92,10 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
       Es[i] += TINKERWrapper("Enrg",parts,QMMMOpts,i);
       Times_mm[i] += (unsigned)time(0)-t_mm_start;
     }
-    if (Amber == 1)
+    if (AMBER == 1)
     {
       t_mm_start = (unsigned)time(0);
-      Es[i] += AmberWrapper("Enrg",parts,QMMMOpts,i);
+      Es[i] += AMBERWrapper("Enrg",parts,QMMMOpts,i);
       Times_mm[i] += (unsigned)time(0)-t_mm_start;
     }
   }

@@ -344,10 +344,10 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     {
       TINKER = 1;
     }
-    if ((dummy == "Amber") or (dummy == "AMBER") or
+    if ((dummy == "AMBER") or (dummy == "Amber") or
        (dummy == "amber"))
     {
-      Amber = 1;
+      AMBER = 1;
     }
     if ((dummy == "LAMMPS") or (dummy == "lammps") or
        (dummy == "Lammps"))
@@ -389,10 +389,10 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     {
       TINKER = 1;
     }
-    if ((dummy == "Amber") or (dummy == "AMBER") or
+    if ((dummy == "AMBER") or (dummy == "Amber") or
        (dummy == "amber"))
     {
-      Amber = 1;
+      AMBER = 1;
     }
     if ((dummy == "LAMMPS") or (dummy == "lammps") or
        (dummy == "Lammps"))
@@ -629,7 +629,7 @@ void FLUKEErrorChecker(QMMMSettings& QMMMOpts)
 {
   //Checks for basic errors and conflicts
   bool DoQuit = 0; //Bool, quit with error
-  if (((TINKER+Amber+LAMMPS) == 0) and (QMonly != 1))
+  if (((TINKER+AMBER+LAMMPS) == 0) and (QMonly != 1))
   {
     //Check the MM wrappers
     cout << " Error: No valid MM wrapper selected.";

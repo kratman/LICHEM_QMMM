@@ -94,7 +94,7 @@ user:\$ ./compile
  \centering
  \begin{tabular}{|c|c c|c c c|}
  \hline
-  & Gaussian & PSI4 & TINKER & Amber & LAMMPS \\ \hline
+  & Gaussian & PSI4 & TINKER & AMBER & LAMMPS \\ \hline
  QM energy & Yes & Yes & No & No & No \\
  MM energy & No & No & Yes & Yes & Yes \\
  QMMM energy & Yes & Yes & Yes & Yes & Yes \\ \hline
@@ -128,7 +128,7 @@ the results are collected from the temporary output files. This is a
 relatively inefficient procedure, however, reading and writing input/output
 files is often negligible compared to the computational cost of the QM
 calculation. Currently, calculations can be performed using Gaussian, PSI4,
-TINKER, Amber, and LAMMPS. Additional wrappers can be added to FLUKE with
+TINKER, AMBER, and LAMMPS. Additional wrappers can be added to FLUKE with
 relatively little effort.
 
 \subsection{Types of calculations}
@@ -200,7 +200,7 @@ id MMTyp NumTyp q Nbonds [connectivity] \\
 ... \\
 
 Here id is the index of the atom (0 to N-1), MMTyp is the force field atom
-type (i.e. Amber atom types), NumTyp is a numerical atom type (i.e. TINKER
+type (i.e. AMBER atom types), NumTyp is a numerical atom type (i.e. TINKER
 atom types), q is the force field charge on the atom, Nbonds is the number of
 bonds to the atom, and [connectivity] is the bond list . The length of the
 connectivity list must match Nbonds and the information in the connectivity
@@ -253,7 +253,7 @@ values for the memory.
 If the potential type is MM or QMMM, several keywords are required to define
 the MM wrapper. \\
 
-MM\_type: $<$TINKER or Amber or LAMMPS$>$ \\
+MM\_type: $<$TINKER or AMBER or LAMMPS$>$ \\
 
 All of the MM input is read into FLUKE as text, and hence, it must match the
 correct input for the MM package.
@@ -268,7 +268,7 @@ QM\_basis: $<$basis set$>$ \\
 QM\_memory: $<$RAM in GB$>$ \\
 QM\_charge: $<$charge on the QM region$>$ \\
 QM\_spin: $<$multiplicity of the QM region$>$ \\
-MM\_type: $<$TINKER or Amber or LAMMPS$>$ \\
+MM\_type: $<$TINKER or AMBER or LAMMPS$>$ \\
 
 All of the QMMM input is read into FLUKE as text, and hence, it must match the
 correct input for the QM and MM packages. For example, Gaussian can only read
@@ -348,7 +348,7 @@ user:\$ FLUKE -convert -t TINKER.xyz -k tinker.key ( -p Yes) \\
 The -p flag is optional and tells FLUKE to read the lattice constants from
 the second line of the XYZ file. \\
 
-Amber: \\
+AMBER: \\
 
 LAMMPS:
 
