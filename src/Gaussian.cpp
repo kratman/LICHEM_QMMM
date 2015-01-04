@@ -109,37 +109,27 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
         call << " " << setprecision(12) << Struct[i].PC[Bead].y1;
         call << " " << setprecision(12) << Struct[i].PC[Bead].z1;
         call << " " << setprecision(12) << Struct[i].PC[Bead].q1;
-        call.copyfmt(cout);
         call << '\n';
-        call << fixed; //Forces numbers to be floats
         call << " " << setprecision(12) << Struct[i].PC[Bead].x2;
         call << " " << setprecision(12) << Struct[i].PC[Bead].y2;
         call << " " << setprecision(12) << Struct[i].PC[Bead].z2;
         call << " " << setprecision(12) << Struct[i].PC[Bead].q2;
-        call.copyfmt(cout);
         call << '\n';
-        call << fixed; //Forces numbers to be floats
         call << " " << setprecision(12) << Struct[i].PC[Bead].x3;
         call << " " << setprecision(12) << Struct[i].PC[Bead].y3;
         call << " " << setprecision(12) << Struct[i].PC[Bead].z3;
         call << " " << setprecision(12) << Struct[i].PC[Bead].q3;
-        call.copyfmt(cout);
         call << '\n';
-        call << fixed; //Forces numbers to be floats
         call << " " << setprecision(12) << Struct[i].PC[Bead].x4;
         call << " " << setprecision(12) << Struct[i].PC[Bead].y4;
         call << " " << setprecision(12) << Struct[i].PC[Bead].z4;
         call << " " << setprecision(12) << Struct[i].PC[Bead].q4;
-        call.copyfmt(cout);
         call << '\n';
-        call << fixed; //Forces numbers to be floats
         call << " " << setprecision(12) << Struct[i].PC[Bead].x5;
         call << " " << setprecision(12) << Struct[i].PC[Bead].y5;
         call << " " << setprecision(12) << Struct[i].PC[Bead].z5;
         call << " " << setprecision(12) << Struct[i].PC[Bead].q5;
-        call.copyfmt(cout);
         call << '\n';
-        call << fixed; //Forces numbers to be floats
         call << " " << setprecision(12) << Struct[i].PC[Bead].x6;
         call << " " << setprecision(12) << Struct[i].PC[Bead].y6;
         call << " " << setprecision(12) << Struct[i].PC[Bead].z6;
@@ -384,7 +374,7 @@ void ExternalGaussian(int& argc, char**& argv)
   }
   call << '\n'; //Blank line needed
   //Add the MM field
-  if (CHRG == 1)
+  if ((CHRG == 1) and (QMMM == 1))
   {
     for (int i=0;i<Natoms;i++)
     {
@@ -400,6 +390,21 @@ void ExternalGaussian(int& argc, char**& argv)
       }
     }
     call << '\n'; //Blank line needed
+  }
+  if ((AMOEBA == 1) and (QMMM == 1))
+  {
+    ifile.open("CHARGES",ios_base::in);
+    if (ifile.good())
+    {
+      while (!ifile.eof())
+      {
+         //Copy multipole point-charges line by line
+         getline(ifile,dummy);
+         call << dummy << '\n';
+      }
+      ifile.close();
+      call << '\n'; //Blank line needed
+    }
   }
   //Add basis set information from the BASIS file
   ifile.open("BASIS",ios_base::in);
@@ -923,37 +928,27 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         call << " " << setprecision(12) << Struct[i].PC[Bead].y1;
         call << " " << setprecision(12) << Struct[i].PC[Bead].z1;
         call << " " << setprecision(12) << Struct[i].PC[Bead].q1;
-        call.copyfmt(cout);
         call << '\n';
-        call << fixed; //Forces numbers to be floats
         call << " " << setprecision(12) << Struct[i].PC[Bead].x2;
         call << " " << setprecision(12) << Struct[i].PC[Bead].y2;
         call << " " << setprecision(12) << Struct[i].PC[Bead].z2;
         call << " " << setprecision(12) << Struct[i].PC[Bead].q2;
-        call.copyfmt(cout);
         call << '\n';
-        call << fixed; //Forces numbers to be floats
         call << " " << setprecision(12) << Struct[i].PC[Bead].x3;
         call << " " << setprecision(12) << Struct[i].PC[Bead].y3;
         call << " " << setprecision(12) << Struct[i].PC[Bead].z3;
         call << " " << setprecision(12) << Struct[i].PC[Bead].q3;
-        call.copyfmt(cout);
         call << '\n';
-        call << fixed; //Forces numbers to be floats
         call << " " << setprecision(12) << Struct[i].PC[Bead].x4;
         call << " " << setprecision(12) << Struct[i].PC[Bead].y4;
         call << " " << setprecision(12) << Struct[i].PC[Bead].z4;
         call << " " << setprecision(12) << Struct[i].PC[Bead].q4;
-        call.copyfmt(cout);
         call << '\n';
-        call << fixed; //Forces numbers to be floats
         call << " " << setprecision(12) << Struct[i].PC[Bead].x5;
         call << " " << setprecision(12) << Struct[i].PC[Bead].y5;
         call << " " << setprecision(12) << Struct[i].PC[Bead].z5;
         call << " " << setprecision(12) << Struct[i].PC[Bead].q5;
-        call.copyfmt(cout);
         call << '\n';
-        call << fixed; //Forces numbers to be floats
         call << " " << setprecision(12) << Struct[i].PC[Bead].x6;
         call << " " << setprecision(12) << Struct[i].PC[Bead].y6;
         call << " " << setprecision(12) << Struct[i].PC[Bead].z6;
@@ -1060,6 +1055,52 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     }
     ofile.flush();
     ofile.close();
+    //Write multipole point-charges
+    if ((AMOEBA == 1) and (QMMM == 1))
+    {
+      ofile.open("CHARGES",ios_base::out);
+      ofile.copyfmt(cout);
+      for (int i=0;i<Natoms;i++)
+      {
+        if (Struct[i].MMregion == 1)
+        {
+          ofile << fixed; //Forces numbers to be floats
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].x1;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].y1;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].z1;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
+          ofile << '\n';
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].x2;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].y2;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].z2;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
+          ofile << '\n';
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].x3;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].y3;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].z3;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
+          ofile << '\n';
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].x4;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].y4;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].z4;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
+          ofile << '\n';
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].x5;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].y5;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].z5;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
+          ofile << '\n';
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].x6;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].y6;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].z6;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
+          ofile << '\n';
+        }
+      }
+      ofile.copyfmt(cout);
+      ofile.flush();
+      ofile.close();
+    }
     //Write Gaussian input
     call.str("");
     call << "QMMM_" << Bead << ".com";
@@ -1256,7 +1297,7 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     if ((AMOEBA == 1) and (QMMM == 1))
     {
       for (int i=0;i<Natoms;i++)
-      {  
+      {
         if (Struct[i].MMregion == 1)
         {
           call << fixed; //Forces numbers to be floats
@@ -1264,37 +1305,27 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
           call << " " << setprecision(12) << Struct[i].PC[Bead].y1;
           call << " " << setprecision(12) << Struct[i].PC[Bead].z1;
           call << " " << setprecision(12) << Struct[i].PC[Bead].q1;
-          call.copyfmt(cout);
           call << '\n';
-          call << fixed; //Forces numbers to be floats
           call << " " << setprecision(12) << Struct[i].PC[Bead].x2;
           call << " " << setprecision(12) << Struct[i].PC[Bead].y2;
           call << " " << setprecision(12) << Struct[i].PC[Bead].z2;
           call << " " << setprecision(12) << Struct[i].PC[Bead].q2;
-          call.copyfmt(cout);
           call << '\n';
-          call << fixed; //Forces numbers to be floats
           call << " " << setprecision(12) << Struct[i].PC[Bead].x3;
           call << " " << setprecision(12) << Struct[i].PC[Bead].y3;
           call << " " << setprecision(12) << Struct[i].PC[Bead].z3;
           call << " " << setprecision(12) << Struct[i].PC[Bead].q3;
-          call.copyfmt(cout);
           call << '\n';
-          call << fixed; //Forces numbers to be floats
           call << " " << setprecision(12) << Struct[i].PC[Bead].x4;
           call << " " << setprecision(12) << Struct[i].PC[Bead].y4;
           call << " " << setprecision(12) << Struct[i].PC[Bead].z4;
           call << " " << setprecision(12) << Struct[i].PC[Bead].q4;
-          call.copyfmt(cout);
           call << '\n';
-          call << fixed; //Forces numbers to be floats
           call << " " << setprecision(12) << Struct[i].PC[Bead].x5;
           call << " " << setprecision(12) << Struct[i].PC[Bead].y5;
           call << " " << setprecision(12) << Struct[i].PC[Bead].z5;
           call << " " << setprecision(12) << Struct[i].PC[Bead].q5;
-          call.copyfmt(cout);
           call << '\n';
-          call << fixed; //Forces numbers to be floats
           call << " " << setprecision(12) << Struct[i].PC[Bead].x6;
           call << " " << setprecision(12) << Struct[i].PC[Bead].y6;
           call << " " << setprecision(12) << Struct[i].PC[Bead].z6;

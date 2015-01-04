@@ -425,7 +425,6 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   regionfile >> dummy >> dummy; //Calculation type
   if ((dummy == "PIMC") or (dummy == "pimc"))
   {
-    FullParallel = 0;
     //Read MC and PIMC options
     OptSim = 0;
     BFGSSim = 0;

@@ -112,7 +112,6 @@ bool PIMCSim = 0; //Flag for Monte Carlo
 bool PathSim = 0; //Flag for reaction paths
 bool SinglePoint = 0; //Flag for energy calculation
 bool GauExternal = 0; //Runs Gaussian with External
-bool FullParallel = 1; //Flag to avoid OpenMP for PIMC and RP
 
 //Timers
 int StartTime = 0; //Time the calculation starts

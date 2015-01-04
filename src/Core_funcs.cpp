@@ -203,29 +203,15 @@ int RevTyping(string AtName)
   Typs.push_back("Te");
   Typs.push_back("I");
   Typs.push_back("Xe");
-  if (FullParallel == 1)
+  #pragma omp parallel for
+  for (int i=0;i<Typs.size();i++)
   {
-    //Optionally make loop parallel
-    #pragma omp parallel for
-    for (int i=0;i<Typs.size();i++)
+    if (AtName == Typs[i])
     {
-      if (AtName == Typs[i])
-      {
-        Z = i+1;
-      }
-    }
-    #pragma omp barrier
-  }
-  else
-  {
-    for (int i=0;i<Typs.size();i++)
-    {
-      if (AtName == Typs[i])
-      {
-        Z = i+1;
-      }
+      Z = i+1;
     }
   }
+  #pragma omp barrier
   return Z;
 };
 
