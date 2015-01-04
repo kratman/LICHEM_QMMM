@@ -98,6 +98,58 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     }
     call << '\n'; //Blank line needed
   }
+  if (AMOEBA == 1)
+  {
+    for (int i=0;i<Natoms;i++)
+    {
+      if (Struct[i].MMregion == 1)
+      {
+        call << fixed; //Forces numbers to be floats
+        call << " " << setprecision(12) << Struct[i].PC[Bead].x1;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].y1;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].z1;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].q1;
+        call.copyfmt(cout);
+        call << '\n';
+        call << fixed; //Forces numbers to be floats
+        call << " " << setprecision(12) << Struct[i].PC[Bead].x2;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].y2;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].z2;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].q2;
+        call.copyfmt(cout);
+        call << '\n';
+        call << fixed; //Forces numbers to be floats
+        call << " " << setprecision(12) << Struct[i].PC[Bead].x3;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].y3;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].z3;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].q3;
+        call.copyfmt(cout);
+        call << '\n';
+        call << fixed; //Forces numbers to be floats
+        call << " " << setprecision(12) << Struct[i].PC[Bead].x4;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].y4;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].z4;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].q4;
+        call.copyfmt(cout);
+        call << '\n';
+        call << fixed; //Forces numbers to be floats
+        call << " " << setprecision(12) << Struct[i].PC[Bead].x5;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].y5;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].z5;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].q5;
+        call.copyfmt(cout);
+        call << '\n';
+        call << fixed; //Forces numbers to be floats
+        call << " " << setprecision(12) << Struct[i].PC[Bead].x6;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].y6;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].z6;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].q6;
+        call.copyfmt(cout);
+        call << '\n';
+      }
+    }
+    call << '\n'; //Blank line needed
+  }
   //Add basis set information from the BASIS file
   ifile.open("BASIS",ios_base::in);
   if (ifile.good())
@@ -860,6 +912,58 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     }
     call << '\n'; //Blank line needed
   }
+  if ((AMOEBA == 1) and (QMMM == 1))
+  {
+    for (int i=0;i<Natoms;i++)
+    {
+      if (Struct[i].MMregion == 1)
+      {
+        call << fixed; //Forces numbers to be floats
+        call << " " << setprecision(12) << Struct[i].PC[Bead].x1;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].y1;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].z1;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].q1;
+        call.copyfmt(cout);
+        call << '\n';
+        call << fixed; //Forces numbers to be floats
+        call << " " << setprecision(12) << Struct[i].PC[Bead].x2;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].y2;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].z2;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].q2;
+        call.copyfmt(cout);
+        call << '\n';
+        call << fixed; //Forces numbers to be floats
+        call << " " << setprecision(12) << Struct[i].PC[Bead].x3;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].y3;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].z3;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].q3;
+        call.copyfmt(cout);
+        call << '\n';
+        call << fixed; //Forces numbers to be floats
+        call << " " << setprecision(12) << Struct[i].PC[Bead].x4;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].y4;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].z4;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].q4;
+        call.copyfmt(cout);
+        call << '\n';
+        call << fixed; //Forces numbers to be floats
+        call << " " << setprecision(12) << Struct[i].PC[Bead].x5;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].y5;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].z5;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].q5;
+        call.copyfmt(cout);
+        call << '\n';
+        call << fixed; //Forces numbers to be floats
+        call << " " << setprecision(12) << Struct[i].PC[Bead].x6;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].y6;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].z6;
+        call << " " << setprecision(12) << Struct[i].PC[Bead].q6;
+        call.copyfmt(cout);
+        call << '\n';
+      }
+    }
+    call << '\n'; //Blank line needed
+  }
   //Add basis set information from the BASIS file
   ifile.open("BASIS",ios_base::in);
   if (ifile.good())
@@ -1143,6 +1247,58 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
           call << " " << setprecision(12) << Struct[i].P[Bead].y;
           call << " " << setprecision(12) << Struct[i].P[Bead].z;
           call << " " << setprecision(12) << Struct[i].MP[Bead].q;
+          call.copyfmt(cout);
+          call << '\n';
+        }
+      }
+      call << '\n'; //Blank line needed
+    }
+    if ((AMOEBA == 1) and (QMMM == 1))
+    {
+      for (int i=0;i<Natoms;i++)
+      {  
+        if (Struct[i].MMregion == 1)
+        {
+          call << fixed; //Forces numbers to be floats
+          call << " " << setprecision(12) << Struct[i].PC[Bead].x1;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].y1;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].z1;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].q1;
+          call.copyfmt(cout);
+          call << '\n';
+          call << fixed; //Forces numbers to be floats
+          call << " " << setprecision(12) << Struct[i].PC[Bead].x2;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].y2;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].z2;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].q2;
+          call.copyfmt(cout);
+          call << '\n';
+          call << fixed; //Forces numbers to be floats
+          call << " " << setprecision(12) << Struct[i].PC[Bead].x3;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].y3;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].z3;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].q3;
+          call.copyfmt(cout);
+          call << '\n';
+          call << fixed; //Forces numbers to be floats
+          call << " " << setprecision(12) << Struct[i].PC[Bead].x4;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].y4;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].z4;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].q4;
+          call.copyfmt(cout);
+          call << '\n';
+          call << fixed; //Forces numbers to be floats
+          call << " " << setprecision(12) << Struct[i].PC[Bead].x5;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].y5;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].z5;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].q5;
+          call.copyfmt(cout);
+          call << '\n';
+          call << fixed; //Forces numbers to be floats
+          call << " " << setprecision(12) << Struct[i].PC[Bead].x6;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].y6;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].z6;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].q6;
           call.copyfmt(cout);
           call << '\n';
         }

@@ -11,6 +11,7 @@
 
 */
 
+//TINKER routines
 void ExtractTINKpoles(vector<QMMMAtom>& Struct)
 {
   //Parses TINKER parameter files to find multipoles and local frames
@@ -18,7 +19,7 @@ void ExtractTINKpoles(vector<QMMMAtom>& Struct)
   return;
 };
 
-void RotateCharges(vector<QMMMAtom>& Struct, int Bead)
+void RotateTINKCharges(vector<QMMMAtom>& Struct, int Bead)
 {
   //Switches from the local frame of reference to the global frame
   //of reference
@@ -26,6 +27,7 @@ void RotateCharges(vector<QMMMAtom>& Struct, int Bead)
   return;
 };
 
+//General routines
 RedMpole Cart2SphHarm(Mpole& poles)
 {
   //Converts cartesian multipoles to spherical harmonic multipoles

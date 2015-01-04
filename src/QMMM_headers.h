@@ -261,7 +261,7 @@ int RevTyping(string);
 
 void ExtractTINKpoles(vector<QMMMAtom>& Struct);
 
-void RotateCharges(vector<QMMMAtom>&,int);
+void RotateTINKCharges(vector<QMMMAtom>&,int);
 
 RedMpole Cart2SphHarm(Mpole&);
 
