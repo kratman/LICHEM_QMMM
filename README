@@ -1,5 +1,6 @@
 FLUKE: Fields Layered Under Kohn-Sham Electrons
 A QMMM interface for polarizable force fields
+-----------------------------------------------
 
 This package is designed to be an open source (GPLv3) interface between QM
 and MM software so that QMMM calculations can be performed with polarizable
