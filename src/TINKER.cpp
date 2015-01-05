@@ -156,7 +156,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
       ct += 1;
     }
   }
-  if (CHRG == 1)
+  if ((CHRG == 1) or (AMOEBA == 1))
   {
     ct = 0;
     for (int i=0;i<Natoms;i++)
@@ -445,12 +445,27 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
         ct += 1;
       }
     }
-    if (CHRG == 1)
+    if ((CHRG == 1) or (AMOEBA == 1))
     {
       ct = 0;
       for (int i=0;i<Natoms;i++)
       {
         //Add nuclear charges
+        if (Struct[i].PAregion == 1)
+        {
+          if (CHRG == 1)
+          {
+            ofile << "charge " << (MaxTINKERNum+ct) << " ";
+            ofile << Struct[i].MP[Bead].q;
+          }
+          if (AMOEBA == 1)
+          {
+            //Temporary, needs to be fixed
+            ofile << "charge " << (MaxTINKERNum+ct) << " ";
+            ofile << Struct[i].MP[Bead].q; //Dipole and quadrupole dropped
+          }
+          ct += 1;
+        }
         if (Struct[i].QMregion == 1)
         {
           ofile << "charge " << (MaxTINKERNum+ct) << " ";
