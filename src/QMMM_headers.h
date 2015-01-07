@@ -262,6 +262,8 @@ void ExtractTINKpoles(vector<QMMMAtom>& Struct);
 
 void RotateTINKCharges(vector<QMMMAtom>&,int);
 
+void WriteTINKMpole(vector<QMMMAtom>&,fstream&,int,int);
+
 RedMpole Cart2SphHarm(Mpole&);
 
 OctCharges SphHarm2Charges(RedMpole);
@@ -271,6 +273,8 @@ void FindTINKERClasses(vector<QMMMAtom>&);
 double TINKERWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
 double TINKERForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+
+double TINKERPolEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double AMBERWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 

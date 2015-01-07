@@ -13,13 +13,13 @@ Available QM wrappers: Gaussian, PSI4
 
 Available MM wrappers: TINKER, Amber, LAMMPS
 
-Note: This software is still in alpha. Not all features will work properly.
-Please report all bugs or missing features so that the code can be updated
-quickly.
+Note: This software is still in alpha. Not all features will work properly
+and some features will be held back until the research is published. Please
+report all bugs or missing features so that the code can be updated quickly.
 
 Force-field wrapper timeline and checklist:
  Point-charge force fields: Done (TINKER and LAMMPS)
- Polarizable force fields: In progress (TINKER only)
+ Polarizable force fields: Done (Debugging, TINKER only)
  Polarizable force fields: Future (Amber)
  Frozen density force fields: Future (Amber)
 

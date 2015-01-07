@@ -12,6 +12,193 @@
 */
 
 //MM utility functions
+double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
+       int Bead)
+{
+  //Function to extract the polarization energy
+  fstream ofile,ifile;
+  stringstream call;
+  call.copyfmt(cout);
+  string dummy;
+  string TINKKeyFile = "tinker.key";
+  int MaxTINKERNum = 3500;
+  int MaxTINKERClass = 100;
+  double Epol = 0;
+  double E = 0;
+  int sys;
+  int ct;
+  //Create TINKER xyz file
+  call.str("");
+  call << "QMMM_" << Bead << ".xyz";
+  ofile.open(call.str().c_str(),ios_base::out);
+  ofile << Natoms << '\n';
+  if (PBCon == 1)
+  {
+    //Write box size
+    ofile << Lx << " " << Ly << " " << Lz;
+    ofile << " 90.0 90.0 90.0";
+    ofile << '\n';
+  }
+  ct = 0; //Counter for QM atoms
+  for (int i=0;i<Natoms;i++)
+  {
+    ofile.precision(8);
+    ofile << setw(6) << (Struct[i].id+1);
+    ofile << " ";
+    ofile << setw(3) << Struct[i].MMTyp;
+    ofile << " ";
+    ofile << setw(10) << Struct[i].P[Bead].x;
+    ofile << " ";
+    ofile << setw(10) << Struct[i].P[Bead].y;
+    ofile << " ";
+    ofile << setw(10) << Struct[i].P[Bead].z;
+    ofile << " ";
+    if (Struct[i].QMregion != 1)
+    {
+      ofile << setw(4) << Struct[i].NumTyp;
+    }
+    if (Struct[i].QMregion == 1)
+    {
+      ofile << setw(4) << (MaxTINKERNum+ct);
+      ct += 1; //Count number of qm atoms
+    }
+    for (int j=0;j<Struct[i].Bonds.size();j++)
+    {
+      ofile << " "; //Avoids trailing spaces
+      ofile << setw(6) << (Struct[i].Bonds[j]+1);
+    }
+    ofile.copyfmt(cout);
+    ofile << '\n';
+  }
+  ofile.flush();
+  ofile.close();
+  //Create new TINKER key file
+  call.str("");
+  call << "cp " << TINKKeyFile << " QMMM";
+  call << "_" << Bead;
+  call << ".key";
+  sys = system(call.str().c_str());
+  //Save new keyfile name
+  call.str("");
+  call << "QMMM";
+  call << "_" << Bead;
+  call << ".key";
+  TINKKeyFile = call.str(); //Save the new name
+  //Add QM atoms to force field parameters list
+  ofile.open(TINKKeyFile.c_str(),ios_base::app|ios_base::out);
+  ofile << '\n';
+  ofile << "#QM force field parameters"; //Marks the changes
+  ofile << '\n';
+  ct = 0; //Generic counter
+  for (int i=0;i<Natoms;i++)
+  {
+    //Add active atoms
+    if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1))
+    {
+      if (ct == 0)
+      {
+        //Start a new active line
+        ofile << "active ";
+      }
+      else
+      {
+        //Place a space to separate values
+        ofile << " ";
+      }
+      ofile << (Struct[i].id+1);
+      ct += 1;
+      if (ct == 10)
+      {
+        //terminate an active line
+        ct = 0;
+        ofile << '\n';
+      }
+    }
+  }
+  if (ct != 0)
+  {
+    //Terminate trailing actives line
+    ofile << '\n';
+  }
+  ct = 0;
+  for (int i=0;i<Natoms;i++)
+  {
+    //Add atom types
+    if (Struct[i].QMregion == 1)
+    {
+      ofile << "atom " << (MaxTINKERNum+ct) << " ";
+      ofile << Struct[i].NumClass << " ";
+      ofile << Struct[i].MMTyp << " ";
+      ofile << "\"Dummy QM atom type\" ";
+      ofile << RevTyping(Struct[i].QMTyp) << " ";
+      ofile << Struct[i].m << " ";
+      ofile << Struct[i].Bonds.size();
+      ofile << '\n';
+      ct += 1;
+    }
+  }
+  ct = 0;
+  for (int i=0;i<Natoms;i++)
+  {
+    //Add nuclear charges
+    if ((Struct[i].PAregion == 1) or (Struct[i].QMregion == 1))
+    {
+      //Write new multipole definition for the atom ID
+      WriteTINKMpole(Struct,ofile,i,Bead);
+    }
+  }
+  ofile.flush();
+  ofile.close();
+  //Calculate QMMM energy
+  call.str("");
+  call << "analyze QMMM_";
+  call << Bead << ".xyz E > QMMM_";
+  call << Bead << ".log";
+  sys = system(call.str().c_str());
+  //Extract polarization energy
+  call.str("");
+  call << "QMMM_" << Bead << ".log";
+  ifile.open(call.str().c_str(),ios_base::in);
+  bool Efound = 0;
+  while (!ifile.eof())
+  {
+    ifile >> dummy;
+    if (dummy == "Total")
+    {
+      ifile >> dummy >> dummy;
+      if (dummy == "Energy")
+      {
+        ifile >> dummy >> E;
+        Efound = 1;
+      }
+    }
+    if (dummy == "Polarization")
+    {
+      ifile >> Epol;
+    }
+  }
+  if (Efound == 0)
+  {
+    //Warn user if no energy was found
+    cout << "Warning: No MM energy found after a calculation!!!";
+    cout << '\n';
+    cout << " FLUKE will attempt to continue...";
+    cout << '\n';
+    E = HugeNum; //Large number to reject step
+  }
+  ifile.close();
+  //Clean up files
+  call.str("");
+  call << "rm -f";
+  call << " QMMM_" << Bead << ".xyz";
+  call << " QMMM_" << Bead << ".log";
+  call << " QMMM_" << Bead << ".key";
+  sys = system(call.str().c_str());
+  //Return polarization energy in kcal/mol
+  cout << "Pol energy " << Epol << endl;
+  return Epol;
+};
+
 double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
@@ -26,7 +213,6 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   double Emm = 0.0;
   int ct;
   int sys;
-  call.str("");
   //Construct MM forces input for TINKER
   call.str("");
   call << "cp " << TINKKeyFile << " ";
@@ -156,7 +342,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
       ct += 1;
     }
   }
-  if ((CHRG == 1) or (AMOEBA == 1))
+  if (CHRG == 1)
   {
     ct = 0;
     for (int i=0;i<Natoms;i++)
@@ -168,6 +354,18 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
         ofile << 0.0; //Delete charges
         ofile << '\n';
         ct += 1;
+      }
+    }
+  }
+  if (AMOEBA == 1)
+  {
+    ct = 0;
+    for (int i=0;i<Natoms;i++)
+    {
+      //Add nuclear charges
+      if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+      {
+        WriteTINKMpole(Struct,ofile,i,Bead);
       }
     }
   }
@@ -280,6 +478,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << ".*";
   sys = system(call.str().c_str());
   //Return
+  Emm *= kcal2eV;
   return Emm;
 };
 
@@ -364,15 +563,16 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
 {
   //Runs TINKER MM
   fstream ofile,ifile;
-  string dummy;
   stringstream call;
   call.copyfmt(cout);
+  string dummy;
   string TINKKeyFile = "tinker.key";
   int MaxTINKERNum = 3500;
   int MaxTINKERClass = 100;
-  double E = 0.0;
-  int ct;
+  double Epol = 0;
+  double E = 0;
   int sys;
+  int ct;
   call.str("");
   //Copy the original key file and make changes
   if (QMMM == 1)
@@ -445,29 +645,15 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
         ct += 1;
       }
     }
-    if ((CHRG == 1) or (AMOEBA == 1))
+    if (CHRG == 1)
     {
       ct = 0;
       for (int i=0;i<Natoms;i++)
       {
         //Add nuclear charges
-        if (Struct[i].PAregion == 1)
-        {
-          if (CHRG == 1)
-          {
-            ofile << "charge " << (MaxTINKERNum+ct) << " ";
-            ofile << Struct[i].MP[Bead].q;
-          }
-          if (AMOEBA == 1)
-          {
-            //Temporary, needs to be fixed
-            ofile << "charge " << (MaxTINKERNum+ct) << " ";
-            ofile << Struct[i].MP[Bead].q; //Dipole and quadrupole dropped
-          }
-          ct += 1;
-        }
         if (Struct[i].QMregion == 1)
         {
+          //New atom types are only needed for QM atoms
           ofile << "charge " << (MaxTINKERNum+ct) << " ";
           if (RunTyp == "Opt")
           {
@@ -479,6 +665,30 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
           }
           ofile << '\n';
           ct += 1;
+        }
+      }
+    }
+    if (AMOEBA == 1)
+    {
+      for (int i=0;i<Natoms;i++)
+      {
+        //Add nuclear charges
+        if (Struct[i].PAregion == 1)
+        {
+          //Write new multipole definition for the atom ID
+          WriteTINKMpole(Struct,ofile,i,Bead);
+        }
+        if (Struct[i].QMregion == 1)
+        {
+          double qi = 0;
+          if (RunTyp == "Enrg")
+          {
+            //remove charge
+            qi = Struct[i].MP[Bead].q;
+            Struct[i].MP[Bead].q = 0;
+          }
+          WriteTINKMpole(Struct,ofile,i,Bead);
+          Struct[i].MP[Bead].q += qi; //Restore charge
         }
       }
     }
@@ -574,8 +784,8 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     call << "QMMM_" << Bead << ".log";
     ifile.open(call.str().c_str(),ios_base::in);
     //Read MM potential energy
-    bool contread = 1;
-    while ((!ifile.eof()) and (contread == 1))
+    bool Efound = 0;
+    while (!ifile.eof())
     {
       ifile >> dummy;
       if (dummy == "Total")
@@ -584,18 +794,22 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
         if (dummy == "Energy")
         {
           ifile >> dummy >> E;
-          contread = 0;
+          Efound = 1;
         }
       }
+      if (dummy == "Polarization")
+      {
+        ifile >> Epol;
+      }
     }
-    if (contread == 1)
+    if (Efound == 0)
     {
       //Warn user if no energy was found
-      cout << "Warning: No MM energy found after calculation!!!";
+      cout << "Warning: No MM energy found after a calculation!!!";
       cout << '\n';
-      cout << " The calculation attempt will continue...";
+      cout << " FLUKE will attempt to continue...";
       cout << '\n';
-      E = 10000.0; //Large number to reject step
+      E = HugeNum; //Large number to reject step
     }
     ifile.close();
   }
@@ -607,6 +821,13 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   call << " QMMM_" << Bead << ".xyz_*";
   call << " QMMM_" << Bead << ".key";
   sys = system(call.str().c_str());
+  //Calculate polarization energy
+  if ((AMOEBA == 1) and (QMMM == 1))
+  {
+    //Correct polarization energy for QMMM simulations
+    E -= Epol; //Incorrect polarization energy
+    E += TINKERPolEnergy(Struct,QMMMOpts,Bead);
+  }
   //Change units
   E *= kcal2eV;
   return E;

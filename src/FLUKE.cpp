@@ -688,7 +688,7 @@ int main(int argc, char* argv[])
   cout << "  Wall time for MM Wrappers: ";
   cout << TotalMM << " hours";
   cout << '\n';
-  cout << "  Wall time, other: ";
+  cout << "  Wall time for FLUKE: ";
   cout << OtherTime << " hours";
   cout << '\n';
   if (Jokes == 1)

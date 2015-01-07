@@ -1410,7 +1410,7 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     {
       cout << "Warning: SCF did not converge!!!";
       cout << '\n';
-      cout << " The calculation attempt will continue...";
+      cout << " FLUKE will attempt to continue...";
       cout << '\n';
       E = HugeNum; //Large number to reject step
     }

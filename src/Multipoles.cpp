@@ -34,6 +34,13 @@ void RotateTINKCharges(vector<QMMMAtom>& Struct, int Bead)
   return;
 };
 
+void WriteTINKMpole(vector<QMMMAtom>& Struct, fstream& ofile, int i, int Bead)
+{
+  //Write a new multipole definition for pseudo-atoms
+  
+  return;
+};
+
 //General routines
 RedMpole Cart2SphHarm(Mpole& poles)
 {

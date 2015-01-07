@@ -757,7 +757,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     {
       cout << " path-integral";
     }
-    cout << " Monte Carlo" << '\n' << '\n';
+    cout << " Monte Carlo" << '\n';
   }
   if ((OptSim == 1) or (SteepSim == 1) or (BFGSSim == 1))
   {
@@ -800,7 +800,6 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
         cout << "FLUKE BFGS" << '\n';
       }
     }
-    cout << '\n';
   }
   if (SinglePoint == 1)
   {
@@ -819,8 +818,48 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       cout << "Pure MM";
     }
     cout << " single-point energy" << '\n';
-    cout << '\n';
   }
+  if ((QMonly == 1) or (QMMM == 1))
+  {
+    cout << " QM wrapper: ";
+    if (PSI4 == 1)
+    {
+      cout << "PSI4" << '\n';
+    }
+    if (Gaussian == 1)
+    {
+      cout << "Gaussian" << '\n';
+    }
+  }
+  if ((MMonly == 1) or (QMMM == 1))
+  {
+    cout << " MM wrapper: ";
+    if (TINKER == 1)
+    {
+      cout << "TINKER" << '\n';
+    }
+    if (AMBER == 1)
+    {
+      cout << "AMBER" << '\n';
+    }
+    if (LAMMPS == 1)
+    {
+      cout << "LAMMPS" << '\n';
+    }
+    if (QMMM == 1)
+    {
+      cout << " QMMM potential: ";
+      if (CHRG == 1)
+      {
+        cout << "Point-charge force field" << '\n';
+      }
+      if (AMOEBA == 1)
+      {
+        cout << "Polarizable force field" << '\n';
+      }
+    }
+  }
+  cout << '\n';
   cout.flush(); //Flush for output being redirected to a file
   return;
 };

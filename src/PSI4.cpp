@@ -581,7 +581,7 @@ double PSIWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   {
     cout << "Warning: SCF did not converge!!!";
     cout << '\n';
-    cout << " The calculation attempt will continue...";
+    cout << " FLUKE will attempt to continue...";
     cout << '\n';
     E = HugeNum; //Large number to reject step
   }
@@ -589,7 +589,7 @@ double PSIWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   {
     cout << "Warning: Optimization did not converge!!!";
     cout << '\n';
-    cout << " The calculation attempt will continue with the";
+    cout << " FLUKE will attempt to continue using the";
     cout << " old structure...";
     cout << '\n';
     E = HugeNum; //Large number to reject step
@@ -601,6 +601,11 @@ double PSIWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   call << "QMMM_" << Bead << ".out ";
   call << "QMMM_" << Bead << ".log";
   sys = system(call.str().c_str());
+  if ((AMOEBA == 1) and (QMMM == 1))
+  {
+    //Update point charges for the polarization energy calculation
+    PSICharges(Struct,QMMMOpts,Bead);
+  }
   //Change units
   E *= Har2eV;
   return E;
