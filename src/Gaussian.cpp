@@ -27,6 +27,10 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   fstream ofile,ifile,QMlog;
   double Eqm = 0;
   double Eself = 0;
+  if ((AMOEBA == 1) and (TINKER == 1))
+  {
+    RotateTINKCharges(Struct,Bead);
+  }
   //Construct g09 input
   call.str("");
   call << "QMMM";
@@ -845,6 +849,10 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   string dummy;
   stringstream call;
   call.copyfmt(cout);
+  if ((AMOEBA == 1) and (TINKER == 1))
+  {
+    RotateTINKCharges(Struct,Bead);
+  }
   //Construct input
   call.str("");
   call << "QMMM";
@@ -1038,6 +1046,10 @@ double GaussianWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   double E = 0.0; //QM energy
   double Eself = 0.0; //Field self-energy
   int sys;
+  if ((AMOEBA == 1) and (TINKER == 1))
+  {
+    RotateTINKCharges(Struct,Bead);
+  }
   call.str("");
   if (RunTyp == "Opt")
   {

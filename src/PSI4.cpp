@@ -24,9 +24,13 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   string dummy;
   stringstream call;
   call.copyfmt(cout);
-  call.str("");
   double Eqm = 0;
+  if ((AMOEBA == 1) and (TINKER == 1))
+  {
+    RotateTINKCharges(Struct,Bead);
+  }
   //Set up memory
+  call.str("");
   call << "memory " << QMMMOpts.RAM;
   call << " gb" << '\n' << '\n';
   //Set up globals
@@ -212,8 +216,12 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   string dummy;
   stringstream call;
   call.copyfmt(cout);
-  call.str("");
+  if ((AMOEBA == 1) and (TINKER == 1))
+  {
+    RotateTINKCharges(Struct,Bead);
+  }
   //Set up memory
+  call.str("");
   call << "memory " << QMMMOpts.RAM;
   call << " gb" << '\n' << '\n';
   //Set up globals
@@ -388,12 +396,12 @@ double PSIWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   call.copyfmt(cout);
   double E = 0.0;
   int sys;
-  if (AMOEBA == 1)
+  if ((AMOEBA == 1) and (TINKER == 1))
   {
     RotateTINKCharges(Struct,Bead);
   }
-  call.str("");
   //Set up memory
+  call.str("");
   call << "memory " << QMMMOpts.RAM;
   call << " gb" << '\n' << '\n';
   //Set up globals
