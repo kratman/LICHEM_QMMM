@@ -131,8 +131,8 @@ struct Mpole
 {
   //Cartesian multipoles
   //Atoms for the local frame of reference
-  bool Chiral; //Chiral molecules need an atom for the y axis
-  string Type; //Bisector or Z-then-X
+  bool ChiralFlip; //Flip y axis
+  string Type; //Bisector, Z-then-X, Z-Only, 3-Fold, or Z-Bisect
   int Atom1; //Atom which defines the z axis
   int Atom2; //Atom which defines the x axis
   int Atom3; //Atom which defines the y axis (chiral only)

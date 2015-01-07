@@ -105,8 +105,8 @@ int main(int argc, char* argv[])
       //Print total energy
       cout << "QMMM total energy: ";
       cout << SumE << " eV";
-      cout << "                   ";
-      cout << SumE/Har2eV << "a.u.";
+      cout << " ";
+      cout << SumE/Har2eV << " a.u.";
     }
     cout << '\n' << endl;
   }

@@ -388,6 +388,10 @@ double PSIWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   call.copyfmt(cout);
   double E = 0.0;
   int sys;
+  if (AMOEBA == 1)
+  {
+    RotateTINKCharges(Struct,Bead);
+  }
   call.str("");
   //Set up memory
   call << "memory " << QMMMOpts.RAM;
