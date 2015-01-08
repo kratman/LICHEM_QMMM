@@ -195,7 +195,6 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << " QMMM_" << Bead << ".key";
   sys = system(call.str().c_str());
   //Return polarization energy in kcal/mol
-  cout << "Pol energy " << Epol << endl;
   return Epol;
 };
 

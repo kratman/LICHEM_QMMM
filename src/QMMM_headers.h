@@ -167,6 +167,8 @@ struct RedMpole
   //Quadrupole moments
   double Q20;
   double Q22c;
+  //Spherical harmonic vectors
+  Matrix3d Vec;
 };
 
 struct OctCharges

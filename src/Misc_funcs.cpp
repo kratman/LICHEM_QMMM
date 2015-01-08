@@ -871,7 +871,6 @@ void GetQuotes(vector<string>& Quotes)
   dummy = "\'It is difficult to prove that this quote is not random.\'";
   dummy += '\n';
   dummy += "                                           -Eric G. Kratz";
-  dummy += '\n';
   for (int i=0;i<1000;i++)
   {
     //Add quotes to the list
