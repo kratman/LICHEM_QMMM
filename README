@@ -23,6 +23,11 @@ Force-field wrapper timeline and checklist:
  Polarizable force fields: Future (Amber)
  Frozen density force fields: Future (Amber)
 
+QMMM boundries:
+ Non-bonded: Done
+ Pseudo-bond: Done (Debugging)
+ Frozen density: Future
+
 Simulation mode timeline and checklist:
  Single-point energy: Done
  NVT/NPT Monte Carlo: Done
