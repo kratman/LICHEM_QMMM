@@ -23,7 +23,7 @@ Force-field wrapper timeline and checklist:
  Polarizable force fields: Future (Amber)
  Frozen density force fields: Future (Amber)
 
-QMMM boundries:
+QMMM boundry timeline and checklist:
  Non-bonded: Done
  Pseudo-bond: Done (Debugging)
  Frozen density: Future
