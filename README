@@ -11,11 +11,11 @@ classical Monte Carlo, path-integral Monte Carlo, and reaction pathways
 
 Available QM wrappers: Gaussian, PSI4
 
-Available MM wrappers: TINKER, Amber, LAMMPS
+Available MM wrappers: TINKER, AMBER, LAMMPS
 
 Note: This software is still in alpha. Not all features will work properly
 and some features will be held back until the research is published. Please
-report all bugs or missing features so that the code can be updated quickly.
+report all bugs so that the code can be updated quickly.
 
 Force-field wrapper timeline and checklist:
  Point-charge force fields: Done (TINKER and LAMMPS)
