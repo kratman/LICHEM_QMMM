@@ -127,8 +127,9 @@ in the user's path. Temporary input files are created for each package and
 the results are collected from the temporary output files. This is a
 relatively inefficient procedure, however, reading and writing input/output
 files is often negligible compared to the computational cost of the QM
-calculation. Currently, calculations can be performed using Gaussian, PSI4,
-TINKER, AMBER, and LAMMPS. Additional wrappers can be added to FLUKE with
+calculation. Currently, calculations can be performed using Gaussian
+\cite{Frisch2009}, PSI4 \cite{Turney2012}, TINKER \cite{}, AMBER \cite{}, and
+LAMMPS \cite{Plimpton1995}. Additional wrappers can be added to FLUKE with
 relatively little effort.
 
 \subsection{Types of calculations}
@@ -532,10 +533,10 @@ spherical harmonic multipoles, $Q$
 \end{equation}
 where $R_i$ are the eigenvectors in the $i$ direction. The spherical harmonic
 representation reduces the the multipole expansion to six moments in the new
-frame of reference defined by $R$. \\
+frame of reference defined by $R$. \cite{} \\
 
 The spherical harmonic multipole expansion through quadrupole moments can be
-converted to six point-charges.
+converted to six point-charges. \cite{}
 \begin{equation}
  q_{\pm x} = \frac{Q_{00}}{6} \pm \frac{Q_{11c}}{2d} -
           \frac{Q_{20}}{6d^2} + \frac{Q_{22c}}{2\sqrt{3}d^2} \; ,
@@ -548,7 +549,10 @@ converted to six point-charges.
  q_{\pm z} = \frac{Q_{00}}{6} \pm \frac{Q_{10}}{2d} +
           \frac{Q_{20}}{3d^2} \; ,
 \end{equation}
-where $q_{\pm i}$ are the charges in the $\pm i$ direction.
+where $q_{\pm i}$ are the charges in the $\pm i$ direction, and $d$ is the
+displacement from the atomic center. While representing the multipoles as a
+set of point-charges reduces the accuracy, most QM and MM packages can easily
+add additional point-charges to the potential.
 
 \subsection{Frozen density force fields}
 
@@ -1145,5 +1149,7 @@ close together. The presence of strong potentials restricts the movement of
 the atoms, and reduces $P_{acc}$.
 
 \FloatBarrier
+\bibliographystyle{unsrt}
+\bibliography{../manual.bib}
 
 \end{document}
