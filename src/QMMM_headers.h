@@ -68,6 +68,7 @@ const double SI2eV = 1/(1.602176565e-19); //Convert SI to eV
 const double ToeV = amu2kg*SI2eV/(m2Ang*m2Ang); //Convert to eV units
 const double C2eV = m2Ang/(4*pi*SI2eV*8.854187817e-12); //Coulomb to eV
 const double Masse = 9.10938291e-31; //Mass of an electron (kg)
+const double ElecMass = 5.4857990943e-4; //Mass of an electron (amu)
 const double BohrRad = 0.52917721092; //Bohr radius (Ang)
 const double Har2eV = 27.21138386; //Hartrees to eV
 const double atm2eV = SI2eV*1.01325e-25; //atmA^3 to eV
@@ -313,9 +314,14 @@ void PSICharges(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double EFFEnergy(QMMMAtom&,QMMMElec&,int);
 
+double KineticE_eFF(vector<QMMMElec>&,QMMMSettings&);
+
 double EFFCorr(QMMMElec&,QMMMElec&,int);
 
 double Get_EeFF(vector<QMMMAtom>&,vector<QMMMElec>&,QMMMSettings&);
+
+bool OptConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,vector<Coord>&,
+     int,QMMMSettings& QMMMOpts,int,bool);
 
 void FLUKESteepest(vector<QMMMAtom>&,QMMMSettings&,int);
 
@@ -362,6 +368,7 @@ void GetQuotes(vector<string>&);
 #ifndef DEVCOMP
 #include "Multipoles.cpp"
 #endif
+#include "Frozen_Density.cpp"
 #include "Optimizers.cpp"
 
 //Wrapper definitions

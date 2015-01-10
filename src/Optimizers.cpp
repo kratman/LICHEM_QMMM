@@ -12,6 +12,85 @@
 
 */
 
+//Convergence test functions
+bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
+     vector<Coord>& Forces, int stepct, QMMMSettings& QMMMOpts, int Bead,
+     bool QMregion)
+{
+  //Check convergence of QMMM optimizations
+  stringstream call;
+  string dummy;
+  call.str("");
+  //Gather stats
+  bool OptDone = 0;
+  double RMSdiff = 0;
+  double RMSforce = 0;
+  double MAXforce = 0;
+  if (QMregion)
+  {
+    //Check if a QM calculation is converged
+    for (int i=0;i<(Nqm+Npseudo);i++)
+    {
+      //Calculate RMS forces
+      double Fx = Forces[i].x;
+      double Fy = Forces[i].y;
+      double Fz = Forces[i].z;
+      if (abs(Fx) > MAXforce)
+      {
+        MAXforce = abs(Fx);
+      }
+      if (abs(Fy) > MAXforce)
+      {
+        MAXforce = abs(Fy);
+      }
+      if (abs(Fz) > MAXforce)
+      {
+        MAXforce = abs(Fz);
+      }
+      RMSforce += Fx*Fx+Fy*Fy+Fz*Fz;
+    }
+    for (int i=0;i<Natoms;i++)
+    {
+      //Calculate RMS displacement
+      if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+      {
+        double dx = Struct[i].P[Bead].x-OldStruct[i].P[Bead].x;
+        double dy = Struct[i].P[Bead].y-OldStruct[i].P[Bead].y;
+        double dz = Struct[i].P[Bead].z-OldStruct[i].P[Bead].z;
+        RMSdiff += dx*dx+dy*dy+dz*dz;
+      }
+    }
+    RMSdiff /= 3*(Nqm+Npseudo);
+    RMSdiff = sqrt(RMSdiff);
+    RMSforce /= 3*(Nqm+Npseudo);
+    RMSforce = sqrt(RMSforce);
+    //Print progress
+    call.copyfmt(cout); //Save settings
+    cout << setprecision(8);
+    cout << "    QM Step: " << (stepct-1);
+    cout << " | RMS Disp: " << RMSdiff;
+    cout << '\n';
+    cout << "    Max force: " << MAXforce;
+    cout << " | RMS force: " << RMSforce;
+    cout << '\n' << endl;
+    cout.copyfmt(call); //Return to previous settings
+    //Check convergence criteria
+    if ((RMSdiff >= QMMMOpts.QMOptTol) and
+       (RMSforce >= (100*QMMMOpts.QMOptTol)) and
+       (MAXforce >= (200*QMMMOpts.QMOptTol)))
+    {
+      OptDone = 1;
+    }
+  }
+  if (!QMregion)
+  {
+    //Check if the MM region changed
+    
+  }
+  return OptDone;
+};
+
+//Optimizer functions
 void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
@@ -20,21 +99,14 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call;
   call.copyfmt(cout);
   string dummy;
-  double RMSdiff = 10000;
-  double RMSforce = 10000;
-  double MAXforce = 10000;
   int stepct = 0;
   fstream qmfile;
   qmfile.open("QMOpt.xyz",ios_base::out);
   //Optimize structure
-  while (((RMSdiff >= QMMMOpts.QMOptTol) or
-        (RMSforce >= (100*QMMMOpts.QMOptTol)) or
-        (MAXforce >= (200*QMMMOpts.QMOptTol))) and
-        (stepct <= QMMMOpts.MaxOptSteps))
+  bool OptDone = 0;
+  while ((OptDone != 1) and (stepct <= QMMMOpts.MaxOptSteps))
   {
     double E = 0;
-    RMSforce = 0;
-    RMSdiff = 0;
     //Copy old structure and create blank force array
     vector<QMMMAtom> OldStruct = Struct;
     vector<Coord> Forces;
@@ -85,53 +157,8 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Print structure
     Print_traj(Struct,qmfile,QMMMOpts);
     //Check convergence
-    MAXforce = 0;
-    for (int i=0;i<(Nqm+Npseudo);i++)
-    {
-      //Calculate RMS forces
-      double Fx = Forces[i].x;
-      double Fy = Forces[i].y;
-      double Fz = Forces[i].z;
-      if (abs(Fx) > MAXforce)
-      {
-        MAXforce = abs(Fx);
-      }
-      if (abs(Fy) > MAXforce)
-      {
-        MAXforce = abs(Fy);
-      }
-      if (abs(Fz) > MAXforce)
-      {
-        MAXforce = abs(Fz);
-      }
-      RMSforce += Fx*Fx+Fy*Fy+Fz*Fz;
-    }
-    for (int i=0;i<Natoms;i++)
-    {
-      //Calculate RMS displacement
-      if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
-      {
-        double dx = Struct[i].P[Bead].x-OldStruct[i].P[Bead].x;
-        double dy = Struct[i].P[Bead].y-OldStruct[i].P[Bead].y;
-        double dz = Struct[i].P[Bead].z-OldStruct[i].P[Bead].z;
-        RMSdiff += dx*dx+dy*dy+dz*dz;
-      }
-    }
-    RMSdiff /= 3*(Nqm+Npseudo);
-    RMSdiff = sqrt(RMSdiff);
-    RMSforce /= 3*(Nqm+Npseudo);
-    RMSforce = sqrt(RMSforce);
     stepct += 1;
-    //Print progress
-    call.copyfmt(cout); //Save settings
-    cout << setprecision(8);
-    cout << "    QM Step: " << (stepct-1);
-    cout << " | RMS Disp: " << RMSdiff;
-    cout << '\n';
-    cout << "    Max force: " << MAXforce;
-    cout << " | RMS force: " << RMSforce;
-    cout << '\n' << endl;
-    cout.copyfmt(call); //Return to previous settings
+    OptDone = OptConverged(Struct,OldStruct,Forces,stepct,QMMMOpts,Bead,1);
   }
   //Calculate new point charges
   if (QMMM == 1)
@@ -168,9 +195,6 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call;
   call.copyfmt(cout);
   string dummy;
-  double RMSdiff = 10000;
-  double RMSforce = 10000;
-  double MAXforce = 10000;
   int stepct = 0;
   fstream qmfile;
   qmfile.open("QMOpt.xyz",ios_base::out);
@@ -237,14 +261,9 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ct2 += 3;
   }
   //Optimize structure
-  while (((RMSdiff >= QMMMOpts.QMOptTol) or
-        (RMSforce >= (100*QMMMOpts.QMOptTol)) or
-        (MAXforce >= (200*QMMMOpts.QMOptTol))) and
-        (stepct <= QMMMOpts.MaxOptSteps))
+  bool OptDone = 0;
+  while ((OptDone != 1) and (stepct <= QMMMOpts.MaxOptSteps))
   {
-    RMSforce = 0;
-    RMSdiff = 0;
-    MAXforce = 0;
     //Copy old structure and delete old forces force array
     vector<QMMMAtom> OldStruct = Struct;
     ct = 0; //Counter
@@ -316,52 +335,8 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     OptVec))-((Hess*OptVec*OptVec.transpose()*Hess)/(OptVec.transpose()*
     Hess*OptVec)); //End really long line
     //Check convergence
-    for (int i=0;i<(Nqm+Npseudo);i++)
-    {
-      //Calculate RMS forces
-      double Fx = Forces[i].x;
-      double Fy = Forces[i].y;
-      double Fz = Forces[i].z;
-      if (abs(Fx) > MAXforce)
-      {
-        MAXforce = abs(Fx);
-      }
-      if (abs(Fy) > MAXforce)
-      {
-        MAXforce = abs(Fy);
-      }
-      if (abs(Fz) > MAXforce)
-      {
-        MAXforce = abs(Fz);
-      }
-      RMSforce += Fx*Fx+Fy*Fy+Fz*Fz;
-    }
-    for (int i=0;i<Natoms;i++)
-    {
-      //Calculate RMS displacement
-      if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
-      {
-        double dx = Struct[i].P[Bead].x-OldStruct[i].P[Bead].x;
-        double dy = Struct[i].P[Bead].y-OldStruct[i].P[Bead].y;
-        double dz = Struct[i].P[Bead].z-OldStruct[i].P[Bead].z;
-        RMSdiff += dx*dx+dy*dy+dz*dz;
-      }
-    }
-    RMSdiff /= 3*(Nqm+Npseudo);
-    RMSdiff = sqrt(RMSdiff);
-    RMSforce /= 3*(Nqm+Npseudo);
-    RMSforce = sqrt(RMSforce);
     stepct += 1;
-    //Print progress
-    call.copyfmt(cout); //Save settings
-    cout << setprecision(8);
-    cout << "    QM Step: " << (stepct-1);
-    cout << " | RMS Disp: " << RMSdiff;
-    cout << '\n';
-    cout << "    Max force: " << MAXforce;
-    cout << " | RMS force: " << RMSforce;
-    cout << '\n' << endl;
-    cout.copyfmt(call); //Return to previous settings
+    OptDone = OptConverged(Struct,OldStruct,Forces,stepct,QMMMOpts,Bead,1);
   }
   //Calculate new point charges
   if (QMMM == 1)

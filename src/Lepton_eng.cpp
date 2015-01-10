@@ -124,6 +124,30 @@ double EFFCorr(QMMMElec& elec1, QMMMElec& elec2, int Bead)
   return E;
 };
 
+double KineticE_eFF(vector<QMMMElec>& elecs, QMMMSettings& QMMMOpts)
+{
+  //Total electron kinetic energy
+  double E = 0;
+  for (int i=0;i<elecs.size();i++)
+  {
+    elecs[i].Ep = 0.0;
+    for (int k=0;k<QMMMOpts.Nbeads;k++)
+    {
+      //Lepton kinetic energy
+      double Etmp = 3/(2*elecs[i].rad[k]*elecs[i].rad[k]);
+      Etmp *= ElecMass/elecs[i].m; //Scale by mass
+      Etmp *= Har2eV*BohrRad*BohrRad;
+      if (Scale_eFF == 1)
+      {
+        //Reduce kinetic energy as the beads increase
+        Etmp /= ElrtNbeads;
+      }
+      elecs[i].Ep += Etmp;
+    }
+  }
+  return E;
+};
+
 double Get_EeFF(vector<QMMMAtom>& parts, vector<QMMMElec>& elecs,
        QMMMSettings& QMMMOpts)
 {
@@ -148,15 +172,7 @@ double Get_EeFF(vector<QMMMAtom>& parts, vector<QMMMElec>& elecs,
     elecs[i].Ep = 0.0;
     for (int k=0;k<QMMMOpts.Nbeads;k++)
     {
-      //Lepton kinetic energy
-      double Etmp = 3/(2*elecs[i].rad[k]*elecs[i].rad[k]);
-      Etmp *= Har2eV*BohrRad*BohrRad;
-      if (Scale_eFF == 1)
-      {
-        //Reduce kinetic energy as the beads increase
-        Etmp /= ElrtNbeads;
-      }
-      elecs[i].Ep += Etmp;
+      //Lepton interaction energy
       for (int j=0;j<i;j++)
       {
         //Lepton-lepton correlation
