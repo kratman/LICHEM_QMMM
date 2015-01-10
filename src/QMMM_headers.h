@@ -203,6 +203,7 @@ struct OctCharges
 
 struct QMMMAtom
 {
+  //Data type for atomic information
   double m; //Mass of atom
   bool QMregion; //QM, MM, pseudo-atom, or boundary-atom
   bool MMregion; //QM, MM, pseudo-atom, or boundary-atom
@@ -219,6 +220,18 @@ struct QMMMAtom
   vector<Coord> P; //Array of PI beads
   vector<Mpole> MP; //Multipoles
   vector<OctCharges> PC; //Point-charge multipoles
+};
+
+struct QMMMElec
+{
+  //Data type for electronic information (eFF model)
+  string typ; //Lepton type
+  double m; //mass (amu)
+  double q; //Charge (au)
+  int spin; //Spin
+  double Ep; //Temporary energy for parallel
+  vector<Coord> P; //Bead coordinates
+  vector<double> rad; //Radius (Ang)
 };
 
 struct QMMMSettings
@@ -297,6 +310,12 @@ double PSIWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 double PSIForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
 void PSICharges(vector<QMMMAtom>&,QMMMSettings&,int);
+
+double EFFEnergy(QMMMAtom&,QMMMElec&,int);
+
+double EFFCorr(QMMMElec&,QMMMElec&,int);
+
+double Get_EeFF(vector<QMMMAtom>&,vector<QMMMElec>&,QMMMSettings&);
 
 void FLUKESteepest(vector<QMMMAtom>&,QMMMSettings&,int);
 

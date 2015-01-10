@@ -37,18 +37,6 @@ double FlipProb = 0.05; //Probability to flip a single spin
 //Global variables
 double ElrtNbeads; //Scale factor for eFF kinetic energy
 
-//Structures
-struct QMMMElec
-{
-  string typ; //Lepton type
-  double m; //mass (amu)
-  double q; //Charge (au)
-  int spin; //Spin
-  double Ep; //Temporary energy for parallel
-  vector<Coord> P; //Bead coordinates
-  vector<double> rad; //Radius (Ang)
-};
-
 //Functions
 double EFFEnergy(QMMMAtom& atom, QMMMElec& elec, int Bead)
 {

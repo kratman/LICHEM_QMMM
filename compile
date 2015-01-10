@@ -33,7 +33,7 @@ pdflatex manual > doclog.txt
 pdflatex manual > doclog.txt
 pdflatex manual > doclog.txt
 #Remove junk files
-rm -f manual.aux manual.bbl manual.lof doclog.txt
+rm -f manual.aux manual.bbl manual.lof doclog.txt manual.blg
 rm -f manual.lot manual.out manual.toc manual.log
 mv manual.pdf ../doc/FLUKE_manual.pdf
 cd ../
