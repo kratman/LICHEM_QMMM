@@ -118,7 +118,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     if (AMBER == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += AMBERWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += AMBEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     //Calculate RMS displacement

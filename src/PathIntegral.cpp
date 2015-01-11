@@ -95,7 +95,7 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
     if (AMBER == 1)
     {
       t_mm_start = (unsigned)time(0);
-      Es[i] += AMBERWrapper("Enrg",parts,QMMMOpts,i);
+      Es[i] += AMBEREnergy(parts,QMMMOpts,i);
       Times_mm[i] += (unsigned)time(0)-t_mm_start;
     }
   }
