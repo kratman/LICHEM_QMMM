@@ -26,6 +26,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
   double RMSdiff = 0;
   double RMSforce = 0;
   double MAXforce = 0;
+  double SumE = 0;
   if (QMregion)
   {
     //Check if a QM calculation is converged
@@ -93,10 +94,36 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
   }
   if (!QMregion)
   {
-    //Check if the MM region changed
+    //Check if the MM region changed and gather statistics
+    if (Gaussian == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tstart;
+    }
+    if (PSI4 == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += PSIWrapper("Enrg",Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tstart;
+      //Clean up annoying useless files
+      int sys = system("rm -f psi.*");
+    }
+    if (TINKER == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    if (AMBER == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += AMBERWrapper("Enrg",Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    //Calculate RMS displacement
     for (int i=0;i<Natoms;i++)
     {
-      //Calculate RMS displacement
       for (int j=i;j<Natoms;j++)
       {
         double Rnew = 0;
@@ -110,6 +137,13 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     }
     RMSdiff /= (Natoms*Natoms)-Natoms;
     RMSdiff = sqrt(RMSdiff);
+    //Print progress
+    cout << " | Opt. Step: ";
+    cout << (stepct-1) << " | Energy: ";
+    cout << SumE << " eV ";
+    cout << " | RMSdev: " << RMSdiff;
+    cout << '\n';
+    //Check convergence
     if (RMSdiff <= QMMMOpts.MMOptTol)
     {
       OptDone = 1;

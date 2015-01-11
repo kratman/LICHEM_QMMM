@@ -253,6 +253,7 @@ int main(int argc, char* argv[])
   //Optimize structure (optional)
   if (OptSim == 1)
   {
+    vector<Coord> Forces; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
@@ -292,7 +293,6 @@ int main(int argc, char* argv[])
     bool OptDone = 0;
     while (OptDone == 0)
     {
-      optct += 1;
       //Copy structure
       OldStruct = Struct;
       //Run optimization
@@ -324,58 +324,9 @@ int main(int argc, char* argv[])
       }
       //Print Optimized geometry
       Print_traj(Struct,outfile,QMMMOpts);
-      //Calculate energy
-      SumE = 0; //Clear old energies
-      if (Gaussian == 1)
-      {
-        int tstart = (unsigned)time(0);
-        SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,0);
-        QMTime += (unsigned)time(0)-tstart;
-      }
-      if (PSI4 == 1)
-      {
-        int tstart = (unsigned)time(0);
-        SumE += PSIWrapper("Enrg",Struct,QMMMOpts,0);
-        QMTime += (unsigned)time(0)-tstart;
-        //Clean up annoying useless files
-        int sys = system("rm -f psi.*");
-      }
-      if (TINKER == 1)
-      {
-        int tstart = (unsigned)time(0);
-        SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
-      }
-      if (AMBER == 1)
-      {
-        int tstart = (unsigned)time(0);
-        SumE += AMBERWrapper("Enrg",Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
-      }
-      //Check convergance of the MM region
-      cout << " | Opt. Step: ";
-      cout << optct << " | Energy: ";
-      cout << SumE << " eV ";
-      double RMSdiff = 0;
-      for (int i=0;i<Natoms;i++)
-      {
-        if (Struct[i].MMregion == 1)
-        {
-          double dx = Struct[i].P[0].x-OldStruct[i].P[0].x;
-          double dy = Struct[i].P[0].y-OldStruct[i].P[0].y;
-          double dz = Struct[i].P[0].z-OldStruct[i].P[0].z;
-          RMSdiff += dx*dx+dy*dy+dz*dz;
-        }
-      }
-      RMSdiff /= 3*Natoms;
-      RMSdiff = sqrt(RMSdiff);
-      if (RMSdiff <= QMMMOpts.MMOptTol)
-      {
-        RMSdiff = 0.0;
-        OptDone = 1;
-      }
-      cout << " | RMSdev: " << RMSdiff;
-      cout << '\n';
+      //Check convergence
+      optct += 1;
+      OptDone = OptConverged(Struct,OldStruct,Forces,optct,QMMMOpts,0,0);
     }
     cout << '\n';
     cout << "Optimization complete.";
@@ -386,6 +337,7 @@ int main(int argc, char* argv[])
   //Steepest descent optimization
   if (SteepSim == 1)
   {
+    vector<Coord> Forces; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
@@ -425,7 +377,6 @@ int main(int argc, char* argv[])
     bool OptDone = 0;
     while (OptDone == 0)
     {
-      optct += 1;
       //Copy structure
       OldStruct = Struct;
       //Run optimization
@@ -444,58 +395,9 @@ int main(int argc, char* argv[])
       }
       //Print Optimized geometry
       Print_traj(Struct,outfile,QMMMOpts);
-      //Calculate energy
-      SumE = 0; //Clear old energies
-      if (Gaussian == 1)
-      {
-        int tstart = (unsigned)time(0);
-        SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,0);
-        QMTime += (unsigned)time(0)-tstart;
-      }
-      if (PSI4 == 1)
-      {
-        int tstart = (unsigned)time(0);
-        SumE += PSIWrapper("Enrg",Struct,QMMMOpts,0);
-        QMTime += (unsigned)time(0)-tstart;
-        //Clean up annoying useless files
-        int sys = system("rm -f psi.*");
-      }
-      if (TINKER == 1)
-      {
-        int tstart = (unsigned)time(0);
-        SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
-      }
-      if (AMBER == 1)
-      {
-        int tstart = (unsigned)time(0);
-        SumE += AMBERWrapper("Enrg",Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
-      }
-      //Check convergance of the MM region
-      cout << " | Opt. Step: ";
-      cout << optct << " | Energy: ";
-      cout << SumE << " eV ";
-      double RMSdiff = 0;
-      for (int i=0;i<Natoms;i++)
-      {
-        if (Struct[i].MMregion == 1)
-        {
-          double dx = Struct[i].P[0].x-OldStruct[i].P[0].x;
-          double dy = Struct[i].P[0].y-OldStruct[i].P[0].y;
-          double dz = Struct[i].P[0].z-OldStruct[i].P[0].z;
-          RMSdiff += dx*dx+dy*dy+dz*dz;
-        }
-      }
-      RMSdiff /= 3*Natoms;
-      RMSdiff = sqrt(RMSdiff);
-      if (RMSdiff <= QMMMOpts.MMOptTol)
-      {
-        RMSdiff = 0.0;
-        OptDone = 1;
-      }
-      cout << " | RMSdev: " << RMSdiff;
-      cout << '\n';
+      //Check convergence
+      optct += 1;
+      OptDone = OptConverged(Struct,OldStruct,Forces,optct,QMMMOpts,0,0);
     }
     cout << '\n';
     cout << "Optimization complete.";
@@ -506,6 +408,7 @@ int main(int argc, char* argv[])
   //BFGS minimization
   if (BFGSSim == 1)
   {
+    vector<Coord> Forces; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
@@ -545,7 +448,6 @@ int main(int argc, char* argv[])
     bool OptDone = 0;
     while (OptDone == 0)
     {
-      optct += 1;
       //Copy structure
       OldStruct = Struct;
       //Run optimization
@@ -564,58 +466,9 @@ int main(int argc, char* argv[])
       }
       //Print Optimized geometry
       Print_traj(Struct,outfile,QMMMOpts);
-      //Calculate energy
-      SumE = 0; //Clear old energies
-      if (Gaussian == 1)
-      {
-        int tstart = (unsigned)time(0);
-        SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,0);
-        QMTime += (unsigned)time(0)-tstart;
-      }
-      if (PSI4 == 1)
-      {
-        int tstart = (unsigned)time(0);
-        SumE += PSIWrapper("Enrg",Struct,QMMMOpts,0);
-        QMTime += (unsigned)time(0)-tstart;
-        //Clean up annoying useless files
-        int sys = system("rm -f psi.*");
-      }
-      if (TINKER == 1)
-      {
-        int tstart = (unsigned)time(0);
-        SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
-      }
-      if (AMBER == 1)
-      {
-        int tstart = (unsigned)time(0);
-        SumE += AMBERWrapper("Enrg",Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
-      }
-      //Check convergance of the MM region
-      cout << " | Opt. Step: ";
-      cout << optct << " | Energy: ";
-      cout << SumE << " eV ";
-      double RMSdiff = 0;
-      for (int i=0;i<Natoms;i++)
-      {
-        if (Struct[i].MMregion == 1)
-        {
-          double dx = Struct[i].P[0].x-OldStruct[i].P[0].x;
-          double dy = Struct[i].P[0].y-OldStruct[i].P[0].y;
-          double dz = Struct[i].P[0].z-OldStruct[i].P[0].z;
-          RMSdiff += dx*dx+dy*dy+dz*dz;
-        }
-      }
-      RMSdiff /= 3*Natoms;
-      RMSdiff = sqrt(RMSdiff);
-      if (RMSdiff <= QMMMOpts.MMOptTol)
-      {
-        RMSdiff = 0.0;
-        OptDone = 1;
-      }
-      cout << " | RMSdev: " << RMSdiff;
-      cout << '\n';
+      //Check convergence
+      optct += 1;
+      OptDone = OptConverged(Struct,OldStruct,Forces,optct,QMMMOpts,0,0);
     }
     cout << '\n';
     cout << "Optimization complete.";
@@ -624,6 +477,10 @@ int main(int argc, char* argv[])
   //End of sections
 
   //Clean up
+  xyzfile.close();
+  outfile.close();
+  regionfile.close();
+  connectfile.close();
   if (Gaussian == 1)
   {
     //Clear any remaining Gaussian files
@@ -633,10 +490,15 @@ int main(int argc, char* argv[])
     call << "rm -f Gau-*"; //Produced if there is a crash
     int sys = system(call.str().c_str());
   }
-  xyzfile.close();
-  outfile.close();
-  regionfile.close();
-  connectfile.close();
+  if (PSI4 == 1)
+  {
+    //Clear any remaining PSI4 files
+    stringstream call;
+    call.copyfmt(cout);
+    call.str("");
+    call << "rm -f psi*";
+    int sys = system(call.str().c_str());
+  }
   if (SinglePoint == 1)
   {
     //Clear worthless output xyz file
