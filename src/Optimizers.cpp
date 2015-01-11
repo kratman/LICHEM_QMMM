@@ -54,13 +54,22 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       //Calculate RMS displacement
       if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
       {
-        double dx = Struct[i].P[Bead].x-OldStruct[i].P[Bead].x;
-        double dy = Struct[i].P[Bead].y-OldStruct[i].P[Bead].y;
-        double dz = Struct[i].P[Bead].z-OldStruct[i].P[Bead].z;
-        RMSdiff += dx*dx+dy*dy+dz*dz;
+        for (int j=i;j<Natoms;j++)
+        {
+          if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+          {
+            double Rnew = 0;
+            double Rold = 0;
+            Rnew = CoordDist2(Struct[i].P[Bead],Struct[j].P[Bead]);
+            Rold = CoordDist2(OldStruct[i].P[Bead],OldStruct[j].P[Bead]);
+            Rnew = sqrt(Rnew);
+            Rold = sqrt(Rold);
+            RMSdiff += (Rnew-Rold)*(Rnew-Rold);
+          }
+        }
       }
     }
-    RMSdiff /= 3*(Nqm+Npseudo);
+    RMSdiff /= ((Nqm+Npseudo)*(Nqm+Npseudo))-(Nqm+Npseudo);
     RMSdiff = sqrt(RMSdiff);
     RMSforce /= 3*(Nqm+Npseudo);
     RMSforce = sqrt(RMSforce);
@@ -85,7 +94,26 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
   if (!QMregion)
   {
     //Check if the MM region changed
-    
+    for (int i=0;i<Natoms;i++)
+    {
+      //Calculate RMS displacement
+      for (int j=i;j<Natoms;j++)
+      {
+        double Rnew = 0;
+        double Rold = 0;
+        Rnew = CoordDist2(Struct[i].P[Bead],Struct[j].P[Bead]);
+        Rold = CoordDist2(OldStruct[i].P[Bead],OldStruct[j].P[Bead]);
+        Rnew = sqrt(Rnew);
+        Rold = sqrt(Rold);
+        RMSdiff += (Rnew-Rold)*(Rnew-Rold);
+      }
+    }
+    RMSdiff /= (Natoms*Natoms)-Natoms;
+    RMSdiff = sqrt(RMSdiff);
+    if (RMSdiff <= QMMMOpts.MMOptTol)
+    {
+      OptDone = 1;
+    }
   }
   return OptDone;
 };
