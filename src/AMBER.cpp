@@ -18,16 +18,31 @@
 
 
 //MM wrapper functions
-double AMBERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
-       QMMMSettings& QMMMOpts, int Bead)
+double AMBEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
-  //Runs AMBER
+  //Runs AMBER energy calculations
   fstream ofile,ifile;
   string dummy;
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;
   int sys;
+  
+  //Change units
+  E *= kcal2eV;
+  return E;
+};
+
+double AMBEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
+{
+  //Runs AMBER optimizations
+  fstream ofile,ifile;
+  string dummy;
+  stringstream call;
+  call.copyfmt(cout);
+  double E = 0.0;
+  int sys;
+  
   //Change units
   E *= kcal2eV;
   return E;

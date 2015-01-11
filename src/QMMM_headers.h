@@ -286,13 +286,17 @@ OctCharges SphHarm2Charges(RedMpole);
 
 void FindTINKERClasses(vector<QMMMAtom>&);
 
-double TINKERWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
+double TINKEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
+
+double TINKEROpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double TINKERForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
 double TINKERPolEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
-double AMBERWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
+double AMBEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
+
+double AMBEROpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double LAMMPSWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
@@ -306,7 +310,9 @@ double GaussianForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
 void GaussianCharges(vector<QMMMAtom>&,QMMMSettings&,int);
 
-double PSIWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
+double PSIEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
+
+double PSIOpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double PSIForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 

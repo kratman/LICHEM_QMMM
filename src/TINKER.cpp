@@ -557,8 +557,7 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
 }
 
 //MM wrappers
-double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
-       QMMMSettings& QMMMOpts, int Bead)
+double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs TINKER MM
   fstream ofile,ifile;
@@ -596,29 +595,25 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
-      if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1)
-         or ((Struct[i].PAregion == 1) and (RunTyp == "Opt")))
+      if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1))
       {
-        if ((Struct[i].Frozen == 0) or (RunTyp == "Enrg"))
+        if (ct == 0)
         {
-          if (ct == 0)
-          {
-            //Start a new active line
-            ofile << "active ";
-          }
-          else
-          {
-            //Place a space to separate values
-            ofile << " ";
-          }
-          ofile << (Struct[i].id+1);
-          ct += 1;
-          if (ct == 10)
-          {
-            //terminate an active line
-            ct = 0;
-            ofile << '\n';
-          }
+          //Start a new active line
+          ofile << "active ";
+        }
+        else
+        {
+          //Place a space to separate values
+          ofile << " ";
+        }
+        ofile << (Struct[i].id+1);
+        ct += 1;
+        if (ct == 10)
+        {
+          //terminate an active line
+          ct = 0;
+          ofile << '\n';
         }
       }
     }
@@ -654,15 +649,7 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
         {
           //New atom types are only needed for QM atoms
           ofile << "charge " << (MaxTINKERNum+ct) << " ";
-          if (RunTyp == "Opt")
-          {
-            ofile << Struct[i].MP[Bead].q;
-          }
-          if (RunTyp == "Enrg")
-          {
-            ofile << 0.0;
-          }
-          ofile << '\n';
+          ofile << "0.0" << '\n';
           ct += 1;
         }
       }
@@ -680,12 +667,9 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
         if (Struct[i].QMregion == 1)
         {
           double qi = 0;
-          if (RunTyp == "Enrg")
-          {
-            //remove charge
-            qi = Struct[i].MP[Bead].q;
-            Struct[i].MP[Bead].q = 0;
-          }
+          //remove charge
+          qi = Struct[i].MP[Bead].q;
+          Struct[i].MP[Bead].q = 0;
           WriteTINKMpole(Struct,ofile,i,Bead);
           Struct[i].MP[Bead].q += qi; //Restore charge
         }
@@ -740,84 +724,49 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   }
   ofile.flush();
   ofile.close();
-  //Run optimization
-  if (RunTyp == "Opt")
-  {
-    //Run TINKER
-    call.str("");
-    call << "newton QMMM_";
-    call << Bead << ".xyz A A 0.01 > QMMM_";
-    call << Bead << ".log";
-    sys = system(call.str().c_str());
-    //Read new structure
-    call.str("");
-    call << "QMMM_" << Bead << ".xyz_2";
-    ifile.open(call.str().c_str(),ios_base::in);
-    getline(ifile,dummy);
-    if (PBCon == 1)
-    {
-      getline(ifile,dummy);
-    }
-    for (int i=0;i<Natoms;i++)
-    {
-      getline(ifile,dummy);
-      stringstream line(dummy);
-      //Read new positions
-      line >> dummy >> dummy;
-      line >> Struct[i].P[Bead].x;
-      line >> Struct[i].P[Bead].y;
-      line >> Struct[i].P[Bead].z;
-    }
-    ifile.close();
-  }
   //Calculate MM potential energy
-  if (RunTyp == "Enrg")
+  call.str("");
+  call << "analyze QMMM_";
+  call << Bead << ".xyz E > QMMM_";
+  call << Bead << ".log";
+  sys = system(call.str().c_str());
+  call.str("");
+  call << "QMMM_" << Bead << ".log";
+  ifile.open(call.str().c_str(),ios_base::in);
+  //Read MM potential energy
+  bool Efound = 0;
+  while (!ifile.eof())
   {
-    //Run TINKER
-    call.str("");
-    call << "analyze QMMM_";
-    call << Bead << ".xyz E > QMMM_";
-    call << Bead << ".log";
-    sys = system(call.str().c_str());
-    call.str("");
-    call << "QMMM_" << Bead << ".log";
-    ifile.open(call.str().c_str(),ios_base::in);
-    //Read MM potential energy
-    bool Efound = 0;
-    while (!ifile.eof())
+    ifile >> dummy;
+    if (dummy == "Total")
     {
-      ifile >> dummy;
-      if (dummy == "Total")
+      ifile >> dummy >> dummy;
+      if (dummy == "Energy")
       {
-        ifile >> dummy >> dummy;
-        if (dummy == "Energy")
-        {
-          ifile >> dummy >> E;
-          Efound = 1;
-        }
-      }
-      if (dummy == "Polarization")
-      {
-        ifile >> Epol;
+        ifile >> dummy >> E;
+        Efound = 1;
       }
     }
-    if (Efound == 0)
+    if (dummy == "Polarization")
     {
-      //Warn user if no energy was found
-      cout << "Warning: No MM energy found after a calculation!!!";
-      cout << '\n';
-      cout << " FLUKE will attempt to continue...";
-      cout << '\n';
-      E = HugeNum; //Large number to reject step
+      ifile >> Epol;
     }
-    ifile.close();
   }
+  if (Efound == 0)
+  {
+    //Warn user if no energy was found
+    cout << "Warning: No MM energy found after a calculation!!!";
+    cout << '\n';
+    cout << " FLUKE will attempt to continue...";
+    cout << '\n';
+    E = HugeNum; //Large number to reject step
+  }
+  ifile.close();
   //Clean up files
   call.str("");
   call << "rm -f";
   call << " QMMM_" << Bead << ".xyz";
   call << " QMMM_" << Bead << ".log";
-  call << " QMMM_" << Bead << ".xyz_*";
   call << " QMMM_" << Bead << ".key";
   sys = system(call.str().c_str());
   //Calculate polarization energy
@@ -832,3 +781,204 @@ double TINKERWrapper(string RunTyp, vector<QMMMAtom>& Struct,
   return E;
 };
 
+double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
+{
+  //Runs TINKER MM
+  fstream ofile,ifile;
+  stringstream call;
+  call.copyfmt(cout);
+  string dummy;
+  string TINKKeyFile = "tinker.key";
+  int MaxTINKERNum = 3500;
+  int MaxTINKERClass = 100;
+  double Epol = 0;
+  double E = 0;
+  int sys;
+  int ct;
+  call.str("");
+  //Copy the original key file and make changes
+  if (QMMM == 1)
+  {
+    call.str("");
+    call << "cp " << TINKKeyFile << " QMMM";
+    call << "_" << Bead;
+    call << ".key";
+    sys = system(call.str().c_str());
+    //Save new keyfile name
+    call.str("");
+    call << "QMMM";
+    call << "_" << Bead;
+    call << ".key";
+    TINKKeyFile = call.str(); //Save the new name
+    //Add QM atoms to force field parameters list
+    ofile.open(TINKKeyFile.c_str(),ios_base::app|ios_base::out);
+    ofile << '\n';
+    ofile << "#QM force field parameters"; //Marks the changes
+    ofile << '\n';
+    ct = 0; //Generic counter
+    for (int i=0;i<Natoms;i++)
+    {
+      //Add active atoms
+      if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1)
+         or (Struct[i].PAregion == 1))
+      {
+        if (Struct[i].Frozen == 0)
+        {
+          if (ct == 0)
+          {
+            //Start a new active line
+            ofile << "active ";
+          }
+          else
+          {
+            //Place a space to separate values
+            ofile << " ";
+          }
+          ofile << (Struct[i].id+1);
+          ct += 1;
+          if (ct == 10)
+          {
+            //terminate an active line
+            ct = 0;
+            ofile << '\n';
+          }
+        }
+      }
+    }
+    if (ct != 0)
+    {
+      //Terminate trailing actives line
+      ofile << '\n';
+    }
+    ct = 0;
+    for (int i=0;i<Natoms;i++)
+    {
+      //Add atom types
+      if (Struct[i].QMregion == 1)
+      {
+        ofile << "atom " << (MaxTINKERNum+ct) << " ";
+        ofile << Struct[i].NumClass << " ";
+        ofile << Struct[i].MMTyp << " ";
+        ofile << "\"Dummy QM atom type\" ";
+        ofile << RevTyping(Struct[i].QMTyp) << " ";
+        ofile << Struct[i].m << " ";
+        ofile << Struct[i].Bonds.size();
+        ofile << '\n';
+        ct += 1;
+      }
+    }
+    if (CHRG == 1)
+    {
+      ct = 0;
+      for (int i=0;i<Natoms;i++)
+      {
+        //Add nuclear charges
+        if (Struct[i].QMregion == 1)
+        {
+          //New atom types are only needed for QM atoms
+          ofile << "charge " << (MaxTINKERNum+ct) << " ";
+          ofile << Struct[i].MP[Bead].q;
+          ofile << '\n';
+          ct += 1;
+        }
+      }
+    }
+    if (AMOEBA == 1)
+    {
+      for (int i=0;i<Natoms;i++)
+      {
+        //Add nuclear charges
+        if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+        {
+          //Write new multipole definition for the atom ID
+          WriteTINKMpole(Struct,ofile,i,Bead);
+        }
+      }
+    }
+    ofile.flush();
+    ofile.close();
+  }
+  //Create TINKER xyz file from the structure
+  call.str("");
+  call << "QMMM_" << Bead << ".xyz";
+  ofile.open(call.str().c_str(),ios_base::out);
+  //Write atoms to the xyz file
+  ofile << Natoms << '\n';
+  if (PBCon == 1)
+  {
+    //Write box size
+    ofile << Lx << " " << Ly << " " << Lz;
+    ofile << " 90.0 90.0 90.0";
+    ofile << '\n';
+  }
+  ct = 0; //Counter for QM atoms
+  for (int i=0;i<Natoms;i++)
+  {
+    ofile.precision(8);
+    ofile << setw(6) << (Struct[i].id+1);
+    ofile << " ";
+    ofile << setw(3) << Struct[i].MMTyp;
+    ofile << " ";
+    ofile << setw(10) << Struct[i].P[Bead].x;
+    ofile << " ";
+    ofile << setw(10) << Struct[i].P[Bead].y;
+    ofile << " ";
+    ofile << setw(10) << Struct[i].P[Bead].z;
+    ofile << " ";
+    if (Struct[i].QMregion != 1)
+    {
+      ofile << setw(4) << Struct[i].NumTyp;
+    }
+    if (Struct[i].QMregion == 1)
+    {
+      ofile << setw(4) << (MaxTINKERNum+ct);
+      ct += 1; //Count number of qm atoms
+    }
+    for (int j=0;j<Struct[i].Bonds.size();j++)
+    {
+      ofile << " "; //Avoids trailing spaces
+      ofile << setw(6) << (Struct[i].Bonds[j]+1);
+    }
+    ofile.copyfmt(cout);
+    ofile << '\n';
+  }
+  ofile.flush();
+  ofile.close();
+  //Run optimization
+  call.str("");
+  call << "newton QMMM_";
+  call << Bead << ".xyz A A 0.01 > QMMM_";
+  call << Bead << ".log";
+  sys = system(call.str().c_str());
+  //Read new structure
+  call.str("");
+  call << "QMMM_" << Bead << ".xyz_2";
+  ifile.open(call.str().c_str(),ios_base::in);
+  getline(ifile,dummy);
+  if (PBCon == 1)
+  {
+    getline(ifile,dummy);
+  }
+  for (int i=0;i<Natoms;i++)
+  {
+    getline(ifile,dummy);
+    stringstream line(dummy);
+    //Read new positions
+    line >> dummy >> dummy;
+    line >> Struct[i].P[Bead].x;
+    line >> Struct[i].P[Bead].y;
+    line >> Struct[i].P[Bead].z;
+  }
+  ifile.close();
+  //Clean up files
+  call.str("");
+  call << "rm -f";
+  call << " QMMM_" << Bead << ".xyz";
+  call << " QMMM_" << Bead << ".log";
+  call << " QMMM_" << Bead << ".xyz_*";
+  call << " QMMM_" << Bead << ".key";
+  sys = system(call.str().c_str());
+  //Change units
+  E *= kcal2eV;
+  return E;
+};

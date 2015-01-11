@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
     if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
-      Eqm += PSIWrapper("Enrg",Struct,QMMMOpts,0);
+      Eqm += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
     if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);
-      Emm += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
+      Emm += TINKEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     if (AMBER == 1)
@@ -268,7 +268,7 @@ int main(int argc, char* argv[])
     if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += PSIWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
@@ -276,7 +276,7 @@ int main(int argc, char* argv[])
     if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += TINKEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     if (AMBER == 1)
@@ -305,7 +305,7 @@ int main(int argc, char* argv[])
       if (PSI4 == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE = PSIWrapper("Opt",Struct,QMMMOpts,0);
+        SumE = PSIOpt(Struct,QMMMOpts,0);
         QMTime += (unsigned)time(0)-tstart;
         //Clean up annoying useless files
         int sys = system("rm -f psi.*");
@@ -313,7 +313,7 @@ int main(int argc, char* argv[])
       if (TINKER == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE = TINKERWrapper("Opt",Struct,QMMMOpts,0);
+        SumE = TINKEROpt(Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       if (AMBER == 1)
@@ -352,7 +352,7 @@ int main(int argc, char* argv[])
     if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += PSIWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
@@ -360,7 +360,7 @@ int main(int argc, char* argv[])
     if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += TINKEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     if (AMBER == 1)
@@ -384,7 +384,7 @@ int main(int argc, char* argv[])
       if (TINKER == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE = TINKERWrapper("Opt",Struct,QMMMOpts,0);
+        SumE = TINKEROpt(Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       if (AMBER == 1)
@@ -423,7 +423,7 @@ int main(int argc, char* argv[])
     if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += PSIWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
@@ -431,7 +431,7 @@ int main(int argc, char* argv[])
     if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += TINKEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     if (AMBER == 1)
@@ -455,7 +455,7 @@ int main(int argc, char* argv[])
       if (TINKER == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE = TINKERWrapper("Opt",Struct,QMMMOpts,0);
+        SumE = TINKEROpt(Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       if (AMBER == 1)

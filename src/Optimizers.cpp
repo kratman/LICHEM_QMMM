@@ -104,7 +104,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += PSIWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
@@ -112,7 +112,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += TINKERWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += TINKEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     if (AMBER == 1)
