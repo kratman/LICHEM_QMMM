@@ -12,6 +12,82 @@
 */
 
 //MM utility functions
+void FindTINKERClasses(vector<QMMMAtom>& Struct)
+{
+  //Parses TINKER parameter files to find atom classes
+  fstream ifile;
+  string dummy;
+  string TINKKeyFile = "tinker.key";
+  ifile.open(TINKKeyFile.c_str(),ios_base::in);
+  if (!ifile.good())
+  {
+    //Exit if files do not exist
+    cout << "Error: Missing tinker.key file.";
+    cout << endl;
+    exit(0);
+  }
+  bool FileFound = 0; //Bool to break loops
+  while ((!ifile.eof()) and (!FileFound))
+  {
+    //Detect the name of the force field file
+    ifile >> dummy;
+    if (dummy == "parameters")
+    {
+      ifile >> dummy;
+      FileFound = 1;
+    }
+  }
+  ifile.close();
+  ifile.open(dummy.c_str(),ios_base::in);
+  if (!FileFound)
+  {
+    //Exit if parameter file is not found
+    cout << "Error: Cannot find TINKER parameter file.";
+    cout << endl;
+    exit(0);
+  }
+  if (!ifile.good())
+  {
+    //Exit if parameter file does not exist
+    cout << "Error: Cannot read TINKER ";
+    cout << dummy;
+    cout << " parameter file.";
+    cout << endl;
+    exit(0);
+  }
+  int ct = 0; //Generic counter
+  while (!ifile.eof())
+  {
+    getline(ifile,dummy);
+    stringstream FullLine(dummy);
+    FullLine >> dummy;
+    if (dummy == "atom")
+    {
+      int AtType,AtClass;
+      FullLine >> AtType;
+      FullLine >> AtClass;
+      for (int i=0;i<Natoms;i++)
+      {
+        if (Struct[i].NumTyp == AtType)
+        {
+          Struct[i].NumClass = AtClass;
+          ct += 1;
+        }
+      }
+    }
+  }
+  if (ct < Natoms)
+  {
+    cout << "Error: Atom type not found in TINKER parameters.";
+    cout << '\n';
+    cout << " Please check the input.";
+    cout << endl;
+    exit(0);
+  }
+  return;
+}
+
+//MM wrapper functions
 double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
        int Bead)
 {
@@ -481,82 +557,6 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   return Emm;
 };
 
-void FindTINKERClasses(vector<QMMMAtom>& Struct)
-{
-  //Parses TINKER parameter files to find atom classes
-  fstream ifile;
-  string dummy;
-  string TINKKeyFile = "tinker.key";
-  ifile.open(TINKKeyFile.c_str(),ios_base::in);
-  if (!ifile.good())
-  {
-    //Exit if files do not exist
-    cout << "Error: Missing tinker.key file.";
-    cout << endl;
-    exit(0);
-  }
-  bool FileFound = 0; //Bool to break loops
-  while ((!ifile.eof()) and (!FileFound))
-  {
-    //Detect the name of the force field file
-    ifile >> dummy;
-    if (dummy == "parameters")
-    {
-      ifile >> dummy;
-      FileFound = 1;
-    }
-  }
-  ifile.close();
-  ifile.open(dummy.c_str(),ios_base::in);
-  if (!FileFound)
-  {
-    //Exit if parameter file is not found
-    cout << "Error: Cannot find TINKER parameter file.";
-    cout << endl;
-    exit(0);
-  }
-  if (!ifile.good())
-  {
-    //Exit if parameter file does not exist
-    cout << "Error: Cannot read TINKER ";
-    cout << dummy;
-    cout << " parameter file.";
-    cout << endl;
-    exit(0);
-  }
-  int ct = 0; //Generic counter
-  while (!ifile.eof())
-  {
-    getline(ifile,dummy);
-    stringstream FullLine(dummy);
-    FullLine >> dummy;
-    if (dummy == "atom")
-    {
-      int AtType,AtClass;
-      FullLine >> AtType;
-      FullLine >> AtClass;
-      for (int i=0;i<Natoms;i++)
-      {
-        if (Struct[i].NumTyp == AtType)
-        {
-          Struct[i].NumClass = AtClass;
-          ct += 1;
-        }
-      }
-    }
-  }
-  if (ct < Natoms)
-  {
-    cout << "Error: Atom type not found in TINKER parameters.";
-    cout << '\n';
-    cout << " Please check the input.";
-    cout << endl;
-    exit(0);
-  }
-  return;
-}
-
-//MM wrappers
 double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs TINKER MM

@@ -300,9 +300,17 @@ double AMBEROpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double LAMMPSWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
 
+double LAMMPSEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
+
+double LAMMPSOpt(vector<QMMMAtom>&,QMMMSettings&,int);
+
 double LAMMPSForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
 double GaussianWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
+
+double GaussianEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
+
+double GaussianOpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void ExternalGaussian(int&,char**&);
 

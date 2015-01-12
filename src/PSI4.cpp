@@ -15,6 +15,8 @@
 */
 
 //QM utility functions
+
+//QM wrapper functions
 double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
@@ -70,9 +72,9 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
       {
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].MP[Bead].q << ",";
-        call << Struct[i].P[Bead].x << ",";
-        call << Struct[i].P[Bead].y << ",";
-        call << Struct[i].P[Bead].z;
+        call << Struct[i].P[Bead].x/BohrRad << ",";
+        call << Struct[i].P[Bead].y/BohrRad << ",";
+        call << Struct[i].P[Bead].z/BohrRad;
         call << ")" << '\n';
       }
     }
@@ -89,39 +91,39 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
       {
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q1 << ",";
-        call << Struct[i].PC[Bead].x1 << ",";
-        call << Struct[i].PC[Bead].y1 << ",";
-        call << Struct[i].PC[Bead].z1;
+        call << Struct[i].PC[Bead].x1/BohrRad << ",";
+        call << Struct[i].PC[Bead].y1/BohrRad << ",";
+        call << Struct[i].PC[Bead].z1/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q2 << ",";
-        call << Struct[i].PC[Bead].x2 << ",";
-        call << Struct[i].PC[Bead].y2 << ",";
-        call << Struct[i].PC[Bead].z2;
+        call << Struct[i].PC[Bead].x2/BohrRad << ",";
+        call << Struct[i].PC[Bead].y2/BohrRad << ",";
+        call << Struct[i].PC[Bead].z2/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q3 << ",";
-        call << Struct[i].PC[Bead].x3 << ",";
-        call << Struct[i].PC[Bead].y3 << ",";
-        call << Struct[i].PC[Bead].z3;
+        call << Struct[i].PC[Bead].x3/BohrRad << ",";
+        call << Struct[i].PC[Bead].y3/BohrRad << ",";
+        call << Struct[i].PC[Bead].z3/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q4 << ",";
-        call << Struct[i].PC[Bead].x4 << ",";
-        call << Struct[i].PC[Bead].y4 << ",";
-        call << Struct[i].PC[Bead].z4;
+        call << Struct[i].PC[Bead].x4/BohrRad << ",";
+        call << Struct[i].PC[Bead].y4/BohrRad << ",";
+        call << Struct[i].PC[Bead].z4/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q5 << ",";
-        call << Struct[i].PC[Bead].x5 << ",";
-        call << Struct[i].PC[Bead].y5 << ",";
-        call << Struct[i].PC[Bead].z5;
+        call << Struct[i].PC[Bead].x5/BohrRad << ",";
+        call << Struct[i].PC[Bead].y5/BohrRad << ",";
+        call << Struct[i].PC[Bead].z5/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q6 << ",";
-        call << Struct[i].PC[Bead].x6 << ",";
-        call << Struct[i].PC[Bead].y6 << ",";
-        call << Struct[i].PC[Bead].z6;
+        call << Struct[i].PC[Bead].x6/BohrRad << ",";
+        call << Struct[i].PC[Bead].y6/BohrRad << ",";
+        call << Struct[i].PC[Bead].z6/BohrRad;
         call << ")" << '\n';
       }
     }
@@ -261,9 +263,9 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       {
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].MP[Bead].q << ",";
-        call << Struct[i].P[Bead].x << ",";
-        call << Struct[i].P[Bead].y << ",";
-        call << Struct[i].P[Bead].z;
+        call << Struct[i].P[Bead].x/BohrRad << ",";
+        call << Struct[i].P[Bead].y/BohrRad << ",";
+        call << Struct[i].P[Bead].z/BohrRad;
         call << ")" << '\n';
       }
     }
@@ -280,39 +282,39 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       {
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q1 << ",";
-        call << Struct[i].PC[Bead].x1 << ",";
-        call << Struct[i].PC[Bead].y1 << ",";
-        call << Struct[i].PC[Bead].z1;
+        call << Struct[i].PC[Bead].x1/BohrRad << ",";
+        call << Struct[i].PC[Bead].y1/BohrRad << ",";
+        call << Struct[i].PC[Bead].z1/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q2 << ",";
-        call << Struct[i].PC[Bead].x2 << ",";
-        call << Struct[i].PC[Bead].y2 << ",";
-        call << Struct[i].PC[Bead].z2;
+        call << Struct[i].PC[Bead].x2/BohrRad << ",";
+        call << Struct[i].PC[Bead].y2/BohrRad << ",";
+        call << Struct[i].PC[Bead].z2/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q3 << ",";
-        call << Struct[i].PC[Bead].x3 << ",";
-        call << Struct[i].PC[Bead].y3 << ",";
-        call << Struct[i].PC[Bead].z3;
+        call << Struct[i].PC[Bead].x3/BohrRad << ",";
+        call << Struct[i].PC[Bead].y3/BohrRad << ",";
+        call << Struct[i].PC[Bead].z3/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q4 << ",";
-        call << Struct[i].PC[Bead].x4 << ",";
-        call << Struct[i].PC[Bead].y4 << ",";
-        call << Struct[i].PC[Bead].z4;
+        call << Struct[i].PC[Bead].x4/BohrRad << ",";
+        call << Struct[i].PC[Bead].y4/BohrRad << ",";
+        call << Struct[i].PC[Bead].z4/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q5 << ",";
-        call << Struct[i].PC[Bead].x5 << ",";
-        call << Struct[i].PC[Bead].y5 << ",";
-        call << Struct[i].PC[Bead].z5;
+        call << Struct[i].PC[Bead].x5/BohrRad << ",";
+        call << Struct[i].PC[Bead].y5/BohrRad << ",";
+        call << Struct[i].PC[Bead].z5/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q6 << ",";
-        call << Struct[i].PC[Bead].x6 << ",";
-        call << Struct[i].PC[Bead].y6 << ",";
-        call << Struct[i].PC[Bead].z6;
+        call << Struct[i].PC[Bead].x6/BohrRad << ",";
+        call << Struct[i].PC[Bead].y6/BohrRad << ",";
+        call << Struct[i].PC[Bead].z6/BohrRad;
         call << ")" << '\n';
       }
     }
@@ -385,7 +387,6 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   return;
 };
 
-//QM wrapper functions
 double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs psi4 for energy calculations
@@ -440,9 +441,9 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       {
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].MP[Bead].q << ",";
-        call << Struct[i].P[Bead].x << ",";
-        call << Struct[i].P[Bead].y << ",";
-        call << Struct[i].P[Bead].z;
+        call << Struct[i].P[Bead].x/BohrRad << ",";
+        call << Struct[i].P[Bead].y/BohrRad << ",";
+        call << Struct[i].P[Bead].z/BohrRad;
         call << ")" << '\n';
       }
     }
@@ -459,39 +460,39 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       {
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q1 << ",";
-        call << Struct[i].PC[Bead].x1 << ",";
-        call << Struct[i].PC[Bead].y1 << ",";
-        call << Struct[i].PC[Bead].z1;
+        call << Struct[i].PC[Bead].x1/BohrRad << ",";
+        call << Struct[i].PC[Bead].y1/BohrRad << ",";
+        call << Struct[i].PC[Bead].z1/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q2 << ",";
-        call << Struct[i].PC[Bead].x2 << ",";
-        call << Struct[i].PC[Bead].y2 << ",";
-        call << Struct[i].PC[Bead].z2;
+        call << Struct[i].PC[Bead].x2/BohrRad << ",";
+        call << Struct[i].PC[Bead].y2/BohrRad << ",";
+        call << Struct[i].PC[Bead].z2/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q3 << ",";
-        call << Struct[i].PC[Bead].x3 << ",";
-        call << Struct[i].PC[Bead].y3 << ",";
-        call << Struct[i].PC[Bead].z3;
+        call << Struct[i].PC[Bead].x3/BohrRad << ",";
+        call << Struct[i].PC[Bead].y3/BohrRad << ",";
+        call << Struct[i].PC[Bead].z3/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q4 << ",";
-        call << Struct[i].PC[Bead].x4 << ",";
-        call << Struct[i].PC[Bead].y4 << ",";
-        call << Struct[i].PC[Bead].z4;
+        call << Struct[i].PC[Bead].x4/BohrRad << ",";
+        call << Struct[i].PC[Bead].y4/BohrRad << ",";
+        call << Struct[i].PC[Bead].z4/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q5 << ",";
-        call << Struct[i].PC[Bead].x5 << ",";
-        call << Struct[i].PC[Bead].y5 << ",";
-        call << Struct[i].PC[Bead].z5;
+        call << Struct[i].PC[Bead].x5/BohrRad << ",";
+        call << Struct[i].PC[Bead].y5/BohrRad << ",";
+        call << Struct[i].PC[Bead].z5/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q6 << ",";
-        call << Struct[i].PC[Bead].x6 << ",";
-        call << Struct[i].PC[Bead].y6 << ",";
-        call << Struct[i].PC[Bead].z6;
+        call << Struct[i].PC[Bead].x6/BohrRad << ",";
+        call << Struct[i].PC[Bead].y6/BohrRad << ",";
+        call << Struct[i].PC[Bead].z6/BohrRad;
         call << ")" << '\n';
       }
     }
@@ -550,6 +551,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     E = HugeNum; //Large number to reject step
   }
   //Clean up files
+  exit(0);
   call.str("");
   call << "rm -f ";
   call << "QMMM_" << Bead << ".dat ";
@@ -621,9 +623,9 @@ double PSIOpt(vector<QMMMAtom>& Struct,
       {
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].MP[Bead].q << ",";
-        call << Struct[i].P[Bead].x << ",";
-        call << Struct[i].P[Bead].y << ",";
-        call << Struct[i].P[Bead].z;
+        call << Struct[i].P[Bead].x/BohrRad << ",";
+        call << Struct[i].P[Bead].y/BohrRad << ",";
+        call << Struct[i].P[Bead].z/BohrRad;
         call << ")" << '\n';
       }
     }
@@ -640,39 +642,39 @@ double PSIOpt(vector<QMMMAtom>& Struct,
       {
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q1 << ",";
-        call << Struct[i].PC[Bead].x1 << ",";
-        call << Struct[i].PC[Bead].y1 << ",";
-        call << Struct[i].PC[Bead].z1;
+        call << Struct[i].PC[Bead].x1/BohrRad << ",";
+        call << Struct[i].PC[Bead].y1/BohrRad << ",";
+        call << Struct[i].PC[Bead].z1/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q2 << ",";
-        call << Struct[i].PC[Bead].x2 << ",";
-        call << Struct[i].PC[Bead].y2 << ",";
-        call << Struct[i].PC[Bead].z2;
+        call << Struct[i].PC[Bead].x2/BohrRad << ",";
+        call << Struct[i].PC[Bead].y2/BohrRad << ",";
+        call << Struct[i].PC[Bead].z2/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q3 << ",";
-        call << Struct[i].PC[Bead].x3 << ",";
-        call << Struct[i].PC[Bead].y3 << ",";
-        call << Struct[i].PC[Bead].z3;
+        call << Struct[i].PC[Bead].x3/BohrRad << ",";
+        call << Struct[i].PC[Bead].y3/BohrRad << ",";
+        call << Struct[i].PC[Bead].z3/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q4 << ",";
-        call << Struct[i].PC[Bead].x4 << ",";
-        call << Struct[i].PC[Bead].y4 << ",";
-        call << Struct[i].PC[Bead].z4;
+        call << Struct[i].PC[Bead].x4/BohrRad << ",";
+        call << Struct[i].PC[Bead].y4/BohrRad << ",";
+        call << Struct[i].PC[Bead].z4/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q5 << ",";
-        call << Struct[i].PC[Bead].x5 << ",";
-        call << Struct[i].PC[Bead].y5 << ",";
-        call << Struct[i].PC[Bead].z5;
+        call << Struct[i].PC[Bead].x5/BohrRad << ",";
+        call << Struct[i].PC[Bead].y5/BohrRad << ",";
+        call << Struct[i].PC[Bead].z5/BohrRad;
         call << ")" << '\n';
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q6 << ",";
-        call << Struct[i].PC[Bead].x6 << ",";
-        call << Struct[i].PC[Bead].y6 << ",";
-        call << Struct[i].PC[Bead].z6;
+        call << Struct[i].PC[Bead].x6/BohrRad << ",";
+        call << Struct[i].PC[Bead].y6/BohrRad << ",";
+        call << Struct[i].PC[Bead].z6/BohrRad;
         call << ")" << '\n';
       }
     }
