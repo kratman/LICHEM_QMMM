@@ -85,9 +85,9 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     cout << '\n' << endl;
     cout.copyfmt(call); //Return to previous settings
     //Check convergence criteria
-    if ((RMSdiff >= QMMMOpts.QMOptTol) and
-       (RMSforce >= (100*QMMMOpts.QMOptTol)) and
-       (MAXforce >= (200*QMMMOpts.QMOptTol)))
+    if ((RMSdiff <= QMMMOpts.QMOptTol) and
+       (RMSforce <= (100*QMMMOpts.QMOptTol)) and
+       (MAXforce <= (200*QMMMOpts.QMOptTol)))
     {
       OptDone = 1;
     }
@@ -139,7 +139,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     RMSdiff = sqrt(RMSdiff);
     //Print progress
     cout << " | Opt. Step: ";
-    cout << (stepct-1) << " | Energy: ";
+    cout << stepct << " | Energy: ";
     cout << SumE << " eV ";
     cout << " | RMSdev: " << RMSdiff;
     cout << '\n';
