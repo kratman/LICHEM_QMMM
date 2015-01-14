@@ -551,7 +551,6 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     E = HugeNum; //Large number to reject step
   }
   //Clean up files
-  exit(0);
   call.str("");
   call << "rm -f ";
   call << "QMMM_" << Bead << ".dat ";

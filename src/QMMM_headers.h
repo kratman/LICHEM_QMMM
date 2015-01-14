@@ -373,8 +373,6 @@ void GetQuotes(vector<string>&);
 //Function definitions
 #include "Core_funcs.cpp"
 #include "Misc_funcs.cpp"
-#include "PathIntegral.cpp"
-#include "ReactionPath.cpp"
 #include "TINK2FLUKE.cpp"
 #ifdef DEVCOMP
 #include "Real_Multipoles.cpp"
@@ -383,7 +381,10 @@ void GetQuotes(vector<string>&);
 #include "Multipoles.cpp"
 #endif
 #include "Frozen_Density.cpp"
+#include "PathIntegral.cpp"
+#include "ReactionPath.cpp"
 #include "Optimizers.cpp"
+#include "Dynamics.cpp"
 
 //Wrapper definitions
 #include "Lepton_eng.cpp"

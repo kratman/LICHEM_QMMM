@@ -1,13 +1,13 @@
 Potential_Type: QMMM
-QM_type: Gaussian
-QM_functional: B97D
+QM_type: PSI4
+QM_functional: PBE0
 QM_basis: 6-31G*
 QM_memory: 2
 QM_charge: 0
 QM_spin: 1
 MM_type: TINKER
 Electrostatics: Charges
-Calculation_type: Steep
+Calculation_type: BFGS
 Opt_step_size: 0.01
 QM_opt_tolerance: 1e-4
 MM_opt_tolerance: 1e-2
@@ -16,5 +16,5 @@ PBC: No
 QM_atoms: 3
 3 4 5
 Pseudo_atoms: 0
-ZC_atoms: 0
+Boundary_atoms: 0
 Frozen_atoms: 0
