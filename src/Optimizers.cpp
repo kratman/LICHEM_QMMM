@@ -70,7 +70,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
         }
       }
     }
-    RMSdiff /= ((Nqm+Npseudo)*(Nqm+Npseudo))-(Nqm+Npseudo);
+    RMSdiff /= (Nqm+Npseudo)*(Nqm+Npseudo-1)/2;
     RMSdiff = sqrt(RMSdiff);
     RMSforce /= 3*(Nqm+Npseudo);
     RMSforce = sqrt(RMSforce);
@@ -78,10 +78,11 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     call.copyfmt(cout); //Save settings
     cout << setprecision(8);
     cout << "    QM Step: " << (stepct-1);
-    cout << " | RMS Disp: " << RMSdiff;
-    cout << '\n';
+    cout << " | RMS dev: " << RMSdiff;
+    cout << " \u212B" << '\n';
     cout << "    Max force: " << MAXforce;
-    cout << " | RMS force: " << RMSforce;
+    cout << " eV/\u212B | RMS force: " << RMSforce;
+    cout << " eV/\u212B";
     cout << '\n' << endl;
     cout.copyfmt(call); //Return to previous settings
     //Check convergence criteria
@@ -135,14 +136,14 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
         RMSdiff += (Rnew-Rold)*(Rnew-Rold);
       }
     }
-    RMSdiff /= (Natoms*Natoms)-Natoms;
+    RMSdiff /= Natoms*(Natoms-1)/2;
     RMSdiff = sqrt(RMSdiff);
     //Print progress
     cout << " | Opt. Step: ";
     cout << stepct << " | Energy: ";
     cout << SumE << " eV ";
-    cout << " | RMSdev: " << RMSdiff;
-    cout << '\n';
+    cout << " | RMS dev: " << RMSdiff;
+    cout << " \u212B" << '\n';
     //Check convergence
     if (RMSdiff <= QMMMOpts.MMOptTol)
     {
@@ -272,12 +273,13 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     GradDiff(i) = 0;
     NGrad(i) = 0;
     //Create matrix for the initial Hessian
-    for (int j=0;j<(3*(Nqm+Npseudo));j++)
+    for (int j=0;j<i;j++)
     {
       //Set off diagonal terms
-      Hess(i,j) = 0.0;
+      Hess(i,j) = 0.1;
+      Hess(j,i) = 0.1;
     }
-    Hess(i,i) = 10.0; //Scale diagonal identity matrix for small initial steps
+    Hess(i,i) = 1000.0; //Scale diagonal elements for small initial steps
   }
   vector<Coord> Forces;
   for (int i=0;i<(Nqm+Npseudo);i++)
@@ -405,17 +407,10 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     if (Gaussian == 1)
     {
+      //Not needed, should be fixed
       int tstart = (unsigned)time(0);
       GaussianCharges(Struct,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
-    }
-    if (PSI4 == 1)
-    {
-      int tstart = (unsigned)time(0);
-      PSICharges(Struct,QMMMOpts,Bead);
-      QMTime += (unsigned)time(0)-tstart;
-      //Clean up annoying useless files
-      int sys = system("rm -f psi.*");
     }
   }
   //Clean up files

@@ -134,6 +134,7 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   //Set up charge calculation
   call << "energy('" << QMMMOpts.Func << "')" << '\n';
   call << "gradient('" << QMMMOpts.Func << "')" << '\n';
+  call << "oeprop('MULLIKEN_CHARGES')" << '\n';
   //Print file
   dummy = call.str(); //Store file as a temporary variable
   call.str("");
@@ -167,7 +168,7 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
       if (dummy == "Gradient:")
       {
         getline(ifile,dummy);
-	getline(ifile,dummy);
+        getline(ifile,dummy);
         for (int i=0;i<(Nqm+Npseudo);i++)
         {
           double Fx = 0;
@@ -194,6 +195,29 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
       if (dummy == "Energy:")
       {
         line >> Eqm;
+      }
+    }
+    if (dummy == "Mulliken")
+    {
+      line >> dummy;
+      if (dummy == "Charges:")
+      {
+        getline(ifile,dummy);
+        for (int i=0;i<Natoms;i++)
+        {
+          if ((Struct[i].QMregion == 1) or (Struct[i].PAregion ==1))
+          {
+            getline(ifile,dummy);
+            if (Struct[i].QMregion == 1)
+            {
+              stringstream line(dummy);
+              line >> dummy >> dummy;
+              line >> dummy >> dummy;
+              line >> dummy;
+              line >> Struct[i].MP[Bead].q;
+            }
+          }
+        }
       }
     }
   }

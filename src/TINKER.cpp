@@ -947,7 +947,8 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Run optimization
   call.str("");
   call << "newton QMMM_";
-  call << Bead << ".xyz A A 0.01 > QMMM_";
+  call << Bead << ".xyz A A ";
+  call << QMMMOpts.MMOptTol << " > QMMM_";
   call << Bead << ".log";
   sys = system(call.str().c_str());
   //Read new structure
