@@ -553,7 +553,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << ".*";
   sys = system(call.str().c_str());
   //Return
-  Emm *= kcal2eV;
+  Emm *= kcal2eV; //Currently returns zero
   return Emm;
 };
 

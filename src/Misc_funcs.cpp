@@ -781,7 +781,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       cout << " QM minimizer: ";
       if (OptSim == 1)
       {
-        cout << " Native optimizer" << '\n';
+        cout << "Native optimizer" << '\n';
       }
       if (SteepSim == 1)
       {

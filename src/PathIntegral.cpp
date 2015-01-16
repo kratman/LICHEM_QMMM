@@ -75,7 +75,7 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
     if (Gaussian == 1)
     {
       t_qm_start = (unsigned)time(0);
-      Es[i] += GaussianWrapper("Enrg",parts,QMMMOpts,i);
+      Es[i] += GaussianEnergy(parts,QMMMOpts,i);
       Times_qm[i] += (unsigned)time(0)-t_qm_start;
     }
     if (PSI4 == 1)

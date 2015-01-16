@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
     if (Gaussian == 1)
     {
       int tstart = (unsigned)time(0);
-      Eqm += GaussianWrapper("Enrg",Struct,QMMMOpts,0);
+      Eqm += GaussianEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
     }
     if (PSI4 == 1)
@@ -262,7 +262,7 @@ int main(int argc, char* argv[])
     if (Gaussian == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += GaussianEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
     }
     if (PSI4 == 1)
@@ -299,7 +299,7 @@ int main(int argc, char* argv[])
       if (Gaussian == 1)
       {
         int tstart = (unsigned)time(0);
-        SumE = GaussianWrapper("Opt",Struct,QMMMOpts,0);
+        SumE = GaussianOpt(Struct,QMMMOpts,0);
         QMTime += (unsigned)time(0)-tstart;
       }
       if (PSI4 == 1)
@@ -346,7 +346,7 @@ int main(int argc, char* argv[])
     if (Gaussian == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += GaussianEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
     }
     if (PSI4 == 1)
@@ -417,7 +417,7 @@ int main(int argc, char* argv[])
     if (Gaussian == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += GaussianEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
     }
     if (PSI4 == 1)

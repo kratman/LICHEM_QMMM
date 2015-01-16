@@ -306,8 +306,6 @@ double LAMMPSOpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double LAMMPSForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
-double GaussianWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
-
 double GaussianEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double GaussianOpt(vector<QMMMAtom>&,QMMMSettings&,int);

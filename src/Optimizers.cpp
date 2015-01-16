@@ -55,9 +55,9 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       //Calculate RMS displacement
       if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
       {
-        for (int j=i;j<Natoms;j++)
+        for (int j=0;j<i;j++)
         {
-          if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+          if ((Struct[j].QMregion == 1) or (Struct[j].PAregion == 1))
           {
             double Rnew = 0;
             double Rold = 0;
@@ -99,7 +99,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     if (Gaussian == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += GaussianWrapper("Enrg",Struct,QMMMOpts,0);
+      SumE += GaussianEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
     }
     if (PSI4 == 1)
@@ -125,7 +125,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     //Calculate RMS displacement
     for (int i=0;i<Natoms;i++)
     {
-      for (int j=i;j<Natoms;j++)
+      for (int j=0;j<i;j++)
       {
         double Rnew = 0;
         double Rold = 0;
@@ -272,14 +272,14 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     OptVec(i) = 0;
     GradDiff(i) = 0;
     NGrad(i) = 0;
-    //Create matrix for the initial Hessian
+    //Create guess Hessian
     for (int j=0;j<i;j++)
     {
       //Set off diagonal terms
-      Hess(i,j) = 0.1;
-      Hess(j,i) = 0.1;
+      Hess(i,j) = 0.5;
+      Hess(j,i) = 0.5;
     }
-    Hess(i,i) = 1000.0; //Scale diagonal elements for small initial steps
+    Hess(i,i) = 5000.0; //Scale diagonal elements for small initial steps
   }
   vector<Coord> Forces;
   for (int i=0;i<(Nqm+Npseudo);i++)
@@ -315,14 +315,13 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   //Determine new structure
   int ct = 0; //Counter
-  int ct2 = 0; //Secondary counter
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
     //Change forces array
-    NGrad(ct2) = Forces[i].x;
-    NGrad(ct2+1) = Forces[i].y;
-    NGrad(ct2+2) = Forces[i].z;
-    ct2 += 3;
+    NGrad(ct) = Forces[i].x;
+    NGrad(ct+1) = Forces[i].y;
+    NGrad(ct+2) = Forces[i].z;
+    ct += 3;
   }
   //Optimize structure
   bool OptDone = 0;

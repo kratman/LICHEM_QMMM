@@ -20,7 +20,7 @@
 double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
-  //Function for calculating the forces on a set of atoms
+  //Function for calculating the forces and charges on a set of atoms
   int sys;
   fstream ofile,ifile;
   string dummy;
