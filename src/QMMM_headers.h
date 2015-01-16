@@ -218,7 +218,7 @@ struct QMMMAtom
   int id; //Atom number, starts at zero
   vector<int> Bonds; //Connectivity
   double Ep; //Storage for PI energies
-  vector<Coord> P; //Array of PI beads
+  vector<Coord> P; //Array of beads
   vector<Mpole> MP; //Multipoles
   vector<OctCharges> PC; //Point-charge multipoles
 };

@@ -223,24 +223,6 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     stepct += 1;
     OptDone = OptConverged(Struct,OldStruct,Forces,stepct,QMMMOpts,Bead,1);
   }
-  //Calculate new point charges
-  if (QMMM == 1)
-  {
-    if (Gaussian == 1)
-    {
-      int tstart = (unsigned)time(0);
-      GaussianCharges(Struct,QMMMOpts,Bead);
-      QMTime += (unsigned)time(0)-tstart;
-    }
-    if (PSI4 == 1)
-    {
-      int tstart = (unsigned)time(0);
-      PSICharges(Struct,QMMMOpts,Bead);
-      QMTime += (unsigned)time(0)-tstart;
-      //Clean up annoying useless files
-      int sys = system("rm -f psi.*");
-    }
-  }
   //Clean up files
   call.str("");
   call << "rm -f QMOpt.xyz";
@@ -277,8 +259,8 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     for (int j=0;j<i;j++)
     {
       //Set off diagonal terms
-      IHess(i,j) = 0.5; //Slightly mix vectors
-      IHess(j,i) = 0.5; //Slightly mix vectors
+      IHess(i,j) = 0.0; //Slightly mix vectors
+      IHess(j,i) = 0.0; //Slightly mix vectors
     }
     IHess(i,i) = 1000.0; //Scale diagonal elements for small initial steps
   }
@@ -429,17 +411,6 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Check convergence
     stepct += 1;
     OptDone = OptConverged(Struct,OldStruct,Forces,stepct,QMMMOpts,Bead,1);
-  }
-  //Calculate new point charges
-  if (QMMM == 1)
-  {
-    if (Gaussian == 1)
-    {
-      //Not needed, should be fixed
-      int tstart = (unsigned)time(0);
-      GaussianCharges(Struct,QMMMOpts,Bead);
-      QMTime += (unsigned)time(0)-tstart;
-    }
   }
   //Clean up files
   call.str("");
