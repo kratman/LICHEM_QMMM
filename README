@@ -19,13 +19,13 @@ report all bugs so that the code can be updated quickly.
 
 Force-field wrapper timeline and checklist:
  Point-charge force fields: Done (TINKER and LAMMPS)
- Polarizable force fields: Done (Debugging, TINKER only)
+ Polarizable force fields: Done (debugging, TINKER only)
  Polarizable force fields: Future (Amber)
  Frozen density force fields: Future (Amber)
 
 QMMM boundry timeline and checklist:
  Non-bonded: Done
- Pseudo-bond: Done (Debugging)
+ Pseudo-bond: Done (debugging)
  Frozen density: Future
 
 Simulation mode timeline and checklist:
