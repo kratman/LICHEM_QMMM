@@ -77,7 +77,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     //Print progress
     call.copyfmt(cout); //Save settings
     cout << setprecision(8);
-    cout << "    QM Step: " << (stepct-1);
+    cout << "    QM Step: " << stepct;
     cout << " | RMS dev: " << RMSdiff;
     cout << " \u212B" << '\n';
     cout << "    Max force: " << MAXforce;
@@ -252,7 +252,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
-  //BFGS optimizer for QM atoms
+  //BFGS optimizer for QM atoms that is secretly a DFP optimizer
   double E = 0; //Energy
   int sys;
   stringstream call;
@@ -261,11 +261,12 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   int stepct = 0;
   fstream qmfile;
   qmfile.open("QMOpt.xyz",ios_base::out);
+  double VecMax = 0;
   //Create BFGS arrays
-  VectorXd OptVec(3*(Nqm+Npseudo));
-  VectorXd GradDiff(3*(Nqm+Npseudo));
-  VectorXd NGrad(3*(Nqm+Npseudo));
-  MatrixXd Hess(3*(Nqm+Npseudo),3*(Nqm+Npseudo));
+  VectorXd OptVec(3*(Nqm+Npseudo)); //Gradient descent direction
+  VectorXd GradDiff(3*(Nqm+Npseudo)); //Change in the gradient
+  VectorXd NGrad(3*(Nqm+Npseudo)); //Negative of the gradient
+  MatrixXd IHess(3*(Nqm+Npseudo),3*(Nqm+Npseudo)); //Inverse Hessian
   for (int i=0;i<(3*(Nqm+Npseudo));i++)
   {
     //Initialize arrays
@@ -276,11 +277,12 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     for (int j=0;j<i;j++)
     {
       //Set off diagonal terms
-      Hess(i,j) = 0.5;
-      Hess(j,i) = 0.5;
+      IHess(i,j) = 0.5; //Slightly mix vectors
+      IHess(j,i) = 0.5; //Slightly mix vectors
     }
-    Hess(i,i) = 5000.0; //Scale diagonal elements for small initial steps
+    IHess(i,i) = 1000.0; //Scale diagonal elements for small initial steps
   }
+  IHess = IHess.inverse(); //Invert initial Hessian matrix
   vector<Coord> Forces;
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
@@ -313,8 +315,9 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
     MMTime += (unsigned)time(0)-tstart;
   }
-  //Determine new structure
+  //Save forces
   int ct = 0; //Counter
+  VecMax = 0; //Using this variable to avoid creating a new one
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
     //Change forces array
@@ -322,7 +325,20 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     NGrad(ct+1) = Forces[i].y;
     NGrad(ct+2) = Forces[i].z;
     ct += 3;
+    //Calculate initial RMS force
+    VecMax += Forces[i].x*Forces[i].x;
+    VecMax += Forces[i].y*Forces[i].y;
+    VecMax += Forces[i].z*Forces[i].z;
   }
+  //Output initial RMS force
+  VecMax = sqrt(VecMax/(3*(Nqm+Npseudo)));
+  call.copyfmt(cout); //Save settings
+  cout << setprecision(8);
+  cout << "    QM Step: 0";
+  cout << " | RMS force: " << VecMax;
+  cout << " eV/\u212B";
+  cout << '\n' << endl;
+  cout.copyfmt(call); //Return to previous settings
   //Optimize structure
   bool OptDone = 0;
   while ((OptDone != 1) and (stepct <= QMMMOpts.MaxOptSteps))
@@ -343,8 +359,21 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       Forces[i].z = 0;
     }
     //Determine new structure
-    OptVec = Hess.inverse()*NGrad;
-    OptVec *= QMMMOpts.SteepStep;
+    OptVec = IHess*NGrad;
+    VecMax = 0;
+    for (int i=0;i<(3*(Nqm+Npseudo));i++)
+    {
+      //Check if the step size is too large
+      if (abs(OptVec(i)) > VecMax)
+      {
+        VecMax = abs(OptVec(i));
+      }
+    }
+    if (VecMax > QMMMOpts.SteepStep)
+    {
+      //Scale step size
+      OptVec *= (QMMMOpts.SteepStep/VecMax);
+    }
     ct = 0; //Counter
     for (int i=0;i<Natoms;i++)
     {
@@ -394,9 +423,9 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       ct += 3;
     }
     //Start really long "line"
-    Hess = Hess+((GradDiff*GradDiff.transpose())/(GradDiff.transpose()*
-    OptVec))-((Hess*OptVec*OptVec.transpose()*Hess)/(OptVec.transpose()*
-    Hess*OptVec)); //End really long line
+    IHess = IHess+((OptVec*OptVec.transpose())/(OptVec.transpose()*GradDiff))
+    -((IHess*GradDiff*GradDiff.transpose()*IHess)/(GradDiff.transpose()*IHess
+    *GradDiff)); //End really long "line"
     //Check convergence
     stepct += 1;
     OptDone = OptConverged(Struct,OldStruct,Forces,stepct,QMMMOpts,Bead,1);
