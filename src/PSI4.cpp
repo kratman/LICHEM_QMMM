@@ -132,7 +132,6 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     call << '\n';
   }
   //Set up charge calculation
-  call << "energy('" << QMMMOpts.Func << "')" << '\n';
   call << "gradient('" << QMMMOpts.Func << "')" << '\n';
   call << "oeprop('MULLIKEN_CHARGES')" << '\n';
   //Print file
@@ -181,10 +180,19 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
           line >> Fx;
           line >> Fy;
           line >> Fz;
-          //Save forces
-          Forces[i].x += Fx*Har2eV/BohrRad;
-          Forces[i].y += Fy*Har2eV/BohrRad;
-          Forces[i].z += Fz*Har2eV/BohrRad;
+          //Switch to eV/A and save forces
+          if (abs(Fx) >= 1e-12)
+          {
+            Forces[i].x += Fx*Har2eV/BohrRad;
+          }
+          if (abs(Fy) >= 1e-12)
+          {
+            Forces[i].y += Fy*Har2eV/BohrRad;
+          }
+          if (abs(Fz) >= 1e-12)
+          {
+            Forces[i].z += Fz*Har2eV/BohrRad;
+          }
         }
       }
     }

@@ -931,7 +931,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "\"" << '\n';
   call << "Symmetry=None Opt=(MaxCycles=";
   call << QMMMOpts.MaxOptSteps;
-  call << ",MaxStep=" << int(round((QMMMOpts.SteepStep/(0.01*BohrRad))));
+  call << ",MaxStep=" << int(round((QMMMOpts.MaxStep/(0.01*BohrRad))));
   call << ")" << '\n';
   call << '\n'; //Blank line
   call << "QMMM" << '\n' << '\n'; //Dummy title

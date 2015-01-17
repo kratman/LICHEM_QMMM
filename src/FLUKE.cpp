@@ -405,8 +405,8 @@ int main(int argc, char* argv[])
   }
   //End of sections
 
-  //BFGS minimization
-  if (BFGSSim == 1)
+  //DFP minimization
+  if (DFPSim == 1)
   {
     vector<Coord> Forces; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
@@ -451,7 +451,7 @@ int main(int argc, char* argv[])
       //Copy structure
       OldStruct = Struct;
       //Run optimization
-      FLUKEBFGS(Struct,QMMMOpts,0);
+      FLUKEDFP(Struct,QMMMOpts,0);
       if (TINKER == 1)
       {
         int tstart = (unsigned)time(0);

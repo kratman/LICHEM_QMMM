@@ -108,7 +108,7 @@ bool MMonly = 0; //Flag for the type of wrapper
 bool QMonly = 0; //Flag for the type of wrapper
 bool OptSim = 0; //Flag for energy minimization with QM packages
 bool SteepSim = 0; //Flag for steepest descent minimization in FLUKE
-bool BFGSSim = 0; //Flag for BFGS minimization in FLUKE
+bool DFPSim = 0; //Flag for DFP minimization in FLUKE
 bool PIMCSim = 0; //Flag for Monte Carlo
 bool PathSim = 0; //Flag for reaction paths
 bool SinglePoint = 0; //Flag for energy calculation
@@ -261,6 +261,7 @@ struct QMMMSettings
   double MMOptTol; //Criteria to end the optimization
   double QMOptTol; //Criteria to end the optimization
   double SteepStep; //Steepest descent step size (Ang)
+  double MaxStep; //Maximum size of the optimization step
 };
 
 //Function declarations
@@ -337,7 +338,7 @@ bool OptConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,vector<Coord>&,
 
 void FLUKESteepest(vector<QMMMAtom>&,QMMMSettings&,int);
 
-void FLUKEBFGS(vector<QMMMAtom>&,QMMMSettings&,int);
+void FLUKEDFP(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double SpringEnergy(double,double);
 

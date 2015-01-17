@@ -148,6 +148,8 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     if (RMSdiff <= QMMMOpts.MMOptTol)
     {
       OptDone = 1;
+      cout << "    MM relaxation satisfactory.";
+      cout << '\n';
     }
   }
   return OptDone;
@@ -166,8 +168,10 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   fstream qmfile;
   qmfile.open("QMOpt.xyz",ios_base::out);
   //Optimize structure
+  double stepsize = 1;
+  double VecMax = 0;
   bool OptDone = 0;
-  while ((OptDone != 1) and (stepct <= QMMMOpts.MaxOptSteps))
+  while ((OptDone == 0) and (stepct <= QMMMOpts.MaxOptSteps))
   {
     double E = 0;
     //Copy old structure and create blank force array
@@ -204,6 +208,30 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
+    //Check optimization stepsize
+    VecMax = 0;
+    for (int i=0;i<(Nqm+Npseudo);i++)
+    {
+      //Check if the step size is too large
+      if (abs(QMMMOpts.SteepStep*Forces[i].x) > VecMax)
+      {
+        VecMax = abs(QMMMOpts.SteepStep*Forces[i].x);
+      }
+      if (abs(QMMMOpts.SteepStep*Forces[i].y) > VecMax)
+      {
+        VecMax = abs(QMMMOpts.SteepStep*Forces[i].y);
+      }
+      if (abs(QMMMOpts.SteepStep*Forces[i].z) > VecMax)
+      {
+        VecMax = abs(QMMMOpts.SteepStep*Forces[i].z);
+      }
+    }
+    stepsize = QMMMOpts.SteepStep;
+    if (VecMax > QMMMOpts.MaxStep)
+    {
+      //Scale step size
+      stepsize *= (QMMMOpts.MaxStep/VecMax);
+    }
     //Determine new structure
     int ct = 0; //Counter
     for (int i=0;i<Natoms;i++)
@@ -211,9 +239,9 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Move QM atoms
       if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
       {
-        Struct[i].P[Bead].x += QMMMOpts.SteepStep*Forces[ct].x;
-        Struct[i].P[Bead].y += QMMMOpts.SteepStep*Forces[ct].y;
-        Struct[i].P[Bead].z += QMMMOpts.SteepStep*Forces[ct].z;
+        Struct[i].P[Bead].x += stepsize*Forces[ct].x;
+        Struct[i].P[Bead].y += stepsize*Forces[ct].y;
+        Struct[i].P[Bead].z += stepsize*Forces[ct].z;
         ct += 1;
       }
     }
@@ -231,10 +259,10 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   return;
 };
 
-void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
+void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
-  //BFGS optimizer for QM atoms that is secretly a DFP optimizer
+  //A simple DFP optimizer, which is similar to BFGS updating
   double E = 0; //Energy
   int sys;
   stringstream call;
@@ -244,7 +272,7 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   fstream qmfile;
   qmfile.open("QMOpt.xyz",ios_base::out);
   double VecMax = 0;
-  //Create BFGS arrays
+  //Create DFP arrays
   VectorXd OptVec(3*(Nqm+Npseudo)); //Gradient descent direction
   VectorXd GradDiff(3*(Nqm+Npseudo)); //Change in the gradient
   VectorXd NGrad(3*(Nqm+Npseudo)); //Negative of the gradient
@@ -259,8 +287,8 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     for (int j=0;j<i;j++)
     {
       //Set off diagonal terms
-      IHess(i,j) = 0.0; //Slightly mix vectors
-      IHess(j,i) = 0.0; //Slightly mix vectors
+      IHess(i,j) = 0.5; //Slightly mix vectors (add noise)
+      IHess(j,i) = 0.5; //Slightly mix vectors (add noise)
     }
     IHess(i,i) = 1000.0; //Scale diagonal elements for small initial steps
   }
@@ -323,7 +351,7 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   cout.copyfmt(call); //Return to previous settings
   //Optimize structure
   bool OptDone = 0;
-  while ((OptDone != 1) and (stepct <= QMMMOpts.MaxOptSteps))
+  while ((OptDone == 0) and (stepct <= QMMMOpts.MaxOptSteps))
   {
     //Copy old structure and delete old forces force array
     vector<QMMMAtom> OldStruct = Struct;
@@ -342,6 +370,7 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     }
     //Determine new structure
     OptVec = IHess*NGrad;
+    OptVec *= QMMMOpts.SteepStep;
     VecMax = 0;
     for (int i=0;i<(3*(Nqm+Npseudo));i++)
     {
@@ -351,10 +380,10 @@ void FLUKEBFGS(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         VecMax = abs(OptVec(i));
       }
     }
-    if (VecMax > QMMMOpts.SteepStep)
+    if (VecMax > QMMMOpts.MaxStep)
     {
       //Scale step size
-      OptVec *= (QMMMOpts.SteepStep/VecMax);
+      OptVec *= (QMMMOpts.MaxStep/VecMax);
     }
     ct = 0; //Counter
     for (int i=0;i<Natoms;i++)

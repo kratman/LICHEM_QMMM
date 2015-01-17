@@ -21,7 +21,7 @@ void Print_traj(vector<QMMMAtom>& parts, fstream& traj, QMMMSettings& QMMMOpts)
   {
     for (int j=0;j<QMMMOpts.Nbeads;j++)
     {
-      traj << parts[i].MMTyp << " ";
+      traj << parts[i].QMTyp << " ";
       traj << parts[i].P[j].x << " ";
       traj << parts[i].P[j].y << " ";
       traj << parts[i].P[j].z << '\n';
@@ -427,7 +427,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   {
     //Read MC and PIMC options
     OptSim = 0;
-    BFGSSim = 0;
+    DFPSim = 0;
     PIMCSim = 1;
     SteepSim = 0;
     SinglePoint = 0;
@@ -482,7 +482,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   {
     //Read energy minimization options
     OptSim = 1;
-    BFGSSim = 0;
+    DFPSim = 0;
     PIMCSim = 0;
     SteepSim = 0;
     SinglePoint = 0;
@@ -496,6 +496,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     QMMMOpts.Nprint = 0;
     QMMMOpts.Ensemble = "N/A";
     regionfile >> dummy >> QMMMOpts.SteepStep;
+    regionfile >> dummy >> QMMMOpts.MaxStep;
     regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
@@ -505,7 +506,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   {
     //Read energy minimization options
     OptSim = 0;
-    BFGSSim = 0;
+    DFPSim = 0;
     PIMCSim = 0;
     SteepSim = 1;
     SinglePoint = 0;
@@ -519,15 +520,17 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     QMMMOpts.Nprint = 0;
     QMMMOpts.Ensemble = "N/A";
     regionfile >> dummy >> QMMMOpts.SteepStep;
+    regionfile >> dummy >> QMMMOpts.MaxStep;
     regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
   }
-  if ((dummy == "bfgs") or (dummy == "BFGS"))
+  if ((dummy == "bfgs") or (dummy == "BFGS") or
+     (dummy == "dfp") or (dummy == "DFP"))
   {
-    //Read energy minimization options
+    //Read energy minimization options for the DFP optimizer
     OptSim = 0;
-    BFGSSim = 1;
+    DFPSim = 1;
     PIMCSim = 0;
     SteepSim = 0;
     SinglePoint = 0;
@@ -541,6 +544,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     QMMMOpts.Nprint = 0;
     QMMMOpts.Ensemble = "N/A";
     regionfile >> dummy >> QMMMOpts.SteepStep;
+    regionfile >> dummy >> QMMMOpts.MaxStep;
     regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
@@ -550,7 +554,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   {
     //Read energy minimization options
     OptSim = 0;
-    BFGSSim = 0;
+    DFPSim = 0;
     PIMCSim = 0;
     SteepSim = 0;
     SinglePoint = 1;
@@ -678,7 +682,7 @@ void FLUKEErrorChecker(QMMMSettings& QMMMOpts)
     {
       cout << " Error: QMMM PSI4 optimizations can only be performed with";
       cout << '\n';
-      cout << " the native steepest descent or BFGS.";
+      cout << " the native steepest descent or DFP.";
       cout << '\n';
       DoQuit = 1;
     }
@@ -759,7 +763,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     }
     cout << " Monte Carlo" << '\n';
   }
-  if ((OptSim == 1) or (SteepSim == 1) or (BFGSSim == 1))
+  if ((OptSim == 1) or (SteepSim == 1) or (DFPSim == 1))
   {
     cout << '\n';
     cout << "Simulation mode: ";
@@ -787,9 +791,9 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       {
         cout << "FLUKE steepest descent" << '\n';
       }
-      if (BFGSSim == 1)
+      if (DFPSim == 1)
       {
-        cout << "FLUKE BFGS" << '\n';
+        cout << "FLUKE DFP" << '\n';
       }
     }
   }

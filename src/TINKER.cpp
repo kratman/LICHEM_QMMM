@@ -536,10 +536,19 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
           line >> Fx;
           line >> Fy;
           line >> Fz;
-          //Switch to a.u. and change sign
-          Forces[i].x += -1*Fx*kcal2eV;
-          Forces[i].y += -1*Fy*kcal2eV;
-          Forces[i].z += -1*Fz*kcal2eV;
+          //Switch to eV/A and change sign
+          if (abs(Fx) >= 1e-4)
+          {
+            Forces[i].x += -1*Fx*kcal2eV;
+          }
+          if (abs(Fy) >= 1e-4)
+          {
+            Forces[i].y += -1*Fy*kcal2eV;
+          }
+          if (abs(Fz) >= 1e-4)
+          {
+            Forces[i].z += -1*Fz*kcal2eV;
+          }
         }
       }
     }
