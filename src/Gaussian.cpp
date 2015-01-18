@@ -24,7 +24,7 @@ void ExternalGaussian(int& argc, char**& argv)
   double Emm = 0; //Stores partial energies
   vector<QMMMAtom> Struct; //Atomic data
   QMMMSettings QMMMOpts; //Simulation settings
-  int sys,DerType,ct;
+  int sys,DerType,ct,Bead;
   stringstream call;
   call.copyfmt(cout);
   string dummy,Stub;
@@ -62,6 +62,10 @@ void ExternalGaussian(int& argc, char**& argv)
     {
       regionfile.open(argv[i+1],ios_base::in);
     }
+    if (dummy == "-b")
+    {
+      Bead = atoi(argv[i+1]);
+    }
   }
   GauInput.open(argv[10],ios_base::in);
   GauOutput.open(argv[11],ios_base::out);
@@ -88,13 +92,13 @@ void ExternalGaussian(int& argc, char**& argv)
       getline(GauInput,dummy);
       stringstream line(dummy);
       line >> dummy;
-      line >> Struct[i].P[0].x;
-      line >> Struct[i].P[0].y;
-      line >> Struct[i].P[0].z;
+      line >> Struct[i].P[Bead].x;
+      line >> Struct[i].P[Bead].y;
+      line >> Struct[i].P[Bead].z;
       //Change units
-      Struct[i].P[0].x *= BohrRad;
-      Struct[i].P[0].y *= BohrRad;
-      Struct[i].P[0].z *= BohrRad;
+      Struct[i].P[Bead].x *= BohrRad;
+      Struct[i].P[Bead].y *= BohrRad;
+      Struct[i].P[Bead].z *= BohrRad;
     }
   }
   GauInput.close();
@@ -113,7 +117,7 @@ void ExternalGaussian(int& argc, char**& argv)
   //MM forces
   if (TINKER == 1)
   {
-    Emm = TINKERForces(Struct,Forces,QMMMOpts,0);
+    Emm = TINKERForces(Struct,Forces,QMMMOpts,Bead);
   }
   if (AMBER == 1)
   {
@@ -124,7 +128,7 @@ void ExternalGaussian(int& argc, char**& argv)
     
   }
   //QM forces
-  Eqm = GaussianForces(Struct,Forces,QMMMOpts,0);
+  Eqm = GaussianForces(Struct,Forces,QMMMOpts,Bead);
   //Write formatted output for g09
   double E = (Eqm+Emm)/Har2eV; //Calculate
   GauOutput << fixed; //Formatting
@@ -168,9 +172,9 @@ void ExternalGaussian(int& argc, char**& argv)
   for (int i=0;i<Natoms;i++)
   {
     ofile << Struct[i].QMTyp << " ";
-    ofile << setprecision(12) << Struct[i].P[0].x << " ";
-    ofile << setprecision(12) << Struct[i].P[0].y << " ";
-    ofile << setprecision(12) << Struct[i].P[0].z << '\n';
+    ofile << setprecision(12) << Struct[i].P[Bead].x << " ";
+    ofile << setprecision(12) << Struct[i].P[Bead].y << " ";
+    ofile << setprecision(12) << Struct[i].P[Bead].z << '\n';
   }
   ofile.flush();
   ofile.close();
@@ -187,12 +191,25 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   int sys;
   stringstream call;
   call.copyfmt(cout);
-  string dummy;
+  string dummy,chrgfilename;
   fstream ofile,ifile,QMlog;
   double Eqm = 0;
   double Eself = 0;
-  if ((AMOEBA == 1) and (TINKER == 1))
+  //Check if a list of point charges exists
+  bool UseChrgFile = 0;
+  call.str("");
+  call << "MMCharges_" << Bead << ".txt";
+  ifile.open(call.str().c_str(),ios_base::in);
+  if (ifile.good())
   {
+    UseChrgFile = 1;
+    chrgfilename = call.str();
+  }
+  ifile.close();
+  //If not use the input
+  if ((AMOEBA == 1) and (TINKER == 1) and (UseChrgFile == 0))
+  {
+    //Set up multipoles
     RotateTINKCharges(Struct,Bead);
   }
   //Construct g09 input
@@ -210,7 +227,8 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << "%NprocShared=" << Ncpus << '\n';
   call << "%NoSave" << '\n'; //Deletes files
   call << "#P " << QMMMOpts.Func << "/";
-  call << QMMMOpts.Basis << " Force=NoStep Symmetry=None" << '\n';
+  call << QMMMOpts.Basis << " Force=NoStep Symmetry=None";
+  call << " Int=UltraFine" << '\n';
   if (QMMM == 1)
   {
     if (Npseudo > 0)
@@ -250,7 +268,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   }
   call << '\n'; //Blank line needed
   //Add the MM field
-  if (CHRG == 1)
+  if ((CHRG == 1) and (UseChrgFile == 0))
   {
     for (int i=0;i<Natoms;i++)
     {
@@ -267,7 +285,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     }
     call << '\n'; //Blank line needed
   }
-  if (AMOEBA == 1)
+  if ((AMOEBA == 1) and (UseChrgFile == 0))
   {
     for (int i=0;i<Natoms;i++)
     {
@@ -307,6 +325,19 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
         call << '\n';
       }
     }
+    call << '\n'; //Blank line needed
+  }
+  if (UseChrgFile == 1)
+  {
+    //Add charges to g09 input
+    ifile.open(chrgfilename.c_str(),ios_base::in);
+    while (!ifile.eof())
+    {
+       //Copy charges line by line
+       getline(ifile,dummy);
+       call << dummy << '\n';
+    }
+    ifile.close();
     call << '\n'; //Blank line needed
   }
   //Add basis set information from the BASIS file
@@ -470,7 +501,8 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "%NprocShared=" << Ncpus << '\n';
   call << "%NoSave" << '\n'; //Deletes files
   call << "#P " << QMMMOpts.Func << "/";
-  call << QMMMOpts.Basis << " SP Symmetry=None" << '\n';
+  call << QMMMOpts.Basis << " SP Symmetry=None";
+  call << " Int=UltraFine" << '\n';
   if (QMMM == 1)
   {
     if (Npseudo > 0)
@@ -660,7 +692,8 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "%NprocShared=" << Ncpus << '\n';
   call << "%NoSave" << '\n'; //Deletes files
   call << "#P " << QMMMOpts.Func << "/";
-  call << QMMMOpts.Basis << " SP Symmetry=None" << '\n';
+  call << QMMMOpts.Basis << " SP Symmetry=None";
+  call << " Int=UltraFine" << '\n';
   if (QMMM == 1)
   {
     if (Npseudo > 0)
@@ -928,6 +961,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << " -n " << Ncpus;
   call << " -c " << confilename;
   call << " -r " << regfilename;
+  call << " -b " << Bead;
   call << "\"" << '\n';
   call << "Symmetry=None Opt=(MaxCycles=";
   call << QMMMOpts.MaxOptSteps;
