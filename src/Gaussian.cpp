@@ -212,6 +212,16 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     //Set up multipoles
     RotateTINKCharges(Struct,Bead);
   }
+  //Check if there is a checkpoint file
+  bool UseCheckPoint = 0;
+  call.str("");
+  call << "QMMM_" << Bead << ".chk";
+  ifile.open(call.str().c_str(),ios_base::in);
+  if (ifile.good())
+  {
+    UseCheckPoint = 1;
+  }
+  ifile.close();
   //Construct g09 input
   call.str("");
   call << "QMMM";
@@ -228,7 +238,13 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << "%NoSave" << '\n'; //Deletes files
   call << "#P " << QMMMOpts.Func << "/";
   call << QMMMOpts.Basis << " Force=NoStep Symmetry=None";
-  call << " Int=UltraFine" << '\n';
+  call << " Int=UltraFine";
+  if (UseCheckPoint == 1)
+  {
+    //Restart if possible
+    call << " Guess=Read";
+  }
+  call << '\n';
   if (QMMM == 1)
   {
     if (Npseudo > 0)
@@ -405,9 +421,18 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
           line >> Fy;
           line >> Fz;
           //Save forces
-          Forces[i].x += Fx*Har2eV/BohrRad;
-          Forces[i].y += Fy*Har2eV/BohrRad;
-          Forces[i].z += Fz*Har2eV/BohrRad;
+          if (abs(Fx) >= 1e-8)
+          {
+            Forces[i].x += Fx*Har2eV/BohrRad;
+          }
+          if (abs(Fy) >= 1e-8)
+          {
+            Forces[i].y += Fy*Har2eV/BohrRad;
+          }
+          if (abs(Fz) >= 1e-8)
+          {
+            Forces[i].z += Fz*Har2eV/BohrRad;
+          }
         }
       }
     }
@@ -462,10 +487,15 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   QMlog.close();
   //Clean up files
   call.str("");
+  call << "mv QMMM_" << Bead;
+  call << ".chk tmp_" << Bead;
+  call << ".chk && ";
   call << "rm -f ";
-  call << "QMMM";
-  call << "_" << Bead;
+  call << "QMMM_" << Bead;
   call << ".*";
+  call << " && mv tmp_" << Bead;
+  call << ".chk QMMM_" << Bead;
+  call << ".chk";
   sys = system(call.str().c_str());
   //Return
   Eqm -= Eself;

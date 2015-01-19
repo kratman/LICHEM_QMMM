@@ -552,6 +552,15 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
         }
       }
     }
+    if (dummy == "Total")
+    {
+      line >> dummy >> dummy;
+      if (dummy == "Energy")
+      {
+        //Collect partial MM energy
+        line >> dummy >> Emm;
+      }
+    }
   }
   MMgrad.close();
   //Clean up files
