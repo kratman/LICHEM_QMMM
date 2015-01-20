@@ -97,8 +97,6 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.copyfmt(cout);
   string dummy;
   string TINKKeyFile = "tinker.key";
-  int MaxTINKERNum = 3500;
-  int MaxTINKERClass = 100;
   double Epol = 0;
   double E = 0;
   int sys;
@@ -129,15 +127,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ofile << " ";
     ofile << setw(10) << Struct[i].P[Bead].z;
     ofile << " ";
-    if (Struct[i].QMregion != 1)
-    {
-      ofile << setw(4) << Struct[i].NumTyp;
-    }
-    if (Struct[i].QMregion == 1)
-    {
-      ofile << setw(4) << (MaxTINKERNum+ct);
-      ct += 1; //Count number of qm atoms
-    }
+    ofile << setw(4) << Struct[i].NumTyp;
     for (int j=0;j<Struct[i].Bonds.size();j++)
     {
       ofile << " "; //Avoids trailing spaces
@@ -196,24 +186,6 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Terminate trailing actives line
     ofile << '\n';
   }
-  ct = 0;
-  for (int i=0;i<Natoms;i++)
-  {
-    //Add atom types
-    if (Struct[i].QMregion == 1)
-    {
-      ofile << "atom " << (MaxTINKERNum+ct) << " ";
-      ofile << Struct[i].NumClass << " ";
-      ofile << Struct[i].MMTyp << " ";
-      ofile << "\"Dummy QM atom type\" ";
-      ofile << RevTyping(Struct[i].QMTyp) << " ";
-      ofile << Struct[i].m << " ";
-      ofile << Struct[i].Bonds.size();
-      ofile << '\n';
-      ct += 1;
-    }
-  }
-  ct = 0;
   for (int i=0;i<Natoms;i++)
   {
     //Add nuclear charges
@@ -283,8 +255,6 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   stringstream call;
   call.copyfmt(cout);
   string TINKKeyFile = "tinker.key";
-  int MaxTINKERNum = 3500;
-  int MaxTINKERClass = 100;
   double Emm = 0.0;
   int ct;
   int sys;
@@ -400,35 +370,17 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     //Terminate trailing group line
     ofile << '\n';
   }
-  ct = 0;
-  for (int i=0;i<Natoms;i++)
-  {
-    //Add atom types
-    if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
-    {
-      ofile << "atom " << (MaxTINKERNum+ct) << " ";
-      ofile << Struct[i].NumClass << " ";
-      ofile << Struct[i].MMTyp << " ";
-      ofile << "\"Dummy QM atom type\" ";
-      ofile << RevTyping(Struct[i].QMTyp) << " ";
-      ofile << Struct[i].m << " ";
-      ofile << Struct[i].Bonds.size();
-      ofile << '\n';
-      ct += 1;
-    }
-  }
   if (CHRG == 1)
   {
-    ct = 0;
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
       if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
       {
-        ofile << "charge " << (MaxTINKERNum+ct) << " ";
-        ofile << 0.0; //Delete charges
+        //New charges are needed for QM and PA attoms
+        ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
+        ofile << "0.0"; //Delete charges
         ofile << '\n';
-        ct += 1;
       }
     }
   }
@@ -475,15 +427,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     ofile << " ";
     ofile << setw(10) << Struct[i].P[Bead].z;
     ofile << " ";
-    if ((Struct[i].QMregion != 1) and (Struct[i].PAregion != 1))
-    {
-      ofile << setw(4) << Struct[i].NumTyp;
-    }
-    if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
-    {
-      ofile << setw(4) << (MaxTINKERNum+ct);
-      ct += 1; //Count number of qm atoms
-    }
+    ofile << setw(4) << Struct[i].NumTyp;
     for (int j=0;j<Struct[i].Bonds.size();j++)
     {
       ofile << " "; //Avoids trailing spaces
@@ -583,8 +527,6 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call.copyfmt(cout);
   string dummy;
   string TINKKeyFile = "tinker.key";
-  int MaxTINKERNum = 3500;
-  int MaxTINKERClass = 100;
   double Epol = 0;
   double E = 0;
   int sys;
@@ -640,35 +582,16 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       //Terminate trailing actives line
       ofile << '\n';
     }
-    ct = 0;
-    for (int i=0;i<Natoms;i++)
-    {
-      //Add atom types
-      if (Struct[i].QMregion == 1)
-      {
-        ofile << "atom " << (MaxTINKERNum+ct) << " ";
-        ofile << Struct[i].NumClass << " ";
-        ofile << Struct[i].MMTyp << " ";
-        ofile << "\"Dummy QM atom type\" ";
-        ofile << RevTyping(Struct[i].QMTyp) << " ";
-        ofile << Struct[i].m << " ";
-        ofile << Struct[i].Bonds.size();
-        ofile << '\n';
-        ct += 1;
-      }
-    }
     if (CHRG == 1)
     {
-      ct = 0;
       for (int i=0;i<Natoms;i++)
       {
         //Add nuclear charges
         if (Struct[i].QMregion == 1)
         {
-          //New atom types are only needed for QM atoms
-          ofile << "charge " << (MaxTINKERNum+ct) << " ";
+          //New charges are only needed for QM atoms
+          ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
           ofile << "0.0" << '\n';
-          ct += 1;
         }
       }
     }
@@ -723,15 +646,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     ofile << " ";
     ofile << setw(10) << Struct[i].P[Bead].z;
     ofile << " ";
-    if (Struct[i].QMregion != 1)
-    {
-      ofile << setw(4) << Struct[i].NumTyp;
-    }
-    if (Struct[i].QMregion == 1)
-    {
-      ofile << setw(4) << (MaxTINKERNum+ct);
-      ct += 1; //Count number of qm atoms
-    }
+    ofile << setw(4) << Struct[i].NumTyp;
     for (int j=0;j<Struct[i].Bonds.size();j++)
     {
       ofile << " "; //Avoids trailing spaces
@@ -807,8 +722,6 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call.copyfmt(cout);
   string dummy;
   string TINKKeyFile = "tinker.key";
-  int MaxTINKERNum = 3500;
-  int MaxTINKERClass = 100;
   double Epol = 0;
   double E = 0;
   int sys;
@@ -868,36 +781,17 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       //Terminate trailing actives line
       ofile << '\n';
     }
-    ct = 0;
-    for (int i=0;i<Natoms;i++)
-    {
-      //Add atom types
-      if (Struct[i].QMregion == 1)
-      {
-        ofile << "atom " << (MaxTINKERNum+ct) << " ";
-        ofile << Struct[i].NumClass << " ";
-        ofile << Struct[i].MMTyp << " ";
-        ofile << "\"Dummy QM atom type\" ";
-        ofile << RevTyping(Struct[i].QMTyp) << " ";
-        ofile << Struct[i].m << " ";
-        ofile << Struct[i].Bonds.size();
-        ofile << '\n';
-        ct += 1;
-      }
-    }
     if (CHRG == 1)
     {
-      ct = 0;
       for (int i=0;i<Natoms;i++)
       {
         //Add nuclear charges
         if (Struct[i].QMregion == 1)
         {
-          //New atom types are only needed for QM atoms
-          ofile << "charge " << (MaxTINKERNum+ct) << " ";
+          //New charges are only needed for QM atoms
+          ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
           ofile << Struct[i].MP[Bead].q;
           ofile << '\n';
-          ct += 1;
         }
       }
     }
@@ -943,15 +837,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     ofile << " ";
     ofile << setw(10) << Struct[i].P[Bead].z;
     ofile << " ";
-    if (Struct[i].QMregion != 1)
-    {
-      ofile << setw(4) << Struct[i].NumTyp;
-    }
-    if (Struct[i].QMregion == 1)
-    {
-      ofile << setw(4) << (MaxTINKERNum+ct);
-      ct += 1; //Count number of qm atoms
-    }
+    ofile << setw(4) << Struct[i].NumTyp;
     for (int j=0;j<Struct[i].Bonds.size();j++)
     {
       ofile << " "; //Avoids trailing spaces

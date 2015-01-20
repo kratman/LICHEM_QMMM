@@ -246,7 +246,7 @@ struct QMMMSettings
   double Eqm; //QM total energy
   //Input needed for MM wrappers
   double Emm; //MM total energy
-  //Input needed for MC functions
+  //Input needed for MC and MD functions
   string Ensemble; //NVT or NPT
   double Temp; //Temperature
   double Beta; //Inverse temperature
@@ -256,6 +256,7 @@ struct QMMMSettings
   int Nbeads; //Number of time-slices or beads
   double accratio; //Target acceptance ratio
   int Nprint; //Number of steps before printing
+  double dt; //MD timestep
   //Input needed for optimizations
   int MaxOptSteps; //Maximum iterative optimization steps
   double MMOptTol; //Criteria to end the optimization
@@ -339,6 +340,10 @@ bool OptConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,vector<Coord>&,
 void FLUKESteepest(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void FLUKEDFP(vector<QMMMAtom>&,QMMMSettings&,int);
+
+void BerendsenThermo(vector<QMMMAtom>&,QMMMSettings&,int);
+
+void VelocityVerlet(vector<QMMMAtom>&,QMMMSettings&,bool,int);
 
 double SpringEnergy(double,double);
 

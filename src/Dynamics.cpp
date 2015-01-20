@@ -9,10 +9,43 @@
 
  Molecular dynamics, thermostat, and barostat functions for FLUKE.
 
+ Reference for the Berendsen thermostat
+ 
+
+ Reference for the update algorithm
+ 
+
 */
 
 //Thermostats
+void BerendsenThermo(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
+     int Bead)
+{
+  //Berendsen thermostat to maintain a constant temperature
 
-//Barostats
+  return;
+};
 
 //Update algorithms
+void VelocityVerlet(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
+     bool ProdRun, int Bead)
+{
+  //Runs the velocity Verlet algorithm
+
+  int MDSteps;
+  //Set up the run
+  if (ProdRun == 1)
+  {
+    MDSteps = QMMMOpts.Nsteps;
+  }
+  else
+  {
+    MDSteps = QMMMOpts.Neq;
+  }
+  //Run MD
+  for (int n=0;n<MDSteps;n++)
+  {
+    
+  }
+  return;
+};

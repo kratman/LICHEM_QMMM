@@ -67,9 +67,9 @@ void ExternalGaussian(int& argc, char**& argv)
       Bead = atoi(argv[i+1]);
     }
   }
-  GauInput.open(argv[10],ios_base::in);
-  GauOutput.open(argv[11],ios_base::out);
-  GauMsg.open(argv[12],ios_base::out);
+  GauInput.open(argv[12],ios_base::in);
+  GauOutput.open(argv[13],ios_base::out);
+  GauMsg.open(argv[14],ios_base::out);
   //Read FLUKE input
   ReadFLUKEInput(xyzfile,connectfile,regionfile,Struct,QMMMOpts);
   //Read g09 input for new QM atom positions
@@ -235,7 +235,6 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << '\n';
   call << "%Mem=" << QMMMOpts.RAM << "GB" << '\n';
   call << "%NprocShared=" << Ncpus << '\n';
-  call << "%NoSave" << '\n'; //Deletes files
   call << "#P " << QMMMOpts.Func << "/";
   call << QMMMOpts.Basis << " Force=NoStep Symmetry=None";
   call << " Int=UltraFine";
@@ -487,15 +486,21 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   QMlog.close();
   //Clean up files
   call.str("");
-  call << "mv QMMM_" << Bead;
-  call << ".chk tmp_" << Bead;
-  call << ".chk && ";
+  if (UseCheckPoint == 1)
+  {
+    call << "mv QMMM_" << Bead;
+    call << ".chk tmp_" << Bead;
+    call << ".chk && ";
+  }
   call << "rm -f ";
   call << "QMMM_" << Bead;
   call << ".*";
-  call << " && mv tmp_" << Bead;
-  call << ".chk QMMM_" << Bead;
-  call << ".chk";
+  if (UseCheckPoint == 1)
+  {
+    call << " && mv tmp_" << Bead;
+    call << ".chk QMMM_" << Bead;
+    call << ".chk";
+  }
   sys = system(call.str().c_str());
   //Return
   Eqm -= Eself;
