@@ -87,8 +87,8 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     cout.copyfmt(call); //Return to previous settings
     //Check convergence criteria
     if ((RMSdiff <= QMMMOpts.QMOptTol) and
-       (RMSforce <= (100*QMMMOpts.QMOptTol)) and
-       (MAXforce <= (200*QMMMOpts.QMOptTol)))
+       (RMSforce <= (50*QMMMOpts.QMOptTol)) and
+       (MAXforce <= (100*QMMMOpts.QMOptTol)))
     {
       OptDone = 1;
     }
@@ -171,7 +171,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   double stepsize = 1;
   double VecMax = 0;
   bool OptDone = 0;
-  while ((OptDone == 0) and (stepct <= QMMMOpts.MaxOptSteps))
+  while ((OptDone == 0) and (stepct < QMMMOpts.MaxOptSteps))
   {
     double E = 0;
     //Copy old structure and create blank force array
@@ -287,8 +287,8 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     for (int j=0;j<i;j++)
     {
       //Set off diagonal terms
-      IHess(i,j) = 0.5; //Slightly mix vectors (add noise)
-      IHess(j,i) = 0.5; //Slightly mix vectors (add noise)
+      IHess(i,j) = 0.5; //Slightly mix vectors (add noise) if desired
+      IHess(j,i) = 0.5; //Slightly mix vectors (add noise) if desired
     }
     IHess(i,i) = 1000.0; //Scale diagonal elements for small initial steps
   }
@@ -351,7 +351,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   cout.copyfmt(call); //Return to previous settings
   //Optimize structure
   bool OptDone = 0;
-  while ((OptDone == 0) and (stepct <= QMMMOpts.MaxOptSteps))
+  while ((OptDone == 0) and (stepct < QMMMOpts.MaxOptSteps))
   {
     //Copy old structure and delete old forces force array
     vector<QMMMAtom> OldStruct = Struct;

@@ -31,9 +31,6 @@ void ExternalGaussian(int& argc, char**& argv)
   fstream xyzfile,connectfile,regionfile;
   fstream GauInput,GauOutput,GauMsg,GauFchk,GauMatrix;
   fstream ofile,ifile;
-  string TINKKeyFile = "tinker.key";
-  int MaxTINKERNum = 3500;
-  int MaxTINKERClass = 100;
   //Read arguments
   for (int i=0;i<argc;i++)
   {

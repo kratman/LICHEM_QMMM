@@ -477,6 +477,23 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
       }
     }
   }
+  if ((dummy == "MD") or (dummy == "md"))
+  {
+    //Read MC and PIMC options
+    OptSim = 0;
+    DFPSim = 0;
+    PIMCSim = 1;
+    SteepSim = 0;
+    SinglePoint = 0;
+    QMMMOpts.Ensemble = "NVT";
+    QMMMOpts.Nbeads = 1;
+    regionfile >> dummy >> QMMMOpts.dt; //Timestep
+    regionfile >> dummy >> QMMMOpts.Temp; //Temperature
+    QMMMOpts.Beta = 1/(k*QMMMOpts.Temp); //Inverse temperature
+    regionfile >> dummy >> QMMMOpts.Neq; //Number of equil. steps
+    regionfile >> dummy >> QMMMOpts.Nsteps; //Number of prod. steps
+    regionfile >> dummy >> QMMMOpts.Nprint; //Print frequency
+  }
   if ((dummy == "OPT") or (dummy == "Opt") or
   (dummy == "opt"))
   {
@@ -495,9 +512,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     QMMMOpts.accratio = 0;
     QMMMOpts.Nprint = 0;
     QMMMOpts.Ensemble = "N/A";
-    regionfile >> dummy >> QMMMOpts.SteepStep;
     regionfile >> dummy >> QMMMOpts.MaxStep;
-    regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
   }
