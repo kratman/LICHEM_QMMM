@@ -27,7 +27,7 @@ void BerendsenThermo(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 };
 
 //Update algorithms
-void VelocityVerlet(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
+void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      bool ProdRun, int Bead)
 {
   //Runs the velocity Verlet algorithm

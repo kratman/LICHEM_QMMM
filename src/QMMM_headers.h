@@ -343,7 +343,7 @@ void FLUKEDFP(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void BerendsenThermo(vector<QMMMAtom>&,QMMMSettings&,int);
 
-void VelocityVerlet(vector<QMMMAtom>&,QMMMSettings&,bool,int);
+void VerletUpdate(vector<QMMMAtom>&,QMMMSettings&,bool,int);
 
 double SpringEnergy(double,double);
 

@@ -782,10 +782,15 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     cout << " energy minimization" << '\n';
     if ((QMMM == 1) or (QMonly == 1))
     {
-      cout << " QM minimizer: ";
+      cout << " QM";
+      if (QMMM == 1)
+      {
+        cout << "MM";
+      }
+      cout << " minimizer: ";
       if (OptSim == 1)
       {
-        cout << "Native optimizer" << '\n';
+        cout << "Native QM optimizer" << '\n';
       }
       if (SteepSim == 1)
       {
