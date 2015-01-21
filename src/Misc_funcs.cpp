@@ -426,6 +426,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   if ((dummy == "PIMC") or (dummy == "pimc"))
   {
     //Read MC and PIMC options
+    MDSim = 0;
     OptSim = 0;
     DFPSim = 0;
     PIMCSim = 1;
@@ -480,9 +481,10 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   if ((dummy == "MD") or (dummy == "md"))
   {
     //Read MC and PIMC options
+    MDSim = 1;
     OptSim = 0;
     DFPSim = 0;
-    PIMCSim = 1;
+    PIMCSim = 0;
     SteepSim = 0;
     SinglePoint = 0;
     QMMMOpts.Ensemble = "NVT";
@@ -498,6 +500,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   (dummy == "opt"))
   {
     //Read energy minimization options
+    MDSim = 0;
     OptSim = 1;
     DFPSim = 0;
     PIMCSim = 0;
@@ -520,6 +523,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   (dummy == "SD") or (dummy == "sd"))
   {
     //Read energy minimization options
+    MDSim = 0;
     OptSim = 0;
     DFPSim = 0;
     PIMCSim = 0;
@@ -544,6 +548,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
      (dummy == "dfp") or (dummy == "DFP"))
   {
     //Read energy minimization options for the DFP optimizer
+    MDSim = 0;
     OptSim = 0;
     DFPSim = 1;
     PIMCSim = 0;
@@ -568,6 +573,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   (dummy == "energy") or (dummy == "Energy"))
   {
     //Read energy minimization options
+    MDSim = 0;
     OptSim = 0;
     DFPSim = 0;
     PIMCSim = 0;

@@ -109,6 +109,7 @@ bool QMonly = 0; //Flag for the type of wrapper
 bool OptSim = 0; //Flag for energy minimization with QM packages
 bool SteepSim = 0; //Flag for steepest descent minimization in FLUKE
 bool DFPSim = 0; //Flag for DFP minimization in FLUKE
+bool MDSim = 0; //Flag for a NVT MD simulation
 bool PIMCSim = 0; //Flag for Monte Carlo
 bool PathSim = 0; //Flag for reaction paths
 bool SinglePoint = 0; //Flag for energy calculation
@@ -342,9 +343,9 @@ void FLUKESteepest(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void FLUKEDFP(vector<QMMMAtom>&,QMMMSettings&,int);
 
-void BerendsenThermo(vector<QMMMAtom>&,QMMMSettings&,int);
+double BerendsenThermo(vector<QMMMAtom>&,QMMMSettings&,int);
 
-void VerletUpdate(vector<QMMMAtom>&,QMMMSettings&,bool,int);
+void VerletUpdate(vector<QMMMAtom>&,QMMMSettings&,fstream&,bool,int);
 
 double SpringEnergy(double,double);
 

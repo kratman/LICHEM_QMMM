@@ -126,7 +126,6 @@ int main(int argc, char* argv[])
     {
       VolProb = 0.0;
     }
-
     //Run simulations
     cout << '\n';
     SumE = 0;
@@ -219,7 +218,6 @@ int main(int argc, char* argv[])
     SumE /= QMMMOpts.Nsteps; //Average energy
     SumE2 /= QMMMOpts.Nsteps; //Variance of the energy
     VolAvg /= QMMMOpts.Nsteps; //Average volume
-
     //Print output
     cout << '\n';
     cout << "Temperature: ";
@@ -516,6 +514,16 @@ int main(int argc, char* argv[])
       }
     }
     int sys = system(call.str().c_str());
+  }
+  //End of section
+
+  //Run MD simulation
+  if (MDSim == 1)
+  {
+    //Equilibration
+    VerletUpdate(Struct,QMMMOpts,outfile,0,0);
+    //Production
+    VerletUpdate(Struct,QMMMOpts,outfile,1,0);
   }
   //End of section
 
