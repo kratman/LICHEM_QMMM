@@ -495,6 +495,16 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.Neq; //Number of equil. steps
     regionfile >> dummy >> QMMMOpts.Nsteps; //Number of prod. steps
     regionfile >> dummy >> QMMMOpts.Nprint; //Print frequency
+    //Initialize velocity array
+    for (int i=0;i<Natoms;i++)
+    {
+      //Only 1 bead in array
+      Coord tmp;
+      tmp.x = 0;
+      tmp.y = 0;
+      tmp.z = 0;
+      Struct[i].Vel.push_back(tmp);
+    }
   }
   if ((dummy == "OPT") or (dummy == "Opt") or
   (dummy == "opt"))

@@ -193,6 +193,8 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     {
       //Write new multipole definition for the atom ID
       WriteTINKMpole(Struct,ofile,i,Bead);
+      ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+      ofile << '\n';
     }
   }
   ofile.flush();

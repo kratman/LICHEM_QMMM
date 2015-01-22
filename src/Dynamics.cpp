@@ -106,12 +106,31 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     {
       
     }
-    //Calculate velocities and delete old forces
+    //Calculate velocities, sum forces, and delete old QM forces
     
     //Correct temperature
     T = BerendsenThermo(Struct,QMMMOpts,Bead);
-    //Update postions
-    
+    //Update postions and delete old MM forces
+    #pragma omp parallel for
+    for (int i=0;i<Natoms;i++)
+    {
+      //Update from velocity
+      Struct[i].P[Bead].x += Struct[i].Vel[Bead].x*QMMMOpts.dt;
+      Struct[i].P[Bead].y += Struct[i].Vel[Bead].y*QMMMOpts.dt;
+      Struct[i].P[Bead].z += Struct[i].Vel[Bead].z*QMMMOpts.dt;
+      //Update from acceleration (multiline)
+      Struct[i].P[Bead].x += 0.5*MMForces[i].x*QMMMOpts.dt*QMMMOpts.dt
+      /Struct[i].m;
+      Struct[i].P[Bead].y += 0.5*MMForces[i].y*QMMMOpts.dt*QMMMOpts.dt
+      /Struct[i].m;
+      Struct[i].P[Bead].z += 0.5*MMForces[i].z*QMMMOpts.dt*QMMMOpts.dt
+      /Struct[i].m;
+      //Delete old MM forces
+      MMForces[i].x = 0;
+      MMForces[i].y = 0;
+      MMForces[i].z = 0;
+    }
+    #pragma omp barrier
     //Print trajectory
     if ((n == 0) or ((n%QMMMOpts.Nprint) == 0))
     {
@@ -119,13 +138,13 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       if (Gaussian == 1)
       {
         int tstart = (unsigned)time(0);
-        E += GaussianEnergy(Struct,QMMMOpts,0);
+        E += GaussianEnergy(Struct,QMMMOpts,Bead);
         QMTime += (unsigned)time(0)-tstart;
       }
       if (PSI4 == 1)
       {
         int tstart = (unsigned)time(0);
-        E += PSIEnergy(Struct,QMMMOpts,0);
+        E += PSIEnergy(Struct,QMMMOpts,Bead);
         QMTime += (unsigned)time(0)-tstart;
         //Clean up annoying useless files
         int sys = system("rm -f psi.*");
@@ -133,13 +152,13 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       if (TINKER == 1)
       {
         int tstart = (unsigned)time(0);
-        E += TINKEREnergy(Struct,QMMMOpts,0);
+        E += TINKEREnergy(Struct,QMMMOpts,Bead);
         MMTime += (unsigned)time(0)-tstart;
       }
       if (AMBER == 1)
       {
         int tstart = (unsigned)time(0);
-        E += AMBEREnergy(Struct,QMMMOpts,0);
+        E += AMBEREnergy(Struct,QMMMOpts,Bead);
         MMTime += (unsigned)time(0)-tstart;
       }
       Tavg += T;
