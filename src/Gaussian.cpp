@@ -895,6 +895,11 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "_" << Bead;
   call << ".*";
   sys = system(call.str().c_str());
+  //Calculate new charges
+  if ((AMOEBA == 1) and (QMMM == 1))
+  {
+    GaussianCharges(Struct,QMMMOpts,Bead);
+  }
   //Change units
   E -= Eself;
   E *= Har2eV;

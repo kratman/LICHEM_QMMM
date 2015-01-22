@@ -388,13 +388,19 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   }
   if (AMOEBA == 1)
   {
-    ct = 0;
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
       if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
       {
+        double qi = 0;
+        //remove charge
+        qi = Struct[i].MP[Bead].q;
+        Struct[i].MP[Bead].q = 0;
         WriteTINKMpole(Struct,ofile,i,Bead);
+        Struct[i].MP[Bead].q += qi; //Restore charge
+        ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        ofile << '\n';
       }
     }
   }
@@ -517,7 +523,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << ".*";
   sys = system(call.str().c_str());
   //Return
-  Emm *= kcal2eV; //Currently returns zero
+  Emm *= kcal2eV;
   return Emm;
 };
 
@@ -606,6 +612,8 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         {
           //Write new multipole definition for the atom ID
           WriteTINKMpole(Struct,ofile,i,Bead);
+          ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+          ofile << '\n';
         }
         if (Struct[i].QMregion == 1)
         {
@@ -615,6 +623,8 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
           Struct[i].MP[Bead].q = 0;
           WriteTINKMpole(Struct,ofile,i,Bead);
           Struct[i].MP[Bead].q += qi; //Restore charge
+          ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+          ofile << '\n';
         }
       }
     }
@@ -806,6 +816,8 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         {
           //Write new multipole definition for the atom ID
           WriteTINKMpole(Struct,ofile,i,Bead);
+          ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+          ofile << '\n';
         }
       }
     }
