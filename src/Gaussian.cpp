@@ -111,6 +111,8 @@ void ExternalGaussian(int& argc, char**& argv)
     tmp.z = 0;
     Forces.push_back(tmp);
   }
+  //QM forces
+  Eqm = GaussianForces(Struct,Forces,QMMMOpts,Bead);
   //MM forces
   if (TINKER == 1)
   {
@@ -124,8 +126,6 @@ void ExternalGaussian(int& argc, char**& argv)
   {
     
   }
-  //QM forces
-  Eqm = GaussianForces(Struct,Forces,QMMMOpts,Bead);
   //Write formatted output for g09
   double E = (Eqm+Emm)/Har2eV; //Calculate
   GauOutput << fixed; //Formatting
@@ -991,7 +991,6 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << '\n';
   call << "%Mem=" << QMMMOpts.RAM << "GB" << '\n';
   call << "%NprocShared=" << Ncpus << '\n';
-  call << "%NoSave" << '\n'; //Deletes files
   call << "#P " << "external=\"FLUKE -GauExtern ";
   call << "QMMMExt"; //Just the stub
   call << "_" << Bead;

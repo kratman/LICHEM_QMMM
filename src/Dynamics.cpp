@@ -9,10 +9,10 @@
 
  Molecular dynamics, thermostat, and barostat functions for FLUKE.
 
- Reference for the Berendsen thermostat
+ Reference for the Berendsen thermostat:
  
 
- Reference for the update algorithm
+ Reference for the update algorithm:
  
 
 */

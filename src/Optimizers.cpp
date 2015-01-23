@@ -10,6 +10,9 @@
  A set of optimization routines for the QM part of QMMM calculculations. These
  are inefficient, however, they are  useful for testing.
 
+ Reference for optimization routines:
+ Press et al., Numberical Recipes 2nd Edition, 1997
+
 */
 
 //Convergence test functions

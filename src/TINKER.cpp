@@ -9,6 +9,9 @@
 
  FLUKE wrapper functions for TINKER.
 
+ Reference for TINKER:
+ 
+
 */
 
 //MM utility functions
@@ -450,7 +453,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call.str("");
   call << "testgrad " << "QMMM";
   call << "_" << Bead;
-  call << ".xyz Y N > QMMM";
+  call << ".xyz Y N N > QMMM";
   call << "_" << Bead;
   call << ".grad";
   sys = system(call.str().c_str());
