@@ -266,6 +266,8 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
   //A simple DFP optimizer, which is similar to BFGS updating
+  //Note: This optimizer does not have a true line search, instead
+  //a steepest descent step is performed if the energy rises
   int sys;
   stringstream call;
   call.copyfmt(cout);
@@ -287,14 +289,14 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     OptVec(i) = 0;
     GradDiff(i) = 0;
     NGrad(i) = 0;
-    //Create guess Hessian
+    //Create identity matrix as the initial Hessian
     for (int j=0;j<i;j++)
     {
       //Set off diagonal terms
-      IHess(i,j) = 0.0; //Slightly mix vectors (add noise) if desired
-      IHess(j,i) = 0.0; //Slightly mix vectors (add noise) if desired
+      IHess(i,j) = 0.0;
+      IHess(j,i) = 0.0;
     }
-    IHess(i,i) = 1.0; //Scale diagonal elements for small initial steps
+    IHess(i,i) = 1.0;
   }
   IHess = IHess.inverse(); //Invert initial Hessian matrix
   vector<Coord> Forces;

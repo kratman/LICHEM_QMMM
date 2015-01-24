@@ -25,6 +25,7 @@
 #include <fstream>
 #include <vector>
 #include <map>
+#include <sys/stat.h>
 #include <algorithm>
 #include <Eigen/Core>
 #include <Eigen/Dense>
@@ -269,6 +270,8 @@ struct QMMMSettings
 
 //Function declarations
 void PrintFancyTitle();
+
+bool CheckFile(const string&);
 
 double Bohring(double);
 

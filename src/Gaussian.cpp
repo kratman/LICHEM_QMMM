@@ -193,32 +193,23 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   double Eqm = 0;
   double Eself = 0;
   //Check if a list of point charges exists
-  bool UseChrgFile = 0;
   call.str("");
   call << "MMCharges_" << Bead << ".txt";
-  ifile.open(call.str().c_str(),ios_base::in);
-  if (ifile.good())
+  bool UseChrgFile = CheckFile(call.str());
+  if (UseChrgFile)
   {
-    UseChrgFile = 1;
     chrgfilename = call.str();
   }
-  ifile.close();
   //If not use the input
-  if ((AMOEBA == 1) and (TINKER == 1) and (UseChrgFile == 0))
+  if ((AMOEBA == 1) and (TINKER == 1) and (!UseChrgFile))
   {
     //Set up multipoles
     RotateTINKCharges(Struct,Bead);
   }
   //Check if there is a checkpoint file
-  bool UseCheckPoint = 0;
   call.str("");
   call << "QMMM_" << Bead << ".chk";
-  ifile.open(call.str().c_str(),ios_base::in);
-  if (ifile.good())
-  {
-    UseCheckPoint = 1;
-  }
-  ifile.close();
+  bool UseCheckPoint = CheckFile(call.str());
   //Construct g09 input
   call.str("");
   call << "QMMM";
@@ -235,12 +226,12 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << "#P " << QMMMOpts.Func << "/";
   call << QMMMOpts.Basis << " Force=NoStep Symmetry=None";
   call << " Int=UltraFine";
-  if (UseCheckPoint == 1)
+  call << '\n';
+  if (UseCheckPoint)
   {
     //Restart if possible
-    call << " Guess=Read";
+    call << "Guess=Read ";
   }
-  call << '\n';
   if (QMMM == 1)
   {
     if (Npseudo > 0)
@@ -280,7 +271,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   }
   call << '\n'; //Blank line needed
   //Add the MM field
-  if ((CHRG == 1) and (UseChrgFile == 0))
+  if ((CHRG == 1) and (!UseChrgFile))
   {
     for (int i=0;i<Natoms;i++)
     {
@@ -297,7 +288,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     }
     call << '\n'; //Blank line needed
   }
-  if ((AMOEBA == 1) and (UseChrgFile == 0))
+  if ((AMOEBA == 1) and (!UseChrgFile))
   {
     for (int i=0;i<Natoms;i++)
     {
@@ -339,7 +330,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     }
     call << '\n'; //Blank line needed
   }
-  if (UseChrgFile == 1)
+  if (UseChrgFile)
   {
     //Add charges to g09 input
     ifile.open(chrgfilename.c_str(),ios_base::in);
@@ -483,21 +474,15 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   QMlog.close();
   //Clean up files
   call.str("");
-  if (UseCheckPoint == 1)
-  {
-    call << "mv QMMM_" << Bead;
-    call << ".chk tmp_" << Bead;
-    call << ".chk && ";
-  }
+  call << "mv QMMM_" << Bead;
+  call << ".chk tmp_" << Bead;
+  call << ".chk && ";
   call << "rm -f ";
   call << "QMMM_" << Bead;
   call << ".*";
-  if (UseCheckPoint == 1)
-  {
-    call << " && mv tmp_" << Bead;
-    call << ".chk QMMM_" << Bead;
-    call << ".chk";
-  }
+  call << " && mv tmp_" << Bead;
+  call << ".chk QMMM_" << Bead;
+  call << ".chk";
   sys = system(call.str().c_str());
   //Return
   Eqm -= Eself;
@@ -531,7 +516,6 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << '\n';
   call << "%Mem=" << QMMMOpts.RAM << "GB" << '\n';
   call << "%NprocShared=" << Ncpus << '\n';
-  call << "%NoSave" << '\n'; //Deletes files
   call << "#P " << QMMMOpts.Func << "/";
   call << QMMMOpts.Basis << " SP Symmetry=None";
   call << " Int=UltraFine" << '\n';
@@ -691,9 +675,9 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   //Clean up files
   call.str("");
-  call << "rm -f QMMM";
-  call << "_" << Bead;
-  call << ".*";
+  call << "rm -f QMMM_";
+  call << Bead << ".com ";
+  call << "QMMM_" << Bead << ".log";
   sys = system(call.str().c_str());
   return;
 };
@@ -722,7 +706,6 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << '\n';
   call << "%Mem=" << QMMMOpts.RAM << "GB" << '\n';
   call << "%NprocShared=" << Ncpus << '\n';
-  call << "%NoSave" << '\n'; //Deletes files
   call << "#P " << QMMMOpts.Func << "/";
   call << QMMMOpts.Basis << " SP Symmetry=None";
   call << " Int=UltraFine" << '\n';
@@ -891,9 +874,10 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   //Remove files
   call.str("");
-  call << "rm -f QMMM";
-  call << "_" << Bead;
-  call << ".*";
+  call << "rm -f QMMM_";
+  call << Bead << ".com QMMM_";
+  call << Bead << ".log QMMM_";
+  call << Bead << ".chk";
   sys = system(call.str().c_str());
   //Calculate new charges
   if ((AMOEBA == 1) and (QMMM == 1))
@@ -938,7 +922,9 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Write multipole point-charges
   if ((AMOEBA == 1) and (QMMM == 1))
   {
-    ofile.open("CHARGES",ios_base::out);
+    call.str("");
+    call << "MMCharges_" << Bead << ".txt";
+    ofile.open(call.str().c_str(),ios_base::out);
     ofile.copyfmt(cout);
     for (int i=0;i<Natoms;i++)
     {

@@ -862,6 +862,9 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     {
       cout << "Gaussian" << '\n';
     }
+    cout << " QM method: ";
+    cout << QMMMOpts.Func << "/";
+    cout << QMMMOpts.Basis << '\n';
   }
   if ((MMonly == 1) or (QMMM == 1))
   {
@@ -892,6 +895,27 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     }
   }
   cout << '\n';
+  //Print convergence criteria for optimizations
+  if ((SteepSim == 1) or (DFPSim == 1))
+  {
+    cout << "QM convergence criteria:" << '\n';
+    cout << "  RMS dev: " << QMMMOpts.QMOptTol;
+    cout << " \u212B" << '\n';
+    cout << "  max force: " << (100*QMMMOpts.QMOptTol);
+    cout << " eV/\u212B" << '\n';
+    cout << "  RMS force: " << (50*QMMMOpts.QMOptTol);
+    cout << " eV/\u212B" << '\n';
+    cout << '\n';
+  }
+  if ((OptSim == 1) or (SteepSim == 1) or (DFPSim == 1))
+  {
+    cout << "MM convergence criteria:" << '\n';
+    cout << "  RMS dev: " << QMMMOpts.MMOptTol;
+    cout << " \u212B" << '\n';
+    cout << "  RMS force: " << QMMMOpts.MMOptTol;
+    cout << " kcal/mol\u212B" << '\n';
+    cout << '\n';
+  }
   cout.flush(); //Flush for output being redirected to a file
   return;
 };

@@ -35,6 +35,17 @@ void PrintFancyTitle()
   return;
 };
 
+bool CheckFile(const string& file)
+{
+  //Checks if a file exists
+  struct stat buffer;
+  if (stat(file.c_str(),&buffer) != -1)
+  {
+    return 1;
+  }
+  return 0;
+};
+
 double Bohring(double ri)
 {
   //Convert ri (Bohr) to Angstroms

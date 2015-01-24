@@ -520,10 +520,10 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   MMgrad.close();
   //Clean up files
   call.str("");
-  call << "rm -f ";
-  call << "QMMM";
-  call << "_" << Bead;
-  call << ".*";
+  call << "rm -f";
+  call << " QMMM_" << Bead << ".xyz";
+  call << " QMMM_" << Bead << ".key";
+  call << " QMMM_" << Bead << ".grad";
   sys = system(call.str().c_str());
   //Return
   Emm *= kcal2eV;
