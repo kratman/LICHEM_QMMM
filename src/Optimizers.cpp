@@ -266,7 +266,6 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
   //A simple DFP optimizer, which is similar to BFGS updating
-  double E = 0; //Energy
   int sys;
   stringstream call;
   call.copyfmt(cout);
@@ -274,6 +273,8 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   int stepct = 0;
   fstream qmfile;
   qmfile.open("QMOpt.xyz",ios_base::out);
+  double E = 0; //Energy
+  double Eold = 0;
   double VecMax = 0;
   //Create DFP arrays
   VectorXd OptVec(3*(Nqm+Npseudo)); //Gradient descent direction
@@ -290,10 +291,10 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     for (int j=0;j<i;j++)
     {
       //Set off diagonal terms
-      IHess(i,j) = 0.5; //Slightly mix vectors (add noise) if desired
-      IHess(j,i) = 0.5; //Slightly mix vectors (add noise) if desired
+      IHess(i,j) = 0.0; //Slightly mix vectors (add noise) if desired
+      IHess(j,i) = 0.0; //Slightly mix vectors (add noise) if desired
     }
-    IHess(i,i) = 1000.0; //Scale diagonal elements for small initial steps
+    IHess(i,i) = 1.0; //Scale diagonal elements for small initial steps
   }
   IHess = IHess.inverse(); //Invert initial Hessian matrix
   vector<Coord> Forces;
@@ -353,6 +354,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   cout << '\n' << endl;
   cout.copyfmt(call); //Return to previous settings
   //Optimize structure
+  Eold = E;
   bool OptDone = 0;
   while ((OptDone == 0) and (stepct < QMMMOpts.MaxOptSteps))
   {
@@ -436,10 +438,35 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       NGrad(ct+2) = Forces[i].z;
       ct += 3;
     }
-    //Start really long "line"
-    IHess = IHess+((OptVec*OptVec.transpose())/(OptVec.transpose()*GradDiff))
-    -((IHess*GradDiff*GradDiff.transpose()*IHess)/(GradDiff.transpose()*IHess
-    *GradDiff)); //End really long "line"
+    if (E < Eold)
+    {
+      //Start really long "line"
+      IHess = IHess+((OptVec*OptVec.transpose())/(OptVec.transpose()
+      *GradDiff))-((IHess*GradDiff*GradDiff.transpose()*IHess)
+      /(GradDiff.transpose()*IHess*GradDiff));
+      //End really long "line"
+    }
+    else
+    {
+      //Take a steepest descent step and rebuild Hessian
+      if (E > Eold)
+      {
+        cout << "    QM energy increased, rebuilding Hessian...";
+        cout << '\n';
+      }
+      for (int i=0;i<(3*(Nqm+Npseudo));i++)
+      {
+        //Create identity matrix
+        for (int j=0;j<i;j++)
+        {
+          IHess(i,j) = 0.0;
+          IHess(j,i) = 0.0;
+        }
+        IHess(i,i) = 1.0;
+      }
+      IHess = IHess.inverse(); //Invert Hessian matrix
+    }
+    Eold = E; //Save energy
     //Check convergence
     stepct += 1;
     OptDone = OptConverged(Struct,OldStruct,Forces,stepct,QMMMOpts,Bead,1);
