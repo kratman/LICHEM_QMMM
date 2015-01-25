@@ -102,7 +102,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   string TINKKeyFile = "tinker.key";
   double Epol = 0;
   double E = 0;
-  int sys;
+  int sys; //Dummy return for system calls
   int ct;
   //Create TINKER xyz file
   call.str("");
@@ -262,7 +262,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   string TINKKeyFile = "tinker.key";
   double Emm = 0.0;
   int ct;
-  int sys;
+  int sys; //Dummy return for system calls
   //Construct MM forces input for TINKER
   call.str("");
   call << "cp " << TINKKeyFile << " ";
@@ -540,7 +540,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   string TINKKeyFile = "tinker.key";
   double Epol = 0;
   double E = 0;
-  int sys;
+  int sys; //Dummy return for system calls
   int ct;
   call.str("");
   //Copy the original key file and make changes
@@ -739,7 +739,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   string TINKKeyFile = "tinker.key";
   double Epol = 0;
   double E = 0;
-  int sys;
+  int sys; //Dummy return for system calls
   int ct;
   call.str("");
   //Copy the original key file and make changes

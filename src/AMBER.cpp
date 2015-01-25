@@ -26,7 +26,7 @@ double AMBEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;
-  int sys;
+  int sys; //Dummy return for system calls
   
   //Change units
   E *= kcal2eV;
@@ -41,7 +41,7 @@ double AMBEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;
-  int sys;
+  int sys; //Dummy return for system calls
   
   //Change units
   E *= kcal2eV;

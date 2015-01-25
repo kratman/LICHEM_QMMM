@@ -163,7 +163,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
   //Steepest descent optimizer
-  int sys;
+  int sys; //Dummy return for system calls
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string
@@ -322,7 +322,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //A simple DFP optimizer, which is similar to BFGS updating
   //Note: This optimizer does not have a true line search, instead
   //a steepest descent step is performed if the energy rises
-  int sys;
+  int sys; //Dummy return for system calls
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string

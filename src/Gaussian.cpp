@@ -185,7 +185,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the forces on a set of atoms
-  int sys;
+  int sys; //Dummy return for system calls
   stringstream call;
   call.copyfmt(cout);
   string dummy,chrgfilename;
@@ -494,7 +494,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
   //Function to update QM point charges
-  int sys;
+  int sys; //Dummy return for system calls
   fstream ofile,ifile;
   string dummy; //Generic string
   stringstream call;
@@ -692,7 +692,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.copyfmt(cout);
   double E = 0.0; //QM energy
   double Eself = 0.0; //Field self-energy
-  int sys;
+  int sys; //Dummy return for system calls
   if ((AMOEBA == 1) and (TINKER == 1))
   {
     RotateTINKCharges(Struct,Bead);
@@ -900,7 +900,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.copyfmt(cout);
   double E = 0.0; //QM energy
   double Eself = 0.0; //Field self-energy
-  int sys;
+  int sys; //Dummy return for system calls
   if ((AMOEBA == 1) and (TINKER == 1))
   {
     RotateTINKCharges(Struct,Bead);

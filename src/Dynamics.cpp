@@ -10,7 +10,7 @@
  Molecular dynamics, thermostat, and barostat functions for FLUKE.
 
  Reference for the Berendsen thermostat:
- 
+ Berendsen et al. J. Chem. Phys. 81, 8, 3684, 1984
 
  Reference for the update algorithm:
  
@@ -22,12 +22,18 @@ double BerendsenThermo(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
   //Berendsen thermostat to maintain a constant temperature
-  int sys;
+  int sys; //Dummy return for system calls
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string
   double T = 0; //Temperature
+  //Calculate temperature
 
+  //Calculate the change in the temperature
+
+  //Scale velocities
+
+  //Return
   return T;
 };
 
@@ -37,7 +43,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 {
   //Runs the velocity Verlet algorithm
   double E = 0; //Energy
-  int sys;
+  int sys; //Dummy return for system calls
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string

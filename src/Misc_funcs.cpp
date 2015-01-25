@@ -34,7 +34,7 @@ void Print_traj(vector<QMMMAtom>& parts, fstream& traj, QMMMSettings& QMMMOpts)
 void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
      fstream& connectfile, fstream& regionfile, fstream& outfile)
 {
-  int sys;
+  int sys; //Dummy return for system calls
   string dummy; //Generic string
   stringstream call;
   //Read command line arguments
