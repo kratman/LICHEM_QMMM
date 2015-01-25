@@ -19,7 +19,7 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
 {
   //Parses TINKER parameter files to find atom classes
   fstream ifile;
-  string dummy;
+  string dummy; //Generic string
   string TINKKeyFile = "tinker.key";
   ifile.open(TINKKeyFile.c_str(),ios_base::in);
   if (!ifile.good())
@@ -98,7 +98,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   fstream ofile,ifile;
   stringstream call;
   call.copyfmt(cout);
-  string dummy;
+  string dummy; //Generic string
   string TINKKeyFile = "tinker.key";
   double Epol = 0;
   double E = 0;
@@ -256,7 +256,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
 {
   //Function for calculating the MM forces on a set of QM atoms
   fstream ofile,ifile;
-  string dummy;
+  string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
   string TINKKeyFile = "tinker.key";
@@ -536,7 +536,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   fstream ofile,ifile;
   stringstream call;
   call.copyfmt(cout);
-  string dummy;
+  string dummy; //Generic string
   string TINKKeyFile = "tinker.key";
   double Epol = 0;
   double E = 0;
@@ -735,7 +735,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   fstream ofile,ifile;
   stringstream call;
   call.copyfmt(cout);
-  string dummy;
+  string dummy; //Generic string
   string TINKKeyFile = "tinker.key";
   double Epol = 0;
   double E = 0;

@@ -35,7 +35,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
      fstream& connectfile, fstream& regionfile, fstream& outfile)
 {
   int sys;
-  string dummy;
+  string dummy; //Generic string
   stringstream call;
   //Read command line arguments
   if (argc == 1)
@@ -227,7 +227,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
      fstream& regionfile, vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
 {
   //Read input
-  string dummy;
+  string dummy; //Generic string
   if (GauExternal == 0)
   {
     xyzfile >> Natoms;
@@ -923,7 +923,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
 void GetQuotes(vector<string>& Quotes)
 {
   //Generate random quotes
-  string dummy;
+  string dummy; //Generic string
   dummy = "\'It is difficult to prove that this quote is not random.\'";
   dummy += '\n';
   dummy += "                                           -Eric G. Kratz";

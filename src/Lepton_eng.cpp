@@ -9,7 +9,7 @@
 
  Functions and options for the eFF semi-classical electron model.
 
- Citation for eFF:
+ Reference for eFF:
  Su et al. Phys. Rev. Lett. 18, 99, 185002, 2007
 
 */

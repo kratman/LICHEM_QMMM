@@ -9,12 +9,11 @@
 
  FLUKE functions for manipulating multipoles.
 
- Citation for TINKER and frame of reference rotations:
+ Reference for TINKER and frame of reference rotations:
  
 
- Citations for conversion to point charges:
- Stone, The Theory of Intermolecular Forces, 2013
- Devereux et al., J. Chem. Theory Comp., 10, 10, 4229, 2014
+ References for conversion to point charges:
+ 
 
 */
 

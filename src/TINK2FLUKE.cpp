@@ -9,6 +9,9 @@
 
  Functions to convert TINKER files to FLUKE format
 
+ Reference for TINKER:
+ 
+
 */
 
 
@@ -16,10 +19,10 @@
 void TINK2FLUKE(int& argc, char**& argv)
 {
   //Local variables
-  fstream TINKxyz, TINKkey, paramfile; //Input
-  fstream posfile, confile, regfile; //Output
+  fstream TINKxyz,TINKkey,paramfile; //Input
+  fstream posfile,confile,regfile; //Output
   stringstream line;
-  string dummy;
+  string dummy; //Generic string
   bool TINKQMMM = 0;
   int Ninact = 0;
   bool SomeFroz = 0;
@@ -162,17 +165,17 @@ void TINK2FLUKE(int& argc, char**& argv)
     cout << '\n' << endl;
     exit(0);
   }
-  if ((SomeAct == 1) or (SomeFroz == 1))
+  if ((SomeAct) or (SomeFroz))
   {
     for (int i=0;i<Natoms;i++)
     {
       if ((Actives[i] == 0) and (Froz[i] == 0))
       {
-        if (SomeFroz == 1)
+        if (SomeFroz)
         {
           Froz[i] = 0;
         }
-        if (SomeAct == 1)
+        if (SomeAct)
         {
           Froz[i] = 1;
         }

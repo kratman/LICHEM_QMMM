@@ -512,6 +512,11 @@ dipoles ($\mu$), quadrupoles ($\Theta$), and polarizabilities ($\alpha$) to
 the atoms. These force fields are more computationally expensive than standard
 point-charge force fields, however, the results can be much more accurate.
 
+Multipoles add an additional complication to the potential in that the
+potential is aspherical. To address this, a local frame of reference is
+defined for each atom. Local frames are defined using two or three neighboring
+atoms.
+
 A Cartesian representation of the multipoles can be simplified by converting
 to a spherical harmonic representation. The first step in the conversion is to
 diagonalize the quadrupole tensor
@@ -557,10 +562,12 @@ converted to six point-charges. \cite{}
  q_{\pm z} = \frac{Q_{00}}{6} \pm \frac{Q_{10}}{2d} +
           \frac{Q_{20}}{3d^2} \; ,
 \end{equation}
-where $q_{\pm i}$ are the charges in the $\pm i$ direction, and $d$ is the
-displacement from the atomic center. While representing the multipoles as a
-set of point-charges reduces the accuracy, most QM and MM packages can easily
-add additional point-charges to the potential.
+where $q_{\pm i}$ are the charges in the $\pm R_i$ direction, and $d$ is the
+displacement from the atomic center. Before the electrostatic interactions can
+be calculated, the point-charges must be rotated from the local frame of
+reference to the global frame. While representing the multipoles as a set of
+point-charges reduces the accuracy, most QM and MM packages can easily add
+additional point-charges to the potential.
 
 \subsection{Frozen density force fields}
 
@@ -770,16 +777,16 @@ Large or complicated systems can be simplified by discarding core electrons
 and modifying the electron-nuclei interactions for the valence states. A
 simple (albeit extremely inaccurate) example would be to combine the core
 electrons of an atom with the nucleus (e.g. oxygen would have a nuclear charge
-of six and four valence electrons). The modified potentials are referred to as
+of six and six valence electrons). The modified potentials are referred to as
 pseudopotentials. Pseudopotentials are useful for a variety of reasons, they
 reduce the number of electrons, the least important electrons are removed,
-basis functions have a difficult time modeling the core region, and they can
-be designed to include relativistic effects. \\
+basis functions have a difficult time modeling the core region, and the
+potentials can be designed to include relativistic effects. \\
 
-Real pseudopotentials do not change the nuclear charge, but rather add an
-electrostatic potential with the same spatial distribution as the electrons
-they replace. A further advantage of pseudopotentials, which is employed in
-QMMM calculations, is that the potentials can replace entire atoms. For
+Real pseudopotentials do not really change the nuclear charge, but rather add
+an electrostatic potential with the same spatial distribution as the electrons
+which are replaced. A further advantage of pseudopotentials, which is employed
+in QMMM calculations, is that the potentials can replace entire atoms. For
 instance, a methyl group can be modeled as a fluorine atom combined with a
 pseudopotential.
 

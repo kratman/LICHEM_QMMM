@@ -10,7 +10,7 @@
  FLUKE wrapper functions for Gaussian. These routines are written for g09.
  Note that the external function needs to interface with all MM codes.
 
- Citation for Gaussian:
+ Reference for Gaussian:
  Frisch et al. Gaussian 09 Rev D.01 2009
 
 */
@@ -496,7 +496,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Function to update QM point charges
   int sys;
   fstream ofile,ifile;
-  string dummy;
+  string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
   if ((AMOEBA == 1) and (TINKER == 1))
@@ -687,7 +687,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 {
   //Calculates the QM energy with Gaussian
   fstream ofile,ifile;
-  string dummy;
+  string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0; //QM energy
@@ -895,7 +895,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 {
   //Runs Gaussian optimizations with GauExternal
   fstream ofile,ifile;
-  string dummy;
+  string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0; //QM energy
@@ -1076,6 +1076,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "rm -f QMMMExt_";
   call << Bead << ".*";
+  call << " MMCharges_" << Bead << ".txt";
   sys = system(call.str().c_str());
   //Calculate new point-charges
   GaussianCharges(Struct,QMMMOpts,Bead);

@@ -10,7 +10,7 @@
  FLUKE wrapper functions for frozen density QMMM calculations using the
  Gaussian electrostatic model (GEM).
 
- Citation for GEM:
+ Reference for GEM:
  
 
 */

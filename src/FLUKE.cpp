@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
 
   //Initialize local variables
   srand((unsigned)time(0)); //Serial only random numbers
-  string dummy; //Dummy strings
+  string dummy; //Generic string
   double SumE,SumE2,VolAvg,Ek;
   fstream xyzfile,connectfile,regionfile,outfile; //Input and output files
   vector<QMMMAtom> Struct; //Atom list

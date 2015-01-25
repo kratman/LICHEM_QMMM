@@ -9,7 +9,7 @@
 
  FLUKE wrapper functions for LAMMPS.
 
- Citation for LAMMPS:
+ Reference for LAMMPS:
  Plimpton, Steve J. Comp. Phys. 1, 117, 1, 1995
 
 */
@@ -20,7 +20,7 @@ double LAMMPSForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
 {
   //Function for calculating the MM forces on a set of QM atoms
   fstream ofile,ifile;
-  string dummy;
+  string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
   double Emm = 0.0;
@@ -38,7 +38,7 @@ double LAMMPSWrapper(string RunTyp, vector<QMMMAtom>& Struct,
 {
   //Runs LAMMPS
   fstream ofile,ifile;
-  string dummy;
+  string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;

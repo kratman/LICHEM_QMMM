@@ -9,7 +9,7 @@
 
  FLUKE wrapper functions for PSI4.
 
- Citation for PSI4:
+ Reference for PSI4:
  Turney et al. WIREs Comp. Mol. Sci. 2, 4, 556, 2012
 
 */
@@ -23,7 +23,7 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   //Function for calculating the forces and charges on a set of atoms
   int sys;
   fstream ofile,ifile;
-  string dummy;
+  string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
   double Eqm = 0;
@@ -247,7 +247,7 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Function to update QM point charges
   int sys;
   fstream ofile,ifile;
-  string dummy;
+  string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
   if ((AMOEBA == 1) and (TINKER == 1))
@@ -423,7 +423,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs psi4 for energy calculations
   fstream ofile,ifile;
-  string dummy;
+  string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;
@@ -604,7 +604,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
 {
   //Runs psi4 for energy calculations
   fstream ofile,ifile;
-  string dummy;
+  string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;

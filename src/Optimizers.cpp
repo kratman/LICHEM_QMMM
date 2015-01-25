@@ -8,7 +8,7 @@
 ##############################################################################
 
  A set of optimization routines for the QM part of QMMM calculculations. These
- are inefficient, however, they are  useful for testing.
+ are inefficient, however, they are useful for testing and debugging.
 
  Reference for optimization routines:
  Press et al., Numberical Recipes 2nd Edition, 1997
@@ -22,7 +22,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
 {
   //Check convergence of QMMM optimizations
   stringstream call;
-  string dummy;
+  string dummy; //Generic string
   call.str("");
   //Gather stats
   bool OptDone = 0;
@@ -166,15 +166,68 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   int sys;
   stringstream call;
   call.copyfmt(cout);
-  string dummy;
-  int stepct = 0;
-  fstream qmfile;
+  string dummy; //Generic string
+  int stepct = 0; //Counter for optimization steps
+  fstream qmfile, ifile, ofile; //Generic file names
   qmfile.open("QMOpt.xyz",ios_base::out);
+  //Initialize charges for Gaussian
+  if ((AMOEBA == 1) and (Gaussian == 1))
+  {
+    if (TINKER == 1)
+    {
+      //Set up current charges
+      RotateTINKCharges(Struct,Bead);
+    }
+    call.str("");
+    call << "MMCharges_" << Bead << ".txt";
+    ofile.open(call.str().c_str(),ios_base::out);
+    ofile.copyfmt(cout);
+    for (int i=0;i<Natoms;i++)
+    {
+      if (Struct[i].MMregion == 1)
+      {
+        ofile << fixed; //Forces numbers to be floats
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x1;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y1;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z1;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x2;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y2;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z2;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x3;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y3;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z3;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x4;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y4;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z4;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x5;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y5;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z5;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x6;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y6;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z6;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
+        ofile << '\n';
+      }
+    }
+    ofile.copyfmt(cout);
+    ofile.flush();
+    ofile.close();
+  }
   //Optimize structure
   double stepsize = 1;
   double VecMax = 0;
   bool OptDone = 0;
-  while ((OptDone == 0) and (stepct < QMMMOpts.MaxOptSteps))
+  while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
   {
     double E = 0;
     //Copy old structure and create blank force array
@@ -257,6 +310,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Clean up files
   call.str("");
   call << "rm -f QMOpt.xyz";
+  call << " MMCharges_" << Bead << ".txt";
   sys = system(call.str().c_str());
   //Return for MM optimization
   return;
@@ -271,13 +325,66 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   int sys;
   stringstream call;
   call.copyfmt(cout);
-  string dummy;
-  int stepct = 0;
-  fstream qmfile;
+  string dummy; //Generic string
+  int stepct = 0; //Counter for optimization steps
+  fstream qmfile,ifile,ofile; //Generic file names
   qmfile.open("QMOpt.xyz",ios_base::out);
   double E = 0; //Energy
-  double Eold = 0;
+  double Eold = 0; //Energy from previous step
   double VecMax = 0;
+  //Initialize multipoles for Gaussian optimizations
+  if ((AMOEBA == 1) and (Gaussian == 1))
+  {
+    if (TINKER == 1)
+    {
+      //Set up current charges
+      RotateTINKCharges(Struct,Bead);
+    }
+    call.str("");
+    call << "MMCharges_" << Bead << ".txt";
+    ofile.open(call.str().c_str(),ios_base::out);
+    ofile.copyfmt(cout);
+    for (int i=0;i<Natoms;i++)
+    {
+      if (Struct[i].MMregion == 1)
+      {
+        ofile << fixed; //Forces numbers to be floats
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x1;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y1;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z1;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x2;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y2;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z2;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x3;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y3;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z3;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x4;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y4;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z4;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x5;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y5;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z5;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x6;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y6;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z6;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
+        ofile << '\n';
+      }
+    }
+    ofile.copyfmt(cout);
+    ofile.flush();
+    ofile.close();
+  }
   //Create DFP arrays
   VectorXd OptVec(3*(Nqm+Npseudo)); //Gradient descent direction
   VectorXd GradDiff(3*(Nqm+Npseudo)); //Change in the gradient
@@ -358,7 +465,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Optimize structure
   Eold = E;
   bool OptDone = 0;
-  while ((OptDone == 0) and (stepct < QMMMOpts.MaxOptSteps))
+  while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
   {
     //Copy old structure and delete old forces force array
     vector<QMMMAtom> OldStruct = Struct;
@@ -440,7 +547,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       NGrad(ct+2) = Forces[i].z;
       ct += 3;
     }
-    if (E < Eold)
+    if (E <= Eold)
     {
       //Start really long "line"
       IHess = IHess+((OptVec*OptVec.transpose())/(OptVec.transpose()
@@ -464,9 +571,8 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
           IHess(i,j) = 0.0;
           IHess(j,i) = 0.0;
         }
-        IHess(i,i) = 1.0;
+        IHess(i,i) = 1.0; //Already an "inverse Hessian"
       }
-      IHess = IHess.inverse(); //Invert Hessian matrix
     }
     Eold = E; //Save energy
     //Check convergence
@@ -476,6 +582,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Clean up files
   call.str("");
   call << "rm -f QMOpt.xyz";
+  call << " MMCharges_" << Bead << ".txt";
   sys = system(call.str().c_str());
   //Return for MM optimization
   return;

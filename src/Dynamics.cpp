@@ -25,7 +25,7 @@ double BerendsenThermo(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   int sys;
   stringstream call;
   call.copyfmt(cout);
-  string dummy;
+  string dummy; //Generic string
   double T = 0; //Temperature
 
   return T;
@@ -40,7 +40,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   int sys;
   stringstream call;
   call.copyfmt(cout);
-  string dummy;
+  string dummy; //Generic string
   int MDSteps;
   double T = 0; //Instantaneous temperature
   double Eavg = 0; //Average energy
