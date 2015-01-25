@@ -28,11 +28,21 @@ double BerendsenThermo(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   string dummy; //Generic string
   double T = 0; //Temperature
   //Calculate temperature
-
+  double Ek = 0; //Kinetic energy
+  for (int i=0;i<Natoms;i++)
+  {
+    //Calculate the kinetic energy
+    double v2 = 0;
+    v2 += Struct[i].Vel[Bead].x*Struct[i].Vel[Bead].x;
+    v2 += Struct[i].Vel[Bead].y*Struct[i].Vel[Bead].y;
+    v2 += Struct[i].Vel[Bead].z*Struct[i].Vel[Bead].z;
+    Ek += Struct[i].m*v2; //Two left out below
+  }
+  T = (Ek*amu2kg)/(3*Natoms*kSI*m2Ang*m2Ang); //Two left out above
   //Calculate the change in the temperature
-
+  double dT = (QMMMOpts.Temp-T)*QMMMOpts.dt/QMMMOpts.tautemp;
   //Scale velocities
-
+  
   //Return
   return T;
 };
@@ -47,7 +57,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string
-  int MDSteps;
+  int MDSteps; //Number of steps for the MD simulation
   double T = 0; //Instantaneous temperature
   double Eavg = 0; //Average energy
   double Tavg = 0; //Average temperature
@@ -69,6 +79,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
+    //Create forces array for QM and PA regions
     Coord tmp;
     tmp.x = 0;
     tmp.y = 0;
@@ -77,6 +88,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   for (int i=0;i<Natoms;i++)
   {
+    //Create forces array for MM, BA, and PA regions
     Coord tmp;
     tmp.x = 0;
     tmp.y = 0;

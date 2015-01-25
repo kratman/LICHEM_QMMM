@@ -260,6 +260,7 @@ struct QMMMSettings
   double accratio; //Target acceptance ratio
   int Nprint; //Number of steps before printing
   double dt; //MD timestep
+  double tautemp; //Thermostat time constant
   //Input needed for optimizations
   int MaxOptSteps; //Maximum iterative optimization steps
   double MMOptTol; //Criteria to end the optimization
