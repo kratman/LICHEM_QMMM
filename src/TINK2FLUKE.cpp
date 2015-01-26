@@ -10,7 +10,7 @@
  Functions to convert TINKER files to FLUKE format
 
  Reference for TINKER:
- 
+ Ponder, TINKER - Software Tools for Molecular Design
 
 */
 

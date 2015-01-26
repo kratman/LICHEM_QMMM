@@ -27,8 +27,9 @@ double BerendsenThermo(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.copyfmt(cout);
   string dummy; //Generic string
   double T = 0; //Temperature
-  //Calculate temperature
   double Ek = 0; //Kinetic energy
+  double VelScale = 0; //Scale factor for velocities
+  //Calculate temperature
   for (int i=0;i<Natoms;i++)
   {
     //Calculate the kinetic energy
@@ -39,10 +40,21 @@ double BerendsenThermo(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     Ek += Struct[i].m*v2; //Two left out below
   }
   T = (Ek*amu2kg)/(3*Natoms*kSI*m2Ang*m2Ang); //Two left out above
-  //Calculate the change in the temperature
-  double dT = (QMMMOpts.Temp-T)*QMMMOpts.dt/QMMMOpts.tautemp;
+  //Calculate the scale factor for the velocities
+  VelScale = (T/QMMMOpts.Temp);
+  VelScale -= 1;
+  VelScale *= (QMMMOpts.dt/QMMMOpts.tautemp);
+  VelScale += 1;
+  VelScale = sqrt(VelScale);
   //Scale velocities
-  
+  #pragma omp parallel for
+  for (int i=0;i<Natoms;i++)
+  {
+    Struct[i].Vel[Bead].x *= VelScale;
+    Struct[i].Vel[Bead].y *= VelScale;
+    Struct[i].Vel[Bead].z *= VelScale;
+  }
+  #pragma omp barrier
   //Return
   return T;
 };
@@ -204,3 +216,4 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   cout << '\n' << '\n';
   return;
 };
+

@@ -10,7 +10,7 @@
  FLUKE wrapper functions for TINKER.
 
  Reference for TINKER:
- 
+ Ponder, TINKER - Software Tools for Molecular Design
 
 */
 
