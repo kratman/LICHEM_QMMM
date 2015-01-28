@@ -506,10 +506,15 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
       Struct[i].Vel.push_back(tmp);
     }
   }
-  if ((dummy == "OPT") or (dummy == "Opt") or
-  (dummy == "opt"))
+  if ((dummy == "OPT") or (dummy == "Opt") or (dummy == "opt")
+     or (dummy == "TS") or (dummy == "ts"))
   {
     //Read energy minimization options
+    if ((dummy == "TS") or (dummy == "ts"))
+    {
+      //Search for a transition state
+      TranState = 1;
+    }
     MDSim = 0;
     OptSim = 1;
     DFPSim = 0;
@@ -643,12 +648,14 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     if (PIMCSim == 1)
     {
       //Frozen atoms must be purely classical
+      #pragma omp parallel for
       for (int j=0;j<QMMMOpts.Nbeads;j++)
       {
         Struct[AtomID].P[j].x = Struct[AtomID].P[0].x;
         Struct[AtomID].P[j].y = Struct[AtomID].P[0].y;
         Struct[AtomID].P[j].z = Struct[AtomID].P[0].z;
       }
+      #pragma omp barrier
     }
   }
   //Collect additonal TINKER input
@@ -901,7 +908,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     cout << "QM convergence criteria:" << '\n';
     cout << "  RMS dev: " << QMMMOpts.QMOptTol;
     cout << " \u212B" << '\n';
-    cout << "  max force: " << (100*QMMMOpts.QMOptTol);
+    cout << "  Max force: " << (100*QMMMOpts.QMOptTol);
     cout << " eV/\u212B" << '\n';
     cout << "  RMS force: " << (50*QMMMOpts.QMOptTol);
     cout << " eV/\u212B" << '\n';

@@ -98,6 +98,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
   }
   if (!QMregion)
   {
+    SumE = 0;
     //Check if the MM region changed and gather statistics
     if (Gaussian == 1)
     {
@@ -467,6 +468,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   bool OptDone = 0;
   while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
   {
+    E = 0; // Reinitialize energy
     //Copy old structure and delete old forces force array
     vector<QMMMAtom> OldStruct = Struct;
     ct = 0; //Counter
@@ -555,14 +557,11 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       /(GradDiff.transpose()*IHess*GradDiff));
       //End really long "line"
     }
-    else
+    if (E > Eold)
     {
       //Take a steepest descent step and rebuild Hessian
-      if (E > Eold)
-      {
-        cout << "    QM energy increased, rebuilding Hessian...";
-        cout << '\n';
-      }
+      cout << "    QM energy increased, rebuilding Hessian...";
+      cout << '\n';
       for (int i=0;i<(3*(Nqm+Npseudo));i++)
       {
         //Create identity matrix

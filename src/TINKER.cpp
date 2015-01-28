@@ -344,32 +344,6 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     //Terminate trailing group line
     ofile << '\n';
   }
-  ct = 0; //Generic counter
-  for (int i=0;i<Natoms;i++)
-  {
-    //Add group 1 atoms
-    if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1))
-    {
-      if (ct == 0)
-      {
-        //Start a new group line
-        ofile << "group 2 ";
-      }
-      else
-      {
-        //Place a space to separate values
-        ofile << " ";
-      }
-      ofile << (Struct[i].id+1);
-      ct += 1;
-      if (ct == 10)
-      {
-        //terminate a group line
-        ct = 0;
-        ofile << '\n';
-      }
-    }
-  }
   if (ct != 0)
   {
     //Terminate trailing group line

@@ -21,7 +21,8 @@
 double BerendsenThermo(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
-  //Berendsen thermostat to maintain a constant temperature
+  //Berendsen thermostat to maintain a constant temperature and remove
+  //center of mass velocities
   int sys; //Dummy return for system calls
   stringstream call;
   call.copyfmt(cout);
@@ -29,6 +30,28 @@ double BerendsenThermo(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   double T = 0; //Temperature
   double Ek = 0; //Kinetic energy
   double VelScale = 0; //Scale factor for velocities
+  //Calculate center of mass translation
+  double vxcom = 0;
+  double vycom = 0;
+  double vzcom = 0;
+  for (int i=0;i<Natoms;i++)
+  {
+    vxcom += Struct[i].Vel[Bead].x;
+    vycom += Struct[i].Vel[Bead].y;
+    vzcom += Struct[i].Vel[Bead].z;
+  }
+  vxcom /= Natoms;
+  vxcom /= Natoms;
+  vxcom /= Natoms;
+  #pragma omp parallel for
+  for (int i=0;i<Natoms;i++)
+  {
+    //Remove center of mass translation
+    Struct[i].Vel[Bead].x -= vxcom;
+    Struct[i].Vel[Bead].y -= vycom;
+    Struct[i].Vel[Bead].z -= vzcom;
+  }
+  #pragma omp barrier
   //Calculate temperature
   for (int i=0;i<Natoms;i++)
   {
@@ -110,6 +133,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Run MD
   for (int n=0;n<MDSteps;n++)
   {
+    E = 0;
     //Update QM forces
     if (Gaussian == 1)
     {
@@ -136,10 +160,8 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     {
       
     }
-    //Calculate velocities, sum forces, and delete old QM forces
+    //Sum forces, and delete old QM forces
     
-    //Correct temperature
-    T = BerendsenThermo(Struct,QMMMOpts,Bead);
     //Update postions and delete old MM forces
     #pragma omp parallel for
     for (int i=0;i<Natoms;i++)
@@ -161,6 +183,10 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       MMForces[i].z = 0;
     }
     #pragma omp barrier
+    //Update velocities
+    
+    //Correct temperature
+    T = BerendsenThermo(Struct,QMMMOpts,Bead);
     //Print trajectory
     if ((n == 0) or ((n%QMMMOpts.Nprint) == 0))
     {

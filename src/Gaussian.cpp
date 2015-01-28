@@ -985,8 +985,13 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << " -r " << regfilename;
   call << " -b " << Bead;
   call << "\"" << '\n';
-  call << "Symmetry=None Opt=(MaxCycles=";
-  call << QMMMOpts.MaxOptSteps;
+  call << "Symmetry=None Opt=(";
+  if (TranState)
+  {
+    //Add transition state options
+    call << "TS,";
+  }
+  call << "MaxCycles=" << QMMMOpts.MaxOptSteps;
   call << ",MaxStep=" << int(round((QMMMOpts.MaxStep/(0.01*BohrRad))));
   call << ")" << '\n';
   call << '\n'; //Blank line
