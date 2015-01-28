@@ -659,8 +659,9 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     }
   }
   //Collect additonal TINKER input
-  if (TINKER == 1)
+  if ((TINKER == 1) and (!GauExternal))
   {
+    //Classes are not used in the QMMM, but looking for them can spot errors
     FindTINKERClasses(Struct);
   }
   return;

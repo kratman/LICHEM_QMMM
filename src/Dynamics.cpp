@@ -92,11 +92,12 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string
+  int ct; //Generic counter
   int MDSteps; //Number of steps for the MD simulation
   double T = 0; //Instantaneous temperature
   double Eavg = 0; //Average energy
   double Tavg = 0; //Average temperature
-  int avgct = 0; //Counter
+  int avgct = 0; //Another counter
   vector<Coord> Forces; //QM forces
   vector<Coord> MMForces; //MM forces
   //Set up the run
@@ -160,8 +161,36 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     {
       
     }
-    //Sum forces, and delete old QM forces
-    
+    //Sum forces and delete old QM forces
+    ct = 0;
+    for (int i=0;i<Natoms;i++)
+    {
+      if (Struct[i].QMregion == 1)
+      {
+        //Use the QM forces
+        MMForces[i].x = Forces[ct].x;
+        MMForces[i].y = Forces[ct].y;
+        MMForces[i].z = Forces[ct].z;
+        Forces[ct].x = 0;
+        Forces[ct].y = 0;
+        Forces[ct].z = 0;
+        ct += 1;
+      }
+      if (Struct[i].PAregion == 1)
+      {
+        //Take the average of the MM and QM forces
+        MMForces[i].x += Forces[ct].x;
+        MMForces[i].y += Forces[ct].y;
+        MMForces[i].z += Forces[ct].z;
+        MMForces[i].x *= 0.5;
+        MMForces[i].y *= 0.5;
+        MMForces[i].z *= 0.5;
+        Forces[ct].x = 0;
+        Forces[ct].y = 0;
+        Forces[ct].z = 0;
+        ct += 1;
+      }
+    }
     //Update postions and delete old MM forces
     #pragma omp parallel for
     for (int i=0;i<Natoms;i++)
