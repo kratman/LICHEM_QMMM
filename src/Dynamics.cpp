@@ -206,14 +206,21 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       /Struct[i].m;
       Struct[i].P[Bead].z += 0.5*MMForces[i].z*QMMMOpts.dt*QMMMOpts.dt
       /Struct[i].m;
+    }
+    #pragma omp barrier
+    //Update velocities and delete old forces
+    #pragma omp parallel for
+    for (int i=0;i<Natoms;i++)
+    {
+      Struct[i].Vel[Bead].x += 0.5*MMForces[i].x*QMMMOpts.dt/Struct[i].m;
+      Struct[i].Vel[Bead].y += 0.5*MMForces[i].y*QMMMOpts.dt/Struct[i].m;
+      Struct[i].Vel[Bead].z += 0.5*MMForces[i].z*QMMMOpts.dt/Struct[i].m;
       //Delete old MM forces
       MMForces[i].x = 0;
       MMForces[i].y = 0;
       MMForces[i].z = 0;
     }
     #pragma omp barrier
-    //Update velocities
-    
     //Correct temperature
     T = BerendsenThermo(Struct,QMMMOpts,Bead);
     //Print trajectory

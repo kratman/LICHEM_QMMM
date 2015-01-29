@@ -18,7 +18,7 @@ and some features will be held back until the research is published. Please
 report all bugs so that the code can be updated quickly.
 
 Force-field wrapper timeline and checklist:
- Point-charge force fields: Done (TINKER and LAMMPS)
+ Point-charge force fields: Done (TINKER)
  Polarizable force fields: Done (debugging, TINKER only)
  Polarizable force fields: Future (Amber)
  Frozen density force fields: Future (Amber)
@@ -33,8 +33,8 @@ Simulation mode timeline and checklist:
  NVT/NPT Monte Carlo: Done
  NVT/NPT PI Monte Carlo: Done
  NVT molecular dynamics: In progress
- Geometry optimizations: Done (debugging)
- Reaction pathways: Future
+ Geometry optimizations: Done
+ Reaction pathways: In progress
 
 Currently, the binary and user's manual are not included in the repository.
 The compile script can be used to generate both files. Since FLUKE is

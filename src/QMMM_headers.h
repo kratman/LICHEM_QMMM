@@ -266,7 +266,7 @@ struct QMMMSettings
   int MaxOptSteps; //Maximum iterative optimization steps
   double MMOptTol; //Criteria to end the optimization
   double QMOptTol; //Criteria to end the optimization
-  double SteepStep; //Steepest descent step size (Ang)
+  double StepScale; //Steepest descent step size (Ang)
   double MaxStep; //Maximum size of the optimization step
 };
 
@@ -396,6 +396,7 @@ void GetQuotes(vector<string>&);
 #include "ReactionPath.cpp"
 #include "Optimizers.cpp"
 #include "Dynamics.cpp"
+#include "Analysis.cpp"
 
 //Wrapper definitions
 #include "Lepton_eng.cpp"

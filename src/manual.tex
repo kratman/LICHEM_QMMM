@@ -255,6 +255,7 @@ If the potential type is MM or QMMM, several keywords are required to define
 the MM wrapper. \\
 
 MM\_type: $<$TINKER or AMBER or LAMMPS$>$ \\
+Electrostatics: $<$Charges or AMOEBA or Density$>$ \\
 
 All of the MM input is read into FLUKE as text, and hence, it must match the
 correct input for the MM package.
@@ -286,6 +287,11 @@ simulations with a single bead. All calculation types are documented below. \\
 Calculation\_type: $<$SP or Energy$>$ \\
 
 Calculation\_type: Opt \\
+Max\_opt\_step: $<$Size of the maximum optimization step (\AA)$>$ \\
+MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
+Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
+
+Calculation\_type: TS \\
 Max\_opt\_step: $<$Size of the maximum optimization step (\AA)$>$ \\
 MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
 Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
@@ -357,9 +363,9 @@ user:\$ FLUKE -convert -t TINKER.xyz -k tinker.key ( -p Yes) \\
 The -p flag is optional and tells FLUKE to read the lattice constants from
 the second line of the XYZ file. \\
 
-AMBER: \\
+AMBER: {\color{red}Still in development} \\
 
-LAMMPS:
+LAMMPS: {\color{red}Still in development}
 
 \section{FLUKE output}
 

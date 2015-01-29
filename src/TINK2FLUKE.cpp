@@ -384,12 +384,15 @@ void TINK2FLUKE(int& argc, char**& argv)
         Zfound = 1;
       }
     }
-    if (Zfound != 1)
+    if (!Zfound)
     {
       //Print error
-      cout << "Error: Missing nuclear charge!";
+      cout << "Warning: Missing nuclear charge!";
+      cout << " The .prm file may be incomplete.";
       cout << '\n';
-      //Dump output and quit
+      cout << "FLUKE cannot continue...";
+      cout << '\n';
+      //Dump files and exit
       posfile.flush();
       confile.flush();
       regfile.flush();
@@ -413,10 +416,12 @@ void TINK2FLUKE(int& argc, char**& argv)
         massfound = 1;
       }
     }
-    if (massfound != 1)
+    if (!massfound)
     {
       //Print error
-      cout << "Error: Missing mass!";
+      cout << "Error: Missing mass! The .prm file may be incomplete.";
+      cout << '\n';
+      cout << "FLUKE cannot continue...";
       cout << '\n';
       //Dump output and quit
       posfile.flush();
@@ -434,17 +439,12 @@ void TINK2FLUKE(int& argc, char**& argv)
         chargefound = 1;
       }
     }
-    if (chargefound != 1)
+    if (!chargefound)
     {
       //Print error
-      cout << "Error: Missing charge!";
+      cout << "Warning: Missing charge! The .prm file may be incomplete.";
       cout << '\n';
-      //Dump output and quit
-      posfile.flush();
-      confile.flush();
-      regfile.flush();
-      cout.flush();
-      exit(0);
+      confile << "0.00" << " "; //Set charge to zero
     }
     int nbonds = fullline.size()-6;
     confile << nbonds;

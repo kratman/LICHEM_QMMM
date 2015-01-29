@@ -553,7 +553,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     QMMMOpts.accratio = 0;
     QMMMOpts.Nprint = 0;
     QMMMOpts.Ensemble = "N/A";
-    regionfile >> dummy >> QMMMOpts.SteepStep;
+    regionfile >> dummy >> QMMMOpts.StepScale;
     regionfile >> dummy >> QMMMOpts.MaxStep;
     regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
@@ -578,7 +578,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     QMMMOpts.accratio = 0;
     QMMMOpts.Nprint = 0;
     QMMMOpts.Ensemble = "N/A";
-    regionfile >> dummy >> QMMMOpts.SteepStep;
+    regionfile >> dummy >> QMMMOpts.StepScale;
     regionfile >> dummy >> QMMMOpts.MaxStep;
     regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
@@ -656,6 +656,28 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
         Struct[AtomID].P[j].z = Struct[AtomID].P[0].z;
       }
       #pragma omp barrier
+    }
+  }
+  //Read initial structures for all beads
+  if ((CheckFile("BeadStartStruct.xyz")) and (!GauExternal))
+  {
+    //Open file
+    fstream beadfile;
+    beadfile.open("BeadStartStruct.xyz",ios_base::in);
+    //Read and discard number of atoms
+    beadfile >> dummy;
+    //Read atom/bead positions
+    for (int i=0;i<Natoms;i++)
+    {
+      for (int j=0;j<QMMMOpts.Nbeads;j++)
+      {
+        //Read atom type and discard
+        beadfile >> dummy;
+        //Read XYZ coordinates
+        beadfile >> Struct[i].P[j].x;
+        beadfile >> Struct[i].P[j].y;
+        beadfile >> Struct[i].P[j].z;
+      }
     }
   }
   //Collect additonal TINKER input
@@ -904,19 +926,29 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
   }
   cout << '\n';
   //Print convergence criteria for optimizations
-  if ((SteepSim == 1) or (DFPSim == 1))
-  {
-    cout << "QM convergence criteria:" << '\n';
-    cout << "  RMS dev: " << QMMMOpts.QMOptTol;
-    cout << " \u212B" << '\n';
-    cout << "  Max force: " << (100*QMMMOpts.QMOptTol);
-    cout << " eV/\u212B" << '\n';
-    cout << "  RMS force: " << (50*QMMMOpts.QMOptTol);
-    cout << " eV/\u212B" << '\n';
-    cout << '\n';
-  }
   if ((OptSim == 1) or (SteepSim == 1) or (DFPSim == 1))
   {
+    cout << "Optimization settings:" << '\n';
+    if ((SteepSim == 1) or (DFPSim == 1))
+    {
+      cout << " Step scale factor: " << QMMMOpts.MaxStep;
+      cout << '\n';
+    }
+    cout << " Max step size: " << QMMMOpts.MaxStep;
+    cout << " \u212B" << '\n';
+    cout << " Max steps: " << QMMMOpts.MaxOptSteps;
+    cout << '\n' << '\n';
+    if ((SteepSim == 1) or (DFPSim == 1))
+    {
+      cout << "QM convergence criteria:" << '\n';
+      cout << "  RMS dev: " << QMMMOpts.QMOptTol;
+      cout << " \u212B" << '\n';
+      cout << "  Max force: " << (100*QMMMOpts.QMOptTol);
+      cout << " eV/\u212B" << '\n';
+      cout << "  RMS force: " << (50*QMMMOpts.QMOptTol);
+      cout << " eV/\u212B" << '\n';
+      cout << '\n';
+    }
     cout << "MM convergence criteria:" << '\n';
     cout << "  RMS dev: " << QMMMOpts.MMOptTol;
     cout << " \u212B" << '\n';

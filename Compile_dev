@@ -1,5 +1,7 @@
 #!/bin/bash
-# Compile script for FLUKE
+# Compile script for the FLUKE development branch
+
+#NOTE: This script requires files outside of the repository!!!
 
 #Print FLUKE title
 echo ""
@@ -10,10 +12,18 @@ echo "#                                                 #"
 echo "###################################################"
 echo ""
 
-### Compile FLUKE ###
+### Compile non-dev FLUKE (compile-time error checking) ###
 echo "Compiling the FLUKE binary..."
 cd src/
-g++ -fopenmp -g -static -O3 FLUKE.cpp -o FLUKE -I/usr/include/eigen3/
+g++ -fopenmp -static -O3 FLUKE.cpp -o FLUKE -I/usr/include/eigen3/
+cd ../
+rm src/FLUKE
+echo ""
+
+### Compile FLUKE development binary for test calculations ###
+echo "Compiling the FLUKE development binary..."
+cd src/
+g++ -DDEVCOMP -fopenmp -g -static -O3 FLUKE.cpp -o FLUKE -I/usr/include/eigen3/
 cd ../
 mv src/FLUKE .
 echo ""
@@ -37,6 +47,13 @@ rm -f manual.aux manual.bbl manual.lof doclog.txt manual.blg
 rm -f manual.lot manual.out manual.toc manual.log
 mv manual.pdf ../doc/FLUKE_manual.pdf
 cd ../
+echo ""
+
+### Print code stats ###
+echo "Number of FLUKE source code files:"
+ls -al ./src/* | wc -l
+echo "Total length of FLUKE (lines):"
+cat ./src/* | wc -l
 echo ""
 
 ### Finish ###

@@ -11,7 +11,7 @@
  are inefficient, however, they are useful for testing and debugging.
 
  Reference for optimization routines:
- Press et al., Numberical Recipes 2nd Edition, 1997
+ Press et al., Numerical Recipes 2nd Edition, 1997
 
 */
 
@@ -270,20 +270,20 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     for (int i=0;i<(Nqm+Npseudo);i++)
     {
       //Check if the step size is too large
-      if (abs(QMMMOpts.SteepStep*Forces[i].x) > VecMax)
+      if (abs(QMMMOpts.StepScale*Forces[i].x) > VecMax)
       {
-        VecMax = abs(QMMMOpts.SteepStep*Forces[i].x);
+        VecMax = abs(QMMMOpts.StepScale*Forces[i].x);
       }
-      if (abs(QMMMOpts.SteepStep*Forces[i].y) > VecMax)
+      if (abs(QMMMOpts.StepScale*Forces[i].y) > VecMax)
       {
-        VecMax = abs(QMMMOpts.SteepStep*Forces[i].y);
+        VecMax = abs(QMMMOpts.StepScale*Forces[i].y);
       }
-      if (abs(QMMMOpts.SteepStep*Forces[i].z) > VecMax)
+      if (abs(QMMMOpts.StepScale*Forces[i].z) > VecMax)
       {
-        VecMax = abs(QMMMOpts.SteepStep*Forces[i].z);
+        VecMax = abs(QMMMOpts.StepScale*Forces[i].z);
       }
     }
-    stepsize = QMMMOpts.SteepStep;
+    stepsize = QMMMOpts.StepScale;
     if (VecMax > QMMMOpts.MaxStep)
     {
       //Scale step size
@@ -486,7 +486,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     }
     //Determine new structure
     OptVec = IHess*NGrad;
-    OptVec *= QMMMOpts.SteepStep;
+    OptVec *= QMMMOpts.StepScale;
     VecMax = 0;
     for (int i=0;i<(3*(Nqm+Npseudo));i++)
     {
@@ -559,18 +559,18 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     }
     if (E > Eold)
     {
-      //Take a steepest descent step and rebuild Hessian
-      cout << "    QM energy increased, rebuilding Hessian...";
+      //Take a small steepest descent step and rebuild Hessian
+      cout << "    QM energy increased. Constructing new Hessian...";
       cout << '\n';
       for (int i=0;i<(3*(Nqm+Npseudo));i++)
       {
-        //Create identity matrix
+        //Create scaled identity matrix
         for (int j=0;j<i;j++)
         {
           IHess(i,j) = 0.0;
           IHess(j,i) = 0.0;
         }
-        IHess(i,i) = 1.0; //Already an "inverse Hessian"
+        IHess(i,i) = 0.10; //Already an "inverse Hessian"
       }
     }
     Eold = E; //Save energy
