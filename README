@@ -32,7 +32,7 @@ Simulation mode timeline and checklist:
  Single-point energy: Done
  NVT/NPT Monte Carlo: Done
  NVT/NPT PI Monte Carlo: Done
- NVT molecular dynamics: In progress
+ NVT molecular dynamics: Done (debugging)
  Geometry optimizations: Done
  Reaction pathways: In progress
 
