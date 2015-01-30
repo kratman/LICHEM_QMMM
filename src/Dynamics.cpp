@@ -159,7 +159,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Update MM forces
     if (TINKER == 1)
     {
-      
+      TINKERMMForces(Struct,MMForces,QMMMOpts,Bead);
     }
     //Sum forces and delete old QM forces
     ct = 0;

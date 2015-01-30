@@ -8,7 +8,7 @@
 ##############################################################################
 
  Misc. functions that are needed by main(), but call core and wrapper
- functions. This file must be the last file imported into main().
+ functions.
 
 */
 

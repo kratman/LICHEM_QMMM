@@ -301,6 +301,8 @@ double TINKEROpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double TINKERForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
+double TINKERMMForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+
 double TINKERPolEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double AMBEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
@@ -380,6 +382,8 @@ void FLUKEErrorChecker(QMMMSettings&);
 void FLUKEPrintSettings(QMMMSettings&);
 
 void GetQuotes(vector<string>&);
+
+void BurstTraj(vector<QMMMAtom>&,string&,QMMMSettings&);
 
 //Function definitions
 #include "Core_funcs.cpp"

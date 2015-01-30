@@ -1,0 +1,22 @@
+
+PSI4 interface:
+-PSI4 gradients do not include the contribution from the external field.
+This is not a FLUKE bug, but rather a bug in PSI4. Due to this bug, PSI4 QMMM
+optimizations currently do not work.
+
+TINKER interface:
+-Chiral atoms with multipoles have not been tested. It is possible that these
+interactions are incorrect.
+
+LAMMPS interface:
+-The LAMMPS wrapper needs to be rewritten. The version that is in the source
+directory is not configured properly.
+
+Gaussian interface:
+-Transition state optimizations are currently broken.
+
+DFP optimization:
+-The steepest descent and DFP optimizers use Cartesian coordinates.
+-The DFP optimizer included in Optimizers.cpp does not have a true line
+search algorithm. Instead, the optimizer will create a new guess Hessian
+and take a small steepest descent step if the QMMM energy rises.

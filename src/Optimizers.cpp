@@ -404,9 +404,8 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       IHess(i,j) = 0.0;
       IHess(j,i) = 0.0;
     }
-    IHess(i,i) = 1.0;
+    IHess(i,i) = 1.0; //Already an "inverse Hessian"
   }
-  IHess = IHess.inverse(); //Invert initial Hessian matrix
   vector<Coord> Forces;
   for (int i=0;i<(Nqm+Npseudo);i++)
   {

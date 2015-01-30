@@ -27,7 +27,7 @@ void TINK2FLUKE(int& argc, char**& argv)
   int Ninact = 0;
   bool SomeFroz = 0;
   bool SomeAct = 0;
-  int ct;
+  int ct; //Generic counter
   //Open files
   posfile.open("xyzfile.xyz",ios_base::out);
   confile.open("connect.inp",ios_base::out);
