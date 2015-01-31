@@ -101,10 +101,13 @@ user:\$ ./compile
  QM opt. & Yes & Yes & No & No & No \\
  MM opt. & No & No & Yes & Yes & Yes \\
  QMMM opt. & Yes & No & Yes & Yes & Yes \\ \hline
- QM SD & Yes & Yes & No & No & No \\
- MM SD & No & No & No & No & No \\
- QMMM SD & Yes & Yes & Yes & Yes & Yes \\ \hline
- QM MC & Yes & Yes & No & No & No \\
+ QM SD/DFP & Yes & Yes & No & No & No \\
+ MM SD/DFP & No & No & No & No & No \\
+ QMMM SD/DFP & Yes & Yes & Yes & Yes & Yes \\ \hline
+ QM MD & Yes & Yes & No & No & No \\
+ MM MD & No & No & Yes & Yes & Yes \\
+ QMMM MD & Yes & Yes & Yes & Yes & Yes \\ \hline
+ QM MC & Yes & Yes & No & No & No \\ 
  MM MC & No & No & Yes & Yes & Yes \\
  QMMM MC & Yes & Yes & Yes & Yes & Yes \\ \hline
  QM PIMC & Yes & Yes & No & No & No \\
@@ -115,8 +118,9 @@ user:\$ ./compile
  QMMM RP & Yes & No & Yes & Yes & Yes \\ \hline
  \end{tabular}
  \caption{Wrapper capabilities for single-point energy, geometry optimization,
- steepest descent (SD), Monte Carlo (MC), path-integral Monte Carlo (PIMC) and
- reaction path (RP) calculations.}
+ steepest descent or Davidson-Fletcher-Powell (SD/DFP), molecular dynamics
+ (MD), Monte Carlo (MC), path-integral Monte Carlo (PIMC), and reaction path
+ (RP) calculations.}
  \label{tab:WrapCap}
 \end{table}
 
@@ -1054,7 +1058,7 @@ their force field charges, and the MM bonding interactions are added for the
 pseudo-atoms. The treatment of different interaction types are given in Table
 \ref{tab:IntTable} for single-point energy calculations. In the pseudo-bond
 approach, only some of the bonded interactions are calculated for the QMMM
-interface. Further detials on which bonded interactions are included can be
+interface. Further details on which bonded interactions are included can be
 found in the literature. \\
 
 So far we have discussed systems similar to the one shown in Figure
@@ -1185,6 +1189,6 @@ the atoms, and reduces $P_{acc}$.
 
 \FloatBarrier
 \bibliographystyle{unsrt}
-\bibliography{../manual.bib}
+\bibliography{manual}
 
 \end{document}
