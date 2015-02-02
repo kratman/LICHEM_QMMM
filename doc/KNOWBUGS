@@ -1,3 +1,6 @@
+General:
+-The multipole code will not be fully released until after the work is
+published.
 
 PSI4 interface:
 -PSI4 gradients do not include the contribution from the external field.

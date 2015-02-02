@@ -161,6 +161,29 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     getline(ifile,dummy);
     stringstream line(dummy);
     line >> dummy;
+    if (dummy == "Mulliken")
+    {
+      line >> dummy;
+      if (dummy == "Charges:")
+      {
+        getline(ifile,dummy);
+        for (int i=0;i<Natoms;i++)
+        {
+          if ((Struct[i].QMregion == 1) or (Struct[i].PAregion ==1))
+          {
+            getline(ifile,dummy);
+            if (Struct[i].QMregion == 1)
+            {
+              stringstream line(dummy);
+              line >> dummy >> dummy;
+              line >> dummy >> dummy;
+              line >> dummy;
+              line >> Struct[i].MP[Bead].q;
+            }
+          }
+        }
+      }
+    }
     if (dummy == "-Total")
     {
       line >> dummy;
@@ -196,36 +219,13 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
         }
       }
     }
-    line >> dummy;
+    line >> dummy; //Get rid of junk
     if (dummy == "Final")
     {
       line >> dummy;
       if (dummy == "Energy:")
       {
         line >> Eqm;
-      }
-    }
-    if (dummy == "Mulliken")
-    {
-      line >> dummy;
-      if (dummy == "Charges:")
-      {
-        getline(ifile,dummy);
-        for (int i=0;i<Natoms;i++)
-        {
-          if ((Struct[i].QMregion == 1) or (Struct[i].PAregion ==1))
-          {
-            getline(ifile,dummy);
-            if (Struct[i].QMregion == 1)
-            {
-              stringstream line(dummy);
-              line >> dummy >> dummy;
-              line >> dummy >> dummy;
-              line >> dummy;
-              line >> Struct[i].MP[Bead].q;
-            }
-          }
-        }
       }
     }
   }
@@ -534,6 +534,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   }
   //Set up energy calculation
   call << "energy('" << QMMMOpts.Func << "')" << '\n';
+  call << "oeprop('MULLIKEN_CHARGES')" << '\n';
   //Print file
   dummy = call.str(); //Store as a temporary variable
   call.str("");
@@ -561,7 +562,31 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   {
     getline(ifile,dummy);
     stringstream line(dummy);
-    line >> dummy >> dummy;
+    line >> dummy;
+    if (dummy == "Mulliken")
+    {
+      line >> dummy;
+      if (dummy == "Charges:")
+      {
+        getline(ifile,dummy);
+        for (int i=0;i<Natoms;i++)
+        {
+          if ((Struct[i].QMregion == 1) or (Struct[i].PAregion ==1))
+          {
+            getline(ifile,dummy);
+            if (Struct[i].QMregion == 1)
+            {
+              stringstream line(dummy);
+              line >> dummy >> dummy;
+              line >> dummy >> dummy;
+              line >> dummy;
+              line >> Struct[i].MP[Bead].q;
+            }
+          }
+        }
+      }
+    }
+    line >> dummy; //Get rid of junk
     if (dummy == "Final")
     {
       line >> dummy;
@@ -589,11 +614,6 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "QMMM_" << Bead << ".out ";
   call << "QMMM_" << Bead << ".log";
   sys = system(call.str().c_str());
-  if ((AMOEBA == 1) and (QMMM == 1))
-  {
-    //Update point charges for the polarization energy calculation
-    PSICharges(Struct,QMMMOpts,Bead);
-  }
   //Change units
   E *= Har2eV;
   return E;
@@ -715,6 +735,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   }
   //Set up QM only optimization
   call << "optimize('" << QMMMOpts.Func << "')" << '\n';
+  call << "oeprop('MULLIKEN_CHARGES')" << '\n';
   //Print file
   dummy = call.str(); //Store as a temporary variable
   call.str("");
@@ -769,7 +790,30 @@ double PSIOpt(vector<QMMMAtom>& Struct,
         }
       }
     }
-    line >> dummy;
+    if (dummy == "Mulliken")
+    {
+      line >> dummy;
+      if (dummy == "Charges:")
+      {
+        getline(ifile,dummy);
+        for (int i=0;i<Natoms;i++)
+        {
+          if ((Struct[i].QMregion == 1) or (Struct[i].PAregion ==1))
+          {
+            getline(ifile,dummy);
+            if (Struct[i].QMregion == 1)
+            {
+              stringstream line(dummy);
+              line >> dummy >> dummy;
+              line >> dummy >> dummy;
+              line >> dummy;
+              line >> Struct[i].MP[Bead].q;
+            }
+          }
+        }
+      }
+    }
+    line >> dummy; //Get rid of junk
     if (dummy == "Final")
     {
       line >> dummy;
@@ -806,11 +850,6 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   call << "QMMM_" << Bead << ".out ";
   call << "QMMM_" << Bead << ".log";
   sys = system(call.str().c_str());
-  if ((AMOEBA == 1) and (QMMM == 1))
-  {
-    //Update point charges for the polarization energy calculation
-    PSICharges(Struct,QMMMOpts,Bead);
-  }
   //Change units
   E *= Har2eV;
   return E;
