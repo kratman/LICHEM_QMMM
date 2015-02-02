@@ -395,9 +395,19 @@ void BurstTraj(vector<QMMMAtom>&,string&,QMMMSettings&);
 #ifndef DEVCOMP
 #include "Multipoles.cpp"
 #endif
-#include "Frozen_Density.cpp"
+#ifdef DEVCOMP
+#include "Real_Frozen_density.cpp"
+#endif
+#ifndef DEVCOMP
+#include "Frozen_density.cpp"
+#endif
 #include "PathIntegral.cpp"
+#ifdef DEVCOMP
+#include "Real_ReactionPath.cpp"
+#endif
+#ifndef DEVCOMP
 #include "ReactionPath.cpp"
+#endif
 #include "Optimizers.cpp"
 #include "Dynamics.cpp"
 #include "Analysis.cpp"
