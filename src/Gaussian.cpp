@@ -192,7 +192,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   fstream ofile,ifile,QMlog;
   double Eqm = 0;
   double Eself = 0;
-  //Check if a list of point charges exists
+  //Check if a list of point-charges exists
   call.str("");
   call << "MMCharges_" << Bead << ".txt";
   bool UseChrgFile = CheckFile(call.str());
@@ -493,7 +493,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
 void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
-  //Function to update QM point charges
+  //Function to update QM point-charges
   int sys; //Dummy return for system calls
   fstream ofile,ifile;
   string dummy; //Generic string

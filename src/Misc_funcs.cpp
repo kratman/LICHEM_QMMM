@@ -492,6 +492,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.dt; //Timestep
     regionfile >> dummy >> QMMMOpts.Temp; //Temperature
     QMMMOpts.Beta = 1/(k*QMMMOpts.Temp); //Inverse temperature
+    regionfile >> dummy >> QMMMOpts.tautemp; //Thermostat time constant
     regionfile >> dummy >> QMMMOpts.Neq; //Number of equil. steps
     regionfile >> dummy >> QMMMOpts.Nsteps; //Number of prod. steps
     regionfile >> dummy >> QMMMOpts.Nprint; //Print frequency
@@ -823,6 +824,29 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       cout << " path-integral";
     }
     cout << " Monte Carlo" << '\n';
+  }
+  if (MDSim == 1)
+  {
+    cout << '\n';
+    cout << "Simulation mode: ";
+    if (QMMM == 1)
+    {
+      cout << "QMMM";
+    }
+    if (QMonly == 1)
+    {
+      cout << "Pure QM";
+    }
+    if (MMonly == 1)
+    {
+      cout << "Pure MM";
+    }
+    cout << " molecular dynamics" << '\n';
+    cout << " Time step: " << QMMMOpts.dt << " fs" << '\n';
+    cout << " Temperature: " << QMMMOpts.Temp << " K" << '\n';
+    cout << " Berendsen time-constant: " << QMMMOpts.tautemp << " fs" << '\n';
+    cout << " Equilibration MD steps: " << QMMMOpts.Neq << '\n';
+    cout << " Production MD steps: " << QMMMOpts.Nsteps << '\n';
   }
   if ((OptSim == 1) or (SteepSim == 1) or (DFPSim == 1))
   {

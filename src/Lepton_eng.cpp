@@ -22,7 +22,7 @@ const double rbar = 1.0; //Parameter for eFF distance scaling
 const double Charm = 0; //Force constant for eFF harmonic constraint
 const bool Scale_eFF = 0; //Scale the eFF kinetic energy by ElrtNbeads
 const double Scale_POW = 0.5; //ElrtNbeads = pow(P,Scale_POW)
-const bool qGrid = 0; //Restrict point charge movements
+const bool qGrid = 0; //Restrict point-charge movements
 const double RadMin = 0.01; //Minimum electron radius
 const double RadMax = 25.0; //Maximum electron radius
 const double ElecCutoff = 15.0; //Cutoff for electron electrostatics

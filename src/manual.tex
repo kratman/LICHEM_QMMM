@@ -978,8 +978,8 @@ solving the Schr\"odinger equation is essentially trivial.
 
 When the QM and MM regions are not connected by covalent bonds, the QM-MM
 interactions are reasonably straightforward. The interaction between the
-electric field of the MM region (point charges or multipoles) and the QM
-region is calculated by adding point charges to the QM calculations. This
+electric field of the MM region (point-charges or multipoles) and the QM
+region is calculated by adding point-charges to the QM calculations. This
 allows for electrostatic repulsion and polarization, but neglects exchange
 and dispersion interactions. These missing interactions are added using the
 vdW potentials taken from the MM force field. \\
@@ -1022,8 +1022,8 @@ the MM calculation ($\hat V_{mm}$) and the QM calculation ($\hat H_{qm}$).
  \caption{The treatment of region-region interactions in the MM and QM 
  wrappers during single-point energy calculations. Interactions were 
  abbreviated as follows: force field (FF), electron density ($\rho_{el}$),
- pseudopotential (PP), no interaction (Zero), QM point charges 
- (\{$q_{qm}$\}), MM bond potentials (Bonds), and MM point charges
+ pseudopotential (PP), no interaction (Zero), QM point-charges 
+ (\{$q_{qm}$\}), MM bond potentials (Bonds), and MM point-charges
  (\{$q_{mm}$\}). A "-" sign is used if the interaction is removed instead of
  added (i.e. FF-\{$q_{qm}$\} denotes the force field with no charges on the
  QM atoms).} 
@@ -1045,7 +1045,7 @@ shared by the QM and MM regions, and handle the bulk of the covalent
 interactions. The severed bonds from the MM region are treated by adding a
 pseudopotential to the pseudo-atoms that allows a fluorine atom to mimic the
 behavior of an sp$^3$ hybridized carbon or nitrogen atom. Boundary atoms
-correct for two additional errors. First, having point charges close to the
+correct for two additional errors. First, having point-charges close to the
 QM region can cause the electron density to be over-polarized. The second
 error is introduced by the fact that the QM region must have an integer number
 of electrons. Both of these problems can be mitigated by absorbing the point

@@ -12,7 +12,7 @@
  Reference for TINKER and frame of reference rotations:
  
 
- References for conversion to point charges:
+ References for conversion to point-charges:
  
 
 */
@@ -51,8 +51,8 @@ RedMpole Cart2SphHarm(Mpole& poles)
 
 OctCharges SphHarm2Charges(RedMpole poles)
 {
-  //Converts spherical harmonic multipoles to point charges
-  OctCharges PCgrid; //New point charge multipoles
+  //Converts spherical harmonic multipoles to point-charges
+  OctCharges PCgrid; //New point-charge multipoles
 
   return PCgrid;
 };

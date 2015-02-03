@@ -19,7 +19,8 @@ report all bugs so that the code can be updated quickly.
 
 Force-field wrapper timeline and checklist:
  Point-charge force fields: Done (TINKER)
- Polarizable force fields: Done (debugging, TINKER only)
+ Point-charge force fields: In progress (LAMMPS/AMBER)
+ Polarizable force fields: Done (TINKER)
  Polarizable force fields: Future (Amber)
  Frozen density force fields: Future (Amber)
 

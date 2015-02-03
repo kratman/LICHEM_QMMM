@@ -62,7 +62,7 @@ double BerendsenThermo(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     v2 += Struct[i].Vel[Bead].z*Struct[i].Vel[Bead].z;
     Ek += Struct[i].m*v2; //Two left out below
   }
-  T = (Ek*amu2kg)/(3*Natoms*kSI*m2Ang*m2Ang); //Two left out above
+  T = (Ek*amu2kg)/(3*Natoms*kSI*m2Ang*m2Ang*fs2s*fs2s); //Two left out above
   //Calculate the scale factor for the velocities
   VelScale = (T/QMMMOpts.Temp);
   VelScale -= 1;
@@ -100,8 +100,12 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   int avgct = 0; //Another counter
   vector<Coord> Forces; //QM forces
   vector<Coord> MMForces; //MM forces
+  double AccelConst; //Conversion constant for forces
+  AccelConst = ((m2Ang*m2Ang*fs2s*fs2s)/(amu2kg*SI2eV));
+  double VelConst; //Conversion constant for velocity
+  VelConst = ((m2Ang*m2Ang*fs2s)/(amu2kg*SI2eV));
   //Set up the run
-  if (ProdRun == 1)
+  if (ProdRun)
   {
     MDSteps = QMMMOpts.Nsteps;
     cout << "Starting production run:" << '\n';
@@ -132,7 +136,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     MMForces.push_back(tmp);
   }
   //Run MD
-  for (int n=0;n<MDSteps;n++)
+  for (int n=0;n<(MDSteps+1);n++)
   {
     E = 0;
     //Update QM forces
@@ -159,7 +163,9 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Update MM forces
     if (TINKER == 1)
     {
-      TINKERMMForces(Struct,MMForces,QMMMOpts,Bead);
+      int tstart = (unsigned)time(0);
+      E += TINKERMMForces(Struct,MMForces,QMMMOpts,Bead);
+      MMTime += (unsigned)time(0)-tstart;
     }
     //Sum forces and delete old QM forces
     ct = 0;
@@ -201,20 +207,23 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       Struct[i].P[Bead].z += Struct[i].Vel[Bead].z*QMMMOpts.dt;
       //Update from acceleration (multiline)
       Struct[i].P[Bead].x += 0.5*MMForces[i].x*QMMMOpts.dt*QMMMOpts.dt
-      /Struct[i].m;
+      *AccelConst/Struct[i].m;
       Struct[i].P[Bead].y += 0.5*MMForces[i].y*QMMMOpts.dt*QMMMOpts.dt
-      /Struct[i].m;
+      *AccelConst/Struct[i].m;
       Struct[i].P[Bead].z += 0.5*MMForces[i].z*QMMMOpts.dt*QMMMOpts.dt
-      /Struct[i].m;
+      *AccelConst/Struct[i].m;
     }
     #pragma omp barrier
     //Update velocities and delete old forces
     #pragma omp parallel for
     for (int i=0;i<Natoms;i++)
     {
-      Struct[i].Vel[Bead].x += 0.5*MMForces[i].x*QMMMOpts.dt/Struct[i].m;
-      Struct[i].Vel[Bead].y += 0.5*MMForces[i].y*QMMMOpts.dt/Struct[i].m;
-      Struct[i].Vel[Bead].z += 0.5*MMForces[i].z*QMMMOpts.dt/Struct[i].m;
+      Struct[i].Vel[Bead].x += 0.5*MMForces[i].x*QMMMOpts.dt*VelConst
+      /Struct[i].m;
+      Struct[i].Vel[Bead].y += 0.5*MMForces[i].y*QMMMOpts.dt*VelConst
+      /Struct[i].m;
+      Struct[i].Vel[Bead].z += 0.5*MMForces[i].z*QMMMOpts.dt*VelConst
+      /Struct[i].m;
       //Delete old MM forces
       MMForces[i].x = 0;
       MMForces[i].y = 0;
@@ -256,7 +265,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       Tavg += T;
       Eavg += E;
       cout << " | MD Step: ";
-      cout << (n+1) << " | Temperature: ";
+      cout << n << " | Temperature: ";
       cout << T << " K | Energy: ";
       cout << E << " eV";
       cout << endl; //Print progress

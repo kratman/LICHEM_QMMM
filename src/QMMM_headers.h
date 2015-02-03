@@ -77,6 +77,7 @@ const double Na = 6.02214179e23; //Avogadro's number
 const double kcal2eV = 4184*SI2eV/Na; //kcal/mol to eV
 const double sqrt2 = pow(2,0.5); //Square root of 2
 const double HugeNum = 100000.0; //Large number to reject step
+const double fs2s = 1e-12; //Convert fs to s
 
 //Globals
 string xyzfilename; //Saves the filename given in the arguments
@@ -97,7 +98,7 @@ double Lz = 500.0; //Box length
 //Flags for simulation options
 int GEM = 0; //Flag for frozen density QMMM potential
 int AMOEBA = 0; //Flag for polarizable QMMM potential
-int CHRG = 0; //Flag for point charge QMMM potential
+int CHRG = 0; //Flag for point-charge QMMM potential
 int PBCon = 0; //Flag for the boundary conditions
 int PSI4 = 0; //Wrapper flag
 int Gaussian = 0; //Wrapper flag

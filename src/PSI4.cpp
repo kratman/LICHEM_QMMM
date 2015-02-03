@@ -244,7 +244,7 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
 
 void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
-  //Function to update QM point charges
+  //Function to update QM point-charges
   int sys; //Dummy return for system calls
   fstream ofile,ifile;
   string dummy; //Generic string

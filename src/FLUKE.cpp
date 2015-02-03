@@ -248,6 +248,16 @@ int main(int argc, char* argv[])
   }
   //End of section
 
+  //Run MD simulation
+  if (MDSim == 1)
+  {
+    //Equilibration
+    VerletUpdate(Struct,QMMMOpts,outfile,0,0);
+    //Production
+    VerletUpdate(Struct,QMMMOpts,outfile,1,0);
+  }
+  //End of section
+
   //Optimize structure (optional)
   if (OptSim == 1)
   {
@@ -514,16 +524,6 @@ int main(int argc, char* argv[])
       }
     }
     int sys = system(call.str().c_str());
-  }
-  //End of section
-
-  //Run MD simulation
-  if (MDSim == 1)
-  {
-    //Equilibration
-    VerletUpdate(Struct,QMMMOpts,outfile,0,0);
-    //Production
-    VerletUpdate(Struct,QMMMOpts,outfile,1,0);
   }
   //End of section
 
