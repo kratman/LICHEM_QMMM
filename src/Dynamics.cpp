@@ -41,8 +41,8 @@ double BerendsenThermo(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     vzcom += Struct[i].Vel[Bead].z;
   }
   vxcom /= Natoms;
-  vxcom /= Natoms;
-  vxcom /= Natoms;
+  vycom /= Natoms;
+  vzcom /= Natoms;
   #pragma omp parallel for
   for (int i=0;i<Natoms;i++)
   {
@@ -197,7 +197,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         ct += 1;
       }
     }
-    //Update postions and delete old MM forces
+    //Update postions
     #pragma omp parallel for
     for (int i=0;i<Natoms;i++)
     {
@@ -233,7 +233,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Correct temperature
     T = BerendsenThermo(Struct,QMMMOpts,Bead);
     //Print trajectory
-    if ((n == 0) or ((n%QMMMOpts.Nprint) == 0))
+    if ((n == 0) or ((n%QMMMOpts.Nprint) == 0) or (n == MDSteps))
     {
       E = 0;
       if (Gaussian == 1)

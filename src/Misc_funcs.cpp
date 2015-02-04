@@ -501,9 +501,29 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     {
       //Only 1 bead in array
       Coord tmp;
-      tmp.x = 0;
-      tmp.y = 0;
-      tmp.z = 0;
+      //Initialize with a uniform velocity distribution
+      double randnum;
+      randnum = (((double)rand())/((double)RAND_MAX));
+      tmp.x = sqrt(kSI*QMMMOpts.Temp/(Struct[i].m*amu2kg));
+      tmp.x *= m2Ang*fs2s;
+      if (randnum < 0.5)
+      {
+        tmp.x *= -1;
+      }
+      randnum = (((double)rand())/((double)RAND_MAX));
+      tmp.y = sqrt(kSI*QMMMOpts.Temp/(Struct[i].m*amu2kg));
+      tmp.y *= m2Ang*fs2s;
+      if (randnum < 0.5)
+      {
+        tmp.y *= -1;
+      }
+      randnum = (((double)rand())/((double)RAND_MAX));
+      tmp.z = sqrt(kSI*QMMMOpts.Temp/(Struct[i].m*amu2kg));
+      tmp.z *= m2Ang*fs2s;
+      if (randnum < 0.5)
+      {
+        tmp.z *= -1;
+      }
       Struct[i].Vel.push_back(tmp);
     }
   }

@@ -124,7 +124,7 @@ void ExternalGaussian(int& argc, char**& argv)
   }
   if (LAMMPS == 1)
   {
-    
+    Emm = TINKERForces(Struct,Forces,QMMMOpts,Bead);
   }
   //Write formatted output for g09
   double E = (Eqm+Emm)/Har2eV; //Calculate
@@ -986,11 +986,6 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << " -b " << Bead;
   call << "\"" << '\n';
   call << "Symmetry=None Opt=(";
-  if (TranState)
-  {
-    //Add transition state options
-    call << "TS,";
-  }
   call << "MaxCycles=" << QMMMOpts.MaxOptSteps;
   call << ",MaxStep=" << int(round((QMMMOpts.MaxStep/(0.01*BohrRad))));
   call << ")" << '\n';

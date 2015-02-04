@@ -1,6 +1,13 @@
-General:
+Withheld features:
 -The multipole code will not be fully released until after the work is
 published.
+-The frozen density code will not be fully released until after the work is
+published.
+-The reaction pathway code will not be fully released until after the work is
+published.
+
+General:
+-Molecular dynamics simulations are currently broken, a fix is in progress
 
 PSI4 interface:
 -PSI4 gradients do not include the contribution from the external field.
