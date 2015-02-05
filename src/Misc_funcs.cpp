@@ -361,7 +361,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
       AMOEBA = 1;
       if (TINKER == 1)
       {
-        ExtractTINKpoles(Struct);
+        ExtractTINKpoles(Struct,0);
       }
     }
     if ((dummy == "Charges") or (dummy == "charges") or
@@ -406,7 +406,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
       AMOEBA = 1;
       if (TINKER == 1)
       {
-        ExtractTINKpoles(Struct);
+        ExtractTINKpoles(Struct,0);
       }
     }
     if ((dummy == "Charges") or (dummy == "charges") or
@@ -996,8 +996,8 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     cout << "MM convergence criteria:" << '\n';
     cout << "  RMS dev: " << QMMMOpts.MMOptTol;
     cout << " \u212B" << '\n';
-    cout << "  RMS force: " << QMMMOpts.MMOptTol;
-    cout << " kcal/mol\u212B" << '\n';
+    cout << "  RMS force: " << QMMMOpts.MMOptTol*kcal2eV;
+    cout << " eV/\u212B" << '\n';
     cout << '\n';
   }
   cout.flush(); //Flush for output being redirected to a file

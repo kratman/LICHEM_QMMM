@@ -284,7 +284,7 @@ string Typing(int);
 
 int RevTyping(string);
 
-void ExtractTINKpoles(vector<QMMMAtom>& Struct);
+void ExtractTINKpoles(vector<QMMMAtom>&,int);
 
 void RotateTINKCharges(vector<QMMMAtom>&,int);
 

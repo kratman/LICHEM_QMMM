@@ -18,7 +18,7 @@
 */
 
 //TINKER routines
-void ExtractTINKpoles(vector<QMMMAtom>& Struct)
+void ExtractTINKpoles(vector<QMMMAtom>& Struct, int Bead)
 {
   //Parses TINKER parameter files to find multipoles and local frames
   
