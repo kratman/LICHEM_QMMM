@@ -822,7 +822,6 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Write Gaussian input
   ofile << call.str();
   ofile.close();
-  exit(0);
   //Calculate energy
   call.str("");
   call << "g09 ";
