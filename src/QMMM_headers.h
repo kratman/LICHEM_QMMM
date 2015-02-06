@@ -185,6 +185,10 @@ struct OctCharges
   double q4; //Charge in the -x direction
   double q5; //Charge in the -y direction
   double q6; //Charge in the -z direction
+  //Vectors for the quadrupole frame of reference
+  Vector3d Vecx;
+  Vector3d Vecy;
+  Vector3d Vecz;
   //Positions of the charges in the global frame
   double x1;
   double y1;
@@ -388,7 +392,7 @@ void BurstTraj(vector<QMMMAtom>&,string&,QMMMSettings&);
 
 //Function definitions
 #include "Core_funcs.cpp"
-#include "Misc_funcs.cpp"
+#include "Input_Reader.cpp"
 #include "TINK2FLUKE.cpp"
 #ifdef DEVCOMP
 #include "Real_Multipoles.cpp"

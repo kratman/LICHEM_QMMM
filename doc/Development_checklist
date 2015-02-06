@@ -1,0 +1,19 @@
+Force-field wrapper timeline and checklist:
+ Point-charge force fields: Done (TINKER)
+ Point-charge force fields: In progress (LAMMPS/AMBER)
+ Polarizable force fields: Done (TINKER)
+ Polarizable force fields: Future (Amber)
+ Frozen density force fields: Future (Amber)
+
+QMMM boundry timeline and checklist:
+ Non-bonded: Done
+ Pseudo-bond: Done (debugging)
+ Frozen density: Future
+
+Simulation mode timeline and checklist:
+ Single-point energy: Done
+ NVT/NPT Monte Carlo: Done
+ NVT/NPT PI Monte Carlo: Done
+ NVT molecular dynamics: Done (debugging)
+ Geometry optimizations: Done
+ Reaction pathways: In progress

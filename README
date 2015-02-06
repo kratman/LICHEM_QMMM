@@ -1,6 +1,8 @@
 FLUKE: Fields Layered Under Kohn-Sham Electrons
 A QMMM interface for polarizable force fields
 
+### Introduction ###
+
 This package is designed to be an open source (GPLv3) interface between QM
 and MM software so that QMMM calculations can be performed with polarizable
 and frozen density force fields. Functionality is also present for standard
@@ -15,27 +17,10 @@ Available MM wrappers: TINKER, AMBER, LAMMPS
 
 Note: This software is still in alpha. Not all features will work properly
 and some features will be held back until the research is published. Please
-report all bugs so that the code can be updated quickly.
+report all bugs so that the code can be updated quickly. A list of known
+issues and the development timeline are available in the doc directory. 
 
-Force-field wrapper timeline and checklist:
- Point-charge force fields: Done (TINKER)
- Point-charge force fields: In progress (LAMMPS/AMBER)
- Polarizable force fields: Done (TINKER)
- Polarizable force fields: Future (Amber)
- Frozen density force fields: Future (Amber)
-
-QMMM boundry timeline and checklist:
- Non-bonded: Done
- Pseudo-bond: Done (debugging)
- Frozen density: Future
-
-Simulation mode timeline and checklist:
- Single-point energy: Done
- NVT/NPT Monte Carlo: Done
- NVT/NPT PI Monte Carlo: Done
- NVT molecular dynamics: Done (debugging)
- Geometry optimizations: Done
- Reaction pathways: In progress
+### Installation ###
 
 Currently, the binary and user's manual are not included in the repository.
 The compile script can be used to generate both files. Since FLUKE is

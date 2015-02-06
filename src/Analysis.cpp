@@ -1,6 +1,24 @@
 
 
 //Trajectory analysis functions
+void Print_traj(vector<QMMMAtom>& parts, fstream& traj, QMMMSettings& QMMMOpts)
+{
+  int Ntot = QMMMOpts.Nbeads*Natoms;
+  traj << Ntot << '\n' << '\n';
+  for (int i=0;i<Natoms;i++)
+  {
+    for (int j=0;j<QMMMOpts.Nbeads;j++)
+    {
+      traj << parts[i].QMTyp << " ";
+      traj << parts[i].P[j].x << " ";
+      traj << parts[i].P[j].y << " ";
+      traj << parts[i].P[j].z << '\n';
+    }
+  }
+  traj.flush();
+  return;
+};
+
 void BurstTraj(vector<QMMMAtom>& Struct, string& filename,
      QMMMSettings& QMMMOpts)
 {

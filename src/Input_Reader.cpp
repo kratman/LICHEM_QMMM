@@ -7,30 +7,11 @@
 #                                                                            #
 ##############################################################################
 
- Misc. functions that are needed by main(), but call core and wrapper
- functions.
+ Routines for reading and checking the input for FLUKE.
 
 */
 
 //Misc. functions
-void Print_traj(vector<QMMMAtom>& parts, fstream& traj, QMMMSettings& QMMMOpts)
-{
-  int Ntot = QMMMOpts.Nbeads*Natoms;
-  traj << Ntot << '\n' << '\n';
-  for (int i=0;i<Natoms;i++)
-  {
-    for (int j=0;j<QMMMOpts.Nbeads;j++)
-    {
-      traj << parts[i].QMTyp << " ";
-      traj << parts[i].P[j].x << " ";
-      traj << parts[i].P[j].y << " ";
-      traj << parts[i].P[j].z << '\n';
-    }
-  }
-  traj.flush();
-  return;
-};
-
 void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
      fstream& connectfile, fstream& regionfile, fstream& outfile)
 {
