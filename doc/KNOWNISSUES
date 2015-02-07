@@ -30,3 +30,8 @@ DFP optimization:
 -The DFP optimizer included in Optimizers.cpp does not have a true line
 search algorithm. Instead, the optimizer will create a new guess Hessian
 and take a small steepest descent step if the QMMM energy rises.
+
+Manual:
+-The theory sections need citations
+-Better descriptions of the simulations methods should be given (i.e. DFP vs
+Opt).

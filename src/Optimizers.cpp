@@ -24,12 +24,13 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
   stringstream call;
   string dummy; //Generic string
   call.str("");
-  //Gather stats
+  //Initialize stats variables
   bool OptDone = 0;
   double RMSdiff = 0;
   double RMSforce = 0;
   double MAXforce = 0;
   double SumE = 0;
+  //Check progress
   if (QMregion)
   {
     //Check if a QM calculation is converged

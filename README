@@ -8,8 +8,9 @@ and MM software so that QMMM calculations can be performed with polarizable
 and frozen density force fields. Functionality is also present for standard
 point-charge based force fields.
 
-Available calculations: single-point energies, optimized geometries,
-classical Monte Carlo, path-integral Monte Carlo, and reaction pathways
+Available calculations: single-point energies, optimized geometries, classical
+molecular dynamics, classical Monte Carlo, path-integral Monte Carlo, and
+reaction pathways
 
 Available QM wrappers: Gaussian, PSI4
 

@@ -46,7 +46,7 @@ const bool Isotrop = 1; //Force isotropic expansion
 const double StepMin = 0.01; //Minimum step size
 const double StepMax = 1.0; //Maximum step size
 const double Centratio= 5.0; //Scales 'step' for centroids
-const int Acc_Check = 5000; //Eq steps before checking accratio
+const int Acc_Check = 2000; //Eq steps before checking accratio
 
 //Move Probabilities for PIMC
 //Note: These probabilities allow for multi-particle moves
@@ -147,17 +147,17 @@ struct Mpole
   double Dx;
   double Dy;
   double Dz;
-  //Cartesian induced dipole moments
+  //Cartesian induced dipole moments (global frame)
   double IDx;
   double IDy;
   double IDz;
-  //Cartesian quadrupole moments
+  //Cartesian quadrupole moments (Q_ij = Q_ji)
   double Qxx;
-  double Qyy;
-  double Qzz;
   double Qxy;
   double Qxz;
+  double Qyy;
   double Qyz;
+  double Qzz;
 };
 
 struct RedMpole
@@ -173,7 +173,9 @@ struct RedMpole
   double Q20;
   double Q22c;
   //Spherical harmonic vectors
-  Matrix3d Vec;
+  Vector3d Vecx;
+  Vector3d Vecy;
+  Vector3d Vecz;
 };
 
 struct OctCharges
@@ -185,10 +187,6 @@ struct OctCharges
   double q4; //Charge in the -x direction
   double q5; //Charge in the -y direction
   double q6; //Charge in the -z direction
-  //Vectors for the quadrupole frame of reference
-  Vector3d Vecx;
-  Vector3d Vecy;
-  Vector3d Vecz;
   //Positions of the charges in the global frame
   double x1;
   double y1;
