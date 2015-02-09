@@ -187,7 +187,6 @@ int main(int argc, char* argv[])
       if (acc)
       {
         Nct += 1;
-        ct += 1;
         Nacc += 1;
         double Et = Ek;
         Et += Get_PI_Epot(Struct,QMMMOpts);
@@ -199,10 +198,17 @@ int main(int argc, char* argv[])
         VolAvg += Lx*Ly*Lz;
         SumE += Et;
         SumE2 += Et*Et;
-        if (ct == QMMMOpts.Nprint)
+        if ((Nct%QMMMOpts.Nprint) == 0)
         {
+          //Print progress
           Print_traj(Struct,outfile,QMMMOpts);
-          ct = 0;
+          cout << " | Step: " << Nct;
+          cout << " | Energy: " << Et << "eV";
+          if (QMMMOpts.Ensemble == "NPT")
+          {
+            cout << " | Volume: " << Lx*Ly*Lz << "\u212B^3";
+          }
+          cout << '\n';
         }
       }
       else
@@ -210,7 +216,7 @@ int main(int argc, char* argv[])
         Nrej += 1;
       }
     }
-    if (ct != 0)
+    if ((Nct%QMMMOpts.Nprint) != 0)
     {
       //Print final geometry if it was not already written
       Print_traj(Struct,outfile,QMMMOpts);
