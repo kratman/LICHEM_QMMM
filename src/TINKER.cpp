@@ -100,8 +100,6 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.copyfmt(cout);
   string dummy; //Generic string
   string TINKKeyFile = "tinker.key";
-  double Epol = 0;
-  double E = 0;
   int sys; //Dummy return for system calls
   int ct; //Generic counter
   //Create TINKER xyz file
@@ -195,15 +193,11 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   for (int i=0;i<Natoms;i++)
   {
     //Add nuclear charges
-    if ((Struct[i].PAregion == 1) or (Struct[i].QMregion == 1))
+    if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
     {
       //Write new multipole definition for the atom ID
-      if (!First)
-      {
-        //Use real multipoles for the first polarization iteration
-        WriteTINKMpole(Struct,ofile,i,Bead);
-        ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
-      }
+      WriteTINKMpole(Struct,ofile,i,Bead);
+      ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
       ofile << '\n';
     }
   }
@@ -241,6 +235,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "rm -f ";
   call << "QMMM_" << Bead << ".xyz ";
+  call << "QMMM_" << Bead << ".key ";
   call << "QMMM_" << Bead << ".0* ";
   call << "QMMM_" << Bead << ".dyn ";
   call << "QMMM_" << Bead << ".log";
