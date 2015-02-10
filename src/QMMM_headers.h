@@ -307,7 +307,7 @@ double TINKERForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
 double TINKERMMForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
-void TINKERInduced(vector<QMMMAtom>&,QMMMSettings&,int,bool);
+void TINKERInduced(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double TINKERPolEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 

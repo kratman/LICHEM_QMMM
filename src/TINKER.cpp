@@ -92,7 +92,7 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
 
 //MM wrapper functions
 void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-       int Bead, bool First)
+       int Bead)
 {
   //Function to extract induced dipoles
   fstream ofile,ifile;
@@ -1248,7 +1248,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Calculate new induced dipoles
   if ((AMOEBA == 1) and (QMMM))
   {
-    TINKERInduced(Struct,QMMMOpts,Bead,0);
+    TINKERInduced(Struct,QMMMOpts,Bead);
   }
   //Change units
   E *= kcal2eV;

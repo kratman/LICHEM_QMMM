@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
   //End of section
 
   //Find induced dipoles for polarizable simulations
-  if ((AMOEBA == 1) and (QMMM) and (!GauExternal))
+  if ((AMOEBA == 1) and (QMMM) and (!PIMCSim))
   {
     if (Gaussian == 1)
     {
@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
       #pragma omp parallel for
       for (int i=0;i<QMMMOpts.Nbeads;i++)
       {
-        TINKERInduced(Struct,QMMMOpts,i,1);
+        TINKERInduced(Struct,QMMMOpts,i);
       }
       #pragma omp barrier
     }
