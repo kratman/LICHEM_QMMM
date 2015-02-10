@@ -673,6 +673,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       }
     }
   }
+  ifile.close();
   //Clean up files
   call.str("");
   call << "rm -f QMMM_";
@@ -716,7 +717,8 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Read pseudo potential
       call << "Pseudo=Read ";
     }
-    call << "Charge=angstroms"; //Read charges
+    call << "Charge=angstroms "; //Read charges
+    call << "Population(MK,ReadRadii)";
     call << '\n';
   }
   call << '\n';
@@ -863,6 +865,30 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         QMfinished = 1;
       }
     }
+    //Check for charges
+    if (dummy == "ESP")
+    {
+      line >> dummy;
+      if (dummy == "charges:")
+      {
+        getline(ifile,dummy);
+        for (int i=0;i<Natoms;i++)
+        {
+          if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+          {
+            //Count through all atoms in the QM calculations
+            getline(ifile,dummy);
+            if (Struct[i].QMregion == 1)
+            {
+              //Only collect charges for QM atoms
+              stringstream line(dummy);
+              line >> dummy >> dummy;
+              line >> Struct[i].MP[Bead].q;
+            }
+          }
+        }
+      }
+    }
   }
   if (QMfinished != 1)
   {
@@ -872,6 +898,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cout << '\n';
     E = HugeNum; //Large number to reject step
   }
+  ifile.close();
   //Remove files
   call.str("");
   call << "rm -f QMMM_";
@@ -879,11 +906,6 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << Bead << ".log QMMM_";
   call << Bead << ".chk";
   sys = system(call.str().c_str());
-  //Calculate new charges
-  if ((AMOEBA == 1) and (QMMM == 1))
-  {
-    GaussianCharges(Struct,QMMMOpts,Bead);
-  }
   //Change units
   E -= Eself;
   E *= Har2eV;
@@ -1072,6 +1094,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       }
     }
   }
+  ifile.close();
   //Clean up files
   call.str("");
   call << "rm -f QMMMExt_";

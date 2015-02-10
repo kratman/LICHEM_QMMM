@@ -55,6 +55,35 @@ int main(int argc, char* argv[])
   FLUKEPrintSettings(QMMMOpts);
   //End of section
 
+  //Find induced dipoles for polarizable simulations
+  if ((AMOEBA == 1) and (QMMM) and (!GauExternal))
+  {
+    if (TINKER == 1)
+    {
+      #pragma omp parallel for
+      for (int i=0;i<QMMMOpts.Nbeads;i++)
+      {
+        TINKERInduced(Struct,QMMMOpts,i,1);
+      }
+      #pragma omp barrier
+    }
+    #pragma omp parallel for
+    for (int i=0;i<Natoms;i++)
+    {
+      if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+      {
+        for (int j=0;j<QMMMOpts.Nbeads;j++)
+        {
+          Struct[i].MP[j].IDx = 0;
+          Struct[i].MP[j].IDy = 0;
+          Struct[i].MP[j].IDz = 0;
+        }
+      }
+    }
+    #pragma omp barrier
+  }
+  //End of section
+
   //Calculate single-point energy (optional)
   if (SinglePoint == 1)
   {
@@ -134,13 +163,15 @@ int main(int argc, char* argv[])
     Ek = 3*Natoms*QMMMOpts.Nbeads/(2*QMMMOpts.Beta);
     int Nct = 0; //Step counter
     int ct = 0; //Secondary counter
-    double Nacc = 0;
-    double Nrej = 0;
-    bool acc;
+    double Nacc = 0; //Number of accepted moves
+    double Nrej = 0; //Number of rejected moves
+    double Emc = 0; //Monte Carlo energy
+    bool acc; //Flag for accepting a step
     cout << "Starting equilibration..." << endl;
     Nct = 0;
     while (Nct < QMMMOpts.Neq) //Equilibration
     {
+      Emc = 0;
       if(ct == Acc_Check)
       {
         if ((Nacc/(Nrej+Nacc)) > QMMMOpts.accratio)
@@ -164,7 +195,7 @@ int main(int argc, char* argv[])
         Nrej = 0;
       }
       ct += 1;
-      acc = MCMove(Struct,QMMMOpts);
+      acc = MCMove(Struct,QMMMOpts,Emc);
       if (acc)
       {
         Nct += 1;
@@ -178,19 +209,18 @@ int main(int argc, char* argv[])
     Nct = 0;
     Nacc = 0;
     Nrej = 0;
-    ct = 0;
     cout << "Starting production run..." << endl;
     Print_traj(Struct,outfile,QMMMOpts);
     while (Nct < QMMMOpts.Nsteps)
     {
-      acc = MCMove(Struct,QMMMOpts);
+      Emc = 0; //Set energy to zero
+      acc = MCMove(Struct,QMMMOpts,Emc);
       if (acc)
       {
         Nct += 1;
         Nacc += 1;
-        double Et = Ek;
-        Et += Get_PI_Epot(Struct,QMMMOpts);
-        Et -= Get_PI_Espring(Struct,QMMMOpts);
+        double Et = Ek+Emc;
+        Et -= 2*Get_PI_Espring(Struct,QMMMOpts);
         if (QMMMOpts.Ensemble == "NPT")
         {
           Et += QMMMOpts.Press*Lx*Ly*Lz*atm2eV;

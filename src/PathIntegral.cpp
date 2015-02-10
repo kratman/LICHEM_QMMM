@@ -109,7 +109,7 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
   return E;
 };
 
-bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
+bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
 {
   bool acc = 0;
   //Copy parts
@@ -328,10 +328,12 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
   if ((dE <= 0) or (randnum < Prob))
   {
     parts = parts2;
+    Emc = Enew;
     acc = 1;
   }
   else
   {
+    Emc = Eold;
     Lx = Lxtmp;
     Ly = Lytmp;
     Lz = Lztmp;

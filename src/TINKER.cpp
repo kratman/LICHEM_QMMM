@@ -91,6 +91,163 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
 }
 
 //MM wrapper functions
+void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
+       int Bead, bool First)
+{
+  //Function to extract induced dipoles
+  fstream ofile,ifile;
+  stringstream call;
+  call.copyfmt(cout);
+  string dummy; //Generic string
+  string TINKKeyFile = "tinker.key";
+  double Epol = 0;
+  double E = 0;
+  int sys; //Dummy return for system calls
+  int ct; //Generic counter
+  //Create TINKER xyz file
+  call.str("");
+  call << "QMMM_" << Bead << ".xyz";
+  ofile.open(call.str().c_str(),ios_base::out);
+  ofile << Natoms << '\n';
+  if (PBCon == 1)
+  {
+    //Write box size
+    ofile << Lx << " " << Ly << " " << Lz;
+    ofile << " 90.0 90.0 90.0";
+    ofile << '\n';
+  }
+  ct = 0; //Counter for QM atoms
+  for (int i=0;i<Natoms;i++)
+  {
+    ofile.precision(8);
+    ofile << setw(6) << (Struct[i].id+1);
+    ofile << " ";
+    ofile << setw(3) << Struct[i].MMTyp;
+    ofile << " ";
+    ofile << setw(10) << Struct[i].P[Bead].x;
+    ofile << " ";
+    ofile << setw(10) << Struct[i].P[Bead].y;
+    ofile << " ";
+    ofile << setw(10) << Struct[i].P[Bead].z;
+    ofile << " ";
+    ofile << setw(4) << Struct[i].NumTyp;
+    for (int j=0;j<Struct[i].Bonds.size();j++)
+    {
+      ofile << " "; //Avoids trailing spaces
+      ofile << setw(6) << (Struct[i].Bonds[j]+1);
+    }
+    ofile.copyfmt(cout);
+    ofile << '\n';
+  }
+  ofile.flush();
+  ofile.close();
+  //Create new TINKER key file
+  call.str("");
+  call << "cp " << TINKKeyFile << " QMMM";
+  call << "_" << Bead;
+  call << ".key";
+  sys = system(call.str().c_str());
+  //Save new keyfile name
+  call.str("");
+  call << "QMMM";
+  call << "_" << Bead;
+  call << ".key";
+  TINKKeyFile = call.str(); //Save the new name
+  //Add QM atoms to force field parameters list
+  ofile.open(TINKKeyFile.c_str(),ios_base::app|ios_base::out);
+  ofile << '\n'; //Make sure current line is empty
+  ofile << "#QM force field parameters"; //Marks the changes
+  ofile << '\n';
+  ofile << "save-induced" << '\n'; //Save induced dipoles
+  ofile << "thermostat berendsen" << '\n';
+  ofile << "tau-temperature 0.1" << '\n';
+  ct = 0; //Generic counter
+  for (int i=0;i<Natoms;i++)
+  {
+    //Add active atoms
+    if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1))
+    {
+      if (ct == 0)
+      {
+        //Start a new active line
+        ofile << "active ";
+      }
+      else
+      {
+        //Place a space to separate values
+        ofile << " ";
+      }
+      ofile << (Struct[i].id+1);
+      ct += 1;
+      if (ct == 10)
+      {
+        //terminate an active line
+        ct = 0;
+        ofile << '\n';
+      }
+    }
+  }
+  if (ct != 0)
+  {
+    //Terminate trailing actives line
+    ofile << '\n';
+  }
+  for (int i=0;i<Natoms;i++)
+  {
+    //Add nuclear charges
+    if ((Struct[i].PAregion == 1) or (Struct[i].QMregion == 1))
+    {
+      //Write new multipole definition for the atom ID
+      if (!First)
+      {
+        //Use real multipoles for the first polarization iteration
+        WriteTINKMpole(Struct,ofile,i,Bead);
+        ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+      }
+      ofile << '\n';
+    }
+  }
+  ofile.flush();
+  ofile.close();
+  //Calculate induced dipoles using dynamic
+  call.str("");
+  call << "dynamic QMMM_" << Bead << ".xyz ";
+  call << "1 1e-4 1e-7 2 0 > QMMM_" << Bead << ".log";
+  sys = system(call.str().c_str());
+  //Extract induced dipoles from the MD cycle file
+  call.str("");
+  call << "QMMM_" << Bead << ".001u";
+  ifile.open(call.str().c_str(),ios_base::in);
+  getline(ifile,dummy); //Clear number of atoms
+  while (!ifile.eof())
+  {
+    int AtNum; //Identifies which atom was polarized
+    //Parse file line by line
+    getline(ifile,dummy);
+    stringstream line(dummy);
+    //Save dipoles for later
+    line >> AtNum >> dummy; //Collect atom number and clear junk
+    AtNum -= 1; //Fixes array indexing
+    line >> Struct[AtNum].MP[Bead].IDx;
+    line >> Struct[AtNum].MP[Bead].IDy;
+    line >> Struct[AtNum].MP[Bead].IDz;
+    //Change units from Debye to a.u.
+    Struct[AtNum].MP[Bead].IDx *= Debye2au;
+    Struct[AtNum].MP[Bead].IDy *= Debye2au;
+    Struct[AtNum].MP[Bead].IDz *= Debye2au;
+  }
+  ifile.close();
+  //Delete junk files
+  call.str("");
+  call << "rm -f ";
+  call << "QMMM_" << Bead << ".xyz ";
+  call << "QMMM_" << Bead << ".0* ";
+  call << "QMMM_" << Bead << ".dyn ";
+  call << "QMMM_" << Bead << ".log";
+  sys = system(call.str().c_str());
+  return;
+};
+
 double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
        int Bead)
 {
@@ -1093,6 +1250,11 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << " QMMM_" << Bead << ".xyz_*";
   call << " QMMM_" << Bead << ".key";
   sys = system(call.str().c_str());
+  //Calculate new induced dipoles
+  if ((AMOEBA == 1) and (QMMM))
+  {
+    TINKERInduced(Struct,QMMMOpts,Bead,0);
+  }
   //Change units
   E *= kcal2eV;
   return E;

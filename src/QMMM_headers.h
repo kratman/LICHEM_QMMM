@@ -78,6 +78,7 @@ const double kcal2eV = 4184*SI2eV/Na; //kcal/mol to eV
 const double sqrt2 = pow(2,0.5); //Square root of 2
 const double HugeNum = 100000.0; //Large number to reject step
 const double fs2s = 1e-12; //Convert fs to s
+const double Debye2au = 0.393430307; //Convert from Debye to au
 
 //Globals
 string xyzfilename; //Saves the filename given in the arguments
@@ -306,6 +307,8 @@ double TINKERForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
 double TINKERMMForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
+void TINKERInduced(vector<QMMMAtom>&,QMMMSettings&,int,bool);
+
 double TINKERPolEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double AMBEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
@@ -363,7 +366,7 @@ double Get_PI_Espring(vector<QMMMAtom>&,QMMMSettings&);
 
 double Get_PI_Epot(vector<QMMMAtom>&,QMMMSettings&);
 
-bool MCMove(vector<QMMMAtom>&,QMMMSettings&);
+bool MCMove(vector<QMMMAtom>&,QMMMSettings&,double&);
 
 void Get_Centroid(QMMMAtom&,QMMMSettings&);
 
