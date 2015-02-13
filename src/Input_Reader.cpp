@@ -663,6 +663,9 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   //Read initial structures for all beads
   if ((CheckFile("BeadStartStruct.xyz")) and (!GauExternal))
   {
+    //Print output
+    cout << "Reading restart information...";
+    cout << '\n' << '\n';;
     //Open file
     fstream beadfile;
     beadfile.open("BeadStartStruct.xyz",ios_base::in);

@@ -42,6 +42,11 @@ int main(int argc, char* argv[])
   cout << endl;
   //End of section
 
+  //Print early messages
+  cout << "Reading input..." << '\n';
+  cout << endl;
+  //End of section
+
   //Read arguments and look for errors
   ReadArgs(argc,argv,xyzfile,connectfile,regionfile,outfile);
   //End of section
