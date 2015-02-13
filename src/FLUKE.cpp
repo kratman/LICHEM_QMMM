@@ -225,10 +225,6 @@ int main(int argc, char* argv[])
         Nacc += 1;
         double Et = Ek+Emc;
         Et -= 2*Get_PI_Espring(Struct,QMMMOpts);
-        if (QMMMOpts.Ensemble == "NPT")
-        {
-          Et += QMMMOpts.Press*Lx*Ly*Lz*atm2eV;
-        }
         VolAvg += Lx*Ly*Lz;
         SumE += Et;
         SumE2 += Et*Et;
@@ -237,10 +233,10 @@ int main(int argc, char* argv[])
           //Print progress
           Print_traj(Struct,outfile,QMMMOpts);
           cout << " | Step: " << Nct;
-          cout << " | Energy: " << Et << "eV";
+          cout << " | Energy: " << Et << " eV";
           if (QMMMOpts.Ensemble == "NPT")
           {
-            cout << " | Volume: " << Lx*Ly*Lz << "\u212B^3";
+            cout << " | Volume: " << Lx*Ly*Lz << " \u212B^3";
           }
           cout << '\n';
         }
@@ -267,7 +263,7 @@ int main(int argc, char* argv[])
     {
       cout << "Volume: ";
       cout << VolAvg;
-      cout << " A^3";
+      cout << " \u212B^3";
     }
     cout << '\n';
     cout << "Average Energy: ";
@@ -282,7 +278,7 @@ int main(int argc, char* argv[])
     cout << "    ";
     cout << "Optimum step size: ";
     cout << step;
-    cout << " A";
+    cout << " \u212B";
     cout << '\n';
     cout << endl;
   }

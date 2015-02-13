@@ -106,6 +106,7 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
     QMTime += Times_qm[i];
     MMTime += Times_mm[i];
   }
+  E /= QMMMOpts.Nbeads;
   return E;
 };
 

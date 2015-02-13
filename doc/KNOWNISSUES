@@ -8,6 +8,8 @@ published.
 
 General:
 -Molecular dynamics simulations are currently broken, a fix is in progress
+-The QM and MM run time printed in the statistics may be inaccurate for
+multi-replica simulations (PIMC and reaction paths)
 
 PSI4 interface:
 -PSI4 gradients do not include the contribution from the external field.
