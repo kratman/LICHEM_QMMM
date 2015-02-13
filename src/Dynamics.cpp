@@ -197,7 +197,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         ct += 1;
       }
     }
-    //Update postions
+    //Update positions
     #pragma omp parallel for
     for (int i=0;i<Natoms;i++)
     {
@@ -205,7 +205,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       Struct[i].P[Bead].x += Struct[i].Vel[Bead].x*QMMMOpts.dt;
       Struct[i].P[Bead].y += Struct[i].Vel[Bead].y*QMMMOpts.dt;
       Struct[i].P[Bead].z += Struct[i].Vel[Bead].z*QMMMOpts.dt;
-      //Update from acceleration (multiline)
+      //Update from acceleration (multi-line)
       Struct[i].P[Bead].x += 0.5*MMForces[i].x*QMMMOpts.dt*QMMMOpts.dt
       *AccelConst/Struct[i].m;
       Struct[i].P[Bead].y += 0.5*MMForces[i].y*QMMMOpts.dt*QMMMOpts.dt

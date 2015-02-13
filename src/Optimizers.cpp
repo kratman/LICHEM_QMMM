@@ -266,7 +266,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
-    //Check optimization stepsize
+    //Check optimization step size
     VecMax = 0;
     for (int i=0;i<(Nqm+Npseudo);i++)
     {

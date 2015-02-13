@@ -169,7 +169,12 @@ int main(int argc, char* argv[])
     SumE = 0;
     SumE2 = 0;
     VolAvg = 0;
-    Ek = 3*Natoms*QMMMOpts.Nbeads/(2*QMMMOpts.Beta);
+    Ek = 0;
+    if (QMMMOpts.Nbeads > 1)
+    {
+      //PIMC kinetic energy
+      Ek = 3*Natoms*QMMMOpts.Nbeads/(2*QMMMOpts.Beta);
+    }
     int Nct = 0; //Step counter
     int ct = 0; //Secondary counter
     double Nacc = 0; //Number of accepted moves

@@ -508,7 +508,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
       //Add nuclear charges
       if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
       {
-        //New charges are needed for QM and PA attoms
+        //New charges are needed for QM and PA atoms
         ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
         ofile << "0.0"; //Delete charges
         ofile << '\n';

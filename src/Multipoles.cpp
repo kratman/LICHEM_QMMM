@@ -43,7 +43,7 @@ void WriteTINKMpole(vector<QMMMAtom>& Struct, fstream& ofile, int i, int Bead)
 //General routines
 RedMpole Cart2SphHarm(Mpole& poles)
 {
-  //Converts cartesian multipoles to spherical harmonic multipoles
+  //Converts Cartesian multipoles to spherical harmonic multipoles
   RedMpole SHpoles; //Spherical harmonic multipoles
 
   return SHpoles;

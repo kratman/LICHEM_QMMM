@@ -421,7 +421,7 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 
 double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
-  //Runs psi4 for energy calculations
+  //Runs PSI4 for energy calculations
   fstream ofile,ifile;
   string dummy; //Generic string
   stringstream call;
