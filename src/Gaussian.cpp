@@ -225,7 +225,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << "%NprocShared=" << Ncpus << '\n';
   call << "#P " << QMMMOpts.Func << "/";
   call << QMMMOpts.Basis << " Force=NoStep Symmetry=None" << '\n';
-  call << "Int=UltraFine SCF=(Big,Direct)"; //Line terminated further below
+  call << "Int=UltraFine SCF=(YQC,Big,Direct)"; //Line ended further below
   if (UseCheckPoint)
   {
     //Restart if possible
@@ -518,7 +518,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "%NprocShared=" << Ncpus << '\n';
   call << "#P " << QMMMOpts.Func << "/";
   call << QMMMOpts.Basis << " SP Symmetry=None" << '\n';
-  call << "Int=UltraFine SCF=(Big,Direct)" << '\n';
+  call << "Int=UltraFine SCF=(YQC,Big,Direct)" << '\n';
   if (QMMM == 1)
   {
     if (Npseudo > 0)
@@ -709,7 +709,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "%NprocShared=" << Ncpus << '\n';
   call << "#P " << QMMMOpts.Func << "/";
   call << QMMMOpts.Basis << " SP Symmetry=None" << '\n';
-  call << "Int=UltraFine SCF=(Big,Direct)" << '\n';
+  call << "Int=UltraFine SCF=(YQC,Big,Direct)" << '\n';
   if (QMMM == 1)
   {
     if (Npseudo > 0)
