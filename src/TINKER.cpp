@@ -390,6 +390,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cout << " FLUKE will attempt to continue...";
     cout << '\n';
     E = HugeNum; //Large number to reject step
+    cout.flush(); //Print warning immediately
   }
   ifile.close();
   //Clean up files
@@ -1053,6 +1054,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     cout << " FLUKE will attempt to continue...";
     cout << '\n';
     E = HugeNum; //Large number to reject step
+    cout.flush(); //Print warning immediately
   }
   ifile.close();
   //Clean up files

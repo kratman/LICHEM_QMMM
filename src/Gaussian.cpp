@@ -897,6 +897,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cout << " FLUKE will attempt to continue...";
     cout << '\n';
     E = HugeNum; //Large number to reject step
+    cout.flush(); //Print warning immediately
   }
   ifile.close();
   //Remove files
@@ -1110,6 +1111,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cout << "An older geometry will be recovered...";
     cout << '\n';
     E = HugeNum; //Large number to reject step
+    cout.flush(); //Print warning immediately
   }
   return E;
 };

@@ -606,6 +606,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     cout << " FLUKE will attempt to continue...";
     cout << '\n';
     E = HugeNum; //Large number to reject step
+    cout.flush(); //Print warning immediately
   }
   //Clean up files
   call.str("");
@@ -833,6 +834,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
     cout << " FLUKE will attempt to continue...";
     cout << '\n';
     E = HugeNum; //Large number to reject step
+    cout.flush(); //Print warning immediately
   }
   if (Optfinished == 0)
   {
@@ -842,6 +844,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
     cout << " old structure...";
     cout << '\n';
     E = HugeNum; //Large number to reject step
+    cout.flush(); //Print warning immediately
   }
   //Clean up files
   call.str("");

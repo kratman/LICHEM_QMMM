@@ -969,7 +969,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     if ((SteepSim == 1) or (DFPSim == 1))
     {
       cout << "QM convergence criteria:" << '\n';
-      cout << "  RMS dev: " << QMMMOpts.QMOptTol;
+      cout << "  RMS deviation: " << QMMMOpts.QMOptTol;
       cout << " \u212B" << '\n';
       cout << "  Max force: " << (100*QMMMOpts.QMOptTol);
       cout << " eV/\u212B" << '\n';
@@ -978,7 +978,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       cout << '\n';
     }
     cout << "MM convergence criteria:" << '\n';
-    cout << "  RMS dev: " << QMMMOpts.MMOptTol;
+    cout << "  RMS deviation: " << QMMMOpts.MMOptTol;
     cout << " \u212B" << '\n';
     cout << "  RMS force: " << QMMMOpts.MMOptTol*kcal2eV;
     cout << " eV/\u212B" << '\n';

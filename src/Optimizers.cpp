@@ -171,7 +171,10 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   string dummy; //Generic string
   int stepct = 0; //Counter for optimization steps
   fstream qmfile, ifile, ofile; //Generic file names
-  qmfile.open("QMOpt.xyz",ios_base::out);
+  //Initialize files
+  call.str("");
+  call << "QMOpt_" << Bead << ".xyz";
+  qmfile.open(call.str().c_str(),ios_base::out);
   //Initialize charges for Gaussian
   if ((AMOEBA == 1) and (Gaussian == 1))
   {
@@ -311,7 +314,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   //Clean up files
   call.str("");
-  call << "rm -f QMOpt.xyz";
+  call << "rm -f QMOpt_" << Bead << ".xyz";
   call << " MMCharges_" << Bead << ".txt";
   sys = system(call.str().c_str());
   //Return for MM optimization
@@ -330,7 +333,11 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   string dummy; //Generic string
   int stepct = 0; //Counter for optimization steps
   fstream qmfile,ifile,ofile; //Generic file names
-  qmfile.open("QMOpt.xyz",ios_base::out);
+  //Initialize files
+  call.str("");
+  call << "QMOpt_" << Bead << ".xyz";
+  qmfile.open(call.str().c_str(),ios_base::out);
+  //Initialize variables
   double E = 0; //Energy
   double Eold = 0; //Energy from previous step
   double VecMax = 0;
@@ -580,7 +587,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   //Clean up files
   call.str("");
-  call << "rm -f QMOpt.xyz";
+  call << "rm -f QMOpt_" << Bead << ".xyz";
   call << " MMCharges_" << Bead << ".txt";
   sys = system(call.str().c_str());
   //Return for MM optimization
