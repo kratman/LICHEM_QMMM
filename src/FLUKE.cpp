@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
   int randnum; //Random integer
   //End of section
 
-  //Print title
+  //Print title and compile date
   PrintFancyTitle();
   cout << '\n';
   cout << "Last modification: ";

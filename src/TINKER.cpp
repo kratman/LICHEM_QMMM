@@ -213,7 +213,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "QMMM_" << Bead << ".001u";
   ifile.open(call.str().c_str(),ios_base::in);
   getline(ifile,dummy); //Clear number of atoms
-  while (!ifile.eof())
+  while (ifile.good())
   {
     int AtNum; //Identifies which atom was polarized
     //Parse file line by line

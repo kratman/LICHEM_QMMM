@@ -405,14 +405,14 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     OptVec(i) = 0;
     GradDiff(i) = 0;
     NGrad(i) = 0;
-    //Create identity matrix as the initial Hessian
+    //Create a scaled identity matrix as the initial Hessian
     for (int j=0;j<i;j++)
     {
       //Set off diagonal terms
       IHess(i,j) = 0.0;
       IHess(j,i) = 0.0;
     }
-    IHess(i,i) = 1.0; //Already an "inverse Hessian"
+    IHess(i,i) = 0.1; //Already an "inverse Hessian"
   }
   vector<Coord> Forces;
   for (int i=0;i<(Nqm+Npseudo);i++)

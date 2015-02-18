@@ -124,7 +124,7 @@ void ExternalGaussian(int& argc, char**& argv)
   }
   if (LAMMPS == 1)
   {
-    Emm = TINKERForces(Struct,Forces,QMMMOpts,Bead);
+    Emm = LAMMPSForces(Struct,Forces,QMMMOpts,Bead);
   }
   //Write formatted output for g09
   double E = (Eqm+Emm)/Har2eV; //Calculate
@@ -176,6 +176,7 @@ void ExternalGaussian(int& argc, char**& argv)
   ofile.flush();
   ofile.close();
   //Return to Gaussian
+  cout << "Forces were returned to Gaussian..." << endl;
   exit(0);
   return;
 };
