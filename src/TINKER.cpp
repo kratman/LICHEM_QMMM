@@ -221,14 +221,17 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     stringstream line(dummy);
     //Save dipoles for later
     line >> AtNum >> dummy; //Collect atom number and clear junk
-    AtNum -= 1; //Fixes array indexing
-    line >> Struct[AtNum].MP[Bead].IDx;
-    line >> Struct[AtNum].MP[Bead].IDy;
-    line >> Struct[AtNum].MP[Bead].IDz;
-    //Change units from Debye to a.u.
-    Struct[AtNum].MP[Bead].IDx *= Debye2au;
-    Struct[AtNum].MP[Bead].IDy *= Debye2au;
-    Struct[AtNum].MP[Bead].IDz *= Debye2au;
+    if (line.good())
+    {
+      AtNum -= 1; //Fixes array indexing
+      line >> Struct[AtNum].MP[Bead].IDx;
+      line >> Struct[AtNum].MP[Bead].IDy;
+      line >> Struct[AtNum].MP[Bead].IDz;
+      //Change units from Debye to a.u.
+      Struct[AtNum].MP[Bead].IDx *= Debye2au;
+      Struct[AtNum].MP[Bead].IDy *= Debye2au;
+      Struct[AtNum].MP[Bead].IDz *= Debye2au;
+    }
   }
   ifile.close();
   //Delete junk files
