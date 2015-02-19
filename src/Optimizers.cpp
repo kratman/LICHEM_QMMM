@@ -556,7 +556,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       NGrad(ct+2) = Forces[i].z;
       ct += 3;
     }
-    if (E <= Eold)
+    if (E < Eold)
     {
       //Start really long "line"
       IHess = IHess+((OptVec*OptVec.transpose())/(OptVec.transpose()
@@ -564,10 +564,10 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       /(GradDiff.transpose()*IHess*GradDiff));
       //End really long "line"
     }
-    if (E > Eold)
+    else
     {
       //Take a small steepest descent step and rebuild Hessian
-      cout << "    QM energy increased. Constructing new Hessian...";
+      cout << "    QM energy did not decrease. Constructing new Hessian...";
       cout << '\n';
       for (int i=0;i<(3*(Nqm+Npseudo));i++)
       {
