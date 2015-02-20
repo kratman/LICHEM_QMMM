@@ -171,6 +171,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   string dummy; //Generic string
   int stepct = 0; //Counter for optimization steps
   fstream qmfile, ifile, ofile; //Generic file names
+  double Eold = 0; //Old saved energy
   //Initialize files
   call.str("");
   call << "QMOpt_" << Bead << ".xyz";
@@ -269,6 +270,14 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
+    //Check step size
+    if (E >= Eold)
+    {
+      //Take smaller steps if the energy does not improve
+      cout << "    QM energy did not decrease. Reducing step size...";
+      cout << '\n';
+      QMMMOpts.StepScale *= 0.90;
+    }
     //Check optimization step size
     VecMax = 0;
     for (int i=0;i<(Nqm+Npseudo);i++)
@@ -306,6 +315,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         ct += 1;
       }
     }
+    Eold = E; //Save energy
     //Print structure
     Print_traj(Struct,qmfile,QMMMOpts);
     //Check convergence
