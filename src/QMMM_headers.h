@@ -311,6 +311,8 @@ void TINKERInduced(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double TINKERPolEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
+double AMBERForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+
 double AMBEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double AMBEROpt(vector<QMMMAtom>&,QMMMSettings&,int);

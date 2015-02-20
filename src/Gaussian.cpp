@@ -121,7 +121,7 @@ void ExternalGaussian(int& argc, char**& argv)
   }
   if (AMBER == 1)
   {
-    
+    Emm = AMBERForces(Struct,Forces,QMMMOpts,Bead);
   }
   if (LAMMPS == 1)
   {
