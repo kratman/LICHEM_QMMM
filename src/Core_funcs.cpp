@@ -31,7 +31,8 @@ void PrintFancyTitle()
   cout << '\n';
   cout << "#######################################";
   cout << "########################################";
-  cout << '\n' << endl;
+  cout << '\n' << '\n';
+  cout.flush();
   return;
 };
 

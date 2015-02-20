@@ -78,7 +78,8 @@ void ExternalGaussian(int& argc, char**& argv)
     cout << "Error: Second derivatives of the energy were requested!!!";
     cout << '\n';
     cout << "Something is wrong.";
-    cout << endl;
+    cout << '\n';
+    cout.flush();
     exit(0);
   }
   for (int i=0;i<Natoms;i++)
@@ -176,7 +177,8 @@ void ExternalGaussian(int& argc, char**& argv)
   ofile.flush();
   ofile.close();
   //Return to Gaussian
-  cout << "Forces were returned to Gaussian..." << endl;
+  cout << "Forces were returned to Gaussian..." << '\n';
+  cout.flush();
   exit(0);
   return;
 };

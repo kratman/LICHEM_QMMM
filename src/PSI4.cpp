@@ -139,7 +139,8 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call.str("");
   call << "QMMM_" << Bead << ".dat";
   ofile.open(call.str().c_str(),ios_base::out);
-  ofile << dummy << endl;
+  ofile << dummy << '\n';
+  ofile.flush();
   ofile.close();
   //Call PSI4
   call.str("");
@@ -362,7 +363,8 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call.str("");
   call << "QMMM_" << Bead << ".dat";
   ofile.open(call.str().c_str(),ios_base::out);
-  ofile << dummy << endl;
+  ofile << dummy << '\n';
+  ofile.flush();
   ofile.close();
   //Call PSI4
   call.str("");
@@ -540,7 +542,8 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call.str("");
   call << "QMMM_" << Bead << ".dat";
   ofile.open(call.str().c_str(),ios_base::out);
-  ofile << dummy << endl;
+  ofile << dummy << '\n';
+  ofile.flush();
   ofile.close();
   //Call PSI4
   call.str("");
@@ -742,7 +745,8 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   call.str("");
   call << "QMMM_" << Bead << ".dat";
   ofile.open(call.str().c_str(),ios_base::out);
-  ofile << dummy << endl;
+  ofile << dummy << '\n';
+  ofile.flush();
   ofile.close();
   //Call PSI4
   call.str("");

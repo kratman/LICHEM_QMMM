@@ -87,7 +87,8 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     cout << "    Max force: " << MAXforce;
     cout << " eV/\u212B | RMS force: " << RMSforce;
     cout << " eV/\u212B";
-    cout << '\n' << endl;
+    cout << '\n' << '\n';
+    cout.flush();
     cout.copyfmt(call); //Return to previous settings
     //Check convergence criteria
     if ((RMSdiff <= QMMMOpts.QMOptTol) and
@@ -478,7 +479,8 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   cout << "    QM Step: 0";
   cout << " | RMS force: " << VecMax;
   cout << " eV/\u212B";
-  cout << '\n' << endl;
+  cout << '\n' << '\n';
+  cout.flush();
   cout.copyfmt(call); //Return to previous settings
   //Optimize structure
   Eold = E;

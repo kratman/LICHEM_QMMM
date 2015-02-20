@@ -26,7 +26,8 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
   {
     //Exit if files do not exist
     cout << "Error: Missing tinker.key file.";
-    cout << endl;
+    cout << '\n';
+    cout.flush();
     exit(0);
   }
   bool FileFound = 0; //Bool to break loops
@@ -46,7 +47,8 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
   {
     //Exit if parameter file is not found
     cout << "Error: Cannot find TINKER parameter file.";
-    cout << endl;
+    cout << '\n';
+    cout.flush();
     exit(0);
   }
   if (!ifile.good())
@@ -55,7 +57,8 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
     cout << "Error: Cannot read TINKER ";
     cout << dummy;
     cout << " parameter file.";
-    cout << endl;
+    cout << '\n';
+    cout.flush();
     exit(0);
   }
   int ct = 0; //Generic counter
@@ -84,7 +87,8 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
     cout << "Error: Atom type not found in TINKER parameters.";
     cout << '\n';
     cout << " Please check the input.";
-    cout << endl;
+    cout << '\n';
+    cout.flush();
     exit(0);
   }
   return;

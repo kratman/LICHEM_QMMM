@@ -8,8 +8,6 @@ published.
 
 General:
 -Molecular dynamics simulations are currently broken, a fix is in progress
--The QM and MM run time printed in the statistics may be inaccurate for
-multi-replica simulations (PIMC and reaction paths)
 
 PSI4 interface:
 -PSI4 gradients do not include the contribution from the external field.
@@ -30,10 +28,12 @@ Gaussian interface:
 DFP optimization:
 -The steepest descent and DFP optimizers use Cartesian coordinates.
 -The DFP optimizer included in Optimizers.cpp does not have a true line
-search algorithm. Instead, the optimizer will create a new guess Hessian
-and take a small steepest descent step if the QMMM energy rises.
+search algorithm. Instead, the optimizer will take a small steepest descent
+step (and create a new guess Hessian) if the QMMM energy rises.
 
 Manual:
 -The theory sections need citations
 -Better descriptions of the simulations methods should be given (i.e. DFP vs
 Opt).
+-A section which details the programming style and practices should be added
+for developers

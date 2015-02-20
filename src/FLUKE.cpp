@@ -39,12 +39,14 @@ int main(int argc, char* argv[])
   cout << "Last modification: ";
   cout << __TIME__ << " on ";
   cout << __DATE__ << '\n';
-  cout << endl;
+  cout << '\n';
+  cout.flush();
   //End of section
 
   //Print early messages
   cout << "Reading input..." << '\n';
-  cout << endl;
+  cout << '\n';
+  cout.flush();
   //End of section
 
   //Read arguments and look for errors
@@ -117,7 +119,7 @@ int main(int argc, char* argv[])
     {
       //Print QM partial energy
       cout << "QM energy: " << Eqm << " eV";
-      cout << endl;
+      cout << '\n';
     }
     if (TINKER == 1)
     {
@@ -135,7 +137,7 @@ int main(int argc, char* argv[])
     {
       //Print MM partial energy
       cout << "MM energy: " << Emm << " eV";
-      cout << endl;
+      cout << '\n';
     }
     SumE = Eqm+Emm;
     if (QMMM == 1)
@@ -146,7 +148,8 @@ int main(int argc, char* argv[])
       cout << " ";
       cout << SumE/Har2eV << " a.u.";
     }
-    cout << '\n' << endl;
+    cout << '\n' << '\n';
+    cout.flush();
   }
   //End of section
 
@@ -181,7 +184,8 @@ int main(int argc, char* argv[])
     double Nrej = 0; //Number of rejected moves
     double Emc = 0; //Monte Carlo energy
     bool acc; //Flag for accepting a step
-    cout << "Starting equilibration..." << endl;
+    cout << "Starting equilibration..." << '\n';
+    cout.flush();
     Nct = 0;
     while (Nct < QMMMOpts.Neq) //Equilibration
     {
@@ -223,7 +227,8 @@ int main(int argc, char* argv[])
     Nct = 0;
     Nacc = 0;
     Nrej = 0;
-    cout << "Starting production run..." << endl;
+    cout << "Starting production run..." << '\n';
+    cout.flush();
     Print_traj(Struct,outfile,QMMMOpts);
     while (Nct < QMMMOpts.Nsteps)
     {
@@ -291,7 +296,8 @@ int main(int argc, char* argv[])
     cout << step;
     cout << " \u212B";
     cout << '\n';
-    cout << endl;
+    cout << '\n';
+    cout.flush();
   }
   //End of section
 
@@ -343,7 +349,8 @@ int main(int argc, char* argv[])
     cout << " | Opt. Step: ";
     cout << optct << " | Energy: ";
     cout << SumE << " eV";
-    cout << endl; //Print progress
+    cout << '\n';
+    cout.flush(); //Print progress
     //Run optimization
     bool OptDone = 0;
     while (OptDone == 0)
@@ -385,7 +392,8 @@ int main(int argc, char* argv[])
     }
     cout << '\n';
     cout << "Optimization complete.";
-    cout << '\n' << endl;
+    cout << '\n' << '\n';
+    cout.flush();
   }
   //End of section
 
@@ -427,7 +435,8 @@ int main(int argc, char* argv[])
     cout << " | Opt. Step: ";
     cout << optct << " | Energy: ";
     cout << SumE << " eV";
-    cout << endl; //Print progress
+    cout << '\n';
+    cout.flush(); //Print progress
     //Run optimization
     bool OptDone = 0;
     while (OptDone == 0)
@@ -456,7 +465,8 @@ int main(int argc, char* argv[])
     }
     cout << '\n';
     cout << "Optimization complete.";
-    cout << '\n' << endl;
+    cout << '\n' << '\n';
+    cout.flush();
   }
   //End of sections
 
@@ -498,7 +508,8 @@ int main(int argc, char* argv[])
     cout << " | Opt. Step: ";
     cout << optct << " | Energy: ";
     cout << SumE << " eV";
-    cout << endl; //Print progress
+    cout << '\n';
+    cout.flush(); //Print progress
     //Run optimization
     bool OptDone = 0;
     while (OptDone == 0)
@@ -527,7 +538,8 @@ int main(int argc, char* argv[])
     }
     cout << '\n';
     cout << "Optimization complete.";
-    cout << '\n' << endl;
+    cout << '\n' << '\n';
+    cout.flush();
   }
   //End of sections
 
@@ -616,7 +628,8 @@ int main(int argc, char* argv[])
     cout << '\n';
   }
   cout << "####################################################";
-  cout << endl;
+  cout << '\n';
+  cout.flush();
   //End of section
 
   //Print a quote
@@ -638,6 +651,7 @@ int main(int argc, char* argv[])
   cout << '\n';
   cout << "Done.";
   cout << '\n';
-  cout << endl;
+  cout << '\n';
+  cout.flush();
   return 0;
 };

@@ -268,7 +268,8 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       cout << n << " | Temperature: ";
       cout << T << " K | Energy: ";
       cout << E << " eV";
-      cout << endl; //Print progress
+      cout << '\n'; //Print progress
+      cout.flush();
       if (ProdRun == 1)
       {
         Print_traj(Struct,outfile,QMMMOpts);

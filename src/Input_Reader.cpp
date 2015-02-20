@@ -31,7 +31,8 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     cout << "-r Regions.inp -o Output.xyz" << '\n';
     cout << '\n';
     cout << "Use -h or --help for detailed instructions.";
-    cout << endl;
+    cout << '\n';
+    cout.flush();
     exit(0);
   }
   dummy = string(argv[1]);
@@ -48,7 +49,8 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
       cout << '\n';
       cout << "Unrecognized file format.";
       cout << '\n';
-      cout << endl;
+      cout << '\n';
+      cout.flush();
     }
   }
   if (dummy == "-GauExtern")
@@ -71,7 +73,8 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
       cout << "-r Regions.inp -o Output.xyz" << '\n';
       cout << '\n';
       cout << "Use -h or --help for detailed instructions.";
-      cout << endl;
+      cout << '\n';
+      cout.flush();
       exit(0);
     }
   }
@@ -97,7 +100,8 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
       cout << "  -r    Information about how the system is subdivided" << '\n';
       cout << "        into QM, MM, and psuedo-atom regions." << '\n' << '\n';
       cout << "  -o    Output xyz file for the optimized structures.";
-      cout << '\n' << endl;
+      cout << '\n' << '\n';
+      cout.flush();
       exit(0);
     }
     if (dummy == "-n")
@@ -151,7 +155,8 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
         cout << "-r Regions.inp -o Output.xyz" << '\n';
         cout << '\n';
         cout << "Use -h or --help for detailed instructions.";
-        cout << endl;
+        cout << '\n';
+        cout.flush();
         exit(0);
       }
     }
@@ -168,7 +173,8 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     cout << "-r Regions.inp -o Output.xyz" << '\n';
     cout << '\n';
     cout << "Use -h or --help for detailed instructions.";
-    cout << endl;
+    cout << '\n';
+    cout.flush();
     exit(0);
   }
   //Make sure input files can be read
@@ -176,25 +182,29 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
   if (!xyzfile.good())
   {
     cout << "Error: Could not open xyz file.";
-    cout << endl;
+    cout << '\n';
+    cout.flush();
     DoQuit = 1;
   }
   if (!connectfile.good())
   {
     cout << "Error: Could not open connectivity file.";
-    cout << endl;
+    cout << '\n';
+    cout.flush();
     DoQuit = 1;
   }
   if (!regionfile.good())
   {
     cout << "Error: Could not open region file.";
-    cout << endl;
+    cout << '\n';
+    cout.flush();
     DoQuit = 1;
   }
   if (!outfile.good())
   {
     cout << "Error: Could not create output file.";
-    cout << endl;
+    cout << '\n';
+    cout.flush();
     DoQuit = 1;
   }
   if (DoQuit == 1)
@@ -243,7 +253,8 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     {
       //Escape if connectivity errors are found
       cout << "Error: Atoms in the connectivity file are out of order.";
-      cout << endl;
+      cout << '\n';
+      cout.flush();
       exit(0); //Escape
     }
     connectfile >> Struct[i].MMTyp >> Struct[i].NumTyp;
@@ -260,7 +271,8 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
         cout << "Error: Atom index out of range in connectivity.";
         cout << '\n';
         cout << "Atom " << i << " bonded to non-existant atom ";
-        cout << AtomID << endl;
+        cout << AtomID << '\n';
+        cout.flush();
         exit(0); //Escape
       }
       Struct[i].Bonds.push_back(AtomID); //Add bond
@@ -764,7 +776,8 @@ void FLUKEErrorChecker(QMMMSettings& QMMMOpts)
   if (DoQuit == 1)
   {
     //Quits
-    cout << endl;
+    cout << '\n';
+    cout.flush();
     exit(0);
   }
   if (DoQuit == 0)
@@ -776,7 +789,8 @@ void FLUKEErrorChecker(QMMMSettings& QMMMOpts)
     {
       cout << " And there was much rejoicing. Yay...";
       cout << '\n';
-      cout << endl;
+      cout << '\n';
+      cout.flush();
     }
   }
   return;

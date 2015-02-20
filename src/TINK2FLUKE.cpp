@@ -124,7 +124,8 @@ void TINK2FLUKE(int& argc, char**& argv)
   {
     cout << '\n';
     cout << "Error: Could not read TINKER key file!";
-    cout << '\n' << endl;
+    cout << '\n' << '\n';
+    cout.flush();
     exit(0);
   }
   while (!TINKkey.eof())
@@ -162,7 +163,8 @@ void TINK2FLUKE(int& argc, char**& argv)
   {
     cout << '\n';
     cout << "Error: Could not open TINKER parameter file!";
-    cout << '\n' << endl;
+    cout << '\n' << '\n';
+    cout.flush();
     exit(0);
   }
   if ((SomeAct) or (SomeFroz))
@@ -462,7 +464,8 @@ void TINK2FLUKE(int& argc, char**& argv)
   cout << '\n';
   cout << "Conversion complete.";
   cout << '\n';
-  cout << endl;
+  cout << '\n';
+  cout.flush();
   TINKxyz.close();
   TINKkey.close();
   paramfile.close();
