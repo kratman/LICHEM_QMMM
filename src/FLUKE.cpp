@@ -249,6 +249,7 @@ int main(int argc, char* argv[])
             cout << " | Volume: " << Lx*Ly*Lz << " \u212B^3";
           }
           cout << '\n';
+          cout.flush(); //Print results
         }
       }
       else
