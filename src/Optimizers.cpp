@@ -274,7 +274,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (E >= Eold)
     {
       //Take smaller steps if the energy does not improve
-      cout << "    QM energy did not decrease. Reducing step size...";
+      cout << "    Energy did not decrease. Reducing step size by 10%...";
       cout << '\n';
       QMMMOpts.StepScale *= 0.90;
     }
@@ -577,7 +577,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     else
     {
       //Take a small steepest descent step and rebuild Hessian
-      cout << "    QM energy did not decrease. Constructing new Hessian...";
+      cout << "    Energy did not decrease. Constructing new Hessian...";
       cout << '\n';
       for (int i=0;i<(3*(Nqm+Npseudo));i++)
       {
