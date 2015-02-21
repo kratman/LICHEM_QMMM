@@ -275,9 +275,9 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (E >= Eold)
     {
       //Take smaller steps if the energy does not improve
-      cout << "    Energy did not decrease. Reducing step size by 25%...";
+      cout << "    Energy did not decrease. Reducing step size by 15%...";
       cout << '\n';
-      QMMMOpts.StepScale *= 0.75;
+      QMMMOpts.StepScale *= 0.85;
     }
     //Check optimization step size
     VecMax = 0;
