@@ -67,30 +67,24 @@ int main(int argc, char* argv[])
   {
     if (Gaussian == 1)
     {
-      #pragma omp parallel for
       for (int i=0;i<QMMMOpts.Nbeads;i++)
       {
         GaussianCharges(Struct,QMMMOpts,i);
       }
-      #pragma omp barrier
     }
     if (PSI4 == 1)
     {
-      #pragma omp parallel for
       for (int i=0;i<QMMMOpts.Nbeads;i++)
       {
         PSICharges(Struct,QMMMOpts,i);
       }
-      #pragma omp barrier
     }
     if (TINKER == 1)
     {
-      #pragma omp parallel for
       for (int i=0;i<QMMMOpts.Nbeads;i++)
       {
         TINKERInduced(Struct,QMMMOpts,i);
       }
-      #pragma omp barrier
     }
   }
   //End of section

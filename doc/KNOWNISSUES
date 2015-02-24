@@ -25,7 +25,7 @@ directory is not configured properly.
 Gaussian interface:
 -Transition state optimizations are currently broken.
 
-DFP optimization:
+Optimization:
 -The steepest descent and DFP optimizers use Cartesian coordinates.
 -The DFP optimizer included in Optimizers.cpp does not have a true line
 search algorithm. Instead, the optimizer will take a small steepest descent
