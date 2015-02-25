@@ -480,21 +480,37 @@ void FLUKE2TINK(int& argc, char**& argv)
 {
   //Local variables
   fstream posfile,confile,ofile; //Files
-  stringstream line;
   string dummy; //Generic string
   //Read arguments
+  bool DoQuit = 0;
   cout << "Reading FLUKE input: ";
   for (int i=0;i<argc;i++)
   {
     dummy = string(argv[i]);
     if (dummy == "-x")
     {
+      stringstream file;
+      file << argv[i+1];
+      if (!CheckFile(file.str()))
+      {
+        cout << "Error: Could not open XYZ file!!!";
+        cout << '\n';
+        DoQuit = 1;
+      }
       posfile.open(argv[i+1],ios_base::in);
       cout << argv[i+1];
       cout << " ";
     }
-    if (dummy == "-r")
+    if (dummy == "-c")
     {
+      stringstream file;
+      file << argv[i+1];
+      if (!CheckFile(file.str()))
+      {
+        cout << "Error: Could not open XYZ file!!!";
+        cout << '\n';
+        DoQuit = 1;
+      }
       confile.open(argv[i+1],ios_base::in);
       cout << argv[i+1];
       cout << " ";
@@ -502,66 +518,54 @@ void FLUKE2TINK(int& argc, char**& argv)
   }
   cout << '\n' << '\n'; //Terminate output
   ofile.open("tinkxyz.xyz",ios_base::out);
-  //Check if files exist
-  if (!posfile.good());
+  //Parse input if files exist
+  if (!DoQuit)
   {
-    cout << "Error: Could not open XYZ file!!!";
-    cout << '\n';
-  }
-  if (!confile.good());
-  {
-    cout << "Error: Could not open connectivity file!!!";
-    cout << '\n';
-  }
-  if (!ofile.good());
-  {
-    cout << "Error: Could not open TINKER XYZ file!!!";
-    cout << '\n';
-  }
-  //Parse XYZ file and connect file
-  posfile >> Natoms; //Collect the number of atoms
-  ofile << Natoms << '\n'; //Write the number of atoms
-  for (int i=0;i<Natoms;i++)
-  {
-    //Collect positions
-    double x,y,z;
-    posfile >> dummy >> x >> y >> z;
-    //Collect atom type
-    string AtType; //MM type (TINKER,AMBER)
-    int AtNum; //Number type (TINKER)
-    confile >> dummy >> AtType >> AtNum;
-    //Collect bonds
-    int Nbonds;
-    vector<int> Bonds;
-    confile >> dummy >> dummy >> Nbonds;
-    for (int j=0;j<Nbonds;j++)
+    //Parse XYZ file and connect file
+    posfile >> Natoms; //Collect the number of atoms
+    ofile << Natoms << '\n'; //Write the number of atoms
+    for (int i=0;i<Natoms;i++)
     {
-      int BondID;
-      confile >> BondID;
-      BondID += 1; //Fix index for TINKER
-      Bonds.push_back(BondID);
+      //Collect positions
+      double x,y,z;
+      posfile >> dummy >> x >> y >> z;
+      //Collect atom type
+      string AtType; //MM type (TINKER,AMBER)
+      int AtNum; //Number type (TINKER)
+      confile >> dummy >> AtType >> AtNum;
+      //Collect bonds
+      int Nbonds;
+      vector<int> Bonds;
+      confile >> dummy >> dummy >> Nbonds;
+      for (int j=0;j<Nbonds;j++)
+      {
+        int BondID;
+        confile >> BondID;
+        BondID += 1; //Fix index for TINKER
+        Bonds.push_back(BondID);
+      }
+      //Write line of TINKER XYZ
+      ofile << (i+1) << " ";
+      ofile << AtType << " ";
+      ofile << x << " ";
+      ofile << y << " ";
+      ofile << z << " ";
+      ofile << AtNum;
+      for (int j=0;j<Bonds.size();j++)
+      {
+        ofile << " "; //Prevents trailing spaces
+        ofile << Bonds[j];
+      }
+      ofile << '\n'; //End the line
     }
-    //Write line of TINKER XYZ
-    ofile << (i+1) << " ";
-    ofile << AtType << " ";
-    ofile << x << " ";
-    ofile << y << " ";
-    ofile << z << " ";
-    ofile << AtNum;
-    for (int j=0;j<Bonds.size();j++)
-    {
-      ofile << " "; //Prevents trailing spaces
-      ofile << Bonds[j];
-    }
-    ofile << '\n'; //End the line
+    //Finish up and exit
+    cout << "TINKER XYZ data written to tinkxyz.xyz";
+    cout << '\n' << '\n';
+    cout.flush();
+    ofile.close();
+    posfile.close();
+    confile.close();
   }
-  //Finish up and exit
-  cout << "TINKER XYZ data written to tinkxyz.xyz";
-  cout << '\n' << '\n';
-  cout.flush();
-  ofile.close();
-  posfile.close();
-  confile.close();
   exit(0); //Quit
   return;
 };

@@ -53,6 +53,11 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
       cout.flush();
     }
   }
+  if (dummy == "-tinker")
+  {
+    //Attempt to create a TINKER XYZ file from FLUKE input
+    FLUKE2TINK(argc,argv);
+  }
   if (dummy == "-GauExtern")
   {
     //Escape to GauExternal
