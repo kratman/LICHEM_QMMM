@@ -370,13 +370,9 @@ double Get_PI_Epot(vector<QMMMAtom>&,QMMMSettings&);
 
 bool MCMove(vector<QMMMAtom>&,QMMMSettings&,double&);
 
-void Get_Centroid(QMMMAtom&,QMMMSettings&);
-
-Coord Get_COM(vector<QMMMAtom>&,QMMMSettings&);
-
 void TINK2FLUKE(int&,char**&);
 
-void Remove_COM(vector<QMMMAtom>&,QMMMSettings&);
+void FLUKE2TINK(int&,char**&);
 
 void Print_traj(vector<QMMMAtom>&,fstream&,QMMMSettings&);
 

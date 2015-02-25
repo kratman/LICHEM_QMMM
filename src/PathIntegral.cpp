@@ -127,7 +127,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     {
       //Make sure the atom is not frozen
       p = (rand()%Natoms);
-      if (parts[p].Frozen != 1)
+      if (parts[p].Frozen == 0)
       {
         FrozenAt = 0;
       }
@@ -197,7 +197,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     {
       //Make sure the atom is not frozen
       p = (rand()%Natoms);
-      if (parts[p].Frozen != 1)
+      if (parts[p].Frozen == 0)
       {
         FrozenAt = 0;
       }
