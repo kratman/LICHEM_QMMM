@@ -12,6 +12,8 @@
 
 */
 
+#ifndef QMMM_HEADERS
+#define QMMM_HEADERS
 //Header Files
 #include <omp.h>
 #include <cstdlib>
@@ -423,4 +425,6 @@ void BurstTraj(vector<QMMMAtom>&,string&,QMMMSettings&);
 #include "LAMMPS.cpp"
 #include "AMBER.cpp"
 #include "PSI4.cpp"
+
+#endif
 

@@ -142,7 +142,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
         RMSdiff += (Rnew-Rold)*(Rnew-Rold);
       }
     }
-    RMSdiff /= Natoms*(Natoms-1)/2;
+    RMSdiff /= (Natoms-Nfreeze)*(Natoms-Nfreeze-1)/2;
     RMSdiff = sqrt(RMSdiff);
     //Print progress
     cout << " | Opt. Step: ";
@@ -275,14 +275,14 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (E >= Eold)
     {
       //Take smaller steps if the energy does not improve
-      cout << "    Energy did not decrease. Reducing step size by 25%...";
+      cout << "    Energy did not decrease. Reducing step size...";
       cout << '\n';
-      QMMMOpts.StepScale *= 0.75;
+      QMMMOpts.StepScale *= 0.80;
     }
     else
     {
       //Take larger steps if the energy is still decreasing
-      cout << "    Energy is decreasing. Increasing step size by 1%...";
+      cout << "    Energy is decreasing. Increasing step size by...";
       cout << '\n';
       QMMMOpts.StepScale *= 1.01;
     }

@@ -407,6 +407,94 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << " QMMM_" << Bead << ".log";
   call << " QMMM_" << Bead << ".key";
   sys = system(call.str().c_str());
+  //Fix QM-MM double counting
+  vector<double> Es; //List of energies
+  vector<int> QMatoms; //List of the QM atoms
+  for (int i=0;i<Natoms;i++)
+  {
+    //Create temporary storage arrays
+    Es.push_back(0.0);
+    if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+    {
+      QMatoms.push_back(i);
+    }
+  }
+  #pragma omp parallel for
+  for (int i=0;i<Natoms;i++)
+  {
+    if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1))
+    {
+      //Store coordinates for dipoles
+      Coord PoleXp = Struct[i].P[Bead];
+      Coord PoleXm = Struct[i].P[Bead];
+      Coord PoleYp = Struct[i].P[Bead];
+      Coord PoleYm = Struct[i].P[Bead];
+      Coord PoleZp = Struct[i].P[Bead];
+      Coord PoleZm = Struct[i].P[Bead];
+      //Adjust dipole positions
+      PoleXp.x += 0.25*BohrRad;
+      PoleXm.x -= 0.25*BohrRad;
+      PoleYp.y += 0.25*BohrRad;
+      PoleYm.y -= 0.25*BohrRad;
+      PoleZp.z += 0.25*BohrRad;
+      PoleZm.z -= 0.25*BohrRad;
+      //Calculate energies
+      for (int j=0;j<(Nqm+Npseudo);j++)
+      {
+        //Create variables
+        double Etmp; //Energy of a dipole-charge interaction
+        double r; //Distance between charges
+        //Calculate X dipole interactions
+        r = sqrt(CoordDist2(PoleXp,Struct[QMatoms[j]].P[Bead]));
+        r /= BohrRad; //Change to a.u.
+        Etmp = Struct[i].MP[Bead].IDx/(2*0.25);
+        Etmp *= Struct[QMatoms[j]].MP[Bead].q;
+        Etmp /= r;
+        Es[i] += Etmp;
+        r = sqrt(CoordDist2(PoleXm,Struct[QMatoms[j]].P[Bead]));
+        r /= BohrRad; //Change to a.u.
+        Etmp = Struct[i].MP[Bead].IDx/(2*0.25);
+        Etmp *= Struct[QMatoms[j]].MP[Bead].q;
+        Etmp /= r;
+        Etmp *= -1; //Change sign for negative displacement
+        Es[i] += Etmp;
+        //Calculate X dipole interactions
+        r = sqrt(CoordDist2(PoleYp,Struct[QMatoms[j]].P[Bead]));
+        r /= BohrRad; //Change to a.u.
+        Etmp = Struct[i].MP[Bead].IDy/(2*0.25);
+        Etmp *= Struct[QMatoms[j]].MP[Bead].q;
+        Etmp /= r;
+        Es[i] += Etmp;
+        r = sqrt(CoordDist2(PoleYm,Struct[QMatoms[j]].P[Bead]));
+        r /= BohrRad; //Change to a.u.
+        Etmp = Struct[i].MP[Bead].IDy/(2*0.25);
+        Etmp *= Struct[QMatoms[j]].MP[Bead].q;
+        Etmp /= r;
+        Etmp *= -1; //Change sign for negative displacement
+        Es[i] += Etmp;
+        //Calculate Z dipole interactions
+        r = sqrt(CoordDist2(PoleZp,Struct[QMatoms[j]].P[Bead]));
+        r /= BohrRad; //Change to a.u.
+        Etmp = Struct[i].MP[Bead].IDz/(2*0.25);
+        Etmp *= Struct[QMatoms[j]].MP[Bead].q;
+        Etmp /= r;
+        Es[i] += Etmp;
+        r = sqrt(CoordDist2(PoleZm,Struct[QMatoms[j]].P[Bead]));
+        r /= BohrRad; //Change to a.u.
+        Etmp = Struct[i].MP[Bead].IDz/(2*0.25);
+        Etmp *= Struct[QMatoms[j]].MP[Bead].q;
+        Etmp /= r;
+        Etmp *= -1; //Change sign for negative displacement
+        Es[i] += Etmp;
+      }
+    }
+  }
+  #pragma omp barrier
+  for (int i=0;i<Natoms;i++)
+  {
+    //Sum up the energy in kcal/mol
+    Epol -= Es[i]*Har2eV/kcal2eV;
+  }
   //Return polarization energy in kcal/mol
   return Epol;
 };
