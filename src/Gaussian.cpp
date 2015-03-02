@@ -506,6 +506,10 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     RotateTINKCharges(Struct,Bead);
   }
+  //Check if there is a checkpoint file
+  call.str("");
+  call << "QMMM_" << Bead << ".chk";
+  bool UseCheckPoint = CheckFile(call.str());
   //Construct input
   call.str("");
   call << "QMMM";
@@ -528,6 +532,11 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     {
       //Read pseudo potential
       call << "Pseudo=Read ";
+    }
+    if (UseCheckPoint)
+    {
+      //Read pseudo potential
+      call << "Guess=Read ";
     }
     call << "Charge=angstroms "; //Read charges
     call << "Population(MK,ReadRadii)";
@@ -677,11 +686,17 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     }
   }
   ifile.close();
-  //Clean up files
+  //Clean up files and save checkpoint file
   call.str("");
-  call << "rm -f QMMM_";
-  call << Bead << ".com ";
-  call << "QMMM_" << Bead << ".log";
+  call << "mv QMMM_" << Bead;
+  call << ".chk tmp_" << Bead;
+  call << ".chk && ";
+  call << "rm -f ";
+  call << "QMMM_" << Bead;
+  call << ".*";
+  call << " && mv tmp_" << Bead;
+  call << ".chk QMMM_" << Bead;
+  call << ".chk";
   sys = system(call.str().c_str());
   return;
 };
@@ -1105,8 +1120,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << Bead << ".*";
   call << " MMCharges_" << Bead << ".txt";
   sys = system(call.str().c_str());
-  //Calculate new point-charges
-  GaussianCharges(Struct,QMMMOpts,Bead);
+  //Print warnings and errors
   if (Optfinished == 0)
   {
     cout << "Warning: Optimization did not converge!!!";
@@ -1116,6 +1130,8 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     E = HugeNum; //Large number to reject step
     cout.flush(); //Print warning immediately
   }
+  //Calculate new point-charges and return
+  GaussianCharges(Struct,QMMMOpts,Bead);
   return E;
 };
 

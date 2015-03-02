@@ -357,6 +357,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     {
       //AMOEBA polarizable force field
       AMOEBA = 1;
+      regionfile >> dummy >> QMMMOpts.Nind;
       if (TINKER == 1)
       {
         ExtractTINKpoles(Struct,0);
@@ -373,6 +374,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     {
       //Frozen density
       GEM = 1;
+      regionfile >> dummy >> QMMMOpts.Nind;
     }
   }
   if ((dummy == "MM") or (dummy == "mm"))

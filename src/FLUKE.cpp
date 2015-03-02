@@ -65,25 +65,29 @@ int main(int argc, char* argv[])
   //Find induced dipoles for polarizable simulations
   if ((AMOEBA == 1) and (QMMM) and (!PIMCSim))
   {
-    if (Gaussian == 1)
+    //Loop for convergence
+    for (int j=0;j<QMMMOpts.Nind;j++)
     {
-      for (int i=0;i<QMMMOpts.Nbeads;i++)
+      if (Gaussian == 1)
       {
-        GaussianCharges(Struct,QMMMOpts,i);
+        for (int i=0;i<QMMMOpts.Nbeads;i++)
+        {
+          GaussianCharges(Struct,QMMMOpts,i);
+        }
       }
-    }
-    if (PSI4 == 1)
-    {
-      for (int i=0;i<QMMMOpts.Nbeads;i++)
+      if (PSI4 == 1)
       {
-        PSICharges(Struct,QMMMOpts,i);
+        for (int i=0;i<QMMMOpts.Nbeads;i++)
+        {
+          PSICharges(Struct,QMMMOpts,i);
+        }
       }
-    }
-    if (TINKER == 1)
-    {
-      for (int i=0;i<QMMMOpts.Nbeads;i++)
+      if (TINKER == 1)
       {
-        TINKERInduced(Struct,QMMMOpts,i);
+        for (int i=0;i<QMMMOpts.Nbeads;i++)
+        {
+          TINKERInduced(Struct,QMMMOpts,i);
+        }
       }
     }
   }

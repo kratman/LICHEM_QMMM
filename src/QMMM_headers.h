@@ -253,9 +253,8 @@ struct QMMMSettings
   string RAM; //Ram for QM calculations
   string Charge; //QM total charge
   string Spin; //QM total spin
-  double Eqm; //QM total energy
   //Input needed for MM wrappers
-  double Emm; //MM total energy
+  int Nind; //Number of induced dipole iterations
   //Input needed for MC and MD functions
   string Ensemble; //NVT or NPT
   double Temp; //Temperature
