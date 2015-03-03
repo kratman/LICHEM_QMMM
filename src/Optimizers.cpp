@@ -165,7 +165,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
 void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
-  //Steepest descent optimizer
+  //Steepest descent optimizer with a crude backtracking algorithm
   int sys; //Dummy return for system calls
   stringstream call;
   call.copyfmt(cout);
@@ -234,11 +234,15 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   double stepsize = 1;
   double VecMax = 0;
   bool OptDone = 0;
+  vector<QMMMAtom> OldStruct; //Previous structure
+  vector<QMMMAtom> OlderStruct; //Previous previous structure
+  vector<Coord> OldForces; //Previous forces
   while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
   {
     double E = 0;
-    //Copy old structure and create blank force array
-    vector<QMMMAtom> OldStruct = Struct;
+    //Save old structure and create blank force array
+    OlderStruct = OldStruct;
+    OldStruct = Struct;
     vector<Coord> Forces;
     for (int i=0;i<(Nqm+Npseudo);i++)
     {
@@ -278,13 +282,21 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       cout << "    Energy did not decrease. Reducing step size...";
       cout << '\n';
       QMMMOpts.StepScale *= 0.80;
+      //Revert to the old structure and forces
+      Forces = OldForces;
+      Struct = OldStruct;
+      OldStruct = OlderStruct;
+      E = Eold;
     }
     else
     {
       //Take larger steps if the energy is still decreasing
-      cout << "    Energy is decreasing. Increasing step size by...";
+      cout << "    Energy is decreasing. Increasing step size...";
       cout << '\n';
       QMMMOpts.StepScale *= 1.01;
+      //Save forces and energy
+      Eold = E;
+      OldForces = Forces;
     }
     //Check optimization step size
     VecMax = 0;
@@ -323,7 +335,6 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         ct += 1;
       }
     }
-    Eold = E; //Save energy
     //Print structure
     Print_traj(Struct,qmfile,QMMMOpts);
     //Check convergence

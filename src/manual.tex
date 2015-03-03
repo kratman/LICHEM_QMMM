@@ -262,7 +262,12 @@ MM\_type: $<$TINKER or AMBER or LAMMPS$>$ \\
 Electrostatics: $<$Charges or AMOEBA or Density$>$ \\
 
 All of the MM input is read into FLUKE as text, and hence, it must match the
-correct input for the MM package.
+correct input for the MM package. If a QMMM calculation is using the AMOEBA or
+GEM models for the electrostatics, then an additional line is required: \\
+
+Induced\_cycles: $<$Cycles to converge dipoles$>$ \\
+
+This line should be omitted for non-polarizable and pure MM calculations.
 
 \subsection{QMMM input}
 
