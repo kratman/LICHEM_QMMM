@@ -589,6 +589,8 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (E < Eold)
     {
       //Start really long "line"
+      cout << "    Updating inverse Hessian...";
+      cout << '\n';
       IHess = IHess+((OptVec*OptVec.transpose())/(OptVec.transpose()
       *GradDiff))-((IHess*GradDiff*GradDiff.transpose()*IHess)
       /(GradDiff.transpose()*IHess*GradDiff));

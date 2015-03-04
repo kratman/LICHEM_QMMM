@@ -8,6 +8,8 @@ published.
 
 General:
 -Molecular dynamics simulations are currently broken, a fix is in progress
+-Currently only DFT and HF energies can be used in the calculations. Post-HF
+methods will be implemented in the future.
 
 PSI4 interface:
 -PSI4 gradients do not include the contribution from the external field.
