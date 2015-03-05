@@ -108,7 +108,7 @@ void TINK2FLUKE(int& argc, char**& argv)
   cout << '\n';
   cout << "Creating xyzfile.xyz, connect.inp, and regions.inp";
   cout << "...";
-  cout << '\n';
+  cout << '\n' << '\n';
   //Create lists for grouping frozen atoms
   vector<bool> Actives;
   vector<bool> Froz;
@@ -462,6 +462,9 @@ void TINK2FLUKE(int& argc, char**& argv)
   }
   //Quit FLUKE
   cout << '\n';
+  cout << "Do not forget to manually add the simulation input to the";
+  cout << " regions.inp file.";
+  cout << '\n' << '\n';
   cout << "Conversion complete.";
   cout << '\n';
   cout << '\n';

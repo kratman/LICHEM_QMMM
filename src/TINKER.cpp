@@ -20,8 +20,7 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
   //Parses TINKER parameter files to find atom classes
   fstream ifile;
   string dummy; //Generic string
-  string TINKKeyFile = "tinker.key";
-  ifile.open(TINKKeyFile.c_str(),ios_base::in);
+  ifile.open("tinker.key",ios_base::in);
   if (!ifile.good())
   {
     //Exit if files do not exist
@@ -103,7 +102,6 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string
-  string TINKKeyFile = "tinker.key";
   int sys; //Dummy return for system calls
   int ct; //Generic counter
   //Create TINKER xyz file
@@ -145,18 +143,14 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile.close();
   //Create new TINKER key file
   call.str("");
-  call << "cp " << TINKKeyFile << " QMMM";
-  call << "_" << Bead;
-  call << ".key";
+  call << "cp tinker.key QMMM_";
+  call << Bead << ".key";
   sys = system(call.str().c_str());
-  //Save new keyfile name
+  //Update key file
   call.str("");
-  call << "QMMM";
-  call << "_" << Bead;
-  call << ".key";
-  TINKKeyFile = call.str(); //Save the new name
-  //Add QM atoms to force field parameters list
-  ofile.open(TINKKeyFile.c_str(),ios_base::app|ios_base::out);
+  call << "QMMM_";
+  call << Bead << ".key";
+  ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
   ofile << '\n'; //Make sure current line is empty
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
@@ -258,7 +252,6 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string
-  string TINKKeyFile = "tinker.key";
   double Epol = 0;
   double E = 0;
   int sys; //Dummy return for system calls
@@ -302,18 +295,14 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile.close();
   //Create new TINKER key file
   call.str("");
-  call << "cp " << TINKKeyFile << " QMMM";
-  call << "_" << Bead;
-  call << ".key";
+  call << "cp tinker.key QMMM_";
+  call << Bead << ".key";
   sys = system(call.str().c_str());
-  //Save new keyfile name
+  //Update key file
   call.str("");
-  call << "QMMM";
-  call << "_" << Bead;
-  call << ".key";
-  TINKKeyFile = call.str(); //Save the new name
-  //Add QM atoms to force field parameters list
-  ofile.open(TINKKeyFile.c_str(),ios_base::app|ios_base::out);
+  call << "QMMM_";
+  call << Bead << ".key";
+  ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
   ofile << '\n';
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
@@ -408,95 +397,92 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << " QMMM_" << Bead << ".key";
   sys = system(call.str().c_str());
   //Fix QM-MM double counting
-  if (QMMMOpts.Nind > 0)
+  vector<double> Es; //List of energies
+  vector<int> QMatoms; //List of the QM atoms
+  for (int i=0;i<Natoms;i++)
   {
-    vector<double> Es; //List of energies
-    vector<int> QMatoms; //List of the QM atoms
-    for (int i=0;i<Natoms;i++)
+    //Create temporary storage arrays
+    Es.push_back(0.0);
+    if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
     {
-      //Create temporary storage arrays
-      Es.push_back(0.0);
-      if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+      QMatoms.push_back(i);
+    }
+  }
+  #pragma omp parallel for
+  for (int i=0;i<Natoms;i++)
+  {
+    if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1))
+    {
+      //Store coordinates for dipoles
+      Coord PoleXp = Struct[i].P[Bead];
+      Coord PoleXm = Struct[i].P[Bead];
+      Coord PoleYp = Struct[i].P[Bead];
+      Coord PoleYm = Struct[i].P[Bead];
+      Coord PoleZp = Struct[i].P[Bead];
+      Coord PoleZm = Struct[i].P[Bead];
+      //Adjust dipole positions
+      PoleXp.x += 0.25*BohrRad;
+      PoleXm.x -= 0.25*BohrRad;
+      PoleYp.y += 0.25*BohrRad;
+      PoleYm.y -= 0.25*BohrRad;
+      PoleZp.z += 0.25*BohrRad;
+      PoleZm.z -= 0.25*BohrRad;
+      //Calculate energies
+      for (int j=0;j<(Nqm+Npseudo);j++)
       {
-        QMatoms.push_back(i);
+        //Create variables
+        double Etmp; //Energy of a dipole-charge interaction
+        double r; //Distance between charges
+        //Calculate X dipole interactions
+        r = sqrt(CoordDist2(PoleXp,Struct[QMatoms[j]].P[Bead]));
+        r /= BohrRad; //Change to a.u.
+        Etmp = Struct[i].MP[Bead].IDx/(2*0.25);
+        Etmp *= Struct[QMatoms[j]].MP[Bead].q;
+        Etmp /= r;
+        Es[i] += Etmp;
+        r = sqrt(CoordDist2(PoleXm,Struct[QMatoms[j]].P[Bead]));
+        r /= BohrRad; //Change to a.u.
+        Etmp = Struct[i].MP[Bead].IDx/(2*0.25);
+        Etmp *= Struct[QMatoms[j]].MP[Bead].q;
+        Etmp /= r;
+        Etmp *= -1; //Change sign for negative displacement
+        Es[i] += Etmp;
+        //Calculate X dipole interactions
+        r = sqrt(CoordDist2(PoleYp,Struct[QMatoms[j]].P[Bead]));
+        r /= BohrRad; //Change to a.u.
+        Etmp = Struct[i].MP[Bead].IDy/(2*0.25);
+        Etmp *= Struct[QMatoms[j]].MP[Bead].q;
+        Etmp /= r;
+        Es[i] += Etmp;
+        r = sqrt(CoordDist2(PoleYm,Struct[QMatoms[j]].P[Bead]));
+        r /= BohrRad; //Change to a.u.
+        Etmp = Struct[i].MP[Bead].IDy/(2*0.25);
+        Etmp *= Struct[QMatoms[j]].MP[Bead].q;
+        Etmp /= r;
+        Etmp *= -1; //Change sign for negative displacement
+        Es[i] += Etmp;
+        //Calculate Z dipole interactions
+        r = sqrt(CoordDist2(PoleZp,Struct[QMatoms[j]].P[Bead]));
+        r /= BohrRad; //Change to a.u.
+        Etmp = Struct[i].MP[Bead].IDz/(2*0.25);
+        Etmp *= Struct[QMatoms[j]].MP[Bead].q;
+        Etmp /= r;
+        Es[i] += Etmp;
+        r = sqrt(CoordDist2(PoleZm,Struct[QMatoms[j]].P[Bead]));
+        r /= BohrRad; //Change to a.u.
+        Etmp = Struct[i].MP[Bead].IDz/(2*0.25);
+        Etmp *= Struct[QMatoms[j]].MP[Bead].q;
+        Etmp /= r;
+        Etmp *= -1; //Change sign for negative displacement
+        Es[i] += Etmp;
       }
     }
-    #pragma omp parallel for
-    for (int i=0;i<Natoms;i++)
-    {
-      if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1))
-      {
-        //Store coordinates for dipoles
-        Coord PoleXp = Struct[i].P[Bead];
-        Coord PoleXm = Struct[i].P[Bead];
-        Coord PoleYp = Struct[i].P[Bead];
-        Coord PoleYm = Struct[i].P[Bead];
-        Coord PoleZp = Struct[i].P[Bead];
-        Coord PoleZm = Struct[i].P[Bead];
-        //Adjust dipole positions
-        PoleXp.x += 0.25*BohrRad;
-        PoleXm.x -= 0.25*BohrRad;
-        PoleYp.y += 0.25*BohrRad;
-        PoleYm.y -= 0.25*BohrRad;
-        PoleZp.z += 0.25*BohrRad;
-        PoleZm.z -= 0.25*BohrRad;
-        //Calculate energies
-        for (int j=0;j<(Nqm+Npseudo);j++)
-        {
-          //Create variables
-          double Etmp; //Energy of a dipole-charge interaction
-          double r; //Distance between charges
-          //Calculate X dipole interactions
-          r = sqrt(CoordDist2(PoleXp,Struct[QMatoms[j]].P[Bead]));
-          r /= BohrRad; //Change to a.u.
-          Etmp = Struct[i].MP[Bead].IDx/(2*0.25);
-          Etmp *= Struct[QMatoms[j]].MP[Bead].q;
-          Etmp /= r;
-          Es[i] += Etmp;
-          r = sqrt(CoordDist2(PoleXm,Struct[QMatoms[j]].P[Bead]));
-          r /= BohrRad; //Change to a.u.
-          Etmp = Struct[i].MP[Bead].IDx/(2*0.25);
-          Etmp *= Struct[QMatoms[j]].MP[Bead].q;
-          Etmp /= r;
-          Etmp *= -1; //Change sign for negative displacement
-          Es[i] += Etmp;
-          //Calculate X dipole interactions
-          r = sqrt(CoordDist2(PoleYp,Struct[QMatoms[j]].P[Bead]));
-          r /= BohrRad; //Change to a.u.
-          Etmp = Struct[i].MP[Bead].IDy/(2*0.25);
-          Etmp *= Struct[QMatoms[j]].MP[Bead].q;
-          Etmp /= r;
-          Es[i] += Etmp;
-          r = sqrt(CoordDist2(PoleYm,Struct[QMatoms[j]].P[Bead]));
-          r /= BohrRad; //Change to a.u.
-          Etmp = Struct[i].MP[Bead].IDy/(2*0.25);
-          Etmp *= Struct[QMatoms[j]].MP[Bead].q;
-          Etmp /= r;
-          Etmp *= -1; //Change sign for negative displacement
-          Es[i] += Etmp;
-          //Calculate Z dipole interactions
-          r = sqrt(CoordDist2(PoleZp,Struct[QMatoms[j]].P[Bead]));
-          r /= BohrRad; //Change to a.u.
-          Etmp = Struct[i].MP[Bead].IDz/(2*0.25);
-          Etmp *= Struct[QMatoms[j]].MP[Bead].q;
-          Etmp /= r;
-          Es[i] += Etmp;
-          r = sqrt(CoordDist2(PoleZm,Struct[QMatoms[j]].P[Bead]));
-          r /= BohrRad; //Change to a.u.
-          Etmp = Struct[i].MP[Bead].IDz/(2*0.25);
-          Etmp *= Struct[QMatoms[j]].MP[Bead].q;
-          Etmp /= r;
-          Etmp *= -1; //Change sign for negative displacement
-          Es[i] += Etmp;
-        }
-      }
-    }
-    #pragma omp barrier
-    for (int i=0;i<Natoms;i++)
-    {
-      //Sum up the energy in kcal/mol
-      Epol -= Es[i]*Har2eV/kcal2eV;
-    }
+  }
+  #pragma omp barrier
+  for (int i=0;i<Natoms;i++)
+  {
+    //Sum up the energy in kcal/mol
+    Epol -= Es[i]*Har2eV/kcal2eV;
   }
   //Return polarization energy in kcal/mol
   return Epol;
@@ -510,25 +496,19 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
-  string TINKKeyFile = "tinker.key";
   double Emm = 0.0;
   int ct; //Generic counter
   int sys; //Dummy return for system calls
   //Construct MM forces input for TINKER
   call.str("");
-  call << "cp " << TINKKeyFile << " ";
-  call << "QMMM";
-  call << "_" << Bead;
-  call << ".key";
+  call << "cp tinker.key QMMM_";
+  call << Bead << ".key";
   sys = system(call.str().c_str());
-  //Save new keyfile name
+  //Update key file
   call.str("");
-  call << "QMMM";
-  call << "_" << Bead;
-  call << ".key";
-  TINKKeyFile = call.str(); //Save the new name
-  //Add QM atoms to force field parameters list
-  ofile.open(TINKKeyFile.c_str(),ios_base::app|ios_base::out);
+  call << "QMMM_";
+  call << Bead << ".key";
+  ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
   ofile << '\n';
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
@@ -763,7 +743,6 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, vector<Coord>& MMForces,
   string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
-  string TINKKeyFile = "tinker.key";
   double Emm = 0.0;
   int ct; //Generic counter
   int sys; //Dummy return for system calls
@@ -771,18 +750,14 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, vector<Coord>& MMForces,
   if (QMMM == 1)
   {
     call.str("");
-    call << "cp " << TINKKeyFile << " QMMM";
-    call << "_" << Bead;
-    call << ".key";
+    call << "cp tinker.key QMMM_";
+    call << Bead << ".key";
     sys = system(call.str().c_str());
-    //Save new keyfile name
+    //Update key file
     call.str("");
-    call << "QMMM";
-    call << "_" << Bead;
-    call << ".key";
-    TINKKeyFile = call.str(); //Save the new name
-    //Add QM atoms to force field parameters list
-    ofile.open(TINKKeyFile.c_str(),ios_base::app|ios_base::out);
+    call << "QMMM_";
+    call << Bead << ".key";
+    ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
     ofile << '\n';
     ofile << "#QM force field parameters"; //Marks the changes
     ofile << '\n';
@@ -981,7 +956,6 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string
-  string TINKKeyFile = "tinker.key";
   double Epol = 0;
   double E = 0;
   int sys; //Dummy return for system calls
@@ -991,18 +965,14 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (QMMM == 1)
   {
     call.str("");
-    call << "cp " << TINKKeyFile << " QMMM";
-    call << "_" << Bead;
-    call << ".key";
+    call << "cp tinker.key QMMM_";
+    call << Bead << ".key";
     sys = system(call.str().c_str());
-    //Save new keyfile name
+    //Update key file
     call.str("");
-    call << "QMMM";
-    call << "_" << Bead;
-    call << ".key";
-    TINKKeyFile = call.str(); //Save the new name
-    //Add QM atoms to force field parameters list
-    ofile.open(TINKKeyFile.c_str(),ios_base::app|ios_base::out);
+    call << "QMMM_";
+    call << Bead << ".key";
+    ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
     ofile << '\n';
     ofile << "#QM force field parameters"; //Marks the changes
     ofile << '\n';
@@ -1181,7 +1151,6 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string
-  string TINKKeyFile = "tinker.key";
   double Epol = 0;
   double E = 0;
   int sys; //Dummy return for system calls
@@ -1191,18 +1160,14 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (QMMM == 1)
   {
     call.str("");
-    call << "cp " << TINKKeyFile << " QMMM";
-    call << "_" << Bead;
-    call << ".key";
+    call << "cp tinker.key QMMM_";
+    call << Bead << ".key";
     sys = system(call.str().c_str());
-    //Save new keyfile name
+    //Update key file
     call.str("");
-    call << "QMMM";
-    call << "_" << Bead;
-    call << ".key";
-    TINKKeyFile = call.str(); //Save the new name
-    //Add QM atoms to force field parameters list
-    ofile.open(TINKKeyFile.c_str(),ios_base::app|ios_base::out);
+    call << "QMMM_";
+    call << Bead << ".key";
+    ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
     ofile << '\n';
     ofile << "#QM force field parameters"; //Marks the changes
     ofile << '\n';
@@ -1321,9 +1286,10 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call.str("");
   call << "QMMM_" << Bead << ".xyz_2";
   ifile.open(call.str().c_str(),ios_base::in);
-  getline(ifile,dummy);
+  getline(ifile,dummy); //Discard number of atoms
   if (PBCon == 1)
   {
+    //Discard PBC information
     getline(ifile,dummy);
   }
   for (int i=0;i<Natoms;i++)
@@ -1331,7 +1297,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     getline(ifile,dummy);
     stringstream line(dummy);
     //Read new positions
-    line >> dummy >> dummy;
+    line >> dummy >> dummy; //Discard atom ID and type
     line >> Struct[i].P[Bead].x;
     line >> Struct[i].P[Bead].y;
     line >> Struct[i].P[Bead].z;
