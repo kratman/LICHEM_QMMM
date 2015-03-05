@@ -294,6 +294,8 @@ void RotateTINKCharges(vector<QMMMAtom>&,int);
 
 void WriteTINKMpole(vector<QMMMAtom>&,fstream&,int,int);
 
+void ExtractGlobalPoles(int& argc, char**& argv);
+
 RedMpole Cart2SphHarm(Mpole&);
 
 OctCharges SphHarm2Charges(RedMpole);

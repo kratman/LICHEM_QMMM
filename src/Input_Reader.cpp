@@ -26,9 +26,6 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     cout << "Missing arguments..." << '\n' << '\n';
     cout << "Usage: FLUKE -n Ncpus -x Input.xyz -c Connectivity.inp ";
     cout << "-r Regions.inp -o Output.xyz" << '\n';
-    cout << '\n' << "  or" << '\n' << '\n';
-    cout << "Usage: FLUKE -n Ncpus -x Input.pdb -c Connectivity.inp ";
-    cout << "-r Regions.inp -o Output.xyz" << '\n';
     cout << '\n';
     cout << "Use -h or --help for detailed instructions.";
     cout << '\n';
@@ -36,6 +33,11 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     exit(0);
   }
   dummy = string(argv[1]);
+  if (dummy == "-GauExtern")
+  {
+    //Escape to GauExternal
+    ExternalGaussian(argc,argv);
+  }
   if (dummy == "-convert")
   {
     //Attempt to create FLUKE input from other formats
@@ -58,10 +60,9 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     //Attempt to create a TINKER XYZ file from FLUKE input
     FLUKE2TINK(argc,argv);
   }
-  if (dummy == "-GauExtern")
+  if (dummy == "-GlobalPoles")
   {
-    //Escape to GauExternal
-    ExternalGaussian(argc,argv);
+    ExtractGlobalPoles(argc,argv);
   }
   if ((argc % 2) != 1)
   {
@@ -72,9 +73,6 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
       cout << '\n';
       cout << "Odd number of arguments..." << '\n' << '\n';
       cout << "Usage: FLUKE -n Ncpus -x Input.xyz -c Connectivity.inp ";
-      cout << "-r Regions.inp -o Output.xyz" << '\n';
-      cout << '\n' << "  or" << '\n' << '\n';
-      cout << "Usage: FLUKE -n Ncpus -x Input.pdb -c Connectivity.inp ";
       cout << "-r Regions.inp -o Output.xyz" << '\n';
       cout << '\n';
       cout << "Use -h or --help for detailed instructions.";
@@ -93,15 +91,13 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
       cout << '\n';
       cout << "Usage: FLUKE -n Ncpus -x Input.xyz -c Connectivity.inp ";
       cout << "-r Regions.inp -o Output.xyz" << '\n';
-      cout << '\n' << "  or" << '\n' << '\n';
-      cout << "Usage: FLUKE -n Ncpus -x Input.pdb -c Connectivity.inp ";
-      cout << "-r Regions.inp -o Output.xyz" << '\n';
       cout << '\n';
       cout << "Command line arguments:" << '\n' << '\n';
-      cout << "  -n    Number of CPUs used for the QM calculation." << '\n' << '\n';
-      cout << "  -x    Input pdb or xyz file. The input parser will" << '\n';
-      cout << "        detect the file type." << '\n' << '\n';
-      cout << "  -c    List of connectivity, atom types, and charges." << '\n' << '\n';
+      cout << "  -n    Number of CPUs used for the QM calculation." << '\n';
+      cout << '\n';
+      cout << "  -x    Input xyz file." << '\n' << '\n';
+      cout << "  -c    Connectivity and force field input file." << '\n';
+      cout << '\n';
       cout << "  -r    Information about how the system is subdivided" << '\n';
       cout << "        into QM, MM, and psuedo-atom regions." << '\n' << '\n';
       cout << "  -o    Output xyz file for the optimized structures.";
@@ -155,9 +151,6 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
         cout << "Unrecognized flag..." << '\n' << '\n';
         cout << "Usage: FLUKE -n Ncpus -x Input.xyz -c Connectivity.inp ";
         cout << "-r Regions.inp -o Output.xyz" << '\n';
-        cout << '\n' << "  or" << '\n' << '\n';
-        cout << "Usage: FLUKE -n Ncpus -x Input.pdb -c Connectivity.inp ";
-        cout << "-r Regions.inp -o Output.xyz" << '\n';
         cout << '\n';
         cout << "Use -h or --help for detailed instructions.";
         cout << '\n';
@@ -172,9 +165,6 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     cout << '\n';
     cout << "Missing arguments..." << '\n' << '\n';
     cout << "Usage: FLUKE -n Ncpus -x Input.xyz -c Connectivity.inp ";
-    cout << "-r Regions.inp -o Output.xyz" << '\n';
-    cout << '\n' << "  or" << '\n' << '\n';
-    cout << "Usage: FLUKE -n Ncpus -x Input.pdb -c Connectivity.inp ";
     cout << "-r Regions.inp -o Output.xyz" << '\n';
     cout << '\n';
     cout << "Use -h or --help for detailed instructions.";

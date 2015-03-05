@@ -36,11 +36,18 @@ void RotateTINKCharges(vector<QMMMAtom>& Struct, int Bead)
 void WriteTINKMpole(vector<QMMMAtom>& Struct, fstream& ofile, int i, int Bead)
 {
   //Write a new multipole definition for pseudo-atoms
-  
+
   return;
 };
 
 //General routines
+void ExtractGlobalPoles(int& argc, char**& argv)
+{
+  //Function to print the multipoles in the global frame
+
+  return;
+};
+
 RedMpole Cart2SphHarm(Mpole& poles)
 {
   //Converts Cartesian multipoles to spherical harmonic multipoles

@@ -234,8 +234,8 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   double stepsize = 1;
   double VecMax = 0;
   bool OptDone = 0;
-  vector<QMMMAtom> OldStruct; //Previous structure
-  vector<QMMMAtom> OlderStruct; //Previous previous structure
+  vector<QMMMAtom> OldStruct = Struct; //Previous structure
+  vector<QMMMAtom> OlderStruct = Struct; //Previous previous structure
   vector<Coord> OldForces; //Previous forces
   while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
   {
