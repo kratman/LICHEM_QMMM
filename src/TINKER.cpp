@@ -1277,8 +1277,8 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ofile.close();
   //Run optimization
   call.str("");
-  call << "newton QMMM_";
-  call << Bead << ".xyz A A ";
+  call << "minimize QMMM_";
+  call << Bead << ".xyz ";
   call << QMMMOpts.MMOptTol << " > QMMM_";
   call << Bead << ".log";
   sys = system(call.str().c_str());

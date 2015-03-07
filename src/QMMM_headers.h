@@ -78,7 +78,7 @@ const double atm2eV = SI2eV*1.01325e-25; //atmA^3 to eV
 const double Na = 6.02214179e23; //Avogadro's number
 const double kcal2eV = 4184*SI2eV/Na; //kcal/mol to eV
 const double sqrt2 = pow(2,0.5); //Square root of 2
-const double HugeNum = 100000.0; //Large number to reject step
+const double HugeNum = 1e50; //Large number to reject step
 const double fs2s = 1e-12; //Convert fs to s
 const double Debye2au = 0.393430307; //Convert from Debye to au
 

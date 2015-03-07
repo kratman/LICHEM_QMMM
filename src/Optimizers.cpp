@@ -230,12 +230,22 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ofile.flush();
     ofile.close();
   }
-  //Optimize structure
+  //Initialize optimization variables
   double stepsize = 1;
   double VecMax = 0;
   bool OptDone = 0;
   vector<QMMMAtom> OldStruct = Struct; //Previous structure
   vector<Coord> OldForces; //Previous forces
+  for (int i=0;i<(Nqm+Npseudo);i++)
+  {
+    //Create arrays with zeros
+    Coord tmp;
+    tmp.x = 0;
+    tmp.y = 0;
+    tmp.z = 0;
+    OldForces.push_back(tmp);
+  }
+  //Run optimization
   while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
   {
     double E = 0;
@@ -282,7 +292,6 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Revert to the old structure and forces
       Forces = OldForces;
       Struct = OldStruct;
-      E = Eold;
     }
     else
     {
@@ -290,7 +299,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       cout << "    Energy is decreasing. Increasing step size...";
       cout << '\n';
       QMMMOpts.StepScale *= 1.01;
-      //Save forces and energy
+      //Save current best forces and energy
       Eold = E;
       OldForces = Forces;
       OldStruct = Struct;
