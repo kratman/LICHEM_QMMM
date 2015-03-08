@@ -77,6 +77,12 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
       t_qm_start = (unsigned)time(0);
       Es[i] += GaussianEnergy(parts,QMMMOpts,i);
       Times_qm[i] += (unsigned)time(0)-t_qm_start;
+      //Remove .chk file
+      //Note: Chk files may be a problem if large steps are taken
+      stringstream call;
+      call.str("");
+      call << "rm -f QMMM_" << i << ".chk";
+      int sys = system(call.str().c_str());
     }
     if (PSI4 == 1)
     {

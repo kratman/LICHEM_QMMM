@@ -712,10 +712,16 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   double E = 0.0; //QM energy
   double Eself = 0.0; //Field self-energy
   int sys; //Dummy return for system calls
+  //Set up point charges
   if ((AMOEBA == 1) and (TINKER == 1))
   {
     RotateTINKCharges(Struct,Bead);
   }
+  //Check if there is a checkpoint file
+  call.str("");
+  call << "QMMM_" << Bead << ".chk";
+  bool UseCheckPoint = CheckFile(call.str());
+  //Construct Gaussian input
   call.str("");
   call << "QMMM_" << Bead << ".com";
   ofile.open(call.str().c_str(),ios_base::out);
@@ -727,7 +733,12 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "%NprocShared=" << Ncpus << '\n';
   call << "#P " << QMMMOpts.Func << "/";
   call << QMMMOpts.Basis << " SP Symmetry=None" << '\n';
-  call << "Int=UltraFine SCF=(YQC,Big,Direct)" << '\n';
+  call << "Int=UltraFine SCF=(YQC,Big,Direct)";
+  if (UseCheckPoint)
+  {
+    call << " Guess=Read";
+  }
+  call << '\n';
   if (QMMM == 1)
   {
     if (Npseudo > 0)
