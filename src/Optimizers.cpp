@@ -86,9 +86,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     cout << " \u212B" << '\n';
     cout << "    Max force: " << MAXforce;
     cout << " eV/\u212B | RMS force: " << RMSforce;
-    cout << " eV/\u212B";
-    cout << '\n' << '\n';
-    cout.flush();
+    cout << " eV/\u212B" << '\n';
     cout.copyfmt(call); //Return to previous settings
     //Check convergence criteria
     if ((RMSdiff <= QMMMOpts.QMOptTol) and
@@ -96,7 +94,10 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
        (MAXforce <= (100*QMMMOpts.QMOptTol)))
     {
       OptDone = 1;
+      cout << "    QM optimization complete." << '\n';
     }
+    cout << '\n';
+    cout.flush();
   }
   if (!QMregion)
   {
@@ -145,16 +146,19 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     RMSdiff /= (Natoms-Nfreeze)*(Natoms-Nfreeze-1)/2;
     RMSdiff = sqrt(RMSdiff);
     //Print progress
+    call.copyfmt(cout); //Save settings
+    cout << setprecision(8);
     cout << " | Opt. Step: ";
     cout << stepct << " | Energy: ";
     cout << SumE << " eV ";
     cout << " | RMS dev: " << RMSdiff;
     cout << " \u212B" << '\n';
+    cout.copyfmt(call); //Save settings
     //Check convergence
     if (RMSdiff <= QMMMOpts.MMOptTol)
     {
       OptDone = 1;
-      cout << "    MM relaxation satisfactory.";
+      cout << "    QMMM relaxation satisfactory.";
       cout << '\n';
     }
   }
@@ -447,7 +451,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       IHess(i,j) = 0.0;
       IHess(j,i) = 0.0;
     }
-    IHess(i,i) = 0.1; //Already an "inverse Hessian"
+    IHess(i,i) = 0.05; //Already an "inverse Hessian"
   }
   vector<Coord> Forces;
   for (int i=0;i<(Nqm+Npseudo);i++)
