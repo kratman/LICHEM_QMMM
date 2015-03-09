@@ -929,12 +929,17 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cout.flush(); //Print warning immediately
   }
   ifile.close();
-  //Remove files
+  //Clean up files and save checkpoint file
   call.str("");
-  call << "rm -f QMMM_";
-  call << Bead << ".com QMMM_";
-  call << Bead << ".log QMMM_";
-  call << Bead << ".chk";
+  call << "mv QMMM_" << Bead;
+  call << ".chk tmp_" << Bead;
+  call << ".chk && ";
+  call << "rm -f ";
+  call << "QMMM_" << Bead;
+  call << ".*";
+  call << " && mv tmp_" << Bead;
+  call << ".chk QMMM_" << Bead;
+  call << ".chk";
   sys = system(call.str().c_str());
   //Change units
   E -= Eself;
