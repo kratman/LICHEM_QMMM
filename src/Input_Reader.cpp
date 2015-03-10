@@ -108,9 +108,10 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     if (dummy == "-n")
     {
       Ncpus = atoi(argv[i+1]);
+      //I am not sure if this works as intended... Disabled.
       call.str("");
       call << "export OMP_NUM_THREADS=" << Ncpus;
-      sys = system(call.str().c_str());
+      //sys = system(call.str().c_str());
     }
     if (dummy == "-x")
     {
