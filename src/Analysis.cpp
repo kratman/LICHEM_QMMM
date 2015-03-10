@@ -1,4 +1,16 @@
+/*
 
+##############################################################################
+#                                                                            #
+#              FLUKE: Fields Layered Under Kohn-sham Electrons               #
+#                             By: Eric G. Kratz                              #
+#                             and Alice Walker                               #
+#                                                                            #
+##############################################################################
+
+ Functions for data analysis and trajectory processing.
+
+*/
 
 //Trajectory analysis functions
 void Print_traj(vector<QMMMAtom>& parts, fstream& traj, QMMMSettings& QMMMOpts)

@@ -1029,6 +1029,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         {
           //Write new multipole definition for the atom ID
           WriteTINKMpole(Struct,ofile,i,Bead);
+          //Remove polarizatio
           ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
           ofile << '\n';
         }
@@ -1038,8 +1039,11 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
           //remove charge
           qi = Struct[i].MP[Bead].q;
           Struct[i].MP[Bead].q = 0;
+          //Write new multipole definition for the atom ID
           WriteTINKMpole(Struct,ofile,i,Bead);
-          Struct[i].MP[Bead].q += qi; //Restore charge
+          //Restore charge
+          Struct[i].MP[Bead].q = qi;
+          //Remove polarization
           ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
           ofile << '\n';
         }
