@@ -42,7 +42,7 @@ using namespace Eigen;
 using namespace std;
 
 //Compile options
-const bool Jokes = 0; //Print humorous comments
+const bool Jokes = 1; //Print humorous comments
 const bool Debug = 0; //Turn debugging on/off
 const bool Isotrop = 1; //Force isotropic expansion
 const double StepMin = 0.01; //Minimum step size
