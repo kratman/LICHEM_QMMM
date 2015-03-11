@@ -39,9 +39,8 @@ void ExternalGaussian(int& argc, char**& argv)
     if (dummy == "-n")
     {
       Ncpus = atoi(argv[i+1]);
-      call.str("");
-      call << "export OMP_NUM_THREADS=" << Ncpus;
-      sys = system(call.str().c_str());
+      //Set OpenMP threads for the external routine
+      omp_set_num_threads(Ncpus);
     }
     if (dummy == "-GauExtern")
     {

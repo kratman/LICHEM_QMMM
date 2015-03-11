@@ -108,10 +108,9 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     if (dummy == "-n")
     {
       Ncpus = atoi(argv[i+1]);
-      //I am not sure if this works as intended... Disabled.
-      call.str("");
-      call << "export OMP_NUM_THREADS=" << Ncpus;
-      //sys = system(call.str().c_str());
+      //Set OpenMP threads based on QM CPUs and total CPUs
+      double Procs = double(omp_get_num_threads());
+      omp_set_num_threads(floor(Procs/Ncpus));
     }
     if (dummy == "-x")
     {

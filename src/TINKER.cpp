@@ -1179,8 +1179,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
-      if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1)
-         or (Struct[i].PAregion == 1))
+      if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1))
       {
         if (Struct[i].Frozen == 0)
         {
