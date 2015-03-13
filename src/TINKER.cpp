@@ -1012,7 +1012,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       for (int i=0;i<Natoms;i++)
       {
         //Add nuclear charges
-        if (Struct[i].QMregion == 1)
+        if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
         {
           //New charges are only needed for QM atoms
           ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
