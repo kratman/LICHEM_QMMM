@@ -108,9 +108,6 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     if (dummy == "-n")
     {
       Ncpus = atoi(argv[i+1]);
-      //Set OpenMP threads based on QM CPUs and total CPUs
-      double Procs = double(omp_get_num_threads());
-      omp_set_num_threads(floor(Procs/Ncpus));
     }
     if (dummy == "-x")
     {
@@ -699,6 +696,18 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   {
     //Classes are not used in the QMMM, but looking for them can spot errors
     FindTINKERClasses(Struct);
+  }
+  //Set OpenMP threads based on QM CPUs and total CPUs
+  if (!GauExternal)
+  {
+    //Get total number of processors based on OMP_NUM_THREADS
+    double Procs = double(omp_get_num_threads());
+    if (QMMMOpts.Nbeads > 1)
+    {
+      //Always safe, but may waste threads if Nprocs is not a perfect square
+      int Nthreads = int(floor(sqrt(Procs)));
+      omp_set_num_threads(Nthreads);
+    }
   }
   return;
 };
