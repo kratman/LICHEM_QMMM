@@ -63,7 +63,7 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << "    no_com" << '\n';
   call << "}" << '\n' << '\n';
   //Set up MM field
-  if ((QMMM == 1) and (CHRG == 1))
+  if ((QMMM) and (CHRG == 1))
   {
     call << "Chrgfield = QMMM()" << '\n';
     for (int i=0;i<Natoms;i++)
@@ -82,7 +82,7 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     call << '\n';
     call << '\n';
   }
-  if ((QMMM == 1) and (AMOEBA == 1))
+  if ((QMMM) and (AMOEBA == 1))
   {
     call << "Chrgfield = QMMM()" << '\n';
     for (int i=0;i<Natoms;i++)
@@ -287,7 +287,7 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "    no_com" << '\n';
   call << "}" << '\n' << '\n';
   //Set up MM field
-  if ((QMMM == 1) and (CHRG == 1))
+  if ((QMMM) and (CHRG == 1))
   {
     call << "Chrgfield = QMMM()" << '\n';
     for (int i=0;i<Natoms;i++)
@@ -306,7 +306,7 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     call << '\n';
     call << '\n';
   }
-  if ((QMMM == 1) and (AMOEBA == 1))
+  if ((QMMM) and (AMOEBA == 1))
   {
     call << "Chrgfield = QMMM()" << '\n';
     for (int i=0;i<Natoms;i++)
@@ -466,7 +466,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "    no_com" << '\n';
   call << "}" << '\n' << '\n';
   //Set up MM field
-  if ((QMMM == 1) and (CHRG == 1))
+  if ((QMMM) and (CHRG == 1))
   {
     call << "Chrgfield = QMMM()" << '\n';
     for (int i=0;i<Natoms;i++)
@@ -485,7 +485,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     call << '\n';
     call << '\n';
   }
-  if ((QMMM == 1) and (AMOEBA == 1))
+  if ((QMMM) and (AMOEBA == 1))
   {
     call << "Chrgfield = QMMM()" << '\n';
     for (int i=0;i<Natoms;i++)
@@ -669,7 +669,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   call << "    no_com" << '\n';
   call << "}" << '\n' << '\n';
   //Set up MM field
-  if ((QMMM == 1) and (CHRG == 1))
+  if ((QMMM) and (CHRG == 1))
   {
     call << "Chrgfield = QMMM()" << '\n';
     for (int i=0;i<Natoms;i++)
@@ -688,7 +688,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
     call << '\n';
     call << '\n';
   }
-  if ((QMMM == 1) and (AMOEBA == 1))
+  if ((QMMM) and (AMOEBA == 1))
   {
     call << "Chrgfield = QMMM()" << '\n';
     for (int i=0;i<Natoms;i++)

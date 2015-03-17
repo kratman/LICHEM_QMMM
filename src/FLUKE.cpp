@@ -63,6 +63,7 @@ int main(int argc, char* argv[])
   //End of section
 
   //Find induced dipoles for polarizable simulations
+  /*
   if ((AMOEBA == 1) and (QMMM) and (!PIMCSim))
   {
     if (QMMMOpts.Nind > 0)
@@ -103,10 +104,11 @@ int main(int argc, char* argv[])
       }
     }
   }
+  */
   //End of section
 
   //Calculate single-point energy (optional)
-  if (SinglePoint == 1)
+  if (SinglePoint)
   {
     double Eqm = 0;
     double Emm = 0;
@@ -125,7 +127,7 @@ int main(int argc, char* argv[])
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
     }
-    if ((QMMM == 1) or (QMonly == 1))
+    if ((QMMM) or (QMonly))
     {
       //Print QM partial energy
       cout << "QM energy: " << Eqm << " eV";
@@ -143,14 +145,14 @@ int main(int argc, char* argv[])
       Emm += AMBEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if ((QMMM == 1) or (MMonly == 1))
+    if ((QMMM) or (MMonly))
     {
       //Print MM partial energy
       cout << "MM energy: " << Emm << " eV";
       cout << '\n';
     }
     SumE = Eqm+Emm;
-    if (QMMM == 1)
+    if (QMMM)
     {
       //Print total energy
       cout << "QMMM total energy: ";
@@ -164,7 +166,7 @@ int main(int argc, char* argv[])
   //End of section
 
   //Run Monte Carlo (optional)
-  if (PIMCSim == 1)
+  if (PIMCSim)
   {
     //Adjust probabilities
     if (Natoms == 1)
@@ -312,7 +314,7 @@ int main(int argc, char* argv[])
   //End of section
 
   //Run MD simulation
-  if (MDSim == 1)
+  if (MDSim)
   {
     //Equilibration
     VerletUpdate(Struct,QMMMOpts,outfile,0,0);
@@ -322,7 +324,7 @@ int main(int argc, char* argv[])
   //End of section
 
   //Optimize structure (optional)
-  if (OptSim == 1)
+  if (OptSim)
   {
     vector<Coord> Forces; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
@@ -410,7 +412,7 @@ int main(int argc, char* argv[])
   //End of section
 
   //Steepest descent optimization
-  if (SteepSim == 1)
+  if (SteepSim)
   {
     vector<Coord> Forces; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
@@ -485,7 +487,7 @@ int main(int argc, char* argv[])
   //End of sections
 
   //DFP minimization
-  if (DFPSim == 1)
+  if (DFPSim)
   {
     vector<Coord> Forces; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
@@ -582,7 +584,7 @@ int main(int argc, char* argv[])
     call << "rm -f psi*";
     int sys = system(call.str().c_str());
   }
-  if (SinglePoint == 1)
+  if (SinglePoint)
   {
     //Clear worthless output xyz file
     stringstream call;
@@ -636,7 +638,7 @@ int main(int argc, char* argv[])
   cout << "  Wall time for FLUKE: ";
   cout << OtherTime << " hours";
   cout << '\n';
-  if (Jokes == 1)
+  if (Jokes)
   {
     randnum = rand() % 10; //Randomly injure animals
     cout << "  Animals injured in the making of this science: ";
@@ -649,7 +651,7 @@ int main(int argc, char* argv[])
   //End of section
 
   //Print a quote
-  if (Jokes == 1)
+  if (Jokes)
   {
     cout << '\n';
     cout << "Random quote:";

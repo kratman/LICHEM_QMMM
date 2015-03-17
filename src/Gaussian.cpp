@@ -117,10 +117,6 @@ void ExternalGaussian(int& argc, char**& argv)
   if (TINKER == 1)
   {
     Emm = TINKERForces(Struct,Forces,QMMMOpts,Bead);
-    if (AMOEBA == 1)
-    {
-      Emm += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
-    }
   }
   if (AMBER == 1)
   {
@@ -238,7 +234,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     call << " Guess=Read";
   }
   call << '\n';
-  if (QMMM == 1)
+  if (QMMM)
   {
     if (Npseudo > 0)
     {
@@ -529,7 +525,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "#P " << QMMMOpts.Func << "/";
   call << QMMMOpts.Basis << " SP Symmetry=None" << '\n';
   call << "Int=UltraFine SCF=(YQC,Big,Direct)" << '\n';
-  if (QMMM == 1)
+  if (QMMM)
   {
     if (Npseudo > 0)
     {
@@ -573,7 +569,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   call << '\n'; //Blank line needed
   //Add the MM field
-  if ((CHRG == 1) and (QMMM == 1))
+  if ((CHRG == 1) and (QMMM))
   {
     for (int i=0;i<Natoms;i++)
     {
@@ -590,7 +586,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     }
     call << '\n'; //Blank line needed
   }
-  if ((AMOEBA == 1) and (QMMM == 1))
+  if ((AMOEBA == 1) and (QMMM))
   {
     for (int i=0;i<Natoms;i++)
     {
@@ -742,7 +738,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     call << " Guess=Read";
   }
   call << '\n';
-  if (QMMM == 1)
+  if (QMMM)
   {
     if (Npseudo > 0)
     {
@@ -781,7 +777,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   call << '\n'; //Blank line needed
   //Add the MM field
-  if ((CHRG == 1) and (QMMM == 1))
+  if ((CHRG == 1) and (QMMM))
   {
     for (int i=0;i<Natoms;i++)
     {
@@ -798,7 +794,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     }
     call << '\n'; //Blank line needed
   }
-  if ((AMOEBA == 1) and (QMMM == 1))
+  if ((AMOEBA == 1) and (QMMM))
   {
     for (int i=0;i<Natoms;i++)
     {
@@ -980,7 +976,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile.flush();
   ofile.close();
   //Write multipole point-charges
-  if ((AMOEBA == 1) and (QMMM == 1))
+  if ((AMOEBA == 1) and (QMMM))
   {
     call.str("");
     call << "MMCharges_" << Bead << ".txt";

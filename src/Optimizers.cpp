@@ -284,10 +284,6 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     {
       int tstart = (unsigned)time(0);
       E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
-      if (AMOEBA == 1)
-      {
-        E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
-      }
       MMTime += (unsigned)time(0)-tstart;
     }
     //Check step size
@@ -487,10 +483,6 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     int tstart = (unsigned)time(0);
     E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
-    if (AMOEBA == 1)
-    {
-      E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
-    }
     MMTime += (unsigned)time(0)-tstart;
   }
   //Save forces
@@ -590,10 +582,6 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     {
       int tstart = (unsigned)time(0);
       E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
-      if (AMOEBA == 1)
-      {
-        E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
-      }
       MMTime += (unsigned)time(0)-tstart;
     }
     //Update Hessian

@@ -26,6 +26,9 @@ directory is not configured properly.
 
 Gaussian interface:
 -Transition state optimizations are currently broken.
+-Using the external interface to gaussian interferes with timing the MM
+wrapper. This is harmless, but the statistics should not be trusted in the
+external optimizations.
 
 Optimization:
 -The steepest descent and DFP optimizers use Cartesian coordinates.
