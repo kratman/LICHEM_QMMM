@@ -65,6 +65,18 @@ int main(int argc, char* argv[])
   //Find induced dipoles for polarizable simulations
   if ((AMOEBA == 1) and (QMMM) and (!PIMCSim))
   {
+    if (QMMMOpts.Nind > 0)
+    {
+      cout << "Allowing the induced dipoles to relax for ";
+      cout << QMMMOpts.Nind << " iterations...";
+      cout << '\n' << '\n';
+    }
+    else
+    {
+      cout << "Starting the calculations with only static multipoles...";
+      cout << '\n' << '\n';
+    }
+    cout.flush(); //Print to the screen
     //Loop for convergence
     for (int j=0;j<QMMMOpts.Nind;j++)
     {
