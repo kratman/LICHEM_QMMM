@@ -918,7 +918,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       }
     }
   }
-  if (QMfinished != 1)
+  if (!QMfinished)
   {
     cout << "Warning: SCF did not converge!!!";
     cout << '\n';

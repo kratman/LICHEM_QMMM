@@ -716,7 +716,7 @@ void FLUKEErrorChecker(QMMMSettings& QMMMOpts)
 {
   //Checks for basic errors and conflicts
   bool DoQuit = 0; //Bool, quit with error
-  if (((TINKER+AMBER+LAMMPS) == 0) and (QMonly != 1))
+  if (((TINKER+AMBER+LAMMPS) == 0) and (!QMonly))
   {
     //Check the MM wrappers
     cout << " Error: No valid MM wrapper selected.";
@@ -726,7 +726,7 @@ void FLUKEErrorChecker(QMMMSettings& QMMMOpts)
     cout << '\n';
     DoQuit = 1;
   }
-  if (((PSI4+Gaussian) == 0) and (MMonly != 1))
+  if (((PSI4+Gaussian) == 0) and (!MMonly))
   {
     //Check the QM wrappers
     cout << " Error: No valid QM wrapper selected.";
