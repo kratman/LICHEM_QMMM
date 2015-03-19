@@ -179,6 +179,14 @@ int main(int argc, char* argv[])
     {
       VolProb = 0.0;
     }
+    //Calculate initial energy
+    QMMMOpts.Eold = 0;
+    QMMMOpts.Eold += Get_PI_Epot(Struct,QMMMOpts);
+    QMMMOpts.Eold += Get_PI_Espring(Struct,QMMMOpts);
+    if (VolProb > 0)
+    {
+      QMMMOpts.Eold += QMMMOpts.Press*Lx*Ly*Lz*atm2eV;
+    }
     //Run simulations
     cout << '\n';
     SumE = 0;

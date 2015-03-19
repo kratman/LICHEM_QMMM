@@ -117,6 +117,10 @@ void ExternalGaussian(int& argc, char**& argv)
   if (TINKER == 1)
   {
     Emm = TINKERForces(Struct,Forces,QMMMOpts,Bead);
+    if (AMOEBA == 1)
+    {
+      Emm += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
+    }
   }
   if (AMBER == 1)
   {

@@ -273,6 +273,8 @@ struct QMMMSettings
   double QMOptTol; //Criteria to end the optimization
   double StepScale; //Steepest descent step size (Ang)
   double MaxStep; //Maximum size of the optimization step
+  //Storage of energies (PIMC and Opt.)
+  double Eold;
 };
 
 //Function declarations
@@ -307,6 +309,8 @@ double TINKEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 double TINKEROpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double TINKERForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+
+double TINKERPolForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
 double TINKERMMForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
