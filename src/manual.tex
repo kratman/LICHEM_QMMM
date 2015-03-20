@@ -266,12 +266,7 @@ MM\_type: $<$TINKER or AMBER or LAMMPS$>$ \\
 Electrostatics: $<$Charges or AMOEBA or Density$>$ \\
 
 All of the MM input is read into FLUKE as text, and hence, it must match the
-correct input for the MM package. If a QMMM calculation is using the AMOEBA or
-GEM models for the electrostatics, then an additional line is required: \\
-
-Induced\_cycles: $<$Cycles to converge dipoles$>$ \\
-
-This line should be omitted for non-polarizable and pure MM calculations.
+correct input for the MM package.
 
 \subsection{QMMM input}
 
@@ -284,20 +279,28 @@ QM\_memory: $<$RAM in GB$>$ \\
 QM\_charge: $<$charge on the QM region$>$ \\
 QM\_spin: $<$multiplicity of the QM region$>$ \\
 MM\_type: $<$TINKER or AMBER or LAMMPS$>$ \\
+Electrostatics: $<$Charges or AMOEBA or Density$>$ \\
 
 All of the QMMM input is read into FLUKE as text, and hence, it must match the
 correct input for the QM and MM packages. For example, Gaussian can only read
-integer values for the memory.
+integer values for the memory. If a QMMM calculation is using the AMOEBA or
+GEM models for the electrostatics, then an additional line is required: \\
+
+Induced\_cycles: $<$Cycles to converge dipoles$>$ \\
+
+This line should be omitted for non-polarizable and pure MM calculations.
 
 \subsection{Simulation input}
 
 Input for the calculation types directly follows the wrapper input. Each type
 of calculation requires slightly different input. FLUKE can perform
-single-point energies (SP), optimizations (Opt), and path-integral Monte Carlo
-simulations (PIMC). Classical Monte Carlo simulations are performed as PIMC
-simulations with a single bead. All calculation types are documented below. \\
+single-point energies (SP), optimizations (Opt,DFP,Steep,TS), and
+path-integral Monte Carlo simulations (PIMC). Classical Monte Carlo
+simulations are performed as PIMC simulations with a single bead. Input for
+all calculation types are documented below. Synonyms for the simulation
+keywords are given in parentheses. \\
 
-Calculation\_type: $<$SP or Energy$>$ \\
+Calculation\_type: Energy (or SP) \\
 
 Calculation\_type: Opt \\
 Max\_opt\_step: $<$Size of the maximum optimization step (\AA)$>$ \\
@@ -309,14 +312,14 @@ Max\_opt\_step: $<$Size of the maximum optimization step (\AA)$>$ \\
 MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
 Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
 
-Calculation\_type: Steep \\
+Calculation\_type: Steep (or SD) \\
 Opt\_step\_size: $<$Initial scale factor for the step size$>$ \\
 Max\_opt\_step: $<$Size of the maximum optimization step (\AA)$>$
 QM\_opt\_tolerance: $<$Criteria to stop the QM optimization$>$\\
 MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
 Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
 
-Calculation\_type: DFP \\
+Calculation\_type: DFP (or BFGS) \\
 Opt\_step\_size: $<$Initial scale factor for the step size$>$ \\
 Max\_opt\_step: $<$Size of the maximum optimization step (\AA)$>$
 QM\_opt\_tolerance: $<$Criteria to stop the QM optimization$>$\\
@@ -412,11 +415,11 @@ field parameter files defined in the tinker.key file.
 
 \subsection{Gaussian}
 
-The Gaussian wrapper will look for a file called BASIS in the working
-directory. This file contains basis and pseudopotential information for
-QMMM calculations with bonds between the QM and MM regions (see below).
-While the file is read in automatically if it is found, the user still needs
-to tell Gaussian to use this information: \\
+The Gaussian wrapper will look for checkpoint files and a file called BASIS in
+the working directory. The BASIS file contains basis set and pseudopotential
+information for QMMM calculations with bonds between the QM and MM regions
+(see below). While the file is read in automatically if it is found, the user
+still needs to tell Gaussian to use this information: \\
 
 QM\_basis: GEN \\
 
