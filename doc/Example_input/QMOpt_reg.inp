@@ -7,7 +7,7 @@ QM_charge: 0
 QM_spin: 1
 Calculation_type: Opt
 Max_opt_step: 0.10
-QM_opt_tolerance: 1e-4
+MM_opt_tolerance: 1e-2
 Max_Opt_Steps: 200
 PBC: No
 QM_atoms: 6

@@ -12,7 +12,7 @@ Opt_step_size: 0.20
 Max_opt_step: 0.10
 QM_opt_tolerance: 1e-4
 MM_opt_tolerance: 1e-2
-Max_opt_steps: 200
+Max_opt_steps: 400
 PBC: No
 QM_atoms: 3
 3 4 5
