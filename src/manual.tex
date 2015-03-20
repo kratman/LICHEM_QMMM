@@ -74,17 +74,19 @@ Clone the git repository or unpack FLUKE\_QMMM-master.tgz \\
 user:\$ mkdir FLUKE \\
 user:\$ git clone https://github.com/kratman/FLUKE\_QMMM.git ./FLUKE/ \\
 
-or \\
+or unpack the zipped source code \\
 
 user:\$ mkdir FLUKE \\
 user:\$ cd FLUKE/ \\
-user:\$ tar -xvf FLUKE\_tarbomb.tgz \\
+user:\$ unzip FLUKE\_QMMM-master.zip \\
+user:\$ mv FLUKE\_QMMM-master/* . \\
+user:\$ rmdir FLUKE\_QMMM-master \\
 
-The FLUKE binary is included with the tgz source code, however, modified or
-git versions can be compiled with the script provided with FLUKE. On Ubuntu
-boxes, the compile script should function without modifications. However, with
-other operating systems it may be necessary to change the path to the
-\textit{Eigen3} package.
+The FLUKE binary will eventually be included with the zipped source code,
+however, modified or git versions can be compiled with the script provided
+with FLUKE. On Ubuntu boxes, the compile script should function without
+modifications. However, with other operating systems it may be necessary to
+change the path to the \textit{Eigen3} package.
 
 Default: -I/usr/include/eigen3/ \\
 
@@ -370,7 +372,7 @@ possible to use the native input/output functions to create FLUKE input from
 input used for MM packages. In all cases the converter produces three
 files: xyzfile.xyz connect.inp regions.inp \\
 
-TINKER: The file converter for TINKER can be used on standard
+\textbf{TINKER:} The file converter for TINKER can be used on standard
 TINKER XYZ files, TINKER QMMM XYZ files (Q-CHEM), and TINKER XYZ files
 with periodic boundary conditions. \\
 
@@ -384,9 +386,9 @@ user:\$ FLUKE -tinker -x xyzfile.xyz -c connectfile.inp \\
 
 A file called "tinkxyz.xyz" will be produced from this conversion. \\
 
-AMBER: {\color{red}Still in development} \\
+\textbf{AMBER:} {\color{red}Still in development} \\
 
-LAMMPS: {\color{red}Still in development}
+\textbf{LAMMPS:} {\color{red}Still in development}
 
 \section{FLUKE output}
 
@@ -394,7 +396,9 @@ Most of the FLUKE output is sent through the c++ std output stream. However,
 trajectories and optimized structures are printed into the file defined
 by the -o flag. In single-point energy calculations, the output XYZ file
 is deleted after the calculation is completed, since the geometry does not
-change during the calculation.
+change during the calculation. FLUKE also leaves some restart files in the
+working directory (e.g. Gaussian checkpoint files, multi-replica XYZ files,
+etc).
 
 \section{Additional input for wrappers}
 
@@ -410,8 +414,8 @@ The TINKER wrapper checks the working directory for a file called tinker.key
 and will read additional force field information (e.g. atom classes,
 multipoles, etc) based on the keywords listed in that file. Any keyword
 defined in tinker.key will be passed into the TINKER key file used by the
-wrapper. For somewhat obvious reasons, the user must also provide the force
-field parameter files defined in the tinker.key file.
+wrapper. For obvious reasons, the user must also provide the force field
+parameter files defined in the tinker.key file.
 
 \subsection{Gaussian}
 

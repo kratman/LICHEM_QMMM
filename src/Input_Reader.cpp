@@ -704,8 +704,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     double Procs = double(omp_get_num_threads());
     if (QMMMOpts.Nbeads > 1)
     {
-      //Always safe, but may waste threads if Nprocs is not a perfect square
-      int Nthreads = int(floor(sqrt(Procs)));
+      int Nthreads = int(floor(Procs/Ncpus));
       omp_set_num_threads(Nthreads);
     }
   }

@@ -215,7 +215,7 @@ int RevTyping(string AtName)
   Typs.push_back("Te");
   Typs.push_back("I");
   Typs.push_back("Xe");
-  #pragma omp parallel for
+  #pragma omp parallel for num_threads(Ncpus)
   for (int i=0;i<Typs.size();i++)
   {
     if (AtName == Typs[i])

@@ -409,7 +409,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       QMatoms.push_back(i);
     }
   }
-  #pragma omp parallel for
+  #pragma omp parallel for num_threads(Ncpus)
   for (int i=0;i<Natoms;i++)
   {
     if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1))
