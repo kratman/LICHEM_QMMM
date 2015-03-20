@@ -62,51 +62,6 @@ int main(int argc, char* argv[])
   FLUKEPrintSettings(QMMMOpts);
   //End of section
 
-  //Find induced dipoles for polarizable simulations
-  /*
-  if ((AMOEBA == 1) and (QMMM) and (!PIMCSim))
-  {
-    if (QMMMOpts.Nind > 0)
-    {
-      cout << "Allowing the induced dipoles to relax for ";
-      cout << QMMMOpts.Nind << " iterations...";
-      cout << '\n' << '\n';
-    }
-    else
-    {
-      cout << "Starting the calculations with only static multipoles...";
-      cout << '\n' << '\n';
-    }
-    cout.flush(); //Print to the screen
-    //Loop for convergence
-    for (int j=0;j<QMMMOpts.Nind;j++)
-    {
-      if (Gaussian == 1)
-      {
-        for (int i=0;i<QMMMOpts.Nbeads;i++)
-        {
-          GaussianCharges(Struct,QMMMOpts,i);
-        }
-      }
-      if (PSI4 == 1)
-      {
-        for (int i=0;i<QMMMOpts.Nbeads;i++)
-        {
-          PSICharges(Struct,QMMMOpts,i);
-        }
-      }
-      if (TINKER == 1)
-      {
-        for (int i=0;i<QMMMOpts.Nbeads;i++)
-        {
-          TINKERInduced(Struct,QMMMOpts,i);
-        }
-      }
-    }
-  }
-  */
-  //End of section
-
   //Calculate single-point energy (optional)
   if (SinglePoint)
   {
