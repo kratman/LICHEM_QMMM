@@ -971,6 +971,8 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       }
     }
   }
+  cout << " CPUs: " << Ncpus << '\n';
+  cout << " OMP threads: " << omp_get_num_threads() << '\n';
   cout << '\n';
   //Print convergence criteria for optimizations
   if ((OptSim) or (SteepSim) or (DFPSim))

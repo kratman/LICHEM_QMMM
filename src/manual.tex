@@ -435,6 +435,30 @@ these must be given below the basis set information in the BASIS file. Both
 the basis set and pseudopotential information must be given in Gaussian
 format.
 
+\subsection{Restart files}
+
+While restarting incomplete geometry optimizations only requires changing
+the initial structure given with the -x flag, multi-replica simulations
+require structural information for each replica. When a multi-replica
+(PIMC or reaction path) simulation is started FLUKE checks the working
+directory for a restart file named "BeadStartStruct.xyz" which will be used as
+the initial structure. The restart file is similar to a standard XYZ file,
+except all the replicas are merged together (see below).
+
+M \\
+
+A  X$_{A,1}$  Y$_{A,1}$  Z$_{A,1}$ \\
+A  X$_{A,2}$  Y$_{A,2}$  Z$_{A,2}$ \\
+... \\
+B  X$_{B,1}$  Y$_{B,1}$  Z$_{B,1}$ \\
+B  X$_{B,2}$  Y$_{B,2}$  Z$_{B,2}$ \\
+... \\
+
+Here M is the number of atoms times the number of beads, and 
+(X$_{i.j}$,Y$_{i,j}$,Z$_{i,j}$) is the position of particle $i$ in replica
+$j$. Note that the atom types given in the XYZ file are ignored since this
+information is read from the files given by the -x and -c flags.
+
 \chapter{Theoretical Background}
 \label{chap:Theory}
 
