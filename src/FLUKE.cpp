@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
     }
-    if ((QMMM) or (QMonly))
+    if (QMMM or QMonly)
     {
       //Print QM partial energy
       cout << "QM energy: " << Eqm << " eV";
@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
       Emm += AMBEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if ((QMMM) or (MMonly))
+    if (QMMM or MMonly)
     {
       //Print MM partial energy
       cout << "MM energy: " << Emm << " eV";
@@ -328,7 +328,7 @@ int main(int argc, char* argv[])
     cout.flush(); //Print progress
     //Run optimization
     bool OptDone = 0;
-    while (OptDone == 0)
+    while (!OptDone)
     {
       //Copy structure
       double SavedStepSize = QMMMOpts.StepScale; //Save old step size
@@ -416,7 +416,7 @@ int main(int argc, char* argv[])
     cout.flush(); //Print progress
     //Run optimization
     bool OptDone = 0;
-    while (OptDone == 0)
+    while (!OptDone)
     {
       //Copy structure
       double SavedStepSize = QMMMOpts.StepScale; //Save old step size
@@ -491,7 +491,7 @@ int main(int argc, char* argv[])
     cout.flush(); //Print progress
     //Run optimization
     bool OptDone = 0;
-    while (OptDone == 0)
+    while (!OptDone)
     {
       //Copy structure
       double SavedStepSize = QMMMOpts.StepScale; //Save old step size

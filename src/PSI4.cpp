@@ -49,7 +49,7 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << " " << QMMMOpts.Spin << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion == 1)
+    if (Struct[i].QMregion)
     {
       call << "    " << Struct[i].QMTyp;
       call << "    " << Struct[i].P[Bead].x;
@@ -63,12 +63,12 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << "    no_com" << '\n';
   call << "}" << '\n' << '\n';
   //Set up MM field
-  if ((QMMM) and (CHRG == 1))
+  if (QMMM and (CHRG == 1))
   {
     call << "Chrgfield = QMMM()" << '\n';
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion == 1)
+      if (Struct[i].MMregion)
       {
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].MP[Bead].q << ",";
@@ -82,12 +82,12 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     call << '\n';
     call << '\n';
   }
-  if ((QMMM) and (AMOEBA == 1))
+  if (QMMM and (AMOEBA == 1))
   {
     call << "Chrgfield = QMMM()" << '\n';
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion == 1)
+      if (Struct[i].MMregion)
       {
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q1 << ",";
@@ -170,10 +170,10 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
         getline(ifile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if ((Struct[i].QMregion == 1) or (Struct[i].PAregion ==1))
+          if (Struct[i].QMregion or Struct[i].PAregion)
           {
             getline(ifile,dummy);
-            if (Struct[i].QMregion == 1)
+            if (Struct[i].QMregion)
             {
               stringstream line(dummy);
               line >> dummy >> dummy;
@@ -273,7 +273,7 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << " " << QMMMOpts.Spin << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion == 1)
+    if (Struct[i].QMregion)
     {
       call << "    " << Struct[i].QMTyp;
       call << "    " << Struct[i].P[Bead].x;
@@ -287,12 +287,12 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "    no_com" << '\n';
   call << "}" << '\n' << '\n';
   //Set up MM field
-  if ((QMMM) and (CHRG == 1))
+  if (QMMM and (CHRG == 1))
   {
     call << "Chrgfield = QMMM()" << '\n';
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion == 1)
+      if (Struct[i].MMregion)
       {
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].MP[Bead].q << ",";
@@ -306,12 +306,12 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     call << '\n';
     call << '\n';
   }
-  if ((QMMM) and (AMOEBA == 1))
+  if (QMMM and (AMOEBA == 1))
   {
     call << "Chrgfield = QMMM()" << '\n';
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion == 1)
+      if (Struct[i].MMregion)
       {
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q1 << ",";
@@ -394,10 +394,10 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         getline(ifile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if ((Struct[i].QMregion == 1) or (Struct[i].PAregion ==1))
+          if (Struct[i].QMregion or Struct[i].PAregion)
           {
             getline(ifile,dummy);
-            if (Struct[i].QMregion == 1)
+            if (Struct[i].QMregion)
             {
               stringstream line(dummy);
               line >> dummy >> dummy;
@@ -452,7 +452,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << " " << QMMMOpts.Spin << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion == 1)
+    if (Struct[i].QMregion)
     {
       call << "    " << Struct[i].QMTyp;
       call << "    " << Struct[i].P[Bead].x;
@@ -466,12 +466,12 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "    no_com" << '\n';
   call << "}" << '\n' << '\n';
   //Set up MM field
-  if ((QMMM) and (CHRG == 1))
+  if (QMMM and (CHRG == 1))
   {
     call << "Chrgfield = QMMM()" << '\n';
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion == 1)
+      if (Struct[i].MMregion)
       {
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].MP[Bead].q << ",";
@@ -485,12 +485,12 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     call << '\n';
     call << '\n';
   }
-  if ((QMMM) and (AMOEBA == 1))
+  if (QMMM and (AMOEBA == 1))
   {
     call << "Chrgfield = QMMM()" << '\n';
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion == 1)
+      if (Struct[i].MMregion)
       {
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q1 << ",";
@@ -574,10 +574,10 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         getline(ifile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if ((Struct[i].QMregion == 1) or (Struct[i].PAregion ==1))
+          if (Struct[i].QMregion or Struct[i].PAregion)
           {
             getline(ifile,dummy);
-            if (Struct[i].QMregion == 1)
+            if (Struct[i].QMregion)
             {
               stringstream line(dummy);
               line >> dummy >> dummy;
@@ -602,7 +602,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     }
   }
   ifile.close();
-  if (QMfinished == 0)
+  if (!QMfinished)
   {
     cout << "Warning: SCF did not converge!!!";
     cout << '\n';
@@ -655,7 +655,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   call << " " << QMMMOpts.Spin << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion == 1)
+    if (Struct[i].QMregion)
     {
       call << "    " << Struct[i].QMTyp;
       call << "    " << Struct[i].P[Bead].x;
@@ -669,12 +669,12 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   call << "    no_com" << '\n';
   call << "}" << '\n' << '\n';
   //Set up MM field
-  if ((QMMM) and (CHRG == 1))
+  if (QMMM and (CHRG == 1))
   {
     call << "Chrgfield = QMMM()" << '\n';
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion == 1)
+      if (Struct[i].MMregion)
       {
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].MP[Bead].q << ",";
@@ -688,12 +688,12 @@ double PSIOpt(vector<QMMMAtom>& Struct,
     call << '\n';
     call << '\n';
   }
-  if ((QMMM) and (AMOEBA == 1))
+  if (QMMM and (AMOEBA == 1))
   {
     call << "Chrgfield = QMMM()" << '\n';
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion == 1)
+      if (Struct[i].MMregion)
       {
         call << "Chrgfield.extern.addCharge(";
         call << Struct[i].PC[Bead].q1 << ",";
@@ -803,10 +803,10 @@ double PSIOpt(vector<QMMMAtom>& Struct,
         getline(ifile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if ((Struct[i].QMregion == 1) or (Struct[i].PAregion ==1))
+          if (Struct[i].QMregion or Struct[i].PAregion)
           {
             getline(ifile,dummy);
-            if (Struct[i].QMregion == 1)
+            if (Struct[i].QMregion)
             {
               stringstream line(dummy);
               line >> dummy >> dummy;
@@ -831,7 +831,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
     }
   }
   ifile.close();
-  if (QMfinished == 0)
+  if (!QMfinished)
   {
     cout << "Warning: SCF did not converge!!!";
     cout << '\n';
@@ -840,7 +840,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
     E = HugeNum; //Large number to reject step
     cout.flush(); //Print warning immediately
   }
-  if (Optfinished == 0)
+  if (!Optfinished)
   {
     cout << "Warning: Optimization did not converge!!!";
     cout << '\n';

@@ -142,7 +142,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
       {
         BadArgs = 1;
       }
-      if (BadArgs == 1)
+      if (BadArgs)
       {
         cout << '\n';
         cout << "Unrecognized flag..." << '\n' << '\n';
@@ -199,7 +199,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     cout.flush();
     DoQuit = 1;
   }
-  if (DoQuit == 1)
+  if (DoQuit)
   {
     exit(0);
   }
@@ -211,7 +211,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
 {
   //Read input
   string dummy; //Generic string
-  if (GauExternal == 0)
+  if (!GauExternal)
   {
     xyzfile >> Natoms;
     for (int i=0;i<Natoms;i++)
@@ -667,7 +667,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     }
   }
   //Read initial structures for all beads
-  if ((CheckFile("BeadStartStruct.xyz")) and (!GauExternal))
+  if (CheckFile("BeadStartStruct.xyz") and (!GauExternal))
   {
     //Print output
     cout << "Reading restart information...";
@@ -759,13 +759,13 @@ void FLUKEErrorChecker(QMMMSettings& QMMMOpts)
     cout << '\n';
     Ncpus = 1;
   }
-  if ((PSI4 == 1) and (QMMM))
+  if ((PSI4 == 1) and QMMM)
   {
     if (OptSim)
     {
       cout << " Error: QMMM PSI4 optimizations can only be performed with";
       cout << '\n';
-      cout << " the native steepest descent or DFP.";
+      cout << " the steepest descent or DFP.";
       cout << '\n';
       DoQuit = 1;
     }
@@ -778,14 +778,14 @@ void FLUKEErrorChecker(QMMMSettings& QMMMOpts)
       DoQuit = 1;
     }
   }
-  if (DoQuit == 1)
+  if (DoQuit)
   {
     //Quits
     cout << '\n';
     cout.flush();
     exit(0);
   }
-  if (DoQuit == 0)
+  if (!DoQuit)
   {
     //Sarcastically continues
     cout << "No fatal errors detected.";
@@ -871,7 +871,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     cout << " Equilibration MD steps: " << QMMMOpts.Neq << '\n';
     cout << " Production MD steps: " << QMMMOpts.Nsteps << '\n';
   }
-  if ((OptSim) or (SteepSim) or (DFPSim))
+  if (OptSim or SteepSim or DFPSim)
   {
     cout << '\n';
     cout << "Simulation mode: ";
@@ -888,7 +888,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       cout << "Pure MM";
     }
     cout << " energy minimization" << '\n';
-    if ((QMMM) or (QMonly))
+    if (QMMM or QMonly)
     {
       cout << " QM";
       if (QMMM)
@@ -928,7 +928,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     }
     cout << " single-point energy" << '\n';
   }
-  if ((QMonly) or (QMMM))
+  if (QMonly or QMMM)
   {
     cout << " QM wrapper: ";
     if (PSI4 == 1)
@@ -943,7 +943,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     cout << QMMMOpts.Func << "/";
     cout << QMMMOpts.Basis << '\n';
   }
-  if ((MMonly) or (QMMM))
+  if (MMonly or QMMM)
   {
     cout << " MM wrapper: ";
     if (TINKER == 1)
@@ -971,14 +971,17 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       }
     }
   }
-  cout << " CPUs: " << Ncpus << '\n';
   cout << " OMP threads: " << omp_get_num_threads() << '\n';
+  if (QMonly or QMMM)
+  {
+    cout << " QM CPUs: " << Ncpus << '\n';
+  }
   cout << '\n';
   //Print convergence criteria for optimizations
-  if ((OptSim) or (SteepSim) or (DFPSim))
+  if (OptSim or SteepSim or DFPSim)
   {
     cout << "Optimization settings:" << '\n';
-    if ((SteepSim) or (DFPSim))
+    if (SteepSim or DFPSim)
     {
       cout << " Step scale factor: " << QMMMOpts.MaxStep;
       cout << '\n';
@@ -987,7 +990,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     cout << " \u212B" << '\n';
     cout << " Max steps: " << QMMMOpts.MaxOptSteps;
     cout << '\n' << '\n';
-    if ((SteepSim) or (DFPSim))
+    if (SteepSim or DFPSim)
     {
       cout << "QM convergence criteria:" << '\n';
       cout << "  RMS deviation: " << QMMMOpts.QMOptTol;

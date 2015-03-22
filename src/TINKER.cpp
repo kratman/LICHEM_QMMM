@@ -161,7 +161,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   for (int i=0;i<Natoms;i++)
   {
     //Add active atoms
-    if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1))
+    if (Struct[i].MMregion or Struct[i].BAregion)
     {
       if (ct == 0)
       {
@@ -191,7 +191,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   for (int i=0;i<Natoms;i++)
   {
     //Add nuclear charges
-    if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+    if (Struct[i].QMregion or Struct[i].PAregion)
     {
       //Write new multipole definition for the atom ID
       WriteTINKMpole(Struct,ofile,i,Bead);
@@ -310,7 +310,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   for (int i=0;i<Natoms;i++)
   {
     //Add active atoms
-    if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1))
+    if (Struct[i].MMregion or Struct[i].BAregion)
     {
       if (ct == 0)
       {
@@ -340,7 +340,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   for (int i=0;i<Natoms;i++)
   {
     //Add nuclear charges
-    if ((Struct[i].PAregion == 1) or (Struct[i].QMregion == 1))
+    if (Struct[i].PAregion or Struct[i].QMregion)
     {
       //Write new multipole definition for the atom ID
       WriteTINKMpole(Struct,ofile,i,Bead);
@@ -428,7 +428,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   for (int i=0;i<Natoms;i++)
   {
     //Add active atoms
-    if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+    if (Struct[i].QMregion or Struct[i].PAregion)
     {
       if (ct == 0)
       {
@@ -460,7 +460,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   for (int i=0;i<Natoms;i++)
   {
     //Add group 1 atoms
-    if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+    if (Struct[i].QMregion or Struct[i].PAregion)
     {
       if (ct == 0)
       {
@@ -492,7 +492,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+      if (Struct[i].QMregion or Struct[i].PAregion)
       {
         //New charges are needed for QM and PA atoms
         ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
@@ -506,7 +506,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+      if (Struct[i].QMregion or Struct[i].PAregion)
       {
         double qi = 0;
         //remove charge
@@ -671,7 +671,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   for (int i=0;i<Natoms;i++)
   {
     //Add active atoms
-    if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+    if (Struct[i].QMregion or Struct[i].PAregion)
     {
       if (ct == 0)
       {
@@ -703,7 +703,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+      if (Struct[i].QMregion or Struct[i].PAregion)
       {
         WriteTINKMpole(Struct,ofile,i,Bead);
         ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
@@ -864,10 +864,9 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, vector<Coord>& MMForces,
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
-      if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1)
-         or (Struct[i].PAregion == 1))
+      if (Struct[i].MMregion or Struct[i].BAregion or Struct[i].PAregion)
       {
-        if (Struct[i].Frozen == 0)
+        if (!Struct[i].Frozen)
         {
           if (ct == 0)
           {
@@ -900,7 +899,7 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, vector<Coord>& MMForces,
       for (int i=0;i<Natoms;i++)
       {
         //Add nuclear charges
-        if (Struct[i].QMregion == 1)
+        if (Struct[i].QMregion)
         {
           //New charges are only needed for QM atoms
           ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
@@ -914,7 +913,7 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, vector<Coord>& MMForces,
       for (int i=0;i<Natoms;i++)
       {
         //Add nuclear charges
-        if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+        if (Struct[i].QMregion or Struct[i].PAregion)
         {
           //Write new multipole definition for the atom ID
           WriteTINKMpole(Struct,ofile,i,Bead);
@@ -996,7 +995,7 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, vector<Coord>& MMForces,
         getline(MMgrad,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if ((Struct[i].Frozen == 0) and (Struct[i].QMregion == 0))
+          if ((!Struct[i].Frozen) and (!Struct[i].QMregion))
           {
             double Fx = 0;
             double Fy = 0;
@@ -1079,7 +1078,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
-      if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1))
+      if (Struct[i].MMregion or Struct[i].BAregion)
       {
         if (ct == 0)
         {
@@ -1111,7 +1110,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       for (int i=0;i<Natoms;i++)
       {
         //Add nuclear charges
-        if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+        if (Struct[i].QMregion or Struct[i].PAregion)
         {
           //New charges are only needed for QM atoms
           ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
@@ -1124,7 +1123,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       for (int i=0;i<Natoms;i++)
       {
         //Add nuclear charges
-        if (Struct[i].PAregion == 1)
+        if (Struct[i].PAregion)
         {
           //Write new multipole definition for the atom ID
           WriteTINKMpole(Struct,ofile,i,Bead);
@@ -1132,7 +1131,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
           ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
           ofile << '\n';
         }
-        if (Struct[i].QMregion == 1)
+        if (Struct[i].QMregion)
         {
           double qi = 0;
           //remove charge
@@ -1236,7 +1235,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << " QMMM_" << Bead << ".key";
   sys = system(call.str().c_str());
   //Calculate polarization energy
-  if ((AMOEBA == 1) and (QMMM))
+  if ((AMOEBA == 1) and QMMM)
   {
     //Correct polarization energy for QMMM simulations
     E -= Epol; //Incorrect polarization energy
@@ -1278,9 +1277,9 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
-      if ((Struct[i].MMregion == 1) or (Struct[i].BAregion == 1))
+      if (Struct[i].MMregion or Struct[i].BAregion)
       {
-        if (Struct[i].Frozen == 0)
+        if (!Struct[i].Frozen)
         {
           if (ct == 0)
           {
@@ -1313,7 +1312,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       for (int i=0;i<Natoms;i++)
       {
         //Add nuclear charges
-        if (Struct[i].QMregion == 1)
+        if (Struct[i].QMregion)
         {
           //New charges are only needed for QM atoms
           ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
@@ -1327,7 +1326,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       for (int i=0;i<Natoms;i++)
       {
         //Add nuclear charges
-        if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+        if (Struct[i].QMregion or Struct[i].PAregion)
         {
           //Write new multipole definition for the atom ID
           WriteTINKMpole(Struct,ofile,i,Bead);

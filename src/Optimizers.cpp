@@ -57,11 +57,11 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     for (int i=0;i<Natoms;i++)
     {
       //Calculate RMS displacement
-      if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+      if (Struct[i].QMregion or Struct[i].PAregion)
       {
         for (int j=0;j<i;j++)
         {
-          if ((Struct[j].QMregion == 1) or (Struct[j].PAregion == 1))
+          if (Struct[j].QMregion or Struct[j].PAregion)
           {
             double Rnew = 0;
             double Rold = 0;
@@ -195,7 +195,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ofile.copyfmt(cout);
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion == 1)
+      if (Struct[i].MMregion)
       {
         ofile << fixed; //Forces numbers to be floats
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].x1;
@@ -341,7 +341,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Move QM atoms
-      if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+      if (Struct[i].QMregion or Struct[i].PAregion)
       {
         Struct[i].P[Bead].x += stepsize*Forces[ct].x;
         Struct[i].P[Bead].y += stepsize*Forces[ct].y;
@@ -398,7 +398,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ofile.copyfmt(cout);
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion == 1)
+      if (Struct[i].MMregion)
       {
         ofile << fixed; //Forces numbers to be floats
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].x1;
@@ -560,7 +560,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Move QM atoms
-      if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+      if (Struct[i].QMregion or Struct[i].PAregion)
       {
         Struct[i].P[Bead].x += OptVec(ct);
         Struct[i].P[Bead].y += OptVec(ct+1);

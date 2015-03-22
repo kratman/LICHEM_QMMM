@@ -83,7 +83,7 @@ void ExternalGaussian(int& argc, char**& argv)
   }
   for (int i=0;i<Natoms;i++)
   {
-    if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+    if (Struct[i].QMregion or Struct[i].PAregion)
     {
       //Save atom information
       getline(GauInput,dummy);
@@ -254,7 +254,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << QMMMOpts.Charge << " " << QMMMOpts.Spin << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion == 1)
+    if (Struct[i].QMregion)
     {
       call << Struct[i].QMTyp;
       call << fixed; //Forces numbers to be floats
@@ -264,7 +264,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
       call.copyfmt(cout);
       call << '\n';
     }
-    if (Struct[i].PAregion == 1)
+    if (Struct[i].PAregion)
     {
       call << "F";
       call << fixed; //Forces numbers to be floats
@@ -281,7 +281,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   {
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion == 1)
+      if (Struct[i].MMregion)
       {
         call << fixed; //Forces numbers to be floats
         call << " " << setprecision(12) << Struct[i].P[Bead].x;
@@ -298,7 +298,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   {
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion == 1)
+      if (Struct[i].MMregion)
       {
         call << fixed; //Forces numbers to be floats
         call << " " << setprecision(12) << Struct[i].PC[Bead].x1;
@@ -461,11 +461,11 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
         getline(ifile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+          if (Struct[i].QMregion or Struct[i].PAregion)
           {
             //Count through all atoms in the QM calculations
             getline(ifile,dummy);
-            if (Struct[i].QMregion == 1)
+            if (Struct[i].QMregion)
             {
               //Only collect charges for QM atoms
               stringstream line(dummy);
@@ -550,7 +550,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << QMMMOpts.Charge << " " << QMMMOpts.Spin << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion == 1)
+    if (Struct[i].QMregion)
     {
       call << Struct[i].QMTyp;
       call << fixed; //Forces numbers to be floats
@@ -560,7 +560,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       call.copyfmt(cout);
       call << '\n';
     }
-    if (Struct[i].PAregion == 1)
+    if (Struct[i].PAregion)
     {
       call << "F";
       call << fixed; //Forces numbers to be floats
@@ -573,11 +573,11 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   call << '\n'; //Blank line needed
   //Add the MM field
-  if ((CHRG == 1) and (QMMM))
+  if ((CHRG == 1) and QMMM)
   {
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion == 1)
+      if (Struct[i].MMregion)
       {
         call << fixed; //Forces numbers to be floats
         call << " " << setprecision(12) << Struct[i].P[Bead].x;
@@ -590,11 +590,11 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     }
     call << '\n'; //Blank line needed
   }
-  if ((AMOEBA == 1) and (QMMM))
+  if ((AMOEBA == 1) and QMMM)
   {
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion == 1)
+      if (Struct[i].MMregion)
       {
         call << fixed; //Forces numbers to be floats
         call << " " << setprecision(12) << Struct[i].PC[Bead].x1;
@@ -672,11 +672,11 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         getline(ifile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+          if (Struct[i].QMregion or Struct[i].PAregion)
           {
             //Count through all atoms in the QM calculations
             getline(ifile,dummy);
-            if (Struct[i].QMregion == 1)
+            if (Struct[i].QMregion)
             {
               //Only collect charges for QM atoms
               stringstream line(dummy);
@@ -758,7 +758,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << QMMMOpts.Charge << " " << QMMMOpts.Spin << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion == 1)
+    if (Struct[i].QMregion)
     {
       call << Struct[i].QMTyp;
       call << fixed; //Forces numbers to be floats
@@ -768,7 +768,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       call.copyfmt(cout);
       call << '\n';
     }
-    if (Struct[i].PAregion == 1)
+    if (Struct[i].PAregion)
     {
       call << "F";
       call << fixed; //Forces numbers to be floats
@@ -781,11 +781,11 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   call << '\n'; //Blank line needed
   //Add the MM field
-  if ((CHRG == 1) and (QMMM))
+  if ((CHRG == 1) and QMMM)
   {
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion == 1)
+      if (Struct[i].MMregion)
       {
         call << fixed; //Forces numbers to be floats
         call << " " << setprecision(12) << Struct[i].P[Bead].x;
@@ -798,11 +798,11 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     }
     call << '\n'; //Blank line needed
   }
-  if ((AMOEBA == 1) and (QMMM))
+  if ((AMOEBA == 1) and QMMM)
   {
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion == 1)
+      if (Struct[i].MMregion)
       {
         call << fixed; //Forces numbers to be floats
         call << " " << setprecision(12) << Struct[i].PC[Bead].x1;
@@ -906,11 +906,11 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         getline(ifile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+          if (Struct[i].QMregion or Struct[i].PAregion)
           {
             //Count through all atoms in the QM calculations
             getline(ifile,dummy);
-            if (Struct[i].QMregion == 1)
+            if (Struct[i].QMregion)
             {
               //Only collect charges for QM atoms
               stringstream line(dummy);
@@ -980,7 +980,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile.flush();
   ofile.close();
   //Write multipole point-charges
-  if ((AMOEBA == 1) and (QMMM))
+  if ((AMOEBA == 1) and QMMM)
   {
     call.str("");
     call << "MMCharges_" << Bead << ".txt";
@@ -988,7 +988,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ofile.copyfmt(cout);
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion == 1)
+      if (Struct[i].MMregion)
       {
         ofile << fixed; //Forces numbers to be floats
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].x1;
@@ -1055,7 +1055,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Add atoms
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion == 1)
+    if (Struct[i].QMregion)
     {
       call << Struct[i].QMTyp;
       call << fixed; //Forces numbers to be floats
@@ -1065,7 +1065,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       call.copyfmt(cout);
       call << '\n';
     }
-    if (Struct[i].PAregion == 1)
+    if (Struct[i].PAregion)
     {
       call << "F";
       call << fixed; //Forces numbers to be floats
@@ -1109,7 +1109,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         getline(ifile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+          if (Struct[i].QMregion or Struct[i].PAregion)
           {
             //Get new coordinates
             getline(ifile,dummy);
@@ -1140,7 +1140,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << " MMCharges_" << Bead << ".txt";
   sys = system(call.str().c_str());
   //Print warnings and errors
-  if (Optfinished == 0)
+  if (!Optfinished)
   {
     cout << "Warning: Optimization did not converge!!!";
     cout << '\n';

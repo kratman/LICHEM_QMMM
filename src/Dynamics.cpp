@@ -175,7 +175,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ct = 0;
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].QMregion == 1)
+      if (Struct[i].QMregion)
       {
         //Use the QM forces
         MMForces[i].x = Forces[ct].x;
@@ -186,7 +186,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         Forces[ct].z = 0;
         ct += 1;
       }
-      if (Struct[i].PAregion == 1)
+      if (Struct[i].PAregion)
       {
         //Take the average of the MM and QM forces
         MMForces[i].x += Forces[ct].x;
@@ -274,7 +274,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       cout << E << " eV";
       cout << '\n'; //Print progress
       cout.flush();
-      if (ProdRun == 1)
+      if (ProdRun)
       {
         Print_traj(Struct,outfile,QMMMOpts);
       }

@@ -65,7 +65,7 @@ double CoordDist2(Coord& a, Coord& b)
   if (PBCon == 1)
   {
     bool check = 1;
-    while (check == 1)
+    while (check)
     {
       check = 0;
       if (abs(dx) > (0.5*Lx))

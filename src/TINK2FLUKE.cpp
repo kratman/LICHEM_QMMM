@@ -167,11 +167,11 @@ void TINK2FLUKE(int& argc, char**& argv)
     cout.flush();
     exit(0);
   }
-  if ((SomeAct) or (SomeFroz))
+  if (SomeAct or SomeFroz)
   {
     for (int i=0;i<Natoms;i++)
     {
-      if ((Actives[i] == 0) and (Froz[i] == 0))
+      if ((!Actives[i]) and (!Froz[i]))
       {
         if (SomeFroz)
         {
@@ -182,15 +182,15 @@ void TINK2FLUKE(int& argc, char**& argv)
           Froz[i] = 1;
         }
       }
-      if ((Actives[i] == 1) and (Froz[i] == 0))
+      if (Actives[i] and (!Froz[i]))
       {
         Froz[i] = 0;
       }
-      if ((Actives[i] == 0) and (Froz[i] == 1))
+      if ((!Actives[i]) and Froz[i])
       {
         Froz[i] = 1;
       }
-      if ((Actives[i] == 1) and (Froz[i] == 1))
+      if (Actives[i] and Froz[i])
       {
         Froz[i] = 0;
         cout << '\n';
@@ -206,7 +206,7 @@ void TINK2FLUKE(int& argc, char**& argv)
       //Count frozen atoms
       if (i >= (Nqm+Npseudo+Nbound))
       {
-        if (Froz[i] == 1)
+        if (Froz[i])
         {
           Ninact += 1;
         }
@@ -305,7 +305,7 @@ void TINK2FLUKE(int& argc, char**& argv)
   ct = 0;
   for (int i=0;i<Natoms;i++)
   {
-    if (Froz[i] == 1)
+    if (Froz[i])
     {
       regfile << i;
       ct += 1;
