@@ -8,7 +8,7 @@ QM_spin: 1
 MM_type: TINKER
 Electrostatics: Charges
 Calculation_type: DFP
-Opt_step_size: 0.20
+Opt_step_size: 0.10
 Max_opt_step: 0.10
 QM_opt_tolerance: 1e-4
 MM_opt_tolerance: 1e-2

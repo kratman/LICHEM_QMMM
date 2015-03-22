@@ -701,10 +701,10 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   if (!GauExternal)
   {
     //Get total number of processors based on OMP_NUM_THREADS
-    double Procs = double(omp_get_num_threads());
+    double Procs = double(omp_get_num_procs());
     if (QMMMOpts.Nbeads > 1)
     {
-      int Nthreads = int(floor(Procs/Ncpus));
+      Nthreads = int(floor(Procs/Ncpus));
       omp_set_num_threads(Nthreads);
     }
   }
@@ -971,7 +971,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       }
     }
   }
-  cout << " OMP threads: " << omp_get_num_threads() << '\n';
+  cout << " OMP threads: " << Nthreads << '\n';
   if (QMonly or QMMM)
   {
     cout << " QM CPUs: " << Ncpus << '\n';

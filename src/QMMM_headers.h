@@ -86,6 +86,7 @@ const double Debye2au = 0.393430307; //Convert from Debye to au
 string xyzfilename; //Saves the filename given in the arguments
 string confilename; //Saves the filename given in the arguments
 string regfilename; //Saves the filename given in the arguments
+int Nthreads = 1;
 int Ncpus = 1; //Number of processors for QM calculations
 int Nfreeze = 0; //Number of frozen atoms
 int Npseudo = 0; //Number of pseudo-atoms

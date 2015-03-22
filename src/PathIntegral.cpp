@@ -9,7 +9,7 @@
 
  Path integral functions using QM, MM, and QMMM energies. Calls to wrappers
  are parallel over the number of beads. Other functions are mostly parallel
- over the number of atoms. It is safest to use serial wrappers for PIMC.
+ over the number of atoms.
 
 */
 
