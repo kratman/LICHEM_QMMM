@@ -137,7 +137,7 @@ double KineticE_eFF(vector<QMMMElec>& elecs, QMMMSettings& QMMMOpts)
       double Etmp = 3/(2*elecs[i].rad[k]*elecs[i].rad[k]);
       Etmp *= ElecMass/elecs[i].m; //Scale by mass
       Etmp *= Har2eV*BohrRad*BohrRad;
-      if (Scale_eFF == 1)
+      if (Scale_eFF)
       {
         //Reduce kinetic energy as the beads increase
         Etmp /= ElrtNbeads;

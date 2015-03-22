@@ -64,7 +64,7 @@ double LAMMPSWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     call << (Struct[i].id+1);
     call << " 1 "; //Dummy molecule ID
     call << Struct[i].NumTyp << " ";
-    if (((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1)) and
+    if ((Struct[i].QMregion or Struct[i].PAregion) and
        (RunTyp == "Enrg"))
     {
       //Add zero charge
@@ -114,7 +114,7 @@ double LAMMPSWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     ct = 0;
     for (int i=0;i<Natoms;i++)
     {
-      if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+      if (Struct[i].QMregion or Struct[i].PAregion)
       {
         call << (Struct[i].id+1); //LAMMPS id
         ct += 1;
@@ -140,7 +140,7 @@ double LAMMPSWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     ct = 0;
     for (int i=0;i<Natoms;i++)
     {
-      if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
+      if (Struct[i].QMregion or Struct[i].PAregion)
       {
         call << (Struct[i].id+1); //LAMMPS id
         ct += 1;
