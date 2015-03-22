@@ -705,12 +705,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
       //Add nuclear charges
       if ((Struct[i].QMregion == 1) or (Struct[i].PAregion == 1))
       {
-        double qi = 0;
-        //remove charge
-        qi = Struct[i].MP[Bead].q;
-        Struct[i].MP[Bead].q = 0;
         WriteTINKMpole(Struct,ofile,i,Bead);
-        Struct[i].MP[Bead].q += qi; //Restore charge
         ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
         ofile << '\n';
       }
