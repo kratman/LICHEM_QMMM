@@ -618,6 +618,23 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       /(GradDiff.transpose()*IHess*GradDiff));
       //End really long "line"
     }
+    else if ((stepct%100) == 0)
+    {
+      //Build a new Hessian after 100 steps
+      cout << "    Constructing new scaled Hessian...";
+      cout << '\n';
+      for (int i=0;i<(3*(Nqm+Npseudo));i++)
+      {
+        //Create scaled identity matrix
+        for (int j=0;j<i;j++)
+        {
+          IHess(i,j) = 0.0;
+          IHess(j,i) = 0.0;
+        }
+        //Very small steps since convergence is slow
+        IHess(i,i) = 0.05; //Already an "inverse Hessian"
+      }
+    }
     else
     {
       //Take a small steepest descent step and rebuild Hessian

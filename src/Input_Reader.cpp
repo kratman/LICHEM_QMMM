@@ -701,8 +701,11 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   if (!GauExternal)
   {
     //Get total number of processors
-    //double Procs = double(omp_get_num_procs());
     double Procs = double(Get_threads());
+    //Set default number of threads
+    Nthreads = Get_threads();
+    omp_set_num_threads(Nthreads);
+    //Modify threads for multi-replica simulations
     if (QMMMOpts.Nbeads > 1)
     {
       //Divide threads between the beads
