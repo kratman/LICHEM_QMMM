@@ -56,6 +56,12 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
 {
   //Potential for all beads
   double E = 0.0;
+  //Fix parallel for classical MC
+  if (QMMMOpts.Nbeads == 1)
+  {
+    omp_set_num_threads(1);
+  }
+  //Calculate energy
   vector<double> Es;
   vector<double> Times_qm;
   vector<double> Times_mm;
@@ -113,6 +119,11 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
     MMTime += Times_mm[i];
   }
   E /= QMMMOpts.Nbeads;
+  //Fix parallel for classical MC
+  if (QMMMOpts.Nbeads == 1)
+  {
+    omp_set_num_threads(Nthreads);
+  }
   return E;
 };
 
