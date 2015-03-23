@@ -700,11 +700,14 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   //Set OpenMP threads based on QM CPUs and total CPUs
   if (!GauExternal)
   {
-    //Get total number of processors based on OMP_NUM_THREADS
-    double Procs = double(omp_get_num_procs());
+    //Get total number of processors
+    //double Procs = double(omp_get_num_procs());
+    double Procs = double(Get_threads());
     if (QMMMOpts.Nbeads > 1)
     {
+      //Divide threads between the beads
       Nthreads = int(floor(Procs/Ncpus));
+      //Set number of threads for wrappers
       omp_set_num_threads(Nthreads);
     }
   }

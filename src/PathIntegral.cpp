@@ -129,7 +129,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     //Move a centroid
     int p;
     bool FrozenAt = 1;
-    while (FrozenAt == 1)
+    while (FrozenAt)
     {
       //Make sure the atom is not frozen
       p = (rand()%Natoms);
@@ -153,7 +153,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
       if (PBCon == 1)
       {
         bool check = 1;
-        while (check == 1)
+        while (check)
         {
           check = 0;
           if (xp > Lx)
@@ -199,7 +199,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     //Move a single bead
     int p;
     bool FrozenAt = 1;
-    while (FrozenAt == 1)
+    while (FrozenAt)
     {
       //Make sure the atom is not frozen
       p = (rand()%Natoms);
@@ -219,7 +219,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     parts2[p].P[p2].x += dx;
     if (PBCon == 1)
     {
-      while (check == 1)
+      while (check)
       {
         check = 0;
         if (parts2[p].P[p2].x > Lx)
@@ -238,7 +238,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     if (PBCon == 1)
     {
       check = 1;
-      while (check == 1)
+      while (check)
       {
         check = 0;
         if (parts2[p].P[p2].y > Ly)
@@ -257,7 +257,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     if (PBCon == 1)
     {
       check = 1;
-      while (check == 1)
+      while (check)
       {
         check = 0;
         if (parts2[p].P[p2].z > Lz)

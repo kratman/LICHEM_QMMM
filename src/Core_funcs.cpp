@@ -47,6 +47,16 @@ bool CheckFile(const string& file)
   return 0;
 };
 
+int Get_threads()
+{
+  //Function to count the number of allowed threads
+  int ct = 0;
+  #pragma omp parallel reduction(+:ct)
+  ct += 1;
+  #pragma omp barrier
+  return ct;
+};
+
 double Bohring(double ri)
 {
   //Convert ri (Bohr) to Angstroms

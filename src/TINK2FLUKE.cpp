@@ -23,7 +23,6 @@ void TINK2FLUKE(int& argc, char**& argv)
   fstream posfile,confile,regfile; //Output
   stringstream line;
   string dummy; //Generic string
-  bool TINKQMMM = 0;
   int Ninact = 0;
   bool SomeFroz = 0;
   bool SomeAct = 0;
@@ -87,7 +86,6 @@ void TINK2FLUKE(int& argc, char**& argv)
   Nmm = Natoms-Nqm-Npseudo-Nbound;
   if (Natoms != Nmm)
   {
-    TINKQMMM = 1;
     cout << '\n';
     cout << "Auto-detected file type: ";
     cout << "TINKER QMMM xyz";

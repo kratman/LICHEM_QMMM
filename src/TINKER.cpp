@@ -378,7 +378,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       ifile >> Epol;
     }
   }
-  if (Efound == 0)
+  if (!Efound)
   {
     //Warn user if no energy was found
     cout << "Warning: No MM energy found after a calculation!!!";
@@ -1216,7 +1216,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       ifile >> Epol;
     }
   }
-  if (Efound == 0)
+  if (!Efound)
   {
     //Warn user if no energy was found
     cout << "Warning: No MM energy found after a calculation!!!";
