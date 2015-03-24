@@ -88,7 +88,7 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
       stringstream call;
       call.str("");
       call << "rm -f QMMM_" << i << ".chk";
-      int sys = system(call.str().c_str());
+      //int sys = system(call.str().c_str());
     }
     if (PSI4 == 1)
     {
