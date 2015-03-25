@@ -80,7 +80,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     RMSforce = sqrt(RMSforce);
     //Print progress
     call.copyfmt(cout); //Save settings
-    cout << setprecision(8);
+    cout << setprecision(12);
     cout << "    QM Step: " << stepct;
     cout << " | RMS dev: " << RMSdiff;
     cout << " \u212B" << '\n';
@@ -147,7 +147,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     RMSdiff = sqrt(RMSdiff);
     //Print progress
     call.copyfmt(cout); //Save settings
-    cout << setprecision(8);
+    cout << setprecision(12);
     cout << " | Opt. Step: ";
     cout << stepct << " | Energy: ";
     cout << SumE << " eV ";
@@ -511,7 +511,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Output initial RMS force
   VecMax = sqrt(VecMax/(3*(Nqm+Npseudo)));
   call.copyfmt(cout); //Save settings
-  cout << setprecision(8);
+  cout << setprecision(12);
   cout << "    QM Step: 0";
   cout << " | RMS force: " << VecMax;
   cout << " eV/\u212B";
@@ -618,7 +618,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       /(GradDiff.transpose()*IHess*GradDiff));
       //End really long "line"
     }
-    else if ((stepct%100) == 0)
+    else if (((stepct%100) == 0) and (stepct != 0))
     {
       //Build a new Hessian after 100 steps
       cout << "    Constructing new scaled Hessian...";

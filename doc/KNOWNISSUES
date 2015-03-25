@@ -34,7 +34,9 @@ Optimization:
 -The steepest descent and DFP optimizers use Cartesian coordinates.
 -The DFP optimizer included in Optimizers.cpp does not have a true line
 search algorithm. Instead, the optimizer will take a small steepest descent
-step (and create a new guess Hessian) if the QMMM energy rises.
+step (and create a new guess Hessian) if the QMMM energy rises. It will also
+create a new Hessian if the optimization does not converge within 100 steps.
+-Steepest descent has a bug in the line search algorithm.
 -The optimizers could corrupt multi-replica structures, however, the routines
 are only intended for single-replica simulations. Optimization routines for
 multi-replica simulations (i.e. reaction paths) are in a different part of the

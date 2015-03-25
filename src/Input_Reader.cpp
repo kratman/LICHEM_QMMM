@@ -977,10 +977,15 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       }
     }
   }
-  cout << " OMP threads: " << Nthreads << '\n';
-  if (QMonly or QMMM)
+  if ((Ncpus > 1) or (Nthreads > 1))
   {
-    cout << " QM CPUs: " << Ncpus << '\n';
+    cout << '\n';
+    cout << "Parallelization settings:" << '\n';
+    cout << " OMP threads: " << Nthreads << '\n';
+    if (QMonly or QMMM)
+    {
+      cout << " QM CPUs: " << Ncpus << '\n';
+    }
   }
   cout << '\n';
   //Print convergence criteria for optimizations
