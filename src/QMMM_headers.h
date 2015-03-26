@@ -274,7 +274,7 @@ struct QMMMSettings
   double QMOptTol; //Criteria to end the optimization
   double StepScale; //Steepest descent step size (Ang)
   double MaxStep; //Maximum size of the optimization step
-  //Storage of energies (PIMC and Opt.)
+  //Storage of energies (PIMC)
   double Eold;
 };
 

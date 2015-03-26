@@ -169,7 +169,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
 void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
-  //Steepest descent optimizer with a crude backtracking algorithm
+  //Cartesian steepest descent optimizer
   int sys; //Dummy return for system calls
   stringstream call;
   call.copyfmt(cout);
@@ -239,16 +239,6 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   double VecMax = 0;
   bool OptDone = 0;
   vector<QMMMAtom> OldStruct = Struct; //Previous structure
-  vector<Coord> OldForces; //Previous forces
-  for (int i=0;i<(Nqm+Npseudo);i++)
-  {
-    //Create arrays with zeros
-    Coord tmp;
-    tmp.x = 0;
-    tmp.y = 0;
-    tmp.z = 0;
-    OldForces.push_back(tmp);
-  }
   //Run optimization
   while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
   {
@@ -291,25 +281,30 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       MMTime += (unsigned)time(0)-tstart;
     }
     //Check step size
-    if (E >= Eold)
+    if (stepct == 0)
+    {
+      //Save structure and energy
+      Eold = E;
+      OldStruct = Struct;
+    }
+    else if (E >= Eold)
     {
       //Take smaller steps if the energy does not improve
       cout << "    Energy did not decrease. Reducing step size...";
       cout << '\n';
       QMMMOpts.StepScale *= 0.80;
-      //Revert to the old structure and forces
-      Forces = OldForces;
-      Struct = OldStruct;
+      //Save structure and energy
+      Eold = E;
+      OldStruct = Struct;
     }
     else
     {
       //Take larger steps if the energy is still decreasing
       cout << "    Energy is decreasing. Increasing step size...";
       cout << '\n';
-      QMMMOpts.StepScale *= 1.01;
-      //Save current best forces and energy
+      QMMMOpts.StepScale *= 1.05;
+      //Save structure and energy
       Eold = E;
-      OldForces = Forces;
       OldStruct = Struct;
     }
     //Check optimization step size
@@ -334,6 +329,8 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (VecMax > QMMMOpts.MaxStep)
     {
       //Scale step size
+      cout << "    Step was too large, reducing step size...";
+      cout << '\n';
       stepsize *= (QMMMOpts.MaxStep/VecMax);
     }
     //Determine new structure
@@ -364,8 +361,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   return;
 };
 
-void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-     int Bead)
+void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //A simple DFP optimizer, which is similar to BFGS updating
   //Note: This optimizer does not have a true line search, instead

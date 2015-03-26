@@ -994,7 +994,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     cout << "Optimization settings:" << '\n';
     if (SteepSim or DFPSim)
     {
-      cout << " Step scale factor: " << QMMMOpts.MaxStep;
+      cout << " Step scale factor: " << QMMMOpts.StepScale;
       cout << '\n';
     }
     cout << " Max step size: " << QMMMOpts.MaxStep;
