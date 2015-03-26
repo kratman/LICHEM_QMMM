@@ -240,7 +240,9 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   bool OptDone = 0;
   vector<QMMMAtom> OldStruct = Struct; //Previous structure
   //Run optimization
+  bool StepFailed = 0; //Tests for a successful step
   double StepScale = QMMMOpts.StepScale;
+  StepScale *= 0.25; //Take a small first step
   while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
   {
     double E = 0;
@@ -285,17 +287,24 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (E > Eold)
     {
       //Take smaller steps if the energy does not improve
-      cout << "    Energy increased. Trying a small step...";
+      cout << "    Energy increased by ";
+      cout << (E-Eold) << " eV.";
       cout << '\n';
-      StepScale *= 0.25; //Take a very small step
+      cout << "    Trying a smaller step...";
+      cout << '\n';
+      StepScale *= 0.75; //Reduce step size
       //Revert to old structure and try again
       Struct = OldStruct;
+      StepFailed = 1;
     }
     else
     {
       //Save structure and energy
-      Eold = E;
-      OldStruct = Struct;
+      if (!StepFailed)
+      {
+        Eold = E;
+        OldStruct = Struct;
+      }
       //Check optimization step size
       VecMax = 0;
       for (int i=0;i<(Nqm+Npseudo);i++)
@@ -341,7 +350,12 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       stepct += 1;
       OptDone = OptConverged(Struct,OldStruct,Forces,stepct,QMMMOpts,Bead,1);
       //Return to original step size
-      StepScale = QMMMOpts.StepScale;
+      if (!StepFailed)
+      {
+        //Reset step size
+        StepScale = QMMMOpts.StepScale;
+      }
+      StepFailed = 0; //Reset flag
     }
   }
   //Clean up files
