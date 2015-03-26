@@ -186,7 +186,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     if (TINKER == 1)
     {
-      //Set up current charges
+      //Set up current multipoles
       RotateTINKCharges(Struct,Bead);
     }
     call.str("");
@@ -240,13 +240,12 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   bool OptDone = 0;
   vector<QMMMAtom> OldStruct = Struct; //Previous structure
   //Run optimization
-  bool StepFailed = 0; //Tests for a successful step
   double StepScale = QMMMOpts.StepScale;
   StepScale *= 0.25; //Take a small first step
   while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
   {
     double E = 0;
-    //Save old structure and create blank force array
+    //Create blank force array
     vector<Coord> Forces;
     for (int i=0;i<(Nqm+Npseudo);i++)
     {
@@ -284,78 +283,66 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       MMTime += (unsigned)time(0)-tstart;
     }
     //Check step size
-    if (E > Eold)
+    if (E >= Eold)
     {
       //Take smaller steps if the energy does not improve
-      cout << "    Energy increased by ";
-      cout << (E-Eold) << " eV.";
+      cout << "    Energy did not decrease. Reducing the step size...";
       cout << '\n';
-      cout << "    Trying a smaller step...";
-      cout << '\n';
-      StepScale *= 0.75; //Reduce step size
-      //Revert to old structure and try again
-      Struct = OldStruct;
-      StepFailed = 1;
+      StepScale *= 0.60; //Reduce step size
     }
-    else
+    //Save structure and energy
+    Eold = E;
+    OldStruct = Struct;
+    //Check optimization step size
+    VecMax = 0;
+    for (int i=0;i<(Nqm+Npseudo);i++)
     {
-      //Save structure and energy
-      if (!StepFailed)
+      //Check if the step size is too large
+      if (abs(StepScale*Forces[i].x) > VecMax)
       {
-        Eold = E;
-        OldStruct = Struct;
+        VecMax = abs(StepScale*Forces[i].x);
       }
-      //Check optimization step size
-      VecMax = 0;
-      for (int i=0;i<(Nqm+Npseudo);i++)
+      if (abs(StepScale*Forces[i].y) > VecMax)
       {
-        //Check if the step size is too large
-        if (abs(StepScale*Forces[i].x) > VecMax)
-        {
-          VecMax = abs(StepScale*Forces[i].x);
-        }
-        if (abs(StepScale*Forces[i].y) > VecMax)
-        {
-          VecMax = abs(StepScale*Forces[i].y);
-        }
-        if (abs(StepScale*Forces[i].z) > VecMax)
-        {
-          VecMax = abs(StepScale*Forces[i].z);
-        }
+        VecMax = abs(StepScale*Forces[i].y);
       }
-      stepsize = StepScale;
-      if (VecMax > QMMMOpts.MaxStep)
+      if (abs(StepScale*Forces[i].z) > VecMax)
       {
-        //Scale step size
-        cout << "    Step was too large, reducing step size...";
-        cout << '\n';
-        stepsize *= (QMMMOpts.MaxStep/VecMax);
+        VecMax = abs(StepScale*Forces[i].z);
       }
-      //Determine new structure
-      int ct = 0; //Counter
-      for (int i=0;i<Natoms;i++)
+    }
+    stepsize = StepScale;
+    if (VecMax > QMMMOpts.MaxStep)
+    {
+      //Scale step size
+      cout << "    Scaling step size to match the maximum...";
+      cout << '\n';
+      stepsize *= (QMMMOpts.MaxStep/VecMax);
+    }
+    //Determine new structure
+    int ct = 0; //Counter
+    for (int i=0;i<Natoms;i++)
+    {
+      //Move QM atoms
+      if (Struct[i].QMregion or Struct[i].PAregion)
       {
-        //Move QM atoms
-        if (Struct[i].QMregion or Struct[i].PAregion)
-        {
-          Struct[i].P[Bead].x += stepsize*Forces[ct].x;
-          Struct[i].P[Bead].y += stepsize*Forces[ct].y;
-          Struct[i].P[Bead].z += stepsize*Forces[ct].z;
-          ct += 1;
-        }
+        Struct[i].P[Bead].x += stepsize*Forces[ct].x;
+        Struct[i].P[Bead].y += stepsize*Forces[ct].y;
+        Struct[i].P[Bead].z += stepsize*Forces[ct].z;
+        ct += 1;
       }
-      //Print structure
-      Print_traj(Struct,qmfile,QMMMOpts);
-      //Check convergence
-      stepct += 1;
-      OptDone = OptConverged(Struct,OldStruct,Forces,stepct,QMMMOpts,Bead,1);
-      //Return to original step size
-      if (!StepFailed)
-      {
-        //Reset step size
-        StepScale = QMMMOpts.StepScale;
-      }
-      StepFailed = 0; //Reset flag
+    }
+    //Print structure
+    Print_traj(Struct,qmfile,QMMMOpts);
+    //Check convergence
+    stepct += 1;
+    OptDone = OptConverged(Struct,OldStruct,Forces,stepct,QMMMOpts,Bead,1);
+    //Increase step size
+    StepScale *= 1.05;
+    if (StepScale > QMMMOpts.StepScale)
+    {
+      //Prevent step size from getting too large
+      StepScale = QMMMOpts.StepScale;
     }
   }
   //Clean up files
@@ -391,7 +378,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   {
     if (TINKER == 1)
     {
-      //Set up current charges
+      //Set up current multipoles
       RotateTINKCharges(Struct,Bead);
     }
     call.str("");
