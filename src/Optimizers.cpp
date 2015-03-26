@@ -240,6 +240,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   bool OptDone = 0;
   vector<QMMMAtom> OldStruct = Struct; //Previous structure
   //Run optimization
+  double StepScale = QMMMOpts.StepScale;
   while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
   {
     double E = 0;
@@ -281,76 +282,67 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       MMTime += (unsigned)time(0)-tstart;
     }
     //Check step size
-    if (stepct == 0)
-    {
-      //Save structure and energy
-      Eold = E;
-      OldStruct = Struct;
-    }
-    else if (E >= Eold)
+    if (E > Eold)
     {
       //Take smaller steps if the energy does not improve
-      cout << "    Energy did not decrease. Reducing step size...";
+      cout << "    Energy increased. Trying a small step...";
       cout << '\n';
-      QMMMOpts.StepScale *= 0.80;
-      //Save structure and energy
-      Eold = E;
-      OldStruct = Struct;
+      StepScale *= 0.25; //Take a very small step
+      //Revert to old structure and try again
+      Struct = OldStruct;
     }
     else
     {
-      //Take larger steps if the energy is still decreasing
-      cout << "    Energy is decreasing. Increasing step size...";
-      cout << '\n';
-      QMMMOpts.StepScale *= 1.05;
       //Save structure and energy
       Eold = E;
       OldStruct = Struct;
-    }
-    //Check optimization step size
-    VecMax = 0;
-    for (int i=0;i<(Nqm+Npseudo);i++)
-    {
-      //Check if the step size is too large
-      if (abs(QMMMOpts.StepScale*Forces[i].x) > VecMax)
+      //Check optimization step size
+      VecMax = 0;
+      for (int i=0;i<(Nqm+Npseudo);i++)
       {
-        VecMax = abs(QMMMOpts.StepScale*Forces[i].x);
+        //Check if the step size is too large
+        if (abs(StepScale*Forces[i].x) > VecMax)
+        {
+          VecMax = abs(StepScale*Forces[i].x);
+        }
+        if (abs(StepScale*Forces[i].y) > VecMax)
+        {
+          VecMax = abs(StepScale*Forces[i].y);
+        }
+        if (abs(StepScale*Forces[i].z) > VecMax)
+        {
+          VecMax = abs(StepScale*Forces[i].z);
+        }
       }
-      if (abs(QMMMOpts.StepScale*Forces[i].y) > VecMax)
+      stepsize = StepScale;
+      if (VecMax > QMMMOpts.MaxStep)
       {
-        VecMax = abs(QMMMOpts.StepScale*Forces[i].y);
+        //Scale step size
+        cout << "    Step was too large, reducing step size...";
+        cout << '\n';
+        stepsize *= (QMMMOpts.MaxStep/VecMax);
       }
-      if (abs(QMMMOpts.StepScale*Forces[i].z) > VecMax)
+      //Determine new structure
+      int ct = 0; //Counter
+      for (int i=0;i<Natoms;i++)
       {
-        VecMax = abs(QMMMOpts.StepScale*Forces[i].z);
+        //Move QM atoms
+        if (Struct[i].QMregion or Struct[i].PAregion)
+        {
+          Struct[i].P[Bead].x += stepsize*Forces[ct].x;
+          Struct[i].P[Bead].y += stepsize*Forces[ct].y;
+          Struct[i].P[Bead].z += stepsize*Forces[ct].z;
+          ct += 1;
+        }
       }
+      //Print structure
+      Print_traj(Struct,qmfile,QMMMOpts);
+      //Check convergence
+      stepct += 1;
+      OptDone = OptConverged(Struct,OldStruct,Forces,stepct,QMMMOpts,Bead,1);
+      //Return to original step size
+      StepScale = QMMMOpts.StepScale;
     }
-    stepsize = QMMMOpts.StepScale;
-    if (VecMax > QMMMOpts.MaxStep)
-    {
-      //Scale step size
-      cout << "    Step was too large, reducing step size...";
-      cout << '\n';
-      stepsize *= (QMMMOpts.MaxStep/VecMax);
-    }
-    //Determine new structure
-    int ct = 0; //Counter
-    for (int i=0;i<Natoms;i++)
-    {
-      //Move QM atoms
-      if (Struct[i].QMregion or Struct[i].PAregion)
-      {
-        Struct[i].P[Bead].x += stepsize*Forces[ct].x;
-        Struct[i].P[Bead].y += stepsize*Forces[ct].y;
-        Struct[i].P[Bead].z += stepsize*Forces[ct].z;
-        ct += 1;
-      }
-    }
-    //Print structure
-    Print_traj(Struct,qmfile,QMMMOpts);
-    //Check convergence
-    stepct += 1;
-    OptDone = OptConverged(Struct,OldStruct,Forces,stepct,QMMMOpts,Bead,1);
   }
   //Clean up files
   call.str("");

@@ -331,7 +331,6 @@ int main(int argc, char* argv[])
     while (!OptDone)
     {
       //Copy structure
-      double SavedStepSize = QMMMOpts.StepScale; //Save old step size
       OldStruct = Struct;
       //Run optimization
       if (Gaussian == 1)
@@ -365,7 +364,6 @@ int main(int argc, char* argv[])
       //Check convergence
       optct += 1;
       OptDone = OptConverged(Struct,OldStruct,Forces,optct,QMMMOpts,0,0);
-      QMMMOpts.StepScale = SavedStepSize;
     }
     cout << '\n';
     cout << "Optimization complete.";
