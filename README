@@ -41,6 +41,6 @@ to the Eigen3 package.
 
 Default: -I/usr/include/eigen3/
 
-The compile script produces both the documentation and the source code.
+The Makefile produces both the documentation and the binary.
 
-user:$ ./compile
+user:$ make install
