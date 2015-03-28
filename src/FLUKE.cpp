@@ -588,7 +588,7 @@ int main(int argc, char* argv[])
   cout << "################# Usage Statistics #################";
   cout << '\n';
   cout << "  Total wall time: ";
-  cout << TotalHours << " hour";
+  cout << TotalHours << " hours";
   cout << '\n';
   cout << "  Wall time for QM Wrappers: ";
   cout << TotalQM << " hours";
