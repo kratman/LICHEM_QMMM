@@ -11,18 +11,25 @@ TEX=pdflatex
 BIB=bibtex
 
 install:	title
+	@echo "Compiling the FLUKE binary..."
 	cd src/; \
-	$(CXX) $(CXXFLAGS) FLUKE.cpp -o FLUKE $(LDFLAGS); \
-	mv FLUKE ../.
+	$(CXX) $(CXXFLAGS) FLUKE.cpp -o FLUKE $(LDFLAGS)
+	@mv src/FLUKE .; \
+	echo ""
 
 all:	install manual
 
-Dev:	install manual
+Dev:	install
+	@echo "Compiling the FLUKE development binary..."
 	cd src/; \
-	$(CC) -DDEVCOMP -o FLUKE; \
-	mv FLUKE ../.
+	$(CXX) $(CXXFLAGS) -DDEVCOMP FLUKE.cpp -o FLUKE $(LDFLAGS)
+	@mv src/FLUKE .; \
+	echo ""
+
+DevAll:	Dev manual
 
 manual:	
+	@echo "Compiling the documentation..."; \
 	cd src/; \
 	$(TEX) manual > doclog.txt; \
 	$(BIB) manual > doclog.txt; \
@@ -40,7 +47,7 @@ manual:
 	rm -f doclog.txt;
 
 title:	
-	echo ""; \
+	@echo ""; \
 	echo "###################################################"; \
 	echo "#                                                 #"; \
 	echo "# FLUKE: Fields Layered Under Kohn-Sham Electrons #"; \
