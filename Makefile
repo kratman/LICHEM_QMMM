@@ -4,9 +4,11 @@
 #                                                 #
 ###################################################
 
+### Compiler settings
+
 CXX=g++
-CXXFLAGS=-static -fopenmp -g -O3
-LDFLAGS=-I/usr/include/eigen3/
+CXXFLAGS=-static -fopenmp -O3
+LDFLAGS=-I./src/ -I/usr/include/eigen3/
 TEX=pdflatex
 BIB=bibtex
 
@@ -21,16 +23,12 @@ Dev:	title binary devbin manual stats compdone
 binary:	
 	@echo ""; \
 	echo "Compiling the FLUKE binary..."
-	cd src/; \
-	$(CXX) $(CXXFLAGS) FLUKE.cpp -o FLUKE $(LDFLAGS)
-	@mv src/FLUKE .
+	$(CXX) $(CXXFLAGS) ./src/FLUKE.cpp -o FLUKE $(LDFLAGS)
 
 devbin:	
 	@echo ""; \
 	echo "Compiling the FLUKE development binary..."
-	cd src/; \
-	$(CXX) $(CXXFLAGS) -DDEVCOMP FLUKE.cpp -o FLUKE $(LDFLAGS)
-	@mv src/FLUKE .
+	$(CXX) $(CXXFLAGS) -g -DDEVCOMP ./src/FLUKE.cpp -o FLUKE $(LDFLAGS)
 
 manual:	
 	@echo ""; \
