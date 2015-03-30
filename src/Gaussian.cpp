@@ -961,6 +961,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   double E = 0.0; //QM energy
   double Eself = 0.0; //Field self-energy
   int sys; //Dummy return for system calls
+  int ExtCPUs = 1; //Number of CPUs for GauExternal
   if ((AMOEBA == 1) and (TINKER == 1))
   {
     RotateTINKCharges(Struct,Bead);
@@ -1036,11 +1037,21 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "_" << Bead << ".chk";
   call << '\n';
   call << "%Mem=" << QMMMOpts.RAM << "GB" << '\n';
-  call << "%NprocShared=" << Ncpus << '\n';
+  call << "%NprocShared=";
+  if (Ncpus <= 2)
+  {
+    call << 1;
+  }
+  else
+  {
+    call << 2;
+    ExtCPUs = Ncpus-2;
+  }
+  call << '\n';
   call << "#P " << "external=\"FLUKE -GauExtern ";
   call << "QMMMExt"; //Just the stub
   call << "_" << Bead;
-  call << " -n " << Ncpus;
+  call << " -n " << ExtCPUs;
   call << " -c " << confilename;
   call << " -r " << regfilename;
   call << " -b " << Bead;
