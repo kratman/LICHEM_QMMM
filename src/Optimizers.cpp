@@ -161,6 +161,8 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       cout << "    QMMM relaxation satisfactory.";
       cout << '\n';
     }
+    //Flush output
+    cout.flush();
   }
   return OptDone;
 };
