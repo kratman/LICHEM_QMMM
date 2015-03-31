@@ -984,7 +984,23 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     cout << " OMP threads: " << Nthreads << '\n';
     if (QMonly or QMMM)
     {
-      cout << " QM CPUs: " << Ncpus << '\n';
+      if (OptSim and (Gaussian == 1))
+      {
+        if (Ncpus <= 2)
+        {
+          cout << " Opt. threads: 1" << '\n';
+          cout << " QM threads: 1" << '\n';
+        }
+        else
+        {
+          cout << " Opt. threads: 2" << '\n';
+          cout << " QM threads: " << (Ncpus-2) << '\n';
+        }
+      }
+      else
+      {
+        cout << " QM threads: " << Ncpus << '\n';
+      }
     }
   }
   cout << '\n';
