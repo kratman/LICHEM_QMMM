@@ -482,6 +482,8 @@ void FLUKE2TINK(int& argc, char**& argv)
   //Local variables
   fstream posfile,confile,ofile; //Files
   string dummy; //Generic string
+  string POSfilename = "NOFILE";
+  string CONfilename = "NOFILE";
   //Read arguments
   bool DoQuit = 0;
   cout << "Reading FLUKE input: ";
@@ -498,6 +500,7 @@ void FLUKE2TINK(int& argc, char**& argv)
         cout << '\n';
         DoQuit = 1;
       }
+      POSfilename = file.str();
       posfile.open(argv[i+1],ios_base::in);
       cout << argv[i+1];
       cout << " ";
@@ -508,21 +511,28 @@ void FLUKE2TINK(int& argc, char**& argv)
       file << argv[i+1];
       if (!CheckFile(file.str()))
       {
-        cout << "Error: Could not open XYZ file!!!";
+        cout << "Error: Could not open connectivity file!!!";
         cout << '\n';
         DoQuit = 1;
       }
+      CONfilename = file.str();
       confile.open(argv[i+1],ios_base::in);
       cout << argv[i+1];
       cout << " ";
     }
   }
   cout << '\n' << '\n'; //Terminate output
-  ofile.open("tinkxyz.xyz",ios_base::out);
+  if ((!CheckFile(POSfilename)) or (!CheckFile(POSfilename)))
+  {
+    cout << "Error: Missing files!!!";
+    cout << '\n' << '\n';
+    DoQuit = 1;
+  }
   //Parse input if files exist
   if (!DoQuit)
   {
     //Parse XYZ file and connect file
+    ofile.open("tinkxyz.xyz",ios_base::out);
     posfile >> Natoms; //Collect the number of atoms
     ofile << Natoms << '\n'; //Write the number of atoms
     for (int i=0;i<Natoms;i++)
