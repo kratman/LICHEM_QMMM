@@ -512,6 +512,8 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Optimize structure
   Eold = E;
   bool OptDone = 0;
+  double StepScale = QMMMOpts.StepScale;
+  StepScale *= 0.75; //Take a smaller first step
   while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
   {
     E = 0; // Reinitialize energy
@@ -532,7 +534,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     }
     //Determine new structure
     OptVec = IHess*NGrad;
-    OptVec *= QMMMOpts.StepScale;
+    OptVec *= StepScale;
     VecMax = 0;
     for (int i=0;i<(3*(Nqm+Npseudo));i++)
     {
@@ -599,17 +601,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       NGrad(ct+2) = Forces[i].z;
       ct += 3;
     }
-    if (E < Eold)
-    {
-      //Start really long "line"
-      cout << "    Updating inverse Hessian...";
-      cout << '\n';
-      IHess = IHess+((OptVec*OptVec.transpose())/(OptVec.transpose()
-      *GradDiff))-((IHess*GradDiff*GradDiff.transpose()*IHess)
-      /(GradDiff.transpose()*IHess*GradDiff));
-      //End really long "line"
-    }
-    else if (((stepct%100) == 0) and (stepct != 0))
+    if (((stepct%100) == 0) and (stepct != 0))
     {
       //Build a new Hessian after 100 steps
       cout << "    Constructing new scaled Hessian...";
@@ -626,11 +618,23 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         IHess(i,i) = 0.05; //Already an "inverse Hessian"
       }
     }
+    else if (E < Eold)
+    {
+      //Update Hessian
+      cout << "    Updating inverse Hessian...";
+      cout << '\n';
+      //Start really long "line"
+      IHess = IHess+((OptVec*OptVec.transpose())/(OptVec.transpose()
+      *GradDiff))-((IHess*GradDiff*GradDiff.transpose()*IHess)
+      /(GradDiff.transpose()*IHess*GradDiff));
+      //End really long "line"
+    }
     else
     {
       //Take a small steepest descent step and rebuild Hessian
       cout << "    Energy did not decrease. Constructing new Hessian...";
       cout << '\n';
+      StepScale *= 0.60;
       for (int i=0;i<(3*(Nqm+Npseudo));i++)
       {
         //Create scaled identity matrix
@@ -642,7 +646,15 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         IHess(i,i) = 0.10; //Already an "inverse Hessian"
       }
     }
-    Eold = E; //Save energy
+    //Increase stepsize
+    StepScale *= 1.05;
+    if (StepScale > QMMMOpts.StepScale)
+    {
+      //Prevent step size from getting too large
+      StepScale = QMMMOpts.StepScale;
+    }
+    //Save energy
+    Eold = E;
     //Check convergence
     stepct += 1;
     OptDone = OptConverged(Struct,OldStruct,Forces,stepct,QMMMOpts,Bead,1);
