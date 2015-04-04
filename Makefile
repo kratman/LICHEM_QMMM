@@ -8,6 +8,7 @@
 
 CXX=g++
 CXXFLAGS=-static -fopenmp -O3
+DEVFLAGS=-g -DDEVCOMP
 LDFLAGS=-I./src/ -I/usr/include/eigen3/
 TEX=pdflatex
 BIB=bibtex
@@ -28,7 +29,7 @@ binary:
 devbin:	
 	@echo ""; \
 	echo "Compiling the FLUKE development binary..."
-	$(CXX) $(CXXFLAGS) -g -DDEVCOMP ./src/FLUKE.cpp -o FLUKE $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(DEVFLAGS) ./src/FLUKE.cpp -o FLUKE $(LDFLAGS)
 
 manual:	
 	@echo ""; \

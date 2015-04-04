@@ -34,12 +34,14 @@ double BerendsenThermo(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   double vxcom = 0;
   double vycom = 0;
   double vzcom = 0;
+  #pragma omp parallel for reduction(+:vxcom,vycom,vzcom)
   for (int i=0;i<Natoms;i++)
   {
     vxcom += Struct[i].Vel[Bead].x;
     vycom += Struct[i].Vel[Bead].y;
     vzcom += Struct[i].Vel[Bead].z;
   }
+  #pragma omp barrier
   vxcom /= Natoms;
   vycom /= Natoms;
   vzcom /= Natoms;
@@ -53,6 +55,7 @@ double BerendsenThermo(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   #pragma omp barrier
   //Calculate temperature
+  #pragma omp parallel for reduction(+:Ek)
   for (int i=0;i<Natoms;i++)
   {
     //Calculate the kinetic energy
@@ -62,6 +65,7 @@ double BerendsenThermo(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     v2 += Struct[i].Vel[Bead].z*Struct[i].Vel[Bead].z;
     Ek += Struct[i].m*v2; //Two left out below
   }
+  #pragma omp barrier
   T = (Ek*amu2kg)/(3*Natoms*kSI*m2Ang*m2Ang*fs2s*fs2s); //Two left out above
   //Calculate the scale factor for the velocities
   VelScale = (T/QMMMOpts.Temp);

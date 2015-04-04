@@ -27,7 +27,7 @@ double Get_PI_Espring(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
   double E = 0.0;
   double w0 = 1/(QMMMOpts.Beta*hbar);
   w0 *= w0*ToeV;
-  #pragma omp parallel for
+  #pragma omp parallel for reduction(+:E)
   for (int i=0;i<Natoms;i++)
   {
     parts[i].Ep = 0.0;
@@ -43,12 +43,9 @@ double Get_PI_Espring(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
       double dr2 = CoordDist2(parts[i].P[j],parts[i].P[j2]);
       parts[i].Ep += SpringEnergy(w,dr2);
     }
-  }
-  #pragma omp barrier
-  for (int i=0;i<Natoms;i++)
-  {
     E += parts[i].Ep;
   }
+  #pragma omp barrier
   return E;
 };
 
@@ -63,62 +60,48 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
     MCThreads = 1;
   }
   //Calculate energy
-  vector<double> Es;
-  vector<double> Times_qm;
-  vector<double> Times_mm;
-  for (int i=0;i<QMMMOpts.Nbeads;i++)
-  {
-    Es.push_back(0.0);
-    Times_qm.push_back(0.0);
-    Times_mm.push_back(0.0);
-  }
-  #pragma omp parallel for num_threads(MCThreads)
+  #pragma omp parallel for num_threads(MCThreads) reduction(+:E,QMTime,MMTime)
   for (int i=0;i<QMMMOpts.Nbeads;i++)
   {
     //Timer variables
     int t_qm_start = 0;
     int t_mm_start = 0;
+    int Times_qm = 0;
+    int Times_mm = 0;
     //Runs the wrappers for all beads
+    double Es = 0.0;
     if (Gaussian == 1)
     {
       t_qm_start = (unsigned)time(0);
-      Es[i] += GaussianEnergy(parts,QMMMOpts,i);
-      Times_qm[i] += (unsigned)time(0)-t_qm_start;
-      //Remove .chk file
-      //Note: Chk files may be a problem if large steps are taken
-      stringstream call;
-      call.str("");
-      call << "rm -f QMMM_" << i << ".chk";
-      //int sys = system(call.str().c_str());
+      Es += GaussianEnergy(parts,QMMMOpts,i);
+      Times_qm += (unsigned)time(0)-t_qm_start;
     }
     if (PSI4 == 1)
     {
       t_qm_start = (unsigned)time(0);
-      Es[i] += PSIEnergy(parts,QMMMOpts,i);
-      Times_qm[i] += (unsigned)time(0)-t_qm_start;
+      Es += PSIEnergy(parts,QMMMOpts,i);
+      Times_qm += (unsigned)time(0)-t_qm_start;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
     }
     if (TINKER == 1)
     {
       t_mm_start = (unsigned)time(0);
-      Es[i] += TINKEREnergy(parts,QMMMOpts,i);
-      Times_mm[i] += (unsigned)time(0)-t_mm_start;
+      Es += TINKEREnergy(parts,QMMMOpts,i);
+      Times_mm += (unsigned)time(0)-t_mm_start;
     }
     if (AMBER == 1)
     {
       t_mm_start = (unsigned)time(0);
-      Es[i] += AMBEREnergy(parts,QMMMOpts,i);
-      Times_mm[i] += (unsigned)time(0)-t_mm_start;
+      Es += AMBEREnergy(parts,QMMMOpts,i);
+      Times_mm += (unsigned)time(0)-t_mm_start;
     }
+    //Sum
+    E += Es;
+    QMTime += Times_qm;
+    MMTime += Times_mm;
   }
   #pragma omp barrier
-  for (int i=0;i<QMMMOpts.Nbeads;i++)
-  {
-    E += Es[i];
-    QMTime += Times_qm[i];
-    MMTime += Times_mm[i];
-  }
   E /= QMMMOpts.Nbeads;
   return E;
 };

@@ -54,6 +54,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       }
       RMSforce += Fx*Fx+Fy*Fy+Fz*Fz;
     }
+    #pragma omp parallel for reduction(+:RMSdiff)
     for (int i=0;i<Natoms;i++)
     {
       //Calculate RMS displacement
@@ -74,6 +75,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
         }
       }
     }
+    #pragma omp barrier
     RMSdiff /= (Nqm+Npseudo)*(Nqm+Npseudo-1)/2;
     RMSdiff = sqrt(RMSdiff);
     RMSforce /= 3*(Nqm+Npseudo);
@@ -130,6 +132,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       MMTime += (unsigned)time(0)-tstart;
     }
     //Calculate RMS displacement
+    #pragma omp parallel for reduction(+:RMSdiff)
     for (int i=0;i<Natoms;i++)
     {
       for (int j=0;j<i;j++)
@@ -143,6 +146,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
         RMSdiff += (Rnew-Rold)*(Rnew-Rold);
       }
     }
+    #pragma omp barrier
     RMSdiff /= (Natoms-Nfreeze)*(Natoms-Nfreeze-1)/2;
     RMSdiff = sqrt(RMSdiff);
     //Print progress
@@ -433,6 +437,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   VectorXd GradDiff(3*(Nqm+Npseudo)); //Change in the gradient
   VectorXd NGrad(3*(Nqm+Npseudo)); //Negative of the gradient
   MatrixXd IHess(3*(Nqm+Npseudo),3*(Nqm+Npseudo)); //Inverse Hessian
+  #pragma omp parallel for
   for (int i=0;i<(3*(Nqm+Npseudo));i++)
   {
     //Initialize arrays
@@ -448,6 +453,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     }
     IHess(i,i) = 0.1; //Already an "inverse Hessian"
   }
+  #pragma omp barrier
   vector<Coord> Forces;
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
@@ -606,6 +612,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       //Build a new Hessian after 100 steps
       cout << "    Too many steps... Constructing new Hessian...";
       cout << '\n';
+      #pragma omp parallel for
       for (int i=0;i<(3*(Nqm+Npseudo));i++)
       {
         //Create scaled identity matrix
@@ -617,6 +624,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         //Very small steps since convergence is slow
         IHess(i,i) = 0.05; //Already an "inverse Hessian"
       }
+      #pragma omp barrier
     }
     else if (E < Eold)
     {
@@ -635,6 +643,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       cout << "    Energy did not decrease. Constructing new Hessian...";
       cout << '\n';
       StepScale *= 0.60;
+      #pragma omp parallel for
       for (int i=0;i<(3*(Nqm+Npseudo));i++)
       {
         //Create scaled identity matrix
@@ -645,6 +654,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         }
         IHess(i,i) = 0.10; //Already an "inverse Hessian"
       }
+      #pragma omp barrier
     }
     //Increase stepsize
     StepScale *= 1.05;
