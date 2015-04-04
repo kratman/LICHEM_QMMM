@@ -604,7 +604,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     if (((stepct%100) == 0) and (stepct != 0))
     {
       //Build a new Hessian after 100 steps
-      cout << "    Constructing new scaled Hessian...";
+      cout << "    Too many steps... Constructing new Hessian...";
       cout << '\n';
       for (int i=0;i<(3*(Nqm+Npseudo));i++)
       {

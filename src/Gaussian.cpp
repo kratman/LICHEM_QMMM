@@ -235,7 +235,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   if (UseCheckPoint)
   {
     //Restart if possible
-    call << " Guess=Read";
+    call << " Guess=TCheck";
   }
   call << '\n';
   if (QMMM)
@@ -539,7 +539,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (UseCheckPoint)
     {
       //Read pseudo potential
-      call << "Guess=Read ";
+      call << "Guess=TCheck ";
     }
     call << "Charge=angstroms "; //Read charges
     call << "Population(MK,ReadRadii)";
@@ -739,7 +739,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "Int=UltraFine SCF=(YQC,Big,Direct)";
   if (UseCheckPoint)
   {
-    call << " Guess=Read";
+    call << " Guess=TCheck";
   }
   call << '\n';
   if (QMMM)
