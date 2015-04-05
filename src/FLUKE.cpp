@@ -332,7 +332,20 @@ int main(int argc, char* argv[])
     {
       //Copy structure
       OldStruct = Struct;
-      //Run optimization
+      //Run MM optimization
+      if (TINKER == 1)
+      {
+        int tstart = (unsigned)time(0);
+        SumE = TINKEROpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      if (AMBER == 1)
+      {
+        int tstart = (unsigned)time(0);
+        SumE = AMBEROpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      //Run QM optimization
       if (Gaussian == 1)
       {
         int tstart = (unsigned)time(0);
@@ -346,18 +359,6 @@ int main(int argc, char* argv[])
         QMTime += (unsigned)time(0)-tstart;
         //Clean up annoying useless files
         int sys = system("rm -f psi.*");
-      }
-      if (TINKER == 1)
-      {
-        int tstart = (unsigned)time(0);
-        SumE = TINKEROpt(Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
-      }
-      if (AMBER == 1)
-      {
-        int tstart = (unsigned)time(0);
-        SumE = AMBEROpt(Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
       }
       //Print Optimized geometry
       Print_traj(Struct,outfile,QMMMOpts);
@@ -419,8 +420,7 @@ int main(int argc, char* argv[])
       //Copy structure
       double SavedStepSize = QMMMOpts.StepScale; //Save old step size
       OldStruct = Struct;
-      //Run optimization
-      FLUKESteepest(Struct,QMMMOpts,0);
+      //Run MM optimization
       if (TINKER == 1)
       {
         int tstart = (unsigned)time(0);
@@ -433,6 +433,8 @@ int main(int argc, char* argv[])
         SumE = AMBEROpt(Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
+      //Run QM optimization
+      FLUKESteepest(Struct,QMMMOpts,0);
       //Print Optimized geometry
       Print_traj(Struct,outfile,QMMMOpts);
       //Check convergence
@@ -494,8 +496,7 @@ int main(int argc, char* argv[])
       //Copy structure
       double SavedStepSize = QMMMOpts.StepScale; //Save old step size
       OldStruct = Struct;
-      //Run optimization
-      FLUKEDFP(Struct,QMMMOpts,0);
+      //Run MM optimization
       if (TINKER == 1)
       {
         int tstart = (unsigned)time(0);
@@ -508,6 +509,8 @@ int main(int argc, char* argv[])
         SumE = AMBEROpt(Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
+      //Run QM optimization
+      FLUKEDFP(Struct,QMMMOpts,0);
       //Print Optimized geometry
       Print_traj(Struct,outfile,QMMMOpts);
       //Check convergence
