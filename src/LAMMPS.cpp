@@ -15,6 +15,8 @@
 */
 
 //MM utility functions
+
+//MM wrapper functions
 double LAMMPSForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
@@ -32,7 +34,40 @@ double LAMMPSForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   return Emm;
 };
 
-//MM wrapper functions
+double LAMMPSEnergy(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
+       QMMMSettings& QMMMOpts, int Bead)
+{
+  //Function for calculating the MM forces on a set of QM atoms
+  fstream ofile,ifile;
+  string dummy; //Generic string
+  stringstream call;
+  call.copyfmt(cout);
+  double Emm = 0.0;
+  int sys,ct;
+  call.str("");
+  //Construct LAMMPS input
+
+  //Return
+  return Emm;
+};
+
+double LAMMPSOpt(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
+       QMMMSettings& QMMMOpts, int Bead)
+{
+  //Function for optimizing with LAMMPS
+  fstream ofile,ifile;
+  string dummy; //Generic string
+  stringstream call;
+  call.copyfmt(cout);
+  double Emm = 0.0;
+  int sys,ct;
+  call.str("");
+  //Construct LAMMPS input
+
+  //Return
+  return Emm;
+};
+
 double LAMMPSWrapper(string RunTyp, vector<QMMMAtom>& Struct,
        QMMMSettings& QMMMOpts, int Bead)
 {

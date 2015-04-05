@@ -610,7 +610,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     if (((stepct%100) == 0) and (stepct != 0))
     {
       //Build a new Hessian after 100 steps
-      cout << "    Too many steps... Constructing new Hessian...";
+      cout << "    Constructing new Hessian...";
       cout << '\n';
       #pragma omp parallel for
       for (int i=0;i<(3*(Nqm+Npseudo));i++)
