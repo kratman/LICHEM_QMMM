@@ -34,7 +34,15 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   //Set up memory
   call.str("");
   call << "memory " << QMMMOpts.RAM;
-  call << " gb" << '\n' << '\n';
+  if (QMMMOpts.MemMB)
+  {
+    call << " mb";
+  }
+  else
+  {
+    call << " gb";
+  }
+  call << '\n' << '\n';
   //Set up globals
   call << "set globals {" << '\n';
   call << "  basis ";
@@ -258,7 +266,15 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Set up memory
   call.str("");
   call << "memory " << QMMMOpts.RAM;
-  call << " gb" << '\n' << '\n';
+  if (QMMMOpts.MemMB)
+  {
+    call << " mb";
+  }
+  else
+  {
+    call << " gb";
+  }
+  call << '\n' << '\n';
   //Set up globals
   call << "set globals {" << '\n';
   call << "  basis ";
@@ -437,7 +453,15 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Set up memory
   call.str("");
   call << "memory " << QMMMOpts.RAM;
-  call << " gb" << '\n' << '\n';
+  if (QMMMOpts.MemMB)
+  {
+    call << " mb";
+  }
+  else
+  {
+    call << " gb";
+  }
+  call << '\n' << '\n';
   //Set up globals
   call << "set globals {" << '\n';
   call << "  basis ";
@@ -640,7 +664,15 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   //Set up memory
   call.str("");
   call << "memory " << QMMMOpts.RAM;
-  call << " gb" << '\n' << '\n';
+  if (QMMMOpts.MemMB)
+  {
+    call << " mb";
+  }
+  else
+  {
+    call << " gb";
+  }
+  call << '\n' << '\n';
   //Set up globals
   call << "set globals {" << '\n';
   call << "  basis ";

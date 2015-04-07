@@ -291,6 +291,16 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.Func;
     regionfile >> dummy >> QMMMOpts.Basis;
     regionfile >> dummy >> QMMMOpts.RAM;
+    regionfile >> dummy;
+    if ((dummy == "mb") or (dummy == "MB") or
+       (dummy == "Mb") or (dummy == "mB"))
+    {
+      QMMMOpts.MemMB = 1;
+    }
+    else
+    {
+      QMMMOpts.MemMB = 0;
+    }
     regionfile >> dummy >> QMMMOpts.Charge;
     regionfile >> dummy >> QMMMOpts.Spin;
     //Place all atoms in the QM region
@@ -321,6 +331,16 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.Func;
     regionfile >> dummy >> QMMMOpts.Basis;
     regionfile >> dummy >> QMMMOpts.RAM;
+    regionfile >> dummy;
+    if ((dummy == "mb") or (dummy == "MB") or
+       (dummy == "Mb") or (dummy == "mB"))
+    {
+      QMMMOpts.MemMB = 1;
+    }
+    else
+    {
+      QMMMOpts.MemMB = 0;
+    }
     regionfile >> dummy >> QMMMOpts.Charge;
     regionfile >> dummy >> QMMMOpts.Spin;
     regionfile >> dummy >> dummy; //MM wrapper

@@ -2,7 +2,7 @@ Potential_type: QMMM
 QM_type: PSI4
 QM_method: PBE0-D
 QM_basis: 6-31++G**
-QM_memory: 2
+QM_memory: 2000 MB
 QM_charge: 0
 QM_spin: 1
 MM_type: TINKER

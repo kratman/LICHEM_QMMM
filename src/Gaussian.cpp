@@ -227,7 +227,16 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << "_" << Bead;
   call << ".chk";
   call << '\n';
-  call << "%Mem=" << QMMMOpts.RAM << "GB" << '\n';
+  call << "%Mem=" << QMMMOpts.RAM;
+  if (QMMMOpts.MemMB)
+  {
+    call << "MB";
+  }
+  else
+  {
+    call << "GB";
+  }
+  call << '\n';
   call << "%NprocShared=" << Ncpus << '\n';
   call << "#P " << QMMMOpts.Func << "/";
   call << QMMMOpts.Basis << " Force=NoStep Symmetry=None" << '\n';
@@ -524,7 +533,16 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "_" << Bead;
   call << ".chk";
   call << '\n';
-  call << "%Mem=" << QMMMOpts.RAM << "GB" << '\n';
+  call << "%Mem=" << QMMMOpts.RAM;
+  if (QMMMOpts.MemMB)
+  {
+    call << "MB";
+  }
+  else
+  {
+    call << "GB";
+  }
+  call << '\n';
   call << "%NprocShared=" << Ncpus << '\n';
   call << "#P " << QMMMOpts.Func << "/";
   call << QMMMOpts.Basis << " SP Symmetry=None" << '\n';
@@ -732,7 +750,16 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "%chk=QMMM";
   call << "_" << Bead << ".chk";
   call << '\n';
-  call << "%Mem=" << QMMMOpts.RAM << "GB" << '\n';
+  call << "%Mem=" << QMMMOpts.RAM;
+  if (QMMMOpts.MemMB)
+  {
+    call << "MB";
+  }
+  else
+  {
+    call << "GB";
+  }
+  call << '\n';
   call << "%NprocShared=" << Ncpus << '\n';
   call << "#P " << QMMMOpts.Func << "/";
   call << QMMMOpts.Basis << " SP Symmetry=None" << '\n';
@@ -1036,7 +1063,16 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "%chk=QMMMExt";
   call << "_" << Bead << ".chk";
   call << '\n';
-  call << "%Mem=" << QMMMOpts.RAM << "GB" << '\n';
+  call << "%Mem=" << QMMMOpts.RAM;
+  if (QMMMOpts.MemMB)
+  {
+    call << "MB";
+  }
+  else
+  {
+    call << "GB";
+  }
+  call << '\n';
   call << "%NprocShared=";
   if (Ncpus <= 2)
   {

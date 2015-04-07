@@ -2,7 +2,7 @@ Potential_type: QMMM
 QM_type: Gaussian
 QM_method: HF
 QM_basis: 6-31G*
-QM_memory: 1
+QM_memory: 1 GB
 QM_charge: 0
 QM_spin: 1
 MM_type: TINKER

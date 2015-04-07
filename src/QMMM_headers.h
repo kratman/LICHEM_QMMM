@@ -252,6 +252,7 @@ struct QMMMSettings
   string Func; //DFT functional
   string Basis; //Basis set for QM calculations
   string RAM; //Ram for QM calculations
+  bool MemMB; //Is the RAM in mb or gb
   string Charge; //QM total charge
   string Spin; //QM total spin
   //Input needed for MM wrappers
