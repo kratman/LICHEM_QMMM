@@ -622,7 +622,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
           IHess(j,i) = 0.0;
         }
         //Very small steps since convergence is slow
-        IHess(i,i) = 0.05; //Already an "inverse Hessian"
+        IHess(i,i) = 0.01; //Already an "inverse Hessian"
       }
       #pragma omp barrier
     }
