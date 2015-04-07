@@ -345,6 +345,9 @@ int main(int argc, char* argv[])
         SumE = AMBEROpt(Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
+      cout << "    MM optimization complete.";
+      cout << '\n';
+      cout.flush();
       //Run QM optimization
       if (Gaussian == 1)
       {
@@ -433,6 +436,9 @@ int main(int argc, char* argv[])
         SumE = AMBEROpt(Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
+      cout << "    MM optimization complete.";
+      cout << '\n';
+      cout.flush();
       //Run QM optimization
       FLUKESteepest(Struct,QMMMOpts,0);
       //Print Optimized geometry
@@ -509,6 +515,9 @@ int main(int argc, char* argv[])
         SumE = AMBEROpt(Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
+      cout << "    MM optimization complete.";
+      cout << '\n';
+      cout.flush();
       //Run QM optimization
       FLUKEDFP(Struct,QMMMOpts,0);
       //Print Optimized geometry
