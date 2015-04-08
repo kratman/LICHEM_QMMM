@@ -257,7 +257,7 @@ int main(int argc, char* argv[])
       cout << " \u212B^3";
     }
     cout << '\n';
-    cout << "Average Energy: ";
+    cout << "Average energy: ";
     cout << SumE;
     cout << " eV    ";
     cout << "Variance: ";
