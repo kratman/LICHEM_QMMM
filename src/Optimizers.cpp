@@ -162,8 +162,11 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     if (RMSdiff <= QMMMOpts.MMOptTol)
     {
       OptDone = 1;
-      cout << "    QMMM relaxation satisfactory.";
-      cout << '\n';
+      if (QMMM)
+      {
+        cout << "    QMMM relaxation satisfactory.";
+        cout << '\n';
+      }
     }
     //Flush output
     cout.flush();
