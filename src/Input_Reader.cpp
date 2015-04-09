@@ -997,31 +997,38 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       }
     }
   }
-  if ((Ncpus > 1) or (Nthreads > 1))
+  cout << '\n';
+  cout << "Parallelization settings:" << '\n';
+  cout << " OMP threads: " << Nthreads << '\n';
+  if (QMonly or QMMM)
   {
-    cout << '\n';
-    cout << "Parallelization settings:" << '\n';
-    cout << " OMP threads: " << Nthreads << '\n';
-    if (QMonly or QMMM)
+    if (OptSim and (Gaussian == 1))
     {
-      if (OptSim and (Gaussian == 1))
+      if (Ncpus <= 2)
       {
-        if (Ncpus <= 2)
-        {
-          cout << " Opt. threads: 1" << '\n';
-          cout << " QM threads: 1" << '\n';
-        }
-        else
-        {
-          cout << " Opt. threads: 2" << '\n';
-          cout << " QM threads: " << (Ncpus-2) << '\n';
-        }
+        cout << " Opt. threads: 1" << '\n';
+        cout << " QM threads: 1" << '\n';
       }
       else
       {
-        cout << " QM threads: " << Ncpus << '\n';
+        cout << " Opt. threads: 2" << '\n';
+        cout << " QM threads: " << (Ncpus-2) << '\n';
       }
     }
+    else
+    {
+      cout << " QM threads: " << Ncpus << '\n';
+    }
+    cout << " QM memory: " << QMMMOpts.RAM << " ";
+    if (QMMMOpts.MemMB)
+    {
+      cout << "MB";
+    }
+    else
+    {
+      cout << "GB";
+    }
+    cout << '\n';
   }
   cout << '\n';
   //Print convergence criteria for optimizations
