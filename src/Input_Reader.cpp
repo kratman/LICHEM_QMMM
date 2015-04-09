@@ -998,7 +998,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     }
   }
   cout << '\n';
-  cout << "Parallelization settings:" << '\n';
+  cout << "Parallelization and memory settings:" << '\n';
   cout << " OMP threads: " << Nthreads << '\n';
   if (QMonly or QMMM)
   {

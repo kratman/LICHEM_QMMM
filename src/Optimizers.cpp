@@ -610,7 +610,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       NGrad(ct+2) = Forces[i].z;
       ct += 3;
     }
-    if (((stepct%75) == 0) and (stepct != 0))
+    if (((stepct%50) == 0) and (stepct != 0))
     {
       //Build a new Hessian after 100 steps
       cout << "    Constructing new Hessian...";
