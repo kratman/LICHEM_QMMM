@@ -306,6 +306,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile << '\n';
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
+  ofile << "polarizeterm only" << '\n'; //Get rid of other interactions
   ct = 0; //Generic counter
   for (int i=0;i<Natoms;i++)
   {
@@ -1054,7 +1055,6 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string
-  double Epol = 0;
   double E = 0;
   int sys; //Dummy return for system calls
   int ct; //Generic counter
@@ -1074,6 +1074,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     ofile << '\n';
     ofile << "#QM force field parameters"; //Marks the changes
     ofile << '\n';
+    ofile << "polarizeterm none" << '\n'; //Remove polarization energy
     ct = 0; //Generic counter
     for (int i=0;i<Natoms;i++)
     {
@@ -1122,16 +1123,8 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     {
       for (int i=0;i<Natoms;i++)
       {
-        //Add nuclear charges
-        if (Struct[i].PAregion)
-        {
-          //Write new multipole definition for the atom ID
-          WriteTINKMpole(Struct,ofile,i,Bead);
-          //Remove polarization
-          ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
-          ofile << '\n';
-        }
-        if (Struct[i].QMregion)
+        //Add multipoles
+        if (Struct[i].QMregion or Struct[i].PAregion or Struct[i].BAregion)
         {
           double qi = 0;
           //remove charge
@@ -1211,10 +1204,6 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         Efound = 1;
       }
     }
-    if (dummy == "Polarization")
-    {
-      ifile >> Epol;
-    }
   }
   if (!Efound)
   {
@@ -1238,7 +1227,6 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if ((AMOEBA == 1) and QMMM)
   {
     //Correct polarization energy for QMMM simulations
-    E -= Epol; //Incorrect polarization energy
     E += TINKERPolEnergy(Struct,QMMMOpts,Bead);
   }
   //Change units
