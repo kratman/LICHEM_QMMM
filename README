@@ -25,9 +25,9 @@ development timeline are available in the doc directory.
 ### Installation ###
 
 Currently, the binary and user's manual are not included in the repository.
-The compile script can be used to generate both files. Since FLUKE is
-designed to be simple, only a small number of packages are required to
-compile the code. An approximate list of packages is given below. 
+The Makefile can be used to generate both files. Since FLUKE is designed to be
+simple, only a small number of packages are required to compile the code. An
+approximate list of packages is given below.
   FLUKE binary: OpenMP, Eigen3
   FLUKE manual: LaTeX, BibTeX
 
