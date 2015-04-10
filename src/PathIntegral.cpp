@@ -63,13 +63,14 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
   #pragma omp parallel for num_threads(MCThreads) reduction(+:E,QMTime,MMTime)
   for (int i=0;i<QMMMOpts.Nbeads;i++)
   {
+    //Run the wrappers for all beads
+    double Es = 0.0;
     //Timer variables
     int t_qm_start = 0;
     int t_mm_start = 0;
     int Times_qm = 0;
     int Times_mm = 0;
-    //Runs the wrappers for all beads
-    double Es = 0.0;
+    //Calculate QM energy
     if (Gaussian == 1)
     {
       t_qm_start = (unsigned)time(0);
@@ -84,6 +85,7 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
     }
+    //Calculate MM energy
     if (TINKER == 1)
     {
       t_mm_start = (unsigned)time(0);
@@ -96,7 +98,7 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
       Es += AMBEREnergy(parts,QMMMOpts,i);
       Times_mm += (unsigned)time(0)-t_mm_start;
     }
-    //Sum
+    //Add temp variables to the totals
     E += Es;
     QMTime += Times_qm;
     MMTime += Times_mm;

@@ -103,8 +103,9 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
   }
   if (!QMregion)
   {
-    SumE = 0;
     //Check if the MM region changed and gather statistics
+    SumE = 0;
+    //Calculate QM energy
     if (Gaussian == 1)
     {
       int tstart = (unsigned)time(0);
@@ -119,6 +120,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
     }
+    //Calculate MM energy
     if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);

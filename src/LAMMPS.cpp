@@ -175,7 +175,7 @@ double LAMMPSWrapper(string RunTyp, vector<QMMMAtom>& Struct,
     ct = 0;
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].QMregion or Struct[i].PAregion)
+      if (Struct[i].MMregion or Struct[i].BAregion)
       {
         call << (Struct[i].id+1); //LAMMPS id
         ct += 1;
