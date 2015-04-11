@@ -83,10 +83,10 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     //Print progress
     call.copyfmt(cout); //Save settings
     cout << setprecision(12);
-    cout << "    QM Step: " << stepct;
+    cout << "    QM step: " << stepct;
     cout << " | RMS dev: " << RMSdiff;
     cout << " \u212B" << '\n';
-    cout << "    Max force: " << MAXforce;
+    cout << "    Max. force: " << MAXforce;
     cout << " eV/\u212B | RMS force: " << RMSforce;
     cout << " eV/\u212B" << '\n';
     cout.copyfmt(call); //Return to previous settings
@@ -154,7 +154,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     //Print progress
     call.copyfmt(cout); //Save settings
     cout << setprecision(12);
-    cout << " | Opt. Step: ";
+    cout << " | Opt. step: ";
     cout << stepct << " | Energy: ";
     cout << SumE << " eV ";
     cout << " | RMS dev: " << RMSdiff;
@@ -612,7 +612,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       NGrad(ct+2) = Forces[i].z;
       ct += 3;
     }
-    if (((stepct%50) == 0) and (stepct != 0))
+    if (((stepct%30) == 0) and (stepct != 0))
     {
       //Build a new Hessian after 100 steps
       cout << "    Constructing new Hessian...";

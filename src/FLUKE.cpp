@@ -321,7 +321,7 @@ int main(int argc, char* argv[])
       SumE += AMBEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    cout << " | Opt. Step: ";
+    cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
     cout << SumE << " eV";
     cout << '\n';
@@ -414,7 +414,7 @@ int main(int argc, char* argv[])
       SumE += AMBEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    cout << " | Opt. Step: ";
+    cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
     cout << SumE << " eV";
     cout << '\n';
@@ -496,7 +496,7 @@ int main(int argc, char* argv[])
       SumE += AMBEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    cout << " | Opt. Step: ";
+    cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
     cout << SumE << " eV";
     cout << '\n';

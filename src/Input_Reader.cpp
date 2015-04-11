@@ -852,8 +852,6 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       cout << " PI Beads: " << QMMMOpts.Nbeads << '\n';
     }
     cout << '\n';
-    cout << "Equilibration steps: " << QMMMOpts.Neq << '\n';
-    cout << "Steps for production run: " << QMMMOpts.Nsteps << '\n';
     cout << "Simulation mode: ";
     if (QMMM)
     {
@@ -873,6 +871,8 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       cout << " path-integral";
     }
     cout << " Monte Carlo" << '\n';
+    cout << " Equilibration MC steps: " << QMMMOpts.Neq << '\n';
+    cout << " Production MC steps: " << QMMMOpts.Nsteps << '\n';
   }
   if (MDSim)
   {
@@ -1040,16 +1040,16 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       cout << " Step scale factor: " << QMMMOpts.StepScale;
       cout << '\n';
     }
-    cout << " Max step size: " << QMMMOpts.MaxStep;
+    cout << " Max. step size: " << QMMMOpts.MaxStep;
     cout << " \u212B" << '\n';
-    cout << " Max steps: " << QMMMOpts.MaxOptSteps;
+    cout << " Max. steps: " << QMMMOpts.MaxOptSteps;
     cout << '\n' << '\n';
     if (SteepSim or DFPSim)
     {
       cout << "QM convergence criteria:" << '\n';
       cout << "  RMS deviation: " << QMMMOpts.QMOptTol;
       cout << " \u212B" << '\n';
-      cout << "  Max force: " << (100*QMMMOpts.QMOptTol);
+      cout << "  Max. force: " << (100*QMMMOpts.QMOptTol);
       cout << " eV/\u212B" << '\n';
       cout << "  RMS force: " << (50*QMMMOpts.QMOptTol);
       cout << " eV/\u212B" << '\n';
@@ -1080,3 +1080,4 @@ void GetQuotes(vector<string>& Quotes)
   }
   return;
 };
+
