@@ -68,6 +68,7 @@ int main(int argc, char* argv[])
     double Eqm = 0;
     double Emm = 0;
     cout << fixed;
+    //Calculate QM energy
     if (Gaussian == 1)
     {
       int tstart = (unsigned)time(0);
@@ -88,6 +89,7 @@ int main(int argc, char* argv[])
       cout << "QM energy: " << Eqm << " eV";
       cout << '\n';
     }
+    //Calculate MM energy
     if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);
@@ -98,6 +100,12 @@ int main(int argc, char* argv[])
     {
       int tstart = (unsigned)time(0);
       Emm += AMBEREnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    if (LAMMPS == 1)
+    {
+      int tstart = (unsigned)time(0);
+      Emm += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     if (QMMM or MMonly)
@@ -295,6 +303,7 @@ int main(int argc, char* argv[])
     Print_traj(Struct,outfile,QMMMOpts);
     //Calculate initial energy
     SumE = 0; //Clear old energies
+    //Calculate QM energy
     if (Gaussian == 1)
     {
       int tstart = (unsigned)time(0);
@@ -309,6 +318,7 @@ int main(int argc, char* argv[])
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
     }
+    //Calculate MM energy
     if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);
@@ -319,6 +329,12 @@ int main(int argc, char* argv[])
     {
       int tstart = (unsigned)time(0);
       SumE += AMBEREnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    if (LAMMPS == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     cout << " | Opt. step: ";
@@ -343,6 +359,12 @@ int main(int argc, char* argv[])
       {
         int tstart = (unsigned)time(0);
         SumE = AMBEROpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      if (LAMMPS == 1)
+      {
+        int tstart = (unsigned)time(0);
+        SumE = LAMMPSOpt(Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       if (QMMM)
@@ -388,6 +410,7 @@ int main(int argc, char* argv[])
     Print_traj(Struct,outfile,QMMMOpts);
     //Calculate initial energy
     SumE = 0; //Clear old energies
+    //Calculate QM energy
     if (Gaussian == 1)
     {
       int tstart = (unsigned)time(0);
@@ -402,6 +425,7 @@ int main(int argc, char* argv[])
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
     }
+    //Calculate MM energy
     if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);
@@ -412,6 +436,12 @@ int main(int argc, char* argv[])
     {
       int tstart = (unsigned)time(0);
       SumE += AMBEREnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    if (LAMMPS == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     cout << " | Opt. step: ";
@@ -437,6 +467,12 @@ int main(int argc, char* argv[])
       {
         int tstart = (unsigned)time(0);
         SumE = AMBEROpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      if (LAMMPS == 1)
+      {
+        int tstart = (unsigned)time(0);
+        SumE = LAMMPSOpt(Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       if (QMMM)
@@ -470,6 +506,7 @@ int main(int argc, char* argv[])
     Print_traj(Struct,outfile,QMMMOpts);
     //Calculate initial energy
     SumE = 0; //Clear old energies
+    //Calculate QM energy
     if (Gaussian == 1)
     {
       int tstart = (unsigned)time(0);
@@ -484,6 +521,7 @@ int main(int argc, char* argv[])
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
     }
+    //Calculate MM energy
     if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);
@@ -494,6 +532,12 @@ int main(int argc, char* argv[])
     {
       int tstart = (unsigned)time(0);
       SumE += AMBEREnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    if (LAMMPS == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
     cout << " | Opt. step: ";
@@ -519,6 +563,12 @@ int main(int argc, char* argv[])
       {
         int tstart = (unsigned)time(0);
         SumE = AMBEROpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      if (LAMMPS == 1)
+      {
+        int tstart = (unsigned)time(0);
+        SumE = LAMMPSOpt(Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
       if (QMMM)

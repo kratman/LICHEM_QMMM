@@ -244,6 +244,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if ((n == 0) or ((n%QMMMOpts.Nprint) == 0) or (n == MDSteps))
     {
       E = 0;
+      //Calculate QM energy
       if (Gaussian == 1)
       {
         int tstart = (unsigned)time(0);
@@ -258,6 +259,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         //Clean up annoying useless files
         int sys = system("rm -f psi.*");
       }
+      //Calculate MM energy
       if (TINKER == 1)
       {
         int tstart = (unsigned)time(0);
@@ -268,6 +270,12 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       {
         int tstart = (unsigned)time(0);
         E += AMBEREnergy(Struct,QMMMOpts,Bead);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      if (LAMMPS == 1)
+      {
+        int tstart = (unsigned)time(0);
+        E += LAMMPSEnergy(Struct,QMMMOpts,Bead);
         MMTime += (unsigned)time(0)-tstart;
       }
       Tavg += T;

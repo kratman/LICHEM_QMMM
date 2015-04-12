@@ -133,6 +133,12 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       SumE += AMBEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
+    if (LAMMPS == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tstart;
+    }
     //Calculate RMS displacement
     #pragma omp parallel for reduction(+:RMSdiff)
     for (int i=0;i<Natoms;i++)

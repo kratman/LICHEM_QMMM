@@ -98,6 +98,12 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
       Es += AMBEREnergy(parts,QMMMOpts,i);
       Times_mm += (unsigned)time(0)-t_mm_start;
     }
+    if (LAMMPS == 1)
+    {
+      t_mm_start = (unsigned)time(0);
+      Es += LAMMPSEnergy(parts,QMMMOpts,i);
+      Times_mm += (unsigned)time(0)-t_mm_start;
+    }
     //Add temp variables to the totals
     E += Es;
     QMTime += Times_qm;

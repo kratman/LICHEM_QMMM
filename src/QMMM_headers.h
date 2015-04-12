@@ -326,8 +326,6 @@ double AMBEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double AMBEROpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
-double LAMMPSWrapper(string,vector<QMMMAtom>&,QMMMSettings&,int);
-
 double LAMMPSEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double LAMMPSOpt(vector<QMMMAtom>&,QMMMSettings&,int);
