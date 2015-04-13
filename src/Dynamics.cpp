@@ -158,6 +158,12 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
     }
+    if (NWChem == 1)
+    {
+      int tstart = (unsigned)time(0);
+      E += NWChemForces(Struct,Forces,QMMMOpts,Bead);
+      QMTime += (unsigned)time(0)-tstart;
+    }
     if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);

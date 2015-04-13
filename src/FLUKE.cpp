@@ -400,6 +400,12 @@ int main(int argc, char* argv[])
         //Clean up annoying useless files
         int sys = system("rm -f psi.*");
       }
+      if (NWChem == 1)
+      {
+        int tstart = (unsigned)time(0);
+        SumE = NWChemOpt(Struct,QMMMOpts,0);
+        QMTime += (unsigned)time(0)-tstart;
+      }
       //Print Optimized geometry
       Print_traj(Struct,outfile,QMMMOpts);
       //Check convergence

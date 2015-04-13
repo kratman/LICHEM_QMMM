@@ -294,6 +294,12 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
     }
+    if (NWChem == 1)
+    {
+      int tstart = (unsigned)time(0);
+      E += NWChemForces(Struct,Forces,QMMMOpts,Bead);
+      QMTime += (unsigned)time(0)-tstart;
+    }
     //Calculate forces (MM part)
     if (TINKER == 1)
     {
@@ -303,6 +309,18 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       {
         E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
       }
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    if (AMBER == 1)
+    {
+      int tstart = (unsigned)time(0);
+      E += AMBERForces(Struct,Forces,QMMMOpts,Bead);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    if (LAMMPS == 1)
+    {
+      int tstart = (unsigned)time(0);
+      E += LAMMPSForces(Struct,Forces,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
     //Check step size
@@ -461,14 +479,14 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     OptVec(i) = 0;
     GradDiff(i) = 0;
     NGrad(i) = 0;
-    //Create a scaled identity matrix as the initial Hessian
+    //Create an identity matrix as the initial Hessian
     for (int j=0;j<i;j++)
     {
       //Set off diagonal terms
       IHess(i,j) = 0.0;
       IHess(j,i) = 0.0;
     }
-    IHess(i,i) = 0.1; //Already an "inverse Hessian"
+    IHess(i,i) = 1.0; //Already an "inverse Hessian"
   }
   #pragma omp barrier
   vector<Coord> Forces;
@@ -496,6 +514,12 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     //Clean up annoying useless files
     int sys = system("rm -f psi.*");
   }
+  if (NWChem == 1)
+  {
+    int tstart = (unsigned)time(0);
+    E += NWChemForces(Struct,Forces,QMMMOpts,Bead);
+    QMTime += (unsigned)time(0)-tstart;
+  }
   //Calculate forces (MM part)
   if (TINKER == 1)
   {
@@ -505,6 +529,18 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     {
       E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
     }
+    MMTime += (unsigned)time(0)-tstart;
+  }
+  if (AMBER == 1)
+  {
+    int tstart = (unsigned)time(0);
+    E += AMBERForces(Struct,Forces,QMMMOpts,Bead);
+    MMTime += (unsigned)time(0)-tstart;
+  }
+  if (LAMMPS == 1)
+  {
+    int tstart = (unsigned)time(0);
+    E += LAMMPSForces(Struct,Forces,QMMMOpts,Bead);
     MMTime += (unsigned)time(0)-tstart;
   }
   //Save forces
@@ -536,7 +572,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   Eold = E;
   bool OptDone = 0;
   double StepScale = QMMMOpts.StepScale;
-  StepScale *= 0.75; //Take a smaller first step
+  StepScale *= 0.05; //Take a very small first step
   while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
   {
     E = 0; // Reinitialize energy
@@ -601,6 +637,12 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
     }
+    if (NWChem == 1)
+    {
+      int tstart = (unsigned)time(0);
+      E += NWChemForces(Struct,Forces,QMMMOpts,Bead);
+      QMTime += (unsigned)time(0)-tstart;
+    }
     //Calculate forces (MM part)
     if (TINKER == 1)
     {
@@ -610,6 +652,18 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       {
         E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
       }
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    if (AMBER == 1)
+    {
+      int tstart = (unsigned)time(0);
+      E += AMBERForces(Struct,Forces,QMMMOpts,Bead);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    if (LAMMPS == 1)
+    {
+      int tstart = (unsigned)time(0);
+      E += LAMMPSForces(Struct,Forces,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
     //Update Hessian
@@ -624,22 +678,31 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       NGrad(ct+2) = Forces[i].z;
       ct += 3;
     }
-    if (((stepct%30) == 0) and (stepct != 0))
+    if (((stepct%50) == 0) and (stepct != 0))
     {
-      //Build a new Hessian after 100 steps
+      //Build a new Hessian after 50 steps
       cout << "    Constructing new Hessian...";
       cout << '\n';
+      //Shrink step size
+      if (StepScale > (0.025*QMMMOpts.StepScale))
+      {
+        StepScale = 0.025*QMMMOpts.StepScale;
+      }
+      else
+      {
+        //Reduce step size further
+        StepScale *= 0.75;
+      }
       #pragma omp parallel for
       for (int i=0;i<(3*(Nqm+Npseudo));i++)
       {
-        //Create scaled identity matrix
+        //Create identity matrix
         for (int j=0;j<i;j++)
         {
           IHess(i,j) = 0.0;
           IHess(j,i) = 0.0;
         }
-        //Very small steps since convergence is slow
-        IHess(i,i) = 0.01; //Already an "inverse Hessian"
+        IHess(i,i) = 1.0; //Already an "inverse Hessian"
       }
       #pragma omp barrier
     }
@@ -653,32 +716,41 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       *GradDiff))-((IHess*GradDiff*GradDiff.transpose()*IHess)
       /(GradDiff.transpose()*IHess*GradDiff));
       //End really long "line"
+      //Increase stepsize
+      StepScale *= 1.15;
+      if (StepScale > QMMMOpts.StepScale)
+      {
+        //Prevent step size from getting too large
+        StepScale = QMMMOpts.StepScale;
+      }
     }
     else
     {
       //Take a small steepest descent step and rebuild Hessian
       cout << "    Energy did not decrease. Constructing new Hessian...";
       cout << '\n';
-      StepScale *= 0.60;
+      //Shrink step size
+      if (StepScale > (0.025*QMMMOpts.StepScale))
+      {
+        StepScale = 0.025*QMMMOpts.StepScale;
+      }
+      else
+      {
+        //Reduce step size further
+        StepScale *= 0.75;
+      }
       #pragma omp parallel for
       for (int i=0;i<(3*(Nqm+Npseudo));i++)
       {
-        //Create scaled identity matrix
+        //Create identity matrix
         for (int j=0;j<i;j++)
         {
           IHess(i,j) = 0.0;
           IHess(j,i) = 0.0;
         }
-        IHess(i,i) = 0.10; //Already an "inverse Hessian"
+        IHess(i,i) = 1.0; //Already an "inverse Hessian"
       }
       #pragma omp barrier
-    }
-    //Increase stepsize
-    StepScale *= 1.05;
-    if (StepScale > QMMMOpts.StepScale)
-    {
-      //Prevent step size from getting too large
-      StepScale = QMMMOpts.StepScale;
     }
     //Save energy
     Eold = E;

@@ -474,13 +474,9 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
           {
             //Count through all atoms in the QM calculations
             getline(ifile,dummy);
-            if (Struct[i].QMregion)
-            {
-              //Only collect charges for QM atoms
-              stringstream line(dummy);
-              line >> dummy >> dummy;
-              line >> Struct[i].MP[Bead].q;
-            }
+            stringstream line(dummy);
+            line >> dummy >> dummy;
+            line >> Struct[i].MP[Bead].q;
           }
         }
       }
@@ -694,13 +690,9 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
           {
             //Count through all atoms in the QM calculations
             getline(ifile,dummy);
-            if (Struct[i].QMregion)
-            {
-              //Only collect charges for QM atoms
-              stringstream line(dummy);
-              line >> dummy >> dummy;
-              line >> Struct[i].MP[Bead].q;
-            }
+            stringstream line(dummy);
+            line >> dummy >> dummy;
+            line >> Struct[i].MP[Bead].q;
           }
         }
       }
@@ -937,13 +929,9 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
           {
             //Count through all atoms in the QM calculations
             getline(ifile,dummy);
-            if (Struct[i].QMregion)
-            {
-              //Only collect charges for QM atoms
-              stringstream line(dummy);
-              line >> dummy >> dummy;
-              line >> Struct[i].MP[Bead].q;
-            }
+            stringstream line(dummy);
+            line >> dummy >> dummy;
+            line >> Struct[i].MP[Bead].q;
           }
         }
       }

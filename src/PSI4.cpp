@@ -181,14 +181,11 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
           if (Struct[i].QMregion or Struct[i].PAregion)
           {
             getline(ifile,dummy);
-            if (Struct[i].QMregion)
-            {
-              stringstream line(dummy);
-              line >> dummy >> dummy;
-              line >> dummy >> dummy;
-              line >> dummy;
-              line >> Struct[i].MP[Bead].q;
-            }
+            stringstream line(dummy);
+            line >> dummy >> dummy;
+            line >> dummy >> dummy;
+            line >> dummy;
+            line >> Struct[i].MP[Bead].q;
           }
         }
       }
@@ -413,14 +410,11 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
           if (Struct[i].QMregion or Struct[i].PAregion)
           {
             getline(ifile,dummy);
-            if (Struct[i].QMregion)
-            {
-              stringstream line(dummy);
-              line >> dummy >> dummy;
-              line >> dummy >> dummy;
-              line >> dummy;
-              line >> Struct[i].MP[Bead].q;
-            }
+            stringstream line(dummy);
+            line >> dummy >> dummy;
+            line >> dummy >> dummy;
+            line >> dummy;
+            line >> Struct[i].MP[Bead].q;
           }
         }
       }
@@ -601,14 +595,11 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
           if (Struct[i].QMregion or Struct[i].PAregion)
           {
             getline(ifile,dummy);
-            if (Struct[i].QMregion)
-            {
-              stringstream line(dummy);
-              line >> dummy >> dummy;
-              line >> dummy >> dummy;
-              line >> dummy;
-              line >> Struct[i].MP[Bead].q;
-            }
+            stringstream line(dummy);
+            line >> dummy >> dummy;
+            line >> dummy >> dummy;
+            line >> dummy;
+            line >> Struct[i].MP[Bead].q;
           }
         }
       }
@@ -838,14 +829,11 @@ double PSIOpt(vector<QMMMAtom>& Struct,
           if (Struct[i].QMregion or Struct[i].PAregion)
           {
             getline(ifile,dummy);
-            if (Struct[i].QMregion)
-            {
-              stringstream line(dummy);
-              line >> dummy >> dummy;
-              line >> dummy >> dummy;
-              line >> dummy;
-              line >> Struct[i].MP[Bead].q;
-            }
+            stringstream line(dummy);
+            line >> dummy >> dummy;
+            line >> dummy >> dummy;
+            line >> dummy;
+            line >> Struct[i].MP[Bead].q;
           }
         }
       }
