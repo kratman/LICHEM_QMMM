@@ -58,6 +58,10 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.copyfmt(cout);
   double E = 0.0;
   int sys; //Dummy return for system calls
+  if ((AMOEBA == 1) and (TINKER == 1))
+  {
+    RotateTINKCharges(Struct,Bead);
+  }
   //Create NWChem input
   call.str("");
   call << "QMMM_" << Bead << ".nw";
