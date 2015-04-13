@@ -83,6 +83,12 @@ int main(int argc, char* argv[])
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
     }
+    if (NWChem == 1)
+    {
+      int tstart = (unsigned)time(0);
+      Eqm += NWChemEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tstart;
+    }
     if (QMMM or QMonly)
     {
       //Print QM partial energy
@@ -318,6 +324,12 @@ int main(int argc, char* argv[])
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
     }
+    if (NWChem == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += NWChemEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tstart;
+    }
     //Calculate MM energy
     if (TINKER == 1)
     {
@@ -425,6 +437,12 @@ int main(int argc, char* argv[])
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
     }
+    if (NWChem == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += NWChemEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tstart;
+    }
     //Calculate MM energy
     if (TINKER == 1)
     {
@@ -520,6 +538,12 @@ int main(int argc, char* argv[])
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
+    }
+    if (NWChem == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += NWChemEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tstart;
     }
     //Calculate MM energy
     if (TINKER == 1)

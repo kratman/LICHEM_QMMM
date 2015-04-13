@@ -120,6 +120,12 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
     }
+    if (NWChem == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += NWChemEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tstart;
+    }
     //Calculate MM energy
     if (TINKER == 1)
     {

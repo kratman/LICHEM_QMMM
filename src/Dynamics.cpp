@@ -259,6 +259,12 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         //Clean up annoying useless files
         int sys = system("rm -f psi.*");
       }
+      if (NWChem == 1)
+      {
+        int tstart = (unsigned)time(0);
+        E += NWChemEnergy(Struct,QMMMOpts,Bead);
+        QMTime += (unsigned)time(0)-tstart;
+      }
       //Calculate MM energy
       if (TINKER == 1)
       {

@@ -351,9 +351,9 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     ifile.open(chrgfilename.c_str(),ios_base::in);
     while (!ifile.eof())
     {
-       //Copy charges line by line
-       getline(ifile,dummy);
-       call << dummy << '\n';
+      //Copy charges line by line
+      getline(ifile,dummy);
+      call << dummy << '\n';
     }
     ifile.close();
     call << '\n'; //Blank line needed
@@ -364,9 +364,9 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   {
     while (!ifile.eof())
     {
-       //Copy BASIS line by line, if BASIS exists
-       getline(ifile,dummy);
-       call << dummy << '\n';
+      //Copy BASIS line by line, if BASIS exists
+      getline(ifile,dummy);
+      call << dummy << '\n';
     }
     ifile.close();
     call << '\n'; //Blank line needed
