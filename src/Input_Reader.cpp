@@ -751,7 +751,7 @@ void FLUKEErrorChecker(QMMMSettings& QMMMOpts)
     cout << '\n';
     DoQuit = 1;
   }
-  if (((PSI4+Gaussian) == 0) and (!MMonly))
+  if (((PSI4+Gaussian+NWChem) == 0) and (!MMonly))
   {
     //Check the QM wrappers
     cout << " Error: No valid QM wrapper selected.";
@@ -803,6 +803,14 @@ void FLUKEErrorChecker(QMMMSettings& QMMMOpts)
       cout << '\n';
       DoQuit = 1;
     }
+  }
+  if ((LAMMPS == 1) and (AMOEBA == 1))
+  {
+    cout << " Error: LAMMPS calculations cannot be performed with";
+    cout << '\n';
+    cout << " polarizable force fields.";
+    cout << '\n';
+    DoQuit = 1;
   }
   if (DoQuit)
   {
@@ -964,6 +972,10 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     if (Gaussian == 1)
     {
       cout << "Gaussian" << '\n';
+    }
+    if (NWChem == 1)
+    {
+      cout << "NWChem" << '\n';
     }
     cout << " QM method: ";
     cout << QMMMOpts.Func << "/";

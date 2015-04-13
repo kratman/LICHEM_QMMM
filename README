@@ -12,7 +12,7 @@ Available calculations: single-point energies, optimized geometries, classical
 molecular dynamics, classical Monte Carlo, path-integral Monte Carlo, and
 reaction pathways
 
-Available QM wrappers: Gaussian, PSI4
+Available QM wrappers: Gaussian, NWChem, PSI4
 
 Available MM wrappers: TINKER, AMBER, LAMMPS
 

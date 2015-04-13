@@ -105,6 +105,7 @@ int AMOEBA = 0; //Flag for polarizable QMMM potential
 int CHRG = 0; //Flag for point-charge QMMM potential
 int PBCon = 0; //Flag for the boundary conditions
 int PSI4 = 0; //Wrapper flag
+int NWChem = 0; //Wrapper flag
 int Gaussian = 0; //Wrapper flag
 int TINKER = 0; //Wrapper flag
 int LAMMPS = 0; //Wrapper flag
@@ -350,6 +351,14 @@ double PSIForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
 void PSICharges(vector<QMMMAtom>&,QMMMSettings&,int);
 
+double NWChemForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+
+double NWChemEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
+
+double NWChemOpt(vector<QMMMAtom>&,QMMMSettings&,int);
+
+void NWChemCharges(vector<QMMMAtom>&,QMMMSettings&,int);
+
 double EFFEnergy(QMMMAtom&,QMMMElec&,int);
 
 double KineticE_eFF(vector<QMMMElec>&,QMMMSettings&);
@@ -428,6 +437,7 @@ void BurstTraj(vector<QMMMAtom>&,string&,QMMMSettings&);
 #include "Gaussian.cpp"
 #include "TINKER.cpp"
 #include "LAMMPS.cpp"
+#include "NWChem.cpp"
 #include "AMBER.cpp"
 #include "PSI4.cpp"
 
