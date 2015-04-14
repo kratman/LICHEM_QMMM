@@ -83,9 +83,9 @@ const double fs2s = 1e-12; //Convert fs to s
 const double Debye2au = 0.393430307; //Convert from Debye to au
 
 //Globals
-string xyzfilename; //Saves the filename given in the arguments
-string confilename; //Saves the filename given in the arguments
-string regfilename; //Saves the filename given in the arguments
+string xyzfilename; //Saves a filename given in the arguments
+string confilename; //Saves a filename given in the arguments
+string regfilename; //Saves a filename given in the arguments
 int Nthreads = 1;
 int Ncpus = 1; //Number of processors for QM calculations
 int Nfreeze = 0; //Number of frozen atoms
@@ -373,6 +373,8 @@ bool OptConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,vector<Coord>&,
 void FLUKESteepest(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void FLUKEDFP(vector<QMMMAtom>&,QMMMSettings&,int);
+
+void EnsembleSD(vector<QMMMAtom>&,fstream&,QMMMSettings&,int);
 
 double BerendsenThermo(vector<QMMMAtom>&,QMMMSettings&,int);
 

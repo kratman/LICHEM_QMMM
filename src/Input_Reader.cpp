@@ -1061,9 +1061,9 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       cout << "QM convergence criteria:" << '\n';
       cout << "  RMS deviation: " << QMMMOpts.QMOptTol;
       cout << " \u212B" << '\n';
-      cout << "  Max. force: " << (100*QMMMOpts.QMOptTol);
+      cout << "  Max. force: " << (20*QMMMOpts.QMOptTol);
       cout << " eV/\u212B" << '\n';
-      cout << "  RMS force: " << (50*QMMMOpts.QMOptTol);
+      cout << "  RMS force: " << (10*QMMMOpts.QMOptTol);
       cout << " eV/\u212B" << '\n';
       cout << '\n';
     }

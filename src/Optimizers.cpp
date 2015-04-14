@@ -92,8 +92,8 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     cout.copyfmt(call); //Return to previous settings
     //Check convergence criteria
     if ((RMSdiff <= QMMMOpts.QMOptTol) and
-       (RMSforce <= (50*QMMMOpts.QMOptTol)) and
-       (MAXforce <= (100*QMMMOpts.QMOptTol)))
+       (RMSforce <= (10*QMMMOpts.QMOptTol)) and
+       (MAXforce <= (20*QMMMOpts.QMOptTol)))
     {
       OptDone = 1;
       cout << "    QM optimization complete." << '\n';
@@ -391,7 +391,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "rm -f QMOpt_" << Bead << ".xyz";
   call << " MMCharges_" << Bead << ".txt";
   sys = system(call.str().c_str());
-  //Return for MM optimization
+  //Finish and return
   return;
 };
 
@@ -763,7 +763,189 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "rm -f QMOpt_" << Bead << ".xyz";
   call << " MMCharges_" << Bead << ".txt";
   sys = system(call.str().c_str());
-  //Return for MM optimization
+  //Finish and return
   return;
 };
 
+//Ensemble optimizers
+void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
+     QMMMSettings& QMMMOpts, int Bead)
+{
+  //Ensemble steepest descent optimizer
+  int sys; //Dummy return for system calls
+  stringstream call;
+  call.copyfmt(cout);
+  string dummy; //Generic string
+  int stepct = 0; //Counter for optimization steps
+  fstream ifile, ofile; //Generic file names
+  //Initialize charges for Gaussian
+  if ((AMOEBA == 1) and (Gaussian == 1))
+  {
+    if (TINKER == 1)
+    {
+      //Set up current multipoles
+      RotateTINKCharges(Struct,Bead);
+    }
+    call.str("");
+    call << "MMCharges_" << Bead << ".txt";
+    ofile.open(call.str().c_str(),ios_base::out);
+    ofile.copyfmt(cout);
+    for (int i=0;i<Natoms;i++)
+    {
+      if (Struct[i].MMregion)
+      {
+        ofile << fixed; //Forces numbers to be floats
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x1;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y1;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z1;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x2;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y2;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z2;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x3;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y3;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z3;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x4;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y4;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z4;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x5;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y5;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z5;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x6;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y6;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z6;
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
+        ofile << '\n';
+      }
+    }
+    ofile.copyfmt(cout);
+    ofile.flush();
+    ofile.close();
+  }
+  //Initialize optimization variables
+  double stepsize = 1;
+  double VecMax = 0;
+  //Run optimization
+  double StepScale = QMMMOpts.StepScale;
+  while (stepct < QMMMOpts.MaxOptSteps)
+  {
+    //Run MD
+    
+    //Perform SD step
+    double E = 0;
+    //Create blank force array
+    vector<Coord> Forces;
+    for (int i=0;i<(Nqm+Npseudo);i++)
+    {
+      //Create arrays with zeros
+      Coord tmp;
+      tmp.x = 0;
+      tmp.y = 0;
+      tmp.z = 0;
+      Forces.push_back(tmp);
+    }
+    //Calculate forces (QM part)
+    if (Gaussian == 1)
+    {
+      int tstart = (unsigned)time(0);
+      E += GaussianForces(Struct,Forces,QMMMOpts,Bead);
+      QMTime += (unsigned)time(0)-tstart;
+    }
+    if (PSI4 == 1)
+    {
+      int tstart = (unsigned)time(0);
+      E += PSIForces(Struct,Forces,QMMMOpts,Bead);
+      QMTime += (unsigned)time(0)-tstart;
+      //Clean up annoying useless files
+      int sys = system("rm -f psi.*");
+    }
+    if (NWChem == 1)
+    {
+      int tstart = (unsigned)time(0);
+      E += NWChemForces(Struct,Forces,QMMMOpts,Bead);
+      QMTime += (unsigned)time(0)-tstart;
+    }
+    //Calculate forces (MM part)
+    if (TINKER == 1)
+    {
+      int tstart = (unsigned)time(0);
+      E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
+      if (AMOEBA == 1)
+      {
+        E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
+      }
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    if (AMBER == 1)
+    {
+      int tstart = (unsigned)time(0);
+      E += AMBERForces(Struct,Forces,QMMMOpts,Bead);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    if (LAMMPS == 1)
+    {
+      int tstart = (unsigned)time(0);
+      E += LAMMPSForces(Struct,Forces,QMMMOpts,Bead);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    //Check optimization step size
+    VecMax = 0;
+    for (int i=0;i<(Nqm+Npseudo);i++)
+    {
+      //Check if the step size is too large
+      if (abs(StepScale*Forces[i].x) > VecMax)
+      {
+        VecMax = abs(StepScale*Forces[i].x);
+      }
+      if (abs(StepScale*Forces[i].y) > VecMax)
+      {
+        VecMax = abs(StepScale*Forces[i].y);
+      }
+      if (abs(StepScale*Forces[i].z) > VecMax)
+      {
+        VecMax = abs(StepScale*Forces[i].z);
+      }
+    }
+    stepsize = StepScale;
+    if (VecMax > QMMMOpts.MaxStep)
+    {
+      //Scale step size
+      cout << "    Scaling step size to match the maximum...";
+      cout << '\n';
+      stepsize *= (QMMMOpts.MaxStep/VecMax);
+    }
+    //Determine new structure
+    int ct = 0; //Counter
+    for (int i=0;i<Natoms;i++)
+    {
+      //Move QM atoms
+      if (Struct[i].QMregion or Struct[i].PAregion)
+      {
+        Struct[i].P[Bead].x += stepsize*Forces[ct].x;
+        Struct[i].P[Bead].y += stepsize*Forces[ct].y;
+        Struct[i].P[Bead].z += stepsize*Forces[ct].z;
+        ct += 1;
+      }
+    }
+    //Print structure
+    Print_traj(Struct,traj,QMMMOpts);
+    //Check convergence
+    stepct += 1;
+  }
+  //Clean up files
+  call.str("");
+  call << "rm -f QMOpt_" << Bead << ".xyz";
+  call << " MMCharges_" << Bead << ".txt";
+  sys = system(call.str().c_str());
+  //Finish and return
+  return;
+};
