@@ -121,7 +121,6 @@ bool PIMCSim = 0; //Flag for Monte Carlo
 bool PathSim = 0; //Flag for reaction paths
 bool SinglePoint = 0; //Flag for energy calculation
 bool GauExternal = 0; //Runs Gaussian with External
-bool TranState = 0; //Flag to search for a transition state
 
 //Timers
 int StartTime = 0; //Time the calculation starts
@@ -256,8 +255,6 @@ struct QMMMSettings
   bool MemMB; //Is the RAM in mb or gb
   string Charge; //QM total charge
   string Spin; //QM total spin
-  //Input needed for MM wrappers
-  int Nind; //Number of induced dipole iterations
   //Input needed for MC and MD functions
   string Ensemble; //NVT or NPT
   double Temp; //Temperature

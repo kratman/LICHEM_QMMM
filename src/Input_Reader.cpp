@@ -364,7 +364,6 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     {
       //AMOEBA polarizable force field
       AMOEBA = 1;
-      regionfile >> dummy >> QMMMOpts.Nind;
       if (TINKER == 1)
       {
         ExtractTINKpoles(Struct,0);
@@ -381,7 +380,6 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     {
       //Frozen density
       GEM = 1;
-      regionfile >> dummy >> QMMMOpts.Nind;
     }
   }
   if ((dummy == "MM") or (dummy == "mm"))
@@ -534,15 +532,9 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
       Struct[i].Vel.push_back(tmp);
     }
   }
-  if ((dummy == "OPT") or (dummy == "Opt") or (dummy == "opt")
-     or (dummy == "TS") or (dummy == "ts"))
+  if ((dummy == "OPT") or (dummy == "Opt") or (dummy == "opt"))
   {
     //Read energy minimization options
-    if ((dummy == "TS") or (dummy == "ts"))
-    {
-      //Search for a transition state
-      TranState = 1;
-    }
     MDSim = 0;
     OptSim = 1;
     DFPSim = 0;

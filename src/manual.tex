@@ -249,7 +249,7 @@ any bugs that are found.
 If the potential type is QM or QMMMM, several keywords are required to define
 the QM wrapper and level of theory. \\
 
-QM\_type: $<$Gaussian or PSI4$>$ \\
+QM\_type: $<$Gaussian or PSI4 or NWChem$>$ \\
 QM\_method: $<$HF or functional$>$ \\
 QM\_basis: $<$basis set$>$ \\
 QM\_memory: $<$RAM$>$ $<$MB or GB$>$ \\
@@ -275,7 +275,7 @@ correct input for the MM package.
 
 QMMM input is a combination of the QM and MM input described above. \\
 
-QM\_type: $<$Gaussian or PSI4$>$ \\
+QM\_type: $<$Gaussian or PSI4 or NWChem$>$ \\
 QM\_method: $<$HF or functional$>$ \\
 QM\_basis: $<$basis set$>$ \\
 QM\_memory: $<$RAM$>$ $<$MB or GB$>$ \\
@@ -286,12 +286,7 @@ Electrostatics: $<$Charges or AMOEBA or Density$>$ \\
 
 All of the QMMM input is read into FLUKE as text, and hence, it must match the
 correct input for the QM and MM packages. For example, Gaussian can only read
-integer values for the memory. If a QMMM calculation is using the AMOEBA or
-GEM models for the electrostatics, then an additional line is required: \\
-
-Induced\_cycles: $<$Cycles to converge dipoles$>$ \\
-
-This line should be omitted for non-polarizable and pure MM calculations.
+integer values for the memory.
 
 \subsection{Simulation input}
 
@@ -306,11 +301,6 @@ keywords are given in parentheses. \\
 Calculation\_type: Energy (or SP) \\
 
 Calculation\_type: Opt \\
-Max\_opt\_step: $<$Size of the maximum optimization step (\AA)$>$ \\
-MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
-Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
-
-Calculation\_type: TS \\
 Max\_opt\_step: $<$Size of the maximum optimization step (\AA)$>$ \\
 MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
 Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\

@@ -7,7 +7,6 @@ QM_charge: 0
 QM_spin: 1
 MM_type: TINKER
 Potential_type: AMOEBA
-Induced_cycles: 0
 Calculation_type: SP
 PBC: No
 QM_atoms: 3
