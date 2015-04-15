@@ -519,7 +519,7 @@ int main(int argc, char* argv[])
     cout << '\n' << '\n';
     cout.flush();
   }
-  //End of sections
+  //End of section
 
   //DFP minimization
   if (DFPSim)
@@ -621,7 +621,69 @@ int main(int argc, char* argv[])
     cout << '\n' << '\n';
     cout.flush();
   }
-  //End of sections
+  //End of section
+
+  //Ensemble minimization
+  if (ESDSim)
+  {
+    vector<Coord> Forces; //Dummy array needed for convergence tests
+    //Print initial structure
+    Print_traj(Struct,outfile,QMMMOpts);
+    //Calculate initial energy
+    SumE = 0; //Clear old energies
+    //Calculate QM energy
+    if (Gaussian == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += GaussianEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tstart;
+    }
+    if (PSI4 == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += PSIEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tstart;
+      //Clean up annoying useless files
+      int sys = system("rm -f psi.*");
+    }
+    if (NWChem == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += NWChemEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tstart;
+    }
+    //Calculate MM energy
+    if (TINKER == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += TINKEREnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    if (AMBER == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += AMBEREnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    if (LAMMPS == 1)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    cout << " | Opt. step: 0";
+    cout << " | Energy: " << SumE << " eV";
+    cout << '\n';
+    cout.flush(); //Print progress
+    //Run optimization
+    EnsembleSD(Struct,outfile,QMMMOpts,0);
+    //Finish output
+    cout << '\n';
+    cout << "Optimization complete.";
+    cout << '\n' << '\n';
+    cout.flush();
+  }
+  //End of section
 
   //Clean up
   xyzfile.close();

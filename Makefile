@@ -48,7 +48,8 @@ manual:
 	mv manual.pdf ../doc/FLUKE_manual.pdf; \
 	rm -f manual.aux manual.bbl manual.blg; \
 	rm -f manual.log manual.out manual.toc; \
-	rm -f doclog.txt
+	rm -f doclog.txt; \
+        echo " [Complete]"
 
 title:	
 	@echo ""; \
@@ -60,7 +61,7 @@ title:
 
 stats:	
 	@echo ""; \
-        echo "### Source code statistics ###" \
+        echo "### Source code statistics ###"; \
 	echo "Number of FLUKE source code files:"; \
 	ls -al src/* | wc -l; \
 	echo "Total lenght of FLUKE (lines):"; \

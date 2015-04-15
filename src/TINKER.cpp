@@ -1050,7 +1050,7 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, vector<Coord>& MMForces,
 
 double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
-  //Runs TINKER MM
+  //Runs TINKER MM energy calculations
   fstream ofile,ifile;
   stringstream call;
   call.copyfmt(cout);
@@ -1234,9 +1234,186 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   return E;
 };
 
+void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
+     int Bead)
+{
+  //Runs TINKER MD (for MM atoms only)
+  fstream ofile,ifile;
+  stringstream call;
+  call.copyfmt(cout);
+  string dummy; //Generic string
+  double Epol = 0;
+  double E = 0;
+  int sys; //Dummy return for system calls
+  int ct; //Generic counter
+  call.str("");
+  //Copy the original key file and make changes
+  if (QMMM)
+  {
+    call.str("");
+    call << "cp tinker.key QMMM_";
+    call << Bead << ".key";
+    sys = system(call.str().c_str());
+    //Update key file
+    call.str("");
+    call << "QMMM_";
+    call << Bead << ".key";
+    ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
+    ofile << '\n';
+    ofile << "#QM force field parameters"; //Marks the changes
+    ofile << '\n';
+    ofile << "thermostat berendsen";
+    ofile << '\n';
+    ofile << "tau-temperature ";
+    ofile << QMMMOpts.tautemp << '\n';
+    ct = 0; //Generic counter
+    for (int i=0;i<Natoms;i++)
+    {
+      //Add active atoms
+      if (Struct[i].MMregion or Struct[i].BAregion)
+      {
+        if (!Struct[i].Frozen)
+        {
+          if (ct == 0)
+          {
+            //Start a new active line
+            ofile << "active ";
+          }
+          else
+          {
+            //Place a space to separate values
+            ofile << " ";
+          }
+          ofile << (Struct[i].id+1);
+          ct += 1;
+          if (ct == 10)
+          {
+            //terminate an active line
+            ct = 0;
+            ofile << '\n';
+          }
+        }
+      }
+    }
+    if (ct != 0)
+    {
+      //Terminate trailing actives line
+      ofile << '\n';
+    }
+    if (CHRG == 1)
+    {
+      for (int i=0;i<Natoms;i++)
+      {
+        //Add nuclear charges
+        if (Struct[i].QMregion)
+        {
+          //New charges are only needed for QM atoms
+          ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
+          ofile << Struct[i].MP[Bead].q;
+          ofile << '\n';
+        }
+      }
+    }
+    if (AMOEBA == 1)
+    {
+      for (int i=0;i<Natoms;i++)
+      {
+        //Add nuclear charges
+        if (Struct[i].QMregion or Struct[i].PAregion)
+        {
+          //Write new multipole definition for the atom ID
+          WriteTINKMpole(Struct,ofile,i,Bead);
+          ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+          ofile << '\n';
+        }
+      }
+    }
+    ofile.flush();
+    ofile.close();
+  }
+  //Create TINKER xyz file from the structure
+  call.str("");
+  call << "QMMM_" << Bead << ".xyz";
+  ofile.open(call.str().c_str(),ios_base::out);
+  //Write atoms to the xyz file
+  ofile << Natoms << '\n';
+  if (PBCon == 1)
+  {
+    //Write box size
+    ofile << Lx << " " << Ly << " " << Lz;
+    ofile << " 90.0 90.0 90.0";
+    ofile << '\n';
+  }
+  ct = 0; //Counter for QM atoms
+  for (int i=0;i<Natoms;i++)
+  {
+    ofile.precision(8);
+    ofile << setw(6) << (Struct[i].id+1);
+    ofile << " ";
+    ofile << setw(3) << Struct[i].MMTyp;
+    ofile << " ";
+    ofile << setw(10) << Struct[i].P[Bead].x;
+    ofile << " ";
+    ofile << setw(10) << Struct[i].P[Bead].y;
+    ofile << " ";
+    ofile << setw(10) << Struct[i].P[Bead].z;
+    ofile << " ";
+    ofile << setw(4) << Struct[i].NumTyp;
+    for (int j=0;j<Struct[i].Bonds.size();j++)
+    {
+      ofile << " "; //Avoids trailing spaces
+      ofile << setw(6) << (Struct[i].Bonds[j]+1);
+    }
+    ofile.copyfmt(cout);
+    ofile << '\n';
+  }
+  ofile.flush();
+  ofile.close();
+  //Run optimization
+  call.str("");
+  call << "dynamic ";
+  call << "QMMM_" << Bead << ".xyz ";
+  call << QMMMOpts.Nsteps << " ";
+  call << QMMMOpts.dt << " ";
+  call << (QMMMOpts.Nsteps*QMMMOpts.dt/1000) << " ";
+  call << "2 " << QMMMOpts.Temp;
+  call << " > QMMM_" << Bead << ".log";
+  sys = system(call.str().c_str());
+  //Read new structure
+  call.str("");
+  call << "QMMM_" << Bead << ".001";
+  ifile.open(call.str().c_str(),ios_base::in);
+  getline(ifile,dummy); //Discard number of atoms
+  if (PBCon == 1)
+  {
+    //Discard PBC information
+    getline(ifile,dummy);
+  }
+  for (int i=0;i<Natoms;i++)
+  {
+    getline(ifile,dummy);
+    stringstream line(dummy);
+    //Read new positions
+    line >> dummy >> dummy; //Discard atom ID and type
+    line >> Struct[i].P[Bead].x;
+    line >> Struct[i].P[Bead].y;
+    line >> Struct[i].P[Bead].z;
+  }
+  ifile.close();
+  //Clean up all files except the .dyn files
+  call.str("");
+  call << "rm -f";
+  call << " QMMM_" << Bead << ".xyz";
+  call << " QMMM_" << Bead << ".log";
+  call << " QMMM_" << Bead << ".0*";
+  call << " QMMM_" << Bead << ".key";
+  sys = system(call.str().c_str());
+  return;
+};
+
 double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
-  //Runs TINKER MM
+  //Runs TINKER MM optimization
   fstream ofile,ifile;
   stringstream call;
   call.copyfmt(cout);

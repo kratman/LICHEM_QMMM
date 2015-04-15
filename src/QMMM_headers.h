@@ -116,6 +116,7 @@ bool QMonly = 0; //Flag for the type of wrapper
 bool OptSim = 0; //Flag for energy minimization with QM packages
 bool SteepSim = 0; //Flag for steepest descent minimization in FLUKE
 bool DFPSim = 0; //Flag for DFP minimization in FLUKE
+bool ESDSim = 0; //Flag for ensemble steepest descent
 bool MDSim = 0; //Flag for a NVT MD simulation
 bool PIMCSim = 0; //Flag for Monte Carlo
 bool PathSim = 0; //Flag for reaction paths
@@ -267,6 +268,7 @@ struct QMMMSettings
   int Nprint; //Number of steps before printing
   double dt; //MD timestep
   double tautemp; //Thermostat time constant
+  double taupress; //Barostat time constant
   //Input needed for optimizations
   int MaxOptSteps; //Maximum iterative optimization steps
   double MMOptTol; //Criteria to end the optimization
@@ -305,6 +307,8 @@ OctCharges SphHarm2Charges(RedMpole);
 void FindTINKERClasses(vector<QMMMAtom>&);
 
 double TINKEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
+
+void TINKERDynamics(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double TINKEROpt(vector<QMMMAtom>&,QMMMSettings&,int);
 

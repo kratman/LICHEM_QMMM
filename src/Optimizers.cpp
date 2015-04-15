@@ -171,7 +171,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     cout << SumE << " eV ";
     cout << " | RMS dev: " << RMSdiff;
     cout << " \u212B" << '\n';
-    cout.copyfmt(call); //Save settings
+    cout.copyfmt(call); //Replace settings
     //Check convergence
     if (RMSdiff <= QMMMOpts.MMOptTol)
     {
@@ -778,59 +778,6 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
   string dummy; //Generic string
   int stepct = 0; //Counter for optimization steps
   fstream ifile, ofile; //Generic file names
-  //Initialize charges for Gaussian
-  if ((AMOEBA == 1) and (Gaussian == 1))
-  {
-    if (TINKER == 1)
-    {
-      //Set up current multipoles
-      RotateTINKCharges(Struct,Bead);
-    }
-    call.str("");
-    call << "MMCharges_" << Bead << ".txt";
-    ofile.open(call.str().c_str(),ios_base::out);
-    ofile.copyfmt(cout);
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        ofile << fixed; //Forces numbers to be floats
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
-        ofile << '\n';
-      }
-    }
-    ofile.copyfmt(cout);
-    ofile.flush();
-    ofile.close();
-  }
   //Initialize optimization variables
   double stepsize = 1;
   double VecMax = 0;
@@ -839,9 +786,18 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
   while (stepct < QMMMOpts.MaxOptSteps)
   {
     //Run MD
-    
+    if (TINKER == 1)
+    {
+      TINKERDynamics(Struct,QMMMOpts,Bead);
+      if (AMOEBA == 1)
+      {
+        //Set up current multipoles
+        RotateTINKCharges(Struct,Bead);
+      }
+    }
     //Perform SD step
     double E = 0;
+    double SumE = 0;
     //Create blank force array
     vector<Coord> Forces;
     for (int i=0;i<(Nqm+Npseudo);i++)
@@ -857,13 +813,13 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
     if (Gaussian == 1)
     {
       int tstart = (unsigned)time(0);
-      E += GaussianForces(Struct,Forces,QMMMOpts,Bead);
+      SumE += GaussianForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
     }
     if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
-      E += PSIForces(Struct,Forces,QMMMOpts,Bead);
+      SumE += PSIForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       int sys = system("rm -f psi.*");
@@ -871,7 +827,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
     if (NWChem == 1)
     {
       int tstart = (unsigned)time(0);
-      E += NWChemForces(Struct,Forces,QMMMOpts,Bead);
+      SumE += NWChemForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
     }
     //Calculate forces (MM part)
@@ -879,6 +835,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
     {
       int tstart = (unsigned)time(0);
       E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
+      SumE += TINKEREnergy(Struct,QMMMOpts,Bead);
       if (AMOEBA == 1)
       {
         E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
@@ -889,12 +846,14 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
     {
       int tstart = (unsigned)time(0);
       E += AMBERForces(Struct,Forces,QMMMOpts,Bead);
+      SumE += AMBEREnergy(Struct,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
     if (LAMMPS == 1)
     {
       int tstart = (unsigned)time(0);
       E += LAMMPSForces(Struct,Forces,QMMMOpts,Bead);
+      SumE += LAMMPSEnergy(Struct,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
     //Check optimization step size
@@ -936,16 +895,20 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
         ct += 1;
       }
     }
-    //Print structure
-    Print_traj(Struct,traj,QMMMOpts);
-    //Check convergence
+    //Print structure and energy
     stepct += 1;
+    Print_traj(Struct,traj,QMMMOpts);
+    call.copyfmt(cout); //Save settings
+    cout << setprecision(16);
+    cout << " | Opt. step: ";
+    cout << stepct << " | Energy: ";
+    cout << SumE << " eV" << '\n';
+    cout.copyfmt(call); //Replace settings
   }
-  //Clean up files
+  //Clean up files and return
   call.str("");
-  call << "rm -f QMOpt_" << Bead << ".xyz";
-  call << " MMCharges_" << Bead << ".txt";
+  call << "rm -f QMMM_" << Bead << ".dyn";
   sys = system(call.str().c_str());
-  //Finish and return
   return;
 };
+

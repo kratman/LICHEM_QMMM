@@ -434,6 +434,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     MDSim = 0;
     OptSim = 0;
     DFPSim = 0;
+    ESDSim = 0;
     PIMCSim = 1;
     SteepSim = 0;
     SinglePoint = 0;
@@ -489,6 +490,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     MDSim = 1;
     OptSim = 0;
     DFPSim = 0;
+    ESDSim = 0;
     PIMCSim = 0;
     SteepSim = 0;
     SinglePoint = 0;
@@ -538,6 +540,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     MDSim = 0;
     OptSim = 1;
     DFPSim = 0;
+    ESDSim = 0;
     PIMCSim = 0;
     SteepSim = 0;
     SinglePoint = 0;
@@ -561,6 +564,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     MDSim = 0;
     OptSim = 0;
     DFPSim = 0;
+    ESDSim = 0;
     PIMCSim = 0;
     SteepSim = 1;
     SinglePoint = 0;
@@ -586,6 +590,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     MDSim = 0;
     OptSim = 0;
     DFPSim = 1;
+    ESDSim = 0;
     PIMCSim = 0;
     SteepSim = 0;
     SinglePoint = 0;
@@ -604,6 +609,34 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
   }
+  if ((dummy == "ESD") or (dummy == "esd") or
+     (dummy == "EnsembleSD") or (dummy == "ensembesd"))
+  {
+    //Read energy minimization options for the DFP optimizer
+    MDSim = 0;
+    OptSim = 0;
+    DFPSim = 0;
+    ESDSim = 1;
+    PIMCSim = 0;
+    SteepSim = 0;
+    SinglePoint = 0;
+    QMMMOpts.Temp = 0;
+    QMMMOpts.Beta = 0;
+    QMMMOpts.Press = 0;
+    QMMMOpts.Neq = 0;
+    QMMMOpts.Nsteps = 0;
+    QMMMOpts.Nbeads = 1;
+    QMMMOpts.accratio = 0;
+    QMMMOpts.Nprint = 0;
+    QMMMOpts.Ensemble = "N/A";
+    regionfile >> dummy >> QMMMOpts.StepScale;
+    regionfile >> dummy >> QMMMOpts.MaxStep;
+    regionfile >> dummy >> QMMMOpts.MaxOptSteps;
+    regionfile >> dummy >> QMMMOpts.dt;
+    regionfile >> dummy >> QMMMOpts.Temp;
+    regionfile >> dummy >> QMMMOpts.tautemp;
+    regionfile >> dummy >> QMMMOpts.Nsteps;
+  }
   if ((dummy == "SP") or (dummy == "sp") or
   (dummy == "energy") or (dummy == "Energy"))
   {
@@ -611,6 +644,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     MDSim = 0;
     OptSim = 0;
     DFPSim = 0;
+    ESDSim = 0;
     PIMCSim = 0;
     SteepSim = 0;
     SinglePoint = 1;

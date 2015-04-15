@@ -292,7 +292,7 @@ integer values for the memory.
 
 Input for the calculation types directly follows the wrapper input. Each type
 of calculation requires slightly different input. FLUKE can perform
-single-point energies (SP), optimizations (Opt,DFP,Steep,TS), and
+single-point energies (SP), optimizations (Opt,DFP,ESD,Steep), and
 path-integral Monte Carlo simulations (PIMC). Classical Monte Carlo
 simulations are performed as PIMC simulations with a single bead. Input for
 all calculation types are documented below. Synonyms for the simulation
@@ -318,6 +318,15 @@ Max\_opt\_step: $<$Size of the maximum optimization step (\AA)$>$
 QM\_opt\_tolerance: $<$Criteria to stop the QM optimization$>$\\
 MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
 Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
+
+Calculation\_type: EnsembleSD (or ESD) \\
+Opt\_step\_size: $<$Scale factor for the step size$>$ \\
+Max\_opt\_step: $<$Maximum displacement for each step (\AA)$>$
+QM\_opt\_steps: $<$Run N QM steps$>$ \\
+Timestep: $<$MD timestep (fs)$>$ \\
+Temperature: $<$MD temperature (K)$>$ \\
+Tau: $<$Thermostat time constant ($\tau$)$>$ \\
+MD\_steps: $<$Run N MD steps per iteration$>$ \\
 
 Calculation\_type: PIMC \\
 Ensemble: $<$NVT or NPT$>$ \\
