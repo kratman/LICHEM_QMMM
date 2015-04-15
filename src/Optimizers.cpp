@@ -678,9 +678,9 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       NGrad(ct+2) = Forces[i].z;
       ct += 3;
     }
-    if (((stepct%50) == 0) and (stepct != 0))
+    if (((stepct%30) == 0) and (stepct != 0))
     {
-      //Build a new Hessian after 50 steps
+      //Build a new Hessian after 30 steps
       cout << "    Constructing new Hessian...";
       cout << '\n';
       //Shrink step size
@@ -717,7 +717,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       /(GradDiff.transpose()*IHess*GradDiff));
       //End really long "line"
       //Increase stepsize
-      StepScale *= 1.15;
+      StepScale *= 1.20;
       if (StepScale > QMMMOpts.StepScale)
       {
         //Prevent step size from getting too large

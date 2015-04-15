@@ -23,17 +23,17 @@ Dev:	title binary devbin manual stats compdone
 
 binary:	
 	@echo ""; \
-	echo "Compiling the FLUKE binary..."
+	echo "### Compiling the FLUKE binary ###"
 	$(CXX) $(CXXFLAGS) ./src/FLUKE.cpp -o FLUKE $(LDFLAGS)
 
 devbin:	
 	@echo ""; \
-	echo "Compiling the FLUKE development binary..."
+	echo "### Compiling the FLUKE development binary ###"
 	$(CXX) $(CXXFLAGS) $(DEVFLAGS) ./src/FLUKE.cpp -o FLUKE $(LDFLAGS)
 
 manual:	
 	@echo ""; \
-	echo "Compiling the documentation..."; \
+	echo "### Compiling the documentation ###"; \
 	cd src/; \
 	$(TEX) manual > doclog.txt; \
 	$(BIB) manual > doclog.txt; \
@@ -60,6 +60,7 @@ title:
 
 stats:	
 	@echo ""; \
+        echo "### Source code statistics ###" \
 	echo "Number of FLUKE source code files:"; \
 	ls -al src/* | wc -l; \
 	echo "Total lenght of FLUKE (lines):"; \
