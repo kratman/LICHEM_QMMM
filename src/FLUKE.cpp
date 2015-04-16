@@ -124,7 +124,7 @@ int main(int argc, char* argv[])
     if (QMMM)
     {
       //Print total energy
-      cout << "QMMM total energy: ";
+      cout << "QMMM energy: ";
       cout << SumE << " eV";
       cout << " ";
       cout << SumE/Har2eV << " a.u.";

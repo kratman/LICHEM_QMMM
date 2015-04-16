@@ -900,7 +900,7 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, vector<Coord>& MMForces,
       for (int i=0;i<Natoms;i++)
       {
         //Add nuclear charges
-        if (Struct[i].QMregion)
+        if (Struct[i].QMregion or Struct[i].PAregion)
         {
           //New charges are only needed for QM atoms
           ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
@@ -1305,7 +1305,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       for (int i=0;i<Natoms;i++)
       {
         //Add nuclear charges
-        if (Struct[i].QMregion)
+        if (Struct[i].QMregion or Struct[i].PAregion)
         {
           //New charges are only needed for QM atoms
           ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
@@ -1477,7 +1477,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       for (int i=0;i<Natoms;i++)
       {
         //Add nuclear charges
-        if (Struct[i].QMregion)
+        if (Struct[i].QMregion or Struct[i].PAregion)
         {
           //New charges are only needed for QM atoms
           ofile << "charge " << (-1*(Struct[i].id+1)) << " ";

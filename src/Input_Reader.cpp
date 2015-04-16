@@ -931,7 +931,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     cout << " Equilibration MD steps: " << QMMMOpts.Neq << '\n';
     cout << " Production MD steps: " << QMMMOpts.Nsteps << '\n';
   }
-  if (OptSim or SteepSim or DFPSim)
+  if (OptSim or SteepSim or DFPSim or ESDSim)
   {
     cout << '\n';
     cout << "Simulation mode: ";
@@ -967,6 +967,10 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       if (DFPSim)
       {
         cout << "FLUKE DFP" << '\n';
+      }
+      if (ESDSim)
+      {
+        cout << "Ensemble steepest descent" << '\n';
       }
     }
   }
@@ -1070,10 +1074,10 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
   }
   cout << '\n';
   //Print convergence criteria for optimizations
-  if (OptSim or SteepSim or DFPSim)
+  if (OptSim or SteepSim or DFPSim or ESDSim)
   {
     cout << "Optimization settings:" << '\n';
-    if (SteepSim or DFPSim)
+    if (SteepSim or DFPSim or ESDSim)
     {
       cout << " Step scale factor: " << QMMMOpts.StepScale;
       cout << '\n';
@@ -1093,12 +1097,27 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       cout << " eV/\u212B" << '\n';
       cout << '\n';
     }
-    cout << "MM convergence criteria:" << '\n';
-    cout << "  RMS deviation: " << QMMMOpts.MMOptTol;
-    cout << " \u212B" << '\n';
-    cout << "  RMS force: " << QMMMOpts.MMOptTol*kcal2eV;
-    cout << " eV/\u212B" << '\n';
-    cout << '\n';
+    if (ESDSim)
+    {
+      cout << "MD settings:" << '\n';
+      cout << " Timestep: " << QMMMOpts.dt;
+      cout << " fs" << '\n';
+      cout << " Temperature: " << QMMMOpts.Temp;
+      cout << " K" << '\n';
+      cout << " Thermostat constant, \u03C4: " << QMMMOpts.tautemp;
+      cout << " ps" << '\n';
+      cout << " MD steps: " << QMMMOpts.Nsteps << '\n';
+      cout << '\n';
+    }
+    else
+    {
+      cout << "MM convergence criteria:" << '\n';
+      cout << "  RMS deviation: " << QMMMOpts.MMOptTol;
+      cout << " \u212B" << '\n';
+      cout << "  RMS force: " << QMMMOpts.MMOptTol*kcal2eV;
+      cout << " eV/\u212B" << '\n';
+      cout << '\n';
+    }
   }
   cout.flush(); //Flush for output being redirected to a file
   return;

@@ -904,6 +904,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
     cout << stepct << " | Energy: ";
     cout << SumE << " eV" << '\n';
     cout.copyfmt(call); //Replace settings
+    cout.flush();
   }
   //Clean up files and return
   call.str("");
