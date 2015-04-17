@@ -562,7 +562,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   VecMax = sqrt(VecMax/(3*(Nqm+Npseudo)));
   call.copyfmt(cout); //Save settings
   cout << setprecision(12);
-  cout << "    QM Step: 0";
+  cout << "    QM step: 0";
   cout << " | RMS force: " << VecMax;
   cout << " eV/\u212B";
   cout << '\n' << '\n';
@@ -684,9 +684,9 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       cout << "    Constructing new Hessian...";
       cout << '\n';
       //Shrink step size
-      if (StepScale > (0.025*QMMMOpts.StepScale))
+      if (StepScale > (0.02*QMMMOpts.StepScale))
       {
-        StepScale = 0.025*QMMMOpts.StepScale;
+        StepScale = 0.02*QMMMOpts.StepScale;
       }
       else
       {
@@ -730,9 +730,9 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       cout << "    Energy did not decrease. Constructing new Hessian...";
       cout << '\n';
       //Shrink step size
-      if (StepScale > (0.025*QMMMOpts.StepScale))
+      if (StepScale > (0.02*QMMMOpts.StepScale))
       {
-        StepScale = 0.025*QMMMOpts.StepScale;
+        StepScale = 0.02*QMMMOpts.StepScale;
       }
       else
       {
