@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
   FLUKEPrintSettings(QMMMOpts);
   //End of section
 
-  //Calculate single-point energy (optional)
+  //Calculate single-point energy
   if (SinglePoint)
   {
     double Eqm = 0;
@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
   }
   //End of section
 
-  //Run Monte Carlo (optional)
+  //Run Monte Carlo
   if (PIMCSim)
   {
     //Adjust probabilities
@@ -300,7 +300,7 @@ int main(int argc, char* argv[])
   }
   //End of section
 
-  //Optimize structure (optional)
+  //Optimize structure
   if (OptSim)
   {
     vector<Coord> Forces; //Dummy array needed for convergence tests
