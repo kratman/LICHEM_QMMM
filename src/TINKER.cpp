@@ -102,7 +102,6 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string
-  int sys; //Dummy return for system calls
   int ct; //Generic counter
   //Create TINKER xyz file
   call.str("");
@@ -131,7 +130,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ofile << setw(10) << Struct[i].P[Bead].z;
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
-    for (int j=0;j<Struct[i].Bonds.size();j++)
+    for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
     {
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
@@ -145,7 +144,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "cp tinker.key QMMM_";
   call << Bead << ".key";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Update key file
   call.str("");
   call << "QMMM_";
@@ -205,7 +204,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "dynamic QMMM_" << Bead << ".xyz ";
   call << "1 1e-4 1e-7 2 0 > QMMM_" << Bead << ".log";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Extract induced dipoles from the MD cycle file
   call.str("");
   call << "QMMM_" << Bead << ".001u";
@@ -240,7 +239,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "QMMM_" << Bead << ".0* ";
   call << "QMMM_" << Bead << ".dyn ";
   call << "QMMM_" << Bead << ".log";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   return;
 };
 
@@ -254,7 +253,6 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   string dummy; //Generic string
   double Epol = 0;
   double E = 0;
-  int sys; //Dummy return for system calls
   int ct; //Generic counter
   //Create TINKER xyz file
   call.str("");
@@ -283,7 +281,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ofile << setw(10) << Struct[i].P[Bead].z;
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
-    for (int j=0;j<Struct[i].Bonds.size();j++)
+    for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
     {
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
@@ -297,7 +295,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "cp tinker.key QMMM_";
   call << Bead << ".key";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Update key file
   call.str("");
   call << "QMMM_";
@@ -356,7 +354,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "analyze QMMM_";
   call << Bead << ".xyz E > QMMM_";
   call << Bead << ".log";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Extract polarization energy
   call.str("");
   call << "QMMM_" << Bead << ".log";
@@ -382,12 +380,12 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (!Efound)
   {
     //Warn user if no energy was found
-    cout << "Warning: No MM energy found after a calculation!!!";
-    cout << '\n';
-    cout << " FLUKE will attempt to continue...";
-    cout << '\n';
+    cerr << "Warning: No MM energy found after a calculation!!!";
+    cerr << '\n';
+    cerr << " FLUKE will attempt to continue...";
+    cerr << '\n';
     E = HugeNum; //Large number to reject step
-    cout.flush(); //Print warning immediately
+    cerr.flush(); //Print warning immediately
   }
   ifile.close();
   //Clean up files
@@ -396,7 +394,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << " QMMM_" << Bead << ".xyz";
   call << " QMMM_" << Bead << ".log";
   call << " QMMM_" << Bead << ".key";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Return polarization energy in kcal/mol
   return Epol;
 };
@@ -411,12 +409,11 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call.copyfmt(cout);
   double Emm = 0.0;
   int ct; //Generic counter
-  int sys; //Dummy return for system calls
   //Construct MM forces input for TINKER
   call.str("");
   call << "cp tinker.key QMMM_";
   call << Bead << ".key";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Update key file
   call.str("");
   call << "QMMM_";
@@ -552,7 +549,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     ofile << setw(10) << Struct[i].P[Bead].z;
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
-    for (int j=0;j<Struct[i].Bonds.size();j++)
+    for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
     {
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
@@ -569,7 +566,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << ".xyz Y N N > QMMM";
   call << "_" << Bead;
   call << ".grad";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Collect MM forces
   fstream MMgrad; //QMMM output
   //Open files
@@ -637,7 +634,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << " QMMM_" << Bead << ".xyz";
   call << " QMMM_" << Bead << ".key";
   call << " QMMM_" << Bead << ".grad";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Return
   Emm *= kcal2eV;
   return Emm;
@@ -653,12 +650,11 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call.copyfmt(cout);
   double Emm = 0.0;
   int ct; //Generic counter
-  int sys; //Dummy return for system calls
   //Construct MM forces input for TINKER
   call.str("");
   call << "cp tinker.key QMMM_";
   call << Bead << ".key";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Update key file
   call.str("");
   call << "QMMM_";
@@ -744,7 +740,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     ofile << setw(10) << Struct[i].P[Bead].z;
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
-    for (int j=0;j<Struct[i].Bonds.size();j++)
+    for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
     {
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
@@ -761,7 +757,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << ".xyz Y N N > QMMM";
   call << "_" << Bead;
   call << ".grad";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Collect MM forces
   fstream MMgrad; //QMMM output
   //Open files
@@ -829,7 +825,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << " QMMM_" << Bead << ".xyz";
   call << " QMMM_" << Bead << ".key";
   call << " QMMM_" << Bead << ".grad";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Return
   Emm *= kcal2eV;
   return Emm;
@@ -845,14 +841,13 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, vector<Coord>& MMForces,
   call.copyfmt(cout);
   double Emm = 0.0;
   int ct; //Generic counter
-  int sys; //Dummy return for system calls
   //Copy the original key file and make changes
   if (QMMM)
   {
     call.str("");
     call << "cp tinker.key QMMM_";
     call << Bead << ".key";
-    sys = system(call.str().c_str());
+    GlobalSys = system(call.str().c_str());
     //Update key file
     call.str("");
     call << "QMMM_";
@@ -954,7 +949,7 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, vector<Coord>& MMForces,
     ofile << setw(10) << Struct[i].P[Bead].z;
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
-    for (int j=0;j<Struct[i].Bonds.size();j++)
+    for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
     {
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
@@ -971,7 +966,7 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, vector<Coord>& MMForces,
   call << ".xyz Y N N > QMMM";
   call << "_" << Bead;
   call << ".grad";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Collect MM forces
   fstream MMgrad; //QMMM output
   //Open files
@@ -1042,7 +1037,7 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, vector<Coord>& MMForces,
   call << " QMMM_" << Bead << ".xyz";
   call << " QMMM_" << Bead << ".key";
   call << " QMMM_" << Bead << ".grad";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Return
   Emm *= kcal2eV;
   return Emm;
@@ -1056,7 +1051,6 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call.copyfmt(cout);
   string dummy; //Generic string
   double E = 0;
-  int sys; //Dummy return for system calls
   int ct; //Generic counter
   call.str("");
   //Copy the original key file and make changes
@@ -1065,7 +1059,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     call.str("");
     call << "cp tinker.key QMMM_";
     call << Bead << ".key";
-    sys = system(call.str().c_str());
+    GlobalSys = system(call.str().c_str());
     //Update key file
     call.str("");
     call << "QMMM_";
@@ -1171,7 +1165,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     ofile << setw(10) << Struct[i].P[Bead].z;
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
-    for (int j=0;j<Struct[i].Bonds.size();j++)
+    for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
     {
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
@@ -1186,7 +1180,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "analyze QMMM_";
   call << Bead << ".xyz E > QMMM_";
   call << Bead << ".log";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   call.str("");
   call << "QMMM_" << Bead << ".log";
   ifile.open(call.str().c_str(),ios_base::in);
@@ -1208,12 +1202,12 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (!Efound)
   {
     //Warn user if no energy was found
-    cout << "Warning: No MM energy found after a calculation!!!";
-    cout << '\n';
-    cout << " FLUKE will attempt to continue...";
-    cout << '\n';
+    cerr << "Warning: No MM energy found after a calculation!!!";
+    cerr << '\n';
+    cerr << " FLUKE will attempt to continue...";
+    cerr << '\n';
     E = HugeNum; //Large number to reject step
-    cout.flush(); //Print warning immediately
+    cerr.flush(); //Print warning immediately
   }
   ifile.close();
   //Clean up files
@@ -1222,7 +1216,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << " QMMM_" << Bead << ".xyz";
   call << " QMMM_" << Bead << ".log";
   call << " QMMM_" << Bead << ".key";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Calculate polarization energy
   if ((AMOEBA == 1) and QMMM)
   {
@@ -1242,9 +1236,6 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string
-  double Epol = 0;
-  double E = 0;
-  int sys; //Dummy return for system calls
   int ct; //Generic counter
   call.str("");
   //Copy the original key file and make changes
@@ -1253,7 +1244,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     call.str("");
     call << "cp tinker.key QMMM_";
     call << Bead << ".key";
-    sys = system(call.str().c_str());
+    GlobalSys = system(call.str().c_str());
     //Update key file
     call.str("");
     call << "QMMM_";
@@ -1359,7 +1350,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ofile << setw(10) << Struct[i].P[Bead].z;
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
-    for (int j=0;j<Struct[i].Bonds.size();j++)
+    for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
     {
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
@@ -1378,7 +1369,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << (QMMMOpts.Nsteps*QMMMOpts.dt/1000) << " ";
   call << "2 " << QMMMOpts.Temp;
   call << " > QMMM_" << Bead << ".log";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Read new structure
   call.str("");
   call << "QMMM_" << Bead << ".001";
@@ -1407,7 +1398,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << " QMMM_" << Bead << ".log";
   call << " QMMM_" << Bead << ".0*";
   call << " QMMM_" << Bead << ".key";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   return;
 };
 
@@ -1418,9 +1409,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string
-  double Epol = 0;
   double E = 0;
-  int sys; //Dummy return for system calls
   int ct; //Generic counter
   call.str("");
   //Copy the original key file and make changes
@@ -1429,7 +1418,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     call.str("");
     call << "cp tinker.key QMMM_";
     call << Bead << ".key";
-    sys = system(call.str().c_str());
+    GlobalSys = system(call.str().c_str());
     //Update key file
     call.str("");
     call << "QMMM_";
@@ -1531,7 +1520,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     ofile << setw(10) << Struct[i].P[Bead].z;
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
-    for (int j=0;j<Struct[i].Bonds.size();j++)
+    for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
     {
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
@@ -1547,7 +1536,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << Bead << ".xyz ";
   call << QMMMOpts.MMOptTol << " > QMMM_";
   call << Bead << ".log";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Read new structure
   call.str("");
   call << "QMMM_" << Bead << ".xyz_2";
@@ -1576,7 +1565,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << " QMMM_" << Bead << ".log";
   call << " QMMM_" << Bead << ".xyz_*";
   call << " QMMM_" << Bead << ".key";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Change units
   E *= kcal2eV;
   return E;

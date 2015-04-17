@@ -21,7 +21,6 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the forces and charges on a set of atoms
-  int sys; //Dummy return for system calls
   fstream ofile,ifile;
   string dummy; //Generic string
   stringstream call;
@@ -160,7 +159,7 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << ".out > QMMM";
   call << "_" << Bead;
   call << ".log";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Extract charges
   call.str("");
   call << "QMMM_" << Bead << ".out";
@@ -242,7 +241,7 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << "QMMM_" << Bead << ".dat ";
   call << "QMMM_" << Bead << ".out ";
   call << "QMMM_" << Bead << ".log";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Change units
   Eqm *= Har2eV;
   return Eqm;
@@ -251,7 +250,6 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
 void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Function to update QM point-charges
-  int sys; //Dummy return for system calls
   fstream ofile,ifile;
   string dummy; //Generic string
   stringstream call;
@@ -389,7 +387,7 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << ".out > QMMM";
   call << "_" << Bead;
   call << ".log";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Extract charges
   call.str("");
   call << "QMMM_" << Bead << ".out";
@@ -427,7 +425,7 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "QMMM_" << Bead << ".dat ";
   call << "QMMM_" << Bead << ".out ";
   call << "QMMM_" << Bead << ".log";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   return;
 };
 
@@ -439,7 +437,6 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;
-  int sys; //Dummy return for system calls
   if ((AMOEBA == 1) and (TINKER == 1))
   {
     RotateTINKCharges(Struct,Bead);
@@ -573,7 +570,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << ".out > QMMM";
   call << "_" << Bead;
   call << ".log";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Read energy
   call.str("");
   call << "QMMM_" << Bead << ".out";
@@ -619,12 +616,12 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ifile.close();
   if (!QMfinished)
   {
-    cout << "Warning: SCF did not converge!!!";
-    cout << '\n';
-    cout << " FLUKE will attempt to continue...";
-    cout << '\n';
+    cerr << "Warning: SCF did not converge!!!";
+    cerr << '\n';
+    cerr << " FLUKE will attempt to continue...";
+    cerr << '\n';
     E = HugeNum; //Large number to reject step
-    cout.flush(); //Print warning immediately
+    cerr.flush(); //Print warning immediately
   }
   //Clean up files
   call.str("");
@@ -632,7 +629,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "QMMM_" << Bead << ".dat ";
   call << "QMMM_" << Bead << ".out ";
   call << "QMMM_" << Bead << ".log";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Change units
   E *= Har2eV;
   return E;
@@ -647,7 +644,6 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;
-  int sys; //Dummy return for system calls
   if ((AMOEBA == 1) and (TINKER == 1))
   {
     RotateTINKCharges(Struct,Bead);
@@ -781,7 +777,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   call << ".out > QMMM";
   call << "_" << Bead;
   call << ".log";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Read energy and structure
   call.str("");
   call << "QMMM_" << Bead << ".out";
@@ -853,22 +849,22 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   ifile.close();
   if (!QMfinished)
   {
-    cout << "Warning: SCF did not converge!!!";
-    cout << '\n';
-    cout << " FLUKE will attempt to continue...";
-    cout << '\n';
+    cerr << "Warning: SCF did not converge!!!";
+    cerr << '\n';
+    cerr << " FLUKE will attempt to continue...";
+    cerr << '\n';
     E = HugeNum; //Large number to reject step
-    cout.flush(); //Print warning immediately
+    cerr.flush(); //Print warning immediately
   }
   if (!Optfinished)
   {
-    cout << "Warning: Optimization did not converge!!!";
-    cout << '\n';
-    cout << " FLUKE will attempt to continue using the";
-    cout << " old structure...";
-    cout << '\n';
+    cerr << "Warning: Optimization did not converge!!!";
+    cerr << '\n';
+    cerr << " FLUKE will attempt to continue using the";
+    cerr << " old structure...";
+    cerr << '\n';
     E = HugeNum; //Large number to reject step
-    cout.flush(); //Print warning immediately
+    cerr.flush(); //Print warning immediately
   }
   //Clean up files
   call.str("");
@@ -876,7 +872,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   call << "QMMM_" << Bead << ".dat ";
   call << "QMMM_" << Bead << ".out ";
   call << "QMMM_" << Bead << ".log";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Change units
   E *= Har2eV;
   return E;

@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
       Eqm += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      int sys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.*");
     }
     if (NWChem == 1)
     {
@@ -322,7 +322,7 @@ int main(int argc, char* argv[])
       SumE += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      int sys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.*");
     }
     if (NWChem == 1)
     {
@@ -398,7 +398,7 @@ int main(int argc, char* argv[])
         SumE = PSIOpt(Struct,QMMMOpts,0);
         QMTime += (unsigned)time(0)-tstart;
         //Clean up annoying useless files
-        int sys = system("rm -f psi.*");
+        GlobalSys = system("rm -f psi.*");
       }
       if (NWChem == 1)
       {
@@ -441,7 +441,7 @@ int main(int argc, char* argv[])
       SumE += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      int sys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.*");
     }
     if (NWChem == 1)
     {
@@ -543,7 +543,7 @@ int main(int argc, char* argv[])
       SumE += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      int sys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.*");
     }
     if (NWChem == 1)
     {
@@ -644,7 +644,7 @@ int main(int argc, char* argv[])
       SumE += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      int sys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.*");
     }
     if (NWChem == 1)
     {
@@ -701,7 +701,7 @@ int main(int argc, char* argv[])
     call.copyfmt(cout);
     call.str("");
     call << "rm -f Gau-*"; //Produced if there is a crash
-    int sys = system(call.str().c_str());
+    GlobalSys = system(call.str().c_str());
   }
   if (PSI4 == 1)
   {
@@ -710,7 +710,7 @@ int main(int argc, char* argv[])
     call.copyfmt(cout);
     call.str("");
     call << "rm -f psi*";
-    int sys = system(call.str().c_str());
+    GlobalSys = system(call.str().c_str());
   }
   if (SinglePoint)
   {
@@ -728,7 +728,7 @@ int main(int argc, char* argv[])
         call << argv[i+1];
       }
     }
-    int sys = system(call.str().c_str());
+    GlobalSys = system(call.str().c_str());
   }
   //End of section
 
@@ -799,5 +799,9 @@ int main(int argc, char* argv[])
   cout << '\n';
   cout << '\n';
   cout.flush();
-  return 0;
+
+  //Useless but supresses unused return errors for system calls
+  int RetValue = GlobalSys;
+  RetValue = 0; //This can be changed to error messages later
+  return RetValue;
 };

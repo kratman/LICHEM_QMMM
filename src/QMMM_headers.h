@@ -83,6 +83,7 @@ const double fs2s = 1e-12; //Convert fs to s
 const double Debye2au = 0.393430307; //Convert from Debye to au
 
 //Globals
+int GlobalSys; //Global dummy return for all system calls
 string xyzfilename; //Saves a filename given in the arguments
 string confilename; //Saves a filename given in the arguments
 string regfilename; //Saves a filename given in the arguments

@@ -24,7 +24,7 @@ void ExternalGaussian(int& argc, char**& argv)
   double Emm = 0; //Stores partial energies
   vector<QMMMAtom> Struct; //Atomic data
   QMMMSettings QMMMOpts; //Simulation settings
-  int sys,DerType,ct,Bead;
+  int DerType,Bead;
   stringstream call;
   call.copyfmt(cout);
   string dummy,Stub;
@@ -191,7 +191,6 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the forces on a set of atoms
-  int sys; //Dummy return for system calls
   stringstream call;
   call.copyfmt(cout);
   string dummy,chrgfilename;
@@ -378,7 +377,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call.str("");
   call << "g09 " << "QMMM";
   call << "_" << Bead;
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Extract forces
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
@@ -494,7 +493,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << " && mv tmp_" << Bead;
   call << ".chk QMMM_" << Bead;
   call << ".chk";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Return
   Eqm -= Eself;
   Eqm *= Har2eV;
@@ -505,7 +504,6 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
   //Function to update QM point-charges
-  int sys; //Dummy return for system calls
   fstream ofile,ifile;
   string dummy; //Generic string
   stringstream call;
@@ -666,7 +664,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "g09 QMMM";
   call << "_" << Bead;
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Extract charges
   call.str("");
   call << "QMMM";
@@ -710,7 +708,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << " && mv tmp_" << Bead;
   call << ".chk QMMM_" << Bead;
   call << ".chk";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   return;
 };
 
@@ -724,7 +722,6 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.copyfmt(cout);
   double E = 0.0; //QM energy
   double Eself = 0.0; //Field self-energy
-  int sys; //Dummy return for system calls
   //Set up point charges
   if ((AMOEBA == 1) and (TINKER == 1))
   {
@@ -879,7 +876,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "g09 ";
   call << "QMMM_" << Bead;
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Read output
   call.str("");
   call << "QMMM_" << Bead << ".log";
@@ -939,12 +936,12 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   if (!QMfinished)
   {
-    cout << "Warning: SCF did not converge!!!";
-    cout << '\n';
-    cout << " FLUKE will attempt to continue...";
-    cout << '\n';
+    cerr << "Warning: SCF did not converge!!!";
+    cerr << '\n';
+    cerr << " FLUKE will attempt to continue...";
+    cerr << '\n';
     E = HugeNum; //Large number to reject step
-    cout.flush(); //Print warning immediately
+    cerr.flush(); //Print warning immediately
   }
   ifile.close();
   //Clean up files and save checkpoint file
@@ -958,7 +955,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << " && mv tmp_" << Bead;
   call << ".chk QMMM_" << Bead;
   call << ".chk";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Change units
   E -= Eself;
   E *= Har2eV;
@@ -974,8 +971,6 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0; //QM energy
-  double Eself = 0.0; //Field self-energy
-  int sys; //Dummy return for system calls
   int ExtCPUs = 1; //Number of CPUs for GauExternal
   if ((AMOEBA == 1) and (TINKER == 1))
   {
@@ -1119,7 +1114,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "g09 ";
   call << "QMMMExt_" << Bead;
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Read new structure
   call.str("");
   call << "QMMMExt_";
@@ -1173,16 +1168,16 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "rm -f QMMMExt_";
   call << Bead << ".*";
   call << " MMCharges_" << Bead << ".txt";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Print warnings and errors
   if (!Optfinished)
   {
-    cout << "Warning: Optimization did not converge!!!";
-    cout << '\n';
-    cout << "An older geometry will be recovered...";
-    cout << '\n';
+    cerr << "Warning: Optimization did not converge!!!";
+    cerr << '\n';
+    cerr << "An older geometry will be recovered...";
+    cerr << '\n';
     E = HugeNum; //Large number to reject step
-    cout.flush(); //Print warning immediately
+    cerr.flush(); //Print warning immediately
   }
   //Calculate new point-charges and return
   GaussianCharges(Struct,QMMMOpts,Bead);

@@ -118,7 +118,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       SumE += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      int sys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.*");
     }
     if (NWChem == 1)
     {
@@ -193,7 +193,6 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
   //Cartesian steepest descent optimizer
-  int sys; //Dummy return for system calls
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string
@@ -292,7 +291,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       E += PSIForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      int sys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.*");
     }
     if (NWChem == 1)
     {
@@ -390,7 +389,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "rm -f QMOpt_" << Bead << ".xyz";
   call << " MMCharges_" << Bead << ".txt";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Finish and return
   return;
 };
@@ -400,7 +399,6 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //A simple DFP optimizer, which is similar to BFGS updating
   //Note: This optimizer does not have a true line search, instead
   //a steepest descent step is performed if the energy rises
-  int sys; //Dummy return for system calls
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string
@@ -512,7 +510,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     E += PSIForces(Struct,Forces,QMMMOpts,Bead);
     QMTime += (unsigned)time(0)-tstart;
     //Clean up annoying useless files
-    int sys = system("rm -f psi.*");
+    GlobalSys = system("rm -f psi.*");
   }
   if (NWChem == 1)
   {
@@ -635,7 +633,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       E += PSIForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      int sys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.*");
     }
     if (NWChem == 1)
     {
@@ -762,7 +760,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call.str("");
   call << "rm -f QMOpt_" << Bead << ".xyz";
   call << " MMCharges_" << Bead << ".txt";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Finish and return
   return;
 };
@@ -772,7 +770,6 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
      QMMMSettings& QMMMOpts, int Bead)
 {
   //Ensemble steepest descent optimizer
-  int sys; //Dummy return for system calls
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string
@@ -822,7 +819,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
       SumE += PSIForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      int sys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.*");
     }
     if (NWChem == 1)
     {
@@ -909,7 +906,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
   //Clean up files and return
   call.str("");
   call << "rm -f QMMM_" << Bead << ".dyn";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   return;
 };
 

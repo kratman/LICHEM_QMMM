@@ -27,7 +27,6 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;
-  int sys; //Dummy return for system calls
   
   //Change units
   E *= Har2eV;
@@ -42,8 +41,6 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
-  double E = 0.0;
-  int sys; //Dummy return for system calls
   
   return;
 };
@@ -57,9 +54,9 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;
-  int sys; //Dummy return for system calls
   if ((AMOEBA == 1) and (TINKER == 1))
   {
+    //Set up multipoles
     RotateTINKCharges(Struct,Bead);
   }
   //Create NWChem input
@@ -184,7 +181,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Clean up files
   call.str("");
   
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Change units and return
   E *= Har2eV;
   return E;
@@ -198,7 +195,6 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;
-  int sys; //Dummy return for system calls
   
   //Change units
   E *= Har2eV;

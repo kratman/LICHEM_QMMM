@@ -128,7 +128,7 @@ double KineticE_eFF(vector<QMMMElec>& elecs, QMMMSettings& QMMMOpts)
 {
   //Total electron kinetic energy
   double E = 0;
-  for (int i=0;i<elecs.size();i++)
+  for (unsigned int i=0;i<elecs.size();i++)
   {
     elecs[i].Ep = 0.0;
     for (int k=0;k<QMMMOpts.Nbeads;k++)
@@ -154,10 +154,10 @@ double Get_EeFF(vector<QMMMAtom>& parts, vector<QMMMElec>& elecs,
   //Total eFF interaction energy
   double E = 0;
   #pragma omp parallel for
-  for (int i=0;i<parts.size();i++)
+  for (unsigned int i=0;i<parts.size();i++)
   {
     parts[i].Ep = 0;
-    for (int j=0;j<elecs.size();j++)
+    for (unsigned int j=0;j<elecs.size();j++)
     {
       for (int k=0;k<QMMMOpts.Nbeads;k++)
       {
@@ -167,13 +167,13 @@ double Get_EeFF(vector<QMMMAtom>& parts, vector<QMMMElec>& elecs,
   }
   #pragma omp barrier
   #pragma omp parallel for
-  for (int i=0;i<elecs.size();i++)
+  for (unsigned int i=0;i<elecs.size();i++)
   {
     elecs[i].Ep = 0.0;
     for (int k=0;k<QMMMOpts.Nbeads;k++)
     {
       //Lepton interaction energy
-      for (int j=0;j<i;j++)
+      for (unsigned int j=0;j<i;j++)
       {
         //Lepton-lepton correlation
         elecs[i].Ep += EFFCorr(elecs[i],elecs[j],k);
@@ -181,11 +181,11 @@ double Get_EeFF(vector<QMMMAtom>& parts, vector<QMMMElec>& elecs,
     }
   }
   #pragma omp barrier
-  for (int i=0;i<parts.size();i++)
+  for (unsigned int i=0;i<parts.size();i++)
   {
     E += parts[i].Ep;
   }
-  for (int i=0;i<elecs.size();i++)
+  for (unsigned int i=0;i<elecs.size();i++)
   {
     E += elecs[i].Ep;
   }

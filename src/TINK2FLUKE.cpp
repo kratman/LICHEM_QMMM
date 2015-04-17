@@ -371,7 +371,7 @@ void TINK2FLUKE(int& argc, char**& argv)
     }
     string numtyp = fullline[5];
     bool Zfound = 0;
-    for (int j=0;j<Ncharges.size();j++)
+    for (unsigned int j=0;j<Ncharges.size();j++)
     {
       if (Ncharges[j][0] == numtyp)
       {
@@ -408,7 +408,7 @@ void TINK2FLUKE(int& argc, char**& argv)
     confile << fullline[1] << " ";
     confile << numtyp << " ";
     bool massfound = 0;
-    for (int j=0;j<Masses.size();j++)
+    for (unsigned int j=0;j<Masses.size();j++)
     {
       if (Masses[j][0] == numtyp)
       {
@@ -431,7 +431,7 @@ void TINK2FLUKE(int& argc, char**& argv)
       exit(0);
     }
     bool chargefound = 0;
-    for (int j=0;j<Charges.size();j++)
+    for (unsigned int j=0;j<Charges.size();j++)
     {
       if (Charges[j][0] == numtyp)
       {
@@ -562,7 +562,7 @@ void FLUKE2TINK(int& argc, char**& argv)
       ofile << y << " ";
       ofile << z << " ";
       ofile << AtNum;
-      for (int j=0;j<Bonds.size();j++)
+      for (unsigned int j=0;j<Bonds.size();j++)
       {
         ofile << " "; //Prevents trailing spaces
         ofile << Bonds[j];

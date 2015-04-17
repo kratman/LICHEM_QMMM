@@ -26,7 +26,7 @@ double LAMMPSForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;
-  int sys,ct;
+  int ct;
 
   return E;
 };
@@ -40,7 +40,7 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;
-  int sys,ct;
+  int ct;
   //Construct LAMMPS data file
   call.str("");
   call << "QMMM";
@@ -176,7 +176,7 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << ".in > QMMMlog_";
   call << Bead;
   call << ".txt";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Extract energy
   
   //Clean up files
@@ -200,7 +200,7 @@ double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;
-  int sys,ct;
+  int ct;
   //Construct LAMMPS data file
   call.str("");
   call << "QMMM";
@@ -339,7 +339,7 @@ double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << ".in > QMMMlog";
   call << "_" << Bead;
   call << ".txt";
-  sys = system(call.str().c_str());
+  GlobalSys = system(call.str().c_str());
   //Extract new geometry
   
   //Clean up files

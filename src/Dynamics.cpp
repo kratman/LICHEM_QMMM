@@ -23,7 +23,6 @@ double BerendsenThermo(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 {
   //Berendsen thermostat to maintain a constant temperature and remove
   //center of mass velocities
-  int sys; //Dummy return for system calls
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string
@@ -92,7 +91,6 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 {
   //Runs the velocity Verlet algorithm
   double E = 0; //Energy
-  int sys; //Dummy return for system calls
   stringstream call;
   call.copyfmt(cout);
   string dummy; //Generic string
@@ -156,7 +154,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       E += PSIForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      int sys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.*");
     }
     if (NWChem == 1)
     {
@@ -263,7 +261,7 @@ void VerletUpdate(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         E += PSIEnergy(Struct,QMMMOpts,Bead);
         QMTime += (unsigned)time(0)-tstart;
         //Clean up annoying useless files
-        int sys = system("rm -f psi.*");
+        GlobalSys = system("rm -f psi.*");
       }
       if (NWChem == 1)
       {

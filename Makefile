@@ -8,7 +8,7 @@
 
 CXX=g++
 CXXFLAGS=-static -fopenmp -O3
-DEVFLAGS=-g -DDEVCOMP
+DEVFLAGS=-g -DDEVCOMP -Wall
 LDFLAGS=-I./src/ -I/usr/include/eigen3/
 TEX=pdflatex
 BIB=bibtex
