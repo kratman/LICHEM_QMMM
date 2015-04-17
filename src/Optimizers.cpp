@@ -806,7 +806,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
       tmp.z = 0;
       Forces.push_back(tmp);
     }
-    //Calculate forces (QM part)
+    //Calculate forces and energy (QM part)
     if (Gaussian == 1)
     {
       int tstart = (unsigned)time(0);
@@ -827,7 +827,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
       SumE += NWChemForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
     }
-    //Calculate forces (MM part)
+    //Calculate forces and energy (MM part)
     if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);
