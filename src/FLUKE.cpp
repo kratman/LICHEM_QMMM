@@ -671,10 +671,14 @@ int main(int argc, char* argv[])
       SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
+    stringstream call;
+    call.copyfmt(cout); //Save settings
     cout << " | Opt. step: 0";
-    cout << " | Energy: " << SumE << " eV";
-    cout << '\n';
+    cout << " | Energy: ";
+    cout << setprecision(16) << SumE;
+    cout << " eV" << '\n';
     cout.flush(); //Print progress
+    cout.copyfmt(call); //Replace settings
     //Run optimization
     EnsembleSD(Struct,outfile,QMMMOpts,0);
     //Finish output
