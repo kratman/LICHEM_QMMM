@@ -259,19 +259,28 @@ vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int AtID)
   bool MoreFound = 1; //More boundary atoms were found
   while (MoreFound and (!BondError))
   {
+    MoreFound = 0; //Break the loop
     vector<int> tmp;
     for (unsigned int i=0;i<BoundAtoms.size();i++)
     {
-      for (unsigned int j=0;j<Struct[BoundAtoms[i]].Bonds.size();j++)
+      int BAID = BoundAtoms[i];
+      for (unsigned int j=0;j<Struct[BAID].Bonds.size();j++)
       {
-        int BondID = Struct[BoundAtoms[i]].Bonds[j];
+        int BondID = Struct[BAID].Bonds[j];
         //Check if it is on the list
         bool IsThere = 0;
-        
+        for (unsigned int k=0;k<BoundAtoms.size();k++)
+        {
+          if (BondID == BoundAtoms[k])
+          {
+            IsThere = 1;
+          }
+        }
         if (!IsThere)
         {
           if (Struct[BondID].BAregion)
           {
+            MoreFound = 1; //Keep going
             tmp.push_back(Struct[BondID]);
           }
           if (Struct[BondID].PAregion)
@@ -283,6 +292,22 @@ vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int AtID)
       }
     }
     //Add them to the list
+    for (unsigned int i=0;i<tmp.size();i++)
+    {
+      bool IsThere = 0;
+      for (unsigned int j=0;j<BoundAtoms.size();j++)
+      {
+        //Avoid adding the atom twice
+        if (tmp[i] == BoundAtoms[j])
+        {
+          IsThere = 1;
+        }
+      }
+      if (!IsThere)
+      {
+        BoundAtoms.push_back(tmp[i]);
+      }
+    }
   }
   if (BondError)
   {
