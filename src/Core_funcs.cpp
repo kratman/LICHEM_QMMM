@@ -237,3 +237,62 @@ int RevTyping(string AtName)
   return Z;
 };
 
+vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int AtID)
+{
+  bool BondError = 0;
+  vector<int> BoundAtoms;
+  //Add atoms bonded to atom "AtID"
+  for (unsigned int i=0;i<Struct[AtID].Bonds.size();i++)
+  {
+    int BondID = Struct[AtID].Bonds[i];
+    if (Struct[BondID].BAregion)
+    {
+      BoundAtoms.push_back(BondID);
+    }
+    if (Struct[BondID].PAregion)
+    {
+      //Two PAs are connected and this system will fail
+      Error = 1;
+    }
+  }
+  //Check find other boundary atoms bonded to the initial set
+  bool MoreFound = 1; //More boundary atoms were found
+  while (MoreFound and (!BondError))
+  {
+    vector<int> tmp;
+    for (unsigned int i=0;i<BoundAtoms.size();i++)
+    {
+      for (unsigned int j=0;j<Struct[BoundAtoms[i]].Bonds.size();j++)
+      {
+        int BondID = Struct[BoundAtoms[i]].Bonds[j];
+        //Check if it is on the list
+        bool IsThere = 0;
+        
+        if (!IsThere)
+        {
+          if (Struct[BondID].BAregion)
+          {
+            tmp.push_back(Struct[BondID]);
+          }
+          if (Struct[BondID].PAregion)
+          {
+            //Two PAs are connected and this system will fail
+            Error = 1;
+          }
+        }
+      }
+    }
+    //Add them to the list
+  }
+  if (BondError)
+  {
+    cerr << "Error: Two pseudoatoms are connected through boudary atoms!!!";
+    cerr << '\n';
+    cerr << " The connections prevent FLUKE from correctly updating";
+    cerr << " the charges" << '\n' << '\n';
+    cerr.flush();
+    exit(0);
+  }
+  return BoundAtoms;
+};
+

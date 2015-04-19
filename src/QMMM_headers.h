@@ -293,6 +293,8 @@ string Typing(int);
 
 int RevTyping(string);
 
+vector<int> TraceBoundary(vector<QMMMAtom>&,int);
+
 void ExtractTINKpoles(vector<QMMMAtom>&,int);
 
 void RotateTINKCharges(vector<QMMMAtom>&,int);
