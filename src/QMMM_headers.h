@@ -43,12 +43,11 @@ using namespace std;
 
 //Compile options
 const bool Jokes = 1; //Print humorous comments
-const bool Debug = 0; //Turn debugging on/off
-const bool Isotrop = 1; //Force isotropic expansion
-const double StepMin = 0.01; //Minimum step size
-const double StepMax = 1.0; //Maximum step size
-const double Centratio= 5.0; //Scales 'step' for centroids
-const int Acc_Check = 2000; //Eq steps before checking accratio
+const bool Isotrop = 1; //Force isotropic expansion in NPT Monte Carlo
+const double StepMin = 0.01; //Minimum Monte Carlo step size
+const double StepMax = 1.0; //Maximum Monte Carlo step size
+const double Centratio= 5.0; //Scales step size for path-integral centroids
+const int Acc_Check = 2000; //Eq Monte Carlo steps before checking accratio
 
 //Move Probabilities for PIMC
 //Note: These probabilities allow for multi-particle moves
@@ -56,31 +55,36 @@ double BeadProb = 0.55; //Probability to move a single bead
 double CentProb = 0.55; //Probability to move a centroid
 double VolProb = 0.10; //Volume change probability
 
-//Global constants
-const double k = 8.6173324e-5; //Boltzmann constant (eV)
-const double hbar = 6.58211928e-16; //Reduced Planck Constant (eV)
-const double hbarSI = 1.054571726e-34; //Reduced Planck Constant (SI)
-const double kb = 0.69503476; //Boltzmann constant (cm-1)
-const double kSI = 1.3806488e-23; //Boltzmann constant (SI)
-const double m2Ang = 1.0e10; //Angstroms to meters
-const double amu2kg = 1.660538921e-27; //Atomic mass units to kg
-const double cs = 2.99792458e8; //Speed of light (m)
+//Global exact constants
 const double pi = 4*atan(1); //Pi
-const double h = 2*pi*hbar; //Planck Constant (eV)
-const double SI2eV = 1/(1.602176565e-19); //Convert SI to eV
-const double ToeV = amu2kg*SI2eV/(m2Ang*m2Ang); //Convert to eV units
-const double C2eV = m2Ang/(4*pi*SI2eV*8.854187817e-12); //Coulomb to eV
-const double Masse = 9.10938291e-31; //Mass of an electron (kg)
-const double ElecMass = 5.4857990943e-4; //Mass of an electron (amu)
-const double BohrRad = 0.52917721092; //Bohr radius (Ang)
-const double Har2eV = 27.21138505; //Hartrees to eV
-const double atm2eV = SI2eV*1.01325e-25; //atmA^3 to eV
-const double Na = 6.02214129e23; //Avogadro's number
-const double kcal2eV = 4184*SI2eV/Na; //kcal/mol to eV
 const double sqrt2 = pow(2,0.5); //Square root of 2
 const double HugeNum = 1e50; //Large number to reject step
 const double fs2s = 1e-12; //Convert fs to s
+const double m2Ang = 1.0e10; //Angstroms to meters
+const double atm2Pa = 1.01325e5; //Atmospheres to Pascal
+
+//Global measured constants (NIST, CODATA 2010)
+const double EpsZero = 8.54187817e-12; //Electric constant
+const double hbar = 6.58211928e-16; //Reduced Planck Constant (eV)
+const double k = 8.6173324e-5; //Boltzmann constant (eV)
+const double kSI = 1.3806488e-23; //Boltzmann constant (SI)
+const double amu2kg = 1.660538921e-27; //Atomic mass units to kg
+const double SI2eV = 1/(1.602176565e-19); //Convert SI to eV
+const double Masse = 9.10938291e-31; //Mass of an electron (kg)
+const double BohrRad = 0.52917721092; //Bohr radius (Ang)
+const double Har2eV = 27.21138505; //Hartrees to eV
+const double Na = 6.02214129e23; //Avogadro's number
+
+//Constants of uncertain origin
 const double Debye2au = 0.393430307; //Convert from Debye to au
+
+//Global derived constants
+const double atm2eV = SI2eV*atm2Pa/(m2Ang*m2Ang*m2Ang); //atmA^3 to eV
+const double C2eV = m2Ang/(4*pi*SI2eV*EpsZero); //Coulomb to eV
+const double ElecMass = Masse/amu2kg; //Mass of an electron (amu)
+const double h = 2*pi*hbar; //Planck Constant (eV)
+const double ToeV = amu2kg*SI2eV/(m2Ang*m2Ang); //Convert to eV units (PIMC)
+const double kcal2eV = 4184*SI2eV/Na; //kcal/mol to eV
 
 //Globals
 int GlobalSys; //Global dummy return for all system calls
@@ -374,8 +378,8 @@ double Get_EeFF(vector<QMMMAtom>&,vector<QMMMElec>&,QMMMSettings&);
 bool OptConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,vector<Coord>&,
      int,QMMMSettings& QMMMOpts,int,bool);
 
-bool PathConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,vector<Coord>&,
-     int,QMMMSettings& QMMMOpts,bool);
+bool PathConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,
+     vector<vector<double> >&,int,QMMMSettings& QMMMOpts,bool);
 
 void FLUKESteepest(vector<QMMMAtom>&,QMMMSettings&,int);
 

@@ -109,13 +109,13 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     if (Gaussian == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += GaussianEnergy(Struct,QMMMOpts,0);
+      SumE += GaussianEnergy(Struct,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
     }
     if (PSI4 == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += PSIEnergy(Struct,QMMMOpts,0);
+      SumE += PSIEnergy(Struct,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
       GlobalSys = system("rm -f psi.*");
@@ -123,26 +123,26 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     if (NWChem == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += NWChemEnergy(Struct,QMMMOpts,0);
+      SumE += NWChemEnergy(Struct,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
     }
     //Calculate MM energy
     if (TINKER == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += TINKEREnergy(Struct,QMMMOpts,0);
+      SumE += TINKEREnergy(Struct,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
     if (AMBER == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += AMBEREnergy(Struct,QMMMOpts,0);
+      SumE += AMBEREnergy(Struct,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
     if (LAMMPS == 1)
     {
       int tstart = (unsigned)time(0);
-      SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
+      SumE += LAMMPSEnergy(Struct,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
     //Calculate RMS displacement

@@ -12,4 +12,23 @@
 
 */
 
+//Convergence test functions
+bool PathConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
+     vector<vector<double> >& ForceStats, int stepct, QMMMSettings& QMMMOpts,
+     bool QMregion)
+{
+  //Check convergence of QMMM optimizations
+  bool PathDone = 0;
+  
+  return PathDone;
+};
+
+//Path optimization routines
+void FLUKENEB(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
+{
+  //Cartesian NEB-SD optimizer which runs sequentially
+  
+  return;
+};
+
 

@@ -766,13 +766,6 @@ int main(int argc, char* argv[])
   cout << "  Wall time for FLUKE: ";
   cout << OtherTime << " hours";
   cout << '\n';
-  if (Jokes)
-  {
-    randnum = rand() % 10; //Randomly injure animals
-    cout << "  Animals injured in the making of this science: ";
-    cout << randnum;
-    cout << '\n';
-  }
   cout << "####################################################";
   cout << '\n';
   cout.flush();
