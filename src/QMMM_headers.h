@@ -74,8 +74,6 @@ const double Masse = 9.10938291e-31; //Mass of an electron (kg)
 const double BohrRad = 0.52917721092; //Bohr radius (Ang)
 const double Har2eV = 27.21138505; //Hartrees to eV
 const double Na = 6.02214129e23; //Avogadro's number
-
-//Constants of uncertain origin
 const double Debye2au = 0.393430307; //Convert from Debye to au
 
 //Global derived constants

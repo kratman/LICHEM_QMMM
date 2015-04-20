@@ -11,11 +11,6 @@ General:
 -Currently only DFT and HF energies can be used in the calculations. Post-HF
 methods will be implemented in the future.
 
-Physical constants:
--The current values of the physical constants come from a variety of sources.
-All experimentally measured constants need to be updated from a single
-source.
-
 PSI4 interface:
 -PSI4 gradients do not include the contribution from the external field.
 This is not a FLUKE bug, but rather a bug in PSI4. Due to this bug, PSI4 QMMM
