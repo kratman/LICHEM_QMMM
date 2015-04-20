@@ -374,9 +374,14 @@ double Get_EeFF(vector<QMMMAtom>&,vector<QMMMElec>&,QMMMSettings&);
 bool OptConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,vector<Coord>&,
      int,QMMMSettings& QMMMOpts,int,bool);
 
+bool PathConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,vector<Coord>&,
+     int,QMMMSettings& QMMMOpts,bool);
+
 void FLUKESteepest(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void FLUKEDFP(vector<QMMMAtom>&,QMMMSettings&,int);
+
+void FLUKENEB(vector<QMMMAtom>&,QMMMSettings&);
 
 void EnsembleSD(vector<QMMMAtom>&,fstream&,QMMMSettings&,int);
 
