@@ -249,7 +249,7 @@ vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int AtID)
     {
       BoundAtoms.push_back(BondID);
     }
-    if (Struct[BondID].PAregion)
+    if (Struct[BondID].PAregion and (BondID != AtID))
     {
       //Two PAs are connected and this system will fail
       BondError = 1;
@@ -283,7 +283,7 @@ vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int AtID)
             MoreFound = 1; //Keep going
             tmp.push_back(BondID);
           }
-          if (Struct[BondID].PAregion)
+          if (Struct[BondID].PAregion and (BondID != AtID))
           {
             //Two PAs are connected and this system will fail
             BondError = 1;
