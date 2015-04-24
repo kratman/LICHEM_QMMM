@@ -351,7 +351,7 @@ int main(int argc, char* argv[])
     }
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
-    cout << SumE << " eV";
+    cout << setprecision(12) << SumE << " eV";
     cout << '\n';
     cout.flush(); //Print progress
     //Run optimization
@@ -470,7 +470,7 @@ int main(int argc, char* argv[])
     }
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
-    cout << SumE << " eV";
+    cout << setprecision(12) << SumE << " eV";
     cout << '\n';
     cout.flush(); //Print progress
     //Run optimization
@@ -572,7 +572,7 @@ int main(int argc, char* argv[])
     }
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
-    cout << SumE << " eV";
+    cout << setprecision(12) << SumE << " eV";
     cout << '\n';
     cout.flush(); //Print progress
     //Run optimization
