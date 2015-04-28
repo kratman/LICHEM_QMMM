@@ -383,9 +383,11 @@ void FLUKESteepest(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void FLUKEDFP(vector<QMMMAtom>&,QMMMSettings&,int);
 
-void FLUKENEB(vector<QMMMAtom>&,QMMMSettings&);
+void EnsembleNEB(vector<QMMMAtom>&,QMMMSettings&);
 
 void EnsembleSD(vector<QMMMAtom>&,fstream&,QMMMSettings&,int);
+
+VectorXd EnsembleTangent(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double BerendsenThermo(vector<QMMMAtom>&,QMMMSettings&,int);
 
