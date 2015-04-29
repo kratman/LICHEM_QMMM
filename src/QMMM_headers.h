@@ -278,6 +278,8 @@ struct QMMMSettings
   double QMOptTol; //Criteria to end the optimization
   double StepScale; //Steepest descent step size (Ang)
   double MaxStep; //Maximum size of the optimization step
+  //Input needed for reaction paths
+  double Kspring; //Elastic band spring constant
   //Storage of energies (PIMC)
   double Eold;
 };
