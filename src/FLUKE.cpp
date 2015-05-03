@@ -349,11 +349,14 @@ int main(int argc, char* argv[])
       SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
+    stringstream call;
+    call.copyfmt(cout); //Save settings
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
     cout << setprecision(12) << SumE << " eV";
     cout << '\n';
     cout.flush(); //Print progress
+    cout.copyfmt(call); //Replace settings
     //Run optimization
     bool OptDone = 0;
     while (!OptDone)
@@ -468,11 +471,14 @@ int main(int argc, char* argv[])
       SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
+    stringstream call;
+    call.copyfmt(cout); //Save settings
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
     cout << setprecision(12) << SumE << " eV";
     cout << '\n';
     cout.flush(); //Print progress
+    cout.copyfmt(call); //Replace settings
     //Run optimization
     bool OptDone = 0;
     while (!OptDone)
@@ -570,11 +576,14 @@ int main(int argc, char* argv[])
       SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
+    stringstream call;
+    call.copyfmt(cout); //Save settings
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
     cout << setprecision(12) << SumE << " eV";
     cout << '\n';
     cout.flush(); //Print progress
+    cout.copyfmt(call); //Replace settings
     //Run optimization
     bool OptDone = 0;
     while (!OptDone)

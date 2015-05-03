@@ -283,6 +283,11 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     {
       PSI4 = 1;
     }
+    if ((dummy == "NWChem") or (dummy == "nwchem")
+       or (dummy == "NWCHEM") or (dummy == "NWchem"))
+    {
+      NWChem = 1;
+    }
     if ((dummy == "gaussian") or (dummy == "Gaussian"))
     {
       Gaussian = 1;
@@ -322,6 +327,11 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
        or (dummy == "PSI4"))
     {
       PSI4 = 1;
+    }
+    if ((dummy == "NWChem") or (dummy == "nwchem")
+       or (dummy == "NWCHEM") or (dummy == "NWchem"))
+    {
+      NWChem = 1;
     }
     if ((dummy == "gaussian") or (dummy == "Gaussian"))
     {
