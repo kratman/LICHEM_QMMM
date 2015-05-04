@@ -204,7 +204,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "QMOpt_" << Bead << ".xyz";
   qmfile.open(call.str().c_str(),ios_base::out);
   //Initialize charges for Gaussian
-  if ((AMOEBA == 1) and (Gaussian == 1))
+  if ((AMOEBA == 1) and ((Gaussian == 1) or (NWChem == 1)))
   {
     if (TINKER == 1)
     {
@@ -413,7 +413,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   double Eold = 0; //Energy from previous step
   double VecMax = 0;
   //Initialize multipoles for Gaussian optimizations
-  if ((AMOEBA == 1) and (Gaussian == 1))
+  if ((AMOEBA == 1) and ((Gaussian == 1) or (NWChem == 1)))
   {
     if (TINKER == 1)
     {

@@ -23,14 +23,26 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
 {
   //Runs NWChem force calculations
   fstream ofile,ifile;
-  string dummy; //Generic string
+  string dummy,chrgfilename;
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;
+  bool UseChrgFile = 0;
   if ((AMOEBA == 1) and (TINKER == 1))
   {
-    //Set up multipoles
-    RotateTINKCharges(Struct,Bead);
+    //Check if charges are saved
+    call.str("");
+    call << "MMCharges_" << Bead << ".txt";
+    UseChrgFile = CheckFile(call.str());
+    if (UseChrgFile)
+    {
+      chrgfilename = call.str();
+    }
+    else
+    {
+      //Set up multipoles
+      RotateTINKCharges(Struct,Bead);
+    }
   }
   //Create NWChem input
   call.str("");
@@ -116,42 +128,62 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   if (AMOEBA == 1)
   {
     ofile << "bq mmchrg" << '\n';
-    for (int i=0;i<Natoms;i++)
+    if (UseChrgFile)
     {
-      if (Struct[i].MMregion)
+      //Add charges to NWChem input
+      ifile.open(chrgfilename.c_str(),ios_base::in);
+      while (!ifile.eof())
       {
-        ofile << fixed; //Forces numbers to be floats
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
-        ofile.copyfmt(cout);
-        ofile << '\n';
+        //Copy charges line by line
+        getline(ifile,dummy);
+        stringstream line(dummy);
+        if (line.str() != "")
+        {
+          //Avoid copying extra blank lines
+          ofile << dummy << '\n';
+        }
+      }
+      ifile.close();
+    }
+    else
+    {
+      for (int i=0;i<Natoms;i++)
+      {
+        if (Struct[i].MMregion)
+        {
+          ofile << fixed; //Forces numbers to be floats
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].x1;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].y1;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].z1;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
+          ofile << '\n';
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].x2;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].y2;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].z2;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
+          ofile << '\n';
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].x3;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].y3;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].z3;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
+          ofile << '\n';
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].x4;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].y4;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].z4;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
+          ofile << '\n';
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].x5;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].y5;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].z5;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
+          ofile << '\n';
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].x6;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].y6;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].z6;
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
+          ofile.copyfmt(cout);
+          ofile << '\n';
+        }
       }
     }
     ofile << "end" << '\n';
