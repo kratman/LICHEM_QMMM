@@ -143,6 +143,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   ofile << " grid xfine" << '\n';
   ofile << " noio" << '\n';
   ofile << " tolerances tight" << '\n';
+  ofile << " convergence dampon" << '\n';
   ofile << " xc " << QMMMOpts.Func << '\n';
   ofile << "end" << '\n';
   ofile << "task dft gradient" << '\n';
@@ -199,15 +200,15 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
           line >> Fx;
           line >> Fy;
           line >> Fz;
-          if (abs(Fx) >= 1e-8)
+          if (abs(Fx) >= 1e-6)
           {
             Forces[i].x -= Fx*Har2eV/BohrRad;
           }
-          if (abs(Fy) >= 1e-8)
+          if (abs(Fy) >= 1e-6)
           {
             Forces[i].y -= Fy*Har2eV/BohrRad;
           }
-          if (abs(Fz) >= 1e-8)
+          if (abs(Fz) >= 1e-6)
           {
             Forces[i].z -= Fz*Har2eV/BohrRad;
           }
@@ -375,6 +376,7 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile << " grid xfine" << '\n';
   ofile << " noio" << '\n';
   ofile << " tolerances tight" << '\n';
+  ofile << " convergence dampon" << '\n';
   ofile << " xc " << QMMMOpts.Func << '\n';
   ofile << "end" << '\n';
   ofile << "task dft energy" << '\n';
@@ -585,6 +587,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile << " grid xfine" << '\n';
   ofile << " noio" << '\n';
   ofile << " tolerances tight" << '\n';
+  ofile << " convergence dampon" << '\n';
   ofile << " xc " << QMMMOpts.Func << '\n';
   ofile << "end" << '\n';
   ofile << "task dft energy" << '\n';
@@ -796,6 +799,7 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ofile << " grid xfine" << '\n';
   ofile << " noio" << '\n';
   ofile << " tolerances tight" << '\n';
+  ofile << " convergence dampon" << '\n';
   ofile << " xc " << QMMMOpts.Func << '\n';
   ofile << "end" << '\n';
   ofile << "task dft optimize" << '\n';
