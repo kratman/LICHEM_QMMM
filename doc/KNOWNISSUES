@@ -11,6 +11,10 @@ General:
 -Currently only DFT and HF energies can be used in the calculations. Post-HF
 methods will be implemented in the future.
 
+NWChem interface:
+-NWChem calculations can only be performed with DFT. Wavefunction based
+methods are not implemented.
+
 PSI4 interface:
 -PSI4 gradients do not include the contribution from the external field.
 This is not a FLUKE bug, but rather a bug in PSI4. Due to this bug, PSI4 QMMM
