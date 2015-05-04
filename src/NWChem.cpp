@@ -36,7 +36,27 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call.str("");
   call << "QMMM_" << Bead << ".nw";
   ofile.open(call.str().c_str(),ios_base::out);
-  ofile << "start QMMM_" << Bead << '\n';
+  call.str("");
+  call << "QMMM_" << Bead << ".db";
+  if (CheckFile(call.str()))
+  {
+    ofile << "restart";
+  }
+  else
+  {
+    ofile << "start";
+  }
+  ofile << " QMMM_" << Bead << '\n';
+  ofile << "memory " << QMMMOpts.RAM;
+  if (QMMMOpts.MemMB)
+  {
+    ofile << " mb";
+  }
+  else
+  {
+    ofile << " gb";
+  }
+  ofile << '\n';
   ofile << "charge " << QMMMOpts.Charge << '\n';
   ofile << "geometry nocenter ";
   ofile << "noautoz noautosym" << '\n';
@@ -246,6 +266,19 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     E = HugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
   }
+  //Clean up files
+  call.str("");
+  call << "rm -f ";
+  call << "QMMM_" << Bead << ".b*" << " ";
+  call << "QMMM_" << Bead << ".c*" << " ";
+  call << "QMMM_" << Bead << ".grid*" << " ";
+  call << "QMMM_" << Bead << ".mo*" << " ";
+  call << "QMMM_" << Bead << ".zmat" << " ";
+  call << "QMMM_" << Bead << ".p*" << " ";
+  call << "QMMM_" << Bead << ".q*" << " ";
+  call << "QMMM_" << Bead << ".nw" << " ";
+  call << "QMMM_" << Bead << ".log";
+  GlobalSys = system(call.str().c_str());
   //Change units
   E *= Har2eV;
   return E;
@@ -269,7 +302,27 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "QMMM_" << Bead << ".nw";
   ofile.open(call.str().c_str(),ios_base::out);
-  ofile << "start QMMM_" << Bead << '\n';
+  call.str("");
+  call << "QMMM_" << Bead << ".db";
+  if (CheckFile(call.str()))
+  {
+    ofile << "restart";
+  }
+  else
+  {
+    ofile << "start";
+  }
+  ofile << " QMMM_" << Bead << '\n';
+  ofile << "memory " << QMMMOpts.RAM;
+  if (QMMMOpts.MemMB)
+  {
+    ofile << " mb";
+  }
+  else
+  {
+    ofile << " gb";
+  }
+  ofile << '\n';
   ofile << "charge " << QMMMOpts.Charge << '\n';
   ofile << "geometry nocenter ";
   ofile << "noautoz noautosym" << '\n';
@@ -454,7 +507,6 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "QMMM_" << Bead << ".mo*" << " ";
   call << "QMMM_" << Bead << ".zmat" << " ";
   call << "QMMM_" << Bead << ".p*" << " ";
-  call << "QMMM_" << Bead << ".db" << " ";
   call << "QMMM_" << Bead << ".q*" << " ";
   call << "QMMM_" << Bead << ".nw" << " ";
   call << "QMMM_" << Bead << ".log";
@@ -480,7 +532,27 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "QMMM_" << Bead << ".nw";
   ofile.open(call.str().c_str(),ios_base::out);
-  ofile << "start QMMM_" << Bead << '\n';
+  call.str("");
+  call << "QMMM_" << Bead << ".db";
+  if (CheckFile(call.str()))
+  {
+    ofile << "restart";
+  }
+  else
+  {
+    ofile << "start";
+  }
+  ofile << " QMMM_" << Bead << '\n';
+  ofile << "memory " << QMMMOpts.RAM;
+  if (QMMMOpts.MemMB)
+  {
+    ofile << " mb";
+  }
+  else
+  {
+    ofile << " gb";
+  }
+  ofile << '\n';
   ofile << "charge " << QMMMOpts.Charge << '\n';
   ofile << "geometry nocenter ";
   ofile << "noautoz noautosym" << '\n';
@@ -665,7 +737,6 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "QMMM_" << Bead << ".mo*" << " ";
   call << "QMMM_" << Bead << ".zmat" << " ";
   call << "QMMM_" << Bead << ".p*" << " ";
-  call << "QMMM_" << Bead << ".db" << " ";
   call << "QMMM_" << Bead << ".q*" << " ";
   call << "QMMM_" << Bead << ".nw" << " ";
   call << "QMMM_" << Bead << ".log";
@@ -692,7 +763,27 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call.str("");
   call << "QMMM_" << Bead << ".nw";
   ofile.open(call.str().c_str(),ios_base::out);
-  ofile << "start QMMM_" << Bead << '\n';
+  call.str("");
+  call << "QMMM_" << Bead << ".db";
+  if (CheckFile(call.str()))
+  {
+    ofile << "restart";
+  }
+  else
+  {
+    ofile << "start";
+  }
+  ofile << " QMMM_" << Bead << '\n';
+  ofile << "memory " << QMMMOpts.RAM;
+  if (QMMMOpts.MemMB)
+  {
+    ofile << " mb";
+  }
+  else
+  {
+    ofile << " gb";
+  }
+  ofile << '\n';
   ofile << "charge " << QMMMOpts.Charge << '\n';
   ofile << "geometry nocenter ";
   ofile << "noautoz noautosym" << '\n';
@@ -868,7 +959,19 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     E = HugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
   }
-  
+  //Clean up files
+  call.str("");
+  call << "rm -f ";
+  call << "QMMM_" << Bead << ".b*" << " ";
+  call << "QMMM_" << Bead << ".c*" << " ";
+  call << "QMMM_" << Bead << ".grid*" << " ";
+  call << "QMMM_" << Bead << ".mo*" << " ";
+  call << "QMMM_" << Bead << ".zmat" << " ";
+  call << "QMMM_" << Bead << ".p*" << " ";
+  call << "QMMM_" << Bead << ".q*" << " ";
+  call << "QMMM_" << Bead << ".nw" << " ";
+  call << "QMMM_" << Bead << ".log";
+  GlobalSys = system(call.str().c_str());
   //Change units
   E *= Har2eV;
   return E;
