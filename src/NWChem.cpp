@@ -271,12 +271,13 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << "rm -f ";
   call << "QMMM_" << Bead << ".b*" << " ";
   call << "QMMM_" << Bead << ".c*" << " ";
-  call << "QMMM_" << Bead << ".grid*" << " ";
-  call << "QMMM_" << Bead << ".mo*" << " ";
-  call << "QMMM_" << Bead << ".zmat" << " ";
+  call << "QMMM_" << Bead << ".g*" << " ";
+  call << "QMMM_" << Bead << ".m*" << " ";
+  call << "QMMM_" << Bead << ".z*" << " ";
   call << "QMMM_" << Bead << ".p*" << " ";
   call << "QMMM_" << Bead << ".q*" << " ";
   call << "QMMM_" << Bead << ".nw" << " ";
+  call << "QMMM_" << Bead << ".db" << " ";
   call << "QMMM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Change units
@@ -503,12 +504,13 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "rm -f ";
   call << "QMMM_" << Bead << ".b*" << " ";
   call << "QMMM_" << Bead << ".c*" << " ";
-  call << "QMMM_" << Bead << ".grid*" << " ";
-  call << "QMMM_" << Bead << ".mo*" << " ";
-  call << "QMMM_" << Bead << ".zmat" << " ";
+  call << "QMMM_" << Bead << ".g*" << " ";
+  call << "QMMM_" << Bead << ".m*" << " ";
+  call << "QMMM_" << Bead << ".z*" << " ";
   call << "QMMM_" << Bead << ".p*" << " ";
   call << "QMMM_" << Bead << ".q*" << " ";
   call << "QMMM_" << Bead << ".nw" << " ";
+  call << "QMMM_" << Bead << ".db" << " ";
   call << "QMMM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   return;
@@ -733,12 +735,13 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "rm -f ";
   call << "QMMM_" << Bead << ".b*" << " ";
   call << "QMMM_" << Bead << ".c*" << " ";
-  call << "QMMM_" << Bead << ".grid*" << " ";
-  call << "QMMM_" << Bead << ".mo*" << " ";
-  call << "QMMM_" << Bead << ".zmat" << " ";
+  call << "QMMM_" << Bead << ".g*" << " ";
+  call << "QMMM_" << Bead << ".m*" << " ";
+  call << "QMMM_" << Bead << ".z*" << " ";
   call << "QMMM_" << Bead << ".p*" << " ";
   call << "QMMM_" << Bead << ".q*" << " ";
   call << "QMMM_" << Bead << ".nw" << " ";
+  call << "QMMM_" << Bead << ".db" << " ";
   call << "QMMM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Change units and return
@@ -964,12 +967,13 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "rm -f ";
   call << "QMMM_" << Bead << ".b*" << " ";
   call << "QMMM_" << Bead << ".c*" << " ";
-  call << "QMMM_" << Bead << ".grid*" << " ";
-  call << "QMMM_" << Bead << ".mo*" << " ";
-  call << "QMMM_" << Bead << ".zmat" << " ";
+  call << "QMMM_" << Bead << ".g*" << " ";
+  call << "QMMM_" << Bead << ".m*" << " ";
+  call << "QMMM_" << Bead << ".z*" << " ";
   call << "QMMM_" << Bead << ".p*" << " ";
   call << "QMMM_" << Bead << ".q*" << " ";
   call << "QMMM_" << Bead << ".nw" << " ";
+  call << "QMMM_" << Bead << ".db" << " ";
   call << "QMMM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Change units
