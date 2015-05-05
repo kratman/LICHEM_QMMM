@@ -199,6 +199,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   ofile << " direct" << '\n';
   ofile << " grid xfine nodisk" << '\n';
   ofile << " noio" << '\n';
+  ofile << " cgmin" << '\n';
   ofile << " tolerances tight" << '\n';
   ofile << " xc " << QMMMOpts.Func << '\n';
   ofile << "end" << '\n';
@@ -465,6 +466,7 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile << " direct" << '\n';
   ofile << " grid xfine nodisk" << '\n';
   ofile << " noio" << '\n';
+  ofile << " cgmin" << '\n';
   ofile << " tolerances tight" << '\n';
   ofile << " xc " << QMMMOpts.Func << '\n';
   ofile << "end" << '\n';
@@ -695,6 +697,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile << " direct" << '\n';
   ofile << " grid xfine nodisk" << '\n';
   ofile << " noio" << '\n';
+  ofile << " cgmin" << '\n';
   ofile << " tolerances tight" << '\n';
   ofile << " xc " << QMMMOpts.Func << '\n';
   ofile << "end" << '\n';
@@ -926,6 +929,7 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ofile << " direct" << '\n';
   ofile << " grid xfine nodisk" << '\n';
   ofile << " noio" << '\n';
+  ofile << " cgmin" << '\n';
   ofile << " tolerances tight" << '\n';
   ofile << " xc " << QMMMOpts.Func << '\n';
   ofile << "end" << '\n';

@@ -444,6 +444,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     OptSim = 0;
     DFPSim = 0;
     ESDSim = 0;
+    ENEBSim = 0;
     PIMCSim = 1;
     SteepSim = 0;
     SinglePoint = 0;
@@ -500,6 +501,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     OptSim = 0;
     DFPSim = 0;
     ESDSim = 0;
+    ENEBSim = 0;
     PIMCSim = 0;
     SteepSim = 0;
     SinglePoint = 0;
@@ -550,6 +552,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     OptSim = 1;
     DFPSim = 0;
     ESDSim = 0;
+    ENEBSim = 0;
     PIMCSim = 0;
     SteepSim = 0;
     SinglePoint = 0;
@@ -574,6 +577,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     OptSim = 0;
     DFPSim = 0;
     ESDSim = 0;
+    ENEBSim = 0;
     PIMCSim = 0;
     SteepSim = 1;
     SinglePoint = 0;
@@ -600,6 +604,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     OptSim = 0;
     DFPSim = 1;
     ESDSim = 0;
+    ENEBSim = 0;
     PIMCSim = 0;
     SteepSim = 0;
     SinglePoint = 0;
@@ -626,6 +631,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     OptSim = 0;
     DFPSim = 0;
     ESDSim = 1;
+    ENEBSim = 0;
     PIMCSim = 0;
     SteepSim = 0;
     SinglePoint = 0;
@@ -654,6 +660,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     OptSim = 0;
     DFPSim = 0;
     ESDSim = 0;
+    ENEBSim = 0;
     PIMCSim = 0;
     SteepSim = 0;
     SinglePoint = 1;

@@ -122,7 +122,7 @@ bool DFPSim = 0; //Flag for DFP minimization in FLUKE
 bool ESDSim = 0; //Flag for ensemble steepest descent
 bool MDSim = 0; //Flag for a NVT MD simulation
 bool PIMCSim = 0; //Flag for Monte Carlo
-bool PathSim = 0; //Flag for reaction paths
+bool ENEBSim = 0; //Flag for ensemble NEB reaction paths
 bool SinglePoint = 0; //Flag for energy calculation
 bool GauExternal = 0; //Runs Gaussian with External
 
