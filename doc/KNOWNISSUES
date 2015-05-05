@@ -14,6 +14,8 @@ methods will be implemented in the future.
 NWChem interface:
 -NWChem calculations can only be performed with DFT. Wavefunction based
 methods are not implemented.
+-Optimizations with the native NWChem optimizer (Calculation_type: Opt) cannot
+be performed. However, DFP, SD, and ESD are implemented.
 
 PSI4 interface:
 -PSI4 gradients do not include the contribution from the external field.
