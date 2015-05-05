@@ -94,7 +94,12 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
       {
         //Copy BASIS line by line, if BASIS exists
         getline(ifile,dummy);
-        ofile << dummy << '\n';
+        stringstream line(dummy);
+        if (line.str() != "")
+        {
+          //Avoid copying extra blank lines
+          ofile << dummy << '\n';
+        }
       }
     }
     ifile.close();
