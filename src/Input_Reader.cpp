@@ -686,10 +686,10 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     {
       //The number of beads must be odd
       QMMMOpts.Nbeads += 1;
-      cerr << "Warning: The number of replicas must be odd."
+      cerr << "Warning: The number of replicas must be odd.";
       cerr << '\n';
       cerr << " Starting calculations with " << QMMMOpts.Nbeads;
-      cerr << " beads."
+      cerr << " beads.";
       cerr << '\n' << '\n';
       cerr.flush();
     }
@@ -699,7 +699,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
       for (int j=0;j<(QMMMOpts.Nbeads-1);j++)
       {
         //Create replicas
-        Coord temp = Struct[i].P[0]
+        Coord temp = Struct[i].P[0];
         Struct[i].P.push_back(temp);
         Mpole temp2 = Struct[i].MP[0];
         Struct[i].MP.push_back(temp2);
