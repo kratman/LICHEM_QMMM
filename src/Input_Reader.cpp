@@ -626,7 +626,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   if ((dummy == "ESD") or (dummy == "esd") or
      (dummy == "EnsembleSD") or (dummy == "ensembesd"))
   {
-    //Read energy minimization options for the DFP optimizer
+    //Read energy minimization options for ensemble steepest descent
     MDSim = 0;
     OptSim = 0;
     DFPSim = 0;
@@ -651,6 +651,62 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.Temp;
     regionfile >> dummy >> QMMMOpts.tautemp;
     regionfile >> dummy >> QMMMOpts.Nsteps;
+  }
+  if ((dummy == "ENEB") or (dummy == "NEB") or
+     (dummy == "eneb") or (dummy == "neb"))
+  {
+    //Read energy minimization options for ensemble NEB
+    MDSim = 0;
+    OptSim = 0;
+    DFPSim = 0;
+    ESDSim = 0;
+    ENEBSim = 1;
+    PIMCSim = 0;
+    SteepSim = 0;
+    SinglePoint = 0;
+    QMMMOpts.Temp = 0;
+    QMMMOpts.Beta = 0;
+    QMMMOpts.Press = 0;
+    QMMMOpts.Neq = 0;
+    QMMMOpts.Nsteps = 0;
+    QMMMOpts.Nbeads = 1;
+    QMMMOpts.accratio = 0;
+    QMMMOpts.Nprint = 0;
+    QMMMOpts.Ensemble = "N/A";
+    regionfile >> dummy >> QMMMOpts.Nbeads;
+    regionfile >> dummy >> QMMMOpts.StepScale;
+    regionfile >> dummy >> QMMMOpts.MaxStep;
+    regionfile >> dummy >> QMMMOpts.MaxOptSteps;
+    regionfile >> dummy >> QMMMOpts.Kspring;
+    regionfile >> dummy >> QMMMOpts.dt;
+    regionfile >> dummy >> QMMMOpts.Temp;
+    regionfile >> dummy >> QMMMOpts.tautemp;
+    regionfile >> dummy >> QMMMOpts.Nsteps;
+    if ((QMMMOpts.Nbeads%2) != 1)
+    {
+      //The number of beads must be odd
+      QMMMOpts.Nbeads += 1;
+      cerr << "Warning: The number of replicas must be odd."
+      cerr << '\n';
+      cerr << " Starting calculations with " << QMMMOpts.Nbeads;
+      cerr << " beads."
+      cerr << '\n' << '\n';
+      cerr.flush();
+    }
+    for (int i=0;i<Natoms;i++)
+    {
+      //Create path-integral beads
+      for (int j=0;j<(QMMMOpts.Nbeads-1);j++)
+      {
+        //Create replicas
+        Coord temp = Struct[i].P[0]
+        Struct[i].P.push_back(temp);
+        Mpole temp2 = Struct[i].MP[0];
+        Struct[i].MP.push_back(temp2);
+        OctCharges temp3 = Struct[i].PC[0];
+        Struct[i].PC.push_back(temp3);
+      }
+    }
   }
   if ((dummy == "SP") or (dummy == "sp") or
   (dummy == "energy") or (dummy == "Energy"))
@@ -715,9 +771,9 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     int AtomID;
     regionfile >> AtomID;
     Struct[AtomID].Frozen = 1;
-    if (PIMCSim)
+    if (PIMCSim or ENEBSim)
     {
-      //Frozen atoms must be purely classical
+      //Frozen atoms must be the same for all replicas
       #pragma omp parallel for
       for (int j=0;j<QMMMOpts.Nbeads;j++)
       {
@@ -768,7 +824,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     Nthreads = Get_threads();
     omp_set_num_threads(Nthreads);
     //Modify threads for multi-replica simulations
-    if (QMMMOpts.Nbeads > 1)
+    if ((QMMMOpts.Nbeads > 1) and (!ENEBSim))
     {
       //Divide threads between the beads
       Nthreads = int(floor(Procs/Ncpus));
