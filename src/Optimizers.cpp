@@ -263,7 +263,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   vector<QMMMAtom> OldStruct = Struct; //Previous structure
   //Run optimization
   double StepScale = QMMMOpts.StepScale;
-  StepScale *= 0.75; //Take a smaller first step
+  StepScale *= 0.70; //Take a smaller first step
   while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
   {
     double E = 0;
