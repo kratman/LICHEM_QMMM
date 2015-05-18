@@ -489,7 +489,10 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << ".chk && ";
   call << "rm -f ";
   call << "QMMM_" << Bead;
-  call << ".*";
+  call << ".log";
+  call << " ";
+  call << "QMMM_" << Bead;
+  call << ".com";
   call << " && mv tmp_" << Bead;
   call << ".chk QMMM_" << Bead;
   call << ".chk";
@@ -704,7 +707,10 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << ".chk && ";
   call << "rm -f ";
   call << "QMMM_" << Bead;
-  call << ".*";
+  call << ".log";
+  call << " ";
+  call << "QMMM_" << Bead;
+  call << ".com";
   call << " && mv tmp_" << Bead;
   call << ".chk QMMM_" << Bead;
   call << ".chk";
@@ -951,7 +957,10 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << ".chk && ";
   call << "rm -f ";
   call << "QMMM_" << Bead;
-  call << ".*";
+  call << ".log";
+  call << " ";
+  call << "QMMM_" << Bead;
+  call << ".com";
   call << " && mv tmp_" << Bead;
   call << ".chk QMMM_" << Bead;
   call << ".chk";
