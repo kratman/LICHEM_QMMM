@@ -24,11 +24,10 @@ bool PathConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
 };
 
 //Path optimization routines
-void FLUKENEB(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
+void EnsembleNEB(vector<QMMMAtom>& Struct, fstream& traj,
+     QMMMSettings& QMMMOpts)
 {
-  //Cartesian NEB-SD optimizer which runs sequentially
+  //Cartesian Ensemble SD/NEB optimizer which runs sequentially
   
   return;
 };
-
-

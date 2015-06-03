@@ -72,7 +72,7 @@ double CoordDist2(Coord& a, Coord& b)
   double dy = a.y-b.y;
   double dz = a.z-b.z;
   //PBC
-  if (PBCon == 1)
+  if (PBCon)
   {
     bool check = 1;
     while (check)

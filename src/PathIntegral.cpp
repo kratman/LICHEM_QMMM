@@ -154,7 +154,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
       double xp = parts2[p].P[i].x+dx;
       double yp = parts2[p].P[i].y+dy;
       double zp = parts2[p].P[i].z+dz;
-      if (PBCon == 1)
+      if (PBCon)
       {
         bool check = 1;
         while (check)
@@ -221,7 +221,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     double dz = 2*(randz-0.5)*step;
     bool check = 1;
     parts2[p].P[p2].x += dx;
-    if (PBCon == 1)
+    if (PBCon)
     {
       while (check)
       {
@@ -239,7 +239,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
       }
     }
     parts2[p].P[p2].y += dy;
-    if (PBCon == 1)
+    if (PBCon)
     {
       check = 1;
       while (check)
@@ -258,7 +258,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
       }
     }
     parts2[p].P[p2].z += dz;
-    if (PBCon == 1)
+    if (PBCon)
     {
       check = 1;
       while (check)

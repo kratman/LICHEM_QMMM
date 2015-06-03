@@ -1,13 +1,4 @@
-Withheld features:
--The multipole code will not be fully released until after the work is
-published.
--The frozen density code will not be fully released until after the work is
-published.
--The reaction pathway code will not be fully released until after the work is
-published.
-
 General:
--Molecular dynamics simulations are currently broken, a fix is in progress
 -Currently only DFT and HF energies can be used in the calculations. Post-HF
 methods will be implemented in the future.
 

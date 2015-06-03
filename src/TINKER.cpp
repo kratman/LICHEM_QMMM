@@ -108,7 +108,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "QMMM_" << Bead << ".xyz";
   ofile.open(call.str().c_str(),ios_base::out);
   ofile << Natoms << '\n';
-  if (PBCon == 1)
+  if (PBCon)
   {
     //Write box size
     ofile << Lx << " " << Ly << " " << Lz;
@@ -277,7 +277,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "QMMM_" << Bead << ".xyz";
   ofile.open(call.str().c_str(),ios_base::out);
   ofile << Natoms << '\n';
-  if (PBCon == 1)
+  if (PBCon)
   {
     //Write box size
     ofile << Lx << " " << Ly << " " << Lz;
@@ -563,7 +563,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   ofile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   ofile << Natoms << '\n';
-  if (PBCon == 1)
+  if (PBCon)
   {
     //Write box size
     ofile << Lx << " " << Ly << " " << Lz;
@@ -772,7 +772,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   ofile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   ofile << Natoms << '\n';
-  if (PBCon == 1)
+  if (PBCon)
   {
     //Write box size
     ofile << Lx << " " << Ly << " " << Lz;
@@ -858,251 +858,6 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
           if (abs(Fz) >= 1e-4)
           {
             Forces[i].z += -1*Fz*kcal2eV;
-          }
-        }
-      }
-    }
-    if (dummy == "Total")
-    {
-      line >> dummy >> dummy;
-      if (dummy == "Energy")
-      {
-        //Collect partial MM energy
-        line >> dummy >> Emm;
-      }
-    }
-  }
-  MMgrad.close();
-  //Clean up files
-  call.str("");
-  call << "rm -f";
-  call << " QMMM_" << Bead << ".xyz";
-  call << " QMMM_" << Bead << ".key";
-  call << " QMMM_" << Bead << ".grad";
-  GlobalSys = system(call.str().c_str());
-  //Return
-  Emm *= kcal2eV;
-  return Emm;
-};
-
-double TINKERMMForces(vector<QMMMAtom>& Struct, vector<Coord>& MMForces,
-     QMMMSettings& QMMMOpts, int Bead)
-{
-  //A routine to extract MM forces from TINKER
-  fstream ofile,ifile;
-  string dummy; //Generic string
-  stringstream call;
-  call.copyfmt(cout);
-  double Emm = 0.0;
-  int ct; //Generic counter
-  //Copy the original key file and make changes
-  if (QMMM)
-  {
-    call.str("");
-    call << "cp tinker.key QMMM_";
-    call << Bead << ".key";
-    GlobalSys = system(call.str().c_str());
-    //Update key file
-    call.str("");
-    call << "QMMM_";
-    call << Bead << ".key";
-    ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
-    ofile << '\n';
-    ofile << "#QM force field parameters"; //Marks the changes
-    ofile << '\n';
-    ct = 0; //Generic counter
-    for (int i=0;i<Natoms;i++)
-    {
-      //Add active atoms
-      if (Struct[i].MMregion or Struct[i].BAregion or Struct[i].PAregion)
-      {
-        if (!Struct[i].Frozen)
-        {
-          if (ct == 0)
-          {
-            //Start a new active line
-            ofile << "active ";
-          }
-          else
-          {
-            //Place a space to separate values
-            ofile << " ";
-          }
-          ofile << (Struct[i].id+1);
-          ct += 1;
-          if (ct == 10)
-          {
-            //terminate an active line
-            ct = 0;
-            ofile << '\n';
-          }
-        }
-      }
-    }
-    if (ct != 0)
-    {
-      //Terminate trailing actives line
-      ofile << '\n';
-    }
-    if (CHRG == 1)
-    {
-      for (int i=0;i<Natoms;i++)
-      {
-        //Add nuclear charges
-        if (Struct[i].QMregion)
-        {
-          //New charges are only needed for QM atoms
-          ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
-          ofile << Struct[i].MP[Bead].q;
-          ofile << '\n';
-        }
-        if (Struct[i].PAregion)
-        {
-          //Modify the charge to force charge balance with the boundaries
-          vector<int> Boundaries;
-          Boundaries = TraceBoundary(Struct,i);
-          double qnew = Struct[i].MP[Bead].q;
-          for (unsigned int j=0;j<Boundaries.size();j++)
-          {
-            //Subtract boundary atom charge
-            qnew -= Struct[Boundaries[j]].MP[Bead].q;
-          }
-          ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
-          ofile << qnew;
-          ofile << '\n';
-        }
-      }
-    }
-    if (AMOEBA == 1)
-    {
-      for (int i=0;i<Natoms;i++)
-      {
-        //Add nuclear charges
-        if (Struct[i].QMregion)
-        {
-          //Write new multipole definition for the atom ID
-          WriteTINKMpole(Struct,ofile,i,Bead);
-          ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
-          ofile << '\n';
-        }
-        if (Struct[i].PAregion)
-        {
-          //Modify the charge to force charge balance with the boundaries
-          double qi = Struct[i].MP[Bead].q; //Save a copy
-          vector<int> Boundaries;
-          Boundaries = TraceBoundary(Struct,i);
-          double qnew = qi;
-          for (unsigned int j=0;j<Boundaries.size();j++)
-          {
-            //Subtract boundary atom charge
-            qnew -= Struct[Boundaries[j]].MP[Bead].q;
-          }
-          Struct[i].MP[Bead].q = qnew; //Save modified charge
-          WriteTINKMpole(Struct,ofile,i,Bead);
-          Struct[i].MP[Bead].q = qi; //Return to unmodified charge
-          ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
-          ofile << '\n';
-        }
-      }
-    }
-    ofile.flush();
-    ofile.close();
-  }
-  //Create TINKER xyz file from the structure
-  call.str("");
-  call << "QMMM_" << Bead << ".xyz";
-  ofile.open(call.str().c_str(),ios_base::out);
-  //Write atoms to the xyz file
-  ofile << Natoms << '\n';
-  if (PBCon == 1)
-  {
-    //Write box size
-    ofile << Lx << " " << Ly << " " << Lz;
-    ofile << " 90.0 90.0 90.0";
-    ofile << '\n';
-  }
-  ct = 0; //Counter for QM atoms
-  for (int i=0;i<Natoms;i++)
-  {
-    ofile.precision(8);
-    ofile << setw(6) << (Struct[i].id+1);
-    ofile << " ";
-    ofile << setw(3) << Struct[i].MMTyp;
-    ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].x;
-    ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].y;
-    ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].z;
-    ofile << " ";
-    ofile << setw(4) << Struct[i].NumTyp;
-    for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
-    {
-      ofile << " "; //Avoids trailing spaces
-      ofile << setw(6) << (Struct[i].Bonds[j]+1);
-    }
-    ofile.copyfmt(cout);
-    ofile << '\n';
-  }
-  ofile.flush();
-  ofile.close();
-  //Run MM
-  call.str("");
-  call << "testgrad " << "QMMM";
-  call << "_" << Bead;
-  call << ".xyz Y N N > QMMM";
-  call << "_" << Bead;
-  call << ".grad";
-  GlobalSys = system(call.str().c_str());
-  //Collect MM forces
-  fstream MMgrad; //QMMM output
-  //Open files
-  call.str("");
-  call << "QMMM";
-  call << "_" << Bead;
-  call << ".grad";
-  MMgrad.open(call.str().c_str(),ios_base::in);
-  //Read derivatives
-  bool GradDone = 0;
-  while ((!MMgrad.eof()) and (!GradDone))
-  {
-    getline(MMgrad,dummy);
-    stringstream line(dummy);
-    line >> dummy;
-    if (dummy == "Type")
-    {
-      line >> dummy >> dummy;
-      if (dummy == "dE/dX")
-      {
-        GradDone = 1; //Not grad school, that lasts forever
-        getline(MMgrad,dummy);
-        for (int i=0;i<Natoms;i++)
-        {
-          if ((!Struct[i].Frozen) and (!Struct[i].QMregion))
-          {
-            double Fx = 0;
-            double Fy = 0;
-            double Fz = 0;
-            //Convoluted, but "easy"
-            getline(MMgrad,dummy);
-            stringstream line(dummy);
-            line >> dummy >> dummy; //Clear junk
-            line >> Fx;
-            line >> Fy;
-            line >> Fz;
-            //Switch to eV/A and change sign
-            if (abs(Fx) >= 1e-4)
-            {
-              MMForces[i].x += -1*Fx*kcal2eV;
-            }
-            if (abs(Fy) >= 1e-4)
-            {
-              MMForces[i].y += -1*Fy*kcal2eV;
-            }
-            if (abs(Fz) >= 1e-4)
-            {
-              MMForces[i].z += -1*Fz*kcal2eV;
-            }
           }
         }
       }
@@ -1230,7 +985,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ofile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   ofile << Natoms << '\n';
-  if (PBCon == 1)
+  if (PBCon)
   {
     //Write box size
     ofile << Lx << " " << Ly << " " << Lz;
@@ -1448,7 +1203,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   ofile << Natoms << '\n';
-  if (PBCon == 1)
+  if (PBCon)
   {
     //Write box size
     ofile << Lx << " " << Ly << " " << Lz;
@@ -1495,7 +1250,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "QMMM_" << Bead << ".001";
   ifile.open(call.str().c_str(),ios_base::in);
   getline(ifile,dummy); //Discard number of atoms
-  if (PBCon == 1)
+  if (PBCon)
   {
     //Discard PBC information
     getline(ifile,dummy);
@@ -1651,7 +1406,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ofile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   ofile << Natoms << '\n';
-  if (PBCon == 1)
+  if (PBCon)
   {
     //Write box size
     ofile << Lx << " " << Ly << " " << Lz;
@@ -1695,7 +1450,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "QMMM_" << Bead << ".xyz_2";
   ifile.open(call.str().c_str(),ios_base::in);
   getline(ifile,dummy); //Discard number of atoms
-  if (PBCon == 1)
+  if (PBCon)
   {
     //Discard PBC information
     getline(ifile,dummy);

@@ -205,6 +205,37 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
   return;
 };
 
+void InitializeVariables(QMMMSettings& QMMMOpts)
+{
+  //Initialize all variables at once
+  QMMMOpts.Func = "N/A";
+  QMMMOpts.Basis = "N/A";
+  QMMMOpts.RAM = "N/A";
+  QMMMOpts.MemMB = 0;
+  QMMMOpts.Charge = "N/A";
+  QMMMOpts.Spin = "N/A";
+  QMMMOpts.Ensemble = "N/A";
+  QMMMOpts.Temp = 0;
+  QMMMOpts.Beta = 0;
+  QMMMOpts.Press = 0;
+  QMMMOpts.Neq = 0;
+  QMMMOpts.Nsteps = 0;
+  QMMMOpts.Nbeads = 1; //Key for printing
+  QMMMOpts.accratio = 0;
+  QMMMOpts.Nprint = 0;
+  QMMMOpts.dt = 0;
+  QMMMOpts.tautemp = 0;
+  QMMMOpts.taupress = 0;
+  QMMMOpts.MaxOptSteps = 0;
+  QMMMOpts.MMOptTol = 0;
+  QMMMOpts.QMOptTol = 0;
+  QMMMOpts.StepScale = 0;
+  QMMMOpts.MaxStep = 0;
+  QMMMOpts.Kspring = 0;
+  QMMMOpts.Eold = 0;
+  return;
+};
+
 void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
      fstream& regionfile, vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
 {
@@ -440,14 +471,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   if ((dummy == "PIMC") or (dummy == "pimc"))
   {
     //Read MC and PIMC options
-    MDSim = 0;
-    OptSim = 0;
-    DFPSim = 0;
-    ESDSim = 0;
-    ENEBSim = 0;
     PIMCSim = 1;
-    SteepSim = 0;
-    SinglePoint = 0;
     regionfile >> dummy >> dummy; //Ensemble
     if ((dummy == "NVT") or (dummy == "nvt"))
     {
@@ -494,77 +518,10 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
       }
     }
   }
-  if ((dummy == "MD") or (dummy == "md"))
-  {
-    //Read MC and PIMC options
-    MDSim = 1;
-    OptSim = 0;
-    DFPSim = 0;
-    ESDSim = 0;
-    ENEBSim = 0;
-    PIMCSim = 0;
-    SteepSim = 0;
-    SinglePoint = 0;
-    QMMMOpts.Ensemble = "NVT";
-    QMMMOpts.Nbeads = 1;
-    regionfile >> dummy >> QMMMOpts.dt; //Timestep
-    regionfile >> dummy >> QMMMOpts.Temp; //Temperature
-    QMMMOpts.Beta = 1/(k*QMMMOpts.Temp); //Inverse temperature
-    regionfile >> dummy >> QMMMOpts.tautemp; //Thermostat time constant
-    regionfile >> dummy >> QMMMOpts.Neq; //Number of equil. steps
-    regionfile >> dummy >> QMMMOpts.Nsteps; //Number of prod. steps
-    regionfile >> dummy >> QMMMOpts.Nprint; //Print frequency
-    //Initialize velocity array
-    for (int i=0;i<Natoms;i++)
-    {
-      //Only 1 bead in array
-      Coord tmp;
-      //Initialize with a uniform velocity distribution
-      double randnum;
-      randnum = (((double)rand())/((double)RAND_MAX));
-      tmp.x = sqrt(kSI*QMMMOpts.Temp/(Struct[i].m*amu2kg));
-      tmp.x *= m2Ang*fs2s;
-      if (randnum < 0.5)
-      {
-        tmp.x *= -1;
-      }
-      randnum = (((double)rand())/((double)RAND_MAX));
-      tmp.y = sqrt(kSI*QMMMOpts.Temp/(Struct[i].m*amu2kg));
-      tmp.y *= m2Ang*fs2s;
-      if (randnum < 0.5)
-      {
-        tmp.y *= -1;
-      }
-      randnum = (((double)rand())/((double)RAND_MAX));
-      tmp.z = sqrt(kSI*QMMMOpts.Temp/(Struct[i].m*amu2kg));
-      tmp.z *= m2Ang*fs2s;
-      if (randnum < 0.5)
-      {
-        tmp.z *= -1;
-      }
-      Struct[i].Vel.push_back(tmp);
-    }
-  }
   if ((dummy == "OPT") or (dummy == "Opt") or (dummy == "opt"))
   {
     //Read energy minimization options
-    MDSim = 0;
     OptSim = 1;
-    DFPSim = 0;
-    ESDSim = 0;
-    ENEBSim = 0;
-    PIMCSim = 0;
-    SteepSim = 0;
-    SinglePoint = 0;
-    QMMMOpts.Temp = 0;
-    QMMMOpts.Beta = 0;
-    QMMMOpts.Press = 0;
-    QMMMOpts.Neq = 0;
-    QMMMOpts.Nsteps = 0;
-    QMMMOpts.Nbeads = 1;
-    QMMMOpts.accratio = 0;
-    QMMMOpts.Nprint = 0;
-    QMMMOpts.Ensemble = "N/A";
     regionfile >> dummy >> QMMMOpts.MaxStep;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
@@ -573,23 +530,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   (dummy == "SD") or (dummy == "sd"))
   {
     //Read energy minimization options
-    MDSim = 0;
-    OptSim = 0;
-    DFPSim = 0;
-    ESDSim = 0;
-    ENEBSim = 0;
-    PIMCSim = 0;
     SteepSim = 1;
-    SinglePoint = 0;
-    QMMMOpts.Temp = 0;
-    QMMMOpts.Beta = 0;
-    QMMMOpts.Press = 0;
-    QMMMOpts.Neq = 0;
-    QMMMOpts.Nsteps = 0;
-    QMMMOpts.Nbeads = 1;
-    QMMMOpts.accratio = 0;
-    QMMMOpts.Nprint = 0;
-    QMMMOpts.Ensemble = "N/A";
     regionfile >> dummy >> QMMMOpts.StepScale;
     regionfile >> dummy >> QMMMOpts.MaxStep;
     regionfile >> dummy >> QMMMOpts.QMOptTol;
@@ -600,23 +541,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
      (dummy == "dfp") or (dummy == "DFP"))
   {
     //Read energy minimization options for the DFP optimizer
-    MDSim = 0;
-    OptSim = 0;
     DFPSim = 1;
-    ESDSim = 0;
-    ENEBSim = 0;
-    PIMCSim = 0;
-    SteepSim = 0;
-    SinglePoint = 0;
-    QMMMOpts.Temp = 0;
-    QMMMOpts.Beta = 0;
-    QMMMOpts.Press = 0;
-    QMMMOpts.Neq = 0;
-    QMMMOpts.Nsteps = 0;
-    QMMMOpts.Nbeads = 1;
-    QMMMOpts.accratio = 0;
-    QMMMOpts.Nprint = 0;
-    QMMMOpts.Ensemble = "N/A";
     regionfile >> dummy >> QMMMOpts.StepScale;
     regionfile >> dummy >> QMMMOpts.MaxStep;
     regionfile >> dummy >> QMMMOpts.QMOptTol;
@@ -627,23 +552,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
      (dummy == "EnsembleSD") or (dummy == "ensembesd"))
   {
     //Read energy minimization options for ensemble steepest descent
-    MDSim = 0;
-    OptSim = 0;
-    DFPSim = 0;
     ESDSim = 1;
-    ENEBSim = 0;
-    PIMCSim = 0;
-    SteepSim = 0;
-    SinglePoint = 0;
-    QMMMOpts.Temp = 0;
-    QMMMOpts.Beta = 0;
-    QMMMOpts.Press = 0;
-    QMMMOpts.Neq = 0;
-    QMMMOpts.Nsteps = 0;
-    QMMMOpts.Nbeads = 1;
-    QMMMOpts.accratio = 0;
-    QMMMOpts.Nprint = 0;
-    QMMMOpts.Ensemble = "N/A";
     regionfile >> dummy >> QMMMOpts.StepScale;
     regionfile >> dummy >> QMMMOpts.MaxStep;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
@@ -656,23 +565,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
      (dummy == "eneb") or (dummy == "neb"))
   {
     //Read energy minimization options for ensemble NEB
-    MDSim = 0;
-    OptSim = 0;
-    DFPSim = 0;
-    ESDSim = 0;
     ENEBSim = 1;
-    PIMCSim = 0;
-    SteepSim = 0;
-    SinglePoint = 0;
-    QMMMOpts.Temp = 0;
-    QMMMOpts.Beta = 0;
-    QMMMOpts.Press = 0;
-    QMMMOpts.Neq = 0;
-    QMMMOpts.Nsteps = 0;
-    QMMMOpts.Nbeads = 1;
-    QMMMOpts.accratio = 0;
-    QMMMOpts.Nprint = 0;
-    QMMMOpts.Ensemble = "N/A";
     regionfile >> dummy >> QMMMOpts.Nbeads;
     regionfile >> dummy >> QMMMOpts.StepScale;
     regionfile >> dummy >> QMMMOpts.MaxStep;
@@ -695,7 +588,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     }
     for (int i=0;i<Natoms;i++)
     {
-      //Create path-integral beads
+      //Create reaction-path beads
       for (int j=0;j<(QMMMOpts.Nbeads-1);j++)
       {
         //Create replicas
@@ -712,23 +605,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   (dummy == "energy") or (dummy == "Energy"))
   {
     //Read energy minimization options
-    MDSim = 0;
-    OptSim = 0;
-    DFPSim = 0;
-    ESDSim = 0;
-    ENEBSim = 0;
-    PIMCSim = 0;
-    SteepSim = 0;
     SinglePoint = 1;
-    QMMMOpts.Temp = 0;
-    QMMMOpts.Beta = 0;
-    QMMMOpts.Press = 0;
-    QMMMOpts.Neq = 0;
-    QMMMOpts.Nsteps = 0;
-    QMMMOpts.Nbeads = 1;
-    QMMMOpts.accratio = 0;
-    QMMMOpts.Nprint = 0;
-    QMMMOpts.Ensemble = "N/A";
   }
   regionfile >> dummy >> dummy; //PBC options
   if ((dummy == "Yes") or (dummy == "yes") or
@@ -859,7 +736,7 @@ void FLUKEErrorChecker(QMMMSettings& QMMMOpts)
     cout << '\n';
     DoQuit = 1;
   }
-  if ((QMMMOpts.Ensemble == "NPT") and (PBCon == 0))
+  if ((QMMMOpts.Ensemble == "NPT") and (!PBCon))
   {
     //Check the PBC options
     cout << " Error: NPT simulation without PBC.";
@@ -910,6 +787,17 @@ void FLUKEErrorChecker(QMMMSettings& QMMMOpts)
     cout << '\n';
     DoQuit = 1;
   }
+  if ((NWChem == 1) and QMMM)
+  {
+    if (OptSim)
+    {
+      cout << " Error: QMMM NWChem optimizations can only be performed with";
+      cout << '\n';
+      cout << " the steepest descent or DFP.";
+      cout << '\n';
+      DoQuit = 1;
+    }
+  }
   if (DoQuit)
   {
     //Quits
@@ -950,12 +838,35 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
   {
     cout << " Frozen atoms: " << Nfreeze << '\n';
   }
+  if (ENEBSim)
+  {
+    //Print input for error checking
+    if (QMMMOpts.Nbeads > 1)
+    {
+      cout << " RP beads: " << QMMMOpts.Nbeads << '\n';
+    }
+    cout << '\n';
+    cout << "Simulation mode: ";
+    if (QMMM)
+    {
+      cout << "QMMM";
+    }
+    if (QMonly)
+    {
+      cout << "Pure QM";
+    }
+    if (MMonly)
+    {
+      cout << "Pure MM";
+    }
+    cout << " ensemble NEB" << '\n';
+  }
   if (PIMCSim)
   {
     //Print input for error checking
     if (QMMMOpts.Nbeads > 1)
     {
-      cout << " PI Beads: " << QMMMOpts.Nbeads << '\n';
+      cout << " PI beads: " << QMMMOpts.Nbeads << '\n';
     }
     cout << '\n';
     cout << "Simulation mode: ";
@@ -979,29 +890,6 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     cout << " Monte Carlo" << '\n';
     cout << " Equilibration MC steps: " << QMMMOpts.Neq << '\n';
     cout << " Production MC steps: " << QMMMOpts.Nsteps << '\n';
-  }
-  if (MDSim)
-  {
-    cout << '\n';
-    cout << "Simulation mode: ";
-    if (QMMM)
-    {
-      cout << "QMMM";
-    }
-    if (QMonly)
-    {
-      cout << "Pure QM";
-    }
-    if (MMonly)
-    {
-      cout << "Pure MM";
-    }
-    cout << " molecular dynamics" << '\n';
-    cout << " Time step: " << QMMMOpts.dt << " fs" << '\n';
-    cout << " Temperature: " << QMMMOpts.Temp << " K" << '\n';
-    cout << " Berendsen time-constant: " << QMMMOpts.tautemp << " fs" << '\n';
-    cout << " Equilibration MD steps: " << QMMMOpts.Neq << '\n';
-    cout << " Production MD steps: " << QMMMOpts.Nsteps << '\n';
   }
   if (OptSim or SteepSim or DFPSim or ESDSim)
   {
@@ -1113,7 +1001,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
   }
   cout << '\n';
   cout << "Parallelization and memory settings:" << '\n';
-  cout << " OMP threads: " << Nthreads << '\n';
+  cout << " OpenMP threads: " << Nthreads << '\n';
   if (QMonly or QMMM)
   {
     if (OptSim and (Gaussian == 1))
@@ -1146,10 +1034,10 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
   }
   cout << '\n';
   //Print convergence criteria for optimizations
-  if (OptSim or SteepSim or DFPSim or ESDSim)
+  if (OptSim or SteepSim or DFPSim or ESDSim or ENEBSim)
   {
     cout << "Optimization settings:" << '\n';
-    if (SteepSim or DFPSim or ESDSim)
+    if (SteepSim or DFPSim or ESDSim or ENEBSim)
     {
       cout << " Step scale factor: " << QMMMOpts.StepScale;
       cout << '\n';
@@ -1157,6 +1045,12 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
     cout << " Max. step size: " << QMMMOpts.MaxStep;
     cout << " \u212B" << '\n';
     cout << " Max. steps: " << QMMMOpts.MaxOptSteps;
+    if (ENEBSim)
+    {
+      cout << '\n';
+      cout << " Spring constant: " << QMMMOpts.Kspring;
+      cout << " eV/\u212B";
+    }
     cout << '\n' << '\n';
     if (SteepSim or DFPSim)
     {
@@ -1169,7 +1063,7 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       cout << " eV/\u212B" << '\n';
       cout << '\n';
     }
-    if (ESDSim)
+    if (ESDSim or ENEBSim)
     {
       cout << "MD settings:" << '\n';
       cout << " Timestep: " << QMMMOpts.dt;

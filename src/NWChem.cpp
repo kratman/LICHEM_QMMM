@@ -28,6 +28,17 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call.copyfmt(cout);
   double E = 0.0;
   bool UseChrgFile = 0;
+  //Calculate inverse box lengths for PBC
+  double ix,iy,iz; //Inverse x,y,z
+  ix = 1;
+  iy = 1;
+  iz = 1;
+  if (PBCon)
+  {
+    ix /= Lx;
+    iy /= Ly;
+    iz /= Lz;
+  }
   if ((AMOEBA == 1) and (TINKER == 1))
   {
     //Check if charges are saved
@@ -77,11 +88,22 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     if (Struct[i].QMregion or Struct[i].PAregion)
     {
       ofile << " " << Struct[i].QMTyp;
-      ofile << " " << Struct[i].P[Bead].x;
-      ofile << " " << Struct[i].P[Bead].y;
-      ofile << " " << Struct[i].P[Bead].z;
+      ofile << " " << (Struct[i].P[Bead].x*ix);
+      ofile << " " << (Struct[i].P[Bead].y*iy);
+      ofile << " " << (Struct[i].P[Bead].z*iz);
       ofile << '\n';
     }
+  }
+  if (PBCon)
+  {
+    ofile << " system crystal" << '\n';
+    ofile << "  lat_a " << Lx << '\n';
+    ofile << "  lat_b " << Ly << '\n';
+    ofile << "  lat_c " << Lz << '\n';
+    ofile << "  alpha 90.0" << '\n';
+    ofile << "  beta 90.0" << '\n';
+    ofile << "  gamma 90.0" << '\n';
+    ofile << " end" << '\n';
   }
   ofile << "end" << '\n';
   if (CheckFile("BASIS"))
@@ -113,15 +135,16 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   }
   if (CHRG == 1)
   {
+    ofile << "set bq:max_nbq " << Nmm << '\n';
     ofile << "bq mmchrg" << '\n';
     for (int i=0;i<Natoms;i++)
     {
       if (Struct[i].MMregion)
       {
         ofile << fixed; //Forces numbers to be floats
-        ofile << " " << setprecision(12) << Struct[i].P[Bead].x;
-        ofile << " " << setprecision(12) << Struct[i].P[Bead].y;
-        ofile << " " << setprecision(12) << Struct[i].P[Bead].z;
+        ofile << " " << setprecision(12) << (Struct[i].P[Bead].x*ix);
+        ofile << " " << setprecision(12) << (Struct[i].P[Bead].y*iy);
+        ofile << " " << setprecision(12) << (Struct[i].P[Bead].z*iz);
         ofile << " " << setprecision(12) << Struct[i].MP[Bead].q;
         ofile.copyfmt(cout);
         ofile << '\n';
@@ -132,6 +155,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   }
   if (AMOEBA == 1)
   {
+    ofile << "set bq:max_nbq " << (Nmm*6) << '\n';
     ofile << "bq mmchrg" << '\n';
     if (UseChrgFile)
     {
@@ -157,34 +181,34 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
         if (Struct[i].MMregion)
         {
           ofile << fixed; //Forces numbers to be floats
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].x1;
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].y1;
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].z1;
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x1*ix);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y1*iy);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z1*iz);
           ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
           ofile << '\n';
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].x2;
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].y2;
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].z2;
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x2*ix);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y2*iy);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z2*iz);
           ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
           ofile << '\n';
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].x3;
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].y3;
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].z3;
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x3*ix);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y3*iy);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z3*iz);
           ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
           ofile << '\n';
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].x4;
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].y4;
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].z4;
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x4*ix);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y4*iy);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z4*iz);
           ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
           ofile << '\n';
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].x5;
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].y5;
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].z5;
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x5*ix);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y5*iy);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z5*iz);
           ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
           ofile << '\n';
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].x6;
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].y6;
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].z6;
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x6*ix);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y6*iy);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z6*iz);
           ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
           ofile.copyfmt(cout);
           ofile << '\n';
@@ -331,6 +355,17 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;
+  //Calculate inverse box lengths for PBC
+  double ix,iy,iz; //Inverse x,y,z
+  ix = 1;
+  iy = 1;
+  iz = 1;
+  if (PBCon)
+  {
+    ix /= Lx;
+    iy /= Ly;
+    iz /= Lz;
+  }
   if ((AMOEBA == 1) and (TINKER == 1))
   {
     //Set up multipoles
@@ -369,11 +404,22 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (Struct[i].QMregion or Struct[i].PAregion)
     {
       ofile << " " << Struct[i].QMTyp;
-      ofile << " " << Struct[i].P[Bead].x;
-      ofile << " " << Struct[i].P[Bead].y;
-      ofile << " " << Struct[i].P[Bead].z;
+      ofile << " " << (Struct[i].P[Bead].x*ix);
+      ofile << " " << (Struct[i].P[Bead].y*iy);
+      ofile << " " << (Struct[i].P[Bead].z*iz);
       ofile << '\n';
     }
+  }
+  if (PBCon)
+  {
+    ofile << " system crystal" << '\n';
+    ofile << "  lat_a " << Lx << '\n';
+    ofile << "  lat_b " << Ly << '\n';
+    ofile << "  lat_c " << Lz << '\n';
+    ofile << "  alpha 90.0" << '\n';
+    ofile << "  beta 90.0" << '\n';
+    ofile << "  gamma 90.0" << '\n';
+    ofile << " end" << '\n';
   }
   ofile << "end" << '\n';
   if (CheckFile("BASIS"))
@@ -400,15 +446,16 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   if (CHRG == 1)
   {
+    ofile << "set bq:max_nbq " << Nmm << '\n';
     ofile << "bq mmchrg" << '\n';
     for (int i=0;i<Natoms;i++)
     {
       if (Struct[i].MMregion)
       {
         ofile << fixed; //Forces numbers to be floats
-        ofile << " " << setprecision(12) << Struct[i].P[Bead].x;
-        ofile << " " << setprecision(12) << Struct[i].P[Bead].y;
-        ofile << " " << setprecision(12) << Struct[i].P[Bead].z;
+        ofile << " " << setprecision(12) << (Struct[i].P[Bead].x*ix);
+        ofile << " " << setprecision(12) << (Struct[i].P[Bead].y*iy);
+        ofile << " " << setprecision(12) << (Struct[i].P[Bead].z*iz);
         ofile << " " << setprecision(12) << Struct[i].MP[Bead].q;
         ofile.copyfmt(cout);
         ofile << '\n';
@@ -419,40 +466,41 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   if (AMOEBA == 1)
   {
+    ofile << "set bq:max_nbq " << (Nmm*6) << '\n';
     ofile << "bq mmchrg" << '\n';
     for (int i=0;i<Natoms;i++)
     {
       if (Struct[i].MMregion)
       {
         ofile << fixed; //Forces numbers to be floats
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z1;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x1*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y1*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z1*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z2;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x2*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y2*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z2*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z3;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x3*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y3*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z3*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z4;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x4*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y4*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z4*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z5;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x5*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y5*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z5*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z6;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x6*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y6*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z6*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
         ofile.copyfmt(cout);
         ofile << '\n';
@@ -562,6 +610,17 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;
+  //Calculate inverse box lengths for PBC
+  double ix,iy,iz; //Inverse x,y,z
+  ix = 1;
+  iy = 1;
+  iz = 1;
+  if (PBCon)
+  {
+    ix /= Lx;
+    iy /= Ly;
+    iz /= Lz;
+  }
   if ((AMOEBA == 1) and (TINKER == 1))
   {
     //Set up multipoles
@@ -600,11 +659,22 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (Struct[i].QMregion or Struct[i].PAregion)
     {
       ofile << " " << Struct[i].QMTyp;
-      ofile << " " << Struct[i].P[Bead].x;
-      ofile << " " << Struct[i].P[Bead].y;
-      ofile << " " << Struct[i].P[Bead].z;
+      ofile << " " << (Struct[i].P[Bead].x*ix);
+      ofile << " " << (Struct[i].P[Bead].y*iy);
+      ofile << " " << (Struct[i].P[Bead].z*iz);
       ofile << '\n';
     }
+  }
+  if (PBCon)
+  {
+    ofile << " system crystal" << '\n';
+    ofile << "  lat_a " << Lx << '\n';
+    ofile << "  lat_b " << Ly << '\n';
+    ofile << "  lat_c " << Lz << '\n';
+    ofile << "  alpha 90.0" << '\n';
+    ofile << "  beta 90.0" << '\n';
+    ofile << "  gamma 90.0" << '\n';
+    ofile << " end" << '\n';
   }
   ofile << "end" << '\n';
   if (CheckFile("BASIS"))
@@ -631,15 +701,16 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   if (CHRG == 1)
   {
+    ofile << "set bq:max_nbq " << Nmm << '\n';
     ofile << "bq mmchrg" << '\n';
     for (int i=0;i<Natoms;i++)
     {
       if (Struct[i].MMregion)
       {
         ofile << fixed; //Forces numbers to be floats
-        ofile << " " << setprecision(12) << Struct[i].P[Bead].x;
-        ofile << " " << setprecision(12) << Struct[i].P[Bead].y;
-        ofile << " " << setprecision(12) << Struct[i].P[Bead].z;
+        ofile << " " << setprecision(12) << (Struct[i].P[Bead].x*ix);
+        ofile << " " << setprecision(12) << (Struct[i].P[Bead].y*iy);
+        ofile << " " << setprecision(12) << (Struct[i].P[Bead].z*iz);
         ofile << " " << setprecision(12) << Struct[i].MP[Bead].q;
         ofile.copyfmt(cout);
         ofile << '\n';
@@ -650,40 +721,41 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   if (AMOEBA == 1)
   {
+    ofile << "set bq:max_nbq " << (Nmm*6) << '\n';
     ofile << "bq mmchrg" << '\n';
     for (int i=0;i<Natoms;i++)
     {
       if (Struct[i].MMregion)
       {
         ofile << fixed; //Forces numbers to be floats
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z1;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x1*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y1*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z1*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z2;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x2*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y2*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z2*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z3;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x3*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y3*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z3*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z4;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x4*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y4*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z4*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z5;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x5*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y5*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z5*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z6;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x6*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y6*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z6*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
         ofile.copyfmt(cout);
         ofile << '\n';
@@ -794,6 +866,17 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;
+  //Calculate inverse box lengths for PBC
+  double ix,iy,iz; //Inverse x,y,z
+  ix = 1;
+  iy = 1;
+  iz = 1;
+  if (PBCon)
+  {
+    ix /= Lx;
+    iy /= Ly;
+    iz /= Lz;
+  }
   if ((AMOEBA == 1) and (TINKER == 1))
   {
     //Set up multipoles
@@ -832,11 +915,22 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     if (Struct[i].QMregion or Struct[i].PAregion)
     {
       ofile << " " << Struct[i].QMTyp;
-      ofile << " " << Struct[i].P[Bead].x;
-      ofile << " " << Struct[i].P[Bead].y;
-      ofile << " " << Struct[i].P[Bead].z;
+      ofile << " " << (Struct[i].P[Bead].x*ix);
+      ofile << " " << (Struct[i].P[Bead].y*iy);
+      ofile << " " << (Struct[i].P[Bead].z*iz);
       ofile << '\n';
     }
+  }
+  if (PBCon)
+  {
+    ofile << " system crystal" << '\n';
+    ofile << "  lat_a " << Lx << '\n';
+    ofile << "  lat_b " << Ly << '\n';
+    ofile << "  lat_c " << Lz << '\n';
+    ofile << "  alpha 90.0" << '\n';
+    ofile << "  beta 90.0" << '\n';
+    ofile << "  gamma 90.0" << '\n';
+    ofile << " end" << '\n';
   }
   ofile << "end" << '\n';
   if (CheckFile("BASIS"))
@@ -863,15 +957,16 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   }
   if (CHRG == 1)
   {
+    ofile << "set bq:max_nbq " << Nmm << '\n';
     ofile << "bq mmchrg" << '\n';
     for (int i=0;i<Natoms;i++)
     {
       if (Struct[i].MMregion)
       {
         ofile << fixed; //Forces numbers to be floats
-        ofile << " " << setprecision(12) << Struct[i].P[Bead].x;
-        ofile << " " << setprecision(12) << Struct[i].P[Bead].y;
-        ofile << " " << setprecision(12) << Struct[i].P[Bead].z;
+        ofile << " " << setprecision(12) << (Struct[i].P[Bead].x*ix);
+        ofile << " " << setprecision(12) << (Struct[i].P[Bead].y*iy);
+        ofile << " " << setprecision(12) << (Struct[i].P[Bead].z*iz);
         ofile << " " << setprecision(12) << Struct[i].MP[Bead].q;
         ofile.copyfmt(cout);
         ofile << '\n';
@@ -882,40 +977,41 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   }
   if (AMOEBA == 1)
   {
+    ofile << "set bq:max_nbq " << (Nmm*6) << '\n';
     ofile << "bq mmchrg" << '\n';
     for (int i=0;i<Natoms;i++)
     {
       if (Struct[i].MMregion)
       {
         ofile << fixed; //Forces numbers to be floats
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z1;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x1*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y1*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z1*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z2;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x2*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y2*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z2*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z3;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x3*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y3*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z3*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z4;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x4*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y4*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z4*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z5;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x5*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y5*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z5*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z6;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x6*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y6*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z6*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
         ofile.copyfmt(cout);
         ofile << '\n';

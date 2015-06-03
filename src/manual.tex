@@ -110,9 +110,6 @@ user:\$ make install
  QM SD/DFP & Yes & Yes & No & No & No \\
  MM SD/DFP & No & No & No & No & No \\
  QMMM SD/DFP & Yes & Yes & Yes & Yes & Yes \\ \hline
- QM MD & Yes & Yes & No & No & No \\
- MM MD & No & No & Yes & Yes & Yes \\
- QMMM MD & Yes & Yes & Yes & Yes & Yes \\ \hline
  QM MC & Yes & Yes & No & No & No \\
  MM MC & No & No & Yes & Yes & Yes \\
  QMMM MC & Yes & Yes & Yes & Yes & Yes \\ \hline
@@ -124,9 +121,8 @@ user:\$ make install
  QMMM RP & Yes & No & Yes & Yes & Yes \\ \hline
  \end{tabular}
  \caption{Wrapper capabilities for single-point energy, geometry optimization,
- steepest descent or Davidson-Fletcher-Powell (SD/DFP), molecular dynamics
- (MD), Monte Carlo (MC), path-integral Monte Carlo (PIMC), and reaction path
- (RP) calculations.}
+ steepest descent or Davidson-Fletcher-Powell (SD/DFP), Monte Carlo (MC),
+ path-integral Monte Carlo (PIMC), and reaction path (RP) calculations.}
  \label{tab:WrapCap}
 \end{table}
 
@@ -336,13 +332,6 @@ Number\_of\_eq\_steps: $<$Run N steps before collecting data$>$ \\
 Number\_of\_MC\_steps: $<$Collect data for N steps$>$ \\
 Number\_of\_beads: $<$Number of PI beads$>$ \\
 Acceptance\_ratio: $<$Fraction of attempted moves which succeed$>$ \\
-Traj\_steps\_before\_printing: $<$Print every N steps$>$ \\
-
-Calculation\_type: MD \\
-Timestep: $<$Timestep in fs$>$ \\
-Temperature: $<$Temperature in Kelvin$>$ \\
-Number\_of\_eq\_steps: $<$Run N steps before collecting data$>$ \\
-Number\_of\_MD\_steps: $<$Collect data for N steps$>$ \\
 Traj\_steps\_before\_printing: $<$Print every N steps$>$ \\
 
 \subsection{Region input}

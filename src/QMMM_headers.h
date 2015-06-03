@@ -42,7 +42,7 @@ using namespace Eigen;
 using namespace std;
 
 //Compile options
-const bool Jokes = 0; //Print humorous comments
+const bool Jokes = 1; //Print humorous comments
 const bool Isotrop = 1; //Force isotropic expansion in NPT Monte Carlo
 const double StepMin = 0.01; //Minimum Monte Carlo step size
 const double StepMax = 1.0; //Maximum Monte Carlo step size
@@ -106,13 +106,13 @@ double Lz = 500.0; //Box length
 int GEM = 0; //Flag for frozen density QMMM potential
 int AMOEBA = 0; //Flag for polarizable QMMM potential
 int CHRG = 0; //Flag for point-charge QMMM potential
-int PBCon = 0; //Flag for the boundary conditions
 int PSI4 = 0; //Wrapper flag
 int NWChem = 0; //Wrapper flag
 int Gaussian = 0; //Wrapper flag
 int TINKER = 0; //Wrapper flag
 int LAMMPS = 0; //Wrapper flag
 int AMBER = 0; //Wrapper flag
+bool PBCon = 0; //Flag for the boundary conditions
 bool QMMM = 0; //Flag for the type of wrapper
 bool MMonly = 0; //Flag for the type of wrapper
 bool QMonly = 0; //Flag for the type of wrapper
@@ -120,7 +120,6 @@ bool OptSim = 0; //Flag for energy minimization with QM packages
 bool SteepSim = 0; //Flag for steepest descent minimization in FLUKE
 bool DFPSim = 0; //Flag for DFP minimization in FLUKE
 bool ESDSim = 0; //Flag for ensemble steepest descent
-bool MDSim = 0; //Flag for a NVT MD simulation
 bool PIMCSim = 0; //Flag for Monte Carlo
 bool ENEBSim = 0; //Flag for ensemble NEB reaction paths
 bool SinglePoint = 0; //Flag for energy calculation
@@ -233,7 +232,6 @@ struct QMMMAtom
   vector<int> Bonds; //Connectivity
   double Ep; //Storage for PI energies
   vector<Coord> P; //Array of beads
-  vector<Coord> Vel; //Array of velocities
   vector<Mpole> MP; //Multipoles
   vector<OctCharges> PC; //Point-charge multipoles
 };
@@ -385,15 +383,11 @@ void FLUKESteepest(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void FLUKEDFP(vector<QMMMAtom>&,QMMMSettings&,int);
 
-void EnsembleNEB(vector<QMMMAtom>&,QMMMSettings&);
+void EnsembleNEB(vector<QMMMAtom>&,fstream&,QMMMSettings&);
 
 void EnsembleSD(vector<QMMMAtom>&,fstream&,QMMMSettings&,int);
 
 VectorXd EnsembleTangent(vector<QMMMAtom>&,QMMMSettings&,int);
-
-double BerendsenThermo(vector<QMMMAtom>&,QMMMSettings&,int);
-
-void VerletUpdate(vector<QMMMAtom>&,QMMMSettings&,fstream&,bool,int);
 
 double SpringEnergy(double,double);
 
@@ -420,33 +414,17 @@ void FLUKEPrintSettings(QMMMSettings&);
 
 void GetQuotes(vector<string>&);
 
-void BurstTraj(vector<QMMMAtom>&,string&,QMMMSettings&);
+void BurstTraj(vector<QMMMAtom>&,QMMMSettings&);
 
 //Function definitions
 #include "Core_funcs.cpp"
 #include "Input_Reader.cpp"
 #include "TINK2FLUKE.cpp"
-#ifdef DEVCOMP
-#include "Real_Multipoles.cpp"
-#endif
-#ifndef DEVCOMP
 #include "Multipoles.cpp"
-#endif
-#ifdef DEVCOMP
-#include "Real_Frozen_density.cpp"
-#endif
-#ifndef DEVCOMP
 #include "Frozen_density.cpp"
-#endif
 #include "PathIntegral.cpp"
-#ifdef DEVCOMP
-#include "Real_ReactionPath.cpp"
-#endif
-#ifndef DEVCOMP
 #include "ReactionPath.cpp"
-#endif
 #include "Optimizers.cpp"
-#include "Dynamics.cpp"
 #include "Analysis.cpp"
 
 //Wrapper definitions

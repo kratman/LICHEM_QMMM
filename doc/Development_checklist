@@ -7,13 +7,13 @@ Force-field wrapper timeline and checklist:
 
 QMMM boundry timeline and checklist:
  Non-bonded: Done
- Pseudo-bond: Done (debugging)
+ Pseudo-bond: Done
  Frozen density: Future
 
 Simulation mode timeline and checklist:
  Single-point energy: Done
  NVT/NPT Monte Carlo: Done
  NVT/NPT PI Monte Carlo: Done
- NVT molecular dynamics: In progress
- Geometry optimizations: Done (tuning)
+ Geometry optimizations: Done
  Reaction pathways: In progress
+ Ensemble sampling: In progress

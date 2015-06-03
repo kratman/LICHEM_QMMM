@@ -8,7 +8,7 @@
 
 CXX=g++
 CXXFLAGS=-static -fopenmp -O3
-DEVFLAGS=-g -DDEVCOMP -Wall
+DEVFLAGS=-g -Wall
 LDFLAGS=-I./src/ -I/usr/include/eigen3/
 TEX=pdflatex
 BIB=bibtex
@@ -17,7 +17,9 @@ BIB=bibtex
 
 install:	title binary manual compdone
 
-Dev:	title binary devbin manual stats compdone
+Dev:	title devbin manual stats compdone
+
+clean:	title delbin compdone
 
 ### Rules for building various parts of the code
 
@@ -71,3 +73,8 @@ compdone:
 	@echo ""; \
 	echo "Done."; \
 	echo ""
+
+delbin:	
+	@echo ""; \
+	echo "Removing binary and manual..."; \
+	rm -f FLUKE ./doc/FLUKE_manual.pdf

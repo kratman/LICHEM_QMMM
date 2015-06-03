@@ -61,7 +61,7 @@ void TINK2FLUKE(int& argc, char**& argv)
       }
     }
   }
-  if (PBCon == 1)
+  if (PBCon)
   {
     cout << '\n';
     cout << " with PBC";
@@ -224,7 +224,7 @@ void TINK2FLUKE(int& argc, char**& argv)
     cout << '\n';
   }
   //Collect PBC information
-  if (PBCon == 1)
+  if (PBCon)
   {
     //Grab whole line
     getline(TINKxyz,dummy);
@@ -235,7 +235,7 @@ void TINK2FLUKE(int& argc, char**& argv)
   //Write region file
   regfile << fixed;
   regfile << "PBC: ";
-  if (PBCon == 1)
+  if (PBCon)
   {
     regfile << "Yes" << '\n';
     regfile << "Box_size: ";

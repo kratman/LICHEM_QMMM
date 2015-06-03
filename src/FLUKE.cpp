@@ -54,6 +54,7 @@ int main(int argc, char* argv[])
   //End of section
 
   //Read input and check for errors
+  InitializeVariables(QMMMOpts);
   ReadFLUKEInput(xyzfile,connectfile,regionfile,Struct,QMMMOpts);
   //End of section
 
@@ -287,16 +288,6 @@ int main(int argc, char* argv[])
     cout << '\n';
     cout << '\n';
     cout.flush();
-  }
-  //End of section
-
-  //Run MD simulation
-  if (MDSim)
-  {
-    //Equilibration
-    VerletUpdate(Struct,QMMMOpts,outfile,0,0);
-    //Production
-    VerletUpdate(Struct,QMMMOpts,outfile,1,0);
   }
   //End of section
 
@@ -635,7 +626,6 @@ int main(int argc, char* argv[])
   //Ensemble minimization
   if (ESDSim)
   {
-    vector<Coord> Forces; //Dummy array needed for convergence tests
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
     //Calculate initial energy
@@ -690,6 +680,21 @@ int main(int argc, char* argv[])
     cout.copyfmt(call); //Replace settings
     //Run optimization
     EnsembleSD(Struct,outfile,QMMMOpts,0);
+    //Finish output
+    cout << '\n';
+    cout << "Optimization complete.";
+    cout << '\n' << '\n';
+    cout.flush();
+  }
+  //End of section
+
+  //Ensemble NEB simulation
+  if (ENEBSim)
+  {
+    //Print initial structure
+    Print_traj(Struct,outfile,QMMMOpts);
+    //Optimize path
+    EnsembleNEB(Struct,outfile,QMMMOpts);
     //Finish output
     cout << '\n';
     cout << "Optimization complete.";

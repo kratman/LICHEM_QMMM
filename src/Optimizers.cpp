@@ -211,6 +211,18 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Set up current multipoles
       RotateTINKCharges(Struct,Bead);
     }
+    //Calculate inverse box lengths for PBC
+    double ix,iy,iz; //Inverse x,y,z
+    ix = 1;
+    iy = 1;
+    iz = 1;
+    if (PBCon and (NWChem == 1))
+    {
+      ix /= Lx;
+      iy /= Ly;
+      iz /= Lz;
+    }
+    //Save file
     call.str("");
     call << "MMCharges_" << Bead << ".txt";
     ofile.open(call.str().c_str(),ios_base::out);
@@ -220,34 +232,34 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       if (Struct[i].MMregion)
       {
         ofile << fixed; //Forces numbers to be floats
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z1;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x1*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y1*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z1*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z2;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x2*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y2*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z2*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z3;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x3*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y3*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z3*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z4;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x4*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y4*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z4*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z5;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x5*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y5*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z5*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z6;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x6*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y6*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z6*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
         ofile << '\n';
       }
@@ -420,6 +432,18 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       //Set up current multipoles
       RotateTINKCharges(Struct,Bead);
     }
+    //Calculate inverse box lengths for PBC
+    double ix,iy,iz; //Inverse x,y,z
+    ix = 1;
+    iy = 1;
+    iz = 1;
+    if (PBCon and (NWChem == 1))
+    {
+      ix /= Lx;
+      iy /= Ly;
+      iz /= Lz;
+    }
+    //Save file
     call.str("");
     call << "MMCharges_" << Bead << ".txt";
     ofile.open(call.str().c_str(),ios_base::out);
@@ -429,34 +453,34 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       if (Struct[i].MMregion)
       {
         ofile << fixed; //Forces numbers to be floats
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z1;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x1*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y1*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z1*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z2;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x2*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y2*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z2*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z3;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x3*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y3*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z3*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z4;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x4*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y4*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z4*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z5;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x5*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y5*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z5*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
         ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z6;
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x6*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y6*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z6*iz);
         ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
         ofile << '\n';
       }
@@ -780,6 +804,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
   double VecMax = 0;
   //Run optimization
   double StepScale = QMMMOpts.StepScale;
+  StepScale *= 0.75; //Take a smaller initial step
   while (stepct < QMMMOpts.MaxOptSteps)
   {
     //Run MD
@@ -875,9 +900,21 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
     if (VecMax > QMMMOpts.MaxStep)
     {
       //Scale step size
-      cout << "    Scaling step size to match the maximum...";
+      cout << " Scaling step size to match the maximum...";
       cout << '\n';
       stepsize *= (QMMMOpts.MaxStep/VecMax);
+      //Reduce step size in future steps
+      StepScale *= 0.60;
+    }
+    else
+    {
+      //Increase step size
+      StepScale *= 1.02;
+      if (StepScale > QMMMOpts.StepScale)
+      {
+        //Prevent step size from getting too large
+        StepScale = QMMMOpts.StepScale;
+      }
     }
     //Determine new structure
     int ct = 0; //Counter
