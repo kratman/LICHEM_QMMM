@@ -282,34 +282,119 @@ struct QMMMSettings
   double Eold;
 };
 
-//Function declarations
-void PrintFancyTitle();
+//Function declarations (alphabetical)
+double AMBERForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
-bool CheckFile(const string&);
+double AMBEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
+
+double AMBEROpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double Bohring(double);
 
-double CoordDist2(Coord&,Coord&);
-
-string Typing(int);
-
-int RevTyping(string);
-
-vector<int> TraceBoundary(vector<QMMMAtom>&,int);
-
-void ExtractTINKpoles(vector<QMMMAtom>&,int);
-
-void RotateTINKCharges(vector<QMMMAtom>&,int);
-
-void WriteTINKMpole(vector<QMMMAtom>&,fstream&,int,int);
-
-void ExtractGlobalPoles(int& argc, char**& argv);
+void BurstTraj(vector<QMMMAtom>&,QMMMSettings&);
 
 RedMpole Cart2SphHarm(Mpole&);
 
-OctCharges SphHarm2Charges(RedMpole);
+bool CheckFile(const string&);
+
+double CoordDist2(Coord&,Coord&);
+
+double EFFCorr(QMMMElec&,QMMMElec&,int);
+
+double EFFEnergy(QMMMAtom&,QMMMElec&,int);
+
+void EnsembleNEB(vector<QMMMAtom>&,fstream&,QMMMSettings&);
+
+void EnsembleSD(vector<QMMMAtom>&,fstream&,QMMMSettings&,int);
+
+VectorXd EnsembleTangent(vector<QMMMAtom>&,QMMMSettings&,int);
+
+void ExternalGaussian(int&,char**&);
+
+void ExtractGlobalPoles(int& argc, char**& argv);
+
+void ExtractTINKpoles(vector<QMMMAtom>&,int);
 
 void FindTINKERClasses(vector<QMMMAtom>&);
+
+void FLUKEDFP(vector<QMMMAtom>&,QMMMSettings&,int);
+
+void FLUKEErrorChecker(QMMMSettings&);
+
+void FLUKEPrintSettings(QMMMSettings&);
+
+void FLUKESteepest(vector<QMMMAtom>&,QMMMSettings&,int);
+
+void FLUKE2TINK(int&,char**&);
+
+void GaussianCharges(vector<QMMMAtom>&,QMMMSettings&,int);
+
+double GaussianEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
+
+double GaussianForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+
+double GaussianOpt(vector<QMMMAtom>&,QMMMSettings&,int);
+
+double Get_EeFF(vector<QMMMAtom>&,vector<QMMMElec>&,QMMMSettings&);
+
+double Get_PI_Espring(vector<QMMMAtom>&,QMMMSettings&);
+
+double Get_PI_Epot(vector<QMMMAtom>&,QMMMSettings&);
+
+void GetQuotes(vector<string>&);
+
+VectorXd KabschDisplacement(MatrixXd&,MatrixXd&,int);
+
+void KabschRotation(MatrixXd&,MatrixXd&,int);
+
+double KineticE_eFF(vector<QMMMElec>&,QMMMSettings&);
+
+double LAMMPSEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
+
+double LAMMPSForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+
+double LAMMPSOpt(vector<QMMMAtom>&,QMMMSettings&,int);
+
+bool MCMove(vector<QMMMAtom>&,QMMMSettings&,double&);
+
+void NWChemCharges(vector<QMMMAtom>&,QMMMSettings&,int);
+
+double NWChemEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
+
+double NWChemForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+
+double NWChemOpt(vector<QMMMAtom>&,QMMMSettings&,int);
+
+bool OptConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,vector<Coord>&,
+     int,QMMMSettings& QMMMOpts,int,bool);
+
+bool PathConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,
+     vector<vector<double> >&,int,QMMMSettings& QMMMOpts,bool);
+
+void PrintFancyTitle();
+
+void Print_traj(vector<QMMMAtom>&,fstream&,QMMMSettings&);
+
+void PSICharges(vector<QMMMAtom>&,QMMMSettings&,int);
+
+double PSIEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
+
+double PSIForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+
+double PSIOpt(vector<QMMMAtom>&,QMMMSettings&,int);
+
+void ReadArgs(int&,char**&,fstream&,fstream&,fstream&,fstream&);
+
+void ReadFLUKEInput(fstream&,fstream&,fstream&,
+     vector<QMMMAtom>&,QMMMSettings&);
+
+int RevTyping(string);
+
+void RotateTINKCharges(vector<QMMMAtom>&,int);
+
+OctCharges SphHarm2Charges(RedMpole);
+
+double SpringEnergy(double,double);
 
 double TINKEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
@@ -327,114 +412,33 @@ void TINKERInduced(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double TINKERPolEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
-double AMBERForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
-
-double AMBEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
-
-double AMBEROpt(vector<QMMMAtom>&,QMMMSettings&,int);
-
-double LAMMPSEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
-
-double LAMMPSOpt(vector<QMMMAtom>&,QMMMSettings&,int);
-
-double LAMMPSForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
-
-double GaussianEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
-
-double GaussianOpt(vector<QMMMAtom>&,QMMMSettings&,int);
-
-void ExternalGaussian(int&,char**&);
-
-double GaussianForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
-
-void GaussianCharges(vector<QMMMAtom>&,QMMMSettings&,int);
-
-double PSIEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
-
-double PSIOpt(vector<QMMMAtom>&,QMMMSettings&,int);
-
-double PSIForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
-
-void PSICharges(vector<QMMMAtom>&,QMMMSettings&,int);
-
-double NWChemForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
-
-double NWChemEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
-
-double NWChemOpt(vector<QMMMAtom>&,QMMMSettings&,int);
-
-void NWChemCharges(vector<QMMMAtom>&,QMMMSettings&,int);
-
-double EFFEnergy(QMMMAtom&,QMMMElec&,int);
-
-double KineticE_eFF(vector<QMMMElec>&,QMMMSettings&);
-
-double EFFCorr(QMMMElec&,QMMMElec&,int);
-
-double Get_EeFF(vector<QMMMAtom>&,vector<QMMMElec>&,QMMMSettings&);
-
-bool OptConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,vector<Coord>&,
-     int,QMMMSettings& QMMMOpts,int,bool);
-
-bool PathConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,
-     vector<vector<double> >&,int,QMMMSettings& QMMMOpts,bool);
-
-void FLUKESteepest(vector<QMMMAtom>&,QMMMSettings&,int);
-
-void FLUKEDFP(vector<QMMMAtom>&,QMMMSettings&,int);
-
-void EnsembleNEB(vector<QMMMAtom>&,fstream&,QMMMSettings&);
-
-void EnsembleSD(vector<QMMMAtom>&,fstream&,QMMMSettings&,int);
-
-VectorXd EnsembleTangent(vector<QMMMAtom>&,QMMMSettings&,int);
-
-double SpringEnergy(double,double);
-
-double Get_PI_Espring(vector<QMMMAtom>&,QMMMSettings&);
-
-double Get_PI_Epot(vector<QMMMAtom>&,QMMMSettings&);
-
-bool MCMove(vector<QMMMAtom>&,QMMMSettings&,double&);
-
 void TINK2FLUKE(int&,char**&);
 
-void FLUKE2TINK(int&,char**&);
+vector<int> TraceBoundary(vector<QMMMAtom>&,int);
 
-void Print_traj(vector<QMMMAtom>&,fstream&,QMMMSettings&);
+string Typing(int);
 
-void ReadArgs(int&,char**&,fstream&,fstream&,fstream&,fstream&);
+void WriteTINKMpole(vector<QMMMAtom>&,fstream&,int,int);
 
-void ReadFLUKEInput(fstream&,fstream&,fstream&,
-     vector<QMMMAtom>&,QMMMSettings&);
-
-void FLUKEErrorChecker(QMMMSettings&);
-
-void FLUKEPrintSettings(QMMMSettings&);
-
-void GetQuotes(vector<string>&);
-
-void BurstTraj(vector<QMMMAtom>&,QMMMSettings&);
-
-//Function definitions
+//Function definitions (alphabetical)
+#include "Analysis.cpp"
 #include "Core_funcs.cpp"
-#include "Input_Reader.cpp"
-#include "TINK2FLUKE.cpp"
-#include "Multipoles.cpp"
 #include "Frozen_density.cpp"
+#include "Input_Reader.cpp"
+#include "Multipoles.cpp"
+#include "Optimizers.cpp"
 #include "PathIntegral.cpp"
 #include "ReactionPath.cpp"
-#include "Optimizers.cpp"
-#include "Analysis.cpp"
+#include "TINK2FLUKE.cpp"
 
-//Wrapper definitions
-#include "Lepton_eng.cpp"
-#include "Gaussian.cpp"
-#include "TINKER.cpp"
-#include "LAMMPS.cpp"
-#include "NWChem.cpp"
+//Wrapper definitions (alphabetical)
 #include "AMBER.cpp"
+#include "Gaussian.cpp"
+#include "LAMMPS.cpp"
+#include "Lepton_eng.cpp"
+#include "NWChem.cpp"
 #include "PSI4.cpp"
+#include "TINKER.cpp"
 
 #endif
 
