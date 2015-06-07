@@ -15,19 +15,24 @@
 //Trajectory analysis functions
 void Print_traj(vector<QMMMAtom>& parts, fstream& traj, QMMMSettings& QMMMOpts)
 {
+  //Function to print the trajectory or restart files for all beads
+  stringstream call;
+  call.copyfmt(traj); //Save settings
+  traj.precision(8); //Adjust printing
   int Ntot = QMMMOpts.Nbeads*Natoms;
   traj << Ntot << '\n' << '\n';
   for (int i=0;i<Natoms;i++)
   {
     for (int j=0;j<QMMMOpts.Nbeads;j++)
     {
-      traj << parts[i].QMTyp << " ";
-      traj << parts[i].P[j].x << " ";
-      traj << parts[i].P[j].y << " ";
-      traj << parts[i].P[j].z << '\n';
+      traj << setw(3) << parts[i].QMTyp << " ";
+      traj << setw(10) << parts[i].P[j].x << " ";
+      traj << setw(10) << parts[i].P[j].y << " ";
+      traj << setw(10) << parts[i].P[j].z << '\n';
     }
   }
-  traj.flush();
+  traj.flush(); //Force printing
+  traj.copyfmt(call); //Replace settings
   return;
 };
 
@@ -52,18 +57,21 @@ void BurstTraj(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   }
   burstfile.open(call.str().c_str(),ios_base::out);
   //Print trajectory
+  burstfile.precision(8);
   for (int j=0;j<QMMMOpts.Nbeads;j++)
   {
     burstfile << Natoms; //Number of atoms
     burstfile << '\n' << '\n';
     for (int i=0;i<Natoms;i++)
     {
-      burstfile << Struct[i].QMTyp << " ";
-      burstfile << Struct[i].P[j].x << " ";
-      burstfile << Struct[i].P[j].y << " ";
-      burstfile << Struct[i].P[j].z << '\n';
+      burstfile << setw(3) << Struct[i].QMTyp << " ";
+      burstfile << setw(10) << Struct[i].P[j].x << " ";
+      burstfile << setw(10) << Struct[i].P[j].y << " ";
+      burstfile << setw(10) << Struct[i].P[j].z << '\n';
     }
   }
+  burstfile.flush(); //Print trajectory
+  burstfile.close(); //File is nolonger needed
   return;
 };
 
