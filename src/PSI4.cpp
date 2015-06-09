@@ -177,7 +177,7 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
         getline(ifile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if (Struct[i].QMregion or Struct[i].PAregion)
+          if (Struct[i].QMregion or Struct[i].PBregion)
           {
             getline(ifile,dummy);
             stringstream line(dummy);
@@ -405,7 +405,7 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         getline(ifile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if (Struct[i].QMregion or Struct[i].PAregion)
+          if (Struct[i].QMregion or Struct[i].PBregion)
           {
             getline(ifile,dummy);
             stringstream line(dummy);
@@ -589,7 +589,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         getline(ifile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if (Struct[i].QMregion or Struct[i].PAregion)
+          if (Struct[i].QMregion or Struct[i].PBregion)
           {
             getline(ifile,dummy);
             stringstream line(dummy);
@@ -822,7 +822,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
         getline(ifile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if (Struct[i].QMregion or Struct[i].PAregion)
+          if (Struct[i].QMregion or Struct[i].PBregion)
           {
             getline(ifile,dummy);
             stringstream line(dummy);

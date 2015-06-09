@@ -249,9 +249,9 @@ vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int AtID)
     {
       BoundAtoms.push_back(BondID);
     }
-    if (Struct[BondID].PAregion and (BondID != AtID))
+    if (Struct[BondID].PBregion and (BondID != AtID))
     {
-      //Two PAs are connected and this system will fail
+      //Two PBs are connected and this system will fail
       BondError = 1;
     }
   }
@@ -283,9 +283,9 @@ vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int AtID)
             MoreFound = 1; //Keep going
             tmp.push_back(BondID);
           }
-          if (Struct[BondID].PAregion and (BondID != AtID))
+          if (Struct[BondID].PBregion and (BondID != AtID))
           {
-            //Two PAs are connected and this system will fail
+            //Two PBs are connected and this system will fail
             BondError = 1;
           }
         }
@@ -311,7 +311,7 @@ vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int AtID)
   }
   if (BondError)
   {
-    cerr << "Error: Two pseudoatoms are connected through boudary atoms!!!";
+    cerr << "Error: Two pseudo-bonds are connected through boudary atoms!!!";
     cerr << '\n';
     cerr << " The connections prevent FLUKE from correctly updating";
     cerr << " the charges" << '\n' << '\n';

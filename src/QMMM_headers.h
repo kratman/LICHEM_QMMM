@@ -92,7 +92,7 @@ string regfilename; //Saves a filename given in the arguments
 int Nthreads = 1;
 int Ncpus = 1; //Number of processors for QM calculations
 int Nfreeze = 0; //Number of frozen atoms
-int Npseudo = 0; //Number of pseudo-atoms
+int Npseudo = 0; //Number of pseudo-bonds
 int Nbound = 0; //Number of boundary-atoms
 int Natoms = 0; //Total number of atoms
 int Nqm = 0; //Number of QM atoms
@@ -219,10 +219,10 @@ struct QMMMAtom
 {
   //Data type for atomic information
   double m; //Mass of atom
-  bool QMregion; //QM, MM, pseudo-atom, or boundary-atom
-  bool MMregion; //QM, MM, pseudo-atom, or boundary-atom
-  bool PAregion; //QM, MM, pseudo-atom, or boundary-atom
-  bool BAregion; //QM, MM, pseudo-atom, or boundary-atom
+  bool QMregion; //QM, MM, pseudo-bond, or boundary-atom
+  bool MMregion; //QM, MM, pseudo-bond, or boundary-atom
+  bool PBregion; //QM, MM, pseudo-bond, or boundary-atom
+  bool BAregion; //QM, MM, pseudo-bond, or boundary-atom
   bool Frozen; //Part of a frozen shell
   string QMTyp; //Real atom type
   string MMTyp; //Force field atom type

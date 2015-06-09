@@ -211,7 +211,7 @@ void TINK2FLUKE(int& argc, char**& argv)
       }
       else
       {
-        //QM, PA, and BA cannot be frozen
+        //QM, PB, and BA cannot be frozen
         Froz[i] = 0;
       }
     }

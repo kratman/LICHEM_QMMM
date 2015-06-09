@@ -85,7 +85,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   ofile << "noautoz noautosym" << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion or Struct[i].PAregion)
+    if (Struct[i].QMregion or Struct[i].PBregion)
     {
       ofile << " " << Struct[i].QMTyp;
       ofile << " " << (Struct[i].P[Bead].x*ix);
@@ -306,7 +306,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     getline(ifile,dummy);
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].QMregion or Struct[i].PAregion)
+      if (Struct[i].QMregion or Struct[i].PBregion)
       {
         stringstream line;
         getline(ifile,dummy);
@@ -401,7 +401,7 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile << "noautoz noautosym" << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion or Struct[i].PAregion)
+    if (Struct[i].QMregion or Struct[i].PBregion)
     {
       ofile << " " << Struct[i].QMTyp;
       ofile << " " << (Struct[i].P[Bead].x*ix);
@@ -563,7 +563,7 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     getline(ifile,dummy);
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].QMregion or Struct[i].PAregion)
+      if (Struct[i].QMregion or Struct[i].PBregion)
       {
         stringstream line;
         getline(ifile,dummy);
@@ -656,7 +656,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile << "noautoz noautosym" << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion or Struct[i].PAregion)
+    if (Struct[i].QMregion or Struct[i].PBregion)
     {
       ofile << " " << Struct[i].QMTyp;
       ofile << " " << (Struct[i].P[Bead].x*ix);
@@ -818,7 +818,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     getline(ifile,dummy);
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].QMregion or Struct[i].PAregion)
+      if (Struct[i].QMregion or Struct[i].PBregion)
       {
         stringstream line;
         getline(ifile,dummy);
@@ -912,7 +912,7 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ofile << "noautoz noautosym" << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion or Struct[i].PAregion)
+    if (Struct[i].QMregion or Struct[i].PBregion)
     {
       ofile << " " << Struct[i].QMTyp;
       ofile << " " << (Struct[i].P[Bead].x*ix);
@@ -1074,7 +1074,7 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     getline(ifile,dummy);
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].QMregion or Struct[i].PAregion)
+      if (Struct[i].QMregion or Struct[i].PBregion)
       {
         stringstream line;
         getline(ifile,dummy);

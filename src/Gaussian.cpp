@@ -83,7 +83,7 @@ void ExternalGaussian(int& argc, char**& argv)
   }
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion or Struct[i].PAregion)
+    if (Struct[i].QMregion or Struct[i].PBregion)
     {
       //Save atom information
       getline(GauInput,dummy);
@@ -100,7 +100,7 @@ void ExternalGaussian(int& argc, char**& argv)
   }
   GauInput.close();
   //Calculate the QMMM forces
-  vector<Coord> Forces; //Forces for QM and PA
+  vector<Coord> Forces; //Forces for QM and PB
   fstream MMgrad,QMlog; //QMMM output
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
@@ -272,7 +272,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
       call.copyfmt(cout);
       call << '\n';
     }
-    if (Struct[i].PAregion)
+    if (Struct[i].PBregion)
     {
       call << "F";
       call << fixed; //Forces numbers to be floats
@@ -469,7 +469,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
         getline(ifile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if (Struct[i].QMregion or Struct[i].PAregion)
+          if (Struct[i].QMregion or Struct[i].PBregion)
           {
             //Count through all atoms in the QM calculations
             getline(ifile,dummy);
@@ -575,7 +575,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       call.copyfmt(cout);
       call << '\n';
     }
-    if (Struct[i].PAregion)
+    if (Struct[i].PBregion)
     {
       call << "F";
       call << fixed; //Forces numbers to be floats
@@ -687,7 +687,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         getline(ifile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if (Struct[i].QMregion or Struct[i].PAregion)
+          if (Struct[i].QMregion or Struct[i].PBregion)
           {
             //Count through all atoms in the QM calculations
             getline(ifile,dummy);
@@ -790,7 +790,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       call.copyfmt(cout);
       call << '\n';
     }
-    if (Struct[i].PAregion)
+    if (Struct[i].PBregion)
     {
       call << "F";
       call << fixed; //Forces numbers to be floats
@@ -928,7 +928,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         getline(ifile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if (Struct[i].QMregion or Struct[i].PAregion)
+          if (Struct[i].QMregion or Struct[i].PBregion)
           {
             //Count through all atoms in the QM calculations
             getline(ifile,dummy);
@@ -1104,7 +1104,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       call.copyfmt(cout);
       call << '\n';
     }
-    if (Struct[i].PAregion)
+    if (Struct[i].PBregion)
     {
       call << "F";
       call << fixed; //Forces numbers to be floats
@@ -1148,7 +1148,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         getline(ifile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if (Struct[i].QMregion or Struct[i].PAregion)
+          if (Struct[i].QMregion or Struct[i].PBregion)
           {
             //Get new coordinates
             getline(ifile,dummy);

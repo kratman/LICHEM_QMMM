@@ -62,7 +62,7 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     call << (Struct[i].id+1);
     call << " 1 "; //Dummy molecule ID
     call << Struct[i].NumTyp << " ";
-    if (Struct[i].QMregion or Struct[i].PAregion or Struct[i].BAregion)
+    if (Struct[i].QMregion or Struct[i].PBregion or Struct[i].BAregion)
     {
       //Add zero charge
       call << 0.0;
@@ -107,11 +107,11 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (Nqm > 0)
   {
     //Partition atoms into groups
-    call << "group qm id "; //QM and PA
+    call << "group qm id "; //QM and PB
     ct = 0;
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].QMregion or Struct[i].PAregion)
+      if (Struct[i].QMregion or Struct[i].PBregion)
       {
         call << (Struct[i].id+1); //LAMMPS id
         ct += 1;
@@ -259,11 +259,11 @@ double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (Nqm > 0)
   {
     //Partition atoms into groups
-    call << "group qm id "; //QM and PA
+    call << "group qm id "; //QM and PB
     ct = 0;
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].QMregion or Struct[i].PAregion)
+      if (Struct[i].QMregion or Struct[i].PBregion)
       {
         call << (Struct[i].id+1); //LAMMPS id
         ct += 1;

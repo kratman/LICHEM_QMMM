@@ -58,11 +58,11 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     for (int i=0;i<Natoms;i++)
     {
       //Calculate RMS displacement
-      if (Struct[i].QMregion or Struct[i].PAregion)
+      if (Struct[i].QMregion or Struct[i].PBregion)
       {
         for (int j=0;j<i;j++)
         {
-          if (Struct[j].QMregion or Struct[j].PAregion)
+          if (Struct[j].QMregion or Struct[j].PBregion)
           {
             double Rnew = 0;
             double Rold = 0;
@@ -376,7 +376,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Move QM atoms
-      if (Struct[i].QMregion or Struct[i].PAregion)
+      if (Struct[i].QMregion or Struct[i].PBregion)
       {
         Struct[i].P[Bead].x += stepsize*Forces[ct].x;
         Struct[i].P[Bead].y += stepsize*Forces[ct].y;
@@ -634,7 +634,7 @@ void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     for (int i=0;i<Natoms;i++)
     {
       //Move QM atoms
-      if (Struct[i].QMregion or Struct[i].PAregion)
+      if (Struct[i].QMregion or Struct[i].PBregion)
       {
         Struct[i].P[Bead].x += OptVec(ct);
         Struct[i].P[Bead].y += OptVec(ct+1);
@@ -801,10 +801,8 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
   fstream ifile, ofile; //Generic file names
   //Initialize optimization variables
   double stepsize = 1;
-  double VecMax = 0;
+  double StepScale = QMMMOpts.StepScale; //Saved copy
   //Run optimization
-  double StepScale = QMMMOpts.StepScale;
-  StepScale *= 0.75; //Take a smaller initial step
   while (stepct < QMMMOpts.MaxOptSteps)
   {
     //Run MD
@@ -878,54 +876,37 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
       SumE += LAMMPSEnergy(Struct,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
-    //Check optimization step size
-    VecMax = 0;
-    for (int i=0;i<(Nqm+Npseudo);i++)
-    {
-      //Check if the step size is too large
-      if (abs(StepScale*Forces[i].x) > VecMax)
-      {
-        VecMax = abs(StepScale*Forces[i].x);
-      }
-      if (abs(StepScale*Forces[i].y) > VecMax)
-      {
-        VecMax = abs(StepScale*Forces[i].y);
-      }
-      if (abs(StepScale*Forces[i].z) > VecMax)
-      {
-        VecMax = abs(StepScale*Forces[i].z);
-      }
-    }
-    stepsize = StepScale;
-    if (VecMax > QMMMOpts.MaxStep)
-    {
-      //Scale step size
-      cout << " Scaling step size to match the maximum...";
-      cout << '\n';
-      stepsize *= (QMMMOpts.MaxStep/VecMax);
-      //Reduce step size in future steps
-      StepScale *= 0.60;
-    }
-    else
-    {
-      //Increase step size
-      StepScale *= 1.02;
-      if (StepScale > QMMMOpts.StepScale)
-      {
-        //Prevent step size from getting too large
-        StepScale = QMMMOpts.StepScale;
-      }
-    }
     //Determine new structure
-    int ct = 0; //Counter
+    int ct = 0; //Counter for QM and PB atoms
     for (int i=0;i<Natoms;i++)
     {
       //Move QM atoms
-      if (Struct[i].QMregion or Struct[i].PAregion)
+      if (Struct[i].QMregion or Struct[i].PBregion)
       {
-        Struct[i].P[Bead].x += stepsize*Forces[ct].x;
-        Struct[i].P[Bead].y += stepsize*Forces[ct].y;
-        Struct[i].P[Bead].z += stepsize*Forces[ct].z;
+        //Check X step size
+        stepsize = StepScale*Forces[ct].x;
+        if (abs(stepsize) > QMMMOpts.MaxStep)
+        {
+          //Scale step
+          stepsize *= QMMMOpts.MaxStep/abs(stepsize);
+        }
+        Struct[i].P[Bead].x += stepsize;
+        //Check Y step size
+        stepsize = StepScale*Forces[ct].y;
+        if (abs(stepsize) > QMMMOpts.MaxStep)
+        {
+          //Scale step
+          stepsize *= QMMMOpts.MaxStep/abs(stepsize);
+        }
+        Struct[i].P[Bead].y += stepsize;
+        //Check Z step size
+        stepsize = StepScale*Forces[ct].z;
+        if (abs(stepsize) > QMMMOpts.MaxStep)
+        {
+          //Scale step
+          stepsize *= QMMMOpts.MaxStep/abs(stepsize);
+        }
+        Struct[i].P[Bead].z += stepsize;
         ct += 1;
       }
     }

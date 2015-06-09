@@ -197,7 +197,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
       ofile << '\n';
     }
-    if (Struct[i].PAregion)
+    if (Struct[i].PBregion)
     {
       //Modify the charge to force charge balance with the boundaries
       double qi = Struct[i].MP[Bead].q; //Save a copy
@@ -364,7 +364,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
       ofile << '\n';
     }
-    if (Struct[i].PAregion)
+    if (Struct[i].PBregion)
     {
       //Modify the charge to force charge balance with the boundaries
       double qi = Struct[i].MP[Bead].q; //Save a copy
@@ -462,7 +462,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   for (int i=0;i<Natoms;i++)
   {
     //Add active atoms
-    if (Struct[i].QMregion or Struct[i].PAregion)
+    if (Struct[i].QMregion or Struct[i].PBregion)
     {
       if (ct == 0)
       {
@@ -494,7 +494,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   for (int i=0;i<Natoms;i++)
   {
     //Add group 1 atoms
-    if (Struct[i].QMregion or Struct[i].PAregion)
+    if (Struct[i].QMregion or Struct[i].PBregion)
     {
       if (ct == 0)
       {
@@ -526,9 +526,9 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (Struct[i].QMregion or Struct[i].PAregion)
+      if (Struct[i].QMregion or Struct[i].PBregion)
       {
-        //New charges are needed for QM and PA atoms
+        //New charges are needed for QM and PB atoms
         ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
         ofile << "0.0"; //Delete charges
         ofile << '\n';
@@ -540,7 +540,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (Struct[i].QMregion or Struct[i].PAregion)
+      if (Struct[i].QMregion or Struct[i].PBregion)
       {
         double qi = 0;
         //remove charge
@@ -704,7 +704,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   for (int i=0;i<Natoms;i++)
   {
     //Add active atoms
-    if (Struct[i].QMregion or Struct[i].PAregion)
+    if (Struct[i].QMregion or Struct[i].PBregion)
     {
       if (ct == 0)
       {
@@ -742,7 +742,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
         ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
         ofile << '\n';
       }
-      if (Struct[i].PAregion)
+      if (Struct[i].PBregion)
       {
         //Modify the charge to force charge balance with the boundaries
         double qi = Struct[i].MP[Bead].q; //Save a copy
@@ -947,7 +947,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       for (int i=0;i<Natoms;i++)
       {
         //Add nuclear charges
-        if (Struct[i].QMregion or Struct[i].PAregion or Struct[i].BAregion)
+        if (Struct[i].QMregion or Struct[i].PBregion or Struct[i].BAregion)
         {
           //New charges are only needed for QM atoms
           ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
@@ -960,7 +960,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       for (int i=0;i<Natoms;i++)
       {
         //Add multipoles
-        if (Struct[i].QMregion or Struct[i].PAregion or Struct[i].BAregion)
+        if (Struct[i].QMregion or Struct[i].PBregion or Struct[i].BAregion)
         {
           double qi = 0;
           //remove charge
@@ -1145,7 +1145,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
           ofile << Struct[i].MP[Bead].q;
           ofile << '\n';
         }
-        if (Struct[i].PAregion)
+        if (Struct[i].PBregion)
         {
           //Modify the charge to force charge balance with the boundaries
           vector<int> Boundaries;
@@ -1174,7 +1174,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
           ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
           ofile << '\n';
         }
-        if (Struct[i].PAregion)
+        if (Struct[i].PBregion)
         {
           //Modify the charge to force charge balance with the boundaries
           double qi = Struct[i].MP[Bead].q; //Save a copy
@@ -1348,7 +1348,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
           ofile << Struct[i].MP[Bead].q;
           ofile << '\n';
         }
-        if (Struct[i].PAregion)
+        if (Struct[i].PBregion)
         {
           //Modify the charge to force charge balance with the boundaries
           vector<int> Boundaries;
@@ -1377,7 +1377,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
           ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
           ofile << '\n';
         }
-        if (Struct[i].PAregion)
+        if (Struct[i].PBregion)
         {
           //Modify the charge to force charge balance with the boundaries
           double qi = Struct[i].MP[Bead].q; //Save a copy

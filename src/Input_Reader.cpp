@@ -255,7 +255,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
       tmp.id = i;
       tmp.QMregion = 0;
       tmp.MMregion = 1;
-      tmp.PAregion = 0;
+      tmp.PBregion = 0;
       tmp.BAregion = 0;
       tmp.Frozen = 0;
       Mpole tmp3; //Initialize charges and multipoles
@@ -343,7 +343,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     {
       Struct[i].QMregion = 1;
       Struct[i].MMregion = 0;
-      Struct[i].PAregion = 0;
+      Struct[i].PBregion = 0;
       Struct[i].BAregion = 0;
     }
   }
@@ -625,12 +625,12 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
     Struct[AtomID].QMregion = 1;
     Struct[AtomID].MMregion = 0;
   }
-  regionfile >> dummy >> Npseudo; //Number of pseudo-atoms
+  regionfile >> dummy >> Npseudo; //Number of pseudo-bonds
   for (int i=0;i<Npseudo;i++)
   {
     int AtomID;
     regionfile >> AtomID;
-    Struct[AtomID].PAregion = 1;
+    Struct[AtomID].PBregion = 1;
     Struct[AtomID].MMregion = 0;
   }
   regionfile >> dummy >> Nbound; //Number of boundary-atoms
@@ -774,7 +774,7 @@ void FLUKEErrorChecker(QMMMSettings& QMMMOpts)
     {
       cout << " Error: The PSI4 wrapper can only use QM and MM atoms.";
       cout << '\n';
-      cout << " Remove the pseudo-atoms and boundary-atoms.";
+      cout << " Remove the pseudo-bonds and boundary-atoms.";
       cout << '\n';
       DoQuit = 1;
     }
