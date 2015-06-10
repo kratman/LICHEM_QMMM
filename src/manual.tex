@@ -6,7 +6,6 @@
 \usepackage{graphicx}
 \usepackage{dtklogos}
 \usepackage{amsmath,amssymb}
-\usepackage{placeins}
 \usepackage{color}
 \raggedbottom
 
@@ -68,7 +67,7 @@ keywords used by the Gaussian wrapper: \\
 
 Int=UltraFine SCF=(YQC,Big,Direct) \\
 
-Ultra-fine integrals and quadratic convergence (YQC) is probably overkill for
+Ultra-fine integrals and quadratic convergence (YQC) are probably overkill for
 most QM calculations, however, these options assure that difficult cases will
 converge. Additionally, the YQC and "Big" options are helpful for larger
 systems, but they are not disabled for small systems. Most of the wrappers
@@ -109,44 +108,66 @@ The FLUKE binary will eventually be included with the zipped source code,
 however, modified or git versions can be compiled with the script provided
 with FLUKE. On Ubuntu boxes, the compile script should function without
 modifications. However, with other operating systems it may be necessary to
-change the path to the \textit{Eigen3} package.
+change the path to the \textit{Eigen3} package. \\
 
 Default: -I/usr/include/eigen3/ \\
 
 The compile script produces both the documentation and the binary. \\
 
-user:\$ make install
+user:\$ make install \\
+
+Although, if you are reading this then you already have the documentation.
 
 \section{Capabilities}
 
 \begin{table}[hbt]
  \centering
- \begin{tabular}{|c|c c c|c c c|}
+ \begin{tabular}{|c|c c c|}
  \hline
-  & Gaussian & PSI4 & NWChem & TINKER & AMBER & LAMMPS \\ \hline
- QM energy & Yes & Yes & Yes & No & No & No \\
- MM energy & No & No & No & Yes & Yes & Yes \\
- QMMM energy & Yes & Yes & Yes & Yes & Yes & Yes \\ \hline
- QM opt. & Yes & Yes & No & No & No & No \\
- MM opt. & No & No & No & Yes & Yes & Yes \\
- QMMM opt. & Yes & No & No & Yes & Yes & Yes \\ \hline
- QM SD/DFP & Yes & Yes & Yes & No & No & No \\
- MM SD/DFP & No & No & No & No & No & No \\
- QMMM SD/DFP & Yes & No & Yes & Yes & Yes & Yes \\ \hline
- QM MC & Yes & Yes & Yes & No & No & No \\
- MM MC & No & No & No & Yes & Yes & Yes \\
- QMMM MC & Yes & Yes & Yes & Yes & Yes & Yes \\ \hline
- QM PIMC & Yes & Yes & Yes & No & No & No \\
- MM PIMC & No & No & No & Yes & Yes & Yes \\
- QMMM PIMC & Yes & Yes & Yes & Yes & Yes & Yes \\ \hline
- QM RP & Yes & No & Yes & No & No & No \\
- MM RP & No & No & no & No & No & No \\
- QMMM RP & Yes & No & Yes & Yes & Yes & Yes \\ \hline
+  & Gaussian & PSI4 & NWChem \\ \hline
+ QM energy & Yes & Yes & Yes \\
+ QMMM energy & Yes & Yes & Yes \\ \hline
+ QM opt. & Yes & Yes & No \\
+ QMMM opt. & Yes & No & No \\ \hline
+ QM SD/DFP & Yes & Yes & Yes \\
+ QMMM SD/DFP & Yes & No & Yes \\ \hline
+ QM MC & Yes & Yes & Yes \\
+ QMMM MC & Yes & Yes & Yes\\ \hline
+ QM PIMC & Yes & Yes & Yes \\
+ QMMM PIMC & Yes & Yes & Yes \\ \hline
+ QM RP & Yes & No & Yes\\
+ QMMM RP & Yes & No & Yes \\ \hline
  \end{tabular}
- \caption{Wrapper capabilities for single-point energy, geometry optimization,
- steepest descent or Davidson-Fletcher-Powell (SD/DFP), Monte Carlo (MC),
- path-integral Monte Carlo (PIMC), and reaction path (RP) calculations.}
- \label{tab:WrapCap}
+ \caption{QM wrapper capabilities for single-point energy, geometry
+ optimization, steepest descent or Davidson-Fletcher-Powell (SD/DFP),
+ Monte Carlo (MC), path-integral Monte Carlo (PIMC), and reaction path (RP)
+ calculations.}
+ \label{tab:QMWrapCap}
+\end{table}
+
+\begin{table}[hbt]
+ \centering
+ \begin{tabular}{|c|c c c|}
+ \hline
+  & TINKER & AMBER & LAMMPS \\ \hline
+ MM energy &  Yes & Yes & Yes \\
+ QMMM energy & Yes & Yes & Yes \\ \hline
+ MM opt. & Yes & Yes & Yes \\
+ QMMM opt. & Yes & Yes & Yes \\ \hline
+ MM SD/DFP & No & No & No \\
+ QMMM SD/DFP & Yes & Yes & Yes \\ \hline
+ MM MC & Yes & Yes & Yes \\
+ QMMM MC & Yes & Yes & Yes \\ \hline
+ MM PIMC & Yes & Yes & Yes \\
+ QMMM PIMC & Yes & Yes & Yes \\ \hline
+ MM RP & No & No & No \\
+ QMMM RP & Yes & Yes & Yes \\ \hline
+ \end{tabular}
+ \caption{MM wrapper capabilities for single-point energy, geometry
+ optimization, steepest descent or Davidson-Fletcher-Powell (SD/DFP),
+ Monte Carlo (MC), path-integral Monte Carlo (PIMC), and reaction path (RP)
+ calculations.}
+ \label{tab:MMWrapCap}
 \end{table}
 
 \subsection{QM and MM wrappers}
@@ -163,18 +184,17 @@ relatively little effort.
 
 \subsection{Types of calculations}
 
-Single-point energies, geometry optimizations, steepest descent minimizations
-reaction pathways, classical Monte Carlo, and path-integral Monte Carlo
-calculations can be performed using the QM and MM wrappers. Due to limitations
-of the software packages, not all calculations can currently be performed with
-all combinations of wrappers. For convenience, the capabilities are summarized
-in Table \ref{tab:WrapCap}. \\
+Single-point energies, geometry optimizations, steepest descent minimizations,
+reaction pathways, ensemble sampling, classical Monte Carlo, and
+path-integral Monte Carlo calculations can be performed using the QM and MM
+wrappers. Due to limitations of the software packages, not all calculations
+can currently be performed with all combinations of wrappers. For convenience,
+the capabilities are summarized in Table \ref{tab:QMWrapCap} and
+\ref{tab:MMWrapCap}. \\
 
 Some additional restrictions are also present when there are bonds between
 the QM and MM regions. Currently only Gaussian can be used as a QM wrapper
 for calculations where the QM and MM regions are bonded.
-
-\FloatBarrier
 
 \section{Acknowledgements}
 
@@ -429,6 +449,14 @@ defined in tinker.key will be passed into the TINKER key file used by the
 wrapper. For obvious reasons, the user must also provide the force field
 parameter files defined in the tinker.key file.
 
+\subsection{AMBER}
+
+{\color{red}Still in development}
+
+\subsection{LAMMPS}
+
+{\color{red}Still in development}
+
 \subsection{Gaussian}
 
 The Gaussian wrapper will look for checkpoint files and a file called BASIS in
@@ -446,6 +474,15 @@ FLUKE automatically tells Gaussian to look for pseudo potentials, however,
 these must be given below the basis set information in the BASIS file. Both
 the basis set and pseudopotential information must be given in Gaussian
 format.
+
+\subsection{NWChem}
+
+The NWChem wrapper will look for checkpoint files and a file called BASIS in
+the working directory. The BASIS file contains basis set and pseudopotential
+information for QMMM calculations with bonds between the QM and MM regions
+(see below). If the BASIS file is found, then the basis set given in the
+regions file is ignored. Both the basis set and pseudopotential information
+must be given in NWChem format.
 
 \subsection{Restart files}
 
@@ -646,8 +683,6 @@ where the electron density is represented by Gaussian functions. These
 potentials can greatly improve the calculations of the electrostatic field and
 can include exchange and charge penetration effects.
 
-\FloatBarrier
-
 \section{Geometry and Reaction Path Optimizations}
 
 \subsection{Steepest descent}
@@ -685,12 +720,12 @@ Broyden-Fletcher-Goldfarb-Shanno (BFGS) algorithms. These two methods are
 mathematically related and can theoretically start from any initial guess of
 the inverse Hessian, $H^{-1}$. \\
 
-The DFP algorithm can update the inverse Hessian using the forces ($F$), the
-current Hessian, and the optimization vector ($\vec p$). The optimization
+The DFP algorithm can update the inverse Hessian using the forces ($F_n$), the
+current Hessian, and the optimization vector ($p_n$). The optimization
 algorithm is given by
 
 \begin{equation}
- \vec p_n = \alpha_n H_n^{-1} F_n \; ,
+ p_n = \alpha_n H_n^{-1} F_n \; ,
 \end{equation}
 \begin{equation}
  \delta_n = F_{n-1}-F_n \; ,
@@ -698,8 +733,8 @@ algorithm is given by
 and
 \begin{equation}
  \label{eq:DFP}
- H_{n+1}^{-1} = H_n^{-1} + \frac{\vec p_n \vec p_n^T}{\vec p_n^T \delta_n} -
- \frac{H_n^{-1} \delta_n \delta_n^T H_n^{-1}}{\delta_n^T H_n{-1} \delta_n}
+ H_{n+1}^{-1} = H_n^{-1} + \frac{p_n p_n^T}{p_n^T \delta_n} -
+ \frac{H_n^{-1} \delta_n \delta_n^T H_n^{-1}}{\delta_n^T H_n^{-1} \delta_n}
  \; ,
 \end{equation}
 where $\delta$ is the change in the forces. The BFGS algorithm is similar to
@@ -723,11 +758,11 @@ new Hessian is constructed.
 
 \subsection{Nudged elastic band}
 
-
+{\color{red}Comming soon...}
 
 \subsection{Quadradic string method}
 
-
+{\color{red}Comming soon...}
 
 \section{Quantum Methods}
 
@@ -1072,8 +1107,6 @@ For the most part, the dispersion energy, $E_d$, takes the form
 where $C_6$ is an emprical parameter, $f(R_{ij})$ is a damping function, and
 $R_{ij}$ is the distance between atoms $i$ and $j$.
 
-\FloatBarrier
-
 \section{QMMM}
 
 \begin{figure}[hbt]
@@ -1116,8 +1149,6 @@ wrapper, while the MM wrapper calculates the MM energy with no charges or
 bonded potentials on any of the QM atoms. These two energies are then added
 together to get the total energy. This approach splits $\hat V_{qmmm}$ between
 the MM calculation ($\hat V_{mm}$) and the QM calculation ($\hat H_{qm}$). 
-
-\FloatBarrier
 
 \subsection{Pseudo-bond method}
 
@@ -1200,8 +1231,6 @@ region and can create smoother boundaries between the QM and MM regions.
 Ideally, a system could be constructed with a large boundary region between
 the QM and MM regions (see Figure \ref{fig:QMMM3}).
 
-\FloatBarrier
-
 \section{Monte Carlo Simulations}
 
 \subsection{Stochastic sampling}
@@ -1252,20 +1281,18 @@ different expression for the probabilities,
 where $P$ is the pressure, $\Delta V$ is the change in volume, and $N$ is
 the number of atoms.
 
-\FloatBarrier
-
 \section{Path-Integral Monte Carlo}
 
 \subsection{Path-integral formalism}
 
-
+{\color{red}Comming soon...}
 
 \subsection{PIMC simulations}
 
 Path-integral Monte Carlo simulations are performed by simulating a large
 number of classical systems which are then coupled together via harmonic
 bonds. Allowed Monte Carlo moves include displacements of single beads,
-translations of centroids, and changes of the volume.
+translations of centroids, and changes of the volume. \\
 
 The spring energy between the beads represents the quantum kinetic energy of
 the centroid. Moves are accepted based on the effective energy, $E_{eff}$
@@ -1314,7 +1341,6 @@ that heavy atoms can experience very strong forces holding the centroid
 close together. The presence of strong potentials restricts the movement of
 the atoms, and reduces $P_{acc}$.
 
-\FloatBarrier
 \bibliographystyle{unsrt}
 \bibliography{manual}
 
