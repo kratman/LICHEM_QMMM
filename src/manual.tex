@@ -98,27 +98,27 @@ user:\$ make install
 
 \begin{table}[hbt]
  \centering
- \begin{tabular}{|c|c c|c c c|}
+ \begin{tabular}{|c|c c c|c c c|}
  \hline
-  & Gaussian & PSI4 & TINKER & AMBER & LAMMPS \\ \hline
- QM energy & Yes & Yes & No & No & No \\
- MM energy & No & No & Yes & Yes & Yes \\
- QMMM energy & Yes & Yes & Yes & Yes & Yes \\ \hline
- QM opt. & Yes & Yes & No & No & No \\
- MM opt. & No & No & Yes & Yes & Yes \\
- QMMM opt. & Yes & No & Yes & Yes & Yes \\ \hline
- QM SD/DFP & Yes & Yes & No & No & No \\
- MM SD/DFP & No & No & No & No & No \\
- QMMM SD/DFP & Yes & Yes & Yes & Yes & Yes \\ \hline
- QM MC & Yes & Yes & No & No & No \\
- MM MC & No & No & Yes & Yes & Yes \\
- QMMM MC & Yes & Yes & Yes & Yes & Yes \\ \hline
- QM PIMC & Yes & Yes & No & No & No \\
- MM PIMC & No & No & Yes & Yes & Yes \\
- QMMM PIMC & Yes & Yes & Yes & Yes & Yes \\ \hline
- QM RP & Yes & No & No & No & No \\
- MM RP & No & No & No & No & No \\
- QMMM RP & Yes & No & Yes & Yes & Yes \\ \hline
+  & Gaussian & PSI4 & NWChem & TINKER & AMBER & LAMMPS \\ \hline
+ QM energy & Yes & Yes & Yes & No & No & No \\
+ MM energy & No & No & No & Yes & Yes & Yes \\
+ QMMM energy & Yes & Yes & Yes & Yes & Yes & Yes \\ \hline
+ QM opt. & Yes & Yes & No & No & No & No \\
+ MM opt. & No & No & No & Yes & Yes & Yes \\
+ QMMM opt. & Yes & No & No & Yes & Yes & Yes \\ \hline
+ QM SD/DFP & Yes & Yes & Yes & No & No & No \\
+ MM SD/DFP & No & No & No & No & No & No \\
+ QMMM SD/DFP & Yes & No & Yes & Yes & Yes & Yes \\ \hline
+ QM MC & Yes & Yes & Yes & No & No & No \\
+ MM MC & No & No & No & Yes & Yes & Yes \\
+ QMMM MC & Yes & Yes & Yes & Yes & Yes & Yes \\ \hline
+ QM PIMC & Yes & Yes & Yes & No & No & No \\
+ MM PIMC & No & No & No & Yes & Yes & Yes \\
+ QMMM PIMC & Yes & Yes & Yes & Yes & Yes & Yes \\ \hline
+ QM RP & Yes & No & Yes & No & No & No \\
+ MM RP & No & No & no & No & No & No \\
+ QMMM RP & Yes & No & Yes & Yes & Yes & Yes \\ \hline
  \end{tabular}
  \caption{Wrapper capabilities for single-point energy, geometry optimization,
  steepest descent or Davidson-Fletcher-Powell (SD/DFP), Monte Carlo (MC),
@@ -340,11 +340,11 @@ Four different regions of the structure need to be defined even if the
 regions contain zero atoms. \\
 
 QM\_atoms: Nqm [list of ids] \\
-Pseudo\_atoms: Npseudo [list of ids] \\
+Pseudo-bond\_atoms: Npseudo [list of ids] \\
 Boundary\_atoms: Nbound [list of ids] \\
 Frozen\_atoms: Ninact [list of ids] \\
 
-Definitions of the QM, pseudo-atoms, and boundary atoms can be found in
+Definitions of the QM, pseudo-bond atoms, and boundary atoms can be found in
 Chapter \ref{chap:Theory}. Frozen atoms are atoms that should remain
 stationary during optimizations or Monte Carlo simulations. Frozen atoms are
 useful for optimizing small regions of large periodic systems. \\
@@ -361,7 +361,7 @@ possible to use the native input/output functions to create FLUKE input from
 input used for MM packages. In all cases the converter produces three
 files: xyzfile.xyz connect.inp regions.inp \\
 
-{\textbf TINKER:} The file converter for TINKER can be used on standard
+{\textbf{TINKER:}} The file converter for TINKER can be used on standard
 TINKER XYZ files, TINKER QMMM XYZ files (Q-CHEM), and TINKER XYZ files
 with periodic boundary conditions. \\
 
@@ -375,9 +375,9 @@ user:\$ FLUKE -tinker -x xyzfile.xyz -c connectfile.inp \\
 
 A file called "tinkxyz.xyz" will be produced from this conversion. \\
 
-{\textbf AMBER:} {\color{red}Still in development} \\
+{\textbf{AMBER:}} {\color{red}Still in development} \\
 
-{\textbf LAMMPS:} {\color{red}Still in development}
+{\textbf{LAMMPS:}} {\color{red}Still in development}
 
 \section{FLUKE output}
 
@@ -436,11 +436,12 @@ except all the replicas are merged together (see below).
 
 M \\
 
+A  X$_{A,0}$  Y$_{A,0}$  Z$_{A,0}$ \\
 A  X$_{A,1}$  Y$_{A,1}$  Z$_{A,1}$ \\
-A  X$_{A,2}$  Y$_{A,2}$  Z$_{A,2}$ \\
 ... \\
+A  X$_{A,M-1}$  Y$_{A,M-1}$  Z$_{A,M-1}$ \\
+B  X$_{B,0}$  Y$_{B,0}$  Z$_{B,0}$ \\
 B  X$_{B,1}$  Y$_{B,1}$  Z$_{B,1}$ \\
-B  X$_{B,2}$  Y$_{B,2}$  Z$_{B,2}$ \\
 ... \\
 
 Here M is the number of atoms times the number of beads, and 
@@ -1093,7 +1094,7 @@ the MM calculation ($\hat V_{mm}$) and the QM calculation ($\hat H_{qm}$).
 
 The calculations are more complicated when there are bonds between the QM and
 MM regions. Covalent bonds require two additional regions of the QMMM system,
-a pseudo-atom (PA) region and a boundary atom (BA) region. Pseudo-atoms are
+a pseudo-bond (PB) region and a boundary atom (BA) region. Pseudo-atoms are
 shared by the QM and MM regions, and handle the bulk of the covalent
 interactions. The severed bonds from the MM region are treated by adding a
 pseudopotential to the pseudo-atoms that allows a fluorine atom to mimic the
