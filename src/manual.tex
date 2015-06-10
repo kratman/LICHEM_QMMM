@@ -6,7 +6,6 @@
 \usepackage{graphicx}
 \usepackage{dtklogos}
 \usepackage{amsmath,amssymb}
-\usepackage{microtype}
 \usepackage{placeins}
 \usepackage{color}
 \raggedbottom
@@ -56,7 +55,31 @@ FLUKE is in development with four guiding principles: \\
 
 \section{Notes for developers}
 
+Most of the development of FLUKE should be done though git (or other version
+control packages) and merged into the main repository. Since FLUKE does not
+require a large number of libraries or proprietary software, it should be easy
+to share new wrappers and approximations with the community. \\
 
+When functionality is added to FLUKE, the goal should be to make it simple and
+robust. Avoid adding lots of input keywords and lots of extra files. It is
+better to have software that is a bit costly and always works than software
+that is fast and tempermental. A good example of this can be seen in the
+keywords used by the Gaussian wrapper: \\
+
+Int=UltraFine SCF=(YQC,Big,Direct) \\
+
+Ultra-fine integrals and quadratic convergence (YQC) is probably overkill for
+most QM calculations, however, these options assure that difficult cases will
+converge. Additionally, the YQC and "Big" options are helpful for larger
+systems, but they are not disabled for small systems. Most of the wrappers
+contain assumptions that the QMMM calculations will be difficult to simulate
+and quite large. These sorts of options ensure that FLUKE will work on all
+systems without requiring the user to be an expert with the QM and MM
+software. \\
+
+FLUKE should be tested with extremely difficult systems. During the early
+stages of the development, test systems with highly distorted structures were
+employed to make sure that crashing the software was difficult.
 
 \section{Installation}
 
@@ -633,20 +656,70 @@ Steepest descent (SD) is the simplest optimization method. The gradient of the
 potential is calculated at the current geometry and used to update the atomic
 coordinates.
 \begin{equation}
- {\textbf r}_{n+1} = {\textbf r}_n+\alpha_n \nabla V({\textbf r})
- \; ,
+ {\textbf r}_{n+1} = {\textbf r}_n+\alpha_n \nabla V({\textbf r}) \; ,
 \end{equation}
 Here $V({\textbf r})$ is the potential at the set of coordinates
 ${\textbf r}$ and $\alpha$ is a scale factor which determines how far a
 particle moves during step $n$. \\
 
 Efficient SD optimizers use line search algorithms which backtrack to find the
-optimum value of $alpha$ at step $n$. However, SD optimizations often do not
-converge.
+optimum value of $\alpha$ at step $n$. However, SD optimizations often do not
+converge. \\
+
+The SD algorithm in FLUKE does not use a line search to optimize $\alpha$ at
+each step. Instead, a maximum value of $\alpha$ is given in the input and 
+the optimization starts with $\alpha=0.7\alpha_{max}$. If the QMMM energy
+is decreasing, then the step size increases by 5\% until it reaches
+$\alpha_{max}$. If the energy increases, the step size is reduced by 40\% and
+the optimization continues.
 
 \subsection{Davidson-Fletcher-Powell}
 
+SD optimizations move along the first derivative of the potential (gradient).
+Optimzations are more efficient if the atoms move along a path chosen using
+both the first and second derivatives of the potential. The second derivative
+matrix (Hessian) can be expensive to calculate, however, there are several
+quasi-Newton algorithms which can improve a guess Hessian. The most common
+procedures are the Davidson-Fletcher-Powell (DFP) and
+Broyden-Fletcher-Goldfarb-Shanno (BFGS) algorithms. These two methods are
+mathematically related and can theoretically start from any initial guess of
+the inverse Hessian, $H^{-1}$. \\
 
+The DFP algorithm can update the inverse Hessian using the forces ($F$), the
+current Hessian, and the optimization vector ($\vec p$). The optimization
+algorithm is given by
+
+\begin{equation}
+ \vec p_n = \alpha_n H_n^{-1} F_n \; ,
+\end{equation}
+\begin{equation}
+ \delta_n = F_{n-1}-F_n \; ,
+\end{equation}
+and
+\begin{equation}
+ \label{eq:DFP}
+ H_{n+1}^{-1} = H_n^{-1} + \frac{\vec p_n \vec p_n^T}{\vec p_n^T \delta_n} -
+ \frac{H_n^{-1} \delta_n \delta_n^T H_n^{-1}}{\delta_n^T H_n{-1} \delta_n}
+ \; ,
+\end{equation}
+where $\delta$ is the change in the forces. The BFGS algorithm is similar to
+the DFP algorithm and can be obtained by replacing the inverse Hessian in
+Eq.\ \ref{eq:DFP} with the Hessian. \\
+
+If the updates satisfy the Wolfe conditions, then the algorithm will converge
+to the correct solution. However, satisfying the Wolfe conditions requires
+a line search algorithm and storing old structures. \\
+
+To keep the FLUKE DFP optimizer simple, the guess inverse Hessian is chosen
+to be the identity matrix, which effectively causes the first optimization
+step to be a SD step. As with the SD algorithm, the step size is adjusted 
+based on the progress of the optimizer. Initially, $\alpha=0.05\alpha_{max}$
+and the step size is increased by 20\% after each sucessful optimization step.
+If the energy does not decrease or if 30 optimization steps have been
+performed, the Hessian is reset to the identity matrix and
+$\alpha=0.02\alpha_{max}$. This algorithm will not always satisfy the Wolfe
+conditions, however, it will not violate the conditions for long before a
+new Hessian is constructed.
 
 \subsection{Nudged elastic band}
 
@@ -900,19 +973,19 @@ The earliest orbital-free DFT functional was the Thomas-Fermi (TF) model,
  V[\rho({\textbf r})] = \int
  \frac{\rho({\textbf r})\rho({\textbf r}')}{2|{\textbf r}-{\textbf r}'|}
  d{\textbf r}d{\textbf r}'
- -\sum \int \frac{\rho({\textbf r})Z_i}{|{\textbf r}-{\textbf r}_i|} d{\textbf r}
- \; ,
+ -\sum \int \frac{\rho({\textbf r})Z_i}{|{\textbf r}-{\textbf r}_i|}
+ d{\textbf r} \; ,
 \end{equation}
 and
 \begin{equation}
  E[\rho({\textbf r})] = T[\rho({\textbf r})]+V[\rho({\textbf r})] \; .
 \end{equation}
 Here ${\textbf r}$ is the position of an electron, $Z_i$ is the nuclear charge
-of atom $i$, ${\textbf r}_i$ is the position of nucleus $i$, and ${\textbf r}'$
-is the position of the second electron. This model only requires an
-approximation for the electron density and the positions of the nuclei, and
-hence, the electron density can be treated as a fluid instead of discrete
-particles. \\
+of atom $i$, ${\textbf r}_i$ is the position of nucleus $i$, and
+${\textbf r}'$ is the position of the second electron. This model only
+requires an approximation for the electron density and the positions of the
+nuclei, and hence, the electron density can be treated as a fluid instead of
+discrete particles. \\
 
 In general the electron-electron and electron-nucleus parts of the functional
 are much more accurate than the kinetic energy functional. In fact, the one of
