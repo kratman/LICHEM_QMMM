@@ -401,7 +401,7 @@ be set to zero. This is because these regions are not relevant unless FLUKE is
 performing a QMMM calculation. For all of the regions, the lists of atoms can
 be separated by either spaces or newlines.
 
-\section{Input generation}
+\section{File conversion}
 
 While FLUKE does not handle atom typing or structure generation, it is
 possible to use the native input/output functions to create FLUKE input from
@@ -421,6 +421,12 @@ files. \\
 user:\$ FLUKE -tinker -x xyzfile.xyz -c connectfile.inp \\
 
 A file called "tinkxyz.xyz" will be produced from this conversion. \\
+
+user:\$ FLUKE -GlobalPoles -n Ncpus -x xyzfile.xyz -r regions.inp 
+ -c connect.inp \\
+
+The GlobalPoles flag reads the force field and initial structure, then prints
+the multipoles in the global reference frame. \\
 
 {\textbf{AMBER:}} {\color{red}Still in development} \\
 
