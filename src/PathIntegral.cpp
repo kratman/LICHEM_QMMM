@@ -1,11 +1,11 @@
 /*
 
-##############################################################################
-#                                                                            #
-#              FLUKE: Fields Layered Under Kohn-sham Electrons               #
-#                             By: Eric G. Kratz                              #
-#                                                                            #
-##############################################################################
+###############################################################################
+#                                                                             #
+#                 LICHEM: Layered Interacting CHEmical Models                 #
+#                              By: Eric G. Kratz                              #
+#                                                                             #
+###############################################################################
 
  Path integral functions using QM, MM, and QMMM energies. Calls to wrappers
  are parallel over the number of beads. Other functions are mostly parallel

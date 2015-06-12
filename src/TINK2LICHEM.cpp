@@ -1,13 +1,13 @@
 /*
 
-##############################################################################
-#                                                                            #
-#              FLUKE: Fields Layered Under Kohn-sham Electrons               #
-#                             By: Eric G. Kratz                              #
-#                                                                            #
-##############################################################################
+###############################################################################
+#                                                                             #
+#                 LICHEM: Layered Interacting CHEmical Models                 #
+#                              By: Eric G. Kratz                              #
+#                                                                             #
+###############################################################################
 
- Functions to convert TINKER files to FLUKE format
+ Functions to convert TINKER files to LICHEM format
 
  Reference for TINKER:
  Ponder, TINKER - Software Tools for Molecular Design
@@ -16,7 +16,7 @@
 
 
 //Parsers
-void TINK2FLUKE(int& argc, char**& argv)
+void TINK2LICHEM(int& argc, char**& argv)
 {
   //Local variables
   fstream TINKxyz,TINKkey,paramfile; //Input
@@ -390,7 +390,7 @@ void TINK2FLUKE(int& argc, char**& argv)
       cout << "Warning: Missing nuclear charge!";
       cout << " The .prm file may be incomplete.";
       cout << '\n';
-      cout << "FLUKE cannot continue...";
+      cout << "LICHEM cannot continue...";
       cout << '\n';
       //Dump files and exit
       posfile.flush();
@@ -421,7 +421,7 @@ void TINK2FLUKE(int& argc, char**& argv)
       //Print error
       cout << "Error: Missing mass! The .prm file may be incomplete.";
       cout << '\n';
-      cout << "FLUKE cannot continue...";
+      cout << "LICHEM cannot continue...";
       cout << '\n';
       //Dump output and quit
       posfile.flush();
@@ -458,7 +458,7 @@ void TINK2FLUKE(int& argc, char**& argv)
     }
     confile << '\n';
   }
-  //Quit FLUKE
+  //Quit LICHEM
   cout << '\n';
   cout << "Do not forget to manually add the simulation input to the";
   cout << " regions.inp file.";
@@ -477,7 +477,7 @@ void TINK2FLUKE(int& argc, char**& argv)
   return;
 };
 
-void FLUKE2TINK(int& argc, char**& argv)
+void LICHEM2TINK(int& argc, char**& argv)
 {
   //Local variables
   fstream posfile,confile,ofile; //Files
@@ -486,7 +486,7 @@ void FLUKE2TINK(int& argc, char**& argv)
   string CONfilename = "NOFILE";
   //Read arguments
   bool DoQuit = 0;
-  cout << "Reading FLUKE input: ";
+  cout << "Reading LICHEM input: ";
   for (int i=0;i<argc;i++)
   {
     dummy = string(argv[i]);

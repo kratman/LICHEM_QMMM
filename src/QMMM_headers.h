@@ -2,12 +2,12 @@
 
 ##############################################################################
 #                                                                            #
-#              FLUKE: Fields Layered Under Kohn-sham Electrons               #
+#              LICHEM: Fields Layered Under Kohn-sham Electrons               #
 #                             By: Eric G. Kratz                              #
 #                                                                            #
 ##############################################################################
 
- Headers and globals for FLUKE. This must be the first file
+ Headers and globals for LICHEM. This must be the first file
  imported into main().
 
 */
@@ -117,8 +117,8 @@ bool QMMM = 0; //Flag for the type of wrapper
 bool MMonly = 0; //Flag for the type of wrapper
 bool QMonly = 0; //Flag for the type of wrapper
 bool OptSim = 0; //Flag for energy minimization with QM packages
-bool SteepSim = 0; //Flag for steepest descent minimization in FLUKE
-bool DFPSim = 0; //Flag for DFP minimization in FLUKE
+bool SteepSim = 0; //Flag for steepest descent minimization in LICHEM
+bool DFPSim = 0; //Flag for DFP minimization in LICHEM
 bool ESDSim = 0; //Flag for ensemble steepest descent
 bool PIMCSim = 0; //Flag for Monte Carlo
 bool ENEBSim = 0; //Flag for ensemble NEB reaction paths
@@ -317,15 +317,15 @@ void ExtractTINKpoles(vector<QMMMAtom>&,int);
 
 void FindTINKERClasses(vector<QMMMAtom>&);
 
-void FLUKEDFP(vector<QMMMAtom>&,QMMMSettings&,int);
+void LICHEMDFP(vector<QMMMAtom>&,QMMMSettings&,int);
 
-void FLUKEErrorChecker(QMMMSettings&);
+void LICHEMErrorChecker(QMMMSettings&);
 
-void FLUKEPrintSettings(QMMMSettings&);
+void LICHEMPrintSettings(QMMMSettings&);
 
-void FLUKESteepest(vector<QMMMAtom>&,QMMMSettings&,int);
+void LICHEMSteepest(vector<QMMMAtom>&,QMMMSettings&,int);
 
-void FLUKE2TINK(int&,char**&);
+void LICHEM2TINK(int&,char**&);
 
 void GaussianCharges(vector<QMMMAtom>&,QMMMSettings&,int);
 
@@ -385,7 +385,7 @@ double PSIOpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void ReadArgs(int&,char**&,fstream&,fstream&,fstream&,fstream&);
 
-void ReadFLUKEInput(fstream&,fstream&,fstream&,
+void ReadLICHEMInput(fstream&,fstream&,fstream&,
      vector<QMMMAtom>&,QMMMSettings&);
 
 int RevTyping(string);
@@ -412,7 +412,7 @@ void TINKERInduced(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double TINKERPolEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
-void TINK2FLUKE(int&,char**&);
+void TINK2LICHEM(int&,char**&);
 
 vector<int> TraceBoundary(vector<QMMMAtom>&,int);
 
@@ -429,7 +429,7 @@ void WriteTINKMpole(vector<QMMMAtom>&,fstream&,int,int);
 #include "Optimizers.cpp"
 #include "PathIntegral.cpp"
 #include "ReactionPath.cpp"
-#include "TINK2FLUKE.cpp"
+#include "TINK2LICHEM.cpp"
 
 //Wrapper definitions (alphabetical)
 #include "AMBER.cpp"

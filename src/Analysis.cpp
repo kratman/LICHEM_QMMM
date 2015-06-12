@@ -1,12 +1,11 @@
 /*
 
-##############################################################################
-#                                                                            #
-#              FLUKE: Fields Layered Under Kohn-sham Electrons               #
-#                             By: Eric G. Kratz                              #
-#                             and Alice Walker                               #
-#                                                                            #
-##############################################################################
+###############################################################################
+#                                                                             #
+#                 LICHEM: Layered Interacting CHEmical Models                 #
+#                              By: Eric G. Kratz                              #
+#                                                                             #
+###############################################################################
 
  Functions for data analysis and trajectory processing.
 

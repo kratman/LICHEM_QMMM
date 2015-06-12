@@ -1,13 +1,13 @@
 /*
 
-##############################################################################
-#                                                                            #
-#              FLUKE: Fields Layered Under Kohn-sham Electrons               #
-#                             By: Eric G. Kratz                              #
-#                                                                            #
-##############################################################################
+###############################################################################
+#                                                                             #
+#                 LICHEM: Layered Interacting CHEmical Models                 #
+#                              By: Eric G. Kratz                              #
+#                                                                             #
+###############################################################################
 
- FLUKE wrapper functions for Gaussian. These routines are written for g09.
+ LICHEM wrapper functions for Gaussian. These routines are written for g09.
  Note that the external function needs to interface with all MM codes.
 
  Reference for Gaussian:
@@ -66,8 +66,8 @@ void ExternalGaussian(int& argc, char**& argv)
   GauInput.open(argv[12],ios_base::in);
   GauOutput.open(argv[13],ios_base::out);
   GauMsg.open(argv[14],ios_base::out);
-  //Read FLUKE input
-  ReadFLUKEInput(xyzfile,connectfile,regionfile,Struct,QMMMOpts);
+  //Read LICHEM input
+  ReadLICHEMInput(xyzfile,connectfile,regionfile,Struct,QMMMOpts);
   //Read g09 input for new QM atom positions
   getline(GauInput,dummy);
   stringstream line(dummy);
@@ -944,7 +944,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     cerr << "Warning: SCF did not converge!!!";
     cerr << '\n';
-    cerr << " FLUKE will attempt to continue...";
+    cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
     E = HugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
@@ -1076,7 +1076,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ExtCPUs = Ncpus-2;
   }
   call << '\n';
-  call << "#P " << "external=\"FLUKE -GauExtern ";
+  call << "#P " << "external=\"LICHEM -GauExtern ";
   call << "QMMMExt"; //Just the stub
   call << "_" << Bead;
   call << " -n " << ExtCPUs;

@@ -1,13 +1,13 @@
 /*
 
-##############################################################################
-#                                                                            #
-#              FLUKE: Fields Layered Under Kohn-sham Electrons               #
-#                             By: Eric G. Kratz                              #
-#                                                                            #
-##############################################################################
+###############################################################################
+#                                                                             #
+#                 LICHEM: Layered Interacting CHEmical Models                 #
+#                              By: Eric G. Kratz                              #
+#                                                                             #
+###############################################################################
 
- Routines for reading and checking the input for FLUKE.
+ Routines for reading and checking the input for LICHEM.
 
 */
 
@@ -23,7 +23,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     //Escape if there are no arguments
     cout << '\n';
     cout << "Missing arguments..." << '\n' << '\n';
-    cout << "Usage: FLUKE -n Ncpus -x Input.xyz -c Connectivity.inp ";
+    cout << "Usage: LICHEM -n Ncpus -x Input.xyz -c Connectivity.inp ";
     cout << "-r Regions.inp -o Output.xyz" << '\n';
     cout << '\n';
     cout << "Use -h or --help for detailed instructions.";
@@ -39,11 +39,11 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
   }
   if (dummy == "-convert")
   {
-    //Attempt to create FLUKE input from other formats
+    //Attempt to create LICHEM input from other formats
     dummy = string(argv[2]);
     if (dummy == "-t")
     {
-      TINK2FLUKE(argc,argv);
+      TINK2LICHEM(argc,argv);
     }
     else
     {
@@ -56,8 +56,8 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
   }
   if (dummy == "-tinker")
   {
-    //Attempt to create a TINKER XYZ file from FLUKE input
-    FLUKE2TINK(argc,argv);
+    //Attempt to create a TINKER XYZ file from LICHEM input
+    LICHEM2TINK(argc,argv);
   }
   if (dummy == "-GlobalPoles")
   {
@@ -71,7 +71,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
       //Escape if there are missing arguments
       cout << '\n';
       cout << "Odd number of arguments..." << '\n' << '\n';
-      cout << "Usage: FLUKE -n Ncpus -x Input.xyz -c Connectivity.inp ";
+      cout << "Usage: LICHEM -n Ncpus -x Input.xyz -c Connectivity.inp ";
       cout << "-r Regions.inp -o Output.xyz" << '\n';
       cout << '\n';
       cout << "Use -h or --help for detailed instructions.";
@@ -88,7 +88,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     {
       //Print helpful information and exit
       cout << '\n';
-      cout << "Usage: FLUKE -n Ncpus -x Input.xyz -c Connectivity.inp ";
+      cout << "Usage: LICHEM -n Ncpus -x Input.xyz -c Connectivity.inp ";
       cout << "-r Regions.inp -o Output.xyz" << '\n';
       cout << '\n';
       cout << "Command line arguments:" << '\n' << '\n';
@@ -145,7 +145,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
       {
         cout << '\n';
         cout << "Unrecognized flag..." << '\n' << '\n';
-        cout << "Usage: FLUKE -n Ncpus -x Input.xyz -c Connectivity.inp ";
+        cout << "Usage: LICHEM -n Ncpus -x Input.xyz -c Connectivity.inp ";
         cout << "-r Regions.inp -o Output.xyz" << '\n';
         cout << '\n';
         cout << "Use -h or --help for detailed instructions.";
@@ -160,7 +160,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     //Escape if there are too few arguments
     cout << '\n';
     cout << "Missing arguments..." << '\n' << '\n';
-    cout << "Usage: FLUKE -n Ncpus -x Input.xyz -c Connectivity.inp ";
+    cout << "Usage: LICHEM -n Ncpus -x Input.xyz -c Connectivity.inp ";
     cout << "-r Regions.inp -o Output.xyz" << '\n';
     cout << '\n';
     cout << "Use -h or --help for detailed instructions.";
@@ -236,7 +236,7 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
   return;
 };
 
-void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
+void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
      fstream& regionfile, vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
 {
   //Read input
@@ -712,7 +712,7 @@ void ReadFLUKEInput(fstream& xyzfile, fstream& connectfile,
   return;
 };
 
-void FLUKEErrorChecker(QMMMSettings& QMMMOpts)
+void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
 {
   //Checks for basic errors and conflicts
   bool DoQuit = 0; //Bool, quit with error
@@ -821,7 +821,7 @@ void FLUKEErrorChecker(QMMMSettings& QMMMOpts)
   return;
 };
 
-void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
+void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
 {
   //Prints out the simulation details
   cout << "Setting up simulation..." << '\n';
@@ -922,11 +922,11 @@ void FLUKEPrintSettings(QMMMSettings& QMMMOpts)
       }
       if (SteepSim)
       {
-        cout << "FLUKE steepest descent" << '\n';
+        cout << "LICHEM steepest descent" << '\n';
       }
       if (DFPSim)
       {
-        cout << "FLUKE DFP" << '\n';
+        cout << "LICHEM DFP" << '\n';
       }
       if (ESDSim)
       {

@@ -1,13 +1,13 @@
 /*
 
-##############################################################################
-#                                                                            #
-#              FLUKE: Fields Layered Under Kohn-sham Electrons               #
-#                             By: Eric G. Kratz                              #
-#                                                                            #
-##############################################################################
+###############################################################################
+#                                                                             #
+#                 LICHEM: Layered Interacting CHEmical Models                 #
+#                              By: Eric G. Kratz                              #
+#                                                                             #
+###############################################################################
 
- FLUKE wrapper functions for AMBER.
+ LICHEM wrapper functions for AMBER.
 
  Reference for AMBER:
  Case et al. AMBER 14, 2014

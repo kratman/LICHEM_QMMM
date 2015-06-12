@@ -1,13 +1,13 @@
 /*
 
-##############################################################################
-#                                                                            #
-#              FLUKE: Fields Layered Under Kohn-sham Electrons               #
-#                             By: Eric G. Kratz                              #
-#                                                                            #
-##############################################################################
+###############################################################################
+#                                                                             #
+#                 LICHEM: Layered Interacting CHEmical Models                 #
+#                              By: Eric G. Kratz                              #
+#                                                                             #
+###############################################################################
 
- FLUKE is licensed under GPLv3, for more information see GPL_LICENSE
+ LICHEM is licensed under GPLv3, for more information see GPL_LICENSE
 
 */
 
@@ -55,12 +55,12 @@ int main(int argc, char* argv[])
 
   //Read input and check for errors
   InitializeVariables(QMMMOpts);
-  ReadFLUKEInput(xyzfile,connectfile,regionfile,Struct,QMMMOpts);
+  ReadLICHEMInput(xyzfile,connectfile,regionfile,Struct,QMMMOpts);
   //End of section
 
   //Check input for even more errors
-  FLUKEErrorChecker(QMMMOpts);
-  FLUKEPrintSettings(QMMMOpts);
+  LICHEMErrorChecker(QMMMOpts);
+  LICHEMPrintSettings(QMMMOpts);
   //End of section
 
   //Calculate single-point energy
@@ -503,7 +503,7 @@ int main(int argc, char* argv[])
         cout.flush();
       }
       //Run QM optimization
-      FLUKESteepest(Struct,QMMMOpts,0);
+      LICHEMSteepest(Struct,QMMMOpts,0);
       //Print Optimized geometry
       Print_traj(Struct,outfile,QMMMOpts);
       //Check convergence
@@ -608,7 +608,7 @@ int main(int argc, char* argv[])
         cout.flush();
       }
       //Run QM optimization
-      FLUKEDFP(Struct,QMMMOpts,0);
+      LICHEMDFP(Struct,QMMMOpts,0);
       //Print Optimized geometry
       Print_traj(Struct,outfile,QMMMOpts);
       //Check convergence
@@ -777,7 +777,7 @@ int main(int argc, char* argv[])
   cout << "  Wall time for MM Wrappers: ";
   cout << TotalMM << " hours";
   cout << '\n';
-  cout << "  Wall time for FLUKE: ";
+  cout << "  Wall time for LICHEM: ";
   cout << OtherTime << " hours";
   cout << '\n';
   cout << "####################################################";

@@ -1,13 +1,13 @@
 /*
 
-##############################################################################
-#                                                                            #
-#              FLUKE: Fields Layered Under Kohn-sham Electrons               #
-#                             By: Eric G. Kratz                              #
-#                                                                            #
-##############################################################################
+###############################################################################
+#                                                                             #
+#                 LICHEM: Layered Interacting CHEmical Models                 #
+#                              By: Eric G. Kratz                              #
+#                                                                             #
+###############################################################################
 
- FLUKE wrapper functions for NWChem.
+ LICHEM wrapper functions for NWChem.
 
  Reference for NWChem:
  Valiev et al. Comput. Phys. Commun. 181, 1477, (2010)
@@ -322,7 +322,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   {
     cerr << "Warning: SCF did not converge!!!";
     cerr << '\n';
-    cerr << " FLUKE will attempt to continue...";
+    cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
     E = HugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
@@ -579,7 +579,7 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     cerr << "Warning: SCF did not converge!!!";
     cerr << '\n';
-    cerr << " FLUKE will attempt to continue...";
+    cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
     E = HugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
@@ -834,7 +834,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     cerr << "Warning: SCF did not converge!!!";
     cerr << '\n';
-    cerr << " FLUKE will attempt to continue...";
+    cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
     E = HugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
@@ -1090,7 +1090,7 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   {
     cerr << "Warning: SCF did not converge!!!";
     cerr << '\n';
-    cerr << " FLUKE will attempt to continue...";
+    cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
     E = HugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately

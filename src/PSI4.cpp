@@ -1,13 +1,13 @@
 /*
 
-##############################################################################
-#                                                                            #
-#              FLUKE: Fields Layered Under Kohn-sham Electrons               #
-#                             By: Eric G. Kratz                              #
-#                                                                            #
-##############################################################################
+###############################################################################
+#                                                                             #
+#                 LICHEM: Layered Interacting CHEmical Models                 #
+#                              By: Eric G. Kratz                              #
+#                                                                             #
+###############################################################################
 
- FLUKE wrapper functions for PSI4.
+ LICHEM wrapper functions for PSI4.
 
  Reference for PSI4:
  Turney et al. WIREs Comp. Mol. Sci. 2, 4, 556, 2012
@@ -618,7 +618,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   {
     cerr << "Warning: SCF did not converge!!!";
     cerr << '\n';
-    cerr << " FLUKE will attempt to continue...";
+    cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
     E = HugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
@@ -851,7 +851,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   {
     cerr << "Warning: SCF did not converge!!!";
     cerr << '\n';
-    cerr << " FLUKE will attempt to continue...";
+    cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
     E = HugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
@@ -860,7 +860,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   {
     cerr << "Warning: Optimization did not converge!!!";
     cerr << '\n';
-    cerr << " FLUKE will attempt to continue using the";
+    cerr << " LICHEM will attempt to continue using the";
     cerr << " old structure...";
     cerr << '\n';
     E = HugeNum; //Large number to reject step

@@ -1,4 +1,4 @@
-%Documentation for FLUKE copyright 2014 Eric G. Kratz
+%Documentation for LICHEM copyright 2014 Eric G. Kratz
 
 \documentclass[12pt]{report}
 \usepackage[hidelinks,bookmarks]{hyperref}
@@ -11,8 +11,8 @@
 
 \setlength\parindent{0cm}
 
-\title{{\color{blue}FLUKE:} {\color{red}F}ields {\color{red}L}ayered 
-{\color{red}U}nder {\color{red}K}ohn-Sham {\color{red}E}lectrons
+\title{{\color{blue}LICHEM:} {\color{red}L}ayered {\color{red}I}nteracting
+{\color{red}CHE}mical {\color{red}M}odels
 \\ \vspace{3cm}
 \begin{center}
 \centering\includegraphics[scale=0.60]{../doc/images/QMMM_0.png}
@@ -28,24 +28,24 @@
 
 \section{Design Principles}
 
-FLUKE is in development with four guiding principles: \\
+LICHEM is in development with four guiding principles: \\
 \begin{quote}
  \normalfont{
- 1) {\textbf FLUKE should primarily be an interface.} In order to make the
+ 1) {\textbf LICHEM should primarily be an interface.} In order to make the
  code function with a variety of software packages and for different 
- versions of the packages, FLUKE should not require modifications to other
+ versions of the packages, LICHEM should not require modifications to other
  software packages or tools. \\ 
- 2) {\textbf FLUKE should be easy to read and modify.} Most scientists
+ 2) {\textbf LICHEM should be easy to read and modify.} Most scientists
  are not experts in computer programming. In order to allow for
- collaborative development of FLUKE, the source code needs to be easy
+ collaborative development of LICHEM, the source code needs to be easy
  to read. To that end, the code should be simple, well commented, and
  avoid linking to esoteric libraries. \\
- 3) {\textbf FLUKE should be a single executable.} Since FLUKE is an
+ 3) {\textbf LICHEM should be a single executable.} Since LICHEM is an
  interface, there is no need for a large collection of binaries. Having
  many different single-use executable files can discourage new users.
- Furthermore, FLUKE can be statically linked to ease distribution of the
+ Furthermore, LICHEM can be statically linked to ease distribution of the
  software. \\
- 4) {\textbf FLUKE should be open source.} FLUKE is licensed under the GPLv3.
+ 4) {\textbf LICHEM should be open source.} LICHEM is licensed under the GPLv3.
  Science can benefit everyone, and hence, should be shared as widely as
  possible. Additionally, I do  not want to see my effort in creating a large
  software package go to waste in a package that can only be used by a handful
@@ -54,12 +54,12 @@ FLUKE is in development with four guiding principles: \\
 
 \section{Notes for developers}
 
-Most of the development of FLUKE should be done though git (or other version
-control packages) and merged into the main repository. Since FLUKE does not
+Most of the development of LICHEM should be done though git (or other version
+control packages) and merged into the main repository. Since LICHEM does not
 require a large number of libraries or proprietary software, it should be easy
 to share new wrappers and approximations with the community. \\
 
-When functionality is added to FLUKE, the goal should be to make it simple and
+When functionality is added to LICHEM, the goal should be to make it simple and
 robust. Avoid adding lots of input keywords and lots of extra files. It is
 better to have software that is a bit costly and always works than software
 that is fast and tempermental. A good example of this can be seen in the
@@ -72,11 +72,11 @@ most QM calculations, however, these options assure that difficult cases will
 converge. Additionally, the YQC and "Big" options are helpful for larger
 systems, but they are not disabled for small systems. Most of the wrappers
 contain assumptions that the QMMM calculations will be difficult to simulate
-and quite large. These sorts of options ensure that FLUKE will work on all
+and quite large. These sorts of options ensure that LICHEM will work on all
 systems without requiring the user to be an expert with the QM and MM
 software. \\
 
-FLUKE should be tested with extremely difficult systems. During the early
+LICHEM should be tested with extremely difficult systems. During the early
 stages of the development, test systems with highly distorted structures were
 employed to make sure that crashing the software was difficult.
 
@@ -86,31 +86,31 @@ extremely useful for multipolar/polarizable force fields.
 
 \section{Installation}
 
-Since FLUKE is designed to be simple, only a small number of packages are
+Since LICHEM is designed to be simple, only a small number of packages are
 required to compile the code. An approximate list of packages is given
 below.
 \begin{quote}
  \normalfont{
- FLUKE binary: OpenMP, Eigen3 \\
- FLUKE manual: \LaTeX, \BibTeX}
+ LICHEM binary: OpenMP, Eigen3 \\
+ LICHEM manual: \LaTeX, \BibTeX}
 \end{quote}
 
-Clone the git repository or unpack FLUKE\_QMMM-master.tgz \\
+Clone the git repository or unpack LICHEM\_QMMM-master.tgz \\
 
-user:\$ mkdir FLUKE \\
-user:\$ git clone https://github.com/kratman/FLUKE\_QMMM.git ./FLUKE/ \\
+user:\$ mkdir LICHEM \\
+user:\$ git clone https://github.com/kratman/LICHEM\_QMMM.git ./LICHEM/ \\
 
 or unpack the zipped source code \\
 
-user:\$ mkdir FLUKE \\
-user:\$ cd FLUKE/ \\
-user:\$ unzip FLUKE\_QMMM-master.zip \\
-user:\$ mv FLUKE\_QMMM-master/* . \\
-user:\$ rmdir FLUKE\_QMMM-master \\
+user:\$ mkdir LICHEM \\
+user:\$ cd LICHEM/ \\
+user:\$ unzip LICHEM\_QMMM-master.zip \\
+user:\$ mv LICHEM\_QMMM-master/* . \\
+user:\$ rmdir LICHEM\_QMMM-master \\
 
-The FLUKE binary will eventually be included with the zipped source code,
+The LICHEM binary will eventually be included with the zipped source code,
 however, modified or git versions can be compiled with the script provided
-with FLUKE. On Ubuntu boxes, the compile script should function without
+with LICHEM. On Ubuntu boxes, the compile script should function without
 modifications. However, with other operating systems it may be necessary to
 change the path to the \textit{Eigen3} package. \\
 
@@ -176,14 +176,14 @@ Although, if you are reading this then you already have the documentation.
 
 \subsection{QM and MM wrappers}
 
-FLUKE can perform QM, MM, or QMMM calculations via an interface to packages
+LICHEM can perform QM, MM, or QMMM calculations via an interface to packages
 in the user's path. Temporary input files are created for each package and
 the results are collected from the temporary output files. This is a
 relatively inefficient procedure, however, reading and writing input/output
 files is often negligible compared to the computational cost of the QM
 calculation. Currently, calculations can be performed using Gaussian
 \cite{Frisch2009}, PSI4 \cite{Turney2012}, TINKER \cite{}, AMBER \cite{}, and
-LAMMPS \cite{Plimpton1995}. Additional wrappers can be added to FLUKE with
+LAMMPS \cite{Plimpton1995}. Additional wrappers can be added to LICHEM with
 relatively little effort.
 
 \subsection{Types of calculations}
@@ -202,16 +202,16 @@ for calculations where the QM and MM regions are bonded.
 
 \section{Acknowledgements}
 
-The development of FLUKE was supported by funding from the NIH. FLUKE is
+The development of LICHEM was supported by funding from the NIH. LICHEM is
 maintained by the Cisneros research group at Wayne State University.
 
 \chapter{Input}
 
 \section{Command line arguments}
 
-FLUKE can only be invoked from a command line interface. \\
+LICHEM can only be invoked from a command line interface. \\
 
-user:\$ FLUKE -n Ncpus -x xyzfile.xyz -c confile.inp \\
+user:\$ LICHEM -n Ncpus -x xyzfile.xyz -c confile.inp \\
 
 -r regfile.inp -o output.xyz \\
 
@@ -231,7 +231,7 @@ and general simulation options. \\
 
 \section{XYZ input files}
 
-The input structure for FLUKE is a standard XYZ file with a blank comment
+The input structure for LICHEM is a standard XYZ file with a blank comment
 line. \\
 
 N \\
@@ -243,7 +243,7 @@ B  X$_B$  Y$_B$  Z$_B$ \\
 Here N is the number of atoms and (X$_i$,Y$_i$,Z$_i$) is the position of
 particle $i$. Note that the atom types given in the XYZ file need to be the
 atomic symbols from the periodic table, not the MM atom types. Additionally,
-FLUKE reads the XYZ file item-by-item, which means that having additional
+LICHEM reads the XYZ file item-by-item, which means that having additional
 values on a line will cause (silent) errors.
 
 \section{Connectivity input files}
@@ -268,7 +268,7 @@ of an internal check to make sure correct input files were provided.
 The region file contains QMMM regions (QM atoms, pseudo-atoms, boundary atoms,
 and frozen atoms) as well as miscellaneous input needed to define the type
 of calculations that will be performed. This is the most complicated input
-file required by FLUKE and currently the input keywords must be given in the
+file required by LICHEM and currently the input keywords must be given in the
 correct order. The keywords themselves are only guides for making the files
 human readable and only the values after the keywords are read. Blank templates
 of region files are provided in the documentation directory. \\
@@ -277,14 +277,14 @@ The first line of the input file should read: \\
 
 Potential\_type: $<$QM or MM or QMMM$>$ \\
 
-This line tells FLUKE what type of QM and MM input is listed in the lines that
+This line tells LICHEM what type of QM and MM input is listed in the lines that
 follow.
 
 \subsection{General notes}
 
 Input that is not specific to the wrappers is mostly case insensitive,
 however, users may find exceptions to this rule of thumb. Future versions of
-FLUKE will have a more robust input reader. In the mean-time, please report
+LICHEM will have a more robust input reader. In the mean-time, please report
 any bugs that are found.
 
 \subsection{QM input}
@@ -299,7 +299,7 @@ QM\_memory: $<$RAM$>$ $<$MB or GB$>$ \\
 QM\_charge: $<$charge on the QM region$>$ \\
 QM\_spin: $<$multiplicity of the QM region$>$ \\
 
-All of the QM input is read into FLUKE as text, and hence, it must match the
+All of the QM input is read into LICHEM as text, and hence, it must match the
 correct input for the QM package. For example, Gaussian can only read integer
 values for the memory.
 
@@ -311,7 +311,7 @@ the MM wrapper. \\
 MM\_type: $<$TINKER or AMBER or LAMMPS$>$ \\
 Electrostatics: $<$Charges or AMOEBA or Density$>$ \\
 
-All of the MM input is read into FLUKE as text, and hence, it must match the
+All of the MM input is read into LICHEM as text, and hence, it must match the
 correct input for the MM package.
 
 \subsection{QMMM input}
@@ -327,14 +327,14 @@ QM\_spin: $<$multiplicity of the QM region$>$ \\
 MM\_type: $<$TINKER or AMBER or LAMMPS$>$ \\
 Electrostatics: $<$Charges or AMOEBA or Density$>$ \\
 
-All of the QMMM input is read into FLUKE as text, and hence, it must match the
+All of the QMMM input is read into LICHEM as text, and hence, it must match the
 correct input for the QM and MM packages. For example, Gaussian can only read
 integer values for the memory.
 
 \subsection{Simulation input}
 
 Input for the calculation types directly follows the wrapper input. Each type
-of calculation requires slightly different input. FLUKE can perform
+of calculation requires slightly different input. LICHEM can perform
 single-point energies (SP), optimizations (Opt,DFP,ESD,Steep), and
 path-integral Monte Carlo simulations (PIMC). Classical Monte Carlo
 simulations are performed as PIMC simulations with a single bead. Input for
@@ -397,14 +397,14 @@ stationary during optimizations or Monte Carlo simulations. Frozen atoms are
 useful for optimizing small regions of large periodic systems. \\
 
 Note that in pure QM and pure MM simulations, \{Nqm,Npseudo,Nbound\} can all
-be set to zero. This is because these regions are not relevant unless FLUKE is
+be set to zero. This is because these regions are not relevant unless LICHEM is
 performing a QMMM calculation. For all of the regions, the lists of atoms can
 be separated by either spaces or newlines.
 
 \section{File conversion}
 
-While FLUKE does not handle atom typing or structure generation, it is
-possible to use the native input/output functions to create FLUKE input from
+While LICHEM does not handle atom typing or structure generation, it is
+possible to use the native input/output functions to create LICHEM input from
 input used for MM packages. In all cases the converter produces three
 files: xyzfile.xyz connect.inp regions.inp \\
 
@@ -412,17 +412,17 @@ files: xyzfile.xyz connect.inp regions.inp \\
 TINKER XYZ files, TINKER QMMM XYZ files (Q-CHEM), and TINKER XYZ files
 with periodic boundary conditions. \\
 
-user:\$ FLUKE -convert -t TINKER.xyz -k tinker.key ( -p Yes) \\
+user:\$ LICHEM -convert -t TINKER.xyz -k tinker.key ( -p Yes) \\
 
-The -p flag is optional and tells FLUKE to read the lattice constants from
-the second line of the XYZ file. FLUKE can also be used to create TINKER xyz
+The -p flag is optional and tells LICHEM to read the lattice constants from
+the second line of the XYZ file. LICHEM can also be used to create TINKER xyz
 files. \\
 
-user:\$ FLUKE -tinker -x xyzfile.xyz -c connectfile.inp \\
+user:\$ LICHEM -tinker -x xyzfile.xyz -c connectfile.inp \\
 
 A file called "tinkxyz.xyz" will be produced from this conversion. \\
 
-user:\$ FLUKE -GlobalPoles -n Ncpus -x xyzfile.xyz -r regions.inp 
+user:\$ LICHEM -GlobalPoles -n Ncpus -x xyzfile.xyz -r regions.inp 
  -c connect.inp \\
 
 The GlobalPoles flag reads the force field and initial structure, then prints
@@ -432,19 +432,19 @@ the multipoles in the global reference frame. \\
 
 {\textbf{LAMMPS:}} {\color{red}Still in development}
 
-\section{FLUKE output}
+\section{LICHEM output}
 
-Most of the FLUKE output is sent through the c++ std output stream. However,
+Most of the LICHEM output is sent through the c++ std output stream. However,
 trajectories and optimized structures are printed into the file defined
 by the -o flag. In single-point energy calculations, the output XYZ file
 is deleted after the calculation is completed, since the geometry does not
-change during the calculation. FLUKE also leaves some restart files in the
+change during the calculation. LICHEM also leaves some restart files in the
 working directory (e.g. Gaussian checkpoint files, multi-replica XYZ files,
 etc).
 
 \section{Additional input for wrappers}
 
-The FLUKE wrappers automatically look for a couple "extra" input files. These
+The LICHEM wrappers automatically look for a couple "extra" input files. These
 files depend on which wrappers are used in the calculation, however, in most
 cases the files contain force field and pseudopotential information. Some of
 the extra files are detailed below in no particular order and examples can be
@@ -480,7 +480,7 @@ QM\_basis: GEN \\
 GEN is a Gaussian keyword which causes the package to check for extra basis
 set information below the structure. \\
 
-FLUKE automatically tells Gaussian to look for pseudo potentials, however,
+LICHEM automatically tells Gaussian to look for pseudo potentials, however,
 these must be given below the basis set information in the BASIS file. Both
 the basis set and pseudopotential information must be given in Gaussian
 format.
@@ -499,7 +499,7 @@ must be given in NWChem format.
 While restarting incomplete geometry optimizations only requires changing
 the initial structure given with the -x flag, multi-replica simulations
 require structural information for each replica. When a multi-replica
-(PIMC or reaction path) simulation is started FLUKE checks the working
+(PIMC or reaction path) simulation is started LICHEM checks the working
 directory for a restart file named "BeadStartStruct.xyz" which will be used as
 the initial structure. The restart file is similar to a standard XYZ file,
 except all the replicas are merged together (see below).
@@ -525,7 +525,7 @@ information is read from the files given by the -x and -c flags.
 \section{Preface}
 
 The following chapter is intended to serve as a general introduction to
-computational chemistry and the methods used in FLUKE. There are numerous
+computational chemistry and the methods used in LICHEM. There are numerous
 places users can find more detailed and up-to-date discussions of these
 topics. This chapter is only intended to give a broad review of the concepts
 and terminology.
@@ -711,7 +711,7 @@ Efficient SD optimizers use line search algorithms which backtrack to find the
 optimum value of $\alpha$ at step $n$. However, SD optimizations often do not
 converge. \\
 
-The SD algorithm in FLUKE does not use a line search to optimize $\alpha$ at
+The SD algorithm in LICHEM does not use a line search to optimize $\alpha$ at
 each step. Instead, a maximum value of $\alpha$ is given in the input and 
 the optimization starts with $\alpha=0.7\alpha_{max}$. If the QMMM energy
 is decreasing, then the step size increases by 5\% until it reaches
@@ -755,7 +755,7 @@ If the updates satisfy the Wolfe conditions, then the algorithm will converge
 to the correct solution. However, satisfying the Wolfe conditions requires
 a line search algorithm and storing old structures. \\
 
-To keep the FLUKE DFP optimizer simple, the guess inverse Hessian is chosen
+To keep the LICHEM DFP optimizer simple, the guess inverse Hessian is chosen
 to be the identity matrix, which effectively causes the first optimization
 step to be a SD step. As with the SD algorithm, the step size is adjusted 
 based on the progress of the optimizer. Initially, $\alpha=0.05\alpha_{max}$

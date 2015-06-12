@@ -16,6 +16,6 @@ Max_opt_steps: 400
 PBC: No
 QM_atoms: 3
 3 4 5
-Pseudo_atoms: 0
+Pseudobond_atoms: 0
 Boundary_atoms: 0
 Frozen_atoms: 0

@@ -1,13 +1,13 @@
 /*
 
-##############################################################################
-#                                                                            #
-#              FLUKE: Fields Layered Under Kohn-sham Electrons               #
-#                             By: Eric G. Kratz                              #
-#                                                                            #
-##############################################################################
+###############################################################################
+#                                                                             #
+#                 LICHEM: Layered Interacting CHEmical Models                 #
+#                              By: Eric G. Kratz                              #
+#                                                                             #
+###############################################################################
 
- Primary functions and classes for FLUKE. This must be the first cpp
+ Primary functions and classes for LICHEM. This must be the first cpp
  file imported into main().
 
 */
@@ -22,9 +22,16 @@ void PrintFancyTitle()
   cout << "#                                      ";
   cout << "                                       #";
   cout << '\n';
-  cout << "#               ";
-  cout << "FLUKE: Fields Layered Under Kohn-Sham Electrons";
-  cout << "               #";
+  cout << "#                 ";
+  cout << "LICHEM: Layered Interacting CHEmical Models";
+  cout << "                 #";
+  cout << '\n';
+  cout << "#                                      ";
+  cout << "                                       #";
+  cout << '\n';
+  cout << "#                             ";
+  cout << "Symbiotic Chemistry";
+  cout << "                             #";
   cout << '\n';
   cout << "#                                      ";
   cout << "                                       #";
@@ -313,7 +320,7 @@ vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int AtID)
   {
     cerr << "Error: Two pseudo-bonds are connected through boudary atoms!!!";
     cerr << '\n';
-    cerr << " The connections prevent FLUKE from correctly updating";
+    cerr << " The connections prevent LICHEM from correctly updating";
     cerr << " the charges" << '\n' << '\n';
     cerr.flush();
     exit(0);

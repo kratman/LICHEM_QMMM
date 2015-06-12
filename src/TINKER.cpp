@@ -1,13 +1,13 @@
 /*
 
-##############################################################################
-#                                                                            #
-#              FLUKE: Fields Layered Under Kohn-sham Electrons               #
-#                             By: Eric G. Kratz                              #
-#                                                                            #
-##############################################################################
+###############################################################################
+#                                                                             #
+#                 LICHEM: Layered Interacting CHEmical Models                 #
+#                              By: Eric G. Kratz                              #
+#                                                                             #
+###############################################################################
 
- FLUKE wrapper functions for TINKER.
+ LICHEM wrapper functions for TINKER.
 
  Reference for TINKER:
  Ponder, TINKER - Software Tools for Molecular Design
@@ -418,7 +418,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Warn user if no energy was found
     cerr << "Warning: No MM energy found after a calculation!!!";
     cerr << '\n';
-    cerr << " FLUKE will attempt to continue...";
+    cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
     E = HugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
@@ -1046,7 +1046,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     //Warn user if no energy was found
     cerr << "Warning: No MM energy found after a calculation!!!";
     cerr << '\n';
-    cerr << " FLUKE will attempt to continue...";
+    cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
     E = HugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately

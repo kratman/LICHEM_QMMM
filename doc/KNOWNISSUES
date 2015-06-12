@@ -14,7 +14,7 @@ within NWChem will be implemented in the future.
 
 PSI4 interface:
 -PSI4 gradients do not include the contribution from the external field.
-This is not a FLUKE bug, but rather a bug in PSI4. Due to this bug, PSI4 QMMM
+This is not a LICHEM bug, but rather a bug in PSI4. Due to this bug, PSI4 QMMM
 optimizations currently do not work.
 
 TINKER interface:

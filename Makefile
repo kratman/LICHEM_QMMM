@@ -1,6 +1,8 @@
 ###################################################
 #                                                 #
-# FLUKE: Fields Layered Under Kohn-Sham Electrons #
+#   LICHEM: Layered Interacting CHEmical Models   #
+#                                                 #
+#               Symbiotic Chemistry               #
 #                                                 #
 ###################################################
 
@@ -25,13 +27,13 @@ clean:	title delbin compdone
 
 binary:	
 	@echo ""; \
-	echo "### Compiling the FLUKE binary ###"
-	$(CXX) $(CXXFLAGS) ./src/FLUKE.cpp -o FLUKE $(LDFLAGS)
+	echo "### Compiling the LICHEM binary ###"
+	$(CXX) $(CXXFLAGS) ./src/LICHEM.cpp -o LICHEM $(LDFLAGS)
 
 devbin:	
 	@echo ""; \
-	echo "### Compiling the FLUKE development binary ###"
-	$(CXX) $(CXXFLAGS) $(DEVFLAGS) ./src/FLUKE.cpp -o FLUKE $(LDFLAGS)
+	echo "### Compiling the LICHEM development binary ###"
+	$(CXX) $(CXXFLAGS) $(DEVFLAGS) ./src/LICHEM.cpp -o LICHEM $(LDFLAGS)
 
 manual:	
 	@echo ""; \
@@ -47,7 +49,7 @@ manual:
 	$(TEX) manual > doclog.txt; \
 	$(TEX) manual > doclog.txt; \
 	$(TEX) manual > doclog.txt; \
-	mv manual.pdf ../doc/FLUKE_manual.pdf; \
+	mv manual.pdf ../doc/LICHEM_manual.pdf; \
 	rm -f manual.aux manual.bbl manual.blg; \
 	rm -f manual.log manual.out manual.toc; \
 	rm -f doclog.txt; \
@@ -57,16 +59,18 @@ title:
 	@echo ""; \
 	echo "###################################################"; \
 	echo "#                                                 #"; \
-	echo "# FLUKE: Fields Layered Under Kohn-Sham Electrons #"; \
+	echo "#   LICHEM: Layered Interacting CHEmical Models   #"; \
+	echo "#                                                 #"; \
+	echo "#               Symbiotic Chemistry               #"; \
 	echo "#                                                 #"; \
 	echo "###################################################"
 
 stats:	
 	@echo ""; \
         echo "### Source code statistics ###"; \
-	echo "Number of FLUKE source code files:"; \
+	echo "Number of LICHEM source code files:"; \
 	ls -al src/* | wc -l; \
-	echo "Total lenght of FLUKE (lines):"; \
+	echo "Total lenght of LICHEM (lines):"; \
 	cat src/* | wc -l
 
 compdone:	
@@ -76,5 +80,18 @@ compdone:
 
 delbin:	
 	@echo ""; \
+	echo '     ___'; \
+	echo '    |_  |'; \
+	echo '      \ \'; \
+	echo '      |\ \'; \
+	echo '      | \ \'; \
+	echo '      \  \ \'; \
+	echo '       \  \ \'; \
+	echo '        \  \ \       <wrrr vroooom wrrr> '; \
+	echo '         \__\ \________'; \
+	echo '             |_________\'; \
+	echo '             |__________|  ..,  ,.,. .,.,, ,..'; \
+	echo ""; \
+        echo ""; \
 	echo "Removing binary and manual..."; \
-	rm -f FLUKE ./doc/FLUKE_manual.pdf
+	rm -f LICHEM ./doc/LICHEM_manual.pdf

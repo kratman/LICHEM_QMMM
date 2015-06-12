@@ -1,14 +1,15 @@
 /*
 
-##############################################################################
-#                                                                            #
-#              FLUKE: Fields Layered Under Kohn-sham Electrons               #
-#                             By: Eric G. Kratz                              #
-#                                                                            #
-##############################################################################
+###############################################################################
+#                                                                             #
+#                 LICHEM: Layered Interacting CHEmical Models                 #
+#                              By: Eric G. Kratz                              #
+#                                                                             #
+###############################################################################
 
- A set of optimization routines for the QM part of QMMM calculculations. These
- are inefficient, however, they are useful for testing and debugging.
+ A set of optimization routines for the QM part of QMMM calculculations. Some
+ of these may be inefficient, however, they are useful for testing and
+ debugging.
 
  Reference for optimization routines:
  Press et al., Numerical Recipes 2nd Edition, 1997
@@ -189,7 +190,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
 };
 
 //Optimizer functions
-void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
+void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
   //Cartesian steepest descent optimizer
@@ -406,7 +407,7 @@ void FLUKESteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   return;
 };
 
-void FLUKEDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
+void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //A simple DFP optimizer, which is similar to BFGS updating
   //Note: This optimizer does not have a true line search, instead
