@@ -70,7 +70,7 @@ stats:
         echo "### Source code statistics ###"; \
 	echo "Number of LICHEM source code files:"; \
 	ls -al src/* | wc -l; \
-	echo "Total lenght of LICHEM (lines):"; \
+	echo "Total length of LICHEM (lines):"; \
 	cat src/* | wc -l
 
 compdone:	
