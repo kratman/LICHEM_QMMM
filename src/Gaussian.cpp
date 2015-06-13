@@ -7,8 +7,8 @@
 #                                                                             #
 ###############################################################################
 
- LICHEM wrapper functions for Gaussian. These routines are written for g09.
- Note that the external function needs to interface with all MM codes.
+ LICHEM wrapper functions for Gaussian. These routines are written for g09
+ Rev D. Note that the external function needs to call MM codes.
 
  Reference for Gaussian:
  Frisch et al. Gaussian 09 Rev D.01 2009
@@ -74,11 +74,11 @@ void ExternalGaussian(int& argc, char**& argv)
   line >> dummy >> DerType;
   if (DerType == 2)
   {
-    cout << "Error: Second derivatives of the energy were requested!!!";
-    cout << '\n';
-    cout << "Something is wrong.";
-    cout << '\n';
-    cout.flush();
+    cerr << "Error: Second derivatives of the energy were requested!!!";
+    cerr << '\n';
+    cerr << "Something is wrong.";
+    cerr << '\n';
+    cerr.flush();
     exit(0);
   }
   for (int i=0;i<Natoms;i++)
@@ -482,20 +482,26 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     }
   }
   QMlog.close();
+  if (!GradDone)
+  {
+    cerr << "Warning: No forces recovered!!!";
+    cerr << '\n';
+    cerr << " LICHEM will attempt to recover...";
+    cerr << '\n';
+    cerr.flush(); //Print warning immediately
+    //Delete checkpoint
+    call.str("");
+    call << "rm -f QMMM_" << Bead << ".chk";
+    GlobalSys = system(call.str().c_str());
+  }
   //Clean up files
   call.str("");
-  call << "mv QMMM_" << Bead;
-  call << ".chk tmp_" << Bead;
-  call << ".chk && ";
   call << "rm -f ";
   call << "QMMM_" << Bead;
   call << ".log";
   call << " ";
   call << "QMMM_" << Bead;
   call << ".com";
-  call << " && mv tmp_" << Bead;
-  call << ".chk QMMM_" << Bead;
-  call << ".chk";
   GlobalSys = system(call.str().c_str());
   //Return
   Eqm -= Eself;
@@ -948,22 +954,20 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cerr << '\n';
     E = HugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
+    //Delete checkpoint
+    call.str("");
+    call << "rm -f QMMM_" << Bead << ".chk";
+    GlobalSys = system(call.str().c_str());
   }
   ifile.close();
   //Clean up files and save checkpoint file
   call.str("");
-  call << "mv QMMM_" << Bead;
-  call << ".chk tmp_" << Bead;
-  call << ".chk && ";
   call << "rm -f ";
   call << "QMMM_" << Bead;
   call << ".log";
   call << " ";
   call << "QMMM_" << Bead;
   call << ".com";
-  call << " && mv tmp_" << Bead;
-  call << ".chk QMMM_" << Bead;
-  call << ".chk";
   GlobalSys = system(call.str().c_str());
   //Change units
   E -= Eself;
@@ -1187,6 +1191,10 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cerr << '\n';
     E = HugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
+    //Delete checkpoint
+    call.str("");
+    call << "rm -f QMMM_" << Bead << ".chk";
+    GlobalSys = system(call.str().c_str());
   }
   //Calculate new point-charges and return
   GaussianCharges(Struct,QMMMOpts,Bead);

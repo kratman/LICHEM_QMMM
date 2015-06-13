@@ -7,9 +7,9 @@
 #                                                                             #
 ###############################################################################
 
- A set of optimization routines for the QM part of QMMM calculculations. Some
- of these may be inefficient, however, they are useful for testing and
- debugging.
+ A set of optimization routines for the QM part of QMMM calculculations.
+ MM optimizations are performed with the native optimizers in the MM
+ wrappers.
 
  Reference for optimization routines:
  Press et al., Numerical Recipes 2nd Edition, 1997

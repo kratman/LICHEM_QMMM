@@ -7,8 +7,7 @@
 #                                                                             #
 ###############################################################################
 
- Primary functions and classes for LICHEM. This must be the first cpp
- file imported into main().
+ Primary functions and classes for LICHEM.
 
 */
 
