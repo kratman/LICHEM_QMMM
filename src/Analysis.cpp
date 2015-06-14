@@ -45,7 +45,7 @@ void BurstTraj(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   //Open new split trajectory file
   call.str("");
   call << "BurstStruct.xyz";
-  ct = 1; //Start counting at the second file
+  ct = 0; //Start counting at the second file
   while (CheckFile(call.str()))
   {
     //Avoids overwriting files
@@ -119,7 +119,7 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
   #pragma omp barrier
   //Calculate covariance matrix
   CoVar = A.transpose()*B;
-  //Compute rotation matrix
+  //Compute rotation matrix and identity matrix
   JacobiSVD<MatrixXd> SVDMat(CoVar,ComputeFullU|ComputeFullV);
   MatrixXd DetMat = SVDMat.matrixV()*SVDMat.matrixU().transpose();
   int SignVal = DetMat.determinant();
@@ -141,6 +141,7 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
     Ident(i,i) = 1;
   }
   Ident(2,2) *= SignVal;
+  //Find optimal rotation matrix
   RotMat = SVDMat.matrixV()*Ident*SVDMat.matrixU().transpose();
   //Rotate matrix A
   A *= RotMat;

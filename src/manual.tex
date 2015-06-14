@@ -561,7 +561,7 @@ and
 \end{equation}
 where $F$ is the force, $V$ is the potential energy, $\textbf{r}$ is a vector
 representing the positions of all atoms in the system, and $\Delta t$ is the
-time interval between time step $n$ and $n+1$. The natural ensemble for
+time interval between step $n$ and $n+1$. The natural ensemble for
 molecular dynamics is the microcanonical ensemble (NVE), where the number of
 particles and energy are conserved inside a constant volume simulation box.
 Although the NVE simulations are the native result of propagating Newton's
@@ -709,7 +709,7 @@ particle moves during step $n$. \\
 
 Efficient SD optimizers use line search algorithms which backtrack to find the
 optimum value of $\alpha$ at step $n$. However, SD optimizations often do not
-converge. \\
+converge even with optimal step sizes. \\
 
 The SD algorithm in LICHEM does not use a line search to optimize $\alpha$ at
 each step. Instead, a maximum value of $\alpha$ is given in the input and 
@@ -731,7 +731,7 @@ mathematically related and can theoretically start from any initial guess of
 the inverse Hessian, $H^{-1}$. \\
 
 The DFP algorithm can update the inverse Hessian using the forces ($F_n$), the
-current Hessian, and the optimization vector ($p_n$). The optimization
+current inverse Hessian, and the optimization vector ($p_n$). The optimization
 algorithm is given by
 
 \begin{equation}

@@ -80,6 +80,7 @@ compdone:
 
 delbin:	
 	@echo ""; \
+	if grep -q "Jokes = 1" src/QMMM_headers.h; then \
 	echo '     ___'; \
 	echo '    |_  |'; \
 	echo '      \ \'; \
@@ -92,6 +93,7 @@ delbin:
 	echo '             |_________\'; \
 	echo '             |__________|  ..,  ,.,. .,.,, ,..'; \
 	echo ""; \
+ 	fi; \
         echo ""; \
 	echo "Removing binary and manual..."; \
 	rm -f LICHEM ./doc/LICHEM_manual.pdf

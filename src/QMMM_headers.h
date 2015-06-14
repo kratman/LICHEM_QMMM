@@ -42,7 +42,7 @@ using namespace Eigen;
 using namespace std;
 
 //Compile options
-const bool Jokes = 1; //Print humorous comments
+const bool Jokes = 0; //Print humorous comments
 const bool Isotrop = 1; //Force isotropic expansion in NPT Monte Carlo
 const double StepMin = 0.01; //Minimum Monte Carlo step size
 const double StepMax = 1.0; //Maximum Monte Carlo step size
@@ -317,16 +317,6 @@ void ExtractTINKpoles(vector<QMMMAtom>&,int);
 
 void FindTINKERClasses(vector<QMMMAtom>&);
 
-void LICHEMDFP(vector<QMMMAtom>&,QMMMSettings&,int);
-
-void LICHEMErrorChecker(QMMMSettings&);
-
-void LICHEMPrintSettings(QMMMSettings&);
-
-void LICHEMSteepest(vector<QMMMAtom>&,QMMMSettings&,int);
-
-void LICHEM2TINK(int&,char**&);
-
 void GaussianCharges(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double GaussianEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
@@ -354,6 +344,16 @@ double LAMMPSEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 double LAMMPSForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
 double LAMMPSOpt(vector<QMMMAtom>&,QMMMSettings&,int);
+
+void LICHEMDFP(vector<QMMMAtom>&,QMMMSettings&,int);
+
+void LICHEMErrorChecker(QMMMSettings&);
+
+void LICHEMPrintSettings(QMMMSettings&);
+
+void LICHEMSteepest(vector<QMMMAtom>&,QMMMSettings&,int);
+
+void LICHEM2TINK(int&,char**&);
 
 bool MCMove(vector<QMMMAtom>&,QMMMSettings&,double&);
 
