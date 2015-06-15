@@ -1,14 +1,17 @@
 /*
 
-##############################################################################
-#                                                                            #
-#              FLUKE: Fields Layered Under Kohn-sham Electrons               #
-#                             By: Eric G. Kratz                              #
-#                             and Alice Walker                               #
-#                                                                            #
-##############################################################################
+###############################################################################
+#                                                                             #
+#                 LICHEM: Layered Interacting CHEmical Models                 #
+#                              By: Eric G. Kratz                              #
+#                              and Alice Walker                               #
+#                                                                             #
+###############################################################################
 
- Reaction path and transition state search functions for FLUKE.
+ Reaction path and transition state search functions for LICHEM.
+
+ References for NEB:
+  
 
 */
 
