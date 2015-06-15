@@ -2,7 +2,7 @@
 #                                                 #
 #   LICHEM: Layered Interacting CHEmical Models   #
 #                                                 #
-#               Symbiotic Chemistry               #
+#        Symbiotic Computational Chemistry        #
 #                                                 #
 ###################################################
 

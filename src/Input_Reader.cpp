@@ -27,7 +27,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     cout << "-r Regions.inp -o Output.xyz" << '\n';
     cout << '\n';
     cout << "Use -h or --help for detailed instructions.";
-    cout << '\n';
+    cout << '\n' << '\n';
     cout.flush();
     exit(0);
   }
@@ -75,7 +75,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
       cout << "-r Regions.inp -o Output.xyz" << '\n';
       cout << '\n';
       cout << "Use -h or --help for detailed instructions.";
-      cout << '\n';
+      cout << '\n' << '\n';
       cout.flush();
       exit(0);
     }
@@ -149,7 +149,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
         cout << "-r Regions.inp -o Output.xyz" << '\n';
         cout << '\n';
         cout << "Use -h or --help for detailed instructions.";
-        cout << '\n';
+        cout << '\n' << '\n';
         cout.flush();
         exit(0);
       }
@@ -164,7 +164,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     cout << "-r Regions.inp -o Output.xyz" << '\n';
     cout << '\n';
     cout << "Use -h or --help for detailed instructions.";
-    cout << '\n';
+    cout << '\n' << '\n';
     cout.flush();
     exit(0);
   }

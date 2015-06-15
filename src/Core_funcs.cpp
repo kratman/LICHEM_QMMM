@@ -28,9 +28,9 @@ void PrintFancyTitle()
   cout << "#                                      ";
   cout << "                                       #";
   cout << '\n';
-  cout << "#                             ";
-  cout << "Symbiotic Chemistry";
-  cout << "                             #";
+  cout << "#                      ";
+  cout << "Symbiotic Computational Chemistry";
+  cout << "                      #";
   cout << '\n';
   cout << "#                                      ";
   cout << "                                       #";
