@@ -120,7 +120,11 @@ The compile script produces both the documentation and the binary. \\
 
 user:\$ make install \\
 
-Although, if you are reading this then you already have the documentation.
+Although, if you are reading this then you already have the documentation. \\
+
+For development, debugging, or testing an alternate binary can be compiled. \\
+
+user:$ make Dev
 
 \section{Capabilities}
 
@@ -211,7 +215,7 @@ maintained by the Cisneros research group at Wayne State University.
 
 LICHEM can only be invoked from a command line interface. \\
 
-user:\$ LICHEM -n Ncpus -x xyzfile.xyz -c confile.inp \\
+user:\$ lichem -n Ncpus -x xyzfile.xyz -c confile.inp \\
 
 -r regfile.inp -o output.xyz \\
 
@@ -412,17 +416,17 @@ files: xyzfile.xyz connect.inp regions.inp \\
 TINKER XYZ files, TINKER QMMM XYZ files (Q-CHEM), and TINKER XYZ files
 with periodic boundary conditions. \\
 
-user:\$ LICHEM -convert -t TINKER.xyz -k tinker.key ( -p Yes) \\
+user:\$ lichem -convert -t TINKER.xyz -k tinker.key ( -p Yes) \\
 
 The -p flag is optional and tells LICHEM to read the lattice constants from
 the second line of the XYZ file. LICHEM can also be used to create TINKER xyz
 files. \\
 
-user:\$ LICHEM -tinker -x xyzfile.xyz -c connectfile.inp \\
+user:\$ lichem -tinker -x xyzfile.xyz -c connectfile.inp \\
 
 A file called "tinkxyz.xyz" will be produced from this conversion. \\
 
-user:\$ LICHEM -GlobalPoles -n Ncpus -x xyzfile.xyz -r regions.inp 
+user:\$ lichem -GlobalPoles -n Ncpus -x xyzfile.xyz -r regions.inp 
  -c connect.inp \\
 
 The GlobalPoles flag reads the force field and initial structure, then prints

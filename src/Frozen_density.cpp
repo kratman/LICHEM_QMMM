@@ -13,4 +13,7 @@
  Reference for GEM:
  
 
+ Reference for conversion to point-charges:
+ 
+
 */

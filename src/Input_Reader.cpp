@@ -23,7 +23,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     //Escape if there are no arguments
     cout << '\n';
     cout << "Missing arguments..." << '\n' << '\n';
-    cout << "Usage: LICHEM -n Ncpus -x Input.xyz -c Connectivity.inp ";
+    cout << "Usage: lichem -n Ncpus -x Input.xyz -c Connectivity.inp ";
     cout << "-r Regions.inp -o Output.xyz" << '\n';
     cout << '\n';
     cout << "Use -h or --help for detailed instructions.";
@@ -71,7 +71,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
       //Escape if there are missing arguments
       cout << '\n';
       cout << "Odd number of arguments..." << '\n' << '\n';
-      cout << "Usage: LICHEM -n Ncpus -x Input.xyz -c Connectivity.inp ";
+      cout << "Usage: lichem -n Ncpus -x Input.xyz -c Connectivity.inp ";
       cout << "-r Regions.inp -o Output.xyz" << '\n';
       cout << '\n';
       cout << "Use -h or --help for detailed instructions.";
@@ -88,7 +88,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     {
       //Print helpful information and exit
       cout << '\n';
-      cout << "Usage: LICHEM -n Ncpus -x Input.xyz -c Connectivity.inp ";
+      cout << "Usage: lichem -n Ncpus -x Input.xyz -c Connectivity.inp ";
       cout << "-r Regions.inp -o Output.xyz" << '\n';
       cout << '\n';
       cout << "Command line arguments:" << '\n' << '\n';
@@ -145,7 +145,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
       {
         cout << '\n';
         cout << "Unrecognized flag..." << '\n' << '\n';
-        cout << "Usage: LICHEM -n Ncpus -x Input.xyz -c Connectivity.inp ";
+        cout << "Usage: lichem -n Ncpus -x Input.xyz -c Connectivity.inp ";
         cout << "-r Regions.inp -o Output.xyz" << '\n';
         cout << '\n';
         cout << "Use -h or --help for detailed instructions.";
@@ -160,7 +160,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     //Escape if there are too few arguments
     cout << '\n';
     cout << "Missing arguments..." << '\n' << '\n';
-    cout << "Usage: LICHEM -n Ncpus -x Input.xyz -c Connectivity.inp ";
+    cout << "Usage: lichem -n Ncpus -x Input.xyz -c Connectivity.inp ";
     cout << "-r Regions.inp -o Output.xyz" << '\n';
     cout << '\n';
     cout << "Use -h or --help for detailed instructions.";

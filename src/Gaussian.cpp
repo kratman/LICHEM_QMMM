@@ -1080,7 +1080,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ExtCPUs = Ncpus-2;
   }
   call << '\n';
-  call << "#P " << "external=\"LICHEM -GauExtern ";
+  call << "#P " << "external=\"lichem -GauExtern ";
   call << "QMMMExt"; //Just the stub
   call << "_" << Bead;
   call << " -n " << ExtCPUs;

@@ -28,12 +28,12 @@ clean:	title delbin compdone
 binary:	
 	@echo ""; \
 	echo "### Compiling the LICHEM binary ###"
-	$(CXX) $(CXXFLAGS) ./src/LICHEM.cpp -o LICHEM $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) ./src/LICHEM.cpp -o lichem $(LDFLAGS)
 
 devbin:	
 	@echo ""; \
 	echo "### Compiling the LICHEM development binary ###"
-	$(CXX) $(CXXFLAGS) $(DEVFLAGS) ./src/LICHEM.cpp -o LICHEM $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(DEVFLAGS) ./src/LICHEM.cpp -o lichem $(LDFLAGS)
 
 manual:	
 	@echo ""; \
@@ -96,4 +96,4 @@ delbin:
  	fi; \
         echo ""; \
 	echo "Removing binary and manual..."; \
-	rm -f LICHEM ./doc/LICHEM_manual.pdf
+	rm -f lichem ./doc/LICHEM_manual.pdf
