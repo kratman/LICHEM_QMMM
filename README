@@ -6,7 +6,7 @@ A QMMM interface for polarizable force fields
 This package is designed to be an open source (GPLv3) interface between QM
 and MM software so that QMMM calculations can be performed with polarizable
 and frozen density force fields. Functionality is also present for standard
-point-charge based force fields.
+point-charge based force fields, pure MM, and pure QM calculations.
 
 Available calculations: single-point energies, optimized geometries, classical
 molecular dynamics, classical Monte Carlo, path-integral Monte Carlo, and
@@ -44,4 +44,8 @@ Default: -I/usr/include/eigen3/
 The Makefile produces both the documentation and the binary.
 
 user:$ make install
+
+For development, debugging, or testing an alternate binary can be compiled.
+
+user:$ make Dev
 
