@@ -69,16 +69,16 @@ Int=UltraFine SCF=(YQC,Big,Direct) \\
 
 Ultra-fine integrals and quadratic convergence (YQC) are probably overkill for
 most QM calculations, however, these options assure that difficult cases will
-converge. Additionally, the YQC and "Big" options are helpful for larger
-systems, but they are not disabled for small systems. Most of the wrappers
-contain assumptions that the QMMM calculations will be difficult to simulate
-and quite large. These sorts of options ensure that LICHEM will work on all
-systems without requiring the user to be an expert with the QM and MM
-software. \\
+converge. Additionally, the "Direct", YQC, and "Big" options are helpful for
+larger systems, but they are not disabled for small systems. Most of the
+wrappers contain assumptions that the QMMM calculations will be large and
+quite difficult to simulate. These sorts of options ensure that LICHEM will
+work on all systems without requiring the user to be an expert with the QM and
+MM software. \\
 
 LICHEM should be tested with extremely difficult systems. During the early
 stages of the development, test systems with highly distorted structures were
-employed to make sure that crashing the software was difficult.
+employed to make sure that crashing the software was rare.
 
 A simple way to avoid modifying the QM and MM packages is to search for
 iterative or perturbative approximations for the QMMM equations. This is

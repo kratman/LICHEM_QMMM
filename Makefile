@@ -61,7 +61,7 @@ title:
 	echo "#                                                 #"; \
 	echo "#   LICHEM: Layered Interacting CHEmical Models   #"; \
 	echo "#                                                 #"; \
-	echo "#               Symbiotic Chemistry               #"; \
+	echo "#        Symbiotic Computational Chemistry        #"; \
 	echo "#                                                 #"; \
 	echo "###################################################"
 
