@@ -245,6 +245,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << "QMMM_" << Bead << ".log";
   ifile.open(call.str().c_str(),ios_base::in);
   bool QMfinished = 0;
+  bool GradDone = 0;
   while (!ifile.eof())
   {
     stringstream line;
@@ -267,6 +268,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
       line >> dummy >> dummy;
       if (dummy == "gradient")
       {
+        GradDone = 1; //Not grad school, that lasts forever
         getline(ifile,dummy); //Clear junk
         for (int i=0;i<(Nqm+Npseudo);i++)
         {
@@ -325,6 +327,14 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
     E = HugeNum; //Large number to reject step
+    cerr.flush(); //Print warning immediately
+  }
+  if (!GradDone)
+  {
+    cerr << "Warning: No forces recovered!!!";
+    cerr << '\n';
+    cerr << " LICHEM will attempt to recover...";
+    cerr << '\n';
     cerr.flush(); //Print warning immediately
   }
   //Clean up files
