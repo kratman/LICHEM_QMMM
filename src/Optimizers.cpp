@@ -916,9 +916,11 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
     Print_traj(Struct,traj,QMMMOpts);
     call.copyfmt(cout); //Save settings
     cout << setprecision(16);
-    cout << " | Opt. step: ";
-    cout << stepct << " | Energy: ";
-    cout << SumE << " eV" << '\n';
+    cout << " | Step: " << stepct;
+    cout << " | Simulation time: ";
+    cout << (stepct*QMMMOpts.dt*QMMMOpts.Nsteps/1000);
+    cout << " ps | Energy: " << SumE;
+    cout << " eV" << '\n';
     cout.copyfmt(call); //Replace settings
     cout.flush();
   }
