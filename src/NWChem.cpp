@@ -10,7 +10,7 @@
  LICHEM wrapper functions for NWChem.
 
  Reference for NWChem:
- Valiev et al. Comput. Phys. Commun. 181, 1477, (2010)
+ Valiev et al., Comput. Phys. Commun., 181, 1477, (2010)
 
 */
 

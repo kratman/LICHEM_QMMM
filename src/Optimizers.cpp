@@ -12,7 +12,7 @@
  wrappers.
 
  Reference for optimization routines:
- Press et al., Numerical Recipes 2nd Edition, 1997
+ Press et al., Numerical Recipes 2nd Edition, (1997)
 
 */
 

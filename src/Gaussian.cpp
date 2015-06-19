@@ -11,7 +11,7 @@
  Rev D. Note that the external function needs to call MM codes.
 
  Reference for Gaussian:
- Frisch et al. Gaussian 09 Rev D.01 2009
+ Frisch et al., Gaussian 09 Rev D.01, (2009)
 
 */
 

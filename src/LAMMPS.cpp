@@ -10,7 +10,7 @@
  LICHEM wrapper functions for LAMMPS.
 
  Reference for LAMMPS:
- Plimpton, Steve J. Comp. Phys. 1, 117, 1, 1995
+ Plimpton, Steve, J. Comp. Phys., 1, 117, 1, (1995)
 
 */
 

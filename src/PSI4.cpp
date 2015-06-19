@@ -10,7 +10,7 @@
  LICHEM wrapper functions for PSI4.
 
  Reference for PSI4:
- Turney et al. WIREs Comp. Mol. Sci. 2, 4, 556, 2012
+ Turney et al., WIREs Comp. Mol. Sci., 2, 4, 556, (2012)
 
 */
 

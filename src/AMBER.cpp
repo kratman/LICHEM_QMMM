@@ -10,7 +10,7 @@
  LICHEM wrapper functions for AMBER.
 
  Reference for AMBER:
- Case et al. AMBER 14, 2014
+ Case et al., AMBER 14, (2015)
 
 */
 
