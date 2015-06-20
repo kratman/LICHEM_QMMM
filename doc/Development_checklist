@@ -8,7 +8,7 @@ Force-field wrapper timeline and checklist:
 QMMM boundry timeline and checklist:
  Non-bonded: Done
  Pseudo-bond: Done
- Frozen density: Future
+ Frozen density: In progress
 
 Simulation mode timeline and checklist:
  Single-point energy: Done

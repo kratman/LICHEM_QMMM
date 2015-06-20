@@ -341,9 +341,11 @@ Input for the calculation types directly follows the wrapper input. Each type
 of calculation requires slightly different input. LICHEM can perform
 single-point energies (SP), optimizations (Opt,DFP,ESD,Steep), and
 path-integral Monte Carlo simulations (PIMC). Classical Monte Carlo
-simulations are performed as PIMC simulations with a single bead. Input for
-all calculation types are documented below. Synonyms for the simulation
-keywords are given in parentheses. \\
+simulations are performed as PIMC simulations with a single bead. \\
+
+A description of the methods are given in Chapter \ref{chap:Theory} and the
+input for all calculation types are documented below. Synonyms for the
+simulation keywords are given in parentheses. \\
 
 Calculation\_type: Energy (or SP) \\
 
@@ -770,6 +772,26 @@ $\alpha=0.02\alpha_{max}$. This algorithm will not always satisfy the Wolfe
 conditions, however, it will not violate the conditions for long before a
 new Hessian is constructed.
 
+\subsection{Ensemble steepest descent}
+
+In QMMM simulations (see section \ref{sec:QMMMsim}) the QM and MM atoms are
+optimized independently. The separation of the optimizations can also allow
+the thermodynamic ensemble to be partially sampled. The ensemble steepest
+descent (ESD) method performs a SD optimization on the QM atoms while running
+molecular dynamics. \\
+
+The QM SD minimization is performed in essentially the same manner as described
+above, except that after each step $N$ MM MD steps are performed. If $N=1$,
+the ESD method is similar to the Verlet algorithm with the velocities of the
+QM atoms set to zero each time step. Effectively, the MM atoms are moving in
+the NVT ensemble at a finite temperature, while the QM atoms are at zero
+Kelvin. \\
+
+The goal of an ESD simulation is to find a thermodynamic average of the QMMM
+energy by taking snapshots of the MM environment around the QM region. If the
+initial structure is near the minimum of the QMMM potential, then the QM
+atoms should stay near the minimum while the MM atoms sample phase space.
+
 \subsection{Nudged elastic band}
 
 {\color{red}Comming soon...}
@@ -1122,6 +1144,7 @@ where $C_6$ is an emprical parameter, $f(R_{ij})$ is a damping function, and
 $R_{ij}$ is the distance between atoms $i$ and $j$.
 
 \section{QMMM}
+ \label{sec:QMMMSim}
 
 \begin{figure}[hbt]
  \centering
@@ -1328,12 +1351,12 @@ acceptance probability is given by
 The path-integral total energy is slightly different from the effective
 potential.
 \begin{equation}
- \label{eq:pitotal}
+ \label{eq:PItotal}
  E_{pi} = \frac{3N_aN_p}{2\beta}-E_{spring}
           +\frac{1}{N_p}\sum_i^{N_p} E_{pot,i} \; ,
 \end{equation}
 where $E_{pi}$ is the total energy. The first two terms in Eq.\
-\ref{eq:pitotal} represent the classical kinetic energy for all particles and
+\ref{eq:PItotal} represent the classical kinetic energy for all particles and
 the amount of kinetic energy absorbed by centroid harmonic bonds.
 
 \subsection{Ergodicity}
