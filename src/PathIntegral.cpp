@@ -5,6 +5,8 @@
 #                 LICHEM: Layered Interacting CHEmical Models                 #
 #                              By: Eric G. Kratz                              #
 #                                                                             #
+#                      Symbiotic Computational Chemistry                      #
+#                                                                             #
 ###############################################################################
 
  Path integral functions using QM, MM, and QMMM energies. Calls to wrappers

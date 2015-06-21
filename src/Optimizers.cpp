@@ -5,6 +5,8 @@
 #                 LICHEM: Layered Interacting CHEmical Models                 #
 #                              By: Eric G. Kratz                              #
 #                                                                             #
+#                      Symbiotic Computational Chemistry                      #
+#                                                                             #
 ###############################################################################
 
  A set of optimization routines for the QM part of QMMM calculculations.

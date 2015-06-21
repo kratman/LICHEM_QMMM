@@ -5,6 +5,8 @@
 #                 LICHEM: Layered Interacting CHEmical Models                 #
 #                              By: Eric G. Kratz                              #
 #                                                                             #
+#                      Symbiotic Computational Chemistry                      #
+#                                                                             #
 ###############################################################################
 
  Primary functions and classes for LICHEM.

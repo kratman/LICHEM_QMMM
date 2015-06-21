@@ -5,6 +5,8 @@
 #                 LICHEM: Layered Interacting CHEmical Models                 #
 #                              By: Eric G. Kratz                              #
 #                                                                             #
+#                      Symbiotic Computational Chemistry                      #
+#                                                                             #
 ###############################################################################
 
  Routines for reading and checking the input for LICHEM.

@@ -7,8 +7,7 @@
 #                                                                            #
 ##############################################################################
 
- Headers and globals for LICHEM. This must be the first file
- imported into main().
+ Headers and globals for LICHEM.
 
 */
 

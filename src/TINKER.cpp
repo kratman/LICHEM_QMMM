@@ -5,6 +5,8 @@
 #                 LICHEM: Layered Interacting CHEmical Models                 #
 #                              By: Eric G. Kratz                              #
 #                                                                             #
+#                      Symbiotic Computational Chemistry                      #
+#                                                                             #
 ###############################################################################
 
  LICHEM wrapper functions for TINKER.

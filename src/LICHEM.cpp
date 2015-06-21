@@ -5,6 +5,8 @@
 #                 LICHEM: Layered Interacting CHEmical Models                 #
 #                              By: Eric G. Kratz                              #
 #                                                                             #
+#                      Symbiotic Computational Chemistry                      #
+#                                                                             #
 ###############################################################################
 
  LICHEM is licensed under GPLv3, for more information see GPL_LICENSE
@@ -62,6 +64,14 @@ int main(int argc, char* argv[])
   LICHEMErrorChecker(QMMMOpts);
   LICHEMPrintSettings(QMMMOpts);
   //End of section
+
+  /*
+    NB: All optional simulation types should be wrapped in comments and
+    else-if statements. The first comment should define what calculation is
+    going to be performed, then the simulation should be enclosed in an
+    else-if statement. After the else-if, an "//End of section" comment
+    should be added to mark where the next simulation type begins.
+  */
 
   //Calculate single-point energy
   if (SinglePoint)
@@ -136,7 +146,7 @@ int main(int argc, char* argv[])
   //End of section
 
   //Run Monte Carlo
-  if (PIMCSim)
+  else if (PIMCSim)
   {
     //Adjust probabilities
     if (Natoms == 1)
@@ -292,7 +302,7 @@ int main(int argc, char* argv[])
   //End of section
 
   //Optimize structure
-  if (OptSim)
+  else if (OptSim)
   {
     vector<Coord> Forces; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
@@ -414,7 +424,7 @@ int main(int argc, char* argv[])
   //End of section
 
   //Steepest descent optimization
-  if (SteepSim)
+  else if (SteepSim)
   {
     vector<Coord> Forces; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
@@ -519,7 +529,7 @@ int main(int argc, char* argv[])
   //End of section
 
   //DFP minimization
-  if (DFPSim)
+  else if (DFPSim)
   {
     vector<Coord> Forces; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
@@ -624,7 +634,7 @@ int main(int argc, char* argv[])
   //End of section
 
   //Ensemble minimization
-  if (ESDSim)
+  else if (ESDSim)
   {
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
@@ -689,7 +699,7 @@ int main(int argc, char* argv[])
   //End of section
 
   //Ensemble NEB simulation
-  if (ENEBSim)
+  else if (ENEBSim)
   {
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
@@ -698,6 +708,16 @@ int main(int argc, char* argv[])
     //Finish output
     cout << '\n';
     cout << "Optimization complete.";
+    cout << '\n' << '\n';
+    cout.flush();
+  }
+  //End of section
+
+  //Inform the user if no simulations were performed
+  else
+  {
+    cout << "Nothing was done..." << '\n';
+    cout << "Check the simulation type in " << regfilename;
     cout << '\n' << '\n';
     cout.flush();
   }
