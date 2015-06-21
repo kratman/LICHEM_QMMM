@@ -6,6 +6,8 @@
 #                              By: Eric G. Kratz                              #
 #                              and Alice Walker                               #
 #                                                                             #
+#                      Symbiotic Computational Chemistry                      #
+#                                                                             #
 ###############################################################################
 
  Reaction path and transition state search functions for LICHEM.
