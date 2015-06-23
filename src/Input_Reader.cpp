@@ -550,6 +550,41 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
   }
+  if ((dummy == "NEB") or (dummy == "neb"))
+  {
+    //Read energy minimization options for ensemble NEB
+    NEBSim = 1;
+    regionfile >> dummy >> QMMMOpts.Nbeads;
+    regionfile >> dummy >> QMMMOpts.StepScale;
+    regionfile >> dummy >> QMMMOpts.MaxStep;
+    regionfile >> dummy >> QMMMOpts.MaxOptSteps;
+    regionfile >> dummy >> QMMMOpts.Kspring;
+    if ((QMMMOpts.Nbeads%2) != 1)
+    {
+      //The number of beads must be odd
+      QMMMOpts.Nbeads += 1;
+      cerr << "Warning: The number of replicas should be odd.";
+      cerr << '\n';
+      cerr << " Starting calculations with " << QMMMOpts.Nbeads;
+      cerr << " beads.";
+      cerr << '\n' << '\n';
+      cerr.flush();
+    }
+    for (int i=0;i<Natoms;i++)
+    {
+      //Create reaction-path beads
+      for (int j=0;j<(QMMMOpts.Nbeads-1);j++)
+      {
+        //Create replicas
+        Coord temp = Struct[i].P[0];
+        Struct[i].P.push_back(temp);
+        Mpole temp2 = Struct[i].MP[0];
+        Struct[i].MP.push_back(temp2);
+        OctCharges temp3 = Struct[i].PC[0];
+        Struct[i].PC.push_back(temp3);
+      }
+    }
+  }
   if ((dummy == "ESD") or (dummy == "esd") or
      (dummy == "EnsembleSD") or (dummy == "ensembesd"))
   {
@@ -563,8 +598,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.tautemp;
     regionfile >> dummy >> QMMMOpts.Nsteps;
   }
-  if ((dummy == "ENEB") or (dummy == "NEB") or
-     (dummy == "eneb") or (dummy == "neb"))
+  if ((dummy == "ENEB") or (dummy == "eneb"))
   {
     //Read energy minimization options for ensemble NEB
     ENEBSim = 1;

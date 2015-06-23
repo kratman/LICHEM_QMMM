@@ -633,6 +633,130 @@ int main(int argc, char* argv[])
   }
   //End of section
 
+  //NEB optimization
+  else if (NEBSim)
+  {
+    vector<Coord> Forces; //Dummy array needed for convergence tests
+    int optct = 0; //Counter for optimization steps
+    //Print initial structure
+    Print_traj(Struct,outfile,QMMMOpts);
+    //Calculate initial energies
+    for (int p=0;p<QMMMOpts.Nbeads;p++)
+    {
+      SumE = 0; //Clear old energies
+      //Calculate QM energy
+      if (Gaussian == 1)
+      {
+        int tstart = (unsigned)time(0);
+        SumE += GaussianEnergy(Struct,QMMMOpts,p);
+        QMTime += (unsigned)time(0)-tstart;
+      }
+      if (PSI4 == 1)
+      {
+        int tstart = (unsigned)time(0);
+        SumE += PSIEnergy(Struct,QMMMOpts,p);
+        QMTime += (unsigned)time(0)-tstart;
+        //Clean up annoying useless files
+        GlobalSys = system("rm -f psi.*");
+      }
+      if (NWChem == 1)
+      {
+        int tstart = (unsigned)time(0);
+        SumE += NWChemEnergy(Struct,QMMMOpts,p);
+        QMTime += (unsigned)time(0)-tstart;
+      }
+      //Calculate MM energy
+      if (TINKER == 1)
+      {
+        int tstart = (unsigned)time(0);
+        SumE += TINKEREnergy(Struct,QMMMOpts,p);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      if (AMBER == 1)
+      {
+        int tstart = (unsigned)time(0);
+        SumE += AMBEREnergy(Struct,QMMMOpts,p);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      if (LAMMPS == 1)
+      {
+        int tstart = (unsigned)time(0);
+        SumE += LAMMPSEnergy(Struct,QMMMOpts,p);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      stringstream call;
+      call.copyfmt(cout); //Save settings
+      cout << "   Bead: ";
+      cout << p << " | Energy: ";
+      cout << setprecision(12) << SumE << " eV";
+      cout << '\n';
+      cout.flush(); //Print progress
+      cout.copyfmt(call); //Replace settings
+      //Copy checkpoint data to speed up first step
+      if (p != (QMMMOpts.Nbeads-1))
+      {
+        if (Gaussian == 1)
+        {
+          call.str("");
+          call << "cp QMMM_" << (p);
+          call << ".chk";
+          call << " QMMM_" << (p+1);
+          call << ".chk";
+          GlobalSys = system(call.str().c_str());
+        }
+      }
+    }
+    //Run optimization
+    bool OptDone = 0;
+    while (!OptDone)
+    {
+      //Copy structure
+      double SavedStepSize = QMMMOpts.StepScale; //Save old step size
+      OldStruct = Struct;
+      //Run MM optimization
+      for (int p=0;p<QMMMOpts.Nbeads;p++)
+      {
+        if (TINKER == 1)
+        {
+          int tstart = (unsigned)time(0);
+          SumE = TINKEROpt(Struct,QMMMOpts,p);
+          MMTime += (unsigned)time(0)-tstart;
+        }
+        if (AMBER == 1)
+        {
+          int tstart = (unsigned)time(0);
+          SumE = AMBEROpt(Struct,QMMMOpts,p);
+          MMTime += (unsigned)time(0)-tstart;
+        }
+        if (LAMMPS == 1)
+        {
+          int tstart = (unsigned)time(0);
+          SumE = LAMMPSOpt(Struct,QMMMOpts,p);
+          MMTime += (unsigned)time(0)-tstart;
+        }
+        if (QMMM)
+        {
+          cout << "    MM optimization complete.";
+          cout << '\n' << '\n';
+          cout.flush();
+        }
+      }
+      //Run QM optimization
+      LICHEMNEB(Struct,QMMMOpts);
+      //Print Optimized geometry
+      Print_traj(Struct,outfile,QMMMOpts);
+      //Check convergence
+      optct += 1;
+      OptDone = OptConverged(Struct,OldStruct,Forces,optct,QMMMOpts,0,0);
+      QMMMOpts.StepScale = SavedStepSize;
+    }
+    cout << '\n';
+    cout << "Optimization complete.";
+    cout << '\n' << '\n';
+    cout.flush();
+  }
+  //End of section
+
   //Ensemble minimization
   else if (ESDSim)
   {
