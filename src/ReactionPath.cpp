@@ -29,6 +29,13 @@ bool PathConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
 };
 
 //Path optimization routines
+void LICHEMNEB(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
+{
+  //Cartesian NEB optimizer which runs sequentially
+  
+  return;
+};
+
 void EnsembleNEB(vector<QMMMAtom>& Struct, fstream& traj,
      QMMMSettings& QMMMOpts)
 {
