@@ -217,6 +217,11 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
       ofile << '\n';
     }
+    if (Struct[i].BAregion)
+    {
+      ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+      ofile << '\n';
+    }
   }
   ofile.flush();
   ofile.close();
@@ -384,6 +389,11 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
       ofile << '\n';
     }
+    if (Struct[i].BAregion)
+    {
+      ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+      ofile << '\n';
+    }
   }
   ofile.flush();
   ofile.close();
@@ -528,7 +538,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (Struct[i].QMregion or Struct[i].PBregion)
+      if (Struct[i].QMregion or Struct[i].PBregion or Struct[i].BAregion)
       {
         //New charges are needed for QM and PB atoms
         ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
@@ -542,7 +552,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (Struct[i].QMregion or Struct[i].PBregion)
+      if (Struct[i].QMregion or Struct[i].PBregion or Struct[i].BAregion)
       {
         double qi = 0;
         //remove charge
@@ -759,6 +769,11 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
         Struct[i].MP[Bead].q = qnew; //Save modified charge
         WriteTINKMpole(Struct,ofile,i,Bead);
         Struct[i].MP[Bead].q = qi; //Return to unmodified charge
+        ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        ofile << '\n';
+      }
+      if (Struct[i].BAregion)
+      {
         ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
         ofile << '\n';
       }
@@ -1194,6 +1209,11 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
           ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
           ofile << '\n';
         }
+        if (Struct[i].BAregion)
+        {
+          ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+          ofile << '\n';
+        }
       }
     }
     ofile.flush();
@@ -1394,6 +1414,11 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
           Struct[i].MP[Bead].q = qnew; //Save modified charge
           WriteTINKMpole(Struct,ofile,i,Bead);
           Struct[i].MP[Bead].q = qi; //Return to unmodified charge
+          ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+          ofile << '\n';
+        }
+        if (Struct[i].BAregion)
+        {
           ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
           ofile << '\n';
         }
