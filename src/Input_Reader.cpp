@@ -557,8 +557,10 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.Nbeads;
     regionfile >> dummy >> QMMMOpts.StepScale;
     regionfile >> dummy >> QMMMOpts.MaxStep;
-    regionfile >> dummy >> QMMMOpts.MaxOptSteps;
     regionfile >> dummy >> QMMMOpts.Kspring;
+    regionfile >> dummy >> QMMMOpts.QMOptTol;
+    regionfile >> dummy >> QMMMOpts.MMOptTol;
+    regionfile >> dummy >> QMMMOpts.MaxOptSteps;
     if ((QMMMOpts.Nbeads%2) != 1)
     {
       //The number of beads must be odd
