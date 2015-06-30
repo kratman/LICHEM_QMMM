@@ -173,16 +173,16 @@ struct RedMpole
   //Monopole
   double Q00;
   //Dipole moments
-  double Q10;
-  double Q11c;
-  double Q11s;
+  double Q10; //Z component
+  double Q11c; //X component
+  double Q11s; //Y component
   //Quadrupole moments
-  double Q20;
-  double Q22c;
+  double Q20; //Z^2 component
+  double Q22c; //X^2-Y^2 component
   //Spherical harmonic vectors
-  Vector3d Vecx;
-  Vector3d Vecy;
-  Vector3d Vecz;
+  Vector3d Vecx; //X direction in quadrupole frame
+  Vector3d Vecy; //Y direction in quadrupole frame
+  Vector3d Vecz; //Z direction in quadrupole frame
 };
 
 struct OctCharges

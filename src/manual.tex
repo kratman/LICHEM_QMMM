@@ -46,7 +46,7 @@ LICHEM is in development with four guiding principles: \\
  software packages or tools. \\ 
  2) {\textbf LICHEM should be easy to read and modify.} Most scientists
  are not experts in computer programming. In order to allow for
- collaborative development of LICHEM, the source code needs to be easy
+ rapid collaborative development of LICHEM, the source code needs to be easy
  to read. To that end, the code should be simple, well commented, and
  avoid linking to esoteric libraries. \\
  3) {\textbf LICHEM should be a single executable.} Since LICHEM is an
@@ -63,20 +63,23 @@ LICHEM is in development with four guiding principles: \\
 
 \section{Notes for developers}
 
+\subsection{Updating LICHEM}
+
 Most of the development of LICHEM should be done though git (or other version
 control packages) and merged into the main repository. Since LICHEM does not
 require a large number of libraries or proprietary software, it should be easy
-to share new wrappers and approximations with the community. \\
+to share new wrappers and approximations with the community. Additionally,
+new wrappers and approximations should be placed into separate files.\\
 
 When functionality is added to LICHEM, the goal should be to make it simple and
-robust. Avoid adding lots of input keywords and lots of extra files. It is
+robust. Avoid adding lots of input keywords and extra input files. It is
 better to have software that is a bit costly and always works than software
 that is fast and tempermental. A good example of this can be seen in the
 keywords used by the Gaussian wrapper: \\
 
 Int=UltraFine SCF=(YQC,Big,Direct) \\
 
-Ultra-fine integrals and quadratic convergence (YQC) are probably overkill for
+Ultra-fine integrals and quadratic convergence (YQC) are certainly overkill for
 most QM calculations, however, these options assure that difficult cases will
 converge. Additionally, the "Direct", YQC, and "Big" options are helpful for
 larger systems, but they are not disabled for small systems. Most of the
@@ -92,6 +95,19 @@ employed to make sure that crashing the software was rare.
 A simple way to avoid modifying the QM and MM packages is to search for
 iterative or perturbative approximations for the QMMM equations. This is
 extremely useful for multipolar/polarizable force fields.
+
+\subsection{Parallelization}
+
+LICHEM is parallelized with OpenMP, however, the packages called by the
+wrappers can use any form of parallelization. Care must be taken to avoid
+creating too many threads when calling multiple parallel functions with the
+wrappers. \\
+
+In multi-replica simulations, the number of CPUs given as a command line
+argument is used to divide the OpenMP threads between the replicas. As more
+MPI enabled packages are included in the wrappers, the parallelization
+paradigm will be adjusted. The current OpenMP thread settings can be found
+in the ReadLICHEMInput() routine.
 
 \section{Installation}
 
@@ -118,14 +134,14 @@ user:\$ mv LICHEM\_QMMM-master/* . \\
 user:\$ rmdir LICHEM\_QMMM-master \\
 
 The LICHEM binary will eventually be included with the zipped source code,
-however, modified or git versions can be compiled with the script provided
-with LICHEM. On Ubuntu boxes, the compile script should function without
-modifications. However, with other operating systems it may be necessary to
-change the path to the \textit{Eigen3} package. \\
+however, modified or git source code can be compiled with the Makefile
+provided with LICHEM. On Ubuntu boxes, the Makefile should function
+without modifications. However, with other operating systems it may be
+necessary to change the path to the \textit{Eigen3} package. \\
 
 Default: -I/usr/include/eigen3/ \\
 
-The compile script produces both the documentation and the binary. \\
+The Makefile can produce both the documentation and the binary. \\
 
 user:\$ make install \\
 
@@ -133,7 +149,9 @@ Although, if you are reading this then you already have the documentation. \\
 
 For development, debugging, or testing an alternate binary can be compiled. \\
 
-user:\$ make Dev
+user:\$ make Dev \\
+
+Additional make rules can be found in the Makefile.
 
 \section{Capabilities}
 
@@ -210,13 +228,14 @@ the capabilities are summarized in Table \ref{tab:QMWrapCap} and
 \ref{tab:MMWrapCap}. \\
 
 Some additional restrictions are also present when there are bonds between
-the QM and MM regions. Currently only Gaussian can be used as a QM wrapper
-for calculations where the QM and MM regions are bonded.
+the QM and MM regions. Currently PSI4 cannot be used as a QM wrapper for
+calculations where the QM and MM regions are bonded.
 
 \section{Acknowledgements}
 
-The development of LICHEM was supported by funding from the NIH. LICHEM is
-maintained by the Cisneros research group at Wayne State University.
+The development of LICHEM was supported by funding from the NIH (Grant No.\
+R01GM108583) and Wayne State University. LICHEM is maintained by the Cisneros
+research group at Wayne State University.
 
 \chapter{Input}
 
@@ -224,13 +243,12 @@ maintained by the Cisneros research group at Wayne State University.
 
 LICHEM can only be invoked from a command line interface. \\
 
-user:\$ lichem -n Ncpus -x xyzfile.xyz -c confile.inp \\
-
+user:\$ lichem -n Ncpus -x xyzfile.xyz -c confile.inp
 -r regfile.inp -o output.xyz \\
 
 -n: Number of CPUs used in the calculations. Note that during PIMC and
 reaction path calculations each replica uses this many CPUs. A reaction
-path calculation with 8 points and Ncpus=2 would require 16 CPUs. \\
+path calculation with 8 points and Ncpus=2 may require 16 CPUs. \\
 
 -x: File name for the input structure in XYZ format. The XYZ input should be
 in the standard format and have a blank comment line. \\
@@ -270,35 +288,37 @@ id MMTyp NumTyp q Nbonds [connectivity] \\
 Here id is the index of the atom (0 to N-1), MMTyp is the force field atom
 type (i.e. AMBER atom types), NumTyp is a numerical atom type (i.e. TINKER
 atom types), q is the force field charge on the atom, Nbonds is the number of
-bonds to the atom, and [connectivity] is the bond list . The length of the
+bonds to the atom, and [connectivity] is the bond list. The length of the
 connectivity list must match Nbonds and the information in the connectivity
 file must be given for all atoms, even if there are no MM atoms in the system.
+During pure QM simulations, most of the connectivity information is ignored.
 An additional caveat is that the atoms must be listed in order. This is part
 of an internal check to make sure correct input files were provided.
 
 \section{Region input files}
 
-The region file contains QMMM regions (QM atoms, pseudo-atoms, boundary atoms,
-and frozen atoms) as well as miscellaneous input needed to define the type
-of calculations that will be performed. This is the most complicated input
-file required by LICHEM and currently the input keywords must be given in the
-correct order. The keywords themselves are only guides for making the files
-human readable and only the values after the keywords are read. Blank templates
-of region files are provided in the documentation directory. \\
+The region file contains QMMM regions (QM atoms, pseudo-bond atoms, boundary
+atoms, and frozen atoms) as well as miscellaneous input needed to define the
+type of calculations that will be performed. This is the most complicated
+input file required by LICHEM and currently the input keywords must be given
+in the correct order. The keywords themselves are only guides for making the
+files human readable and only the values after the keywords are read. Blank
+templates of region files are provided in the documentation directory. \\
 
 The first line of the input file should read: \\
 
 Potential\_type: $<$QM or MM or QMMM$>$ \\
 
-This line tells LICHEM what type of QM and MM input is listed in the lines that
-follow.
+This line tells LICHEM what type of QM and MM input is listed in the lines
+that follow.
 
 \subsection{General notes}
 
 Input that is not specific to the wrappers is mostly case insensitive,
 however, users may find exceptions to this rule of thumb. Future versions of
 LICHEM will have a more robust input reader. In the mean-time, please report
-any bugs that are found.
+any bugs that are found. Some input errors will be caught by the error
+checking functions.
 
 \subsection{QM input}
 
