@@ -27,7 +27,7 @@
 \centering\includegraphics[scale=0.1]{../doc/images/trimer.png}
 \end{center}}
 \author{A QMMM Interface for Polarizable Force Fields}
-\date{Eric G. Kratz, 2014}
+\date{Eric G.\ Kratz, 2014}
 
 \begin{document}
 \maketitle
@@ -40,24 +40,28 @@
 LICHEM is in development with four guiding principles: \\
 \begin{quote}
  \normalfont{
- 1) {\textbf LICHEM should primarily be an interface.} In order to make the
- code function with a variety of software packages and for different 
- versions of the packages, LICHEM should not require modifications to other
- software packages or tools. \\ 
- 2) {\textbf LICHEM should be easy to read and modify.} Most scientists
- are not experts in computer programming. In order to allow for
- rapid collaborative development of LICHEM, the source code needs to be easy
- to read. To that end, the code should be simple, well commented, and
- avoid linking to esoteric libraries. \\
- 3) {\textbf LICHEM should be a single executable.} Since LICHEM is an
- interface, there is no need for a large collection of binaries. Having
- many different single-use executable files can discourage new users.
+ 1) {\textbf{LICHEM should primarily be an interface.}}
+ In order to make the code function with a variety of software packages and
+ for different versions of the packages, LICHEM should not require
+ modifications to other software packages or tools. \\ 
+ 2) {\textbf{LICHEM should be easy to read and modify.}}
+ Most scientists  are not experts in computer programming.
+ In order to allow for rapid collaborative development of LICHEM, the source
+ code needs to be easy to read.
+ To that end, the code should be simple, well commented, and avoid linking to
+ esoteric libraries. \\
+ 3) {\textbf{LICHEM should be a single executable.}}
+ Since LICHEM is an interface, there is no need for a large collection of
+ binaries.
+ Having many different single-use executable files can discourage new users.
  Furthermore, LICHEM can be statically linked to ease distribution of the
  software. \\
- 4) {\textbf LICHEM should be open source.} LICHEM is licensed under the GPLv3.
+ 4) {\textbf{LICHEM should be open source.}}
+ LICHEM is licensed under the GPLv3.
  Science can benefit everyone, and hence, should be shared as widely as
- possible. Additionally, I do  not want to see my effort in creating a large
- software package go to waste in a package that can only be used by a handful
+ possible.
+ Additionally, I do  not want to see my effort in creating a large software
+ package go to waste in a package that can only be used by a handful
  of scientists.}
 \end{quote}
 
@@ -66,54 +70,72 @@ LICHEM is in development with four guiding principles: \\
 \subsection{Updating LICHEM}
 
 Most of the development of LICHEM should be done though git (or other version
-control packages) and merged into the main repository. Since LICHEM does not
-require a large number of libraries or proprietary software, it should be easy
-to share new wrappers and approximations with the community. Additionally,
-new wrappers and approximations should be placed into separate files.\\
+control packages) and merged into the main repository.
+Since LICHEM does not require a large number of libraries or proprietary
+software, it should be easy to share new wrappers and approximations with the
+community.
+Additionally, new wrappers and approximations should be placed into separate
+files. \\
 
-When functionality is added to LICHEM, the goal should be to make it simple and
-robust. Avoid adding lots of input keywords and extra input files. It is
-better to have software that is a bit costly and always works than software
-that is fast and tempermental. A good example of this can be seen in the
-keywords used by the Gaussian wrapper: \\
+When functionality is added to LICHEM, the goal should be to make it simple
+and robust.
+Avoid adding lots of input keywords and extra input files.
+It is better to have software that is a bit costly and always works than
+software that is fast and tempermental.
+A good example of this can be seen in the keywords used by the Gaussian
+wrapper: \\
 
 Int=UltraFine SCF=(YQC,Big,Direct) \\
 
-Ultra-fine integrals and quadratic convergence (YQC) are certainly overkill for
-most QM calculations, however, these options assure that difficult cases will
-converge. Additionally, the "Direct", YQC, and "Big" options are helpful for
-larger systems, but they are not disabled for small systems. Most of the
-wrappers contain assumptions that the QMMM calculations will be large and
-quite difficult to simulate. These sorts of options ensure that LICHEM will
-work on all systems without requiring the user to be an expert with the QM and
-MM software. \\
+Ultra-fine integrals and quadratic convergence (YQC) are certainly overkill
+for most QM calculations, however, these options assure that difficult cases
+will converge.
+Additionally, the "Direct", YQC, and "Big" options are helpful for
+larger systems, but they are not disabled for small systems.
+Most of the wrappers contain assumptions that the QMMM calculations will be
+large and quite difficult to simulate.
+These sorts of options ensure that LICHEM will work on all systems without
+requiring the user to be an expert with the QM and MM software. \\
 
-LICHEM should be tested with extremely difficult systems. During the early
-stages of the development, test systems with highly distorted structures were
-employed to make sure that crashing the software was rare.
+LICHEM should be tested with extremely difficult systems.
+During the early stages of the development, test systems with highly distorted
+structures were employed to make sure that crashing the software was rare.
 
 A simple way to avoid modifying the QM and MM packages is to search for
-iterative or perturbative approximations for the QMMM equations. This is
-extremely useful for multipolar/polarizable force fields.
+iterative or perturbative approximations for the QMMM equations.
+This is extremely useful for multipolar/polarizable force fields.
+
+\subsection{\LaTeX\ and C++ formatting}
+
+When updating the documentation, there should be a newline after each
+sentence.
+This makes the documentation files very long, but it makes tracking/merging
+changes safer and easier.
+Paragraphs are ended with a \LaTeX\ newline followed by a black line. \\
+
+All lines of code should be less than 80 characters wide.
+This has nothing to do with compiling or tracking changes, but helps to make
+the code readable on smaller portable devices such as tablets and netbooks.
 
 \subsection{Parallelization}
 
 LICHEM is parallelized with OpenMP, however, the packages called by the
-wrappers can use any form of parallelization. Care must be taken to avoid
-creating too many threads when calling multiple parallel functions with the
-wrappers. \\
+wrappers can use any form of parallelization.
+Care must be taken to avoid creating too many threads when calling multiple
+parallel functions with the wrappers. \\
 
 In multi-replica simulations, the number of CPUs given as a command line
-argument is used to divide the OpenMP threads between the replicas. As more
-MPI enabled packages are included in the wrappers, the parallelization
-paradigm will be adjusted. The current OpenMP thread settings can be found
-in the ReadLICHEMInput() routine.
+argument is used to divide the OpenMP threads between the replicas.
+As more MPI enabled packages are included in the wrappers, the parallelization
+paradigm will be adjusted.
+The current OpenMP thread settings can be found in the ReadLICHEMInput()
+routine.
 
 \section{Installation}
 
 Since LICHEM is designed to be simple, only a small number of packages are
-required to compile the code. An approximate list of packages is given
-below.
+required to compile the code.
+An approximate list of packages is given below.
 \begin{quote}
  \normalfont{
  LICHEM binary: OpenMP, Eigen3 \\
@@ -135,9 +157,10 @@ user:\$ rmdir LICHEM\_QMMM-master \\
 
 The LICHEM binary will eventually be included with the zipped source code,
 however, modified or git source code can be compiled with the Makefile
-provided with LICHEM. On Ubuntu boxes, the Makefile should function
-without modifications. However, with other operating systems it may be
-necessary to change the path to the \textit{Eigen3} package. \\
+provided with LICHEM.
+On Ubuntu boxes, the Makefile should function without modifications.
+However, with other operating systems it may be necessary to change the path
+to the \textit{Eigen3} package. \\
 
 Default: -I/usr/include/eigen3/ \\
 
@@ -173,10 +196,10 @@ Additional make rules can be found in the Makefile.
  QM RP & Yes & No & Yes\\
  QMMM RP & Yes & No & Yes \\ \hline
  \end{tabular}
- \caption{QM wrapper capabilities for single-point energy, geometry
- optimization, steepest descent or Davidson-Fletcher-Powell (SD/DFP),
- Monte Carlo (MC), path-integral Monte Carlo (PIMC), and reaction path (RP)
- calculations.}
+ \caption{
+ QM wrapper capabilities for single-point energy, geometry optimization,
+ steepest descent or Davidson-Fletcher-Powell (SD/DFP), Monte Carlo (MC),
+ path-integral Monte Carlo (PIMC), and reaction path (RP) calculations.}
  \label{tab:QMWrapCap}
 \end{table}
 
@@ -198,44 +221,48 @@ Additional make rules can be found in the Makefile.
  MM RP & No & No & No \\
  QMMM RP & Yes & Yes & Yes \\ \hline
  \end{tabular}
- \caption{MM wrapper capabilities for single-point energy, geometry
- optimization, steepest descent or Davidson-Fletcher-Powell (SD/DFP),
- Monte Carlo (MC), path-integral Monte Carlo (PIMC), and reaction path (RP)
- calculations.}
+ \caption{
+ MM wrapper capabilities for single-point energy, geometry optimization,
+ steepest descent or Davidson-Fletcher-Powell (SD/DFP), Monte Carlo (MC),
+ path-integral Monte Carlo (PIMC), and reaction path (RP) calculations.}
  \label{tab:MMWrapCap}
 \end{table}
 
 \subsection{QM and MM wrappers}
 
 LICHEM can perform QM, MM, or QMMM calculations via an interface to packages
-in the user's path. Temporary input files are created for each package and
-the results are collected from the temporary output files. This is a
-relatively inefficient procedure, however, reading and writing input/output
-files is often negligible compared to the computational cost of the QM
-calculation. Currently, calculations can be performed using Gaussian
-\cite{Frisch2009}, PSI4 \cite{Turney2012}, TINKER \cite{Ponder2015}, AMBER
-\cite{Case2015}, and LAMMPS \cite{Plimpton1995}. Additional wrappers can be
-added to LICHEM with relatively little effort.
+in the user's path.
+Temporary input files are created for each package and the results are
+collected from the temporary output files.
+This is a relatively inefficient procedure, however, reading and writing
+input/output files is often negligible compared to the computational cost of
+the QM calculation.
+Currently, calculations can be performed using Gaussian \cite{Frisch2009},
+PSI4 \cite{Turney2012}, TINKER \cite{Ponder2015}, AMBER \cite{Case2015}, and
+LAMMPS \cite{Plimpton1995}.
+Additional wrappers can be added to LICHEM with relatively little effort.
 
 \subsection{Types of calculations}
 
 Single-point energies, geometry optimizations, steepest descent minimizations,
 reaction pathways, ensemble sampling, classical Monte Carlo, and
 path-integral Monte Carlo calculations can be performed using the QM and MM
-wrappers. Due to limitations of the software packages, not all calculations
-can currently be performed with all combinations of wrappers. For convenience,
-the capabilities are summarized in Table \ref{tab:QMWrapCap} and
-\ref{tab:MMWrapCap}. \\
+wrappers.
+Due to limitations of the software packages, not all calculations can
+currently be performed with all combinations of wrappers.
+For convenience, the capabilities are summarized in Table \ref{tab:QMWrapCap}
+and \ref{tab:MMWrapCap}. \\
 
 Some additional restrictions are also present when there are bonds between
-the QM and MM regions. Currently PSI4 cannot be used as a QM wrapper for
-calculations where the QM and MM regions are bonded.
+the QM and MM regions.
+Currently PSI4 cannot be used as a QM wrapper for calculations where the QM
+and MM regions are bonded.
 
 \section{Acknowledgements}
 
 The development of LICHEM was supported by funding from the NIH (Grant No.\
-R01GM108583) and Wayne State University. LICHEM is maintained by the Cisneros
-research group at Wayne State University.
+R01GM108583) and Wayne State University.
+LICHEM is maintained by the Cisneros research group at Wayne State University.
 
 \chapter{Input}
 
@@ -246,12 +273,14 @@ LICHEM can only be invoked from a command line interface. \\
 user:\$ lichem -n Ncpus -x xyzfile.xyz -c confile.inp
 -r regfile.inp -o output.xyz \\
 
--n: Number of CPUs used in the calculations. Note that during PIMC and
-reaction path calculations each replica uses this many CPUs. A reaction
-path calculation with 8 points and Ncpus=2 may require 16 CPUs. \\
+-n: Number of CPUs used in the calculations.
+Note that during PIMC and reaction path calculations each replica uses this
+many CPUs.
+A reaction path calculation with 8 points and Ncpus=2 may require 16 CPUs. \\
 
--x: File name for the input structure in XYZ format. The XYZ input should be
-in the standard format and have a blank comment line. \\
+-x: File name for the input structure in XYZ format.
+The XYZ input should be in the standard format and have a blank comment
+line. \\
 
 -c: File name for connectivity and force field information. \\
 
@@ -272,38 +301,44 @@ B  X$_B$  Y$_B$  Z$_B$ \\
 ... \\
 
 Here N is the number of atoms and (X$_i$,Y$_i$,Z$_i$) is the position of
-particle $i$. Note that the atom types given in the XYZ file need to be the
-atomic symbols from the periodic table, not the MM atom types. Additionally,
-LICHEM reads the XYZ file item-by-item, which means that having additional
-values on a line will cause (silent) errors.
+particle $i$.
+Note that the atom types given in the XYZ file need to be the atomic symbols
+from the periodic table, not the MM atom types.
+Additionally, LICHEM reads the XYZ file item-by-item, which means that having
+additional values on a line will cause (silent) errors.
 
 \section{Connectivity input files}
 
 The connectivity of the molecules and the force field information are defined
-in the connectivity file. The general format is given below. \\
+in the connectivity file.
+The general format is given below. \\
 
 id MMTyp NumTyp q Nbonds [connectivity] \\
 ... \\
 
 Here id is the index of the atom (0 to N-1), MMTyp is the force field atom
-type (i.e. AMBER atom types), NumTyp is a numerical atom type (i.e. TINKER
+type (i.e.\ AMBER atom types), NumTyp is a numerical atom type (i.e.\ TINKER
 atom types), q is the force field charge on the atom, Nbonds is the number of
-bonds to the atom, and [connectivity] is the bond list. The length of the
-connectivity list must match Nbonds and the information in the connectivity
-file must be given for all atoms, even if there are no MM atoms in the system.
+bonds to the atom, and [connectivity] is the bond list.
+The length of the connectivity list must match Nbonds and the information in
+the connectivity file must be given for all atoms, even if there are no MM
+atoms in the system.
 During pure QM simulations, most of the connectivity information is ignored.
-An additional caveat is that the atoms must be listed in order. This is part
-of an internal check to make sure correct input files were provided.
+An additional caveat is that the atoms must be listed in order.
+This is part of an internal check to make sure correct input files were
+provided.
 
 \section{Region input files}
 
 The region file contains QMMM regions (QM atoms, pseudo-bond atoms, boundary
 atoms, and frozen atoms) as well as miscellaneous input needed to define the
-type of calculations that will be performed. This is the most complicated
-input file required by LICHEM and currently the input keywords must be given
-in the correct order. The keywords themselves are only guides for making the
-files human readable and only the values after the keywords are read. Blank
-templates of region files are provided in the documentation directory. \\
+type of calculations that will be performed.
+This is the most complicated input file required by LICHEM and currently the
+input keywords must be given in the correct order.
+The keywords themselves are only guides for making the files human readable
+and only the values after the keywords are read.
+Blank templates of region files are provided in the documentation
+directory. \\
 
 The first line of the input file should read: \\
 
@@ -315,10 +350,10 @@ that follow.
 \subsection{General notes}
 
 Input that is not specific to the wrappers is mostly case insensitive,
-however, users may find exceptions to this rule of thumb. Future versions of
-LICHEM will have a more robust input reader. In the mean-time, please report
-any bugs that are found. Some input errors will be caught by the error
-checking functions.
+however, users may find exceptions to this rule of thumb.
+Future versions of LICHEM will have a more robust input reader.
+In the mean-time, please report any bugs that are found.
+Some input errors will be caught by the error checking functions.
 
 \subsection{QM input}
 
@@ -333,8 +368,8 @@ QM\_charge: $<$charge on the QM region$>$ \\
 QM\_spin: $<$multiplicity of the QM region$>$ \\
 
 All of the QM input is read into LICHEM as text, and hence, it must match the
-correct input for the QM package. For example, Gaussian can only read integer
-values for the memory.
+correct input for the QM package.
+For example, Gaussian can only read integer values for the memory.
 
 \subsection{MM input}
 
@@ -361,20 +396,21 @@ MM\_type: $<$TINKER or AMBER or LAMMPS$>$ \\
 Electrostatics: $<$Charges or AMOEBA or Density$>$ \\
 
 All of the QMMM input is read into LICHEM as text, and hence, it must match the
-correct input for the QM and MM packages. For example, Gaussian can only read
-integer values for the memory.
+correct input for the QM and MM packages.
+For example, Gaussian can only read integer values for the memory.
 
 \subsection{Simulation input}
 
-Input for the calculation types directly follows the wrapper input. Each type
-of calculation requires slightly different input. LICHEM can perform
-single-point energies (SP), optimizations (Opt,DFP,ESD,Steep,NEB), and
-path-integral Monte Carlo simulations (PIMC). Classical Monte Carlo
-simulations are performed as PIMC simulations with a single bead. \\
+Input for the calculation types directly follows the wrapper input.
+Each type of calculation requires slightly different input.
+LICHEM can perform single-point energies (SP), optimizations
+(Opt,DFP,ESD,Steep,NEB), and path-integral Monte Carlo simulations (PIMC).
+Classical Monte Carlo simulations are performed as PIMC simulations with a
+single bead. \\
 
 A description of the methods are given in Chapter \ref{chap:Theory} and the
-input for all calculation types are documented below. Synonyms for the
-simulation keywords are given in parentheses. \\
+input for all calculation types are documented below.
+Synonyms for the simulation keywords are given in parentheses. \\
 
 Calculation\_type: Energy (or SP) \\
 
@@ -436,25 +472,32 @@ Boundary\_atoms: Nbound [list of ids] \\
 Frozen\_atoms: Ninact [list of ids] \\
 
 Definitions of the QM, pseudo-bond atoms, and boundary atoms can be found in
-Chapter \ref{chap:Theory}. Frozen atoms are atoms that should remain
-stationary during optimizations or Monte Carlo simulations. Frozen atoms are
-useful for optimizing small regions of large periodic systems. \\
+Chapter \ref{chap:Theory}.
+Frozen atoms are atoms that should remain stationary during optimizations,
+dynamics, or Monte Carlo simulations.
+Frozen atoms are useful for optimizing small regions of large periodic
+systems. \\
 
 Note that in pure QM and pure MM simulations, \{Nqm,Npseudo,Nbound\} can all
-be set to zero. This is because these regions are not relevant unless LICHEM is
-performing a QMMM calculation. For all of the regions, the lists of atoms can
-be separated by either spaces or newlines.
+be set to zero.
+This is because these regions are not relevant unless LICHEM is performing a
+QMMM calculation.
+For all of the regions, the lists of atoms can be separated by either spaces
+or newlines.
 
 \section{File conversion}
 
 While LICHEM does not handle atom typing or structure generation, it is
 possible to use the native input/output functions to create LICHEM input from
-input used for MM packages. In all cases the converter produces three
-files: xyzfile.xyz connect.inp regions.inp \\
+input used for MM packages.
+In all cases the converter produces three files: xyzfile.xyz connect.inp
+regions.inp \\
 
-{\textbf{TINKER:}} The file converter for TINKER can be used on standard
-TINKER XYZ files, TINKER QMMM XYZ files (g09MM2,Q-CHEM), and TINKER XYZ files
-with periodic boundary conditions. \\
+{\textbf{TINKER:}} \\
+
+The file converter for TINKER can be used on standard TINKER XYZ files,
+TINKER QMMM XYZ files (g09MM2,Q-CHEM), and TINKER XYZ files with periodic
+boundary conditions. \\
 
 user:\$ lichem -convert -t TINKER.xyz -k tinker.key ( -p Yes) \\
 
@@ -473,36 +516,42 @@ the multipoles in the global reference frame. \\
 user:\$ lichem -GlobalPoles -n Ncpus -x xyzfile.xyz -r regions.inp 
  -c connect.inp \\
 
-{\textbf{AMBER:}} {\color{red}Still in development} \\
+{\textbf{AMBER:}} \\
 
-{\textbf{LAMMPS:}} {\color{red}Still in development}
+{\color{red}Still in development}
+
+{\textbf{LAMMPS:}} \\
+
+{\color{red}Still in development}
 
 \section{LICHEM output}
 
-Most of the LICHEM output is sent through the c++ std output stream. However,
-trajectories and optimized structures are printed into the file defined
-by the -o flag. In single-point energy calculations, the output XYZ file
-is deleted after the calculation is completed, since the geometry does not
-change during the calculation. LICHEM also leaves some restart files in the
-working directory (e.g. Gaussian checkpoint files, multi-replica XYZ files,
-etc).
+Most of the LICHEM output is sent through the c++ std output stream.
+However, trajectories and optimized structures are printed into the file
+defined by the -o flag.
+In single-point energy calculations, the output XYZ file is deleted after the
+calculation is completed, since the geometry does not change during the
+calculation.
+LICHEM also leaves some restart files in theworking directory (e.g.\ Gaussian
+checkpoint files, multi-replica XYZ files, etc).
 
 \section{Additional input for wrappers}
 
-The LICHEM wrappers automatically look for a couple "extra" input files. These
-files depend on which wrappers are used in the calculation, however, in most
-cases the files contain force field and pseudopotential information. Some of
-the extra files are detailed below in no particular order and examples can be
-found in the documentation directory.
+The LICHEM wrappers automatically look for a couple "extra" input files.
+These files depend on which wrappers are used in the calculation, however, in
+most cases the files contain force field and pseudopotential information.
+Some of the extra files are detailed below in no particular order and examples
+can be found in the documentation directory.
 
 \subsection{TINKER}
 
 The TINKER wrapper checks the working directory for a file called tinker.key
-and will read additional force field information (e.g. atom classes,
-multipoles, etc) based on the keywords listed in that file. Any keyword
-defined in tinker.key will be passed into the TINKER key file used by the
-wrapper. For obvious reasons, the user must also provide the force field
-parameter files defined in the tinker.key file.
+and will read additional force field information (e.g.\ atom classes,
+multipoles, etc) based on the keywords listed in that file.
+Any keyword defined in tinker.key will be passed into the TINKER key file used
+by the wrapper.
+For obvious reasons, the user must also provide the force field parameter
+files defined in the tinker.key file.
 
 \subsection{AMBER}
 
@@ -515,10 +564,11 @@ parameter files defined in the tinker.key file.
 \subsection{Gaussian}
 
 The Gaussian wrapper will look for checkpoint files and a file called BASIS in
-the working directory. The BASIS file contains basis set and pseudopotential
-information for QMMM calculations with bonds between the QM and MM regions
-(see below). While the file is read in automatically if it is found, the user
-still needs to tell Gaussian to use this information: \\
+the working directory.
+The BASIS file contains basis set and pseudopotential information for QMMM
+calculations with bonds between the QM and MM regions (see below).
+While the file is read in automatically if it is found, the user still needs
+to tell Gaussian to use this information: \\
 
 QM\_basis: GEN \\
 
@@ -526,28 +576,31 @@ GEN is a Gaussian keyword which causes the package to check for extra basis
 set information below the structure. \\
 
 LICHEM automatically tells Gaussian to look for pseudo potentials, however,
-these must be given below the basis set information in the BASIS file. Both
-the basis set and pseudopotential information must be given in Gaussian
+these must be given below the basis set information in the BASIS file.
+Both the basis set and pseudopotential information must be given in Gaussian
 format.
 
 \subsection{NWChem}
 
 The NWChem wrapper will look for checkpoint files and a file called BASIS in
-the working directory. The BASIS file contains basis set and pseudopotential
-information for QMMM calculations with bonds between the QM and MM regions
-(see below). If the BASIS file is found, then the basis set given in the
-regions file is ignored. Both the basis set and pseudopotential information
-must be given in NWChem format.
+the working directory.
+The BASIS file contains basis set and pseudopotential information for QMMM
+calculations with bonds between the QM and MM regions (see below).
+If the BASIS file is found, then the basis set given in the regions file is
+ignored.
+Both the basis set and pseudopotential information must be given in NWChem
+format.
 
 \subsection{Restart files}
 
 While restarting incomplete geometry optimizations only requires changing
 the initial structure given with the -x flag, multi-replica simulations
-require structural information for each replica. When a multi-replica
-(PIMC or reaction path) simulation is started LICHEM checks the working
-directory for a restart file named "BeadStartStruct.xyz" which will be used as
-the initial structure. The restart file is similar to a standard XYZ file,
-except all the replicas are merged together (see below).
+require structural information for each replica.
+When a multi-replica (PIMC or reaction path) simulation is started LICHEM
+checks the working directory for a restart file named "BeadStartStruct.xyz"
+which will be used as the initial structure.
+The restart file is similar to a standard XYZ file, except all the replicas
+are merged together (see below). \\
 
 M \\
 
@@ -561,7 +614,8 @@ B  X$_{B,1}$  Y$_{B,1}$  Z$_{B,1}$ \\
 
 Here M is the number of atoms times the number of beads, and 
 (X$_{i.j}$,Y$_{i,j}$,Z$_{i,j}$) is the position of particle $i$ in replica
-$j$. Note that the atom types given in the XYZ file are ignored since this
+$j$.
+Note that the atom types given in the XYZ file are ignored since this
 information is read from the files given by the -x and -c flags.
 
 \chapter{Theoretical Background}
@@ -570,10 +624,11 @@ information is read from the files given by the -x and -c flags.
 \section{Preface}
 
 The following chapter is intended to serve as a general introduction to
-computational chemistry and the methods used in LICHEM. There are numerous
-places users can find more detailed and up-to-date discussions of these
-topics. This chapter is only intended to give a broad review of the concepts
-and terminology.
+computational chemistry and the methods used in LICHEM.
+There are numerous places users can find more detailed and up-to-date
+discussions of these topics.
+This chapter is only intended to give a broad review of the concepts and
+terminology.
 
 \section{Classical Methods}
 
@@ -590,8 +645,9 @@ motion.
  3) For every action, there is an equal and opposite reaction.}
 \end{quote}
 Newton's second law can be employed in calculations to predict the position
-and velocity of objects moving in a potential field. A simplified algorithm
-for the discretized equations of motion can be written as
+and velocity of objects moving in a potential field.
+A simplified algorithm for the discretized equations of motion can be written
+as
 \begin{equation}
  F_{n} = -\nabla V_{n} = m\ddot {\textbf r}_{n} \; ,
 \end{equation}
@@ -606,25 +662,28 @@ and
 \end{equation}
 where $F$ is the force, $V$ is the potential energy, $\textbf{r}$ is a vector
 representing the positions of all atoms in the system, and $\Delta t$ is the
-time interval between step $n$ and $n+1$. The natural ensemble for
-molecular dynamics is the microcanonical ensemble (NVE), where the number of
-particles and energy are conserved inside a constant volume simulation box.
+time interval between step $n$ and $n+1$.
+The natural ensemble for molecular dynamics is the microcanonical ensemble
+(NVE), where the number of particles and energy are conserved inside a
+constant volume simulation box.
 Although the NVE simulations are the native result of propagating Newton's
 equations, most experiments are performed in the canonical (NVT) or
-isothermal-isobaric (NPT) ensembles. In the NVT ensemble, the temperature is
-held constant instead of the energy, and the NPT ensemble also holds the
-pressure to be constant by adjusting the size of the simulation box.
+isothermal-isobaric (NPT) ensembles.
+In the NVT ensemble, the temperature is held constant instead of the energy,
+and the NPT ensemble also holds the pressure to be constant by adjusting the
+size of the simulation box.
 
 \subsection{Force fields}
 
 Empirical force fields are classical potentials which can estimate the
-potential energy of a system. Although any functional form could be employed
-for the force field, the potentials are often derived from experiments,
-classical physics, or quantum theory. \\
+potential energy of a system.
+Although any functional form could be employed for the force field, the
+potentials are often derived from experiments, classical physics, or quantum
+theory. \\
 
 Non-bonded interactions of atoms are typically modeled using point-charges
-and Lennard-Jones potentials or other van der Waals potentials. The non-bonded
-potential is given by
+and Lennard-Jones potentials or other van der Waals potentials.
+The non-bonded potential is given by
 \begin{equation}
  V(R) = V_{coul}(R)+V_{vdW}(R) \; ,
 \end{equation} 
@@ -643,51 +702,53 @@ $V_{vdW}(R)$ is the van der Waals potential (in this case, the Lennard-Jones
 potential), $A_{ij}$ is a parameter representing the exchange interaction, and
 $B_{ij}$ is a parameter representing the dispersion interaction. \\
 
-Bonded interactions are often represented by the harmonic potential. Harmonic
-bonds behave as idealized springs that never weaken or break. The harmonic
-potential is given by
+Bonded interactions are often represented by the harmonic potential.
+Harmonic bonds behave as idealized springs that never weaken or break.
+The harmonic potential is given by
 \begin{equation}
  V_{harm}(r_{ij}) = \frac{K_{ij}}{2}r_{ij}^2 \; ,
 \end{equation}
-where $K_{ij}$ is the spring constant. Similarly, bond angles can be described
-by a harmonic potential
+where $K_{ij}$ is the spring constant.
+Similarly, bond angles can be described by a harmonic potential
 \begin{equation}
  V_{harm}(\theta_{ijk}) = \frac{K_{ijk}}{2}\theta_{ijk}^2 \; ,
 \end{equation}
-where $\theta$ is the angle between atoms $i$, $j$, and $k$. More complicated
-potentials can be constructed for the bonded interactions, but these are two
-of the most common potentials. Typically, large molecules require potentials
-for dihedral angles and improper dihedral angles. \\
+where $\theta$ is the angle between atoms $i$, $j$, and $k$.
+More complicated potentials can be constructed for the bonded interactions,
+but these are two of the most common potentials.
+Typically, large molecules require potentials for dihedral angles and improper
+dihedral angles. \\
 
 The parameters for force fields are determined in a very systematic fashion.
 Typically, the charges are determined from electronic structure calculations
 and bonded parameters are determined by matching the molecular vibrational
-modes. The van der Waals parameters are usually adjusted to reproduce
-the density, enthalpy of freezing, or other experimentally determined
-properties.
+modes.
+The van der Waals parameters are usually adjusted to reproduce the density,
+enthalpy of freezing, or other experimentally determined properties.
 
 \subsection{Polarizable force fields}
 
 Point-charges are often inadequate for representing the electrostatic field
-around a molecule. The field can be improved by assigning point-charges ($q$),
-dipoles ($\mu$), quadrupoles ($\Theta$), and polarizabilities ($\alpha$) to
-the atoms. These force fields are more computationally expensive than standard
+around a molecule.
+The field can be improved by assigning point-charges ($q$), dipoles ($\mu$),
+quadrupoles ($\Theta$), and polarizabilities ($\alpha$) to the atoms.
+These force fields are more computationally expensive than standard
 point-charge force fields, however, the results can be much more accurate. \\
 
 Multipoles add an additional complication to the potential in that the
-potential is aspherical. To address this, a local frame of reference is
-defined for each atom. Local frames are defined using two or three neighboring
-atoms. \\
+potential is aspherical.
+To address this, a local frame of reference is defined for each atom.
+Local frames are defined using two or three neighboring atoms. \\
 
 A Cartesian representation of the multipoles can be simplified by converting
-to a spherical harmonic representation. The first step in the conversion is to
-diagonalize the quadrupole tensor
+to a spherical harmonic representation.
+The first step in the conversion is to diagonalize the quadrupole tensor
 \begin{equation}
  R^{-1}\Theta R = \Theta' \; ,
 \end{equation}
-where $R$ are the eigenvectors and $\Theta'$ are the eigenvalues. The
-Cartesian multipoles through the quadrupole moments can be converted to the
-spherical harmonic multipoles, $Q$
+where $R$ are the eigenvectors and $\Theta'$ are the eigenvalues.
+The Cartesian multipoles through the quadrupole moments can be converted to
+the spherical harmonic multipoles, $Q$
 \begin{equation}
  Q_{00} = q \; ,
 \end{equation}
@@ -706,9 +767,9 @@ spherical harmonic multipoles, $Q$
 \begin{equation}
  Q_{20} = \Theta_{zz} \; ,
 \end{equation}
-where $R_i$ are the eigenvectors in the $i$ direction. The spherical harmonic
-representation reduces the the multipole expansion to six moments in the new
-frame of reference defined by $R$. \cite{} \\
+where $R_i$ are the eigenvectors in the $i$ direction.
+The spherical harmonic representation reduces the the multipole expansion to
+six moments in the new frame of reference defined by $R$. \cite{} \\
 
 The spherical harmonic multipole expansion through quadrupole moments can be
 converted to six point-charges. \cite{}
@@ -725,26 +786,27 @@ converted to six point-charges. \cite{}
           \frac{Q_{20}}{3d^2} \; ,
 \end{equation}
 where $q_{\pm i}$ are the charges in the $\pm R_i$ direction, and $d$ is the
-displacement from the atomic center. Before the electrostatic interactions can
-be calculated, the point-charges must be rotated from the local frame of
-reference to the global frame. While representing the multipoles as a set of
-point-charges reduces the accuracy, most QM and MM packages can easily add
-additional point-charges to the potential.
+displacement from the atomic center.
+Before the electrostatic interactions can be calculated, the point-charges
+must be rotated from the local frame of reference to the global frame.
+While representing the multipoles as a set of point-charges reduces the
+accuracy, most QM and MM packages can easily add additional point-charges to
+the potential.
 
 \subsection{Frozen density force fields}
 
 Frozen density force fields are a special class of polarizable force fields
-where the electron density is represented by Gaussian functions. These
-potentials can greatly improve the calculations of the electrostatic field and
-can include exchange and charge penetration effects.
+where the electron density is represented by Gaussian functions.
+These potentials can greatly improve the calculations of the electrostatic
+field and can include exchange and charge penetration effects.
 
 \section{Geometry and Reaction Path Optimizations}
 
 \subsection{Steepest descent}
 
-Steepest descent (SD) is the simplest optimization method. The gradient of the
-potential is calculated at the current geometry and used to update the atomic
-coordinates.
+Steepest descent (SD) is the simplest optimization method.
+The gradient of the potential is calculated at the current geometry and used
+to update the atomic coordinates.
 \begin{equation}
  {\textbf r}_{n+1} = {\textbf r}_n+\alpha_n \nabla V({\textbf r}) \; ,
 \end{equation}
@@ -753,32 +815,34 @@ ${\textbf r}$ and $\alpha$ is a scale factor which determines how far a
 particle moves during step $n$. \\
 
 Efficient SD optimizers use line search algorithms which backtrack to find the
-optimum value of $\alpha$ at step $n$. However, SD optimizations often do not
-converge even with optimal step sizes. \\
+optimum value of $\alpha$ at step $n$.
+However, SD optimizations often do not converge even with optimal step
+sizes. \\
 
 The SD algorithm in LICHEM does not use a line search to optimize $\alpha$ at
-each step. Instead, a maximum value of $\alpha$ is given in the input and 
-the optimization starts with $\alpha=0.7\alpha_{max}$. If the QMMM energy
-is decreasing, then the step size increases by 5\% until it reaches
-$\alpha_{max}$. If the energy increases, the step size is reduced by 40\% and
-the optimization continues.
+each step.
+Instead, a maximum value of $\alpha$ is given in the input and the
+optimization starts with $\alpha=0.7\alpha_{max}$.
+If the QMMM energy is decreasing, then the step size increases by 5\% until it
+reaches $\alpha_{max}$.
+If the energy increases, the step size is reduced by 40\% and the optimization
+continues.
 
 \subsection{Davidson-Fletcher-Powell}
 
 SD optimizations move along the first derivative of the potential (gradient).
 Optimzations are more efficient if the atoms move along a path chosen using
-both the first and second derivatives of the potential. The second derivative
-matrix (Hessian) can be expensive to calculate, however, there are several
-quasi-Newton algorithms which can improve a guess Hessian. The most common
-procedures are the Davidson-Fletcher-Powell (DFP) and
-Broyden-Fletcher-Goldfarb-Shanno (BFGS) algorithms. These two methods are
-mathematically related and can theoretically start from any initial guess of
-the inverse Hessian, $H^{-1}$. \\
+both the first and second derivatives of the potential.
+The second derivative matrix (Hessian) can be expensive to calculate, however,
+there are several quasi-Newton algorithms which can improve a guess Hessian.
+The most common procedures are the Davidson-Fletcher-Powell (DFP) and
+Broyden-Fletcher-Goldfarb-Shanno (BFGS) algorithms.
+These two methods are mathematically related and can theoretically start from
+any initial guess of the inverse Hessian, $H^{-1}$. \\
 
 The DFP algorithm can update the inverse Hessian using the forces ($F_n$), the
-current inverse Hessian, and the optimization vector ($p_n$). The optimization
-algorithm is given by
-
+current inverse Hessian, and the optimization vector ($p_n$).
+The optimization algorithm is given by
 \begin{equation}
  p_n = \alpha_n H_n^{-1} F_n \; ,
 \end{equation}
@@ -792,44 +856,48 @@ and
  \frac{H_n^{-1} \delta_n \delta_n^T H_n^{-1}}{\delta_n^T H_n^{-1} \delta_n}
  \; ,
 \end{equation}
-where $\delta$ is the change in the forces. The BFGS algorithm is similar to
-the DFP algorithm and can be obtained by replacing the inverse Hessian in
-Eq.\ \ref{eq:DFP} with the Hessian. \\
+where $\delta$ is the change in the forces.
+The BFGS algorithm is similar to the DFP algorithm and can be obtained by
+replacing the inverse Hessian in Eq.\ \ref{eq:DFP} with the Hessian. \\
 
 If the updates satisfy the Wolfe conditions, then the algorithm will converge
-to the correct solution. However, satisfying the Wolfe conditions requires
-a line search algorithm and storing old structures. \\
+to the correct solution.
+However, satisfying the Wolfe conditions requires a line search algorithm and
+storing old structures. \\
 
 To keep the LICHEM DFP optimizer simple, the guess inverse Hessian is chosen
 to be the identity matrix, which effectively causes the first optimization
-step to be a SD step. As with the SD algorithm, the step size is adjusted 
-based on the progress of the optimizer. Initially, $\alpha=0.05\alpha_{max}$
-and the step size is increased by 20\% after each sucessful optimization step.
+step to be a SD step.
+As with the SD algorithm, the step size is adjusted based on the progress of
+the optimizer.
+Initially, $\alpha=0.05\alpha_{max}$ and the step size is increased by 20\%
+after each sucessful optimization step.
 If the energy does not decrease or if 30 optimization steps have been
 performed, the Hessian is reset to the identity matrix and
-$\alpha=0.02\alpha_{max}$. This algorithm will not always satisfy the Wolfe
-conditions, however, it will not violate the conditions for long before a
-new Hessian is constructed.
+$\alpha=0.02\alpha_{max}$.
+This algorithm will not always satisfy the Wolfe conditions, however, it will
+not violate the conditions for long before a new Hessian is constructed.
 
 \subsection{Ensemble steepest descent}
 
 In QMMM simulations (see section \ref{sec:QMMMSim}) the QM and MM atoms are
-optimized independently. The separation of the optimizations can also allow
-the thermodynamic ensemble to be partially sampled. The ensemble steepest
-descent (ESD) method performs a SD optimization on the QM atoms while running
-molecular dynamics. \\
+optimized independently.
+The separation of the optimizations can also allow the thermodynamic ensemble
+to be partially sampled.
+The ensemble steepest descent (ESD) method performs a SD optimization on the
+QM atoms while running molecular dynamics. \\
 
 The QM SD minimization is performed in essentially the same manner as described
-above, except that after each step $N$ MM MD steps are performed. If $N=1$,
-the ESD method is similar to the Verlet algorithm with the velocities of the
-QM atoms set to zero each time step. Effectively, the MM atoms are moving in
-the NVT ensemble at a finite temperature, while the QM atoms are at zero
-Kelvin. \\
+above, except that after each step $N$ MM MD steps are performed.
+If $N=1$, the ESD method is similar to the Verlet algorithm with the
+velocities of the QM atoms set to zero each time step.
+Effectively, the MM atoms are moving in the NVT ensemble at a finite
+temperature, while the QM atoms are at zero Kelvin. \\
 
 The goal of an ESD simulation is to find a thermodynamic average of the QMMM
-energy by taking snapshots of the MM environment around the QM region. If the
-initial structure is near the minimum of the QMMM potential, then the QM
-atoms should stay near the minimum while the MM atoms sample phase space.
+energy by taking snapshots of the MM environment around the QM region.
+If the initial structure is near the minimum of the QMMM potential, then the
+QM atoms should stay near the minimum while the MM atoms sample phase space.
 
 \subsection{Nudged elastic band}
 
@@ -849,17 +917,19 @@ the Hamiltonian operator, $\hat H$,
  \hat H = \hat T + \hat V \; ,
 \end{equation}
 where $\hat T$ is the kinetic energy operator and $\hat V$ is the potential
-energy operator. The Schr\"{o}dinger equation is given by
+energy operator.
+The Schr\"{o}dinger equation is given by
 \begin{equation}
  \hat H\psi = E\psi \to E = \int \psi^*\hat H\psi d\tau \; ,
 \end{equation}
 where $\psi$ is the wave function, $E$ is the energy, $^*$ denotes the complex
-conjugate, and $\int d\tau$ is the integral over all space. The
-Schr\"{o}dinger equation can also be written in terms of a determinant,
+conjugate, and $\int d\tau$ is the integral over all space.
+The Schr\"{o}dinger equation can also be written in terms of a determinant,
 \begin{equation}
  |H-ES| = 0 \; ,
 \end{equation}
-where $S$ is the overlap matrix. Another common shorthand is bra-ket notation.
+where $S$ is the overlap matrix.
+Another common shorthand is bra-ket notation.
 \begin{equation}
  \hat H|\psi\rangle = E|\psi\rangle \to E=\langle\psi|\hat H|\psi\rangle \; ,
 \end{equation}
@@ -870,11 +940,12 @@ state $j$.
 
 If there is a complicated system and we want to solve the Schr\"{o}dinger 
 equation, a good starting point is often to use a system for which the exact
-solution is known. In chemistry, this is often the hydrogen atom, and in solid
-state physics, it is often the "homogeneous electron gas". For example, helium
-can be approximated as two electrons interacting with a nucleus, but not with
-each other (i.e. solving the hydrogen problem twice with a nuclear charge of
-+2). \\
+or nearly-exact solution is known.
+In chemistry, this is often the hydrogen atom, and in solid state physics, it
+is often the "homogeneous electron gas".
+For example, helium can be approximated as two electrons interacting with a
+nucleus, but not with each other (i.e.\ solving the hydrogen problem twice
+with a nuclear charge of +2). \\
 
 Mathematically, the Hamiltonian can be divided into the simple parts and the
 ones we wish we did not have to solve,
@@ -884,17 +955,18 @@ ones we wish we did not have to solve,
 where $\hat H$ is the full Hamiltonian, $\hat H_0$ is the simple
 (zeroith-order) Hamiltonian that we can solve analytically, and $\hat H_i$
 ($i$=1,2...) are the $i$th-order Hamiltonians for interactions that have been
-neglected in $\hat H_0$. The Schr\"{o}dinger equation can then solved for the
-simple system,
+neglected in $\hat H_0$.
+The Schr\"{o}dinger equation can then solved for the simple system,
 \begin{equation}
  \hat H_0\psi_0=E_0\psi_0 \; .
 \end{equation}
 
 Perturbation theory adds the $i$th-order Hamiltonians to the zeroth-order
 energy as the average interactions (based on the probability from the
-wave function). This is easiest to understand for first-order perturbation
-theory, however, the higher-order corrections are systematic and
-straightforward. The perturbed Schr\"{o}dinger equation is given as
+wave function).
+This is easiest to understand for first-order perturbation theory, however,
+the higher-order corrections are systematic and straightforward.
+The perturbed Schr\"{o}dinger equation is given as
 \begin{equation}
  \hat H\psi=E\psi \to (\hat H_0 + \hat H_1)\psi = E\psi \; , 
 \end{equation}
@@ -904,83 +976,100 @@ and
 \end{equation}
 
 Note that first-order perturbation theory uses the zeroth-order wave 
-function for the averages. This can be seen as both an advantage and a
-disadvantage in the calculations. The advantage is that it speeds up the
-calculation to use a lower-order wave function since the higher order terms
-have no effect on the solution of the simpler system. The disadvantage is that
-wave function itself does not respond to the higher-order interactions. For
-helium with a first-order perturbation, the electrons are too close to the
+function for the averages.
+This can be seen as both an advantage and a disadvantage in the calculations.
+The advantage is that it speeds up the calculation to use a lower-order wave
+function since the higher order terms have no effect on the solution of the
+simpler system.
+The disadvantage is that wave function itself does not respond
+to the higher-order interactions.
+For helium with a first-order perturbation, the electrons are too close to the
 nucleus since there is a strong nuclear attraction with no repulsion due to
 the second electron. \\
 
 It should be noted that perturbation theory can correct both the wave function
-and the energy. However, the corrections to the wave function can be two orders
-lower than the corrections to the energy. A third-order correction to the
-energy would require a first-order correction to the wave function.
+and the energy.
+However, the corrections to the wave function can be two orders lower than the
+corrections to the energy.
+A third-order correction to the energy would require a first-order correction
+to the wave function.
 
 \subsection{Variational theorem}
 
 Another method for solving the Schr\"{o}dinger equation involves approximating
-the wave function for a complex system. If the Hamiltonian for a system is
-known, but not the wave function, we can often make an educated guess. Since
-the ground-state of a system is the one with the lowest energy, any
+the wave function for a complex system.
+If the Hamiltonian for a system is known, but not the wave function, we can
+often make an educated guess.
+Since the ground-state of a system is the one with the lowest energy, any
 guess-wave function, $\phi$, must have an energy that is greater-than or
-equal-to the ground-state energy. If the energy calculated using $\phi$ is
-equal-to the true ground-state energy, then $\phi$ is the true ground-state
-wave function. If $\hat H\phi=E\phi$ predicts an energy lower than the
-ground-state energy, then the ground-state is not the lowest energy state
-(impossible by definition). This theorem can be proven mathematically,
-however, it is conceptually intuitive. \\
+equal-to the ground-state energy.
+If the energy calculated using $\phi$ is equal-to the true ground-state
+energy, then $\phi$ is the true ground-state wave function.
+If $\hat H\phi=E\phi$ predicts an energy lower than the ground-state energy,
+then the ground-state is not the lowest energy state (impossible by
+definition).
+This theorem can be proven mathematically, however, it is conceptually
+intuitive. \\
 
-While the variational theorem may sound useful since a reasonable guess
+While the variational theorem may not sound useful since a reasonable guess
 wave function must be provided, we can often employ the properties of linear
-combinations and the solutions of $\hat H_0\psi_0=E_0\psi_0$. When solving
-differential equations, any linear combination of the solutions to the
-equation is also a solution. For example, the 1s ground-state of the hydrogen
-atom is a solution of the Schr\"{o}dinger equation for the hydrogen atom. The
-2s excited state is another solution. Therefore,
+combinations and the solutions of $\hat H_0\psi_0=E_0\psi_0$.
+When solving differential equations, any linear combination of the solutions
+to the equation is also a solution.
+For example, the 1s ground-state of the hydrogen atom is a solution of the
+Schr\"{o}dinger equation for the hydrogen atom.
+The 2s excited state is another solution.
+Therefore,
 \begin{equation}
  \phi = c_1\psi_{1s}+c_2\psi_{2s} \; ,
 \end{equation}
-is also a solution for the hydrogen atom. We call this a linear combination of
-atomic orbitals (LCAO) wave function.
+is also a solution for the hydrogen atom.
+We call this a linear combination of atomic orbitals (LCAO) wave function.
 
 \subsection{Basis sets}
 
 In principle, any set of functions (a basis set) can be chosen as a guess and
 then the linear combination coefficients ($c_1$ and $c_2$ above) can be
-adjusted to lower the energy. The more functions that are included in the
-basis set, the closer the guess-wave function can get to the true wave
-function of the system. A logical choice would be to use hydrogen-like wave
-functions for the individual atoms in a molecule as the basis set, however,
-the integrals are not easy to calculate. \\
+adjusted to lower the energy.
+The more functions that are included in the basis set, the closer the
+guess-wave function can get to the true wave function of the system.
+A logical choice would be to use hydrogen-like wave functions for the
+individual atoms in a molecule as the basis set, however, the integrals are
+not easy to calculate. \\
 
 A more practical solution is to choose a large set of functions that we can
-easily integrate. For instance, Gaussian functions have great properties that
-simplify integration. The STO-3G basis set provides a good example of how this
-is done. A Slater-type orbital (STO) is a systematic hydrogen-like orbital for
-any atomic state. The STO-3G basis set represents the STOs of the atoms as the
-combination of 3 Gaussian functions. This produces approximate "hydrogen-like"
-orbitals that have still have the mathematical properties of Gaussians. For
-the hydrogen molecule, the wave function would be given by
+easily integrate.
+For instance, Gaussian functions have great properties that simplify
+integration.
+The STO-3G basis set provides a good example of how this is done.
+A Slater-type orbital (STO) is a systematic hydrogen-like orbital for any
+atomic state.
+The STO-3G basis set represents the STOs of the atoms as the combination of 3
+Gaussian functions.
+This produces approximate "hydrogen-like" orbitals that have still have the
+mathematical properties of Gaussians.
+For the hydrogen molecule, the wave function would be given by
 \begin{equation}
  \psi \approx c_a\phi_{a,1s}+c_b\phi_{b,1s} \; ,
 \end{equation}
 where $\phi_{a,1s}$ and $\phi_{b,1s}$ are the 1s orbitals on the first and
-second hydrogen atom, respectively. If $\phi_n$ is represented by the STO-3G
-basis set, the wavefunciton is given by
+second hydrogen atom, respectively.
+If $\phi_n$ is represented by the STO-3G basis set, the wavefunciton is given
+by
 \begin{equation}
  \psi \approx c_a(G^a_1+G^a_2+G^a_3)+c_b(G^b_1+G^b_2+G^b_3) \; ,
 \end{equation}
-where $G^j_i$ is the $i$th Gaussian functions centered on atom $j$. This
-approximation produces a lot of Gaussian integrals, but only has two
-coefficients that can be changed to lower the energy. Hence, the basis set has
-two relatively easy to integrate orbitals made of three Gaussians each. \\
+where $G^j_i$ is the $i$th Gaussian functions centered on atom $j$.
+This approximation produces a lot of Gaussian integrals, but only has two
+coefficients that can be changed to lower the energy.
+Hence, the basis set has two relatively easy to integrate orbitals made of
+three Gaussians each. \\
 
-Next, let's consider the Pople basis sets which are written as w-xyzG. This
-notation indicates how many Gaussians are used to represent the atomic
-orbitals. For now, we can just use the lithium atom as the example for the
-wave function,
+Next, let's consider the Pople basis sets which are written as w-xyzG.
+This notation indicates how many Gaussians are used to represent the atomic
+orbitals.
+For now, we can just use the lithium atom as the example for the wave
+function,
 \begin{equation}
  \psi = c_1\phi_{1s} + c_2\phi_{2s} + c_3\phi_{2p,x} +
  c_4\phi_{2p,y} + c_5\phi_{2p,z} \; .
@@ -990,65 +1079,79 @@ $\phi_n$ to be an STO, but we are going to use more complicated basis sets. \\
 
 The w in w-xyzG represents the number of Gaussian functions used to represent
 the core orbitals (filled inner shells) and (x,y,z) represent the number of
-Gaussian functions in the valence orbitals. For the moment let's ignore the p
-orbitals ($\psi'$) and consider the 3-21G basis set (w=3,x=2,y=1,z=0) for the
-s orbitals.
+Gaussian functions in the valence orbitals.
+For the moment let's ignore the p orbitals ($\psi'$) and consider the 3-21G
+basis set (w=3,x=2,y=1,z=0) for the s orbitals.
 \begin{equation}
  \psi' = c_{1w}(G_1+G_2+G_3)+c_{2x}(G_4+G_5)+c_{2y}G_6 \; .
 \end{equation}
 The first three Gaussian functions represent the 1s orbital and have a single
-variational coefficient. The second three Gaussians split the valence orbital
-into a two Gaussian and one Gaussian function with two additional variational
-parameters. These split valence basis sets are more flexible and perform
-better compared to the STO valence states. The full 3-21G basis set for
-lithium has nine variational parameters and a total of fifteen Gaussian
-functions. The larger 6-311G basis set splits the valence states into three
-parts (thirteen variational parameters, twenty total Gaussian functions). The
-number of "parts" representing the valence orbitals is referred to as the zeta
-level of the basis set. A single zeta basis set has one variational parameter
-per valence orbital (e.g. STO-3G), a double zeta basis set has two variational
-parameters per valence orbital (e.g. 6-31G), and a triple zeta basis set has
-three parameters per valence orbital (e.g. 6-311G). \\
+variational coefficient.
+The second three Gaussians split the valence orbital into a two Gaussian and
+one Gaussian function with two additional variational parameters.
+These split valence basis sets are more flexible and perform better compared
+to the STO valence states.
+The full 3-21G basis set for lithium has nine variational parameters and a
+total of fifteen Gaussian functions.
+The larger 6-311G basis set splits the valence states into three parts
+(thirteen variational parameters, twenty total Gaussian functions).
+The number of "parts" representing the valence orbitals is referred to as the
+zeta level of the basis set.
+A single zeta basis set has one variational parameter per valence orbital
+(e.g.\ STO-3G), a double zeta basis set has two variational parameters per
+valence orbital (e.g.\ 6-31G), and a triple zeta basis set has three parameters
+per valence orbital (e.g.\ 6-311G). \\
 
 The Pople basis sets are often used with polarization and/or diffuse Gaussian
-functions. Polarization functions are additional p, d, f, etc.\ orbitals on
-top of the standard functions. The 6-31G(d) basis set adds d orbitals to the
-heavy atoms (i.e. not hydrogen) and 6-31G(d,p) also adds p orbitals to the
-hydrogens. This can be made much more complicated (i.e. 6-31G(df,pd)) but the
-notation is straight-forward. There is also an older notation for the
-polarization functions using * instead of the orbitals (6-31G*=6-31G(d) and
-6-31G**=6-31G(d,p)). Diffuse functions are very large s orbitals (e.g. 5s, 6s)
-added to the atomic basis sets. The notation is 6-31+G and 6-31++G for adding
-diffuse functions to the heavy atoms and all atoms respectively. The
-polarization and diffuse functions are often vital for small molecules, but
-can be problematic in large systems. \\
+functions.
+Polarization functions are additional p, d, f, etc.\ orbitals on top of the
+standard functions.
+The 6-31G(d) basis set adds d orbitals to the heavy atoms (i.e.\ not hydrogen)
+and 6-31G(d,p) also adds p orbitals to the hydrogens.
+This can be made much more complicated (i.e.\ 6-31G(df,pd)) but the notation is
+straight-forward.
+There is also an older notation for the polarization functions using * instead
+of the orbitals (6-31G*=6-31G(d) and 6-31G**=6-31G(d,p)).
+Diffuse functions are very large s orbitals (e.g.\ 5s, 6s) added to the atomic
+basis sets.
+The notation is 6-31+G and 6-31++G for adding diffuse functions to the heavy
+atoms and all atoms respectively.
+The polarization and diffuse functions are often vital for small molecules,
+but can be problematic in large systems. \\
 
 Dunning basis sets have a simpler notation, but are mathematically much more
-complicated. The notation is cc-pVnZ, where n is the zeta level. The notation
-stands for "correlation consistent polarized valence n zeta" with
-n=D,T,Q,5,6,etc. A cc-pVDZ basis set is approximately the same as the
-6-31G(d,p) basis set. Diffuse functions are added to all atoms with aug-
-(augmented), i.e. aug-cc-pVnZ. The Dunning basis sets are designed to
-systematically converge to the infinite basis set, however, they are much more
-computationally demanding than the Pople basis sets.
+complicated.
+The notation is cc-pVnZ, where n is the zeta level.
+The notation stands for "correlation consistent polarized valence n zeta"
+with n=D,T,Q,5,6,etc.
+A cc-pVDZ basis set is approximately the same as the 6-31G(d,p) basis set.
+Diffuse functions are added to all atoms with aug-(augmented), i.e.
+aug-cc-pVnZ.
+The Dunning basis sets are designed to systematically converge to the infinite
+basis set, however, they are much more computationally demanding than the
+Pople basis sets.
+The extra computational expense is due to the use of spherical harmonic
+functions.
 
 \subsection{Pseudopotentials}
 
 Large or complicated systems can be simplified by discarding core electrons
-and modifying the electron-nuclei interactions for the valence states. A
-simple (albeit extremely inaccurate) example would be to combine the core
-electrons of an atom with the nucleus (e.g. oxygen would have a nuclear charge
-of six and six valence electrons). The modified potentials are referred to as
-pseudopotentials. Pseudopotentials are useful for a variety of reasons, they
-reduce the number of electrons, the least important electrons are removed,
-basis functions have a difficult time modeling the core region, and the
-potentials can be designed to include relativistic effects. \\
+and modifying the electron-nuclei interactions for the valence states.
+A simple (albeit extremely inaccurate) example would be to combine the core
+electrons of an atom with the nucleus (e.g.\ oxygen would have a nuclear charge
+of six and six valence electrons).
+The modified potentials are referred to as pseudopotentials.
+Pseudopotentials are useful for a variety of reasons, they reduce the number
+of electrons, the least important electrons are removed, basis functions have
+a difficult time modeling the core region, and the potentials can be designed
+to include relativistic effects. \\
 
 Real pseudopotentials do not really change the nuclear charge, but rather add
 an electrostatic potential with the same spatial distribution as the electrons
-which are replaced. A further advantage of pseudopotentials, which is employed
-in QMMM calculations, is that the potentials can replace entire atoms. For
-instance, a methyl group can be modeled as a fluorine atom combined with a
+which are replaced.
+A further advantage of pseudopotentials, which is employed in QMMM
+calculations, is that the potentials can replace entire atoms.
+For instance, a methyl group can be modeled as a fluorine atom combined with a
 pseudopotential.
 
 \subsection{Orbital-free density functional theory}
@@ -1056,13 +1159,14 @@ pseudopotential.
 Density functional theory (DFT) is an elegant solution to problems in quantum
 theory and is distinct from the other formalisms (matrix mechanics
 (Heisenberg), wave mechanics (Schr\"{o}dinger), and the path-integral approach
-(Feynman)). The idea is that you do not need to know the wave function, only
-the electron density of the system, to calculate the energy. It can be proven
-that there is a one-to-one relationship between a given electron density and
-the energy of the system. This greatly simplifies the problem the problem
-since electrons contribute three degrees of freedom (each) to the
-Schr\"{o}dinger equation, while the density, $\rho$, always has a total of
-three degrees of freedom.
+(Feynman)).
+The idea is that you do not need to know the wave function, only the electron
+density of the system, to calculate the energy.
+It can be proven that there is a one-to-one relationship between a given
+electron density and the energy of the system.
+This greatly simplifies the problem the problem since electrons contribute
+three degrees of freedom (each) to the Schr\"{o}dinger equation, while the
+density, $\rho$, always has a total of three degrees of freedom.
 \begin{equation}
  \hat H\psi=E\psi \to E[\rho] = T[\rho]+V[\rho] \; .
 \end{equation}
@@ -1070,10 +1174,11 @@ three degrees of freedom.
 DFT, in its original construction, does not require orbitals or basis sets.
 The entire problem can be solved as a function of $\rho(x,y,z)$.
 Unfortunately, the exact functional $E[\rho]$ is unknown and the functional
-must be approximated. Functionals are often based on the homogeneous electron
-gas, and the nuclei are treated as an external field which perturbs the
-electrons. Current functionals are only approximate, however, they often
-provide a computationally efficient solution for large systems. \\
+must be approximated.
+Functionals are often based on the homogeneous electron gas, and the nuclei
+are treated as an external field which perturbs the electrons.
+Current functionals are only approximate, however, they often provide a
+computationally efficient solution for large systems. \\
 
 The earliest orbital-free DFT functional was the Thomas-Fermi (TF) model,
 \begin{equation}
@@ -1092,38 +1197,40 @@ and
 \end{equation}
 Here ${\textbf r}$ is the position of an electron, $Z_i$ is the nuclear charge
 of atom $i$, ${\textbf r}_i$ is the position of nucleus $i$, and
-${\textbf r}'$ is the position of the second electron. This model only
-requires an approximation for the electron density and the positions of the
-nuclei, and hence, the electron density can be treated as a fluid instead of
-discrete particles. \\
+${\textbf r}'$ is the position of the second electron.
+This model only requires an approximation for the electron density and the
+positions of the nuclei, and hence, the electron density can be treated as a
+fluid instead of discrete particles. \\
 
 In general the electron-electron and electron-nucleus parts of the functional
-are much more accurate than the kinetic energy functional. In fact, the one of
-the simplest potential functionals (LDA) is still used, but the simplest
-kinetic energy functional (TF) cannot even predict chemical bonding. A more
-accurate approximation for the kinetic energy is discussed below.
+are much more accurate than the kinetic energy functional.
+In fact, the one of the simplest potential functionals (LDA) is still used,
+but the simplest kinetic energy functional (TF) cannot even predict chemical
+bonding.
+A more accurate approximation for the kinetic energy is discussed below.
 
 \subsection{Self-consistent field methods}
 
 The self-consistent field (SCF) or Hartee-Fock (HF) formalism takes advantage
 of the topics discussed above to find a simple but relatively accurate
-solution to the Schr\"{o}dinger equation. The method iteratively solves the
-equations using the Fock operator, $F$,
+solution to the Schr\"{o}dinger equation.
+The method iteratively solves the equations using the Fock operator, $F$,
 \begin{equation}
  E = \langle\phi|\hat F|\phi\rangle \; ,
 \end{equation}
 \begin{equation}
  \hat F = \hat H_0+\langle\phi|\hat H_1|\phi\rangle \; ,
 \end{equation}
-until the variational wave function no-longer changes. The problem converges
-since the Fock operator depends on the average electron-electron repulsion
-from the previous iteration. The result is an approximate first-order energy
-and a first-order wave function. \\
+until the variational wave function no-longer changes.
+The problem converges since the Fock operator depends on the average
+electron-electron repulsion from the previous iteration.
+The result is an approximate first-order energy and a first-order wave
+function. \\
 
-The HF method can be improved by adding additional perturbations. A
-second-order correction to the HF energy is referred to as MP2, and up to
-MP4 are often discussed in the literature. The MP2 energy, $E_{mp2}$, is
-given by
+The HF method can be improved by adding additional perturbations.
+A second-order correction to the HF energy is referred to as MP2, and up to
+MP4 are often discussed in the literature.
+The MP2 energy, $E_{mp2}$, is given by
 \begin{equation}
  E_{mp2} = E_{hf} + \langle E_{2} \rangle \; ,
 \end{equation}
@@ -1131,38 +1238,44 @@ where $E_{hf}$ is the HF energy and $\langle E_2 \rangle$ is the second-order
 perturbation. \\
 
 There is a bit of terminology that has thus far been missing from the
-discussions. The first is "electron correlation", which refers to the
-interactions and motions of the electrons (i.e. an electron wants to move away
-from another electron). In the literature, the "correlation energy" is
-the electron-electron interaction energy not captured by the HF method
-(second-order and higher perturbations). The SCF formalism is only a
-mean-field approach, and hence, it gives the average interactions not the true
-interactions. The second bit of terminology is the "exchange interaction",
-which is included in $\hat F$ through $\hat H_1$. The solution of the
-Schr\"{o}dinger equation for electrons should be anti-symmetric with respects
-to the exchange of two electrons. The exchange interaction is added to the
-$\hat H_1$ operator to force the variational wave function to have the correct
-symmetry. \\
+discussions.
+The first is "electron correlation", which refers to the interactions and
+motions of the electrons (i.e.\ an electron wants to move away from another
+electron).
+In the literature, the "correlation energy" is the electron-electron
+interaction energy not captured by the HF method (second-order and higher
+perturbations).
+The SCF formalism is only a mean-field approach, and hence, it gives the
+average interactions not the true interactions.
+The second bit of terminology is the "exchange interaction", which is included
+in $\hat F$ through $\hat H_1$.
+The solution of the Schr\"{o}dinger equation for electrons should be
+anti-symmetric with respects to the exchange of two electrons.
+The exchange interaction is added to the $\hat H_1$ operator to force the
+variational wave function to have the correct symmetry. \\
 
 Hartree-Fock calculations capture the exchange, but miss the higher-order
-correlation. Density functional theory calculations, on the other hand,
-capture some of the higher-order correlation, but miss some of the exchange
-interaction.
+correlation.
+Density functional theory calculations, on the other hand, capture some of the
+higher-order correlation, but miss some of the exchange interaction.
 
 \subsection{Kohn-Sham DFT}
 
 Kohn-Sham (KS) DFT is a SCF approach similar to HF theory, however, it does
-not obey the variational theorem. To overcome the failures of the orbital-free
-kinetic energy functionals, orbitals are reintroduced to the problem so that
-the kinetic energy can be calculated "exactly" from a basis set. As with the
-HF method, the electrons are moving in a mean-field of all other electrons,
-but are not interacting directly. Since KS-DFT has orbitals, the exchange
-interaction can also be calculated "exactly" with only a modest increase in
-computational cost. However, since most functionals include an exchange term,
-hybrid functionals add in a percentage of the exact (HF level) exchange and
-remove the same percentage of DFT exchange. Researchers can make entire
-careers out of developing better functionals (there are currently thousands)
-and the mathematical structure of the functionals can be quite complicated.
+not obey the variational theorem.
+To overcome the failures of the orbital-free kinetic energy functionals,
+orbitals are reintroduced to the problem so that the kinetic energy can be
+calculated "exactly" from a basis set.
+As with the HF method, the electrons are moving in a mean-field of all other
+electrons, but are not interacting directly.
+Since KS-DFT has orbitals, the exchange interaction can also be calculated
+"exactly" with only a modest increase in computational cost.
+However, since most functionals include an exchange term, hybrid functionals
+add in a percentage of the exact (HF level) exchange and remove the same
+percentage of DFT exchange.
+Researchers can make entire careers out of developing better functionals
+(there are currently thousands) and the mathematical structure of the
+functionals can be quite complicated.
 However, some of the most common functionals are LDA (based on the electron
 gas, used in solid state physics), PBE (contains no empirical parameters, used
 in physics), PBE0 (a hybrid form of PBE with 25\% HF exchange, used in
@@ -1172,9 +1285,10 @@ heavily by chemists).
 \subsection{Dispersion corrections}
 
 KS-DFT does a reasonably good job for describing bonded interactions, metals,
-geometries, and energies. However, DFT poorly describes van der Waals
-interactions, such as dispersion. Modern functionals are often dispersion
-corrected by adding empirical corrections to the nuclei-nuclei interactions.
+geometries, and energies.
+However, DFT poorly describes van der Waals interactions, such as dispersion.
+Modern functionals are often dispersion corrected by adding empirical
+corrections to the nuclei-nuclei interactions.
 For the most part, the dispersion energy, $E_d$, takes the form
 \begin{equation}
  E_d = \sum_{i,j} f(R_{ij})\frac{C_6}{R_{ij}^6} \; ,
@@ -1195,7 +1309,8 @@ $R_{ij}$ is the distance between atoms $i$ and $j$.
 
 QMMM calculations divide the system into regions which require accurate
 quantum treatment and regions that can safely be approximated by classical
-models (see Figure \ref{fig:QMMM1}). The full effective Hamiltonian, 
+models (see Figure \ref{fig:QMMM1}).
+The full effective Hamiltonian, 
 $\hat H_{eff}$, can be written as
 \begin{equation}
  \hat H_{eff} = \hat H_{qm} + \hat V_{mm} + \hat V_{qmmm} \; ,
@@ -1213,25 +1328,29 @@ solving the Schr\"odinger equation is essentially trivial.
 \subsection{QM-MM interactions}
 
 When the QM and MM regions are not connected by covalent bonds, the QM-MM
-interactions are reasonably straightforward. The interaction between the
-electric field of the MM region (point-charges or multipoles) and the QM
-region is calculated by adding point-charges to the QM calculations. This
-allows for electrostatic repulsion and polarization, but neglects exchange
-and dispersion interactions. These missing interactions are added using the
-vdW potentials taken from the MM force field. \\
+interactions are reasonably straightforward.
+The interaction between the electric field of the MM region (point-charges or
+multipoles) and the QM region is calculated by adding point-charges to the QM
+calculations.
+This allows for electrostatic repulsion and polarization, but neglects
+exchange and dispersion interactions.
+These missing interactions are added using the vdW potentials taken from the
+MM force field. \\
 
 For a single-point energy, the QM+charges calculation is performed with the QM
 wrapper, while the MM wrapper calculates the MM energy with no charges or
-bonded potentials on any of the QM atoms. These two energies are then added
-together to get the total energy. This approach splits $\hat V_{qmmm}$ between
-the MM calculation ($\hat V_{mm}$) and the QM calculation ($\hat H_{qm}$). 
+bonded potentials on any of the QM atoms.
+These two energies are then added together to get the total energy.
+This approach splits $\hat V_{qmmm}$ between the MM calculation
+($\hat V_{mm}$) and the QM calculation ($\hat H_{qm}$). 
 
 \subsection{Pseudo-bond method}
 
 \begin{figure}[hbt]
  \centering
  \includegraphics[scale=0.50]{../doc/images/QMMM_2.png}
- \caption{Schematic of a QMMM simulation box with the boundary region shown in
+ \caption{
+ Schematic of a QMMM simulation box with the boundary region shown in
  green between the QM and MM regions.}
  \label{fig:QMMM2}
 \end{figure} 
@@ -1241,7 +1360,7 @@ the MM calculation ($\hat V_{mm}$) and the QM calculation ($\hat H_{qm}$).
  \begin{tabular}{|c|c c|}
  \hline
   & \multicolumn{2}{|c|}{Wrapper calculation} \\
- Int. type & MM & QM \\ \hline
+ Int.\ type & MM & QM \\ \hline
  MM-MM & FF & Zero \\
  QM-QM & Zero & $\rho_{el}$ \\
  PA-PA & FF & PP+$\rho_{el}$ \\
@@ -1253,13 +1372,15 @@ the MM calculation ($\hat V_{mm}$) and the QM calculation ($\hat H_{qm}$).
  MM-BA & FF & Zero \\
  PA-BA & FF & Zero \\ \hline
  \end{tabular}
- \caption{The treatment of region-region interactions in the MM and QM 
- wrappers during single-point energy calculations. Interactions were 
- abbreviated as follows: force field (FF), electron density ($\rho_{el}$),
- pseudopotential (PP), no interaction (Zero), QM point-charges 
+ \caption{
+ The treatment of region-region interactions in the MM and QM 
+ wrappers during single-point energy calculations.
+ Interactions were abbreviated as follows: force field (FF), electron density
+ ($\rho_{el}$), pseudopotential (PP), no interaction (Zero), QM point-charges 
  (\{$q_{qm}$\}), MM bond potentials (Bonds), and MM point-charges
- (\{$q_{mm}$\}). A "-" sign is used if the interaction is removed instead of
- added (i.e. FF-\{$q_{qm}$\} denotes the force field with no charges on the
+ (\{$q_{mm}$\}).
+ A "-" sign is used if the interaction is removed instead of added
+ (i.e.\ FF-\{$q_{qm}$\} denotes the force field with no charges on the
  QM atoms).} 
  \label{tab:IntTable}
 \end{table}
@@ -1267,43 +1388,52 @@ the MM calculation ($\hat V_{mm}$) and the QM calculation ($\hat H_{qm}$).
 \begin{figure}[hbt]
  \centering  
  \includegraphics[scale=0.50]{../doc/images/QMMM_3.png}
- \caption{Schematic of a QMMM simulation box with a large boundary region
+ \caption{
+ Schematic of a QMMM simulation box with a large boundary region
  between the QM and MM regions.}
  \label{fig:QMMM3}
 \end{figure}
 
 The calculations are more complicated when there are bonds between the QM and
-MM regions. Covalent bonds require two additional regions of the QMMM system,
-a pseudo-bond (PB) region and a boundary atom (BA) region. Pseudo-atoms are
-shared by the QM and MM regions, and handle the bulk of the covalent
-interactions. The severed bonds from the MM region are treated by adding a
-pseudopotential to the pseudo-atoms that allows a fluorine atom to mimic the
-behavior of an sp$^3$ hybridized carbon or nitrogen atom. Boundary atoms
-correct for two additional errors. First, having point-charges close to the
-QM region can cause the electron density to be over-polarized. The second
-error is introduced by the fact that the QM region must have an integer number
-of electrons. Both of these problems can be mitigated by absorbing the point
-charges on the atoms bonded to the pseudo-atoms into the QM region during the
-QM calculation. This produces atoms with zero-charge on the boundaries between
-the QM and MM regions. \\
+MM regions.
+Covalent bonds require two additional regions of the QMMM system,
+a pseudo-bond (PB) region and a boundary atom (BA) region.
+Pseudo-atoms are shared by the QM and MM regions, and handle the bulk of the
+covalent interactions.
+The severed bonds from the MM region are treated by adding a pseudopotential
+to the pseudo-atoms that allows a fluorine atom to mimic the behavior of an
+sp$^3$ hybridized carbon or nitrogen atom.
+Boundary atoms correct for two additional errors.
+First, having point-charges close to the QM region can cause the electron
+density to be over-polarized.
+The second error is introduced by the fact that the QM region must have an
+integer number of electrons.
+Both of these problems can be mitigated by absorbing the point-charges on the
+atoms bonded to the pseudo-atoms into the QM region during the QM calculation.
+This produces atoms with zero-charge on the boundaries between the QM and MM
+regions. \\
 
 For the MM part of the calculation, the pseudo-atoms and boundary atoms retain
 their force field charges, and the MM bonding interactions are added for the
-pseudo-atoms. The treatment of different interaction types are given in Table
-\ref{tab:IntTable} for single-point energy calculations. In the pseudo-bond
-approach, only some of the bonded interactions are calculated for the QMMM
-interface. Further details on which bonded interactions are included can be
-found in the literature. \\
+pseudo-atoms.
+The treatment of different interaction types are given in Table
+\ref{tab:IntTable} for single-point energy calculations.
+In the pseudo-bond approach, only some of the bonded interactions are
+calculated for the QMMM interface.
+Further details on which bonded interactions are included can be found in the
+literature. \\
 
 So far we have discussed systems similar to the one shown in Figure
 \ref{fig:QMMM2}, where the boundary atoms only surround the covalent bonds.
-This is due to the primitive treatment of the QM-MM boundaries. A more
-complicated scheme can be employed where the boundary atoms are represented by
-a polarizable frozen density force field. The QM and frozen density
-interactions are more natural than interactions between the QM and point
-charges, and thus, this approach avoids the over-polarization. Boundary atoms
-represented by frozen electron density can be extended further from the QM
-region and can create smoother boundaries between the QM and MM regions.
+This is due to the primitive treatment of the QM-MM boundaries.
+A more complicated scheme can be employed where the boundary atoms are
+represented by a polarizable frozen density force field.
+The QM and frozen density interactions are more natural than interactions
+between the QM and point-charges, and thus, this approach avoids the
+over-polarization.
+Boundary atoms represented by frozen electron density can be extended further
+from the QM region and can create smoother boundaries between the QM and MM
+regions.
 Ideally, a system could be constructed with a large boundary region between
 the QM and MM regions (see Figure \ref{fig:QMMM3}).
 
@@ -1312,20 +1442,22 @@ the QM and MM regions (see Figure \ref{fig:QMMM3}).
 \subsection{Stochastic sampling}
 
 Monte Carlo simulations sample phase space by generation random changes to
-the system. Completely random sampling could eventually find a global
-minimum, however, majority of the random structures would have energies well
-above $kT$ and contribute very little to the statistical averages. \\
+the system.
+Completely random sampling could eventually find a global minimum, however,
+majority of the random structures would have energies well above $kT$ and
+contribute very little to the statistical averages. \\
 
 Almost any type of change can be made to the system in a Monte Carlo
-simulation. The primary limitations are the creativity of the programmer and
-the efficiency of making the changes. This allows Monte Carlo simulations to
-be tailored to the system and focus on the randomly changing the most important
-features of a system. \\
+simulation.
+The primary limitations are the creativity of the programmer and the
+efficiency of making the changes.
+This allows Monte Carlo simulations to be tailored to the system and focus on
+the randomly changing the most important features of a system. \\
 
 If the moving atoms and/or type of random change are chosen randomly, this
-procedure satisfies "detailed balance." I.e. the move from configuration $i$
-to configuration $j$ can be reversed by a move from configuration $j$ to
-configuration $i$.
+procedure satisfies "detailed balance."
+I.e.\ the move from configuration $i$ to configuration $j$ can be reversed by
+a move from configuration $j$ to configuration $i$.
 
 \subsection{Canonical ensemble}
 
@@ -1342,15 +1474,17 @@ change in energy, and $\beta$ is the inverse temperature,
 This proceedure leads to biased sampling of the lower energy states. \\
 
 Unlike molecular dynamics simulations, the natural ensemble for Monte Carlo
-simulations is the canonical ensemble (NVT). This is advantageous since there
-is no need to couple the simulation to a thermostat.
+simulations is the canonical ensemble (NVT).
+This is advantageous since there is no need to couple the simulation to a
+thermostat.
 
 \subsection{Isobaric-isothermal ensemble}
 
 Although NVT simulations are natural for Monte Carlo, it is relatively easy to
-change to the NPT ensemble. NPT simulations are performed by randomly changing
-the volume of the simulation box. This procedure produces a slightly
-different expression for the probabilities,
+change to the NPT ensemble.
+NPT simulations are performed by randomly changing the volume of the
+simulation box.
+This procedure produces a slightly different expression for the probabilities,
 \begin{equation}
  P_{acc} \propto e^{-(P\Delta V+\Delta E)\beta+N\Delta ln(V)} \; ,
 \end{equation}
@@ -1367,11 +1501,13 @@ the number of atoms.
 
 Path-integral Monte Carlo simulations are performed by simulating a large
 number of classical systems which are then coupled together via harmonic
-bonds. Allowed Monte Carlo moves include displacements of single beads,
-translations of centroids, and changes of the volume. \\
+bonds.
+Allowed Monte Carlo moves include displacements of single beads, translations
+of centroids, and changes of the volume. \\
 
 The spring energy between the beads represents the quantum kinetic energy of
-the centroid. Moves are accepted based on the effective energy, $E_{eff}$
+the centroid.
+Moves are accepted based on the effective energy, $E_{eff}$
 \begin{equation}
  E_{eff} = E_{spring}+\frac{1}{N_p}\sum_i^{N_p} E_{pot,i} \; ,
 \end{equation}
@@ -1381,8 +1517,8 @@ where the spring energy is given by
               \sum_{i}^{N_p} (r_{i}-r_{i-1})^2  \; .
 \end{equation}
 Here the $N_a$ is the total number of atoms, $N_p$ is the number of beads,
-$r_i$ is the position of bead $i$, and $E_{pot}$ is the potential energy. The
-acceptance probability is given by
+$r_i$ is the position of bead $i$, and $E_{pot}$ is the potential energy.
+The acceptance probability is given by
 \begin{equation}
  P_{acc} \propto e^{\Delta E_{eff}\beta} \; .
 \end{equation}
@@ -1394,28 +1530,31 @@ potential.
  E_{pi} = \frac{3N_aN_p}{2\beta}-E_{spring}
           +\frac{1}{N_p}\sum_i^{N_p} E_{pot,i} \; ,
 \end{equation}
-where $E_{pi}$ is the total energy. The first two terms in Eq.\
-\ref{eq:PItotal} represent the classical kinetic energy for all particles and
-the amount of kinetic energy absorbed by centroid harmonic bonds.
+where $E_{pi}$ is the total energy.
+The first two terms in Eq.\ \ref{eq:PItotal} represent the classical kinetic
+energy for all particles and the amount of kinetic energy absorbed by
+centroid harmonic bonds.
 
 \subsection{Ergodicity}
 
 Classical Monte Carlo simulations typically scale as $N_a^2$ due to the
-pairwise force field interactions of the atoms. Since path-integral
-simulations have $N_p$ simulations that run in tandem, the overall scaling is
-$N_pN_a^2$. In addition to making the energy calculations computationally more
-expensive, the efficiencies of the Monte Carlo moves tend to decrease. Monte
-Carlo moves typically consist of changes to the positions of a single atom or
-possibly more complicated moves where bond angles are shifted. This leads to
-large systems changing very slowly and the path-integral formalism essentially
-increases the size of the system. \\
+pairwise force field interactions of the atoms.
+Since path-integral simulations have $N_p$ simulations that run in tandem,
+the overall scaling is $N_pN_a^2$.
+In addition to making the energy calculations computationally more expensive,
+the efficiencies of the Monte Carlo moves tend to decrease.
+Monte Carlo moves typically consist of changes to the positions of a single
+atom or possibly more complicated moves where bond angles are shifted.
+This leads to large systems changing very slowly and the path-integral
+formalism essentially increases the size of the system. \\
 
 Another problem introduced by the path-integral formalism comes from the
-harmonic constraints between the beads. The force constants for the
-path-integral springs is proportional to the mass of the particle, which means
-that heavy atoms can experience very strong forces holding the centroid
-close together. The presence of strong potentials restricts the movement of
-the atoms, and reduces $P_{acc}$.
+harmonic constraints between the beads.
+The force constants for the path-integral springs is proportional to the mass
+of the particle, which means that heavy atoms can experience very strong
+forces holding the centroid close together.
+The presence of strong potentials restricts the movement of the atoms, and
+reduces $P_{acc}$.
 
 \bibliographystyle{unsrt}
 \bibliography{manual}
