@@ -29,7 +29,7 @@ double LAMMPSForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call.copyfmt(cout);
   double E = 0.0;
   int ct;
-
+  
   return E;
 };
 

@@ -699,7 +699,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       #pragma omp barrier
     }
   }
-  //Read initial structures for all beads
+  //Read initial structures for all beads or create new ones
   if (CheckFile("BeadStartStruct.xyz") and (!GauExternal))
   {
     //Print output
@@ -723,6 +723,11 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
         beadfile >> Struct[i].P[j].z;
       }
     }
+  }
+  else if (NEBSim == 1)
+  {
+    //Create initial reaction pathway
+    
   }
   //Collect additonal TINKER input
   if ((TINKER == 1) and (!GauExternal))

@@ -145,165 +145,10 @@ int main(int argc, char* argv[])
   }
   //End of section
 
-  //Run Monte Carlo
-  else if (PIMCSim)
-  {
-    //Adjust probabilities
-    if (Natoms == 1)
-    {
-      //Remove atom centroid moves
-      CentProb = 0.0;
-      BeadProb = 1.0;
-    }
-    if (QMMMOpts.Ensemble == "NVT")
-    {
-      VolProb = 0.0;
-    }
-    //Calculate initial energy
-    QMMMOpts.Eold = 0;
-    QMMMOpts.Eold += Get_PI_Epot(Struct,QMMMOpts);
-    QMMMOpts.Eold += Get_PI_Espring(Struct,QMMMOpts);
-    if (VolProb > 0)
-    {
-      QMMMOpts.Eold += QMMMOpts.Press*Lx*Ly*Lz*atm2eV;
-    }
-    //Run simulations
-    cout << '\n';
-    SumE = 0;
-    SumE2 = 0;
-    VolAvg = 0;
-    Ek = 0;
-    if (QMMMOpts.Nbeads > 1)
-    {
-      //PIMC kinetic energy
-      Ek = 3*Natoms*QMMMOpts.Nbeads/(2*QMMMOpts.Beta);
-    }
-    int Nct = 0; //Step counter
-    int ct = 0; //Secondary counter
-    double Nacc = 0; //Number of accepted moves
-    double Nrej = 0; //Number of rejected moves
-    double Emc = 0; //Monte Carlo energy
-    bool acc; //Flag for accepting a step
-    cout << "Starting equilibration..." << '\n';
-    cout.flush();
-    Nct = 0;
-    while (Nct < QMMMOpts.Neq) //Equilibration
-    {
-      Emc = 0;
-      if(ct == Acc_Check)
-      {
-        if ((Nacc/(Nrej+Nacc)) > QMMMOpts.accratio)
-        {
-          step *= 1.10;
-        }
-        if ((Nacc/(Nrej+Nacc)) < QMMMOpts.accratio)
-        {
-          step *= 0.91;
-        }
-        if (step < StepMin)
-        {
-          step = StepMin;
-        }
-        if (step > StepMax)
-        {
-          step = StepMax;
-        }
-        ct = 0;
-        Nacc = 0;
-        Nrej = 0;
-      }
-      ct += 1;
-      acc = MCMove(Struct,QMMMOpts,Emc);
-      if (acc)
-      {
-        Nct += 1;
-        Nacc += 1;
-      }
-      else
-      {
-        Nrej += 1;
-      }
-    }
-    Nct = 0;
-    Nacc = 0;
-    Nrej = 0;
-    cout << "Starting production run..." << '\n';
-    cout.flush();
-    Print_traj(Struct,outfile,QMMMOpts);
-    while (Nct < QMMMOpts.Nsteps)
-    {
-      Emc = 0; //Set energy to zero
-      acc = MCMove(Struct,QMMMOpts,Emc);
-      if (acc)
-      {
-        Nct += 1;
-        Nacc += 1;
-        double Et = Ek+Emc;
-        Et -= 2*Get_PI_Espring(Struct,QMMMOpts);
-        VolAvg += Lx*Ly*Lz;
-        SumE += Et;
-        SumE2 += Et*Et;
-        if ((Nct%QMMMOpts.Nprint) == 0)
-        {
-          //Print progress
-          Print_traj(Struct,outfile,QMMMOpts);
-          cout << " | Step: " << Nct;
-          cout << " | Energy: " << Et << " eV";
-          if (QMMMOpts.Ensemble == "NPT")
-          {
-            cout << " | Volume: " << Lx*Ly*Lz << " \u212B^3";
-          }
-          cout << '\n';
-          cout.flush(); //Print results
-        }
-      }
-      else
-      {
-        Nrej += 1;
-      }
-    }
-    if ((Nct%QMMMOpts.Nprint) != 0)
-    {
-      //Print final geometry if it was not already written
-      Print_traj(Struct,outfile,QMMMOpts);
-    }
-    SumE /= QMMMOpts.Nsteps; //Average energy
-    SumE2 /= QMMMOpts.Nsteps; //Variance of the energy
-    VolAvg /= QMMMOpts.Nsteps; //Average volume
-    //Print output
-    cout << '\n';
-    cout << "Temperature: ";
-    cout << QMMMOpts.Temp;
-    cout << " K    ";
-    if (QMMMOpts.Ensemble == "NPT")
-    {
-      cout << "Volume: ";
-      cout << VolAvg;
-      cout << " \u212B^3";
-    }
-    cout << '\n';
-    cout << "Average energy: ";
-    cout << SumE;
-    cout << " eV    ";
-    cout << "Variance: ";
-    cout << (SumE2-SumE*SumE);
-    cout << " eV^2";
-    cout << '\n';
-    cout << "Acceptance ratio: ";
-    cout << (Nacc/(Nrej+Nacc));
-    cout << "    ";
-    cout << "Optimum step size: ";
-    cout << step;
-    cout << " \u212B";
-    cout << '\n';
-    cout << '\n';
-    cout.flush();
-  }
-  //End of section
-
-  //Optimize structure
+  //Optimize structure (native QM and MM package optimizers)
   else if (OptSim)
   {
+    //Note: Currently only Gaussian works with this option
     vector<Coord> Forces; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
     //Print initial structure
@@ -485,7 +330,6 @@ int main(int argc, char* argv[])
     while (!OptDone)
     {
       //Copy structure
-      double SavedStepSize = QMMMOpts.StepScale; //Save old step size
       OldStruct = Struct;
       //Run MM optimization
       if (TINKER == 1)
@@ -519,7 +363,6 @@ int main(int argc, char* argv[])
       //Check convergence
       optct += 1;
       OptDone = OptConverged(Struct,OldStruct,Forces,optct,QMMMOpts,0,0);
-      QMMMOpts.StepScale = SavedStepSize;
     }
     cout << '\n';
     cout << "Optimization complete.";
@@ -590,7 +433,6 @@ int main(int argc, char* argv[])
     while (!OptDone)
     {
       //Copy structure
-      double SavedStepSize = QMMMOpts.StepScale; //Save old step size
       OldStruct = Struct;
       //Run MM optimization
       if (TINKER == 1)
@@ -624,11 +466,166 @@ int main(int argc, char* argv[])
       //Check convergence
       optct += 1;
       OptDone = OptConverged(Struct,OldStruct,Forces,optct,QMMMOpts,0,0);
-      QMMMOpts.StepScale = SavedStepSize;
     }
     cout << '\n';
     cout << "Optimization complete.";
     cout << '\n' << '\n';
+    cout.flush();
+  }
+  //End of section
+
+  //Run Monte Carlo
+  else if (PIMCSim)
+  {
+    //Adjust probabilities
+    if (Natoms == 1)
+    {
+      //Remove atom centroid moves
+      CentProb = 0.0;
+      BeadProb = 1.0;
+    }
+    if (QMMMOpts.Ensemble == "NVT")
+    {
+      VolProb = 0.0;
+    }
+    //Calculate initial energy
+    QMMMOpts.Eold = 0;
+    QMMMOpts.Eold += Get_PI_Epot(Struct,QMMMOpts);
+    QMMMOpts.Eold += Get_PI_Espring(Struct,QMMMOpts);
+    if (VolProb > 0)
+    {
+      QMMMOpts.Eold += QMMMOpts.Press*Lx*Ly*Lz*atm2eV;
+    }
+    //Run simulations
+    cout << '\n';
+    SumE = 0;
+    SumE2 = 0;
+    VolAvg = 0;
+    Ek = 0;
+    if (QMMMOpts.Nbeads > 1)
+    {
+      //PIMC kinetic energy
+      Ek = 3*Natoms*QMMMOpts.Nbeads/(2*QMMMOpts.Beta);
+    }
+    int Nct = 0; //Step counter
+    int ct = 0; //Secondary counter
+    double Nacc = 0; //Number of accepted moves
+    double Nrej = 0; //Number of rejected moves
+    double Emc = 0; //Monte Carlo energy
+    bool acc; //Flag for accepting a step
+    cout << "Starting equilibration..." << '\n';
+    cout.flush();
+    Nct = 0;
+    while (Nct < QMMMOpts.Neq) //Equilibration
+    {
+      Emc = 0;
+      if(ct == Acc_Check)
+      {
+        if ((Nacc/(Nrej+Nacc)) > QMMMOpts.accratio)
+        {
+          step *= 1.10;
+        }
+        if ((Nacc/(Nrej+Nacc)) < QMMMOpts.accratio)
+        {
+          step *= 0.91;
+        }
+        if (step < StepMin)
+        {
+          step = StepMin;
+        }
+        if (step > StepMax)
+        {
+          step = StepMax;
+        }
+        ct = 0;
+        Nacc = 0;
+        Nrej = 0;
+      }
+      ct += 1;
+      acc = MCMove(Struct,QMMMOpts,Emc);
+      if (acc)
+      {
+        Nct += 1;
+        Nacc += 1;
+      }
+      else
+      {
+        Nrej += 1;
+      }
+    }
+    Nct = 0;
+    Nacc = 0;
+    Nrej = 0;
+    cout << "Starting production run..." << '\n';
+    cout.flush();
+    Print_traj(Struct,outfile,QMMMOpts);
+    while (Nct < QMMMOpts.Nsteps)
+    {
+      Emc = 0; //Set energy to zero
+      acc = MCMove(Struct,QMMMOpts,Emc);
+      if (acc)
+      {
+        Nct += 1;
+        Nacc += 1;
+        double Et = Ek+Emc;
+        Et -= 2*Get_PI_Espring(Struct,QMMMOpts);
+        VolAvg += Lx*Ly*Lz;
+        SumE += Et;
+        SumE2 += Et*Et;
+        if ((Nct%QMMMOpts.Nprint) == 0)
+        {
+          //Print progress
+          Print_traj(Struct,outfile,QMMMOpts);
+          cout << " | Step: " << Nct;
+          cout << " | Energy: " << Et << " eV";
+          if (QMMMOpts.Ensemble == "NPT")
+          {
+            cout << " | Volume: " << Lx*Ly*Lz << " \u212B^3";
+          }
+          cout << '\n';
+          cout.flush(); //Print results
+        }
+      }
+      else
+      {
+        Nrej += 1;
+      }
+    }
+    if ((Nct%QMMMOpts.Nprint) != 0)
+    {
+      //Print final geometry if it was not already written
+      Print_traj(Struct,outfile,QMMMOpts);
+    }
+    SumE /= QMMMOpts.Nsteps; //Average energy
+    SumE2 /= QMMMOpts.Nsteps; //Variance of the energy
+    VolAvg /= QMMMOpts.Nsteps; //Average volume
+    //Print output
+    cout << '\n';
+    cout << "Temperature: ";
+    cout << QMMMOpts.Temp;
+    cout << " K    ";
+    if (QMMMOpts.Ensemble == "NPT")
+    {
+      cout << "Volume: ";
+      cout << VolAvg;
+      cout << " \u212B^3";
+    }
+    cout << '\n';
+    cout << "Average energy: ";
+    cout << SumE;
+    cout << " eV    ";
+    cout << "Variance: ";
+    cout << (SumE2-SumE*SumE);
+    cout << " eV^2";
+    cout << '\n';
+    cout << "Acceptance ratio: ";
+    cout << (Nacc/(Nrej+Nacc));
+    cout << "    ";
+    cout << "Optimum step size: ";
+    cout << step;
+    cout << " \u212B";
+    cout << '\n';
+    cout << '\n';
     cout.flush();
   }
   //End of section
@@ -711,7 +708,6 @@ int main(int argc, char* argv[])
     while (!OptDone)
     {
       //Copy structure
-      double SavedStepSize = QMMMOpts.StepScale; //Save old step size
       OldStruct = Struct;
       //Run MM optimization
       for (int p=0;p<QMMMOpts.Nbeads;p++)
@@ -748,7 +744,6 @@ int main(int argc, char* argv[])
       //Check convergence
       optct += 1;
       OptDone = OptConverged(Struct,OldStruct,Forces,optct,QMMMOpts,0,0);
-      QMMMOpts.StepScale = SavedStepSize;
     }
     cout << '\n';
     cout << "Optimization complete.";
