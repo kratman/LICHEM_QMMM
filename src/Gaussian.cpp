@@ -357,7 +357,6 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
       call << dummy << '\n';
     }
     ifile.close();
-    call << '\n'; //Blank line needed
   }
   //Add basis set information from the BASIS file
   ifile.open("BASIS",ios_base::in);
@@ -370,7 +369,6 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
       call << dummy << '\n';
     }
     ifile.close();
-    call << '\n'; //Blank line needed
   }
   ofile << call.str();
   ofile.flush();
@@ -666,10 +664,10 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       call << dummy << '\n';
     }
     ifile.close();
-    call << '\n'; //Blank line needed
   }
   //Write Gaussian input
   ofile << call.str();
+  ofile.flush();
   ofile.close();
   //Run QM calculation
   call.str("");
@@ -881,10 +879,10 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       call << dummy << '\n';
     }
     ifile.close();
-    call << '\n'; //Blank line needed
   }
   //Write Gaussian input
   ofile << call.str();
+  ofile.flush();
   ofile.close();
   //Calculate energy
   call.str("");

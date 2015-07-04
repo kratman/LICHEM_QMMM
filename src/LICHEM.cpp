@@ -231,9 +231,10 @@ int main(int argc, char* argv[])
       if (QMMM)
       {
         cout << "    MM optimization complete.";
-        cout << '\n' << '\n';
+        cout << '\n';
         cout.flush();
       }
+      cout << '\n';
       //Run QM optimization
       if (Gaussian == 1)
       {
@@ -353,9 +354,10 @@ int main(int argc, char* argv[])
       if (QMMM)
       {
         cout << "    MM optimization complete.";
-        cout << '\n' << '\n';
+        cout << '\n';
         cout.flush();
       }
+      cout << '\n';
       //Run QM optimization
       LICHEMSteepest(Struct,QMMMOpts,0);
       //Print Optimized geometry
@@ -456,9 +458,10 @@ int main(int argc, char* argv[])
       if (QMMM)
       {
         cout << "    MM optimization complete.";
-        cout << '\n' << '\n';
+        cout << '\n';
         cout.flush();
       }
+      cout << '\n';
       //Run QM optimization
       LICHEMDFP(Struct,QMMMOpts,0);
       //Print Optimized geometry
@@ -730,13 +733,14 @@ int main(int argc, char* argv[])
           SumE = LAMMPSOpt(Struct,QMMMOpts,p);
           MMTime += (unsigned)time(0)-tstart;
         }
-        if (QMMM)
-        {
-          cout << "    MM optimization complete.";
-          cout << '\n' << '\n';
-          cout.flush();
-        }
       }
+      if (QMMM)
+      {
+        cout << "    MM optimization complete.";
+        cout << '\n';
+        cout.flush();
+      }
+      cout << '\n';
       //Run QM optimization
       LICHEMNEB(Struct,QMMMOpts);
       //Print Optimized geometry
