@@ -11,8 +11,10 @@
 
 */
 
+//Make including safe
 #ifndef QMMM_HEADERS
 #define QMMM_HEADERS
+
 //Header Files
 #include <omp.h>
 #include <cstdlib>

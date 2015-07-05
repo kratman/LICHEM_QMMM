@@ -724,7 +724,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       }
     }
   }
-  else if (NEBSim == 1)
+  else if (NEBSim)
   {
     //Create initial reaction pathway
     
