@@ -99,9 +99,9 @@ int Natoms = 0; //Total number of atoms
 int Nqm = 0; //Number of QM atoms
 int Nmm = 0; //Number of MM atoms
 double step = StepMin; //PIMC step size
-double Lx = 500.0; //Box length
-double Ly = 500.0; //Box length
-double Lz = 500.0; //Box length
+double Lx = 10000.0; //Box length
+double Ly = 10000.0; //Box length
+double Lz = 10000.0; //Box length
 
 //Flags for simulation options
 int GEM = 0; //Flag for frozen density QMMM potential

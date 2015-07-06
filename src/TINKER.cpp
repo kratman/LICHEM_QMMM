@@ -155,6 +155,16 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile << '\n'; //Make sure current line is empty
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
+  if (PBCon)
+  {
+    //Put here for safety
+    ofile << "a-axis " << Lx << '\n';
+    ofile << "b-axis " << Ly << '\n';
+    ofile << "c-axis " << Lz << '\n';
+    ofile << "alpha 90.0" << '\n';
+    ofile << "beta 90.0" << '\n';
+    ofile << "gamma 90.0" << '\n';
+  }
   ofile << "save-induced" << '\n'; //Save induced dipoles
   ofile << "thermostat berendsen" << '\n';
   ofile << "tau-temperature 0.1" << '\n';
@@ -329,6 +339,16 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile << '\n';
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
+  if (PBCon)
+  {
+    //Put here for safety
+    ofile << "a-axis " << Lx << '\n';
+    ofile << "b-axis " << Ly << '\n';
+    ofile << "c-axis " << Lz << '\n';
+    ofile << "alpha 90.0" << '\n';
+    ofile << "beta 90.0" << '\n';
+    ofile << "gamma 90.0" << '\n';
+  }
   ofile << "polarizeterm only" << '\n'; //Get rid of other interactions
   ct = 0; //Generic counter
   for (int i=0;i<Natoms;i++)
@@ -432,7 +452,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cerr << '\n';
     cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
-    E = HugeNum; //Large number to reject step
+    Epol = 0; //Prevents errors when polarization is off
     cerr.flush(); //Print warning immediately
   }
   ifile.close();
@@ -470,6 +490,16 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   ofile << '\n';
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
+  if (PBCon)
+  {
+    //Put here for safety
+    ofile << "a-axis " << Lx << '\n';
+    ofile << "b-axis " << Ly << '\n';
+    ofile << "c-axis " << Lz << '\n';
+    ofile << "alpha 90.0" << '\n';
+    ofile << "beta 90.0" << '\n';
+    ofile << "gamma 90.0" << '\n';
+  }
   ct = 0; //Generic counter
   for (int i=0;i<Natoms;i++)
   {
@@ -711,6 +741,16 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   ofile << '\n';
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
+  if (PBCon)
+  {
+    //Put here for safety
+    ofile << "a-axis " << Lx << '\n';
+    ofile << "b-axis " << Ly << '\n';
+    ofile << "c-axis " << Lz << '\n';
+    ofile << "alpha 90.0" << '\n';
+    ofile << "beta 90.0" << '\n';
+    ofile << "gamma 90.0" << '\n';
+  }
   ofile << "polarizeterm only" << '\n';
   ct = 0; //Generic counter
   for (int i=0;i<Natoms;i++)
@@ -927,6 +967,16 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     ofile << '\n';
     ofile << "#QM force field parameters"; //Marks the changes
     ofile << '\n';
+    if (PBCon)
+    {
+      //Put here for safety
+      ofile << "a-axis " << Lx << '\n';
+      ofile << "b-axis " << Ly << '\n';
+      ofile << "c-axis " << Lz << '\n';
+      ofile << "alpha 90.0" << '\n';
+      ofile << "beta 90.0" << '\n';
+      ofile << "gamma 90.0" << '\n';
+    }
     ofile << "polarizeterm none" << '\n'; //Remove polarization energy
     ct = 0; //Generic counter
     for (int i=0;i<Natoms;i++)
@@ -1112,6 +1162,16 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ofile << '\n';
     ofile << "#QM force field parameters"; //Marks the changes
     ofile << '\n';
+    if (PBCon)
+    {
+      //Put here for safety
+      ofile << "a-axis " << Lx << '\n';
+      ofile << "b-axis " << Ly << '\n';
+      ofile << "c-axis " << Lz << '\n';
+      ofile << "alpha 90.0" << '\n';
+      ofile << "beta 90.0" << '\n';
+      ofile << "gamma 90.0" << '\n';
+    }
     ofile << "thermostat berendsen";
     ofile << '\n';
     ofile << "tau-temperature ";
@@ -1324,6 +1384,16 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     ofile << '\n';
     ofile << "#QM force field parameters"; //Marks the changes
     ofile << '\n';
+    if (PBCon)
+    {
+      //Put here for safety
+      ofile << "a-axis " << Lx << '\n';
+      ofile << "b-axis " << Ly << '\n';
+      ofile << "c-axis " << Lz << '\n';
+      ofile << "alpha 90.0" << '\n';
+      ofile << "beta 90.0" << '\n';
+      ofile << "gamma 90.0" << '\n';
+    }
     ct = 0; //Generic counter
     for (int i=0;i<Natoms;i++)
     {
