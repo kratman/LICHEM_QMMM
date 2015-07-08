@@ -48,6 +48,7 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "QMMM";
   call << "_" << Bead;
   call << ".data";
+  ofile.open(call.str().c_str(),ios_base::out);
   ifile.open("DATA",ios_base::in);
   while (!ifile.eof())
   {
@@ -56,6 +57,11 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      call << dummy << '\n';
   }
   ifile.close();
+  call << '\n';
+  //Add PBC info
+  call << " 0.0 " << Lx << " xlo xhi" << '\n';
+  call << " 0.0 " << Ly << " ylo yhi" << '\n';
+  call << " 0.0 " << Lz << " zlo zhi" << '\n';
   call << '\n';
   call << "Atoms";
   call << '\n' << '\n';
@@ -81,6 +87,15 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     call << Struct[i].P[Bead].z;
     call << '\n';
   }
+  call << '\n';
+  ifile.open("TOPO",ios_base::in);
+  while (!ifile.eof())
+  {
+     //Copy the potential line by line
+     getline(ifile,dummy);
+     call << dummy << '\n';
+  }
+  ifile.close();
   ofile << call.str();
   ofile.flush();
   ofile.close();
@@ -163,8 +178,15 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   call << "thermo 1" << '\n';
   call << "thermo_style step etotal" << '\n';
-  call << "compute mme mm pe" << '\n';
-  call << "compute qmmme mm group/group qm" << '\n';
+  if (MMonly)
+  {
+    call << "compute mme all pe" << '\n';
+  }
+  if (QMMM)
+  {
+    call << "compute mme mm pe" << '\n';
+    call << "compute qmmme mm group/group qm" << '\n';
+  }
   call << "run 1" << '\n';
   ofile << call.str();
   ofile.flush();
@@ -173,13 +195,14 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "lammps -suffix omp -log QMMM_";
   call << Bead;
-  call << "< QMMM_";
+  call << ".log < QMMM_";
   call << Bead;
   call << ".in > QMMMlog_";
   call << Bead;
   call << ".txt";
   GlobalSys = system(call.str().c_str());
   //Extract energy
+  exit(0);
   
   //Clean up files
   call.str("");

@@ -116,6 +116,8 @@ Paragraphs are ended with a \LaTeX\ newline followed by a black line. \\
 All lines of code should be less than 80 characters wide.
 This has nothing to do with compiling or tracking changes, but helps to make
 the code readable on smaller portable devices such as tablets and netbooks.
+Also for readability purposes, avoid tabulars for indenting.
+Tabulars can appear to be different sizes in some text editors.
 
 \subsection{Parallelization}
 
@@ -377,10 +379,7 @@ If the potential type is MM or QMMM, several keywords are required to define
 the MM wrapper. \\
 
 MM\_type: $<$TINKER or AMBER or LAMMPS$>$ \\
-Electrostatics: $<$Charges or AMOEBA or Density$>$ \\
-
-All of the MM input is read into LICHEM as text, and hence, it must match the
-correct input for the MM package.
+Electrostatics: $<$Charges or AMOEBA or Density$>$
 
 \subsection{QMMM input}
 
@@ -403,9 +402,9 @@ For example, Gaussian can only read integer values for the memory.
 
 Input for the calculation types directly follows the wrapper input.
 Each type of calculation requires slightly different input.
-LICHEM can perform single-point energies (SP), optimizations
+LICHEM can perform single-point energies (SP), geometry optimizations
 (Opt,DFP,ESD,Steep,NEB), and path-integral Monte Carlo simulations (PIMC).
-Classical Monte Carlo simulations are performed as PIMC simulations with a
+Classical Monte Carlo simulations can be performed as PIMC simulations with a
 single bead. \\
 
 A description of the methods are given in Chapter \ref{chap:Theory} and the
