@@ -50,6 +50,20 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << ".data";
   ofile.open(call.str().c_str(),ios_base::out);
   ifile.open("DATA",ios_base::in);
+  call.str("");
+  call << '\n';
+  if (PBCon)
+  {
+    call << "0.0 " << Lx << " xlo xhi" << '\n';
+    call << "0.0 " << Ly << " ylo yhi" << '\n';
+    call << "0.0 " << Lz << " zlo zhi" << '\n';
+  }
+  else
+  {
+    call << (-1*Lx) << " " << Lx << " xlo xhi" << '\n';
+    call << (-1*Ly) << " " << Ly << " ylo yhi" << '\n';
+    call << (-1*Lz) << " " << Lz << " zlo zhi" << '\n';
+  }
   while (!ifile.eof())
   {
      //Copy the potential line by line
@@ -57,12 +71,7 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      call << dummy << '\n';
   }
   ifile.close();
-  call << '\n';
   //Add PBC info
-  call << " 0.0 " << Lx << " xlo xhi" << '\n';
-  call << " 0.0 " << Ly << " ylo yhi" << '\n';
-  call << " 0.0 " << Lz << " zlo zhi" << '\n';
-  call << '\n';
   call << "Atoms";
   call << '\n' << '\n';
   for (int i=0;i<Natoms;i++)
@@ -109,9 +118,18 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "atom_style full" << '\n';
   call << "units metal"; //eV,Ang,ps,bar,K
   call << '\n';
+  if (PBCon)
+  {
+    call << "boundary p p p" << '\n';
+  }
+  else
+  {
+    call << "boundary s s s" << '\n';
+  }
+  call << '\n';
   call << "read_data QMMM_";
   call << Bead << ".data";
-  call << '\n' << '\n';
+  call << '\n';
   ifile.open("POTENTIAL",ios_base::in);
   while (!ifile.eof())
   {
@@ -120,7 +138,6 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      call << dummy << '\n';
   }
   ifile.close();
-  call << '\n';
   if (Nqm > 0)
   {
     //Partition atoms into groups
@@ -177,17 +194,17 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     }
   }
   call << "thermo 1" << '\n';
-  call << "thermo_style step etotal" << '\n';
   if (MMonly)
   {
-    call << "compute mme all pe" << '\n';
+    call << "thermo_style custom step pe" << '\n';
   }
   if (QMMM)
   {
-    call << "compute mme mm pe" << '\n';
+    call << "compute mme mm group/group mm" << '\n';
     call << "compute qmmme mm group/group qm" << '\n';
+    call << "thermo_style custom step mme qmmme" << '\n';
   }
-  call << "run 1" << '\n';
+  call << "run 0" << '\n';
   ofile << call.str();
   ofile.flush();
   ofile.close();
