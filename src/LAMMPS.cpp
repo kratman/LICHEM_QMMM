@@ -196,15 +196,15 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "thermo 1" << '\n';
   if (MMonly)
   {
-    call << "thermo_style custom step pe" << '\n';
+    call << "thermo_style custom step etotal" << '\n';
   }
   if (QMMM)
   {
     call << "compute mme mm group/group mm" << '\n';
     call << "compute qmmme mm group/group qm" << '\n';
-    call << "thermo_style custom step mme qmmme" << '\n';
+    call << "thermo_style custom step c_mme c_qmmme" << '\n';
   }
-  call << "run 0" << '\n';
+  call << "run 0" << '\n'; //Only uses the initial energy
   ofile << call.str();
   ofile.flush();
   ofile.close();
