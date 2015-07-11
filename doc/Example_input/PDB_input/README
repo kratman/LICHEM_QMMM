@@ -1,0 +1,122 @@
+### PDB input tutorial ###
+#Eric G. Kratz, 2015
+
+This tutorial will walk a user through the process of creating LICHEM input
+from a PDB. The starting structure is an unsolvated (NHCH3)AWWAFYYFAWWA(COCH3)
+mini-peptide. The PDB will be converted to the LICHEM format by using the
+TINKER software package.
+
+# PDB creation #
+
+The first step for creating LICHEM input from a PDB file is (obviously) to
+find/create a PDB file for your system. In this example the PDB file is called
+peptide_orig.pdb and the AMOEBAPRO13 force field will be used for atom typing.
+
+# Checking the PDB #
+
+The PDB file should be checked to make sure that all of the amino acids are
+listed as "ATOM" and not "HETATM". The TINKER tools will delete all HETATM
+lines in the PDB file. In the PDB you will see that the (NHCH3) and (COCH3)
+caps are labeled as HETATM/LIG. To avoid losing the caps in the conversion,
+a TINKER XYZ file can be created for just the cap atoms (caps.xyz), which
+are conveniently at the end of the PDB file.
+
+When you are done looking at the PDB file, create a copy to use for the
+conversion.
+
+user:$ cp peptide_orig.pdb peptide.pdb
+
+# Creating a TINKER XYZ #
+
+TINKER can automatically atom type the structure using the force field
+provided by the TINKER key file.
+
+user:$ pdbxyz peptide.pdb ALL
+
+This command uses all residues in the final structure. Next use a text editor
+and/or a GUI to examine the peptide.xyz output file. Notice that the caps
+were deleted the peptide ends with (NH3+) and (COO-) groups.
+
+# Replacing the caps #
+
+Using a GUI, find the atom IDs for the unwanted hydrogen and oxygen atoms.
+The caps should connect to a (NH) and a (CO) group, so two hydrogens and an
+oxygen need to be deleted. The unwanted atoms should be {6,7,221} (Note that
+LICHEM and VMD index {0..N-1} while TINKER indexes {1..N}). These atoms can
+safely be removed using TINKER.
+
+user:$ xyzedit peptide.xyz
+
+In the menu, select the option for deleting atoms and remove all three. It is
+always a good idea to delete atoms from the largest to smallest indices. Next,
+use the option for appending an XYZ file (caps.xyz) onto the current file.
+
+# Checking the connectivity and atom types #
+
+Since you deleted atoms and added new ones, the connectivity and atom types
+are no longer accurate. The atom types for the {N,H,C,O} atoms at the end of
+the peptide need to be manually changed to the types defined by the force
+field. Finally, connectivity of the caps has to be added to the XYZ file.
+
+# Testing the file #
+
+It is a good idea to test the TINKER XYZ input.
+
+user:$ analyze peptide.xyz E
+
+TINKER should print warning messages if it detects type errors or connectivity
+errors. The errors are printed in response to missing bond, angle, and
+dihedral parameters, so it is a rather robust test.
+
+There should not be any force field warnings from the files provided with
+this tutorial.
+
+# Convert to LICHEM input #
+
+LICHEM has file conversion tools which can help create valid input. For
+TINKER, the conversion is fairly easy.
+
+user:$ lichem -convert -t peptide.xyz -k tinker.key
+
+This command will convert a TINKER XYZ file (-t) to a standard XYZ file
+(xyzfile.xyz) and a connectivity file (connect.inp). The TINKER key file (-k)
+is used for atom typing and finding frozen atoms (via active/inactive keywords
+in the key file).
+
+Since this is a polarizable force field, lichem will not be able to detect the
+point-charges. With polarizable models, point-charge warnings are often false
+alarms. The warnings are intended to alert users that zeros were added for the
+default point-charges in the connectivity file. This is useful for
+point-charge based models, but pointless for multipole based force fields.
+The multipoles will be checked later in the tutorial.
+
+# Updating the region file #
+
+The next step is to add simulation input to the region.inp file. The region
+file input syntax can be found in the LICHEM manual. It is useful to start
+with a simple single-point energy calculation. If the force field was
+point-charge based, then this would be the last step.
+
+# Checking the multipoles #
+
+The force field can be checked by forcing LICHEM to print the multipoles in
+the global frame of reference. If multipoles were not found for some of the
+atoms, then zeros will be printed for those atoms.
+
+user:$ lichem -GlobalPoles -n Ncpus -x xyzfile.xyz -r regions.inp
+       -c connect.inp > tmp.txt
+
+Here Ncpus can be set to 1 or the number of cores on your machine. For large
+systems LICHEM will use OpenMP to divide the multipole rotations. The LICHEM
+output can be checked for atoms with zero multipole moments and the total
+charge. If the total charge does not match your expectations or if there are
+atoms with zero multipole moments, then there may be a problem with the
+force field file.
+
+In this example the force field should match the PDB file and the total charge
+is zero.
+
+# The end? #
+
+After this tutorial, you should have working LICHEM input for the original
+PDB file. Now you can run test calculations.

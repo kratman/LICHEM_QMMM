@@ -1,3 +1,6 @@
+
+[//]: # (Mixture of GitHub markdown and HTML. HTML is needed for formatting.)
+
 ***
 <div align=center> <h2>
 LICHEM: Layered Interacting CHEmical Models

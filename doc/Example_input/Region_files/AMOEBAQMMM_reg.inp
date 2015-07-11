@@ -1,0 +1,17 @@
+Potential_type: QMMM
+QM_type: Gaussian
+QM_method: HF
+QM_basis: 6-31G*
+QM_memory: 1 GB
+QM_charge: 0
+QM_spin: 1
+MM_type: TINKER
+Potential_type: AMOEBA
+Calculation_type: SP
+PBC: No
+QM_atoms: 3
+0 1 2
+Pseudobond_atoms: 0
+Boundary_atoms: 0
+Frozen_atoms: 0
+

@@ -1,0 +1,24 @@
+Potential_type: QMMM
+QM_type: PSI4
+QM_method: PBE0-D
+QM_basis: 6-31++G**
+QM_memory: 2000 MB
+QM_charge: 0
+QM_spin: 1
+MM_type: TINKER
+Electrostatics: Charges
+Calculation_type: PIMC
+Ensemble: NVT
+Temperature: 300.0
+Pressure: 0.0
+Number_of_Eq_steps: 1000
+Number_of_MC_steps: 1000
+Number_of_beads: 4
+Acceptance_ratio: 0.35
+Traj_steps_before_printing: 10
+PBC: No
+QM_atoms: 3
+0 1 2
+Pseudobond_atoms: 0
+Boundary_atoms: 0
+Frozen_atoms: 0
