@@ -811,7 +811,9 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
     //Run MD
     if (TINKER == 1)
     {
+      int tstart = (unsigned)time(0);
       TINKERDynamics(Struct,QMMMOpts,Bead);
+      MMTime += (unsigned)time(0)-tstart;
       if (AMOEBA == 1)
       {
         //Set up current multipoles
