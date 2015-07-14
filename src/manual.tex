@@ -870,9 +870,9 @@ to be the identity matrix, which effectively causes the first optimization
 step to be a SD step.
 As with the SD algorithm, the step size is adjusted based on the progress of
 the optimizer.
-Initially, $\alpha=0.05\alpha_{max}$ and the step size is increased by 20\%
+Initially, $\alpha=0.05\alpha_{max}$ and the step size is increased by 25\%
 after each sucessful optimization step.
-If the energy does not decrease or if 25 optimization steps have been
+If the energy does not decrease or if 20 optimization steps have been
 performed, the Hessian is reset to the identity matrix and
 $\alpha=0.02\alpha_{max}$.
 This algorithm will not always satisfy the Wolfe conditions, however, it will

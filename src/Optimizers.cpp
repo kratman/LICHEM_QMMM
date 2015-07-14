@@ -703,9 +703,9 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       NGrad(ct+2) = Forces[i].z;
       ct += 3;
     }
-    if (((stepct%25) == 0) and (stepct != 0))
+    if (((stepct%20) == 0) and (stepct != 0))
     {
-      //Build a new Hessian after 25 steps
+      //Build a new Hessian after 20 steps
       cout << "    Constructing new Hessian...";
       cout << '\n';
       //Shrink step size
@@ -742,7 +742,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       /(GradDiff.transpose()*IHess*GradDiff));
       //End really long "line"
       //Increase stepsize
-      StepScale *= 1.20;
+      StepScale *= 1.25;
       if (StepScale > QMMMOpts.StepScale)
       {
         //Prevent step size from getting too large
