@@ -680,11 +680,37 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     Struct[AtomID].BAregion = 1;
     Struct[AtomID].MMregion = 0;
   }
-  if (MMonly or QMMM)
+  if (QMonly)
   {
-    //Set number of MM atoms
-    Nmm = Natoms-Nqm-Npseudo-Nbound;
+    //Reset the numbers if regions were specified in the input
+    Nqm = Natoms;
+    Npseudo = 0;
+    Nbound = 0;
+    //Redundant, but safe
+    for (int i=0;i<Natoms;i++)
+    {
+      Struct[i].QMregion = 1;
+      Struct[i].MMregion = 0;
+      Struct[i].PBregion = 0;
+      Struct[i].BAregion = 0;
+    }
   }
+  if (MMonly)
+  {
+    //Reset the numbers if regions were specified in the input
+    Nqm = 0;
+    Npseudo = 0;
+    Nbound = 0;
+    //Redundant, but safe
+    for (int i=0;i<Natoms;i++)
+    {
+      Struct[i].QMregion = 0;
+      Struct[i].MMregion = 1;
+      Struct[i].PBregion = 0;
+      Struct[i].BAregion = 0;
+    }
+  }
+  Nmm = Natoms-Nqm-Npseudo-Nbound; //Set number of MM atoms
   regionfile >> dummy >> Nfreeze; //Number of frozen atoms
   for (int i=0;i<Nfreeze;i++)
   {

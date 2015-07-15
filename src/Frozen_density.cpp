@@ -18,4 +18,13 @@
  Reference for conversion to point-charges:
  
 
+ References for integrals:
+ 
+
 */
+
+//Gaussian function classes and structs
+
+
+//Functions for conversion to point-charges
+

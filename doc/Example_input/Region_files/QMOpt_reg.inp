@@ -10,8 +10,7 @@ Max_opt_step: 0.10
 MM_opt_tolerance: 1e-2
 Max_Opt_Steps: 200
 PBC: No
-QM_atoms: 6
-0 1 2 3 4 5
+QM_atoms: 0
 Pseudobond_atoms: 0
 Boundary_atoms: 0
 Frozen_atoms: 0

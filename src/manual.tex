@@ -80,7 +80,7 @@ When updating the documentation, there should be a newline after each
 sentence.
 This makes the documentation files very long, but it makes tracking/merging
 changes safer and easier.
-Paragraphs are ended with a \LaTeX\ newline followed by a black line.
+Paragraphs are ended with a \LaTeX\ newline followed by a blank line.
 
 \subsection{Updating LICHEM}
 
@@ -267,7 +267,7 @@ The development of LICHEM was supported by funding from the NIH (Grant No.\
 R01GM108583) and Wayne State University.
 LICHEM is maintained by the Cisneros research group at Wayne State University.
 
-\chapter{Input}
+\chapter{LICHEM Input}
 
 \section{Command line arguments}
 
@@ -473,7 +473,7 @@ Frozen\_atoms: Ninact [list of ids] \\
 
 Definitions of the QM, pseudo-bond atoms, and boundary atoms can be found in
 Chapter \ref{chap:Theory}.
-Frozen atoms are atoms that should remain stationary during optimizations,
+Frozen atoms are MM atoms that should remain stationary during optimizations,
 dynamics, or Monte Carlo simulations.
 Frozen atoms are useful for optimizing small regions of large periodic
 systems. \\
@@ -575,7 +575,7 @@ QM\_basis: GEN \\
 GEN is a Gaussian keyword which causes the package to check for extra basis
 set information below the structure. \\
 
-LICHEM automatically tells Gaussian to look for pseudo potentials, however,
+LICHEM automatically tells Gaussian to look for pseudopotentials, however,
 these must be given below the basis set information in the BASIS file.
 Both the basis set and pseudopotential information must be given in Gaussian
 format.
@@ -793,10 +793,10 @@ While representing the multipoles as a set of point-charges reduces the
 accuracy, most QM and MM packages can easily add additional point-charges to
 the potential.
 
-\subsection{Frozen density force fields}
+\subsection{Polarizable density force fields}
 
-Frozen density force fields are a special class of polarizable force fields
-where the electron density is represented by Gaussian functions.
+Polarizable density force fields are a special class of polarizable force
+fields where the electron density is represented by Gaussian functions.
 These potentials can greatly improve the calculations of the electrostatic
 field and can include exchange and charge penetration effects.
 
@@ -870,9 +870,9 @@ to be the identity matrix, which effectively causes the first optimization
 step to be a SD step.
 As with the SD algorithm, the step size is adjusted based on the progress of
 the optimizer.
-Initially, $\alpha=0.05\alpha_{max}$ and the step size is increased by 25\%
+Initially, $\alpha=0.05\alpha_{max}$ and the step size is increased by 20\%
 after each sucessful optimization step.
-If the energy does not decrease or if 20 optimization steps have been
+If the energy does not decrease or if 30 optimization steps have been
 performed, the Hessian is reset to the identity matrix and
 $\alpha=0.02\alpha_{max}$.
 This algorithm will not always satisfy the Wolfe conditions, however, it will
