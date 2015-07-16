@@ -597,7 +597,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   Eold = E;
   bool OptDone = 0;
   double StepScale = QMMMOpts.StepScale;
-  StepScale *= 0.01; //Take a very small first step
+  StepScale *= 0.02; //Take a very small first step
   while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
   {
     E = 0; // Reinitialize energy
@@ -709,9 +709,9 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       cout << "    Constructing new Hessian...";
       cout << '\n';
       //Shrink step size
-      if (StepScale > (0.01*QMMMOpts.StepScale))
+      if (StepScale > (0.02*QMMMOpts.StepScale))
       {
-        StepScale = 0.01*QMMMOpts.StepScale;
+        StepScale = 0.02*QMMMOpts.StepScale;
       }
       else
       {
@@ -755,9 +755,9 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       cout << "    Energy did not decrease. Constructing new Hessian...";
       cout << '\n';
       //Shrink step size
-      if (StepScale > (0.01*QMMMOpts.StepScale))
+      if (StepScale > (0.02*QMMMOpts.StepScale))
       {
-        StepScale = 0.01*QMMMOpts.StepScale;
+        StepScale = 0.02*QMMMOpts.StepScale;
       }
       else
       {
