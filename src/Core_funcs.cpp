@@ -9,7 +9,7 @@
 #                                                                             #
 ###############################################################################
 
- Primary functions and classes for LICHEM.
+ Primary functions for LICHEM.
 
 */
 
@@ -243,6 +243,135 @@ int RevTyping(string AtName)
   }
   #pragma omp barrier
   return Z;
+};
+
+double SetvdWRad(string AtName)
+{
+  //Function to find the vdW radius for an atom
+  double vdwrad = 1.0; //Fallback value
+  vector<string> Typs; //Atom names
+  vector<double> Rads; //Radii
+  //Set values
+  Typs.push_back("H");
+  Rads.push_back(1.0);
+  Typs.push_back("He");
+  Rads.push_back(1.0);
+  Typs.push_back("Li");
+  Rads.push_back(1.0);
+  Typs.push_back("Be");
+  Rads.push_back(1.0);
+  Typs.push_back("B");
+  Rads.push_back(1.0);
+  Typs.push_back("C");
+  Rads.push_back(1.0);
+  Typs.push_back("N");
+  Rads.push_back(1.0);
+  Typs.push_back("O");
+  Rads.push_back(1.0);
+  Typs.push_back("F");
+  Rads.push_back(1.0);
+  Typs.push_back("Ne");
+  Rads.push_back(1.0);
+  Typs.push_back("Na");
+  Rads.push_back(1.0);
+  Typs.push_back("Mg");
+  Rads.push_back(1.0);
+  Typs.push_back("Al");
+  Rads.push_back(1.0);
+  Typs.push_back("Si");
+  Rads.push_back(1.0);
+  Typs.push_back("P");
+  Rads.push_back(1.0);
+  Typs.push_back("S");
+  Rads.push_back(1.0);
+  Typs.push_back("Cl");
+  Rads.push_back(1.0);
+  Typs.push_back("Ar");
+  Rads.push_back(1.0);
+  Typs.push_back("K");
+  Rads.push_back(1.0);
+  Typs.push_back("Ca");
+  Rads.push_back(1.0);
+  Typs.push_back("Sc");
+  Rads.push_back(1.0);
+  Typs.push_back("Ti");
+  Rads.push_back(1.0);
+  Typs.push_back("V");
+  Rads.push_back(1.0);
+  Typs.push_back("Cr");
+  Rads.push_back(1.0);
+  Typs.push_back("Mn");
+  Rads.push_back(1.0);
+  Typs.push_back("Fe");
+  Rads.push_back(1.0);
+  Typs.push_back("Co");
+  Rads.push_back(1.0);
+  Typs.push_back("Ni");
+  Rads.push_back(1.0);
+  Typs.push_back("Cu");
+  Rads.push_back(1.0);
+  Typs.push_back("Zn");
+  Rads.push_back(1.0);
+  Typs.push_back("Ga");
+  Rads.push_back(1.0);
+  Typs.push_back("Ge");
+  Rads.push_back(1.0);
+  Typs.push_back("As");
+  Rads.push_back(1.0);
+  Typs.push_back("Se");
+  Rads.push_back(1.0);
+  Typs.push_back("Br");
+  Rads.push_back(1.0);
+  Typs.push_back("Kr");
+  Rads.push_back(1.0);
+  Typs.push_back("Rb");
+  Rads.push_back(1.0);
+  Typs.push_back("Sr");
+  Rads.push_back(1.0);
+  Typs.push_back("Y");
+  Rads.push_back(1.0);
+  Typs.push_back("Zr");
+  Rads.push_back(1.0);
+  Typs.push_back("Nb");
+  Rads.push_back(1.0);
+  Typs.push_back("Mo");
+  Rads.push_back(1.0);
+  Typs.push_back("Tc");
+  Rads.push_back(1.0);
+  Typs.push_back("Ru");
+  Rads.push_back(1.0);
+  Typs.push_back("Rh");
+  Rads.push_back(1.0);
+  Typs.push_back("Pd");
+  Rads.push_back(1.0);
+  Typs.push_back("Ag");
+  Rads.push_back(1.0);
+  Typs.push_back("Cd");
+  Rads.push_back(1.0);
+  Typs.push_back("In");
+  Rads.push_back(1.0);
+  Typs.push_back("Sn");
+  Rads.push_back(1.0);
+  Typs.push_back("Sb");
+  Rads.push_back(1.0);
+  Typs.push_back("Te");
+  Rads.push_back(1.0);
+  Typs.push_back("I");
+  Rads.push_back(1.0);
+  Typs.push_back("Xe");
+  Rads.push_back(1.0);
+  //Find radius
+  #pragma omp parallel for num_threads(Ncpus)
+  for (unsigned int i=0;i<Typs.size();i++)
+  {
+    if (AtName == Typs[i])
+    {
+      //Save value
+      vdwrad = Rads[i];
+    }
+  }
+  #pragma omp barrier
+  return vdwrad;
 };
 
 vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int AtID)

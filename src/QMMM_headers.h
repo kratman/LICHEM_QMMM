@@ -217,6 +217,35 @@ struct OctCharges
   double z6;
 };
 
+class GauDen1s
+{
+  //Simple 1s Gaussian class
+  private:
+    //Properties in a.u.
+    double mag; //Magnitude/population (prefactor)
+    double wid; //Width
+    double q; //Nuclear charge
+    double x; //X position
+    double y; //Y position
+    double z; //Z position
+  public:
+    //Constructor
+    GauDen1s(double mag,double wid,double q,double x,double y,double z)
+    {
+      //Convert to a.u.
+      wid /= BohrRad;
+      x /= BohrRad;
+      y /= BohrRad;
+      z /= BohrRad;
+      return;
+    }
+    //Electron density integrals
+    double TwoOver(GauDen1s); //Density-density overlap
+    double OneCoulPC(double,Coord,double); //Density-charge (MM)
+    double OneCoulNuc(GauDen1s,double); //Density-nucleus
+    double TwoCoul(GauDen1s,double); //Density-density Coulomb repulsion
+};
+
 struct QMMMAtom
 {
   //Data type for atomic information
@@ -397,6 +426,10 @@ int RevTyping(string);
 void RotateTINKCharges(vector<QMMMAtom>&,int);
 
 OctCharges SphHarm2Charges(RedMpole);
+
+void SetGauDen(vector<GauDen1s>&,vector<QMMMAtom>&,int);
+
+double SetvdWRad(string);
 
 double SpringEnergy(double,double);
 
