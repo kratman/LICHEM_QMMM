@@ -24,7 +24,44 @@
 */
 
 //Gaussian function classes and structs
+double GauDen1s::TwoOver(GauDen1s gau2)
+{
+  //Calculates the overlap of two Gaussian functions
+  double Sij = 0.0;
 
+  return Sij;
+};
+
+double GauDen1s::OneCoulPC(double qpc, Coord pos, double Rcut)
+{
+  //Calculates the electron-charge interactions for a point-charge
+  double E = 0.0;
+
+  return E;
+};
+
+double GauDen1s::OneCoulNuc(GauDen1s gau2, double Rcut)
+{
+  //Calculates the electron-charge interactions for a point-charge
+  double E = 0.0;
+
+  return E;
+};
+
+double GauDen1s::TwoCoul(GauDen1s gau2, double Rcut)
+{
+  //Calculates the electron-electron interactions
+  double E = 0.0;
+
+  return E;
+};
+
+void SetGauDen(vector<GauDen1s>& AtDens,vector<QMMMAtom>& Struct,int Bead)
+{
+  //Function to set the simplified Gaussian electron density
+
+  return;
+};
 
 //Functions for conversion to point-charges
 
