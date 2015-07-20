@@ -146,7 +146,7 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   //Print file
   dummy = call.str(); //Store file as a temporary variable
   call.str("");
-  call << "QMMM_" << Bead << ".dat";
+  call << "LICHM_" << Bead << ".dat";
   ofile.open(call.str().c_str(),ios_base::out);
   ofile << dummy << '\n';
   ofile.flush();
@@ -164,7 +164,7 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   GlobalSys = system(call.str().c_str());
   //Extract charges
   call.str("");
-  call << "QMMM_" << Bead << ".out";
+  call << "LICHM_" << Bead << ".out";
   ifile.open(call.str().c_str(),ios_base::in);
   while (!ifile.eof())
   {
@@ -240,9 +240,9 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   //Clean up files
   call.str("");
   call << "rm -f ";
-  call << "QMMM_" << Bead << ".dat ";
-  call << "QMMM_" << Bead << ".out ";
-  call << "QMMM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".dat ";
+  call << "LICHM_" << Bead << ".out ";
+  call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Change units
   Eqm *= Har2eV;
@@ -374,7 +374,7 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Print file
   dummy = call.str(); //Store as a temporary variable
   call.str("");
-  call << "QMMM_" << Bead << ".dat";
+  call << "LICHM_" << Bead << ".dat";
   ofile.open(call.str().c_str(),ios_base::out);
   ofile << dummy << '\n';
   ofile.flush();
@@ -392,7 +392,7 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   GlobalSys = system(call.str().c_str());
   //Extract charges
   call.str("");
-  call << "QMMM_" << Bead << ".out";
+  call << "LICHM_" << Bead << ".out";
   ifile.open(call.str().c_str(),ios_base::in);
   while (!ifile.eof())
   {
@@ -424,9 +424,9 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Clean up files
   call.str("");
   call << "rm -f ";
-  call << "QMMM_" << Bead << ".dat ";
-  call << "QMMM_" << Bead << ".out ";
-  call << "QMMM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".dat ";
+  call << "LICHM_" << Bead << ".out ";
+  call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   return;
 };
@@ -557,7 +557,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Print file
   dummy = call.str(); //Store as a temporary variable
   call.str("");
-  call << "QMMM_" << Bead << ".dat";
+  call << "LICHM_" << Bead << ".dat";
   ofile.open(call.str().c_str(),ios_base::out);
   ofile << dummy << '\n';
   ofile.flush();
@@ -575,7 +575,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   GlobalSys = system(call.str().c_str());
   //Read energy
   call.str("");
-  call << "QMMM_" << Bead << ".out";
+  call << "LICHM_" << Bead << ".out";
   ifile.open(call.str().c_str(),ios_base::in);
   bool QMfinished = 0;
   while (!ifile.eof())
@@ -628,9 +628,9 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Clean up files
   call.str("");
   call << "rm -f ";
-  call << "QMMM_" << Bead << ".dat ";
-  call << "QMMM_" << Bead << ".out ";
-  call << "QMMM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".dat ";
+  call << "LICHM_" << Bead << ".out ";
+  call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Change units
   E *= Har2eV;
@@ -764,7 +764,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   //Print file
   dummy = call.str(); //Store as a temporary variable
   call.str("");
-  call << "QMMM_" << Bead << ".dat";
+  call << "LICHM_" << Bead << ".dat";
   ofile.open(call.str().c_str(),ios_base::out);
   ofile << dummy << '\n';
   ofile.flush();
@@ -782,7 +782,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   GlobalSys = system(call.str().c_str());
   //Read energy and structure
   call.str("");
-  call << "QMMM_" << Bead << ".out";
+  call << "LICHM_" << Bead << ".out";
   ifile.open(call.str().c_str(),ios_base::in);
   bool QMfinished = 0;
   bool Optfinished = 0;
@@ -871,9 +871,9 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   //Clean up files
   call.str("");
   call << "rm -f ";
-  call << "QMMM_" << Bead << ".dat ";
-  call << "QMMM_" << Bead << ".out ";
-  call << "QMMM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".dat ";
+  call << "LICHM_" << Bead << ".out ";
+  call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Change units
   E *= Har2eV;

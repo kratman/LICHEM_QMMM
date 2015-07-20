@@ -698,9 +698,9 @@ int main(int argc, char* argv[])
         if (Gaussian == 1)
         {
           call.str("");
-          call << "cp QMMM_" << (p);
+          call << "cp LICHM_" << (p);
           call << ".chk";
-          call << " QMMM_" << (p+1);
+          call << " LICHM_" << (p+1);
           call << ".chk";
           GlobalSys = system(call.str().c_str());
         }

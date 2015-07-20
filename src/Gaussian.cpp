@@ -215,7 +215,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   }
   //Check if there is a checkpoint file
   call.str("");
-  call << "QMMM_" << Bead << ".chk";
+  call << "LICHM_" << Bead << ".chk";
   bool UseCheckPoint = CheckFile(call.str());
   //Construct g09 input
   call.str("");
@@ -491,16 +491,16 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     cerr.flush(); //Print warning immediately
     //Delete checkpoint
     call.str("");
-    call << "rm -f QMMM_" << Bead << ".chk";
+    call << "rm -f LICHM_" << Bead << ".chk";
     GlobalSys = system(call.str().c_str());
   }
   //Clean up files
   call.str("");
   call << "rm -f ";
-  call << "QMMM_" << Bead;
+  call << "LICHM_" << Bead;
   call << ".log";
   call << " ";
-  call << "QMMM_" << Bead;
+  call << "LICHM_" << Bead;
   call << ".com";
   GlobalSys = system(call.str().c_str());
   //Return
@@ -523,7 +523,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   //Check if there is a checkpoint file
   call.str("");
-  call << "QMMM_" << Bead << ".chk";
+  call << "LICHM_" << Bead << ".chk";
   bool UseCheckPoint = CheckFile(call.str());
   //Construct input
   call.str("");
@@ -708,17 +708,17 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ifile.close();
   //Clean up files and save checkpoint file
   call.str("");
-  call << "mv QMMM_" << Bead;
+  call << "mv LICHM_" << Bead;
   call << ".chk tmp_" << Bead;
   call << ".chk && ";
   call << "rm -f ";
-  call << "QMMM_" << Bead;
+  call << "LICHM_" << Bead;
   call << ".log";
   call << " ";
-  call << "QMMM_" << Bead;
+  call << "LICHM_" << Bead;
   call << ".com";
   call << " && mv tmp_" << Bead;
-  call << ".chk QMMM_" << Bead;
+  call << ".chk LICHM_" << Bead;
   call << ".chk";
   GlobalSys = system(call.str().c_str());
   return;
@@ -741,11 +741,11 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   //Check if there is a checkpoint file
   call.str("");
-  call << "QMMM_" << Bead << ".chk";
+  call << "LICHM_" << Bead << ".chk";
   bool UseCheckPoint = CheckFile(call.str());
   //Construct Gaussian input
   call.str("");
-  call << "QMMM_" << Bead << ".com";
+  call << "LICHM_" << Bead << ".com";
   ofile.open(call.str().c_str(),ios_base::out);
   call.str("");
   call << "%chk=QMMM";
@@ -887,11 +887,11 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Calculate energy
   call.str("");
   call << "g09 ";
-  call << "QMMM_" << Bead;
+  call << "LICHM_" << Bead;
   GlobalSys = system(call.str().c_str());
   //Read output
   call.str("");
-  call << "QMMM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".log";
   ifile.open(call.str().c_str(),ios_base::in);
   bool QMfinished = 0;
   while (!ifile.eof())
@@ -956,17 +956,17 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cerr.flush(); //Print warning immediately
     //Delete checkpoint
     call.str("");
-    call << "rm -f QMMM_" << Bead << ".chk";
+    call << "rm -f LICHM_" << Bead << ".chk";
     GlobalSys = system(call.str().c_str());
   }
   ifile.close();
   //Clean up files and save checkpoint file
   call.str("");
   call << "rm -f ";
-  call << "QMMM_" << Bead;
+  call << "LICHM_" << Bead;
   call << ".log";
   call << " ";
-  call << "QMMM_" << Bead;
+  call << "LICHM_" << Bead;
   call << ".com";
   GlobalSys = system(call.str().c_str());
   //Change units
@@ -1193,7 +1193,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cerr.flush(); //Print warning immediately
     //Delete checkpoint
     call.str("");
-    call << "rm -f QMMM_" << Bead << ".chk";
+    call << "rm -f LICHM_" << Bead << ".chk";
     GlobalSys = system(call.str().c_str());
   }
   //Calculate new point-charges and return

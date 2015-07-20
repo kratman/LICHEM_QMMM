@@ -930,7 +930,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
   }
   //Clean up files and return
   call.str("");
-  call << "rm -f QMMM_" << Bead << ".dyn";
+  call << "rm -f LICHM_" << Bead << ".dyn";
   GlobalSys = system(call.str().c_str());
   return;
 };

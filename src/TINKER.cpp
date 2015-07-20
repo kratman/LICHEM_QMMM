@@ -107,7 +107,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   int ct; //Generic counter
   //Create TINKER xyz file
   call.str("");
-  call << "QMMM_" << Bead << ".xyz";
+  call << "LICHM_" << Bead << ".xyz";
   ofile.open(call.str().c_str(),ios_base::out);
   ofile << Natoms << '\n';
   if (PBCon)
@@ -144,12 +144,12 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile.close();
   //Create new TINKER key file
   call.str("");
-  call << "cp tinker.key QMMM_";
+  call << "cp tinker.key LICHM_";
   call << Bead << ".key";
   GlobalSys = system(call.str().c_str());
   //Update key file
   call.str("");
-  call << "QMMM_";
+  call << "LICHM_";
   call << Bead << ".key";
   ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
   ofile << '\n'; //Make sure current line is empty
@@ -237,12 +237,12 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile.close();
   //Calculate induced dipoles using dynamic
   call.str("");
-  call << "dynamic QMMM_" << Bead << ".xyz ";
-  call << "1 1e-4 1e-7 2 0 > QMMM_" << Bead << ".log";
+  call << "dynamic LICHM_" << Bead << ".xyz ";
+  call << "1 1e-4 1e-7 2 0 > LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Extract induced dipoles from the MD cycle file
   call.str("");
-  call << "QMMM_" << Bead << ".001u";
+  call << "LICHM_" << Bead << ".001u";
   ifile.open(call.str().c_str(),ios_base::in);
   getline(ifile,dummy); //Clear number of atoms
   while (ifile.good())
@@ -269,11 +269,11 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Delete junk files
   call.str("");
   call << "rm -f ";
-  call << "QMMM_" << Bead << ".xyz ";
-  call << "QMMM_" << Bead << ".key ";
-  call << "QMMM_" << Bead << ".0* ";
-  call << "QMMM_" << Bead << ".dyn ";
-  call << "QMMM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".xyz ";
+  call << "LICHM_" << Bead << ".key ";
+  call << "LICHM_" << Bead << ".0* ";
+  call << "LICHM_" << Bead << ".dyn ";
+  call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   return;
 };
@@ -291,7 +291,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   int ct; //Generic counter
   //Create TINKER xyz file
   call.str("");
-  call << "QMMM_" << Bead << ".xyz";
+  call << "LICHM_" << Bead << ".xyz";
   ofile.open(call.str().c_str(),ios_base::out);
   ofile << Natoms << '\n';
   if (PBCon)
@@ -328,12 +328,12 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile.close();
   //Create new TINKER key file
   call.str("");
-  call << "cp tinker.key QMMM_";
+  call << "cp tinker.key LICHM_";
   call << Bead << ".key";
   GlobalSys = system(call.str().c_str());
   //Update key file
   call.str("");
-  call << "QMMM_";
+  call << "LICHM_";
   call << Bead << ".key";
   ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
   ofile << '\n';
@@ -419,13 +419,13 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile.close();
   //Calculate QMMM energy
   call.str("");
-  call << "analyze QMMM_";
-  call << Bead << ".xyz E > QMMM_";
+  call << "analyze LICHM_";
+  call << Bead << ".xyz E > LICHM_";
   call << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Extract polarization energy
   call.str("");
-  call << "QMMM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".log";
   ifile.open(call.str().c_str(),ios_base::in);
   bool Efound = 0;
   while (!ifile.eof())
@@ -459,9 +459,9 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Clean up files
   call.str("");
   call << "rm -f";
-  call << " QMMM_" << Bead << ".xyz";
-  call << " QMMM_" << Bead << ".log";
-  call << " QMMM_" << Bead << ".key";
+  call << " LICHM_" << Bead << ".xyz";
+  call << " LICHM_" << Bead << ".log";
+  call << " LICHM_" << Bead << ".key";
   GlobalSys = system(call.str().c_str());
   //Return polarization energy in kcal/mol
   return Epol;
@@ -479,12 +479,12 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   int ct; //Generic counter
   //Construct MM forces input for TINKER
   call.str("");
-  call << "cp tinker.key QMMM_";
+  call << "cp tinker.key LICHM_";
   call << Bead << ".key";
   GlobalSys = system(call.str().c_str());
   //Update key file
   call.str("");
-  call << "QMMM_";
+  call << "LICHM_";
   call << Bead << ".key";
   ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
   ofile << '\n';
@@ -709,9 +709,9 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   //Clean up files
   call.str("");
   call << "rm -f";
-  call << " QMMM_" << Bead << ".xyz";
-  call << " QMMM_" << Bead << ".key";
-  call << " QMMM_" << Bead << ".grad";
+  call << " LICHM_" << Bead << ".xyz";
+  call << " LICHM_" << Bead << ".key";
+  call << " LICHM_" << Bead << ".grad";
   GlobalSys = system(call.str().c_str());
   //Return
   Emm *= kcal2eV;
@@ -730,12 +730,12 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   int ct; //Generic counter
   //Construct MM forces input for TINKER
   call.str("");
-  call << "cp tinker.key QMMM_";
+  call << "cp tinker.key LICHM_";
   call << Bead << ".key";
   GlobalSys = system(call.str().c_str());
   //Update key file
   call.str("");
-  call << "QMMM_";
+  call << "LICHM_";
   call << Bead << ".key";
   ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
   ofile << '\n';
@@ -933,9 +933,9 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   //Clean up files
   call.str("");
   call << "rm -f";
-  call << " QMMM_" << Bead << ".xyz";
-  call << " QMMM_" << Bead << ".key";
-  call << " QMMM_" << Bead << ".grad";
+  call << " LICHM_" << Bead << ".xyz";
+  call << " LICHM_" << Bead << ".key";
+  call << " LICHM_" << Bead << ".grad";
   GlobalSys = system(call.str().c_str());
   //Return
   Emm *= kcal2eV;
@@ -956,12 +956,12 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (QMMM)
   {
     call.str("");
-    call << "cp tinker.key QMMM_";
+    call << "cp tinker.key LICHM_";
     call << Bead << ".key";
     GlobalSys = system(call.str().c_str());
     //Update key file
     call.str("");
-    call << "QMMM_";
+    call << "LICHM_";
     call << Bead << ".key";
     ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
     ofile << '\n';
@@ -1048,7 +1048,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   }
   //Create TINKER xyz file from the structure
   call.str("");
-  call << "QMMM_" << Bead << ".xyz";
+  call << "LICHM_" << Bead << ".xyz";
   ofile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   ofile << Natoms << '\n';
@@ -1086,12 +1086,12 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ofile.close();
   //Calculate MM potential energy
   call.str("");
-  call << "analyze QMMM_";
-  call << Bead << ".xyz E > QMMM_";
+  call << "analyze LICHM_";
+  call << Bead << ".xyz E > LICHM_";
   call << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   call.str("");
-  call << "QMMM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".log";
   ifile.open(call.str().c_str(),ios_base::in);
   //Read MM potential energy
   bool Efound = 0;
@@ -1122,9 +1122,9 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Clean up files
   call.str("");
   call << "rm -f";
-  call << " QMMM_" << Bead << ".xyz";
-  call << " QMMM_" << Bead << ".log";
-  call << " QMMM_" << Bead << ".key";
+  call << " LICHM_" << Bead << ".xyz";
+  call << " LICHM_" << Bead << ".log";
+  call << " LICHM_" << Bead << ".key";
   GlobalSys = system(call.str().c_str());
   //Calculate polarization energy
   if ((AMOEBA == 1) and QMMM)
@@ -1151,12 +1151,12 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (QMMM)
   {
     call.str("");
-    call << "cp tinker.key QMMM_";
+    call << "cp tinker.key LICHM_";
     call << Bead << ".key";
     GlobalSys = system(call.str().c_str());
     //Update key file
     call.str("");
-    call << "QMMM_";
+    call << "LICHM_";
     call << Bead << ".key";
     ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
     ofile << '\n';
@@ -1281,7 +1281,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   //Create TINKER xyz file from the structure
   call.str("");
-  call << "QMMM_" << Bead << ".xyz";
+  call << "LICHM_" << Bead << ".xyz";
   ofile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   ofile << Natoms << '\n';
@@ -1320,16 +1320,16 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Run optimization
   call.str("");
   call << "dynamic ";
-  call << "QMMM_" << Bead << ".xyz ";
+  call << "LICHM_" << Bead << ".xyz ";
   call << QMMMOpts.Nsteps << " ";
   call << QMMMOpts.dt << " ";
   call << (QMMMOpts.Nsteps*QMMMOpts.dt/1000) << " ";
   call << "2 " << QMMMOpts.Temp;
-  call << " > QMMM_" << Bead << ".log";
+  call << " > LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Read new structure
   call.str("");
-  call << "QMMM_" << Bead << ".001";
+  call << "LICHM_" << Bead << ".001";
   ifile.open(call.str().c_str(),ios_base::in);
   getline(ifile,dummy); //Discard number of atoms
   if (PBCon)
@@ -1351,10 +1351,10 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Clean up all files except the .dyn files
   call.str("");
   call << "rm -f";
-  call << " QMMM_" << Bead << ".xyz";
-  call << " QMMM_" << Bead << ".log";
-  call << " QMMM_" << Bead << ".0*";
-  call << " QMMM_" << Bead << ".key";
+  call << " LICHM_" << Bead << ".xyz";
+  call << " LICHM_" << Bead << ".log";
+  call << " LICHM_" << Bead << ".0*";
+  call << " LICHM_" << Bead << ".key";
   GlobalSys = system(call.str().c_str());
   return;
 };
@@ -1373,12 +1373,12 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (QMMM)
   {
     call.str("");
-    call << "cp tinker.key QMMM_";
+    call << "cp tinker.key LICHM_";
     call << Bead << ".key";
     GlobalSys = system(call.str().c_str());
     //Update key file
     call.str("");
-    call << "QMMM_";
+    call << "LICHM_";
     call << Bead << ".key";
     ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
     ofile << '\n';
@@ -1499,7 +1499,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   }
   //Create TINKER xyz file from the structure
   call.str("");
-  call << "QMMM_" << Bead << ".xyz";
+  call << "LICHM_" << Bead << ".xyz";
   ofile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   ofile << Natoms << '\n';
@@ -1537,14 +1537,14 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ofile.close();
   //Run optimization
   call.str("");
-  call << "minimize QMMM_";
+  call << "minimize LICHM_";
   call << Bead << ".xyz ";
-  call << QMMMOpts.MMOptTol << " > QMMM_";
+  call << QMMMOpts.MMOptTol << " > LICHM_";
   call << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Read new structure
   call.str("");
-  call << "QMMM_" << Bead << ".xyz_2";
+  call << "LICHM_" << Bead << ".xyz_2";
   ifile.open(call.str().c_str(),ios_base::in);
   getline(ifile,dummy); //Discard number of atoms
   if (PBCon)
@@ -1566,10 +1566,10 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Clean up files
   call.str("");
   call << "rm -f";
-  call << " QMMM_" << Bead << ".xyz";
-  call << " QMMM_" << Bead << ".log";
-  call << " QMMM_" << Bead << ".xyz_*";
-  call << " QMMM_" << Bead << ".key";
+  call << " LICHM_" << Bead << ".xyz";
+  call << " LICHM_" << Bead << ".log";
+  call << " LICHM_" << Bead << ".xyz_*";
+  call << " LICHM_" << Bead << ".key";
   GlobalSys = system(call.str().c_str());
   //Change units
   E *= kcal2eV;

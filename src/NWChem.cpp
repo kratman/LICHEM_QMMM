@@ -59,10 +59,10 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   }
   //Create NWChem input
   call.str("");
-  call << "QMMM_" << Bead << ".nw";
+  call << "LICHM_" << Bead << ".nw";
   ofile.open(call.str().c_str(),ios_base::out);
   call.str("");
-  call << "QMMM_" << Bead << ".db";
+  call << "LICHM_" << Bead << ".db";
   if (CheckFile(call.str()))
   {
     ofile << "restart";
@@ -71,7 +71,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   {
     ofile << "start";
   }
-  ofile << " QMMM_" << Bead << '\n';
+  ofile << " LICHM_" << Bead << '\n';
   ofile << "memory " << QMMMOpts.RAM;
   if (QMMMOpts.MemMB)
   {
@@ -239,12 +239,12 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   {
     call << "mpirun -n " << Ncpus << " ";
   }
-  call << "nwchem QMMM_" << Bead << ".nw";
-  call << " > QMMM_" << Bead << ".log";
+  call << "nwchem LICHM_" << Bead << ".nw";
+  call << " > LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Parse output
   call.str("");
-  call << "QMMM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".log";
   ifile.open(call.str().c_str(),ios_base::in);
   bool QMfinished = 0;
   bool GradDone = 0;
@@ -303,7 +303,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   }
   ifile.close();
   call.str("");
-  call << "QMMM_" << Bead << ".q";
+  call << "LICHM_" << Bead << ".q";
   ifile.open(call.str().c_str(),ios_base::in);
   if (ifile.good())
   {
@@ -342,16 +342,16 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   //Clean up files
   call.str("");
   call << "rm -f ";
-  call << "QMMM_" << Bead << ".b*" << " ";
-  call << "QMMM_" << Bead << ".c*" << " ";
-  call << "QMMM_" << Bead << ".g*" << " ";
-  call << "QMMM_" << Bead << ".m*" << " ";
-  call << "QMMM_" << Bead << ".z*" << " ";
-  call << "QMMM_" << Bead << ".p*" << " ";
-  call << "QMMM_" << Bead << ".q*" << " ";
-  call << "QMMM_" << Bead << ".nw" << " ";
-  call << "QMMM_" << Bead << ".db" << " ";
-  call << "QMMM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".b*" << " ";
+  call << "LICHM_" << Bead << ".c*" << " ";
+  call << "LICHM_" << Bead << ".g*" << " ";
+  call << "LICHM_" << Bead << ".m*" << " ";
+  call << "LICHM_" << Bead << ".z*" << " ";
+  call << "LICHM_" << Bead << ".p*" << " ";
+  call << "LICHM_" << Bead << ".q*" << " ";
+  call << "LICHM_" << Bead << ".nw" << " ";
+  call << "LICHM_" << Bead << ".db" << " ";
+  call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Change units
   E *= Har2eV;
@@ -385,10 +385,10 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   //Create NWChem input
   call.str("");
-  call << "QMMM_" << Bead << ".nw";
+  call << "LICHM_" << Bead << ".nw";
   ofile.open(call.str().c_str(),ios_base::out);
   call.str("");
-  call << "QMMM_" << Bead << ".db";
+  call << "LICHM_" << Bead << ".db";
   if (CheckFile(call.str()))
   {
     ofile << "restart";
@@ -397,7 +397,7 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     ofile << "start";
   }
-  ofile << " QMMM_" << Bead << '\n';
+  ofile << " LICHM_" << Bead << '\n';
   ofile << "memory " << QMMMOpts.RAM;
   if (QMMMOpts.MemMB)
   {
@@ -540,12 +540,12 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     call << "mpirun -n " << Ncpus << " ";
   }
-  call << "nwchem QMMM_" << Bead << ".nw";
-  call << " > QMMM_" << Bead << ".log";
+  call << "nwchem LICHM_" << Bead << ".nw";
+  call << " > LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Parse output
   call.str("");
-  call << "QMMM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".log";
   ifile.open(call.str().c_str(),ios_base::in);
   bool QMfinished = 0;
   while (!ifile.eof())
@@ -568,7 +568,7 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   ifile.close();
   call.str("");
-  call << "QMMM_" << Bead << ".q";
+  call << "LICHM_" << Bead << ".q";
   ifile.open(call.str().c_str(),ios_base::in);
   if (ifile.good())
   {
@@ -599,16 +599,16 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Clean up files and return
   call.str("");
   call << "rm -f ";
-  call << "QMMM_" << Bead << ".b*" << " ";
-  call << "QMMM_" << Bead << ".c*" << " ";
-  call << "QMMM_" << Bead << ".g*" << " ";
-  call << "QMMM_" << Bead << ".m*" << " ";
-  call << "QMMM_" << Bead << ".z*" << " ";
-  call << "QMMM_" << Bead << ".p*" << " ";
-  call << "QMMM_" << Bead << ".q*" << " ";
-  call << "QMMM_" << Bead << ".nw" << " ";
-  call << "QMMM_" << Bead << ".db" << " ";
-  call << "QMMM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".b*" << " ";
+  call << "LICHM_" << Bead << ".c*" << " ";
+  call << "LICHM_" << Bead << ".g*" << " ";
+  call << "LICHM_" << Bead << ".m*" << " ";
+  call << "LICHM_" << Bead << ".z*" << " ";
+  call << "LICHM_" << Bead << ".p*" << " ";
+  call << "LICHM_" << Bead << ".q*" << " ";
+  call << "LICHM_" << Bead << ".nw" << " ";
+  call << "LICHM_" << Bead << ".db" << " ";
+  call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   return;
 };
@@ -640,10 +640,10 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   //Create NWChem input
   call.str("");
-  call << "QMMM_" << Bead << ".nw";
+  call << "LICHM_" << Bead << ".nw";
   ofile.open(call.str().c_str(),ios_base::out);
   call.str("");
-  call << "QMMM_" << Bead << ".db";
+  call << "LICHM_" << Bead << ".db";
   if (CheckFile(call.str()))
   {
     ofile << "restart";
@@ -652,7 +652,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     ofile << "start";
   }
-  ofile << " QMMM_" << Bead << '\n';
+  ofile << " LICHM_" << Bead << '\n';
   ofile << "memory " << QMMMOpts.RAM;
   if (QMMMOpts.MemMB)
   {
@@ -795,12 +795,12 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     call << "mpirun -n " << Ncpus << " ";
   }
-  call << "nwchem QMMM_" << Bead << ".nw";
-  call << " > QMMM_" << Bead << ".log";
+  call << "nwchem LICHM_" << Bead << ".nw";
+  call << " > LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Parse output
   call.str("");
-  call << "QMMM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".log";
   ifile.open(call.str().c_str(),ios_base::in);
   bool QMfinished = 0;
   while (!ifile.eof())
@@ -823,7 +823,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   ifile.close();
   call.str("");
-  call << "QMMM_" << Bead << ".q";
+  call << "LICHM_" << Bead << ".q";
   ifile.open(call.str().c_str(),ios_base::in);
   if (ifile.good())
   {
@@ -854,16 +854,16 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Clean up files
   call.str("");
   call << "rm -f ";
-  call << "QMMM_" << Bead << ".b*" << " ";
-  call << "QMMM_" << Bead << ".c*" << " ";
-  call << "QMMM_" << Bead << ".g*" << " ";
-  call << "QMMM_" << Bead << ".m*" << " ";
-  call << "QMMM_" << Bead << ".z*" << " ";
-  call << "QMMM_" << Bead << ".p*" << " ";
-  call << "QMMM_" << Bead << ".q*" << " ";
-  call << "QMMM_" << Bead << ".nw" << " ";
-  call << "QMMM_" << Bead << ".db" << " ";
-  call << "QMMM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".b*" << " ";
+  call << "LICHM_" << Bead << ".c*" << " ";
+  call << "LICHM_" << Bead << ".g*" << " ";
+  call << "LICHM_" << Bead << ".m*" << " ";
+  call << "LICHM_" << Bead << ".z*" << " ";
+  call << "LICHM_" << Bead << ".p*" << " ";
+  call << "LICHM_" << Bead << ".q*" << " ";
+  call << "LICHM_" << Bead << ".nw" << " ";
+  call << "LICHM_" << Bead << ".db" << " ";
+  call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Change units and return
   E *= Har2eV;
@@ -896,10 +896,10 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   }
   //Create NWChem input
   call.str("");
-  call << "QMMM_" << Bead << ".nw";
+  call << "LICHM_" << Bead << ".nw";
   ofile.open(call.str().c_str(),ios_base::out);
   call.str("");
-  call << "QMMM_" << Bead << ".db";
+  call << "LICHM_" << Bead << ".db";
   if (CheckFile(call.str()))
   {
     ofile << "restart";
@@ -908,7 +908,7 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   {
     ofile << "start";
   }
-  ofile << " QMMM_" << Bead << '\n';
+  ofile << " LICHM_" << Bead << '\n';
   ofile << "memory " << QMMMOpts.RAM;
   if (QMMMOpts.MemMB)
   {
@@ -1051,12 +1051,12 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   {
     call << "mpirun -n " << Ncpus << " ";
   }
-  call << "nwchem QMMM_" << Bead << ".nw";
-  call << " > QMMM_" << Bead << ".log";
+  call << "nwchem LICHM_" << Bead << ".nw";
+  call << " > LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Parse output
   call.str("");
-  call << "QMMM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".log";
   ifile.open(call.str().c_str(),ios_base::in);
   bool QMfinished = 0;
   while (!ifile.eof())
@@ -1079,7 +1079,7 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   }
   ifile.close();
   call.str("");
-  call << "QMMM_" << Bead << ".q";
+  call << "LICHM_" << Bead << ".q";
   ifile.open(call.str().c_str(),ios_base::in);
   if (ifile.good())
   {
@@ -1110,16 +1110,16 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Clean up files
   call.str("");
   call << "rm -f ";
-  call << "QMMM_" << Bead << ".b*" << " ";
-  call << "QMMM_" << Bead << ".c*" << " ";
-  call << "QMMM_" << Bead << ".g*" << " ";
-  call << "QMMM_" << Bead << ".m*" << " ";
-  call << "QMMM_" << Bead << ".z*" << " ";
-  call << "QMMM_" << Bead << ".p*" << " ";
-  call << "QMMM_" << Bead << ".q*" << " ";
-  call << "QMMM_" << Bead << ".nw" << " ";
-  call << "QMMM_" << Bead << ".db" << " ";
-  call << "QMMM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".b*" << " ";
+  call << "LICHM_" << Bead << ".c*" << " ";
+  call << "LICHM_" << Bead << ".g*" << " ";
+  call << "LICHM_" << Bead << ".m*" << " ";
+  call << "LICHM_" << Bead << ".z*" << " ";
+  call << "LICHM_" << Bead << ".p*" << " ";
+  call << "LICHM_" << Bead << ".q*" << " ";
+  call << "LICHM_" << Bead << ".nw" << " ";
+  call << "LICHM_" << Bead << ".db" << " ";
+  call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Change units
   E *= Har2eV;

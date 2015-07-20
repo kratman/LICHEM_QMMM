@@ -127,7 +127,7 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     call << "boundary s s s" << '\n';
   }
   call << '\n';
-  call << "read_data QMMM_";
+  call << "read_data LICHM_";
   call << Bead << ".data";
   call << '\n';
   ifile.open("POTENTIAL",ios_base::in);
@@ -210,9 +210,9 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile.close();
   //Run calculation
   call.str("");
-  call << "lammps -suffix omp -log QMMM_";
+  call << "lammps -suffix omp -log LICHM_";
   call << Bead;
-  call << ".log < QMMM_";
+  call << ".log < LICHM_";
   call << Bead;
   call << ".in > QMMMlog_";
   call << Bead;
