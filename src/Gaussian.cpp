@@ -219,14 +219,10 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   bool UseCheckPoint = CheckFile(call.str());
   //Construct g09 input
   call.str("");
-  call << "QMMM";
-  call << "_" << Bead;
-  call << ".com";
+  call << "LICHM_" << Bead << ".com";
   ofile.open(call.str().c_str(),ios_base::out);
   call.str("");
-  call << "%chk=QMMM";
-  call << "_" << Bead;
-  call << ".chk";
+  call << "%chk=LICHM_" << Bead << ".chk";
   call << '\n';
   call << "%Mem=" << QMMMOpts.RAM;
   if (QMMMOpts.MemMB)
@@ -375,8 +371,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   ofile.close();
   //Run Gaussian
   call.str("");
-  call << "g09 " << "QMMM";
-  call << "_" << Bead;
+  call << "g09 " << "LICHM_" << Bead;
   GlobalSys = system(call.str().c_str());
   //Extract forces
   for (int i=0;i<(Nqm+Npseudo);i++)
@@ -389,9 +384,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
     Forces.push_back(tmp);
   }
   call.str("");
-  call << "QMMM";
-  call << "_" << Bead;
-  call << ".log";
+  call << "LICHM_" << Bead << ".log";
   QMlog.open(call.str().c_str(),ios_base::in);
   bool GradDone = 0;
   while ((!QMlog.eof()) and (!GradDone))
@@ -527,14 +520,10 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   bool UseCheckPoint = CheckFile(call.str());
   //Construct input
   call.str("");
-  call << "QMMM";
-  call << "_" << Bead;
-  call << ".com";
+  call << "LICHM_" << Bead << ".com";
   ofile.open(call.str().c_str(),ios_base::out);
   call.str("");
-  call << "%chk=QMMM";
-  call << "_" << Bead;
-  call << ".chk";
+  call << "%chk=LICHM_" << Bead << ".chk";
   call << '\n';
   call << "%Mem=" << QMMMOpts.RAM;
   if (QMMMOpts.MemMB)
@@ -671,14 +660,11 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile.close();
   //Run QM calculation
   call.str("");
-  call << "g09 QMMM";
-  call << "_" << Bead;
+  call << "g09 LICHM_" << Bead;
   GlobalSys = system(call.str().c_str());
   //Extract charges
   call.str("");
-  call << "QMMM";
-  call << "_" << Bead;
-  call << ".log";
+  call << "LICHM_" << Bead << ".log";
   ifile.open(call.str().c_str(),ios_base::in);
   while (!ifile.eof())
   {
@@ -748,8 +734,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "LICHM_" << Bead << ".com";
   ofile.open(call.str().c_str(),ios_base::out);
   call.str("");
-  call << "%chk=QMMM";
-  call << "_" << Bead << ".chk";
+  call << "%chk=LICHM_" << Bead << ".chk";
   call << '\n';
   call << "%Mem=" << QMMMOpts.RAM;
   if (QMMMOpts.MemMB)
@@ -991,7 +976,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   //Write a new XYZ
   call.str("");
-  call << "QMMMExt_" << Bead << ".xyz";
+  call << "LICHMExt_" << Bead << ".xyz";
   ofile.open(call.str().c_str(),ios_base::out);
   ofile << Natoms << '\n' << '\n';
   for (int i=0;i<Natoms;i++)
@@ -1053,11 +1038,10 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   //Write Gaussian input
   call.str("");
-  call << "QMMMExt_" << Bead << ".com";
+  call << "LICHMExt_" << Bead << ".com";
   ofile.open(call.str().c_str(),ios_base::out);
   call.str("");
-  call << "%chk=QMMMExt";
-  call << "_" << Bead << ".chk";
+  call << "%chk=LICHMExt_" << Bead << ".chk";
   call << '\n';
   call << "%Mem=" << QMMMOpts.RAM;
   if (QMMMOpts.MemMB)
@@ -1081,8 +1065,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   call << '\n';
   call << "#P " << "external=\"lichem -GauExtern ";
-  call << "QMMMExt"; //Just the stub
-  call << "_" << Bead;
+  call << "LICHMExt_" << Bead;  //Just the stub
   call << " -n " << ExtCPUs;
   call << " -c " << confilename;
   call << " -r " << regfilename;
@@ -1126,11 +1109,11 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Run Optimization
   call.str("");
   call << "g09 ";
-  call << "QMMMExt_" << Bead;
+  call << "LICHMExt_" << Bead;
   GlobalSys = system(call.str().c_str());
   //Read new structure
   call.str("");
-  call << "QMMMExt_";
+  call << "LICHMExt_";
   call << Bead << ".log";
   ifile.open(call.str().c_str(),ios_base::in);
   bool Optfinished = 0;
@@ -1178,7 +1161,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ifile.close();
   //Clean up files
   call.str("");
-  call << "rm -f QMMMExt_";
+  call << "rm -f LICHMExt_";
   call << Bead << ".*";
   call << " MMCharges_" << Bead << ".txt";
   GlobalSys = system(call.str().c_str());

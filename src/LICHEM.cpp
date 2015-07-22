@@ -14,7 +14,7 @@
 */
 
 //Main header
-#include "QMMM_headers.h"
+#include "LICHEM_headers.h"
 
 int main(int argc, char* argv[])
 {

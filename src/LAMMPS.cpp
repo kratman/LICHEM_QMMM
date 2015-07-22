@@ -45,9 +45,7 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   int ct;
   //Construct LAMMPS data file
   call.str("");
-  call << "QMMM";
-  call << "_" << Bead;
-  call << ".data";
+  call << "LICHM_" << Bead << ".data";
   ofile.open(call.str().c_str(),ios_base::out);
   ifile.open("DATA",ios_base::in);
   call.str("");
@@ -110,9 +108,7 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile.close();
   //Construct input file
   call.str("");
-  call << "QMMM";
-  call << "_" << Bead;
-  call << ".in";
+  call << "LICHM_" << Bead << ".in";
   ofile.open(call.str().c_str(),ios_base::out);
   call.str("");
   call << "atom_style full" << '\n';
@@ -214,7 +210,7 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << Bead;
   call << ".log < LICHM_";
   call << Bead;
-  call << ".in > QMMMlog_";
+  call << ".in > LICHMlog_";
   call << Bead;
   call << ".txt";
   GlobalSys = system(call.str().c_str());
@@ -223,13 +219,14 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   
   //Clean up files
   call.str("");
-  call << "rm -f QMMM";
+  call << "rm -f LICHM";
   call << "_" << Bead;
-  call << ".in QMMM";
+  call << ".in LICHM";
   call << "_" << Bead;
-  call << ".data QMMM";
+  call << ".data LICHM";
   call << "_" << Bead;
-  call << ".log QMMMlog.txt";
+  call << ".log LICHMlog_";
+  call << Bead << ".txt";
   return E;
 };
 
@@ -245,9 +242,7 @@ double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   int ct;
   //Construct LAMMPS data file
   call.str("");
-  call << "QMMM";
-  call << "_" << Bead;
-  call << ".data";
+  call << "LICHM_" << Bead << ".data";
   ifile.open("DATA",ios_base::in);
   while (!ifile.eof())
   {
@@ -277,17 +272,14 @@ double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile.close();
   //Construct input file
   call.str("");
-  call << "QMMM";
-  call << "_" << Bead;
-  call << ".in";
+  call << "LICHM_" << Bead << ".in";
   ofile.open(call.str().c_str(),ios_base::out);
   call.str("");
   call << "atom_style full" << '\n';
   call << "units metal"; //eV,Ang,ps,bar,K
   call << '\n';
-  call << "read_data QMMM";
-  call << "_" << Bead;
-  call << ".data";
+  call << "read_data ";
+  call << "LICHM_" << Bead << ".data";
   call << '\n' << '\n';
   ifile.open("POTENTIAL",ios_base::in);
   while (!ifile.eof())
@@ -374,25 +366,24 @@ double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile.close();
   //Run calculation
   call.str("");
-  call << "lammps -suffix omp -log QMMM";
-  call << "_" << Bead;
-  call << "< QMMM";
-  call << "_" << Bead;
-  call << ".in > QMMMlog";
-  call << "_" << Bead;
+  call << "lammps -suffix omp -log ";
+  call << "LICHM_" << Bead;
+  call << "< LICHM_" << Bead;
+  call << ".in > LICHMlog_" << Bead;
   call << ".txt";
   GlobalSys = system(call.str().c_str());
   //Extract new geometry
   
   //Clean up files
   call.str("");
-  call << "rm -f QMMM";
+  call << "rm -f LICHM";
   call << "_" << Bead;
-  call << ".in QMMM";
+  call << ".in LICHM";
   call << "_" << Bead;
-  call << ".data QMMM";
+  call << ".data LICHM";
   call << "_" << Bead;
-  call << ".log QMMMlog.txt";
+  call << ".log LICHMlog_";
+  call << Bead << ".txt";
   return E;
 };
 

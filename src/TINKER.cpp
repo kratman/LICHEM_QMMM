@@ -599,9 +599,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   ofile.close();
   //Create TINKER xyz file from the structure
   call.str("");
-  call << "QMMM";
-  call << "_" << Bead;
-  call << ".xyz";
+  call << "LICHM_" << Bead << ".xyz";
   ofile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   ofile << Natoms << '\n';
@@ -639,19 +637,16 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   ofile.close();
   //Run MM
   call.str("");
-  call << "testgrad " << "QMMM";
-  call << "_" << Bead;
-  call << ".xyz Y N N > QMMM";
-  call << "_" << Bead;
-  call << ".grad";
+  call << "testgrad ";
+  call << "LICHM_" << Bead << ".xyz";
+  call << " Y N N > ";
+  call << "LICHM_" << Bead << ".grad";
   GlobalSys = system(call.str().c_str());
   //Collect MM forces
   fstream MMgrad; //QMMM output
   //Open files
   call.str("");
-  call << "QMMM";
-  call << "_" << Bead;
-  call << ".grad";
+  call << "LICHM_" << Bead << ".grad";
   MMgrad.open(call.str().c_str(),ios_base::in);
   //Read derivatives
   bool GradDone = 0;
@@ -823,9 +818,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   ofile.close();
   //Create TINKER xyz file from the structure
   call.str("");
-  call << "QMMM";
-  call << "_" << Bead;
-  call << ".xyz";
+  call << "LICHM_" << Bead << ".xyz";
   ofile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   ofile << Natoms << '\n';
@@ -863,19 +856,16 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   ofile.close();
   //Run MM
   call.str("");
-  call << "testgrad " << "QMMM";
-  call << "_" << Bead;
-  call << ".xyz Y N N > QMMM";
-  call << "_" << Bead;
-  call << ".grad";
+  call << "testgrad ";
+  call << "LICHM_" << Bead << ".xyz";
+  call << " Y N N > ";
+  call << "LICHM_" << Bead << ".grad";
   GlobalSys = system(call.str().c_str());
   //Collect MM forces
   fstream MMgrad; //QMMM output
   //Open files
   call.str("");
-  call << "QMMM";
-  call << "_" << Bead;
-  call << ".grad";
+  call << "LICHM_" << Bead << ".grad";
   MMgrad.open(call.str().c_str(),ios_base::in);
   //Read derivatives
   bool GradDone = 0;

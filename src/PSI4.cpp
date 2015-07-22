@@ -153,14 +153,10 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   ofile.close();
   //Call PSI4
   call.str("");
-  call << "psi4 -n " << Ncpus;
-  call << "-i QMMM";
-  call << "_" << Bead;
-  call << ".dat -o QMMM";
-  call << "_" << Bead;
-  call << ".out > QMMM";
-  call << "_" << Bead;
-  call << ".log";
+  call << "psi4 -n " << Ncpus << "-i ";
+  call << "LICHM_" << Bead << ".dat -o ";
+  call << "LICHM_" << Bead << ".out > ";
+  call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Extract charges
   call.str("");
@@ -381,14 +377,10 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ofile.close();
   //Call PSI4
   call.str("");
-  call << "psi4 -n " << Ncpus;
-  call << "-i QMMM";
-  call << "_" << Bead;
-  call << ".dat -o QMMM";
-  call << "_" << Bead;
-  call << ".out > QMMM";
-  call << "_" << Bead;
-  call << ".log";
+  call << "psi4 -n " << Ncpus << "-i ";
+  call << "LICHM_" << Bead << ".dat -o ";
+  call << "LICHM_" << Bead << ".out > ";
+  call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Extract charges
   call.str("");
@@ -564,14 +556,10 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ofile.close();
   //Call PSI4
   call.str("");
-  call << "psi4 -n " << Ncpus;
-  call << "-i QMMM";
-  call << "_" << Bead;
-  call << ".dat -o QMMM";
-  call << "_" << Bead;
-  call << ".out > QMMM";
-  call << "_" << Bead;
-  call << ".log";
+  call << "psi4 -n " << Ncpus << "-i ";
+  call << "LICHM_" << Bead << ".dat -o ";
+  call << "LICHM_" << Bead << ".out > ";
+  call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Read energy
   call.str("");
@@ -771,14 +759,10 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   ofile.close();
   //Call PSI4
   call.str("");
-  call << "psi4 -n " << Ncpus;
-  call << "-i QMMM";
-  call << "_" << Bead;
-  call << ".dat -o QMMM";
-  call << "_" << Bead;
-  call << ".out > QMMM";
-  call << "_" << Bead;
-  call << ".log";
+  call << "psi4 -n " << Ncpus << "-i ";
+  call << "LICHM_" << Bead << ".dat -o ";
+  call << "LICHM_" << Bead << ".out > ";
+  call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Read energy and structure
   call.str("");
