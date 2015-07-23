@@ -43,7 +43,7 @@ using namespace Eigen;
 using namespace std;
 
 //Compile options
-const bool Jokes = 1; //Print humorous comments
+const bool Jokes = 0; //Print humorous comments
 const bool Isotrop = 1; //Force isotropic expansion in NPT Monte Carlo
 const double StepMin = 0.01; //Minimum Monte Carlo step size
 const double StepMax = 1.0; //Maximum Monte Carlo step size
