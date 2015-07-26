@@ -429,7 +429,7 @@ OctCharges SphHarm2Charges(RedMpole);
 
 void SetGauDen(vector<GauDen1s>&,vector<QMMMAtom>&,int);
 
-double SetvdWRad(string);
+double SetGauWid(string);
 
 double SpringEnergy(double,double);
 
