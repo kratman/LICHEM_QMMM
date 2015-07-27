@@ -782,6 +782,8 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       //Set number of threads for wrappers
       omp_set_num_threads(Nthreads);
     }
+    //Set eigen threads
+    setNbThreads(Nthreads);
   }
   return;
 };

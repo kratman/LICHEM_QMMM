@@ -35,6 +35,14 @@ devbin:
 	echo "### Compiling the LICHEM development binary ###"
 	$(CXX) $(CXXFLAGS) $(DEVFLAGS) ./src/LICHEM.cpp -o lichem $(LDFLAGS)
 
+checksyntax:	
+	@echo ""; \
+	echo "### Checking for warnings and syntax errors ###"
+	$(CXX) $(CXXFLAGS) $(DEVFLAGS) -fsyntax-only ./src/LICHEM.cpp -o lichem $(LDFLAGS)
+	@echo ""; \
+	echo " [Complete]"; \
+	echo ""
+
 manual:	
 	@echo ""; \
 	echo "### Compiling the documentation ###"; \
