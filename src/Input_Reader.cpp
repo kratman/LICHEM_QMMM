@@ -262,8 +262,11 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       tmp.Frozen = 0;
       Mpole tmp3; //Initialize charges and multipoles
       OctCharges tmp4; //Initialize charges and multipoles
+      GauDen1s tmp5(0,1,0,tmp2.x,tmp2.y,tmp2.z); //Initialize density
+      //Add to arrays
       tmp.MP.push_back(tmp3);
       tmp.PC.push_back(tmp4);
+      tmp.G1s.push_back(tmp5);
       Struct.push_back(tmp);
     }
   }
