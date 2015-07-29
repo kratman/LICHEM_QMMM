@@ -250,16 +250,19 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       //Save atom information
       QMMMAtom tmp;
+      //Set coordinates
       xyzfile >> tmp.QMTyp;
       Coord tmp2;
       xyzfile >> tmp2.x >> tmp2.y >> tmp2.z;
       tmp.P.push_back(tmp2); //Set up zeroth replica
+      //Set ID and regions
       tmp.id = i;
       tmp.QMregion = 0;
       tmp.MMregion = 1;
       tmp.PBregion = 0;
       tmp.BAregion = 0;
       tmp.Frozen = 0;
+      //Set electrostatic field
       Mpole tmp3; //Initialize charges and multipoles
       OctCharges tmp4; //Initialize charges and multipoles
       GauDen1s tmp5(0,1,0,tmp2.x,tmp2.y,tmp2.z); //Initialize density
@@ -267,6 +270,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       tmp.MP.push_back(tmp3);
       tmp.PC.push_back(tmp4);
       tmp.G1s.push_back(tmp5);
+      //Save atomic properties
       Struct.push_back(tmp);
     }
   }

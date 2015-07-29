@@ -133,7 +133,7 @@ int EndTime = 0; //Time the calculation ends
 int QMTime = 0; //Sum of QM wrapper times
 int MMTime = 0; //Sum of MM wrapper times
 
-//Custom data types
+//Custom classes types
 class Coord
 {
   public:
