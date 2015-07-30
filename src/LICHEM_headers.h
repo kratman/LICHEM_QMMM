@@ -339,6 +339,8 @@ double AMBEROpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double Bohring(double);
 
+double BoysFunc(int,double);
+
 void BurstTraj(vector<QMMMAtom>&,QMMMSettings&);
 
 RedMpole Cart2SphHarm(Mpole&);

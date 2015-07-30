@@ -431,6 +431,15 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       //Frozen density
       GEM = 1;
     }
+    if ((dummy == "GauPoles") or (dummy == "gaupoles") or
+       (dummy == "GAUPOLES") or (dummy == "gpoles") or
+       (dummy == "GPOLES") or (dummy == "GPoles") or
+       (dummy == "gp") or (dummy == "GP"))
+    {
+      //Frozen density and multipoles
+      AMOEBA = 1;
+      GEM = 1;
+    }
   }
   if ((dummy == "MM") or (dummy == "mm"))
   {
@@ -474,6 +483,15 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     if ((dummy == "GEM") or (dummy == "gem") or (dummy == "Gem"))
     {
       //Frozen density
+      GEM = 1;
+    }
+    if ((dummy == "GauPoles") or (dummy == "gaupoles") or
+       (dummy == "GAUPOLES") or (dummy == "gpoles") or
+       (dummy == "GPOLES") or (dummy == "GPoles") or
+       (dummy == "gp") or (dummy == "GP"))
+    {
+      //Frozen density and multipoles
+      AMOEBA = 1;
       GEM = 1;
     }
   }
