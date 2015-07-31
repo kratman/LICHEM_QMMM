@@ -40,6 +40,12 @@ checksyntax:
 	echo "### Checking for warnings and syntax errors ###"
 	$(CXX) $(CXXFLAGS) $(DEVFLAGS) -fsyntax-only ./src/LICHEM.cpp -o lichem $(LDFLAGS)
 	@echo ""; \
+	echo "### Source code statistics ###"; \
+	echo "Number of LICHEM source code files:"; \
+	ls -al src/* | wc -l; \
+	echo "Total length of LICHEM (lines):"; \
+	cat src/* | wc -l; \
+	echo ""; \
 	echo " [Complete]"; \
 	echo ""
 

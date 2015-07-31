@@ -9,17 +9,22 @@
 
 %Documentation for LICHEM copyright 2014 Eric G. Kratz
 
+%Package settings
 \documentclass[12pt]{report}
 \usepackage[hidelinks,bookmarks]{hyperref}
 \usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{dtklogos}
-\usepackage{amsmath,amssymb}
 \usepackage{color}
+
+%Formatting settings
+\setlength\parindent{0cm}
+\widowpenalty=10000
+\clubpenalty=10000
 \raggedbottom
 
-\setlength\parindent{0cm}
-
+%Title page
 \title{{\color{blue}LICHEM:} {\color{red}L}ayered {\color{red}I}nteracting
 {\color{red}CHE}mical {\color{red}M}odels
 \\ \vspace{3cm}
@@ -29,6 +34,7 @@
 \author{A QMMM Interface for Polarizable Force Fields}
 \date{Eric G.\ Kratz, 2014}
 
+%Main document
 \begin{document}
 \maketitle
 \tableofcontents

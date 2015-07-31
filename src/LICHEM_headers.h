@@ -104,6 +104,7 @@ double Ly = 10000.0; //Box length
 double Lz = 10000.0; //Box length
 
 //Flags for simulation options
+int GPOL = 0; //Flag for Gaussian multipole QMMM potential
 int GEM = 0; //Flag for frozen density QMMM potential
 int AMOEBA = 0; //Flag for polarizable QMMM potential
 int CHRG = 0; //Flag for point-charge QMMM potential
@@ -133,7 +134,7 @@ int EndTime = 0; //Time the calculation ends
 int QMTime = 0; //Sum of QM wrapper times
 int MMTime = 0; //Sum of MM wrapper times
 
-//Custom classes types
+//Custom classes
 class Coord
 {
   public:
@@ -297,8 +298,9 @@ class QMMMElec
 
 class QMMMSettings
 {
-  //Input needed for QM wrappers
+  //Settings for the simulation and wrappers
   public:
+    //Input needed for QM wrappers
     string Func; //DFT functional
     string Basis; //Basis set for QM calculations
     string RAM; //Ram for QM calculations

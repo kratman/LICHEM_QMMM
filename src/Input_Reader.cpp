@@ -437,8 +437,24 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
        (dummy == "gp") or (dummy == "GP"))
     {
       //Frozen density and multipoles
-      AMOEBA = 1;
-      GEM = 1;
+      GPOL = 1;
+      regionfile >> dummy >> dummy; //Check secondary potential
+      if ((dummy == "Charges") or (dummy == "charges") or
+         (dummy == "Charge") or (dummy == "charge") or
+         (dummy == "point-charge"))
+      {
+        //Gaussians with a point-charge force field
+        CHRG = 1;
+      }
+      if ((dummy == "AMOEBA") or (dummy == "amoeba"))
+      {
+        //Gaussians with the AMOEBA polarizable force field
+        AMOEBA = 1;
+        if (TINKER == 1)
+        {
+          ExtractTINKpoles(Struct,0);
+        }
+      }
     }
   }
   if ((dummy == "MM") or (dummy == "mm"))
@@ -491,8 +507,24 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
        (dummy == "gp") or (dummy == "GP"))
     {
       //Frozen density and multipoles
-      AMOEBA = 1;
-      GEM = 1;
+      GPOL = 1;
+      regionfile >> dummy >> dummy; //Check secondary potential
+      if ((dummy == "Charges") or (dummy == "charges") or
+         (dummy == "Charge") or (dummy == "charge") or
+         (dummy == "point-charge"))
+      {
+        //Gaussians with a point-charge force field
+        CHRG = 1;
+      }
+      if ((dummy == "AMOEBA") or (dummy == "amoeba"))
+      {
+        //Gaussians with the AMOEBA polarizable force field
+        AMOEBA = 1;
+        if (TINKER == 1)
+        {
+          ExtractTINKpoles(Struct,0);
+        }
+      }
     }
   }
   regionfile >> dummy >> dummy; //Calculation type
