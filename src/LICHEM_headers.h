@@ -135,6 +135,23 @@ int QMTime = 0; //Sum of QM wrapper times
 int MMTime = 0; //Sum of MM wrapper times
 
 //Custom classes
+class PeriodicTable
+{
+  //Class for storing periodic table data
+  private:
+    //Atom types
+    vector<string> Typs; //Atomic symbols
+    //Approximate 1s Gaussian widths of the atoms
+    vector<double> GauWids; //Diffuse charge widths
+  public:
+    //Set data (hard coded)
+    PeriodicTable();
+    //Retrieve data
+    string Typing(int); //Atom type
+    int RevTyping(string); //Atomic number
+    double GetGauWid(string); //Gaussian (1s) width
+};
+
 class Coord
 {
   public:
@@ -332,6 +349,9 @@ class QMMMSettings
     double Eold;
 };
 
+//Set up periodic table
+PeriodicTable PTable;
+
 //Function declarations (alphabetical)
 double AMBERForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
 
@@ -339,7 +359,11 @@ double AMBEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double AMBEROpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
+bool Angled(vector<QMMMAtom>&,int,int);
+
 double Bohring(double);
+
+bool Bonded(vector<QMMMAtom>&,int,int);
 
 double BoysFunc(int,double);
 
@@ -350,6 +374,8 @@ RedMpole Cart2SphHarm(Mpole&);
 bool CheckFile(const string&);
 
 double CoordDist2(Coord&,Coord&);
+
+bool Dihedraled(vector<QMMMAtom>&,int,int);
 
 double EFFCorr(QMMMElec&,QMMMElec&,int);
 
@@ -442,15 +468,11 @@ void ReadArgs(int&,char**&,fstream&,fstream&,fstream&,fstream&);
 void ReadLICHEMInput(fstream&,fstream&,fstream&,
      vector<QMMMAtom>&,QMMMSettings&);
 
-int RevTyping(string);
-
 void RotateTINKCharges(vector<QMMMAtom>&,int);
 
 OctCharges SphHarm2Charges(RedMpole);
 
 void SetGauDen(vector<GauDen1s>&,vector<QMMMAtom>&,int);
-
-double SetGauWid(string);
 
 double SpringEnergy(double,double);
 
@@ -473,8 +495,6 @@ double TINKERPolEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 void TINK2LICHEM(int&,char**&);
 
 vector<int> TraceBoundary(vector<QMMMAtom>&,int);
-
-string Typing(int);
 
 void WriteTINKMpole(vector<QMMMAtom>&,fstream&,int,int);
 

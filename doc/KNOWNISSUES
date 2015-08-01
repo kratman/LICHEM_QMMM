@@ -18,14 +18,16 @@ This is not a LICHEM bug, but rather a bug in PSI4. Due to this bug, PSI4 QMMM
 optimizations currently do not work.
 
 TINKER interface:
--Chiral atoms with multipoles have not been tested. It is possible that these
-interactions are incorrect.
+-Chiral atoms with multipoles have not been thoroughly tested in QMMM
+simulations. It is possible that these interactions are incorrect. Note that
+even if the interactions are not treated properly, the errors should be
+insignificant if the chiral atoms are far from the QM region.
 
 LAMMPS interface:
 -The LAMMPS wrapper is currently being rewritten.
 
 Gaussian interface:
--Using the external interface to gaussian interferes with timing the MM
+-Using the external interface to Gaussian interferes with timing the MM
 wrapper. This is harmless, but the statistics should not be trusted in the
 external optimizations.
 

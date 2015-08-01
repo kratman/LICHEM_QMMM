@@ -3,11 +3,13 @@ Force-field wrapper timeline and checklist:
  Point-charge force fields: In progress (LAMMPS/AMBER)
  Polarizable force fields: Done (TINKER)
  Polarizable force fields: Future (Amber)
+ Diffuse charges: In progress (TINKER,AMBER,LAMMPS)
  Frozen density force fields: Future (Amber)
 
 QMMM boundry timeline and checklist:
  Non-bonded: Done
  Pseudo-bond: Done
+ Diffuse charges: In progress
  Frozen density: In progress
 
 Simulation mode timeline and checklist:

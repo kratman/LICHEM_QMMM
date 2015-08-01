@@ -381,7 +381,7 @@ void TINK2LICHEM(int& argc, char**& argv)
         stringstream line(Ncharges[j][1]);
         int NuChg;
         line >> NuChg;
-        posfile << Typing(NuChg);
+        posfile << PTable.Typing(NuChg);
         posfile << " ";
         Zfound = 1;
       }
