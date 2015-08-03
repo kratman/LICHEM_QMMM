@@ -27,12 +27,16 @@ clean:	title delbin compdone
 
 binary:	
 	@echo ""; \
-	echo "### Compiling the LICHEM binary ###"
+	echo "### Compiling the LICHEM binary ###"; \
+	cp ./src/runtests.py ./tests/runtests; \
+	chmod a+x ./tests/runtests
 	$(CXX) $(CXXFLAGS) ./src/LICHEM.cpp -o lichem $(LDFLAGS)
 
 devbin:	
 	@echo ""; \
-	echo "### Compiling the LICHEM development binary ###"
+	echo "### Compiling the LICHEM development binary ###"; \
+	cp ./src/runtests.py ./tests/runtests; \
+	chmod a+x ./tests/runtests
 	$(CXX) $(CXXFLAGS) $(DEVFLAGS) ./src/LICHEM.cpp -o lichem $(LDFLAGS)
 
 checksyntax:	
@@ -110,4 +114,4 @@ delbin:
  	fi; \
         echo ""; \
 	echo "Removing binary and manual..."; \
-	rm -f lichem ./doc/LICHEM_manual.pdf
+	rm -f lichem ./doc/LICHEM_manual.pdf ./tests/runtests

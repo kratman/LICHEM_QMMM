@@ -100,4 +100,18 @@ merged into the public repository as a single commit around midnight.
 
 ### Testing
 
-##### Coming soon...
+Test calculations can be performed with the runtests script in the tests
+directory.
+
+Tests are performed for pairs of QM and MM wrappers.
+
+'''
+user:$ ./runtests Ncpus QMPackage MMPackage
+'''
+
+A dry run can be performed to check packages without perfoming the
+calculations.
+
+'''
+user:$ ./runtests Ncpus QMPackage MMPackage Dry
+'''

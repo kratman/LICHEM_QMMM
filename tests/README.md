@@ -13,7 +13,26 @@ LICHEM: Layered Interacting CHEmical Models
 
 ### LICHEM: A QMMM interface for polarizable force fields
 
-###Test suite
+### Test suite
 
-This directory will contain calculations for testing the LICHEM wrappers,
+This directory contains calculations for testing the LICHEM wrappers,
 efficiency, and accuracy.
+
+Tests are performed for pairs of QM and MM wrappers.
+
+'''
+user:$ ./runtests Ncpus QMPackage MMPackage
+'''
+
+A dry run can be performed to check packages without perfoming the
+calculations.
+
+'''
+user:$ ./runtests Ncpus QMPackage MMPackage Dry
+'''
+
+### Notes
+
+The test suite requires python 2.7 or higher.
+
+The test suite is not compatable with python 3.0 or higher.
