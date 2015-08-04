@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 ###################################################
 #                                                 #
 #   LICHEM: Layered Interacting CHEmical Models   #
@@ -16,7 +14,6 @@ import sys
 import os
 
 #Classes
-### Color settings ###
 class ClrSet:
   #Unicode colors
   Norm = '\033[0m'
@@ -54,16 +51,86 @@ print(line)
 #Read arguments
 DryRun = 0 #Only check packages
 if (len(sys.argv) < 4):
+  #Print help if arguments are missing
   line = ""
   line += "Usage: python runtests.py Ncpus QMPackage MMPackage"
   line += '\n'
+  line += '\n'
+  #Identify QM wrappers
+  line += "Available QM wrappers:"
+  line += '\n'
+  line += " PSI4: "
+  cmd = "which psi4"
+  try:
+    #Find path
+    QMbin = subprocess.check_output(cmd,shell=True)
+    QMbin = QMbin.strip()
+  except:
+    QMbin = "N/A"
+  line += QMbin
+  line += '\n'
+  line += " Gaussian: "
+  cmd = "which g09"
+  try:
+    #Find path
+    QMbin = subprocess.check_output(cmd,shell=True)
+    QMbin = QMbin.strip()
+  except:
+    QMbin = "N/A"
+  line += QMbin
+  line += '\n'
+  line += " NWChem: "
+  cmd = "which nwchem"
+  try:
+    #Find path
+    QMbin = subprocess.check_output(cmd,shell=True)
+    QMbin = QMbin.strip()
+  except:
+    QMbin = "N/A"
+  line += QMbin
+  line += '\n'
+  line += '\n'
+  #Identify MM wrappers
+  line += "Available MM wrappers:"
+  line += '\n'
+  line += " TINKER: "
+  cmd = "which analyze"
+  try:
+    #Find path
+    MMbin = subprocess.check_output(cmd,shell=True)
+    MMbin = MMbin.strip()
+  except:
+    MMbin = "N/A"
+  line += MMbin
+  line += '\n'
+  line += " LAMMPS: "
+  cmd = "which lammps"
+  try:
+    #Find path
+    MMbin = subprocess.check_output(cmd,shell=True)
+    MMbin = MMbin.strip()
+  except:
+    MMbin = "N/A"
+  line += MMbin
+  line += '\n'
+  line += " AMBER: "
+  cmd = "which pmemd"
+  try:
+    #Find path
+    MMbin = subprocess.check_output(cmd,shell=True)
+    MMbin = MMbin.strip()
+  except:
+    MMbin = "N/A"
+  line += MMbin
+  line += '\n'
   print(line)
   exit(0)
-Ncpus = int(sys.argv[1])
-QMPack = sys.argv[2]
-MMPack = sys.argv[3]
+Ncpus = int(sys.argv[1]) #Threads
+QMPack = sys.argv[2] #QM wrapper for calculations
+MMPack = sys.argv[3] #MM wrapper for calculations
 if (len(sys.argv) > 4):
   if ((sys.argv[4] == "Dry") or (sys.argv[4] == "dry")):
+    #Quit early
     DryRun = 1
 QMbin = ""
 MMbin = ""
@@ -74,32 +141,36 @@ if ((QMPack == "PSI4") or (QMPack == "psi4") or (QMPack == "Psi4")):
   QMPack = "PSI4"
   cmd = "which psi4"
   try:
+    #Find path
     QMbin = subprocess.check_output(cmd,shell=True)
     QMbin = QMbin.strip()
   except:
-    QMbin = "Not found..."
+    QMbin = "N/A"
   BadQM = 0
 if ((QMPack == "Gaussian") or (QMPack == "gaussian") or (QMPack == "g09")):
   QMPack = "Gaussian"
   cmd = "which g09"
   try:
+    #Find path
     QMbin = subprocess.check_output(cmd,shell=True)
     QMbin = QMbin.strip()
   except:
-    QMbin = "Not found..."
+    QMbin = "N/A"
   BadQM = 0
 if ((QMPack == "NWChem") or (QMPack == "nwchem") or (QMPack == "NWCHEM")):
   QMPack = "NWChem"
   cmd = "which nwchem"
   try:
+    #Find path
     QMbin = subprocess.check_output(cmd,shell=True)
     QMbin = QMbin.strip()
   except:
-    QMbin = "Not found..."
+    QMbin = "N/A"
   BadQM = 0
 if (BadQM == 1):
+  #Quit with an error
   line = '\n'
-  line += "Error: Package name '"
+  line += "Error: QM package name '"
   line += QMPack
   line += "' not recognized." 
   line += '\n'
@@ -110,32 +181,36 @@ if ((MMPack == "TINKER") or (MMPack == "tinker") or (MMPack == "Tinker")):
   MMPack = "TINKER"
   cmd = "which analyze"
   try:
+    #Find path
     MMbin = subprocess.check_output(cmd,shell=True)
     MMbin = MMbin.strip()
   except:
-    MMbin = "Not found..."
+    MMbin = "N/A"
   BadMM = 0
 if ((MMPack == "LAMMPS") or (MMPack == "lammps") or (MMPack == "Lammps")):
   MMPack = "LAMMPS"
   cmd = "which lammps"
   try:
+    #Find path
     MMbin = subprocess.check_output(cmd,shell=True)
     MMbin = MMbin.strip()
   except:
-    MMbin = "Not found..."
+    MMbin = "N/A"
   BadMM = 0
 if ((MMPack == "AMBER") or (MMPack == "amber") or (MMPack == "Amber")):
   MMPack = "AMBER"
   cmd = "which pmemd" #Check
   try:
+    #Find path
     MMbin = subprocess.check_output(cmd,shell=True)
     MMbin = MMbin.strip()
   except:
-    MMbin = "Not found..."
+    MMbin = "N/A"
   BadMM = 0
 if (BadMM == 1):
+  #Quit with error
   line = '\n'
-  line += "Error: Package name '"
+  line += "Error: MM package name '"
   line += MMPack
   line += "' not recognized."
   line += '\n'
@@ -164,13 +239,15 @@ print(line)
 
 #Escape for dry runs
 if (DryRun == 1):
+  #Quit without an error
   line = "Dry run completed."
   line += '\n'
   print(line)
   exit(0)
 
 #Escape if binaries not found
-if ((QMbin == "Not found...") or (MMbin == "Not found...")):
+if ((QMbin == "N/A") or (MMbin == "N/A")):
+  #Quit with an error
   line = "Error: Missing binaries."
   line += '\n'
   print(line)
@@ -182,7 +259,7 @@ cmd = "lichem -n "
 cmd += `Ncpus`
 cmd += " "
 
-#Set QM package
+#Set path based on packages
 if (QMPack == "PSI4"):
   DirPath += "PSI4_"
 if (QMPack == "Gaussian"):
@@ -220,12 +297,15 @@ QMMMEnergy = QMMMEnergy.split()
 QMMMEnergy = float(QMMMEnergy[2])
 QMMMEnergy = round(QMMMEnergy,6)
 if (QMPack == "PSI4"):
+  #Check again saved energy
   if (QMMMEnergy == round(-2077.771998247412,6)):
     PassEnergy = 1
 if (QMPack == "Gaussian"):
+  #Check again saved energy
   if (QMMMEnergy == round(-2077.775625181200,6)):
     PassEnergy = 1
 if (QMPack == "NWChem"):
+  #Check again saved energy
   if (QMMMEnergy == round(-2077.775529980780,6)):
     PassEnergy = 1
 line += " QMMM energy (water dimer): "

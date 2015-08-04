@@ -17,9 +17,9 @@ BIB=bibtex
 
 ### Compile rules for users and devs
 
-install:	title binary manual compdone
+install:	title binary testexe manual compdone
 
-Dev:	title devbin manual stats compdone
+Dev:	title devbin testexe manual stats compdone
 
 clean:	title delbin compdone
 
@@ -27,17 +27,21 @@ clean:	title delbin compdone
 
 binary:	
 	@echo ""; \
-	echo "### Compiling the LICHEM binary ###"; \
-	cp ./src/runtests.py ./tests/runtests; \
-	chmod a+x ./tests/runtests
+	echo "### Compiling the LICHEM binary ###"
 	$(CXX) $(CXXFLAGS) ./src/LICHEM.cpp -o lichem $(LDFLAGS)
 
 devbin:	
 	@echo ""; \
-	echo "### Compiling the LICHEM development binary ###"; \
-	cp ./src/runtests.py ./tests/runtests; \
-	chmod a+x ./tests/runtests
+	echo "### Compiling the LICHEM development binary ###"
 	$(CXX) $(CXXFLAGS) $(DEVFLAGS) ./src/LICHEM.cpp -o lichem $(LDFLAGS)
+
+testexe:	
+	@echo ""; \
+	echo "### Creating test suite executable ###"
+	echo "#!/usr/bin/python" > ./tests/runtests
+	@echo "" >> ./tests/runtests
+	cat ./src/runtests.py >> ./tests/runtests
+	@chmod a+x ./tests/runtests
 
 checksyntax:	
 	@echo ""; \

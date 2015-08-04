@@ -105,13 +105,13 @@ directory.
 
 Tests are performed for pairs of QM and MM wrappers.
 
-'''
+```
 user:$ ./runtests Ncpus QMPackage MMPackage
-'''
+```
 
 A dry run can be performed to check packages without perfoming the
 calculations.
 
-'''
+```
 user:$ ./runtests Ncpus QMPackage MMPackage Dry
-'''
+```
