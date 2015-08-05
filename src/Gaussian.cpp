@@ -102,17 +102,9 @@ void ExternalGaussian(int& argc, char**& argv)
   }
   GauInput.close();
   //Calculate the QMMM forces
-  vector<Coord> Forces; //Forces for QM and PB
+  VectorXd Forces(3*(Nqm+Npseudo)); //Forces for QM and PB
+  Forces.setZero();
   fstream MMgrad,QMlog; //QMMM output
-  for (int i=0;i<(Nqm+Npseudo);i++)
-  {
-    //Create arrays with zeros
-    Coord tmp;
-    tmp.x = 0;
-    tmp.y = 0;
-    tmp.z = 0;
-    Forces.push_back(tmp);
-  }
   //QM forces
   Eqm = GaussianForces(Struct,Forces,QMMMOpts,Bead);
   //MM forces
@@ -144,9 +136,9 @@ void ExternalGaussian(int& argc, char**& argv)
   GauOutput << '\n';
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
-    GauOutput << setw(20) << (-1*Forces[i].x*BohrRad/Har2eV);
-    GauOutput << setw(20) << (-1*Forces[i].y*BohrRad/Har2eV);
-    GauOutput << setw(20) << (-1*Forces[i].z*BohrRad/Har2eV);
+    GauOutput << setw(20) << (-1*Forces(3*i+0)*BohrRad/Har2eV);
+    GauOutput << setw(20) << (-1*Forces(3*i+1)*BohrRad/Har2eV);
+    GauOutput << setw(20) << (-1*Forces(3*i+2)*BohrRad/Har2eV);
     GauOutput << '\n';
   }
   GauOutput << setw(20) << 0.0; //Polarizability
@@ -189,7 +181,7 @@ void ExternalGaussian(int& argc, char**& argv)
 };
 
 //QM wrapper functions
-double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
+double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the forces on a set of atoms
@@ -374,15 +366,6 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   call << "g09 " << "LICHM_" << Bead;
   GlobalSys = system(call.str().c_str());
   //Extract forces
-  for (int i=0;i<(Nqm+Npseudo);i++)
-  {
-    //Create arrays with zeros
-    Coord tmp;
-    tmp.x = 0;
-    tmp.y = 0;
-    tmp.z = 0;
-    Forces.push_back(tmp);
-  }
   call.str("");
   call << "LICHM_" << Bead << ".log";
   QMlog.open(call.str().c_str(),ios_base::in);
@@ -417,15 +400,15 @@ double GaussianForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
           //Save forces
           if (abs(Fx) >= 1e-8)
           {
-            Forces[i].x += Fx*Har2eV/BohrRad;
+            Forces(3*i+0) += Fx*Har2eV/BohrRad;
           }
           if (abs(Fy) >= 1e-8)
           {
-            Forces[i].y += Fy*Har2eV/BohrRad;
+            Forces(3*i+1) += Fy*Har2eV/BohrRad;
           }
           if (abs(Fz) >= 1e-8)
           {
-            Forces[i].z += Fz*Har2eV/BohrRad;
+            Forces(3*i+2) += Fz*Har2eV/BohrRad;
           }
         }
       }

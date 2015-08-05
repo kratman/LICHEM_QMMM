@@ -19,7 +19,7 @@
 //QM utility functions
 
 //QM wrapper functions
-double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
+double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the forces and charges on a set of atoms
@@ -209,15 +209,15 @@ double PSIForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
           //Switch to eV/A and save forces
           if (abs(Fx) >= 1e-12)
           {
-            Forces[i].x += Fx*Har2eV/BohrRad;
+            Forces(3*i+0) += Fx*Har2eV/BohrRad;
           }
           if (abs(Fy) >= 1e-12)
           {
-            Forces[i].y += Fy*Har2eV/BohrRad;
+            Forces(3*i+1) += Fy*Har2eV/BohrRad;
           }
           if (abs(Fz) >= 1e-12)
           {
-            Forces[i].z += Fz*Har2eV/BohrRad;
+            Forces(3*i+2) += Fz*Har2eV/BohrRad;
           }
         }
       }

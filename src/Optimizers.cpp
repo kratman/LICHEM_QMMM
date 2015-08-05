@@ -20,7 +20,7 @@
 
 //Convergence test functions
 bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
-     vector<Coord>& Forces, int stepct, QMMMSettings& QMMMOpts, int Bead,
+     VectorXd& Forces, int stepct, QMMMSettings& QMMMOpts, int Bead,
      bool QMregion)
 {
   //Check convergence of QMMM optimizations
@@ -40,9 +40,9 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     for (int i=0;i<(Nqm+Npseudo);i++)
     {
       //Calculate RMS forces
-      double Fx = Forces[i].x;
-      double Fy = Forces[i].y;
-      double Fz = Forces[i].z;
+      double Fx = Forces(3*i+0);
+      double Fy = Forces(3*i+1);
+      double Fz = Forces(3*i+2);
       if (abs(Fx) > MAXforce)
       {
         MAXforce = abs(Fx);
@@ -283,16 +283,8 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     double E = 0;
     //Create blank force array
-    vector<Coord> Forces;
-    for (int i=0;i<(Nqm+Npseudo);i++)
-    {
-      //Create arrays with zeros
-      Coord tmp;
-      tmp.x = 0;
-      tmp.y = 0;
-      tmp.z = 0;
-      Forces.push_back(tmp);
-    }
+    VectorXd Forces(3*(Nqm+Npseudo));
+    Forces.setZero();
     //Calculate forces (QM part)
     if (Gaussian == 1)
     {
@@ -350,20 +342,12 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     OldStruct = Struct;
     //Check optimization step size
     VecMax = 0;
-    for (int i=0;i<(Nqm+Npseudo);i++)
+    for (int i=0;i<(3*(Nqm+Npseudo));i++)
     {
       //Check if the step size is too large
-      if (abs(StepScale*Forces[i].x) > VecMax)
+      if (abs(StepScale*Forces(i)) > VecMax)
       {
-        VecMax = abs(StepScale*Forces[i].x);
-      }
-      if (abs(StepScale*Forces[i].y) > VecMax)
-      {
-        VecMax = abs(StepScale*Forces[i].y);
-      }
-      if (abs(StepScale*Forces[i].z) > VecMax)
-      {
-        VecMax = abs(StepScale*Forces[i].z);
+        VecMax = abs(StepScale*Forces(i));
       }
     }
     stepsize = StepScale;
@@ -381,10 +365,10 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Move QM atoms
       if (Struct[i].QMregion or Struct[i].PBregion)
       {
-        Struct[i].P[Bead].x += stepsize*Forces[ct].x;
-        Struct[i].P[Bead].y += stepsize*Forces[ct].y;
-        Struct[i].P[Bead].z += stepsize*Forces[ct].z;
-        ct += 1;
+        Struct[i].P[Bead].x += stepsize*Forces(ct+0);
+        Struct[i].P[Bead].y += stepsize*Forces(ct+1);
+        Struct[i].P[Bead].z += stepsize*Forces(ct+2);
+        ct += 3;
       }
     }
     //Print structure
@@ -495,7 +479,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Create DFP arrays
   VectorXd OptVec(3*(Nqm+Npseudo)); //Gradient descent direction
   VectorXd GradDiff(3*(Nqm+Npseudo)); //Change in the gradient
-  VectorXd NGrad(3*(Nqm+Npseudo)); //Negative of the gradient
+  VectorXd Forces(3*(Nqm+Npseudo)); //Forces
   MatrixXd IHess(3*(Nqm+Npseudo),3*(Nqm+Npseudo)); //Inverse Hessian
   #pragma omp parallel for
   for (int i=0;i<(3*(Nqm+Npseudo));i++)
@@ -503,7 +487,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     //Initialize arrays
     OptVec(i) = 0;
     GradDiff(i) = 0;
-    NGrad(i) = 0;
+    Forces(i) = 0;
     //Create an identity matrix as the initial Hessian
     for (int j=0;j<i;j++)
     {
@@ -514,16 +498,6 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     IHess(i,i) = 1.0; //Already an "inverse Hessian"
   }
   #pragma omp barrier
-  vector<Coord> Forces;
-  for (int i=0;i<(Nqm+Npseudo);i++)
-  {
-    //Create arrays with zeros
-    Coord tmp;
-    tmp.x = 0;
-    tmp.y = 0;
-    tmp.z = 0;
-    Forces.push_back(tmp);
-  }
   //Calculate forces (QM part)
   if (Gaussian == 1)
   {
@@ -569,19 +543,11 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     MMTime += (unsigned)time(0)-tstart;
   }
   //Save forces
-  int ct = 0; //Counter
   VecMax = 0; //Using this variable to avoid creating a new one
-  for (int i=0;i<(Nqm+Npseudo);i++)
+  for (int i=0;i<(3*(Nqm+Npseudo));i++)
   {
-    //Change forces array
-    NGrad(ct) = Forces[i].x;
-    NGrad(ct+1) = Forces[i].y;
-    NGrad(ct+2) = Forces[i].z;
-    ct += 3;
     //Calculate initial RMS force
-    VecMax += Forces[i].x*Forces[i].x;
-    VecMax += Forces[i].y*Forces[i].y;
-    VecMax += Forces[i].z*Forces[i].z;
+    VecMax += Forces(i)*Forces(i);
   }
   //Output initial RMS force
   VecMax = sqrt(VecMax/(3*(Nqm+Npseudo)));
@@ -603,21 +569,15 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     E = 0; // Reinitialize energy
     //Copy old structure and delete old forces force array
     vector<QMMMAtom> OldStruct = Struct;
-    ct = 0; //Counter
-    for (int i=0;i<(Nqm+Npseudo);i++)
+    #pragma omp parallel for
+    for (int i=0;i<(3*(Nqm+Npseudo));i++)
     {
       //Reinitialize the change in the gradient
-      GradDiff(ct) = NGrad(ct);
-      GradDiff(ct+1) = NGrad(ct+1);
-      GradDiff(ct+2) = NGrad(ct+2);
-      ct += 3;
-      //Delete old forces
-      Forces[i].x = 0;
-      Forces[i].y = 0;
-      Forces[i].z = 0;
+      GradDiff(i) = Forces(i);
     }
+    #pragma omp barrier
     //Determine new structure
-    OptVec = IHess*NGrad;
+    OptVec = IHess*Forces;
     OptVec *= StepScale;
     VecMax = 0;
     for (int i=0;i<(3*(Nqm+Npseudo));i++)
@@ -633,7 +593,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       //Scale step size
       OptVec *= (QMMMOpts.MaxStep/VecMax);
     }
-    ct = 0; //Counter
+    int ct = 0; //Counter
     for (int i=0;i<Natoms;i++)
     {
       //Move QM atoms
@@ -648,6 +608,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     //Print structure
     Print_traj(Struct,qmfile,QMMMOpts);
     //Calculate forces (QM part)
+    Forces.setZero();
     if (Gaussian == 1)
     {
       int tstart = (unsigned)time(0);
@@ -692,17 +653,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       MMTime += (unsigned)time(0)-tstart;
     }
     //Update Hessian
-    ct = 0;
-    for (int i=0;i<(Nqm+Npseudo);i++)
-    {
-      GradDiff(ct) -= Forces[i].x;
-      GradDiff(ct+1) -= Forces[i].y;
-      GradDiff(ct+2) -= Forces[i].z;
-      NGrad(ct) = Forces[i].x;
-      NGrad(ct+1) = Forces[i].y;
-      NGrad(ct+2) = Forces[i].z;
-      ct += 3;
-    }
+    GradDiff -= Forces;
     if (((stepct%30) == 0) and (stepct != 0))
     {
       //Build a new Hessian after 30 steps
@@ -824,16 +775,8 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
     double E = 0;
     double SumE = 0;
     //Create blank force array
-    vector<Coord> Forces;
-    for (int i=0;i<(Nqm+Npseudo);i++)
-    {
-      //Create arrays with zeros
-      Coord tmp;
-      tmp.x = 0;
-      tmp.y = 0;
-      tmp.z = 0;
-      Forces.push_back(tmp);
-    }
+    VectorXd Forces(3*(Nqm+Npseudo));
+    Forces.setZero();
     //Calculate forces and energy (QM part)
     if (Gaussian == 1)
     {
@@ -889,7 +832,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
       if (Struct[i].QMregion or Struct[i].PBregion)
       {
         //Check X step size
-        stepsize = StepScale*Forces[ct].x;
+        stepsize = StepScale*Forces(ct+0);
         if (abs(stepsize) > QMMMOpts.MaxStep)
         {
           //Scale step
@@ -897,7 +840,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
         }
         Struct[i].P[Bead].x += stepsize;
         //Check Y step size
-        stepsize = StepScale*Forces[ct].y;
+        stepsize = StepScale*Forces(ct+1);
         if (abs(stepsize) > QMMMOpts.MaxStep)
         {
           //Scale step
@@ -905,14 +848,14 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
         }
         Struct[i].P[Bead].y += stepsize;
         //Check Z step size
-        stepsize = StepScale*Forces[ct].z;
+        stepsize = StepScale*Forces(ct+2);
         if (abs(stepsize) > QMMMOpts.MaxStep)
         {
           //Scale step
           stepsize *= QMMMOpts.MaxStep/abs(stepsize);
         }
         Struct[i].P[Bead].z += stepsize;
-        ct += 1;
+        ct += 3;
       }
     }
     //Print structure and energy

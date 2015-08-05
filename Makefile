@@ -12,6 +12,7 @@ CXX=g++
 CXXFLAGS=-static -fopenmp -O3
 DEVFLAGS=-g -Wall
 LDFLAGS=-I./src/ -I/usr/include/eigen3/
+PYPATH=/usr/bin/python
 TEX=pdflatex
 BIB=bibtex
 
@@ -38,7 +39,7 @@ devbin:
 testexe:	
 	@echo ""; \
 	echo "### Creating test suite executable ###"
-	echo "#!/usr/bin/python" > ./tests/runtests
+	echo "#!$(PYPATH)" > ./tests/runtests
 	@echo "" >> ./tests/runtests
 	cat ./src/runtests.py >> ./tests/runtests
 	@chmod a+x ./tests/runtests
@@ -53,20 +54,19 @@ checksyntax:
 	ls -al src/* | wc -l; \
 	echo "Total length of LICHEM (lines):"; \
 	cat src/* | wc -l; \
-	echo ""; \
-	echo " [Complete]"; \
-	echo ""
 
 manual:	
 	@echo ""; \
 	echo "### Compiling the documentation ###"; \
 	cd src/; \
+	echo "$(TEX) manual"; \
 	$(TEX) manual > doclog.txt; \
 	$(BIB) manual > doclog.txt; \
 	$(TEX) manual > doclog.txt; \
 	$(TEX) manual > doclog.txt; \
 	$(TEX) manual > doclog.txt; \
 	$(TEX) manual > doclog.txt; \
+	echo "$(BIB) manual"; \
 	$(BIB) manual > doclog.txt; \
 	$(TEX) manual > doclog.txt; \
 	$(TEX) manual > doclog.txt; \
@@ -74,8 +74,7 @@ manual:
 	mv manual.pdf ../doc/LICHEM_manual.pdf; \
 	rm -f manual.aux manual.bbl manual.blg; \
 	rm -f manual.log manual.out manual.toc; \
-	rm -f doclog.txt; \
-        echo " [Complete]"
+	rm -f doclog.txt
 
 title:	
 	@echo ""; \

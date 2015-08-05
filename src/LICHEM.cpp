@@ -149,7 +149,7 @@ int main(int argc, char* argv[])
   else if (OptSim)
   {
     //Note: Currently only Gaussian works with this option
-    vector<Coord> Forces; //Dummy array needed for convergence tests
+    VectorXd Forces; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
@@ -272,7 +272,7 @@ int main(int argc, char* argv[])
   //Steepest descent optimization
   else if (SteepSim)
   {
-    vector<Coord> Forces; //Dummy array needed for convergence tests
+    VectorXd Forces; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
@@ -376,7 +376,7 @@ int main(int argc, char* argv[])
   //DFP minimization
   else if (DFPSim)
   {
-    vector<Coord> Forces; //Dummy array needed for convergence tests
+    VectorXd Forces; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
@@ -636,7 +636,7 @@ int main(int argc, char* argv[])
   //NEB optimization
   else if (NEBSim)
   {
-    vector<Coord> Forces; //Dummy array needed for convergence tests
+    VectorXd Forces; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);

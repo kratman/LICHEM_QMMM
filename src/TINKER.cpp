@@ -467,7 +467,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   return Epol;
 };
 
-double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
+double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the MM forces on a set of QM atoms
@@ -677,15 +677,15 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
           //Switch to eV/A and change sign
           if (abs(Fx) >= 1e-4)
           {
-            Forces[i].x += -1*Fx*kcal2eV;
+            Forces(3*i+0) += -1*Fx*kcal2eV;
           }
           if (abs(Fy) >= 1e-4)
           {
-            Forces[i].y += -1*Fy*kcal2eV;
+            Forces(3*i+1) += -1*Fy*kcal2eV;
           }
           if (abs(Fz) >= 1e-4)
           {
-            Forces[i].z += -1*Fz*kcal2eV;
+            Forces(3*i+2) += -1*Fz*kcal2eV;
           }
         }
       }
@@ -713,7 +713,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
   return Emm;
 };
 
-double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
+double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the MM forces on a set of QM atoms
@@ -896,15 +896,15 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
           //Switch to eV/A and change sign
           if (abs(Fx) >= 1e-4)
           {
-            Forces[i].x += -1*Fx*kcal2eV;
+            Forces(3*i+0) += -1*Fx*kcal2eV;
           }
           if (abs(Fy) >= 1e-4)
           {
-            Forces[i].y += -1*Fy*kcal2eV;
+            Forces(3*i+1) += -1*Fy*kcal2eV;
           }
           if (abs(Fz) >= 1e-4)
           {
-            Forces[i].z += -1*Fz*kcal2eV;
+            Forces(3*i+2) += -1*Fz*kcal2eV;
           }
         }
       }

@@ -1,0 +1,137 @@
+
+      ##############################
+      ##                          ##
+      ##  Force Field Definition  ##
+      ##                          ##
+      ##############################
+
+
+forcefield              AMBER-FF99
+
+vdwtype                 LENNARD-JONES
+radiusrule              ARITHMETIC
+radiustype              R-MIN
+radiussize              RADIUS
+epsilonrule             GEOMETRIC
+vdw-14-scale            2.0
+chg-14-scale            1.2
+electric                332.0522173
+dielectric              1.0
+
+
+      #############################
+      ##                         ##
+      ##  Literature References  ##
+      ##                         ##
+      #############################
+
+
+J. Wang, P. Cieplak and P. A. Kollman, "How Well Does a Restrained
+Electrostatic Potential (RESP) Model Perform in Calcluating Conformational
+Energies of Organic and Biological Molecules?", J. Comput. Chem., 21,
+1049-1074 (2000)  [PARM99]
+
+W. D. Cornell, P. Cieplak, C. I. Bayly, I. R. Gould, K. M. Merz, Jr.,
+D. M. Ferguson, D. C. Spellmeyer, T. Fox, J. W. Caldwell and P. A. Kollman,
+"A Second Generation Force Field for the Simulation of Proteins, Nucleic
+Acids, and Organic Molecules", J. Am. Chem. Soc., 117, 5179-5197 (1995)
+[PARM94]
+
+G. Moyna, H. J. Williams, R. J. Nachman and A. I. Scott, "Conformation in
+Solution and Dynamics of a Structurally Constrained Linear Insect Kinin
+Pentapeptide Analogue", Biopolymers, 49, 403-413 (1999)  [AIB charges]
+
+W. S. Ross and C. C. Hardin, "Ion-Induced Stabilization of the G-DNA
+Quadruplex: Free Energy Perturbation Studies", J. Am. Chem. Soc.,
+116, 6070-6080 (1994)  [Alkali Metal Ions]
+
+J. Aqvist, "Ion-Water Interaction Potentials Derived from Free Energy
+Perturbation Simulations", J. Phys. Chem., 94, 8021-8024 (1990)
+[Alkaline Earth Ions, radii adapted for Amber combining rule]
+
+Current parameter values are available from the Amber site, located
+at http://ambermd.org/
+
+
+      #############################
+      ##                         ##
+      ##  Atom Type Definitions  ##
+      ##                         ##
+      #############################
+
+
+   #####################################################
+   ##                                                 ##
+   ##  TINKER Atom Class Numbers to Amber Atom Types  ##
+   ##                                                 ##
+   ##    1  CT      11  CN      21  OW      31  HO    ##
+   ##    2  C       12  CK      22  OH      32  HS    ##
+   ##    3  CA      13  CQ      23  OS      33  HA    ##
+   ##    4  CM      14  N       24  O       34  HC    ##
+   ##    5  CC      15  NA      25  O2      35  H1    ##
+   ##    6  CV      16  NB      26  S       36  H2    ##
+   ##    7  CW      17  NC      27  SH      37  H3    ##
+   ##    8  CR      18  N*      28  P       38  HP    ##
+   ##    9  CB      19  N2      29  H       39  H4    ##
+   ##   10  C*      20  N3      30  HW      40  H5    ##
+   ##                                                 ##
+   #####################################################
+
+
+atom       1   1    OW    "TIP3P Oxygen"                 8    16.000    2
+atom       2   2    HW    "TIP3P Hydrogen"               1     1.008    1
+
+
+      ################################
+      ##                            ##
+      ##  Van der Waals Parameters  ##
+      ##                            ##
+      ################################
+
+
+vdw          1               1.7683     0.1520
+vdw          2               0.0000     0.0000
+
+
+      ##################################
+      ##                              ##
+      ##  Bond Stretching Parameters  ##
+      ##                              ##
+      ##################################
+
+
+bond         1   2          553.00     0.9572
+bond         2   2          553.00     1.5136
+
+
+      ################################
+      ##                            ##
+      ##  Angle Bending Parameters  ##
+      ##                            ##
+      ################################
+
+
+angle        1   2   2       0.00     127.74
+angle        2   1   2     100.00     104.52
+
+
+      ########################################
+      ##                                    ##
+      ##  Atomic Partial Charge Parameters  ##
+      ##                                    ##
+      ########################################
+
+
+charge     1              -0.8340
+charge     2               0.4170
+
+
+      ########################################
+      ##                                    ##
+      ##  Biopolymer Atom Type Conversions  ##
+      ##                                    ##
+      ########################################
+
+
+biotype    2001    O       "Water"                          1
+biotype    2002    H       "Water"                          2

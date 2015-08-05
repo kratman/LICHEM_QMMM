@@ -20,7 +20,7 @@
 
 
 //MM wrapper functions
-double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
+double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs NWChem force calculations
@@ -287,15 +287,15 @@ double NWChemForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
           line >> Fz;
           if (abs(Fx) >= 1e-6)
           {
-            Forces[i].x -= Fx*Har2eV/BohrRad;
+            Forces(3*i+0) -= Fx*Har2eV/BohrRad;
           }
           if (abs(Fy) >= 1e-6)
           {
-            Forces[i].y -= Fy*Har2eV/BohrRad;
+            Forces(3*i+1) -= Fy*Har2eV/BohrRad;
           }
           if (abs(Fz) >= 1e-6)
           {
-            Forces[i].z -= Fz*Har2eV/BohrRad;
+            Forces(3*i+2) -= Fz*Har2eV/BohrRad;
           }
         }
       }

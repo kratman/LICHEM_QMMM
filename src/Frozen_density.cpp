@@ -24,6 +24,22 @@
 */
 
 //Gaussian function classes and structs
+double GauDen1s::ChrgNuc(double qpc, Coord pos, double Rcut)
+{
+  //Function to calculate interactions between nuclei and charges
+  double E = 0;
+  
+  return E;
+};
+
+double GauDen1s::NucNuc(GauDen1s gau2, double Rcut)
+{
+  //Function to calculate interactions between nuclei
+  double E = 0;
+  
+  return E;
+};
+
 double GauDen1s::TwoOver(GauDen1s gau2)
 {
   //Calculates the overlap of two Gaussian functions

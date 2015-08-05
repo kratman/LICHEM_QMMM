@@ -17,9 +17,16 @@
 */
 
 //MM utility functions
+void LAMMPSTopology(vector<QMMMAtom>& Struct, stringstream& topology,
+     int Bead)
+{
+  //Function to write bond and angle information for LAMMPS
+  
+  return;
+};
 
 //MM wrapper functions
-double LAMMPSForces(vector<QMMMAtom>& Struct, vector<Coord>& Forces,
+double LAMMPSForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the MM forces on a set of QM atoms

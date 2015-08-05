@@ -353,7 +353,7 @@ class QMMMSettings
 PeriodicTable PTable;
 
 //Function declarations (alphabetical)
-double AMBERForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+double AMBERForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
 
 double AMBEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
@@ -399,7 +399,7 @@ void GaussianCharges(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double GaussianEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
-double GaussianForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+double GaussianForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
 
 double GaussianOpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
@@ -419,9 +419,11 @@ double KineticE_eFF(vector<QMMMElec>&,QMMMSettings&);
 
 double LAMMPSEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
-double LAMMPSForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+double LAMMPSForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
 
 double LAMMPSOpt(vector<QMMMAtom>&,QMMMSettings&,int);
+
+void LAMMPSTopology(vector<QMMMAtom>&,stringstream&,int);
 
 void LICHEMDFP(vector<QMMMAtom>&,QMMMSettings&,int);
 
@@ -441,7 +443,7 @@ void NWChemCharges(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double NWChemEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
-double NWChemForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+double NWChemForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
 
 double NWChemOpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
@@ -459,7 +461,7 @@ void PSICharges(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double PSIEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
-double PSIForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+double PSIForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
 
 double PSIOpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
@@ -482,11 +484,9 @@ void TINKERDynamics(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double TINKEROpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
-double TINKERForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+double TINKERForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
 
-double TINKERPolForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
-
-double TINKERMMForces(vector<QMMMAtom>&,vector<Coord>&,QMMMSettings&,int);
+double TINKERPolForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
 
 void TINKERInduced(vector<QMMMAtom>&,QMMMSettings&,int);
 

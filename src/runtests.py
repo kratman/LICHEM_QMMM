@@ -64,9 +64,9 @@ if (len(sys.argv) < 4):
   try:
     #Find path
     QMbin = subprocess.check_output(cmd,shell=True)
-    QMbin = QMbin.strip()
+    QMbin = ClrSet.TPass+QMbin.strip()+ClrSet.Reset
   except:
-    QMbin = "N/A"
+    QMbin = ClrSet.TFail+"N/A"+ClrSet.Reset
   line += QMbin
   line += '\n'
   line += " Gaussian: "
@@ -74,9 +74,9 @@ if (len(sys.argv) < 4):
   try:
     #Find path
     QMbin = subprocess.check_output(cmd,shell=True)
-    QMbin = QMbin.strip()
+    QMbin = ClrSet.TPass+QMbin.strip()+ClrSet.Reset
   except:
-    QMbin = "N/A"
+    QMbin = ClrSet.TFail+"N/A"+ClrSet.Reset
   line += QMbin
   line += '\n'
   line += " NWChem: "
@@ -84,9 +84,9 @@ if (len(sys.argv) < 4):
   try:
     #Find path
     QMbin = subprocess.check_output(cmd,shell=True)
-    QMbin = QMbin.strip()
+    QMbin = ClrSet.TPass+QMbin.strip()+ClrSet.Reset
   except:
-    QMbin = "N/A"
+    QMbin = ClrSet.TFail+"N/A"+ClrSet.Reset
   line += QMbin
   line += '\n'
   line += '\n'
@@ -98,9 +98,9 @@ if (len(sys.argv) < 4):
   try:
     #Find path
     MMbin = subprocess.check_output(cmd,shell=True)
-    MMbin = MMbin.strip()
+    MMbin = ClrSet.TPass+MMbin.strip()+ClrSet.Reset
   except:
-    MMbin = "N/A"
+    MMbin = ClrSet.TFail+"N/A"+ClrSet.Reset
   line += MMbin
   line += '\n'
   line += " LAMMPS: "
@@ -108,9 +108,9 @@ if (len(sys.argv) < 4):
   try:
     #Find path
     MMbin = subprocess.check_output(cmd,shell=True)
-    MMbin = MMbin.strip()
+    MMbin = ClrSet.TPass+MMbin.strip()+ClrSet.Reset
   except:
-    MMbin = "N/A"
+    MMbin = ClrSet.TFail+"N/A"+ClrSet.Reset
   line += MMbin
   line += '\n'
   line += " AMBER: "
@@ -118,9 +118,9 @@ if (len(sys.argv) < 4):
   try:
     #Find path
     MMbin = subprocess.check_output(cmd,shell=True)
-    MMbin = MMbin.strip()
+    MMbin = ClrSet.TPass+MMbin.strip()+ClrSet.Reset
   except:
-    MMbin = "N/A"
+    MMbin = ClrSet.TFail+"N/A"+ClrSet.Reset
   line += MMbin
   line += '\n'
   print(line)
@@ -253,13 +253,8 @@ if ((QMbin == "N/A") or (MMbin == "N/A")):
   print(line)
   exit(0)
 
-#Run tests
-DirPath = "./"
-cmd = "lichem -n "
-cmd += `Ncpus`
-cmd += " "
-
 #Set path based on packages
+DirPath = ""
 if (QMPack == "PSI4"):
   DirPath += "PSI4_"
 if (QMPack == "Gaussian"):
@@ -272,65 +267,130 @@ DirPath += "/"
 #Change directory
 os.chdir(DirPath)
 
-#Complete commands
-cmd += "-x xyzfile.xyz "
-cmd += "-r regions.inp "
-cmd += "-c connect.inp "
-cmd += "-o trash.xyz "
-cmd += "> tests.out"
-
-#Run calculations
-subprocess.call(cmd,shell=True)
-
 #Start printing results
 line = "Results:"
 line += '\n'
 
-#Check QMMM energy results
+#Check QMMM point-charge energy results
 PassEnergy = 0
+cmd = "cp pchrg.key tinker.key"
+subprocess.call(cmd,shell=True) #Copy key file
+cmd = "lichem -n "
+cmd += `Ncpus`
+cmd += " "
+cmd += "-x xyzfile.xyz "
+cmd += "-r pchrgreg.inp "
+cmd += "-c connect.inp "
+cmd += "-o trash.xyz "
+cmd += "> tests.out " #Capture stdout
+cmd += "2>&1" #Capture stderr
+subprocess.call(cmd,shell=True) #Run calculations
 cmd = ""
 cmd += "grep -e"
 cmd += ' "QMMM energy: " '
 cmd += "tests.out"
-QMMMEnergy = subprocess.check_output(cmd,shell=True)
+QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
 QMMMEnergy = QMMMEnergy.split()
 QMMMEnergy = float(QMMMEnergy[2])
-QMMMEnergy = round(QMMMEnergy,6)
+QMMMEnergy = round(QMMMEnergy,5)
 if (QMPack == "PSI4"):
   #Check again saved energy
-  if (QMMMEnergy == round(-2077.771998247412,6)):
+  if (QMMMEnergy == round(-2077.868473998802,5)):
     PassEnergy = 1
 if (QMPack == "Gaussian"):
   #Check again saved energy
-  if (QMMMEnergy == round(-2077.775625181200,6)):
+  if (QMMMEnergy == round(-2077.868128282743,5)):
     PassEnergy = 1
 if (QMPack == "NWChem"):
   #Check again saved energy
-  if (QMMMEnergy == round(-2077.775529980780,6)):
+  if (QMMMEnergy == round(-2077.868518657355,5)):
     PassEnergy = 1
-line += " QMMM energy (water dimer): "
+line += " QMMM energy: "
 if (PassEnergy == 1):
-  line += ClrSet.TPass+"Pass"+ClrSet.Reset
-  line += '\n'
+  line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
 else:
-  line += ClrSet.TFail+"Fail"+ClrSet.Reset
-  line += '\n'
-
-#Print all results
-print(line)
+  line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+cmd = ""
+cmd += "grep -e"
+cmd += ' "Total wall time: " '
+cmd += "tests.out"
+RunTime = subprocess.check_output(cmd,shell=True) #Get run time
+RunTime = RunTime.split()
+RunTime = " "+RunTime[3]+" "+RunTime[4]
+line += RunTime
+line += '\n'
 
 #Clean up files
 cmd = ""
-cmd += "rm -f trash.xyz tests.out"
+cmd += "rm -f tinker.key tests.out trash.xyz"
 if (QMPack == "Gaussian"):
   #Remove checkpoint files
   cmd += " *.chk"
 subprocess.call(cmd,shell=True)
 
+#Check QMMM polarizable energy results
+PassEnergy = 0
+cmd = "cp pol.key tinker.key"
+subprocess.call(cmd,shell=True) #Copy key file
+cmd = "lichem -n "
+cmd += `Ncpus`
+cmd += " "
+cmd += "-x xyzfile.xyz "
+cmd += "-r polreg.inp "
+cmd += "-c connect.inp "
+cmd += "-o trash.xyz "
+cmd += "> tests.out " #Capture stdout
+cmd += "2>&1" #Capture stderr
+subprocess.call(cmd,shell=True) #Run calculations
+cmd = ""
+cmd += "grep -e"
+cmd += ' "QMMM energy: " '
+cmd += "tests.out"
+QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
+QMMMEnergy = QMMMEnergy.split()
+QMMMEnergy = float(QMMMEnergy[2])
+QMMMEnergy = round(QMMMEnergy,5)
+if (QMPack == "PSI4"):
+  #Check again saved energy
+  if (QMMMEnergy == round(-2077.771998247412,5)):
+    PassEnergy = 1
+if (QMPack == "Gaussian"):
+  #Check again saved energy
+  if (QMMMEnergy == round(-2077.775625181200,5)):
+    PassEnergy = 1
+if (QMPack == "NWChem"):
+  #Check again saved energy
+  if (QMMMEnergy == round(-2077.775529980780,5)):
+    PassEnergy = 1
+line += " Pol. QMMM energy: "
+if (PassEnergy == 1):
+  line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
+else:
+  line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+cmd = ""
+cmd += "grep -e"
+cmd += ' "Total wall time: " '
+cmd += "tests.out"
+RunTime = subprocess.check_output(cmd,shell=True) #Get run time
+RunTime = RunTime.split()
+RunTime = " "+RunTime[3]+" "+RunTime[4]
+line += RunTime
+line += '\n'
+
+#Clean up files
+cmd = ""
+cmd += "rm -f tinker.key tests.out trash.xyz"
+if (QMPack == "Gaussian"):
+  #Remove checkpoint files
+  cmd += " *.chk"
+subprocess.call(cmd,shell=True)
+
+#Print all results
+print(line)
+
 #Quit
 os.chdir("../")
-line = '\n'
-line += "Done."
+line = "Done."
 line += '\n'
 print(line)
 exit(0)
