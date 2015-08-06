@@ -30,12 +30,7 @@ double LAMMPSForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the MM forces on a set of QM atoms
-  fstream ofile,ifile;
-  string dummy; //Generic string
-  stringstream call;
-  call.copyfmt(cout);
   double E = 0.0;
-  int ct;
   
   return E;
 };

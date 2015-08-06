@@ -234,6 +234,8 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
   QMMMOpts.StepScale = 0;
   QMMMOpts.MaxStep = 0;
   QMMMOpts.Kspring = 0;
+  QMMMOpts.GPolCut = 10000; //Effectively all particles
+  QMMMOpts.GPolAll = 0;
   QMMMOpts.Eold = 0;
   return;
 };
@@ -455,6 +457,12 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
           ExtractTINKpoles(Struct,0);
         }
       }
+      regionfile >> dummy >> dummy; //Check if all atoms should be used
+      if ((dummy == "All") or (dummy == "ALL") or (dummy == "all"))
+      {
+        QMMMOpts.GPolAll = 1;
+      }
+      regionfile >> dummy >> QMMMOpts.GPolCut; //Read cutoff
     }
   }
   if ((dummy == "MM") or (dummy == "mm"))
@@ -525,6 +533,12 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
           ExtractTINKpoles(Struct,0);
         }
       }
+      regionfile >> dummy >> dummy; //Check if all atoms should be used
+      if ((dummy == "All") or (dummy == "ALL") or (dummy == "all"))
+      {
+        QMMMOpts.GPolAll = 1;
+      }
+      regionfile >> dummy >> QMMMOpts.GPolCut; //Read cutoff
     }
   }
   regionfile >> dummy >> dummy; //Calculation type

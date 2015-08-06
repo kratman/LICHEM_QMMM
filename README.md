@@ -23,7 +23,6 @@ standard point-charge based force fields, pure MM, and pure QM calculations.
 Available calculations: single-point energies, optimized geometries, classical
 molecular dynamics, classical Monte Carlo, path-integral Monte Carlo, and
 reaction pathways
-
 ```
 Available QM wrappers: Gaussian, NWChem, PSI4
 
@@ -42,14 +41,12 @@ An approximate list of packages is given below.
 ```
 
 To install LICHEM, clone the git repository
-
 ```
 user:$ mkdir LICHEM 
 user:$ git clone https://github.com/kratman/LICHEM_QMMM.git ./LICHEM/
 ```
 
 or unpack the zipped source code
-
 ```
 user:$ mkdir LICHEM
 user:$ cd LICHEM/
@@ -63,19 +60,16 @@ however, modified or git source code can be compiled with the Makefile
 provided with LICHEM. On Ubuntu boxes, the Makefile should function
 without modifications. However, with other operating systems it may be
 necessary to change the path to the Eigen3 package.
-
 ```
 Default: -I/usr/include/eigen3/
 ```
 
 The Makefile can produce both the documentation and the binary.
-
 ```
 user:$ make install
 ```
 
 For development, debugging, or testing an alternate binary can be compiled.
-
 ```
 user:$ make Dev
 ```
@@ -104,14 +98,12 @@ Test calculations can be performed with the runtests script in the tests
 directory.
 
 Tests are performed for pairs of QM and MM wrappers.
-
 ```
 user:$ ./runtests Ncpus QMPackage MMPackage
 ```
 
 A dry run can be performed to check packages without perfoming the
 calculations.
-
 ```
 user:$ ./runtests Ncpus QMPackage MMPackage Dry
 ```

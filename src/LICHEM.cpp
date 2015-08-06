@@ -76,8 +76,9 @@ int main(int argc, char* argv[])
   //Calculate single-point energy
   if (SinglePoint)
   {
-    double Eqm = 0;
-    double Emm = 0;
+    double Eqm = 0; //QM energy
+    double Emm = 0; //MM energy
+    double Ecorr = 0; //Energy correction
     cout << fixed;
     //Calculate QM energy
     if (Gaussian == 1)
@@ -125,22 +126,41 @@ int main(int argc, char* argv[])
       Emm += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
+    //Calculate energy correction
+    if (GPOL == 1)
+    {
+      Ecorr += GPOLCorr(Struct,QMMMOpts,0);
+      if (MMonly)
+      {
+        //Save energy in the correct location for MM only calculations
+        Emm += Ecorr;
+      }
+    }
+    //Print the rest of the energies
     if (QMMM or MMonly)
     {
       //Print MM partial energy
       cout << "MM energy: " << Emm << " eV";
       cout << '\n';
     }
-    SumE = Eqm+Emm;
+    SumE = Eqm+Emm+Ecorr; //Total energy
     if (QMMM)
     {
+      //Print energy correction
+      if (GPOL == 1)
+      {
+        cout << "Correction term: ";
+        cout << Ecorr << " eV";
+        cout << '\n';
+      }
       //Print total energy
       cout << "QMMM energy: ";
       cout << SumE << " eV";
       cout << " ";
       cout << SumE/Har2eV << " a.u.";
+      cout << '\n';
     }
-    cout << '\n' << '\n';
+    cout << '\n';
     cout.flush();
   }
   //End of section

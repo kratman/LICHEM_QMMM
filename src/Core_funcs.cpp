@@ -18,223 +18,223 @@ PeriodicTable::PeriodicTable()
 {
   //Set atomic properties
   Typs.push_back("H");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("He");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Li");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Be");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("B");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("C");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("N");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("O");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("F");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Ne");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Na");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Mg");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Al");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Si");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("P");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("S");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Cl");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Ar");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("K");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Ca");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Sc");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Ti");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("V");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Cr");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Mn");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Fe");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Co");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Ni");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Cu");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Zn");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Ga");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Ge");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("As");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Se");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Br");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Kr");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Rb");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Sr");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Y");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Zr");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Nb");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Mo");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Tc");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Ru");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Rh");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Pd");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Ag");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Cd");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("In");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Sn");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Sb");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Te");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("I");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Xe");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Cs");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Ba");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("La");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Ce");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Pr");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Nd");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Pm");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Sm");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Eu");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Gd");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Tb");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Dy");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Ho");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Er");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Tm");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Yb");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Lu");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Hf");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Ta");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("W");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Re");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Os");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Ir");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Pt");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Au");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Hg");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Tl");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Pb");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Bi");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Po");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("At");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Rn");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Fr");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Ra");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Ac");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Th");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Pa");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("U");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Np");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Pu");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Am");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Cm");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Bk");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Cf");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Es");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Fm");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Md");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("No");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Lr");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Rf");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Db");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Sg");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Bh");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Hs");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
   Typs.push_back("Mt");
-  GauWids.push_back(1.0);
+  GauWids.push_back(2.0); //Default value
 };
 
 string PeriodicTable::Typing(int Z)

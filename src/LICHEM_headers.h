@@ -261,6 +261,9 @@ class GauDen1s
       z /= BohrRad;
       return;
     }
+    //Point-charge interactions
+    double ChrgNuc(double,Coord,double);
+    double NucNuc(GauDen1s,double);
     //Electron density integrals
     double TwoOver(GauDen1s); //Density-density overlap
     double OneCoulPC(double,Coord,double); //Density-charge (MM)
@@ -345,6 +348,9 @@ class QMMMSettings
     double MaxStep; //Maximum size of the optimization step
     //Input needed for reaction paths
     double Kspring; //Elastic band spring constant
+    //Input needed for Gaussian smearing
+    double GPolCut;
+    bool GPolAll;
     //Storage of energies (PIMC)
     double Eold;
 };
@@ -411,6 +417,8 @@ double Get_PI_Epot(vector<QMMMAtom>&,QMMMSettings&);
 
 void GetQuotes(vector<string>&);
 
+double GPOLCorr(vector<QMMMAtom>&,QMMMSettings&,int);
+
 VectorXd KabschDisplacement(MatrixXd&,MatrixXd&,int);
 
 void KabschRotation(MatrixXd&,MatrixXd&,int);
@@ -474,7 +482,7 @@ void RotateTINKCharges(vector<QMMMAtom>&,int);
 
 OctCharges SphHarm2Charges(RedMpole);
 
-void SetGauDen(vector<GauDen1s>&,vector<QMMMAtom>&,int);
+void SetGauDen(vector<QMMMAtom>&,int);
 
 double SpringEnergy(double,double);
 
