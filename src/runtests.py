@@ -326,6 +326,9 @@ cmd += "rm -f tinker.key tests.out trash.xyz"
 if (QMPack == "Gaussian"):
   #Remove checkpoint files
   cmd += " *.chk"
+if (QMPack == "PSI4"):
+  #Remove checkpoint files
+  cmd += " timer.* psi.*"
 subprocess.call(cmd,shell=True)
 
 #Check QMMM polarizable energy results
@@ -383,6 +386,9 @@ cmd += "rm -f tinker.key tests.out trash.xyz"
 if (QMPack == "Gaussian"):
   #Remove checkpoint files
   cmd += " *.chk"
+if (QMPack == "PSI4"):
+  #Remove checkpoint files
+  cmd += " timer.* psi.*"
 subprocess.call(cmd,shell=True)
 
 #Print all results
