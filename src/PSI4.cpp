@@ -47,6 +47,7 @@ double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   //Set up globals
   call << "set basis ";
   call << QMMMOpts.Basis << '\n';
+  call << "set guess sad" << '\n';
   call << "set scf_type df" << '\n';
   call << '\n';
   //Set up molecules
@@ -84,7 +85,7 @@ double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
         call << ")" << '\n';
       }
     }
-    call << "psi4.set_global_option_python(\'EXTERN\',Chrgfield.extern)";
+    call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
     call << '\n';
     call << '\n';
   }
@@ -133,7 +134,7 @@ double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
         call << ")" << '\n';
       }
     }
-    call << "psi4.set_global_option_python(\'EXTERN\',Chrgfield.extern)";
+    call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
     call << '\n';
     call << '\n';
   }
@@ -268,6 +269,7 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Set up globals
   call << "set basis ";
   call << QMMMOpts.Basis << '\n';
+  call << "set guess sad" << '\n';
   call << "set scf_type df" << '\n';
   call << '\n';
   //Set up molecules
@@ -305,7 +307,7 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         call << ")" << '\n';
       }
     }
-    call << "psi4.set_global_option_python(\'EXTERN\',Chrgfield.extern)";
+    call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
     call << '\n';
     call << '\n';
   }
@@ -354,7 +356,7 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         call << ")" << '\n';
       }
     }
-    call << "psi4.set_global_option_python(\'EXTERN\',Chrgfield.extern)";
+    call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
     call << '\n';
     call << '\n';
   }
@@ -444,6 +446,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Set up globals
   call << "set basis ";
   call << QMMMOpts.Basis << '\n';
+  call << "set guess sad" << '\n';
   call << "set scf_type df" << '\n';
   call << '\n';
   //Set up molecules
@@ -481,7 +484,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         call << ")" << '\n';
       }
     }
-    call << "psi4.set_global_option_python(\'EXTERN\',Chrgfield.extern)";
+    call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
     call << '\n';
     call << '\n';
   }
@@ -530,7 +533,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         call << ")" << '\n';
       }
     }
-    call << "psi4.set_global_option_python(\'EXTERN\',Chrgfield.extern)";
+    call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
     call << '\n';
     call << '\n';
   }
@@ -644,6 +647,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   //Set up globals
   call << "set basis ";
   call << QMMMOpts.Basis << '\n';
+  call << "set guess sad" << '\n';
   call << "set scf_type df" << '\n';
   call << '\n';
   //Set up molecules
@@ -681,7 +685,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
         call << ")" << '\n';
       }
     }
-    call << "psi4.set_global_option_python(\'EXTERN\',Chrgfield.extern)";
+    call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
     call << '\n';
     call << '\n';
   }
@@ -730,7 +734,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
         call << ")" << '\n';
       }
     }
-    call << "psi4.set_global_option_python(\'EXTERN\',Chrgfield.extern)";
+    call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
     call << '\n';
     call << '\n';
   }
