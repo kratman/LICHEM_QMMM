@@ -845,6 +845,12 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     //Set default number of threads
     Nthreads = Get_threads();
     omp_set_num_threads(Nthreads);
+    //Sanity check
+    if (Ncpus > Nthreads)
+    {
+      //Assuming only one node is used for QM
+      Ncpus = Nthreads;
+    }
     //Modify threads for multi-replica simulations
     if ((QMMMOpts.Nbeads > 1) and (!ENEBSim))
     {
