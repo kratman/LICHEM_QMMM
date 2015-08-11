@@ -27,7 +27,7 @@ double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
-  double Eqm = 0;
+  double E = 0;
   if ((AMOEBA == 1) and (TINKER == 1))
   {
     RotateTINKCharges(Struct,Bead);
@@ -167,7 +167,8 @@ double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     call << '\n';
   }
   //Set up charge calculation
-  call << "gradient('" << QMMMOpts.Func << "')" << '\n';
+  call << "Eqm = gradient('" << QMMMOpts.Func << "')" << '\n';
+  call << "print('Energy: '+`Eqm`)" << '\n';
   call << "oeprop('MULLIKEN_CHARGES')" << '\n';
   //Print file
   dummy = call.str(); //Store file as a temporary variable
@@ -254,8 +255,23 @@ double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
       line >> dummy;
       if (dummy == "Energy:")
       {
-        line >> Eqm;
+        line >> E;
       }
+    }
+  }
+  ifile.close();
+  //Collect energy (Correlated methods)
+  call.str("");
+  call << "LICHM_" << Bead << ".log";
+  ifile.open(call.str().c_str(),ios_base::in);
+  while (!ifile.eof())
+  {
+    getline(ifile,dummy);
+    stringstream line(dummy);
+    line >> dummy;
+    if (dummy == "Energy:")
+    {
+      line >> E;
     }
   }
   ifile.close();
@@ -267,8 +283,8 @@ double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Change units
-  Eqm *= Har2eV;
-  return Eqm;
+  E *= Har2eV;
+  return E;
 };
 
 void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
@@ -622,7 +638,8 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     call << '\n';
   }
   //Set up energy calculation
-  call << "energy('" << QMMMOpts.Func << "')" << '\n';
+  call << "Eqm = energy('" << QMMMOpts.Func << "')" << '\n';
+  call << "print('Energy: '+`Eqm`)" << '\n';
   call << "oeprop('MULLIKEN_CHARGES')" << '\n';
   //Print file
   dummy = call.str(); //Store as a temporary variable
@@ -679,6 +696,21 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         line >> E;
         QMfinished = 1;
       }
+    }
+  }
+  ifile.close();
+  //Collect energy (Correlated methods)
+  call.str("");
+  call << "LICHM_" << Bead << ".log";
+  ifile.open(call.str().c_str(),ios_base::in);
+  while (!ifile.eof())
+  {
+    getline(ifile,dummy);
+    stringstream line(dummy);
+    line >> dummy;
+    if (dummy == "Energy:")
+    {
+      line >> E;
     }
   }
   ifile.close();
@@ -851,7 +883,8 @@ double PSIOpt(vector<QMMMAtom>& Struct,
     call << '\n';
   }
   //Set up QM only optimization
-  call << "optimize('" << QMMMOpts.Func << "')" << '\n';
+  call << "Eqm = optimize('" << QMMMOpts.Func << "')" << '\n';
+  call << "print('Energy: '+`Eqm`)" << '\n';
   call << "oeprop('MULLIKEN_CHARGES')" << '\n';
   //Print file
   dummy = call.str(); //Store as a temporary variable
@@ -934,6 +967,21 @@ double PSIOpt(vector<QMMMAtom>& Struct,
         line >> E;
         QMfinished = 1;
       }
+    }
+  }
+  ifile.close();
+  //Collect energy (Correlated methods)
+  call.str("");
+  call << "LICHM_" << Bead << ".log";
+  ifile.open(call.str().c_str(),ios_base::in);
+  while (!ifile.eof())
+  {
+    getline(ifile,dummy);
+    stringstream line(dummy);
+    line >> dummy;
+    if (dummy == "Energy:")
+    {
+      line >> E;
     }
   }
   ifile.close();
