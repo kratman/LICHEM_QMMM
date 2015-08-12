@@ -260,7 +260,7 @@ double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     }
   }
   ifile.close();
-  //Collect energy (Correlated methods)
+  //Collect energy (post-SCF)
   call.str("");
   call << "LICHM_" << Bead << ".log";
   ifile.open(call.str().c_str(),ios_base::in);
@@ -699,7 +699,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     }
   }
   ifile.close();
-  //Collect energy (Correlated methods)
+  //Collect energy (post-SCF)
   call.str("");
   call << "LICHM_" << Bead << ".log";
   ifile.open(call.str().c_str(),ios_base::in);
@@ -711,6 +711,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     if (dummy == "Energy:")
     {
       line >> E;
+      QMfinished = 1;
     }
   }
   ifile.close();
@@ -970,7 +971,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
     }
   }
   ifile.close();
-  //Collect energy (Correlated methods)
+  //Collect energy (post-SCF)
   call.str("");
   call << "LICHM_" << Bead << ".log";
   ifile.open(call.str().c_str(),ios_base::in);
@@ -982,6 +983,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
     if (dummy == "Energy:")
     {
       line >> E;
+      QMfinished = 1;
     }
   }
   ifile.close();
