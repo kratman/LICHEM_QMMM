@@ -48,7 +48,7 @@ const bool Isotrop = 1; //Force isotropic expansion in NPT Monte Carlo
 const double StepMin = 0.01; //Minimum Monte Carlo step size
 const double StepMax = 1.0; //Maximum Monte Carlo step size
 const double Centratio= 5.0; //Scales step size for path-integral centroids
-const int Acc_Check = 2000; //Eq Monte Carlo steps before checking accratio
+const int Acc_Check = 1000; //Eq Monte Carlo steps before checking accratio
 
 //Move Probabilities for PIMC
 //Note: These probabilities allow for multi-particle moves
@@ -243,22 +243,26 @@ class GauDen1s
 {
   //Simple 1s Gaussian class
   private:
-    //Properties in a.u.
+    //Properties
     double mag; //Magnitude/population (prefactor)
-    double wid; //Width
+    double wid; //Width in a.u.
     double q; //Nuclear charge
     double x; //X position
     double y; //Y position
     double z; //Z position
   public:
     //Constructor
-    GauDen1s(double mag,double wid,double q,double x,double y,double z)
+    GauDen1s(double magi,double widi,double qi,double xi,double yi,double zi)
     {
+      //Save input
+      mag = magi;
+      wid = widi;
+      q = qi;
+      x = xi;
+      y = yi;
+      z = zi;
       //Convert to a.u.
-      wid /= BohrRad;
-      x /= BohrRad;
-      y /= BohrRad;
-      z /= BohrRad;
+      wid *= (BohrRad*BohrRad);
       return;
     }
     //Point-charge interactions
