@@ -214,67 +214,69 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
         FrozenAt = 0;
       }
     }
-    int p2 = (rand()%QMMMOpts.Nbeads);
-    double randx = (((double)rand())/((double)RAND_MAX));
-    double randy = (((double)rand())/((double)RAND_MAX));
-    double randz = (((double)rand())/((double)RAND_MAX));
-    double dx = 2*(randx-0.5)*step;
-    double dy = 2*(randy-0.5)*step;
-    double dz = 2*(randz-0.5)*step;
-    bool check = 1;
-    parts2[p].P[p2].x += dx;
-    if (PBCon)
+    for (int i=0;i<QMMMOpts.Nbeads;i++)
     {
-      while (check)
+      double randx = (((double)rand())/((double)RAND_MAX));
+      double randy = (((double)rand())/((double)RAND_MAX));
+      double randz = (((double)rand())/((double)RAND_MAX));
+      double dx = 2*(randx-0.5)*step;
+      double dy = 2*(randy-0.5)*step;
+      double dz = 2*(randz-0.5)*step;
+      bool check = 1;
+      parts2[p].P[i].x += dx;
+      if (PBCon)
       {
-        check = 0;
-        if (parts2[p].P[p2].x > Lx)
+        while (check)
         {
-          parts2[p].P[p2].x -= Lx;
-          check = 1;
-        }
-        if (parts2[p].P[p2].x < 0.0)
-        {
-          parts2[p].P[p2].x += Lx;
-          check = 1;
+          check = 0;
+          if (parts2[p].P[i].x > Lx)
+          {
+            parts2[p].P[i].x -= Lx;
+            check = 1;
+          }
+          if (parts2[p].P[i].x < 0.0)
+          {
+            parts2[p].P[i].x += Lx;
+            check = 1;
+          }
         }
       }
-    }
-    parts2[p].P[p2].y += dy;
-    if (PBCon)
-    {
-      check = 1;
-      while (check)
+      parts2[p].P[i].y += dy;
+      if (PBCon)
       {
-        check = 0;
-        if (parts2[p].P[p2].y > Ly)
+        check = 1;
+        while (check)
         {
-          parts2[p].P[p2].y -= Ly;
-          check = 1;
-        }
-        if (parts2[p].P[p2].y < 0.0)
-        {
-          parts2[p].P[p2].y += Ly;
-          check = 1;
+          check = 0;
+          if (parts2[p].P[i].y > Ly)
+          {
+            parts2[p].P[i].y -= Ly;
+            check = 1;
+          }
+          if (parts2[p].P[i].y < 0.0)
+          {
+            parts2[p].P[i].y += Ly;
+            check = 1;
+          }
         }
       }
-    }
-    parts2[p].P[p2].z += dz;
-    if (PBCon)
-    {
-      check = 1;
-      while (check)
+      parts2[p].P[i].z += dz;
+      if (PBCon)
       {
-        check = 0;
-        if (parts2[p].P[p2].z > Lz)
+        check = 1;
+        while (check)
         {
-          parts2[p].P[p2].z -= Lz;
-          check = 1;
-        }
-        if (parts2[p].P[p2].z < 0.0)
-        {
-          parts2[p].P[p2].z += Lz;
-          check = 1;
+          check = 0;
+          if (parts2[p].P[i].z > Lz)
+          {
+            parts2[p].P[i].z -= Lz;
+            check = 1;
+          }
+          if (parts2[p].P[i].z < 0.0)
+          {
+            parts2[p].P[i].z += Lz;
+            check = 1;
+          }
         }
       }
     }

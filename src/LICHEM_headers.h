@@ -52,7 +52,7 @@ const int Acc_Check = 1000; //Eq Monte Carlo steps before checking accratio
 
 //Move Probabilities for PIMC
 //Note: These probabilities allow for multi-particle moves
-double BeadProb = 0.55; //Probability to move a single bead
+double BeadProb = 0.55; //Probability to move all beads for an atom
 double CentProb = 0.55; //Probability to move a centroid
 double VolProb = 0.10; //Volume change probability
 
