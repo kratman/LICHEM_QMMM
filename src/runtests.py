@@ -6,7 +6,7 @@
 #                                                 #
 ###################################################
 
-#LICHEM semi-automated test suite 
+#LICHEM semi-automated test suite
 
 #Modules
 import subprocess
@@ -172,7 +172,7 @@ if (BadQM == 1):
   line = '\n'
   line += "Error: QM package name '"
   line += QMPack
-  line += "' not recognized." 
+  line += "' not recognized."
   line += '\n'
   print(line)
   exit(0)
