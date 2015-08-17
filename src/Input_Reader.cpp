@@ -841,9 +841,9 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
   if (!GauExternal)
   {
     //Get total number of processors
-    double Procs = double(Get_threads());
+    double Procs = double(FindMaxThreads());
     //Set default number of threads
-    Nthreads = Get_threads();
+    Nthreads = FindMaxThreads();
     omp_set_num_threads(Nthreads);
     //Sanity check
     if (Ncpus > Nthreads)

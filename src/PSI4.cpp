@@ -236,7 +236,7 @@ double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           //Switch to eV/A and save forces
           if (abs(Fx) >= 1e-12)
           {
-            Forces(3*i+0) += Fx*Har2eV/BohrRad;
+            Forces(3*i) += Fx*Har2eV/BohrRad;
           }
           if (abs(Fy) >= 1e-12)
           {

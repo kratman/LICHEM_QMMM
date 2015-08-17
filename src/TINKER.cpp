@@ -677,7 +677,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           //Switch to eV/A and change sign
           if (abs(Fx) >= 1e-4)
           {
-            Forces(3*i+0) += -1*Fx*kcal2eV;
+            Forces(3*i) += -1*Fx*kcal2eV;
           }
           if (abs(Fy) >= 1e-4)
           {
@@ -896,7 +896,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           //Switch to eV/A and change sign
           if (abs(Fx) >= 1e-4)
           {
-            Forces(3*i+0) += -1*Fx*kcal2eV;
+            Forces(3*i) += -1*Fx*kcal2eV;
           }
           if (abs(Fy) >= 1e-4)
           {

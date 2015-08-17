@@ -17,7 +17,7 @@
 void Print_traj(vector<QMMMAtom>& parts, fstream& traj, QMMMSettings& QMMMOpts)
 {
   //Function to print the trajectory or restart files for all beads
-  stringstream call;
+  stringstream call; //Only used to save traj stream settings
   call.copyfmt(traj); //Save settings
   traj.precision(8); //Adjust printing
   int Ntot = QMMMOpts.Nbeads*Natoms;

@@ -17,6 +17,7 @@
 PeriodicTable::PeriodicTable()
 {
   //Set atomic properties
+  //Note: The widths were calculated for the all-electron density
   Typs.push_back("H");
   GauWids.push_back(0.33046422838582712); //Method: PBE0/aug-cc-pVQZ
   Typs.push_back("He");
@@ -318,7 +319,7 @@ bool CheckFile(const string& file)
   return 0;
 };
 
-int Get_threads()
+int FindMaxThreads()
 {
   //Function to count the number of allowed threads
   int ct = 0;

@@ -30,8 +30,8 @@ int main(int argc, char* argv[])
   fstream xyzfile,connectfile,regionfile,outfile; //Input and output files
   vector<QMMMAtom> Struct; //Atom list
   vector<QMMMAtom> OldStruct; //A copy of the atoms list
-  vector<QMMMElec> Elecs; //Semi-classical electrons
-  QMMMSettings QMMMOpts; //QM wrapper settings
+  vector<QMMMElec> Elecs; //Semi-classical electrons (eFF model)
+  QMMMSettings QMMMOpts; //QM and MM wrapper settings
   int randnum; //Random integer
   //End of section
 

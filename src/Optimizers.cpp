@@ -40,7 +40,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     for (int i=0;i<(Nqm+Npseudo);i++)
     {
       //Calculate RMS forces
-      double Fx = Forces(3*i+0);
+      double Fx = Forces(3*i);
       double Fy = Forces(3*i+1);
       double Fz = Forces(3*i+2);
       if (abs(Fx) > MAXforce)
@@ -60,7 +60,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     #pragma omp parallel for reduction(+:RMSdiff)
     for (int i=0;i<Natoms;i++)
     {
-      //Calculate RMS displacement
+      //Calculate RMS displacement (QM-QM distance matrix)
       if (Struct[i].QMregion or Struct[i].PBregion)
       {
         for (int j=0;j<i;j++)
@@ -106,7 +106,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
   }
   if (!QMregion)
   {
-    //Check if the MM region changed and gather statistics
+    //Check energy and convergence of the whole system
     SumE = 0;
     //Calculate QM energy
     if (Gaussian == 1)
@@ -148,7 +148,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       SumE += LAMMPSEnergy(Struct,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
-    //Calculate RMS displacement
+    //Calculate RMS displacement (distance matrix)
     #pragma omp parallel for reduction(+:RMSdiff)
     for (int i=0;i<Natoms;i++)
     {
@@ -365,7 +365,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Move QM atoms
       if (Struct[i].QMregion or Struct[i].PBregion)
       {
-        Struct[i].P[Bead].x += stepsize*Forces(ct+0);
+        Struct[i].P[Bead].x += stepsize*Forces(ct);
         Struct[i].P[Bead].y += stepsize*Forces(ct+1);
         Struct[i].P[Bead].z += stepsize*Forces(ct+2);
         ct += 3;
@@ -410,7 +410,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Initialize variables
   double E = 0; //Energy
   double Eold = 0; //Energy from previous step
-  double VecMax = 0;
+  double VecMax = 0; //Maxium atomic displacement
   //Initialize multipoles for Gaussian optimizations
   if ((AMOEBA == 1) and ((Gaussian == 1) or (NWChem == 1)))
   {
@@ -492,8 +492,8 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     for (int j=0;j<i;j++)
     {
       //Set off diagonal terms
-      IHess(i,j) = 0.0;
-      IHess(j,i) = 0.0;
+      IHess(i,j) = 0;
+      IHess(j,i) = 0;
     }
     IHess(i,i) = 1.0; //Already an "inverse Hessian"
   }
@@ -692,7 +692,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       *GradDiff))-((IHess*GradDiff*GradDiff.transpose()*IHess)
       /(GradDiff.transpose()*IHess*GradDiff));
       //End really long "line"
-      //Increase stepsize
+      //Increase stepsize for the next iteration
       StepScale *= 1.20;
       if (StepScale > QMMMOpts.StepScale)
       {
@@ -705,7 +705,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       //Take a small steepest descent step and rebuild Hessian
       cout << "    Energy did not decrease. Constructing new Hessian...";
       cout << '\n';
-      //Shrink step size
+      //Reduce step size
       if (StepScale > (0.02*QMMMOpts.StepScale))
       {
         StepScale = 0.02*QMMMOpts.StepScale;
@@ -718,7 +718,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       #pragma omp parallel for
       for (int i=0;i<(3*(Nqm+Npseudo));i++)
       {
-        //Create identity matrix
+        //Create new identity matrix
         for (int j=0;j<i;j++)
         {
           IHess(i,j) = 0.0;
@@ -806,6 +806,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
       SumE += TINKEREnergy(Struct,QMMMOpts,Bead);
       if (AMOEBA == 1)
       {
+        //Force from MM polarization
         E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
       }
       MMTime += (unsigned)time(0)-tstart;
@@ -832,7 +833,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
       if (Struct[i].QMregion or Struct[i].PBregion)
       {
         //Check X step size
-        stepsize = StepScale*Forces(ct+0);
+        stepsize = StepScale*Forces(ct);
         if (abs(stepsize) > QMMMOpts.MaxStep)
         {
           //Scale step

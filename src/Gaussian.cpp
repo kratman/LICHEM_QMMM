@@ -136,7 +136,7 @@ void ExternalGaussian(int& argc, char**& argv)
   GauOutput << '\n';
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
-    GauOutput << setw(20) << (-1*Forces(3*i+0)*BohrRad/Har2eV);
+    GauOutput << setw(20) << (-1*Forces(3*i)*BohrRad/Har2eV);
     GauOutput << setw(20) << (-1*Forces(3*i+1)*BohrRad/Har2eV);
     GauOutput << setw(20) << (-1*Forces(3*i+2)*BohrRad/Har2eV);
     GauOutput << '\n';
@@ -400,7 +400,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           //Save forces
           if (abs(Fx) >= 1e-8)
           {
-            Forces(3*i+0) += Fx*Har2eV/BohrRad;
+            Forces(3*i) += Fx*Har2eV/BohrRad;
           }
           if (abs(Fy) >= 1e-8)
           {
