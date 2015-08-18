@@ -187,46 +187,16 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   //Function for calculating the forces on a set of atoms
   stringstream call;
   call.copyfmt(cout);
-  string dummy,chrgfilename;
+  string dummy;
   fstream ofile,ifile,QMlog;
   double Eqm = 0;
   double Eself = 0;
-  //Check if a list of point-charges exists
-  call.str("");
-  call << "MMCharges_" << Bead << ".txt";
-  bool UseChrgFile = CheckFile(call.str());
-  if (UseChrgFile)
-  {
-    chrgfilename = call.str();
-  }
-  //If not use the input
-  if ((AMOEBA == 1) and (TINKER == 1) and (!UseChrgFile))
-  {
-    //Set up multipoles
-    RotateTINKCharges(Struct,Bead);
-  }
   //Check if there is a checkpoint file
   call.str("");
   call << "LICHM_" << Bead << ".chk";
   bool UseCheckPoint = CheckFile(call.str());
-  //Construct g09 input
+  //Construct Gaussian input
   call.str("");
-  call << "LICHM_" << Bead << ".com";
-  ofile.open(call.str().c_str(),ios_base::out);
-  call.str("");
-  call << "%chk=LICHM_" << Bead << ".chk";
-  call << '\n';
-  call << "%Mem=" << QMMMOpts.RAM;
-  if (QMMMOpts.MemMB)
-  {
-    call << "MB";
-  }
-  else
-  {
-    call << "GB";
-  }
-  call << '\n';
-  call << "%NprocShared=" << Ncpus << '\n';
   call << "#P " << QMMMOpts.Func << "/";
   call << QMMMOpts.Basis << " Force=NoStep Symmetry=None" << '\n';
   call << "Int=UltraFine SCF=(YQC,Big,Direct)"; //Line ended further below
@@ -247,120 +217,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     call << "Population(MK,ReadRadii)";
     call << '\n';
   }
-  call << '\n'; //Blank line
-  call << "QMMM" << '\n' << '\n'; //Dummy title
-  call << QMMMOpts.Charge << " " << QMMMOpts.Spin << '\n';
-  for (int i=0;i<Natoms;i++)
-  {
-    if (Struct[i].QMregion)
-    {
-      call << Struct[i].QMTyp;
-      call << fixed; //Forces numbers to be floats
-      call << " " << setprecision(12) << Struct[i].P[Bead].x;
-      call << " " << setprecision(12) << Struct[i].P[Bead].y;
-      call << " " << setprecision(12) << Struct[i].P[Bead].z;
-      call.copyfmt(cout);
-      call << '\n';
-    }
-    if (Struct[i].PBregion)
-    {
-      call << "F";
-      call << fixed; //Forces numbers to be floats
-      call << " " << setprecision(12) << Struct[i].P[Bead].x;
-      call << " " << setprecision(12) << Struct[i].P[Bead].y;
-      call << " " << setprecision(12) << Struct[i].P[Bead].z;
-      call.copyfmt(cout);
-      call << '\n';
-    }
-  }
-  call << '\n'; //Blank line needed
-  //Add the MM field
-  if ((CHRG == 1) and (!UseChrgFile))
-  {
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        call << fixed; //Forces numbers to be floats
-        call << " " << setprecision(12) << Struct[i].P[Bead].x;
-        call << " " << setprecision(12) << Struct[i].P[Bead].y;
-        call << " " << setprecision(12) << Struct[i].P[Bead].z;
-        call << " " << setprecision(12) << Struct[i].MP[Bead].q;
-        call.copyfmt(cout);
-        call << '\n';
-      }
-    }
-    call << '\n'; //Blank line needed
-  }
-  if ((AMOEBA == 1) and (!UseChrgFile))
-  {
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        call << fixed; //Forces numbers to be floats
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x1;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y1;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z1;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q1;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x2;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y2;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z2;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q2;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x3;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y3;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z3;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q3;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x4;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y4;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z4;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q4;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x5;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y5;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z5;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q5;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x6;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y6;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z6;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q6;
-        call.copyfmt(cout);
-        call << '\n';
-      }
-    }
-    call << '\n'; //Blank line needed
-  }
-  if (UseChrgFile)
-  {
-    //Add charges to g09 input
-    ifile.open(chrgfilename.c_str(),ios_base::in);
-    while (!ifile.eof())
-    {
-      //Copy charges line by line
-      getline(ifile,dummy);
-      call << dummy << '\n';
-    }
-    ifile.close();
-  }
-  //Add basis set information from the BASIS file
-  ifile.open("BASIS",ios_base::in);
-  if (ifile.good())
-  {
-    while (!ifile.eof())
-    {
-      //Copy BASIS line by line, if BASIS exists
-      getline(ifile,dummy);
-      call << dummy << '\n';
-    }
-    ifile.close();
-  }
-  ofile << call.str();
-  ofile.flush();
-  ofile.close();
+  WriteGauInput(Struct,call.str(),QMMMOpts,Bead);
   //Run Gaussian
   call.str("");
   call << "g09 " << "LICHM_" << Bead;
@@ -493,32 +350,16 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
-  if ((AMOEBA == 1) and (TINKER == 1))
-  {
-    RotateTINKCharges(Struct,Bead);
-  }
+  //Remove multipoles file
+  call.str("");
+  call << "rm -f MMCharges_" << Bead << ".txt";
+  GlobalSys = system(call.str().c_str());
   //Check if there is a checkpoint file
   call.str("");
   call << "LICHM_" << Bead << ".chk";
   bool UseCheckPoint = CheckFile(call.str());
-  //Construct input
+  //Construct Gaussian input
   call.str("");
-  call << "LICHM_" << Bead << ".com";
-  ofile.open(call.str().c_str(),ios_base::out);
-  call.str("");
-  call << "%chk=LICHM_" << Bead << ".chk";
-  call << '\n';
-  call << "%Mem=" << QMMMOpts.RAM;
-  if (QMMMOpts.MemMB)
-  {
-    call << "MB";
-  }
-  else
-  {
-    call << "GB";
-  }
-  call << '\n';
-  call << "%NprocShared=" << Ncpus << '\n';
   call << "#P " << QMMMOpts.Func << "/";
   call << QMMMOpts.Basis << " SP Symmetry=None" << '\n';
   call << "Int=UltraFine SCF=(YQC,Big,Direct)" << '\n';
@@ -538,109 +379,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     call << "Population(MK,ReadRadii)";
     call << '\n';
   }
-  call << '\n';
-  call << "QMMM" << '\n' << '\n'; //Dummy title
-  call << QMMMOpts.Charge << " " << QMMMOpts.Spin << '\n';
-  for (int i=0;i<Natoms;i++)
-  {
-    if (Struct[i].QMregion)
-    {
-      call << Struct[i].QMTyp;
-      call << fixed; //Forces numbers to be floats
-      call << " " << setprecision(12) << Struct[i].P[Bead].x;
-      call << " " << setprecision(12) << Struct[i].P[Bead].y;
-      call << " " << setprecision(12) << Struct[i].P[Bead].z;
-      call.copyfmt(cout);
-      call << '\n';
-    }
-    if (Struct[i].PBregion)
-    {
-      call << "F";
-      call << fixed; //Forces numbers to be floats
-      call << " " << setprecision(12) << Struct[i].P[Bead].x;
-      call << " " << setprecision(12) << Struct[i].P[Bead].y;
-      call << " " << setprecision(12) << Struct[i].P[Bead].z;
-      call.copyfmt(cout);
-      call << '\n';
-    }
-  }
-  call << '\n'; //Blank line needed
-  //Add the MM field
-  if ((CHRG == 1) and QMMM)
-  {
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        call << fixed; //Forces numbers to be floats
-        call << " " << setprecision(12) << Struct[i].P[Bead].x;
-        call << " " << setprecision(12) << Struct[i].P[Bead].y;
-        call << " " << setprecision(12) << Struct[i].P[Bead].z;
-        call << " " << setprecision(12) << Struct[i].MP[Bead].q;
-        call.copyfmt(cout);
-        call << '\n';
-      }
-    }
-    call << '\n'; //Blank line needed
-  }
-  if ((AMOEBA == 1) and QMMM)
-  {
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        call << fixed; //Forces numbers to be floats
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x1;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y1;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z1;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q1;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x2;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y2;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z2;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q2;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x3;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y3;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z3;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q3;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x4;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y4;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z4;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q4;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x5;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y5;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z5;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q5;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x6;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y6;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z6;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q6;
-        call.copyfmt(cout);
-        call << '\n';
-      }
-    }
-    call << '\n'; //Blank line needed
-  }
-  //Add basis set information from the BASIS file
-  ifile.open("BASIS",ios_base::in);
-  if (ifile.good())
-  {
-    while (!ifile.eof())
-    {
-      //Copy BASIS line by line, if BASIS exists
-      getline(ifile,dummy);
-      call << dummy << '\n';
-    }
-    ifile.close();
-  }
-  //Write Gaussian input
-  ofile << call.str();
-  ofile.flush();
-  ofile.close();
+  WriteGauInput(Struct,call.str(),QMMMOpts,Bead);
   //Run QM calculation
   call.str("");
   call << "g09 LICHM_" << Bead;
@@ -703,33 +442,16 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.copyfmt(cout);
   double E = 0.0; //QM energy
   double Eself = 0.0; //Field self-energy
-  //Set up point charges
-  if ((AMOEBA == 1) and (TINKER == 1))
-  {
-    RotateTINKCharges(Struct,Bead);
-  }
+  //Remove multipole file
+  call.str("");
+  call << "rm -f MMCharges_" << Bead << ".txt";
+  GlobalSys = system(call.str().c_str());
   //Check if there is a checkpoint file
   call.str("");
   call << "LICHM_" << Bead << ".chk";
   bool UseCheckPoint = CheckFile(call.str());
   //Construct Gaussian input
   call.str("");
-  call << "LICHM_" << Bead << ".com";
-  ofile.open(call.str().c_str(),ios_base::out);
-  call.str("");
-  call << "%chk=LICHM_" << Bead << ".chk";
-  call << '\n';
-  call << "%Mem=" << QMMMOpts.RAM;
-  if (QMMMOpts.MemMB)
-  {
-    call << "MB";
-  }
-  else
-  {
-    call << "GB";
-  }
-  call << '\n';
-  call << "%NprocShared=" << Ncpus << '\n';
   call << "#P " << QMMMOpts.Func << "/";
   call << QMMMOpts.Basis << " SP Symmetry=None" << '\n';
   call << "Int=UltraFine SCF=(YQC,Big,Direct)";
@@ -749,109 +471,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     call << "Population(MK,ReadRadii)";
     call << '\n';
   }
-  call << '\n';
-  call << "QMMM" << '\n' << '\n'; //Dummy title
-  call << QMMMOpts.Charge << " " << QMMMOpts.Spin << '\n';
-  for (int i=0;i<Natoms;i++)
-  {
-    if (Struct[i].QMregion)
-    {
-      call << Struct[i].QMTyp;
-      call << fixed; //Forces numbers to be floats
-      call << " " << setprecision(12) << Struct[i].P[Bead].x;
-      call << " " << setprecision(12) << Struct[i].P[Bead].y;
-      call << " " << setprecision(12) << Struct[i].P[Bead].z;
-      call.copyfmt(cout);
-      call << '\n';
-    }
-    if (Struct[i].PBregion)
-    {
-      call << "F";
-      call << fixed; //Forces numbers to be floats
-      call << " " << setprecision(12) << Struct[i].P[Bead].x;
-      call << " " << setprecision(12) << Struct[i].P[Bead].y;
-      call << " " << setprecision(12) << Struct[i].P[Bead].z;
-      call.copyfmt(cout);
-      call << '\n';
-    }
-  }
-  call << '\n'; //Blank line needed
-  //Add the MM field
-  if ((CHRG == 1) and QMMM)
-  {
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        call << fixed; //Forces numbers to be floats
-        call << " " << setprecision(12) << Struct[i].P[Bead].x;
-        call << " " << setprecision(12) << Struct[i].P[Bead].y;
-        call << " " << setprecision(12) << Struct[i].P[Bead].z;
-        call << " " << setprecision(12) << Struct[i].MP[Bead].q;
-        call.copyfmt(cout);
-        call << '\n';
-      }
-    }
-    call << '\n'; //Blank line needed
-  }
-  if ((AMOEBA == 1) and QMMM)
-  {
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        call << fixed; //Forces numbers to be floats
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x1;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y1;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z1;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q1;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x2;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y2;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z2;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q2;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x3;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y3;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z3;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q3;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x4;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y4;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z4;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q4;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x5;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y5;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z5;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q5;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x6;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y6;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z6;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q6;
-        call.copyfmt(cout);
-        call << '\n';
-      }
-    }
-    call << '\n'; //Blank line needed
-  }
-  //Add basis set information from the BASIS file
-  ifile.open("BASIS",ios_base::in);
-  if (ifile.good())
-  {
-    while (!ifile.eof())
-    {
-      //Copy BASIS line by line, if BASIS exists
-      getline(ifile,dummy);
-      call << dummy << '\n';
-    }
-    ifile.close();
-  }
-  //Write Gaussian input
-  ofile << call.str();
-  ofile.flush();
-  ofile.close();
+  WriteGauInput(Struct,call.str(),QMMMOpts,Bead);
   //Calculate energy
   call.str("");
   call << "g09 ";

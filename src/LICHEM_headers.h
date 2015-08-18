@@ -508,6 +508,12 @@ void TINK2LICHEM(int&,char**&);
 
 vector<int> TraceBoundary(vector<QMMMAtom>&,int);
 
+void WriteGauInput(vector<QMMMAtom>&,string,QMMMSettings&,int);
+
+void WriteNWChemInput(vector<QMMMAtom>&,string,QMMMSettings&,int);
+
+void WritePSIInput(vector<QMMMAtom>&,string,QMMMSettings&,int);
+
 void WriteTINKMpole(vector<QMMMAtom>&,fstream&,int,int);
 
 //Function definitions (alphabetical)
@@ -519,6 +525,7 @@ void WriteTINKMpole(vector<QMMMAtom>&,fstream&,int,int);
 #include "Optimizers.cpp"
 #include "PathIntegral.cpp"
 #include "ReactionPath.cpp"
+#include "StructWriter.cpp"
 #include "TINK2LICHEM.cpp"
 
 //Wrapper definitions (alphabetical)

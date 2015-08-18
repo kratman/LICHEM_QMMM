@@ -23,161 +23,17 @@ double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the forces and charges on a set of atoms
-  fstream ofile,ifile;
+  fstream ifile; //Generic file name
   string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
   double E = 0;
-  if ((AMOEBA == 1) and (TINKER == 1))
-  {
-    RotateTINKCharges(Struct,Bead);
-  }
-  //Set up memory
+  //Set up force calculation
   call.str("");
-  call << "memory " << QMMMOpts.RAM;
-  if (QMMMOpts.MemMB)
-  {
-    call << " mb";
-  }
-  else
-  {
-    call << " gb";
-  }
-  call << '\n' << '\n';
-  //Set options
-  if (QMMMOpts.Spin != "1")
-  {
-    if ((QMMMOpts.Func == "HF") or (QMMMOpts.Func == "hf")
-       or (QMMMOpts.Func == "SCF") or (QMMMOpts.Func == "scf"))
-    {
-      //Hartree-Fock only setting
-      call << "set reference uhf" << '\n';
-    }
-    else
-    {
-      //Assume it is a DFT method
-      call << "set reference uks" << '\n';
-    }
-  }
-  else
-  {
-    if ((QMMMOpts.Func == "HF") or (QMMMOpts.Func == "hf")
-       or (QMMMOpts.Func == "SCF") or (QMMMOpts.Func == "scf"))
-    {
-      //Hartree-Fock only setting
-      call << "set reference rhf" << '\n';
-    }
-    else
-    {
-      //Assume it is a DFT method
-      call << "set reference rks" << '\n';
-    }
-  }
-  call << "set basis ";
-  call << QMMMOpts.Basis << '\n';
-  call << "set guess sad" << '\n';
-  call << "set scf_type df" << '\n';
-  call << '\n';
-  //Set up molecules
-  call << "molecule QMregion {" << '\n';
-  call << "  " << QMMMOpts.Charge;
-  call << " " << QMMMOpts.Spin << '\n';
-  for (int i=0;i<Natoms;i++)
-  {
-    if (Struct[i].QMregion)
-    {
-      call << "  " << Struct[i].QMTyp;
-      call << "  " << Struct[i].P[Bead].x;
-      call << "  " << Struct[i].P[Bead].y;
-      call << "  " << Struct[i].P[Bead].z;
-      call << '\n';
-    }
-  }
-  call << "  symmetry c1" << '\n';
-  call << "  no_reorient" << '\n';
-  call << "  no_com" << '\n';
-  call << "}" << '\n' << '\n';
-  //Set up MM field
-  if (QMMM and (CHRG == 1))
-  {
-    call << "Chrgfield = QMMM()" << '\n';
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].MP[Bead].q << ",";
-        call << Struct[i].P[Bead].x/BohrRad << ",";
-        call << Struct[i].P[Bead].y/BohrRad << ",";
-        call << Struct[i].P[Bead].z/BohrRad;
-        call << ")" << '\n';
-      }
-    }
-    call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
-    call << '\n';
-    call << '\n';
-  }
-  if (QMMM and (AMOEBA == 1))
-  {
-    call << "Chrgfield = QMMM()" << '\n';
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q1 << ",";
-        call << Struct[i].PC[Bead].x1/BohrRad << ",";
-        call << Struct[i].PC[Bead].y1/BohrRad << ",";
-        call << Struct[i].PC[Bead].z1/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q2 << ",";
-        call << Struct[i].PC[Bead].x2/BohrRad << ",";
-        call << Struct[i].PC[Bead].y2/BohrRad << ",";
-        call << Struct[i].PC[Bead].z2/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q3 << ",";
-        call << Struct[i].PC[Bead].x3/BohrRad << ",";
-        call << Struct[i].PC[Bead].y3/BohrRad << ",";
-        call << Struct[i].PC[Bead].z3/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q4 << ",";
-        call << Struct[i].PC[Bead].x4/BohrRad << ",";
-        call << Struct[i].PC[Bead].y4/BohrRad << ",";
-        call << Struct[i].PC[Bead].z4/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q5 << ",";
-        call << Struct[i].PC[Bead].x5/BohrRad << ",";
-        call << Struct[i].PC[Bead].y5/BohrRad << ",";
-        call << Struct[i].PC[Bead].z5/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q6 << ",";
-        call << Struct[i].PC[Bead].x6/BohrRad << ",";
-        call << Struct[i].PC[Bead].y6/BohrRad << ",";
-        call << Struct[i].PC[Bead].z6/BohrRad;
-        call << ")" << '\n';
-      }
-    }
-    call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
-    call << '\n';
-    call << '\n';
-  }
-  //Set up charge calculation
   call << "Eqm = gradient('" << QMMMOpts.Func << "')" << '\n';
   call << "print('Energy: '+`Eqm`)" << '\n';
   call << "oeprop('MULLIKEN_CHARGES')" << '\n';
-  //Print file
-  dummy = call.str(); //Store file as a temporary variable
-  call.str("");
-  call << "LICHM_" << Bead << ".dat";
-  ofile.open(call.str().c_str(),ios_base::out);
-  ofile << dummy << '\n';
-  ofile.flush();
-  ofile.close();
+  WritePSIInput(Struct,call.str(),QMMMOpts,Bead);
   //Call PSI4
   call.str("");
   call << "psi4 -n " << Ncpus << "-i ";
@@ -290,159 +146,15 @@ double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
 void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Function to update QM point-charges
-  fstream ofile,ifile;
+  fstream ifile;
   string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
-  if ((AMOEBA == 1) and (TINKER == 1))
-  {
-    RotateTINKCharges(Struct,Bead);
-  }
-  //Set up memory
-  call.str("");
-  call << "memory " << QMMMOpts.RAM;
-  if (QMMMOpts.MemMB)
-  {
-    call << " mb";
-  }
-  else
-  {
-    call << " gb";
-  }
-  call << '\n' << '\n';
-  //Set options
-  if (QMMMOpts.Spin != "1")
-  {
-    if ((QMMMOpts.Func == "HF") or (QMMMOpts.Func == "hf")
-       or (QMMMOpts.Func == "SCF") or (QMMMOpts.Func == "scf"))
-    {
-      //Hartree-Fock only setting
-      call << "set reference uhf" << '\n';
-    }
-    else
-    {
-      //Assume it is a DFT method
-      call << "set reference uks" << '\n';
-    }
-  }
-  else
-  {
-    if ((QMMMOpts.Func == "HF") or (QMMMOpts.Func == "hf")
-       or (QMMMOpts.Func == "SCF") or (QMMMOpts.Func == "scf"))
-    {
-      //Hartree-Fock only setting
-      call << "set reference rhf" << '\n';
-    }
-    else
-    {
-      //Assume it is a DFT method
-      call << "set reference rks" << '\n';
-    }
-  }
-  call << "set basis ";
-  call << QMMMOpts.Basis << '\n';
-  call << "set guess sad" << '\n';
-  call << "set scf_type df" << '\n';
-  call << '\n';
-  //Set up molecules
-  call << "molecule QMregion {" << '\n';
-  call << "  " << QMMMOpts.Charge;
-  call << " " << QMMMOpts.Spin << '\n';
-  for (int i=0;i<Natoms;i++)
-  {
-    if (Struct[i].QMregion)
-    {
-      call << "  " << Struct[i].QMTyp;
-      call << "  " << Struct[i].P[Bead].x;
-      call << "  " << Struct[i].P[Bead].y;
-      call << "  " << Struct[i].P[Bead].z;
-      call << '\n';
-    }
-  }
-  call << "  symmetry c1" << '\n';
-  call << "  no_reorient" << '\n';
-  call << "  no_com" << '\n';
-  call << "}" << '\n' << '\n';
-  //Set up MM field
-  if (QMMM and (CHRG == 1))
-  {
-    call << "Chrgfield = QMMM()" << '\n';
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].MP[Bead].q << ",";
-        call << Struct[i].P[Bead].x/BohrRad << ",";
-        call << Struct[i].P[Bead].y/BohrRad << ",";
-        call << Struct[i].P[Bead].z/BohrRad;
-        call << ")" << '\n';
-      }
-    }
-    call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
-    call << '\n';
-    call << '\n';
-  }
-  if (QMMM and (AMOEBA == 1))
-  {
-    call << "Chrgfield = QMMM()" << '\n';
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q1 << ",";
-        call << Struct[i].PC[Bead].x1/BohrRad << ",";
-        call << Struct[i].PC[Bead].y1/BohrRad << ",";
-        call << Struct[i].PC[Bead].z1/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q2 << ",";
-        call << Struct[i].PC[Bead].x2/BohrRad << ",";
-        call << Struct[i].PC[Bead].y2/BohrRad << ",";
-        call << Struct[i].PC[Bead].z2/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q3 << ",";
-        call << Struct[i].PC[Bead].x3/BohrRad << ",";
-        call << Struct[i].PC[Bead].y3/BohrRad << ",";
-        call << Struct[i].PC[Bead].z3/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q4 << ",";
-        call << Struct[i].PC[Bead].x4/BohrRad << ",";
-        call << Struct[i].PC[Bead].y4/BohrRad << ",";
-        call << Struct[i].PC[Bead].z4/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q5 << ",";
-        call << Struct[i].PC[Bead].x5/BohrRad << ",";
-        call << Struct[i].PC[Bead].y5/BohrRad << ",";
-        call << Struct[i].PC[Bead].z5/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q6 << ",";
-        call << Struct[i].PC[Bead].x6/BohrRad << ",";
-        call << Struct[i].PC[Bead].y6/BohrRad << ",";
-        call << Struct[i].PC[Bead].z6/BohrRad;
-        call << ")" << '\n';
-      }
-    }
-    call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
-    call << '\n';
-    call << '\n';
-  }
   //Set up charge calculation
+  call.str("");
   call << "energy('" << QMMMOpts.Func << "')" << '\n';
   call << "oeprop('MULLIKEN_CHARGES')" << '\n';
-  //Print file
-  dummy = call.str(); //Store as a temporary variable
-  call.str("");
-  call << "LICHM_" << Bead << ".dat";
-  ofile.open(call.str().c_str(),ios_base::out);
-  ofile << dummy << '\n';
-  ofile.flush();
-  ofile.close();
+  WritePSIInput(Struct,call.str(),QMMMOpts,Bead);
   //Call PSI4
   call.str("");
   call << "psi4 -n " << Ncpus << "-i ";
@@ -494,161 +206,17 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs PSI4 for energy calculations
-  fstream ofile,ifile;
+  fstream ifile;
   string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;
-  if ((AMOEBA == 1) and (TINKER == 1))
-  {
-    RotateTINKCharges(Struct,Bead);
-  }
-  //Set up memory
-  call.str("");
-  call << "memory " << QMMMOpts.RAM;
-  if (QMMMOpts.MemMB)
-  {
-    call << " mb";
-  }
-  else
-  {
-    call << " gb";
-  }
-  call << '\n' << '\n';
-  //Set options
-  if (QMMMOpts.Spin != "1")
-  {
-    if ((QMMMOpts.Func == "HF") or (QMMMOpts.Func == "hf")
-       or (QMMMOpts.Func == "SCF") or (QMMMOpts.Func == "scf"))
-    {
-      //Hartree-Fock only setting
-      call << "set reference uhf" << '\n';
-    }
-    else
-    {
-      //Assume it is a DFT method
-      call << "set reference uks" << '\n';
-    }
-  }
-  else
-  {
-    if ((QMMMOpts.Func == "HF") or (QMMMOpts.Func == "hf")
-       or (QMMMOpts.Func == "SCF") or (QMMMOpts.Func == "scf"))
-    {
-      //Hartree-Fock only setting
-      call << "set reference rhf" << '\n';
-    }
-    else
-    {
-      //Assume it is a DFT method
-      call << "set reference rks" << '\n';
-    }
-  }
-  call << "set basis ";
-  call << QMMMOpts.Basis << '\n';
-  call << "set guess sad" << '\n';
-  call << "set scf_type df" << '\n';
-  call << '\n';
-  //Set up molecules
-  call << "molecule QMregion {" << '\n';
-  call << "  " << QMMMOpts.Charge;
-  call << " " << QMMMOpts.Spin << '\n';
-  for (int i=0;i<Natoms;i++)
-  {
-    if (Struct[i].QMregion)
-    {
-      call << "  " << Struct[i].QMTyp;
-      call << "  " << Struct[i].P[Bead].x;
-      call << "  " << Struct[i].P[Bead].y;
-      call << "  " << Struct[i].P[Bead].z;
-      call << '\n';
-    }
-  }
-  call << "  symmetry c1" << '\n';
-  call << "  no_reorient" << '\n';
-  call << "  no_com" << '\n';
-  call << "}" << '\n' << '\n';
-  //Set up MM field
-  if (QMMM and (CHRG == 1))
-  {
-    call << "Chrgfield = QMMM()" << '\n';
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].MP[Bead].q << ",";
-        call << Struct[i].P[Bead].x/BohrRad << ",";
-        call << Struct[i].P[Bead].y/BohrRad << ",";
-        call << Struct[i].P[Bead].z/BohrRad;
-        call << ")" << '\n';
-      }
-    }
-    call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
-    call << '\n';
-    call << '\n';
-  }
-  if (QMMM and (AMOEBA == 1))
-  {
-    call << "Chrgfield = QMMM()" << '\n';
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q1 << ",";
-        call << Struct[i].PC[Bead].x1/BohrRad << ",";
-        call << Struct[i].PC[Bead].y1/BohrRad << ",";
-        call << Struct[i].PC[Bead].z1/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q2 << ",";
-        call << Struct[i].PC[Bead].x2/BohrRad << ",";
-        call << Struct[i].PC[Bead].y2/BohrRad << ",";
-        call << Struct[i].PC[Bead].z2/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q3 << ",";
-        call << Struct[i].PC[Bead].x3/BohrRad << ",";
-        call << Struct[i].PC[Bead].y3/BohrRad << ",";
-        call << Struct[i].PC[Bead].z3/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q4 << ",";
-        call << Struct[i].PC[Bead].x4/BohrRad << ",";
-        call << Struct[i].PC[Bead].y4/BohrRad << ",";
-        call << Struct[i].PC[Bead].z4/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q5 << ",";
-        call << Struct[i].PC[Bead].x5/BohrRad << ",";
-        call << Struct[i].PC[Bead].y5/BohrRad << ",";
-        call << Struct[i].PC[Bead].z5/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q6 << ",";
-        call << Struct[i].PC[Bead].x6/BohrRad << ",";
-        call << Struct[i].PC[Bead].y6/BohrRad << ",";
-        call << Struct[i].PC[Bead].z6/BohrRad;
-        call << ")" << '\n';
-      }
-    }
-    call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
-    call << '\n';
-    call << '\n';
-  }
   //Set up energy calculation
+  call.str("");
   call << "Eqm = energy('" << QMMMOpts.Func << "')" << '\n';
   call << "print('Energy: '+`Eqm`)" << '\n';
   call << "oeprop('MULLIKEN_CHARGES')" << '\n';
-  //Print file
-  dummy = call.str(); //Store as a temporary variable
-  call.str("");
-  call << "LICHM_" << Bead << ".dat";
-  ofile.open(call.str().c_str(),ios_base::out);
-  ofile << dummy << '\n';
-  ofile.flush();
-  ofile.close();
+  WritePSIInput(Struct,call.str(),QMMMOpts,Bead);
   //Call PSI4
   call.str("");
   call << "psi4 -n " << Ncpus << "-i ";
@@ -740,161 +308,17 @@ double PSIOpt(vector<QMMMAtom>& Struct,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs psi4 for energy calculations
-  fstream ofile,ifile;
+  fstream ifile;
   string dummy; //Generic string
   stringstream call;
   call.copyfmt(cout);
   double E = 0.0;
-  if ((AMOEBA == 1) and (TINKER == 1))
-  {
-    RotateTINKCharges(Struct,Bead);
-  }
-  //Set up memory
-  call.str("");
-  call << "memory " << QMMMOpts.RAM;
-  if (QMMMOpts.MemMB)
-  {
-    call << " mb";
-  }
-  else
-  {
-    call << " gb";
-  }
-  call << '\n' << '\n';
-  //Set options
-  if (QMMMOpts.Spin != "1")
-  {
-    if ((QMMMOpts.Func == "HF") or (QMMMOpts.Func == "hf")
-       or (QMMMOpts.Func == "SCF") or (QMMMOpts.Func == "scf"))
-    {
-      //Hartree-Fock only setting
-      call << "set reference uhf" << '\n';
-    }
-    else
-    {
-      //Assume it is a DFT method
-      call << "set reference uks" << '\n';
-    }
-  }
-  else
-  {
-    if ((QMMMOpts.Func == "HF") or (QMMMOpts.Func == "hf")
-       or (QMMMOpts.Func == "SCF") or (QMMMOpts.Func == "scf"))
-    {
-      //Hartree-Fock only setting
-      call << "set reference rhf" << '\n';
-    }
-    else
-    {
-      //Assume it is a DFT method
-      call << "set reference rks" << '\n';
-    }
-  }
-  call << "set basis ";
-  call << QMMMOpts.Basis << '\n';
-  call << "set guess sad" << '\n';
-  call << "set scf_type df" << '\n';
-  call << '\n';
-  //Set up molecules
-  call << "molecule QMregion {" << '\n';
-  call << "  " << QMMMOpts.Charge;
-  call << " " << QMMMOpts.Spin << '\n';
-  for (int i=0;i<Natoms;i++)
-  {
-    if (Struct[i].QMregion)
-    {
-      call << "  " << Struct[i].QMTyp;
-      call << "  " << Struct[i].P[Bead].x;
-      call << "  " << Struct[i].P[Bead].y;
-      call << "  " << Struct[i].P[Bead].z;
-      call << '\n';
-    }
-  }
-  call << "  symmetry c1" << '\n';
-  call << "  no_reorient" << '\n';
-  call << "  no_com" << '\n';
-  call << "}" << '\n' << '\n';
-  //Set up MM field
-  if (QMMM and (CHRG == 1))
-  {
-    call << "Chrgfield = QMMM()" << '\n';
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].MP[Bead].q << ",";
-        call << Struct[i].P[Bead].x/BohrRad << ",";
-        call << Struct[i].P[Bead].y/BohrRad << ",";
-        call << Struct[i].P[Bead].z/BohrRad;
-        call << ")" << '\n';
-      }
-    }
-    call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
-    call << '\n';
-    call << '\n';
-  }
-  if (QMMM and (AMOEBA == 1))
-  {
-    call << "Chrgfield = QMMM()" << '\n';
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q1 << ",";
-        call << Struct[i].PC[Bead].x1/BohrRad << ",";
-        call << Struct[i].PC[Bead].y1/BohrRad << ",";
-        call << Struct[i].PC[Bead].z1/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q2 << ",";
-        call << Struct[i].PC[Bead].x2/BohrRad << ",";
-        call << Struct[i].PC[Bead].y2/BohrRad << ",";
-        call << Struct[i].PC[Bead].z2/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q3 << ",";
-        call << Struct[i].PC[Bead].x3/BohrRad << ",";
-        call << Struct[i].PC[Bead].y3/BohrRad << ",";
-        call << Struct[i].PC[Bead].z3/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q4 << ",";
-        call << Struct[i].PC[Bead].x4/BohrRad << ",";
-        call << Struct[i].PC[Bead].y4/BohrRad << ",";
-        call << Struct[i].PC[Bead].z4/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q5 << ",";
-        call << Struct[i].PC[Bead].x5/BohrRad << ",";
-        call << Struct[i].PC[Bead].y5/BohrRad << ",";
-        call << Struct[i].PC[Bead].z5/BohrRad;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q6 << ",";
-        call << Struct[i].PC[Bead].x6/BohrRad << ",";
-        call << Struct[i].PC[Bead].y6/BohrRad << ",";
-        call << Struct[i].PC[Bead].z6/BohrRad;
-        call << ")" << '\n';
-      }
-    }
-    call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
-    call << '\n';
-    call << '\n';
-  }
   //Set up QM only optimization
+  call.str("");
   call << "Eqm = optimize('" << QMMMOpts.Func << "')" << '\n';
   call << "print('Energy: '+`Eqm`)" << '\n';
   call << "oeprop('MULLIKEN_CHARGES')" << '\n';
-  //Print file
-  dummy = call.str(); //Store as a temporary variable
-  call.str("");
-  call << "LICHM_" << Bead << ".dat";
-  ofile.open(call.str().c_str(),ios_base::out);
-  ofile << dummy << '\n';
-  ofile.flush();
-  ofile.close();
+  WritePSIInput(Struct,call.str(),QMMMOpts,Bead);
   //Call PSI4
   call.str("");
   call << "psi4 -n " << Ncpus << "-i ";

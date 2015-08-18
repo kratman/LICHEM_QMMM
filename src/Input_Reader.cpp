@@ -923,6 +923,13 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       cout << '\n';
       DoQuit = 1;
     }
+    if (DFPSim or SteepSim)
+    {
+      cout << " Warning: PSI4 gradients might not include components from";
+      cout << '\n';
+      cout << " the external field.";
+      cout << '\n';
+    }
     if ((Npseudo != 0) or (Nbound != 0))
     {
       cout << " Error: The PSI4 wrapper can only use QM and MM atoms.";
@@ -931,14 +938,6 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       cout << '\n';
       DoQuit = 1;
     }
-  }
-  if ((LAMMPS == 1) and (AMOEBA == 1))
-  {
-    cout << " Error: LAMMPS calculations cannot be performed with";
-    cout << '\n';
-    cout << " polarizable force fields.";
-    cout << '\n';
-    DoQuit = 1;
   }
   if ((NWChem == 1) and QMMM)
   {
@@ -950,6 +949,14 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       cout << '\n';
       DoQuit = 1;
     }
+  }
+  if ((LAMMPS == 1) and (AMOEBA == 1))
+  {
+    cout << " Error: LAMMPS calculations cannot be performed with";
+    cout << '\n';
+    cout << " polarizable force fields.";
+    cout << '\n';
+    DoQuit = 1;
   }
   if (DoQuit)
   {
@@ -1159,6 +1166,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
   {
     if (OptSim and (Gaussian == 1))
     {
+      //Print modified threading for GauExternal
       if (Ncpus <= 2)
       {
         cout << " Opt. threads: 1" << '\n';
