@@ -90,7 +90,7 @@ int GlobalSys; //Global dummy return for all system calls
 string xyzfilename; //Saves a filename given in the arguments
 string confilename; //Saves a filename given in the arguments
 string regfilename; //Saves a filename given in the arguments
-int Nthreads = 1;
+int Nthreads = 1; //Total number of threads available
 int Ncpus = 1; //Number of processors for QM calculations
 int Nfreeze = 0; //Number of frozen atoms
 int Npseudo = 0; //Number of pseudo-bonds
@@ -219,24 +219,24 @@ class OctCharges
     double q5; //Charge in the -y direction
     double q6; //Charge in the -z direction
     //Positions of the charges in the global frame
-    double x1;
-    double y1;
-    double z1;
-    double x2;
-    double y2;
-    double z2;
-    double x3;
-    double y3;
-    double z3;
-    double x4;
-    double y4;
-    double z4;
-    double x5;
-    double y5;
-    double z5;
-    double x6;
-    double y6;
-    double z6;
+    double x1; //Position of charge 1
+    double y1; //Position of charge 1
+    double z1; //Position of charge 1
+    double x2; //Position of charge 2
+    double y2; //Position of charge 2
+    double z2; //Position of charge 2
+    double x3; //Position of charge 3
+    double y3; //Position of charge 3
+    double z3; //Position of charge 3
+    double x4; //Position of charge 4
+    double y4; //Position of charge 4
+    double z4; //Position of charge 4
+    double x5; //Position of charge 5
+    double y5; //Position of charge 5
+    double z5; //Position of charge 5
+    double x6; //Position of charge 6
+    double y6; //Position of charge 6
+    double z6; //Position of charge 6
 };
 
 class GauDen1s
@@ -254,7 +254,7 @@ class GauDen1s
     //Constructor
     GauDen1s(double magi,double widi,double qi,double xi,double yi,double zi)
     {
-      //Save input
+      //Save data given to the constructor
       mag = magi;
       wid = widi;
       q = qi;
@@ -266,8 +266,8 @@ class GauDen1s
       return;
     }
     //Point-charge interactions
-    double ChrgNuc(double,Coord,double);
-    double NucNuc(GauDen1s,double);
+    double ChrgNuc(double,Coord,double); //Nuclei-charge electrostatic term
+    double NucNuc(GauDen1s,double); //Nuclei-nuclei electrostatic term
     //Electron density integrals
     double TwoOver(GauDen1s); //Density-density overlap
     double OneCoulPC(double,Coord,double); //Density-charge (MM)
@@ -353,10 +353,10 @@ class QMMMSettings
     //Input needed for reaction paths
     double Kspring; //Elastic band spring constant
     //Input needed for Gaussian smearing
-    double GPolCut;
-    bool GPolAll;
+    double GPolCut; //Cutoff for the GauPoles correction
+    bool GPolAll; //Flag to calculate the correction for MM-MM interactions
     //Storage of energies (PIMC)
-    double Eold;
+    double Eold; //Temporary storage
 };
 
 //Set up periodic table

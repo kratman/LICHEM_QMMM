@@ -24,6 +24,7 @@ void Print_traj(vector<QMMMAtom>& parts, fstream& traj, QMMMSettings& QMMMOpts)
   traj << Ntot << '\n' << '\n';
   for (int i=0;i<Natoms;i++)
   {
+    //Print all replicas of atom i
     for (int j=0;j<QMMMOpts.Nbeads;j++)
     {
       traj << setw(3) << parts[i].QMTyp << " ";
@@ -94,6 +95,7 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
   #pragma omp parallel for reduction(+:Ax,Ay,Az,Bx,By,Bz)
   for (int i=0;i<MatSize;i++)
   {
+    //Update sum of the atomic positions
     Ax += A(i,0);
     Ay += A(i,1);
     Az += A(i,2);
@@ -102,6 +104,7 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
     Bz += B(i,2);
   }
   #pragma omp barrier
+  //Take average
   Ax /= MatSize;
   Ay /= MatSize;
   Az /= MatSize;
@@ -111,6 +114,7 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
   #pragma omp parallel for
   for (int i=0;i<MatSize;i++)
   {
+    //Move A and B to (0,0,0)
     A(i,0) -= Ax;
     A(i,1) -= Ay;
     A(i,2) -= Az;
