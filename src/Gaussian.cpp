@@ -28,11 +28,12 @@ void ExternalGaussian(int& argc, char**& argv)
   QMMMSettings QMMMOpts; //Simulation settings
   int DerType,Bead;
   stringstream call;
-  call.copyfmt(cout);
-  string dummy,Stub;
-  fstream xyzfile,connectfile,regionfile;
-  fstream GauInput,GauOutput,GauMsg,GauFchk,GauMatrix;
-  fstream ofile,ifile;
+  call.copyfmt(cout); //Copy print settings
+  string dummy,Stub; //Generic strings
+  //Declare lots of file streams
+  fstream xyzfile,connectfile,regionfile; //LICHEM streams
+  fstream GauInput,GauOutput,GauMsg,GauFchk,GauMatrix; //Gaussian streams
+  fstream ofile,ifile; //Generic streams
   //Read arguments
   for (int i=0;i<argc;i++)
   {
@@ -136,6 +137,7 @@ void ExternalGaussian(int& argc, char**& argv)
   GauOutput << '\n';
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
+    //Write forces
     GauOutput << setw(20) << (-1*Forces(3*i)*BohrRad/Har2eV);
     GauOutput << setw(20) << (-1*Forces(3*i+1)*BohrRad/Har2eV);
     GauOutput << setw(20) << (-1*Forces(3*i+2)*BohrRad/Har2eV);
@@ -166,6 +168,7 @@ void ExternalGaussian(int& argc, char**& argv)
   ofile << Natoms << '\n' << '\n';
   for (int i=0;i<Natoms;i++)
   {
+    //Write XYZ coordinates
     ofile << Struct[i].QMTyp << " ";
     ofile << setprecision(12) << Struct[i].P[Bead].x << " ";
     ofile << setprecision(12) << Struct[i].P[Bead].y << " ";
@@ -186,11 +189,11 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
 {
   //Function for calculating the forces on a set of atoms
   stringstream call;
-  call.copyfmt(cout);
-  string dummy;
-  fstream ofile,ifile,QMlog;
-  double Eqm = 0;
-  double Eself = 0;
+  call.copyfmt(cout); //Copy print settings
+  string dummy; //Generic string
+  fstream ofile,ifile,QMlog; //Generic input files
+  double Eqm = 0; //QM energy
+  double Eself = 0; //External field self-energy
   //Check if there is a checkpoint file
   call.str("");
   call << "LICHM_" << Bead << ".chk";
@@ -336,7 +339,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << "LICHM_" << Bead;
   call << ".com";
   GlobalSys = system(call.str().c_str());
-  //Return
+  //Change units and return
   Eqm -= Eself;
   Eqm *= Har2eV;
   return Eqm;
@@ -346,10 +349,10 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
   //Function to update QM point-charges
-  fstream ofile,ifile;
+  fstream ofile,ifile; //Generic file streams
   string dummy; //Generic string
   stringstream call;
-  call.copyfmt(cout);
+  call.copyfmt(cout); //Copy print settings
   //Remove multipoles file
   call.str("");
   call << "rm -f MMCharges_" << Bead << ".txt";
@@ -436,12 +439,12 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
        int Bead)
 {
   //Calculates the QM energy with Gaussian
-  fstream ofile,ifile;
+  fstream ofile,ifile; //Generic file streams
   string dummy; //Generic string
   stringstream call;
-  call.copyfmt(cout);
+  call.copyfmt(cout); //Copy print settings
   double E = 0.0; //QM energy
-  double Eself = 0.0; //Field self-energy
+  double Eself = 0.0; //External field self-energy
   //Remove multipole file
   call.str("");
   call << "rm -f MMCharges_" << Bead << ".txt";
@@ -557,7 +560,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "LICHM_" << Bead;
   call << ".com";
   GlobalSys = system(call.str().c_str());
-  //Change units
+  //Change units and return
   E -= Eself;
   E *= Har2eV;
   return E;
@@ -567,10 +570,10 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
        int Bead)
 {
   //Runs Gaussian optimizations with GauExternal
-  fstream ofile,ifile;
+  fstream ofile,ifile; //Generic file streams
   string dummy; //Generic string
   stringstream call;
-  call.copyfmt(cout);
+  call.copyfmt(cout); //Copy print settings
   double E = 0.0; //QM energy
   int ExtCPUs = 1; //Number of CPUs for GauExternal
   if ((AMOEBA == 1) and (TINKER == 1))
@@ -578,12 +581,14 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     RotateTINKCharges(Struct,Bead);
   }
   //Write a new XYZ
+  //Note: GauExternal needs different input than the rest of the wrappers
   call.str("");
   call << "LICHMExt_" << Bead << ".xyz";
   ofile.open(call.str().c_str(),ios_base::out);
   ofile << Natoms << '\n' << '\n';
   for (int i=0;i<Natoms;i++)
   {
+    //Print XYZ coordinates
     ofile << setprecision(12) << Struct[i].QMTyp << " ";
     ofile << setprecision(12) << Struct[i].P[Bead].x << " ";
     ofile << setprecision(12) << Struct[i].P[Bead].y << " ";

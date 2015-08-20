@@ -75,6 +75,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
         getline(ifile,dummy); //Clear junk
         for (int i=0;i<(Nqm+Npseudo);i++)
         {
+          //Initialize temporary force variables
           double Fx = 0;
           double Fy = 0;
           double Fz = 0;
@@ -86,6 +87,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           line >> Fx;
           line >> Fy;
           line >> Fz;
+          //Change units and check precision
           if (abs(Fx) >= 1e-6)
           {
             Forces(3*i) -= Fx*Har2eV/BohrRad;
@@ -154,7 +156,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << "LICHM_" << Bead << ".db" << " ";
   call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
-  //Change units
+  //Change units and return
   E *= Har2eV;
   return E;
 };
@@ -163,11 +165,11 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
        int Bead)
 {
   //Calculates atomic charges with NWChem
-  fstream ifile;
+  fstream ifile; //Generic file stream
   string dummy; //Generic string
   stringstream call;
-  call.copyfmt(cout);
-  double E = 0.0;
+  call.copyfmt(cout); //Copy print settings
+  double E = 0.0; //QM energy
   //Remove multipoles file
   call.str("");
   call << "rm -f MMCharges_" << Bead << ".txt";
@@ -181,6 +183,7 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   if (Ncpus > 1)
   {
+    //Run in parallel
     call << "mpirun -n " << Ncpus << " ";
   }
   call << "nwchem LICHM_" << Bead << ".nw";
@@ -220,11 +223,14 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     {
       if (Struct[i].QMregion or Struct[i].PBregion)
       {
+        //Read charges
         stringstream line;
         getline(ifile,dummy);
         line.str(dummy);
+        //Clear junk
         line >> dummy >> dummy;
         line >> dummy >> dummy;
+        //Save charge
         line >> Struct[i].MP[Bead].q;
       }
     }
@@ -260,11 +266,11 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
        int Bead)
 {
   //Runs NWChem energy calculations
-  fstream ifile;
+  fstream ifile; //Generic file stream
   string dummy; //Generic string
   stringstream call;
-  call.copyfmt(cout);
-  double E = 0.0;
+  call.copyfmt(cout); //Copy print settings
+  double E = 0.0; //QM energy
   //Remove multipoles file
   call.str("");
   call << "rm -f MMCharges_" << Bead << ".txt";
@@ -317,11 +323,14 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     {
       if (Struct[i].QMregion or Struct[i].PBregion)
       {
+        //Read charges
         stringstream line;
         getline(ifile,dummy);
         line.str(dummy);
+        //Clear junk
         line >> dummy >> dummy;
         line >> dummy >> dummy;
+        //Save charge
         line >> Struct[i].MP[Bead].q;
       }
     }
@@ -358,11 +367,11 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs NWChem optimizations
-  fstream ifile;
+  fstream ifile; //Generic file stream
   string dummy; //Generic string
   stringstream call;
-  call.copyfmt(cout);
-  double E = 0.0;
+  call.copyfmt(cout); //Save print settings
+  double E = 0.0; //QM energy
   //Remove multipoles file
   call.str("");
   call << "rm -f MMCharges_" << Bead << ".txt";
@@ -415,11 +424,14 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     {
       if (Struct[i].QMregion or Struct[i].PBregion)
       {
+        //Read charges
         stringstream line;
         getline(ifile,dummy);
         line.str(dummy);
+        //Clear junk
         line >> dummy >> dummy;
         line >> dummy >> dummy;
+        //Save charge
         line >> Struct[i].MP[Bead].q;
       }
     }
@@ -448,7 +460,7 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "LICHM_" << Bead << ".db" << " ";
   call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
-  //Change units
+  //Change units and return
   E *= Har2eV;
   return E;
 };

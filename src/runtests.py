@@ -56,6 +56,18 @@ if (len(sys.argv) < 4):
   line += "Usage: python runtests.py Ncpus QMPackage MMPackage"
   line += '\n'
   line += '\n'
+  #Find LICHEM
+  line += "LICHEM binary: "
+  cmd = "which lichem"
+  try:
+    #Find path
+    LICHEMbin = subprocess.check_output(cmd,shell=True)
+    LICHEMbin = ClrSet.TPass+LICHEMbin.strip()+ClrSet.Reset
+  except:
+    LICHEMbin = ClrSet.TFail+"N/A"+ClrSet.Reset
+  line += LICHEMbin
+  line += '\n'
+  line += '\n'
   #Identify QM wrappers
   line += "Available QM wrappers:"
   line += '\n'
@@ -132,10 +144,27 @@ if (len(sys.argv) > 4):
   if ((sys.argv[4] == "Dry") or (sys.argv[4] == "dry")):
     #Quit early
     DryRun = 1
+
+LICHEMbin = ""
 QMbin = ""
 MMbin = ""
-
-#Check packages
+#Check packages and identify missing binaries
+BadLICHEM = 0
+cmd = "which lichem"
+try:
+  #Find path
+  LICHEMbin = subprocess.check_output(cmd,shell=True)
+  LICHEMbin = LICHEMbin.strip()
+except:
+  LICHEMbin = "N/A"
+  BadLICHEM = 1
+if (BadLICHEM == 1):
+  #Quit with an error
+  line = ""
+  line += "Error: LICHEM binary not found!"
+  line += '\n'
+  print(line)
+  exit(0)
 BadQM = 1
 if ((QMPack == "PSI4") or (QMPack == "psi4") or (QMPack == "Psi4")):
   QMPack = "PSI4"
@@ -222,6 +251,9 @@ line = "Settings:"
 line += '\n'
 line += " Threads: "
 line += `Ncpus`
+line += '\n'
+line += " LICHEM binary: "
+line += LICHEMbin
 line += '\n'
 line += " QM package: "
 line += QMPack
