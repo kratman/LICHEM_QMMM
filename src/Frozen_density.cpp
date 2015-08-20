@@ -88,5 +88,14 @@ double BoysFunc(int n, double x)
   return Val;
 };
 
+//Gaussian smearing (GPOL) functions
+double GPOLCorr(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
+{
+  //Function to correct for charge penetration errors (GauPoles)
+  double Ecorr = 0; //Energy correction
+
+  return Ecorr;
+};
+
 //Functions for conversion to point-charges
 
