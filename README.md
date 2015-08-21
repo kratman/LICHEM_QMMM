@@ -13,11 +13,15 @@ LICHEM: Layered Interacting CHEmical Models
 
 ### LICHEM: A QMMM interface for polarizable force fields
 
-#### NOTICE: The compile bug has been corrected.
+<h4>
+NOTICE 1: The compile bug has been corrected.
+</h4>
 
-#### NOTICE: The multipole routines are currently only in the private
+<h4>
+NOTICE 2: The multipole routines are currently only in the private
 development repository. The multipole functionality will be uploaded when
 the LICHEM paper has been accepted.
+</h4>
 
 ### Introduction
 
