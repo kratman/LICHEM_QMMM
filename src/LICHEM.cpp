@@ -126,9 +126,10 @@ int main(int argc, char* argv[])
       Emm += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    //Calculate energy correction
+    //Calculate energy corrections for diffuse charges
     if (GPOL == 1)
     {
+      //GauPoles correction
       Ecorr += GPOLCorr(Struct,QMMMOpts,0);
       if (MMonly)
       {
