@@ -117,3 +117,9 @@ calculations.
 ```
 user:$ ./runtests Ncpus QMPackage MMPackage Dry
 ```
+
+### Development
+
+The development of LICHEM was supported by funding from the NIH (Grant No.
+R01GM108583) and Wayne State University. LICHEM is maintained by the Cisneros
+research group at Wayne State University.
