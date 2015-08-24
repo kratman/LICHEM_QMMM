@@ -35,6 +35,4 @@ The test suite prints run times for the tests. Since LICHEM has different
 settings for different wrappers, the times represent the efficiency of the
 wrappers. The run times are not testing the efficiency of different packages.
 
-The test suite requires python 2.7 or higher.
-
 The test suite is not compatable with python 3.0 or higher.

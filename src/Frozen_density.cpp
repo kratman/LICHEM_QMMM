@@ -72,13 +72,6 @@ double GauDen1s::TwoCoul(GauDen1s gau2, double Rcut)
   return E;
 };
 
-void SetGauDen(vector<GauDen1s>& AtDens,vector<QMMMAtom>& Struct,int Bead)
-{
-  //Function to set the simplified Gaussian electron density
-  
-  return;
-};
-
 //Functions for Gaussian integrals
 double BoysFunc(int n, double x)
 {
@@ -86,15 +79,6 @@ double BoysFunc(int n, double x)
   double Val = 0.0;
   
   return Val;
-};
-
-//Gaussian smearing (GPOL) functions
-double GPOLCorr(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
-{
-  //Function to correct for charge penetration errors (GauPoles)
-  double Ecorr = 0; //Energy correction
-
-  return Ecorr;
 };
 
 //Functions for conversion to point-charges
