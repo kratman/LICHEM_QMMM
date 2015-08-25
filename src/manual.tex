@@ -386,16 +386,7 @@ If the potential type is MM or QMMM, several keywords are required to define
 the MM wrapper. \\
 
 MM\_type: $<$TINKER or AMBER or LAMMPS$>$ \\
-Electrostatics: $<$Charges or AMOEBA or GauPoles or Density$>$ \\
-
-Diffuse charge calculations (GauPoles) require some additional information.
-The GauPoles option expands the monopoles into spherical diffuse charges
-within a cutoff radius.
-This option serves as a correction to the MM force field. \\
-
-Subpotential: $<$Charges or AMOEBA$>$  \\
-GP\_atoms: $<$All$>$ \\
-GP\_cutoff: $<$ Cutoff for the correction (\AA)$>$
+Electrostatics: $<$Charges or AMOEBA or Density$>$ \\
 
 \subsection{QMMM input}
 
@@ -408,23 +399,11 @@ QM\_memory: $<$RAM$>$ $<$MB or GB$>$ \\
 QM\_charge: $<$charge on the QM region$>$ \\
 QM\_spin: $<$multiplicity of the QM region$>$ \\
 MM\_type: $<$TINKER or AMBER or LAMMPS$>$ \\
-Electrostatics: $<$Charges or AMOEBA or GauPoles or Density$>$ \\
+Electrostatics: $<$Charges or AMOEBA or Density$>$ \\
 
 All of the QMMM input is read into LICHEM as text, and hence, it must match the
 correct input for the QM and MM packages.
-For example, Gaussian can only read integer values for the memory. \\
-
-Diffuse charge calculations (GauPoles) require some additional information.
-The GauPoles option expands the monopoles into spherical diffuse charges
-within a cutoff radius.
-This option serves as a correction to the MM force field. \\
-
-Subpotential: $<$Charges or AMOEBA$>$  \\
-GP\_atoms: $<$All or QMMM$>$ \\
-GP\_cutoff: $<$ Cutoff for the correction (\AA)$>$ \\
-
-The "QMMM" option in GauPoles only performs the correction for QM-MM
-interactions.
+For example, Gaussian can only read integer values for the memory.
 
 \subsection{Simulation input}
 

@@ -78,7 +78,6 @@ int main(int argc, char* argv[])
   {
     double Eqm = 0; //QM energy
     double Emm = 0; //MM energy
-    double Ecorr = 0; //Energy correction
     cout << fixed;
     //Calculate QM energy
     if (Gaussian == 1)
@@ -126,17 +125,6 @@ int main(int argc, char* argv[])
       Emm += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    //Calculate energy corrections for diffuse charges
-    if (GPOL == 1)
-    {
-      //GauPoles correction
-      Ecorr += GPOLCorr(Struct,QMMMOpts,0);
-      if (MMonly)
-      {
-        //Save energy in the correct location for MM only calculations
-        Emm += Ecorr;
-      }
-    }
     //Print the rest of the energies
     if (QMMM or MMonly)
     {
@@ -144,16 +132,9 @@ int main(int argc, char* argv[])
       cout << "MM energy: " << Emm << " eV";
       cout << '\n';
     }
-    SumE = Eqm+Emm+Ecorr; //Total energy
+    SumE = Eqm+Emm; //Total energy
     if (QMMM)
     {
-      //Print energy correction
-      if (GPOL == 1)
-      {
-        cout << "Correction term: ";
-        cout << Ecorr << " eV";
-        cout << '\n';
-      }
       //Print total energy
       cout << "QMMM energy: ";
       cout << SumE << " eV";

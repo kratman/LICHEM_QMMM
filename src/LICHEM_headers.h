@@ -104,7 +104,6 @@ double Ly = 10000.0; //Box length
 double Lz = 10000.0; //Box length
 
 //Flags for simulation options
-int GPOL = 0; //Flag for Gaussian multipole QMMM potential
 int GEM = 0; //Flag for frozen density QMMM potential
 int AMOEBA = 0; //Flag for polarizable QMMM potential
 int CHRG = 0; //Flag for point-charge QMMM potential
@@ -300,8 +299,6 @@ class QMMMAtom
     //Multipoles
     vector<Mpole> MP; //Multipoles
     vector<OctCharges> PC; //Point-charge multipoles
-    //Frozen density
-    vector<GauDen1s> G1s; //Spherical electron density
 };
 
 class QMMMElec
@@ -352,9 +349,6 @@ class QMMMSettings
     double MaxStep; //Maximum size of the optimization step
     //Input needed for reaction paths
     double Kspring; //Elastic band spring constant
-    //Input needed for Gaussian smearing
-    double GPolCut; //Cutoff for the GauPoles correction
-    bool GPolAll; //Flag to calculate the correction for MM-MM interactions
     //Storage of energies (PIMC)
     double Eold; //Temporary storage
 };
@@ -421,8 +415,6 @@ double Get_PI_Epot(vector<QMMMAtom>&,QMMMSettings&);
 
 void GetQuotes(vector<string>&);
 
-double GPOLCorr(vector<QMMMAtom>&,QMMMSettings&,int);
-
 VectorXd KabschDisplacement(MatrixXd&,MatrixXd&,int);
 
 void KabschRotation(MatrixXd&,MatrixXd&,int);
@@ -485,8 +477,6 @@ void ReadLICHEMInput(fstream&,fstream&,fstream&,
 void RotateTINKCharges(vector<QMMMAtom>&,int);
 
 OctCharges SphHarm2Charges(RedMpole);
-
-void SetGauDen(vector<QMMMAtom>&,int);
 
 double SpringEnergy(double,double);
 

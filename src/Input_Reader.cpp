@@ -234,8 +234,6 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
   QMMMOpts.StepScale = 0;
   QMMMOpts.MaxStep = 0;
   QMMMOpts.Kspring = 0;
-  QMMMOpts.GPolCut = 10000; //Effectively all particles
-  QMMMOpts.GPolAll = 0;
   QMMMOpts.Eold = 0;
   return;
 };
@@ -267,11 +265,9 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       //Set electrostatic field
       Mpole tmp3; //Initialize charges and multipoles
       OctCharges tmp4; //Initialize charges and multipoles
-      GauDen1s tmp5(0,1,0,tmp2.x,tmp2.y,tmp2.z); //Initialize density
       //Add to arrays
       tmp.MP.push_back(tmp3);
       tmp.PC.push_back(tmp4);
-      tmp.G1s.push_back(tmp5);
       //Save atomic properties
       Struct.push_back(tmp);
     }
@@ -433,37 +429,6 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       //Frozen density
       GEM = 1;
     }
-    if ((dummy == "GauPoles") or (dummy == "gaupoles") or
-       (dummy == "GAUPOLES") or (dummy == "gpoles") or
-       (dummy == "GPOLES") or (dummy == "GPoles") or
-       (dummy == "gp") or (dummy == "GP"))
-    {
-      //Frozen density and multipoles
-      GPOL = 1;
-      regionfile >> dummy >> dummy; //Check secondary potential
-      if ((dummy == "Charges") or (dummy == "charges") or
-         (dummy == "Charge") or (dummy == "charge") or
-         (dummy == "point-charge"))
-      {
-        //Gaussians with a point-charge force field
-        CHRG = 1;
-      }
-      if ((dummy == "AMOEBA") or (dummy == "amoeba"))
-      {
-        //Gaussians with the AMOEBA polarizable force field
-        AMOEBA = 1;
-        if (TINKER == 1)
-        {
-          ExtractTINKpoles(Struct,0);
-        }
-      }
-      regionfile >> dummy >> dummy; //Check if all atoms should be used
-      if ((dummy == "All") or (dummy == "ALL") or (dummy == "all"))
-      {
-        QMMMOpts.GPolAll = 1;
-      }
-      regionfile >> dummy >> QMMMOpts.GPolCut; //Read cutoff
-    }
   }
   if ((dummy == "MM") or (dummy == "mm"))
   {
@@ -508,37 +473,6 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       //Frozen density
       GEM = 1;
-    }
-    if ((dummy == "GauPoles") or (dummy == "gaupoles") or
-       (dummy == "GAUPOLES") or (dummy == "gpoles") or
-       (dummy == "GPOLES") or (dummy == "GPoles") or
-       (dummy == "gp") or (dummy == "GP"))
-    {
-      //Frozen density and multipoles
-      GPOL = 1;
-      regionfile >> dummy >> dummy; //Check secondary potential
-      if ((dummy == "Charges") or (dummy == "charges") or
-         (dummy == "Charge") or (dummy == "charge") or
-         (dummy == "point-charge"))
-      {
-        //Gaussians with a point-charge force field
-        CHRG = 1;
-      }
-      if ((dummy == "AMOEBA") or (dummy == "amoeba"))
-      {
-        //Gaussians with the AMOEBA polarizable force field
-        AMOEBA = 1;
-        if (TINKER == 1)
-        {
-          ExtractTINKpoles(Struct,0);
-        }
-      }
-      regionfile >> dummy >> dummy; //Check if all atoms should be used
-      if ((dummy == "All") or (dummy == "ALL") or (dummy == "all"))
-      {
-        QMMMOpts.GPolAll = 1;
-      }
-      regionfile >> dummy >> QMMMOpts.GPolCut; //Read cutoff
     }
   }
   regionfile >> dummy >> dummy; //Calculation type
