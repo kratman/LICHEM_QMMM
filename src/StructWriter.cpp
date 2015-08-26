@@ -412,7 +412,7 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
   {
     call << " gb";
   }
-  call << '\n' << '\n';
+  call << '\n';
   //Set options
   if (QMMMOpts.Spin != "1")
   {

@@ -12,7 +12,13 @@ CXX=g++
 CXXFLAGS=-static -fopenmp -O3
 DEVFLAGS=-g -Wall
 LDFLAGS=-I./src/ -I/usr/include/eigen3/
+
+### Python settings
+
 PYPATH=/usr/bin/python
+
+### Manual settings
+
 TEX=pdflatex
 BIB=bibtex
 
