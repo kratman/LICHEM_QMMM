@@ -535,6 +535,21 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
     call << '\n';
     call << '\n';
   }
+  if (QMMM and (GEM = 1))
+  {
+    //Add diffuse charge field from a file
+    ifile.open("FIELD",ios_base::in);
+    if (ifile.good())
+    {
+      //Read a block of psithon code
+      while (!ifile.eof())
+      {
+        getline(ifile,dummy);
+        call << dummy << '\n';
+      }
+    }
+
+  }
   //Add calculation type
   call << CalcTyp;
   //Create file
