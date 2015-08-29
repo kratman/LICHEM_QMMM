@@ -1012,7 +1012,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         }
       }
     }
-    if (AMOEBA == 1)
+    if ((AMOEBA == 1) or (GEM == 1))
     {
       for (int i=0;i<Natoms;i++)
       {
