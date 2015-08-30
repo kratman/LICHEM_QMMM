@@ -29,7 +29,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
   {
     chrgfilename = call.str();
   }
-  if ((AMOEBA == 1) and (TINKER == 1) and (!UseChrgFile))
+  if (AMOEBA and (TINKER == 1) and (!UseChrgFile))
   {
     //Set up multipoles
     RotateTINKCharges(Struct,Bead);
@@ -83,7 +83,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
   }
   call << '\n'; //Blank line needed
   //Add the MM field
-  if ((CHRG == 1) and (!UseChrgFile))
+  if (CHRG and (!UseChrgFile))
   {
     for (int i=0;i<Natoms;i++)
     {
@@ -100,7 +100,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
     }
     call << '\n'; //Blank line needed
   }
-  if ((AMOEBA == 1) and (!UseChrgFile))
+  if (AMOEBA and (!UseChrgFile))
   {
     for (int i=0;i<Natoms;i++)
     {
@@ -192,7 +192,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
     iy /= Ly;
     iz /= Lz;
   }
-  if ((AMOEBA == 1) and (TINKER == 1))
+  if (AMOEBA and (TINKER == 1))
   {
     //Check if charges are saved
     call.str("");
@@ -286,7 +286,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
     ofile << '\n';
     ofile << "end" << '\n';
   }
-  if (CHRG == 1)
+  if (CHRG)
   {
     ofile << "set bq:max_nbq " << Nmm << '\n';
     ofile << "bq mmchrg" << '\n';
@@ -306,7 +306,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
     ofile << "end" << '\n';
     ofile << "set bq mmchrg" << '\n';
   }
-  if (AMOEBA == 1)
+  if (AMOEBA)
   {
     ofile << "set bq:max_nbq " << (Nmm*6) << '\n';
     ofile << "bq mmchrg" << '\n';
@@ -396,7 +396,7 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
   call.copyfmt(cout);
   string dummy; //Generic string
   fstream ifile,ofile; //Generic file names
-  if ((AMOEBA == 1) and (TINKER == 1))
+  if (AMOEBA and (TINKER == 1))
   {
     //Set up multipoles
     RotateTINKCharges(Struct,Bead);
@@ -467,7 +467,7 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
   call << "  no_com" << '\n';
   call << "}" << '\n' << '\n';
   //Set up MM field
-  if (QMMM and (CHRG == 1))
+  if (QMMM and CHRG)
   {
     call << "Chrgfield = QMMM()" << '\n';
     for (int i=0;i<Natoms;i++)
@@ -486,7 +486,7 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
     call << '\n';
     call << '\n';
   }
-  if (QMMM and (AMOEBA == 1))
+  if (QMMM and AMOEBA)
   {
     call << "Chrgfield = QMMM()" << '\n';
     for (int i=0;i<Natoms;i++)
@@ -535,7 +535,7 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
     call << '\n';
     call << '\n';
   }
-  if (QMMM and (GEM = 1))
+  if (QMMM and GEM)
   {
     //Add diffuse charge field from a file
     ifile.open("FIELD",ios_base::in);

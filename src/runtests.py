@@ -139,7 +139,9 @@ if (len(sys.argv) < 4):
   exit(0)
 Ncpus = int(sys.argv[1]) #Threads
 QMPack = sys.argv[2] #QM wrapper for calculations
+QMPack = QMPack.lower()
 MMPack = sys.argv[3] #MM wrapper for calculations
+MMPack = MMPack.lower()
 if (len(sys.argv) > 4):
   if ((sys.argv[4] == "Dry") or (sys.argv[4] == "dry")):
     #Quit early
@@ -166,7 +168,7 @@ if (BadLICHEM == 1):
   print(line)
   exit(0)
 BadQM = 1
-if ((QMPack == "PSI4") or (QMPack == "psi4") or (QMPack == "Psi4")):
+if ((QMPack == "psi4") or (QMPack == "psi")):
   QMPack = "PSI4"
   cmd = "which psi4"
   try:
@@ -176,7 +178,7 @@ if ((QMPack == "PSI4") or (QMPack == "psi4") or (QMPack == "Psi4")):
   except:
     QMbin = "N/A"
   BadQM = 0
-if ((QMPack == "Gaussian") or (QMPack == "gaussian") or (QMPack == "g09")):
+if ((QMPack == "gaussian") or (QMPack == "g09")):
   QMPack = "Gaussian"
   cmd = "which g09"
   try:
@@ -186,7 +188,7 @@ if ((QMPack == "Gaussian") or (QMPack == "gaussian") or (QMPack == "g09")):
   except:
     QMbin = "N/A"
   BadQM = 0
-if ((QMPack == "NWChem") or (QMPack == "nwchem") or (QMPack == "NWCHEM")):
+if (QMPack == "nwchem"):
   QMPack = "NWChem"
   cmd = "which nwchem"
   try:
@@ -206,7 +208,7 @@ if (BadQM == 1):
   print(line)
   exit(0)
 BadMM = 1
-if ((MMPack == "TINKER") or (MMPack == "tinker") or (MMPack == "Tinker")):
+if (MMPack == "tinker"):
   MMPack = "TINKER"
   cmd = "which analyze"
   try:
@@ -216,7 +218,7 @@ if ((MMPack == "TINKER") or (MMPack == "tinker") or (MMPack == "Tinker")):
   except:
     MMbin = "N/A"
   BadMM = 0
-if ((MMPack == "LAMMPS") or (MMPack == "lammps") or (MMPack == "Lammps")):
+if (MMPack == "lammps"):
   MMPack = "LAMMPS"
   cmd = "which lammps"
   try:
@@ -226,7 +228,7 @@ if ((MMPack == "LAMMPS") or (MMPack == "lammps") or (MMPack == "Lammps")):
   except:
     MMbin = "N/A"
   BadMM = 0
-if ((MMPack == "AMBER") or (MMPack == "amber") or (MMPack == "Amber")):
+if (MMPack == "amber"):
   MMPack = "AMBER"
   cmd = "which pmemd" #Check
   try:

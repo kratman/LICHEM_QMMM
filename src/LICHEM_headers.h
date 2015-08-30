@@ -104,9 +104,9 @@ double Ly = 10000.0; //Box length
 double Lz = 10000.0; //Box length
 
 //Flags for simulation options
-int GEM = 0; //Flag for frozen density QMMM potential
-int AMOEBA = 0; //Flag for polarizable QMMM potential
-int CHRG = 0; //Flag for point-charge QMMM potential
+bool GEM = 0; //Flag for frozen density QMMM potential
+bool AMOEBA = 0; //Flag for polarizable QMMM potential
+bool CHRG = 0; //Flag for point-charge QMMM potential
 int PSI4 = 0; //Wrapper flag
 int NWChem = 0; //Wrapper flag
 int Gaussian = 0; //Wrapper flag

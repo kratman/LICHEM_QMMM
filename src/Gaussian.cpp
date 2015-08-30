@@ -112,7 +112,7 @@ void ExternalGaussian(int& argc, char**& argv)
   if (TINKER == 1)
   {
     Emm = TINKERForces(Struct,Forces,QMMMOpts,Bead);
-    if (AMOEBA == 1)
+    if (AMOEBA)
     {
       Emm += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
     }
@@ -576,7 +576,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.copyfmt(cout); //Copy print settings
   double E = 0.0; //QM energy
   int ExtCPUs = 1; //Number of CPUs for GauExternal
-  if ((AMOEBA == 1) and (TINKER == 1))
+  if (AMOEBA and (TINKER == 1))
   {
     RotateTINKCharges(Struct,Bead);
   }
@@ -597,7 +597,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile.flush();
   ofile.close();
   //Write multipole point-charges
-  if ((AMOEBA == 1) and QMMM)
+  if (AMOEBA and QMMM)
   {
     call.str("");
     call << "MMCharges_" << Bead << ".txt";

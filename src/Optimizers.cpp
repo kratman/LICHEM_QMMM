@@ -207,7 +207,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "QMOpt_" << Bead << ".xyz";
   qmfile.open(call.str().c_str(),ios_base::out);
   //Initialize charges for Gaussian
-  if ((AMOEBA == 1) and ((Gaussian == 1) or (NWChem == 1)))
+  if (AMOEBA and ((Gaussian == 1) or (NWChem == 1)))
   {
     if (TINKER == 1)
     {
@@ -311,7 +311,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     {
       int tstart = (unsigned)time(0);
       E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
-      if (AMOEBA == 1)
+      if (AMOEBA)
       {
         E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
       }
@@ -412,7 +412,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   double Eold = 0; //Energy from previous step
   double VecMax = 0; //Maxium atomic displacement
   //Initialize multipoles for Gaussian optimizations
-  if ((AMOEBA == 1) and ((Gaussian == 1) or (NWChem == 1)))
+  if (AMOEBA and ((Gaussian == 1) or (NWChem == 1)))
   {
     if (TINKER == 1)
     {
@@ -524,7 +524,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   {
     int tstart = (unsigned)time(0);
     E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
-    if (AMOEBA == 1)
+    if (AMOEBA)
     {
       E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
     }
@@ -634,7 +634,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     {
       int tstart = (unsigned)time(0);
       E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
-      if (AMOEBA == 1)
+      if (AMOEBA)
       {
         E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
       }
@@ -765,7 +765,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
       int tstart = (unsigned)time(0);
       TINKERDynamics(Struct,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
-      if (AMOEBA == 1)
+      if (AMOEBA)
       {
         //Set up current multipoles
         RotateTINKCharges(Struct,Bead);
@@ -804,7 +804,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
       int tstart = (unsigned)time(0);
       E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
       SumE += TINKEREnergy(Struct,QMMMOpts,Bead);
-      if (AMOEBA == 1)
+      if (AMOEBA)
       {
         //Force from MM polarization
         E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);

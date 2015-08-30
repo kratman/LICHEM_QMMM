@@ -884,7 +884,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       DoQuit = 1;
     }
   }
-  if ((LAMMPS == 1) and (AMOEBA == 1))
+  if ((LAMMPS == 1) and AMOEBA)
   {
     cout << " Error: LAMMPS calculations cannot be performed with";
     cout << '\n';
@@ -1083,11 +1083,11 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
     if (QMMM)
     {
       cout << " QMMM potential: ";
-      if (CHRG == 1)
+      if (CHRG)
       {
         cout << "Point-charge force field" << '\n';
       }
-      if (AMOEBA == 1)
+      if (AMOEBA)
       {
         cout << "Polarizable force field" << '\n';
       }

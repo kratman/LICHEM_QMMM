@@ -563,7 +563,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     //Terminate trailing group line
     ofile << '\n';
   }
-  if (CHRG == 1)
+  if (CHRG)
   {
     for (int i=0;i<Natoms;i++)
     {
@@ -577,7 +577,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
       }
     }
   }
-  if (AMOEBA == 1)
+  if (AMOEBA)
   {
     for (int i=0;i<Natoms;i++)
     {
@@ -778,7 +778,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     //Terminate trailing actives line
     ofile << '\n';
   }
-  if (AMOEBA == 1)
+  if (AMOEBA)
   {
     for (int i=0;i<Natoms;i++)
     {
@@ -999,7 +999,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       //Terminate trailing actives line
       ofile << '\n';
     }
-    if (CHRG == 1)
+    if (CHRG)
     {
       for (int i=0;i<Natoms;i++)
       {
@@ -1012,7 +1012,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         }
       }
     }
-    if ((AMOEBA == 1) or (GEM == 1))
+    if (AMOEBA or GEM)
     {
       for (int i=0;i<Natoms;i++)
       {
@@ -1117,7 +1117,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << " LICHM_" << Bead << ".key";
   GlobalSys = system(call.str().c_str());
   //Calculate polarization energy
-  if ((AMOEBA == 1) and QMMM)
+  if ((AMOEBA or GEM) and QMMM)
   {
     //Correct polarization energy for QMMM simulations
     E += TINKERPolEnergy(Struct,QMMMOpts,Bead);
@@ -1200,7 +1200,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Terminate trailing actives line
       ofile << '\n';
     }
-    if (CHRG == 1)
+    if (CHRG)
     {
       for (int i=0;i<Natoms;i++)
       {
@@ -1229,7 +1229,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         }
       }
     }
-    if (AMOEBA == 1)
+    if (AMOEBA)
     {
       for (int i=0;i<Natoms;i++)
       {
@@ -1418,7 +1418,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       //Terminate trailing actives line
       ofile << '\n';
     }
-    if (CHRG == 1)
+    if (CHRG)
     {
       for (int i=0;i<Natoms;i++)
       {
@@ -1447,7 +1447,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         }
       }
     }
-    if (AMOEBA == 1)
+    if (AMOEBA)
     {
       for (int i=0;i<Natoms;i++)
       {
