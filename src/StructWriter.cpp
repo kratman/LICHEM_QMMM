@@ -537,9 +537,9 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
   }
   if (QMMM and GEM)
   {
-    //Add diffuse charge field from a file
+    //Add generic field field from a file (psithon)
     ifile.open("FIELD",ios_base::in);
-    if (ifile.good())
+    if (CheckFile("FIELD") and ifile.good())
     {
       //Read a block of psithon code
       while (!ifile.eof())
@@ -547,8 +547,11 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
         getline(ifile,dummy);
         call << dummy << '\n';
       }
+      //If the file was opened, save the field
+      call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
+      call << '\n';
+      call << '\n';
     }
-
   }
   //Add calculation type
   call << CalcTyp;
