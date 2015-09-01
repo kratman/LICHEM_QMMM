@@ -538,11 +538,11 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
   if (QMMM and GEM)
   {
     //Add generic field field from a file (psithon)
-    ifile.open("FIELD",ios_base::in);
-    if (CheckFile("FIELD") and ifile.good())
+    if (CheckFile("FIELD"))
     {
       //Read a block of psithon code
-      while (!ifile.eof())
+      ifile.open("FIELD",ios_base::in);
+      while ((!ifile.eof()) and ifile.good())
       {
         getline(ifile,dummy);
         call << dummy << '\n';
@@ -551,6 +551,7 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
       call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
       call << '\n';
       call << '\n';
+      ifile.close();
     }
   }
   //Add calculation type
