@@ -27,7 +27,7 @@ void ExternalGaussian(int& argc, char**& argv)
   vector<QMMMAtom> Struct; //Atomic data
   QMMMSettings QMMMOpts; //Simulation settings
   int DerType,Bead;
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout); //Copy print settings
   string dummy,Stub; //Generic strings
   //Declare lots of file streams
@@ -188,7 +188,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the forces on a set of atoms
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout); //Copy print settings
   string dummy; //Generic string
   fstream ofile,ifile,QMlog; //Generic input files
@@ -351,7 +351,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Function to update QM point-charges
   fstream ofile,ifile; //Generic file streams
   string dummy; //Generic string
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout); //Copy print settings
   //Remove multipoles file
   call.str("");
@@ -441,7 +441,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Calculates the QM energy with Gaussian
   fstream ofile,ifile; //Generic file streams
   string dummy; //Generic string
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout); //Copy print settings
   double E = 0.0; //QM energy
   double Eself = 0.0; //External field self-energy
@@ -572,7 +572,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Runs Gaussian optimizations with GauExternal
   fstream ofile,ifile; //Generic file streams
   string dummy; //Generic string
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout); //Copy print settings
   double E = 0.0; //QM energy
   int ExtCPUs = 1; //Number of CPUs for GauExternal

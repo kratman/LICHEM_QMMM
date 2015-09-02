@@ -24,9 +24,9 @@ double AMBERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs AMBER energy calculations
-  fstream ofile,ifile;
+  fstream ofile,ifile; //Generic file streams
   string dummy; //Generic string
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout);
   double E = 0.0;
   
@@ -38,9 +38,9 @@ double AMBERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
 double AMBEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs AMBER energy calculations
-  fstream ofile,ifile;
+  fstream ofile,ifile; //Generic file streams
   string dummy; //Generic string
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout);
   double E = 0.0;
   
@@ -52,9 +52,9 @@ double AMBEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 double AMBEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs AMBER optimizations
-  fstream ofile,ifile;
+  fstream ofile,ifile; //Generic file streams
   string dummy; //Generic string
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout);
   double E = 0.0;
   

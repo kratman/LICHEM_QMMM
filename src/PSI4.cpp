@@ -25,7 +25,7 @@ double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   //Function for calculating the forces and charges on a set of atoms
   fstream ifile; //Generic file name
   string dummy; //Generic string
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout);
   double E = 0;
   //Set up force calculation
@@ -148,7 +148,7 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Function to update QM point-charges
   fstream ifile;
   string dummy; //Generic string
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout);
   //Set up charge calculation
   call.str("");
@@ -208,7 +208,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Runs PSI4 for energy calculations
   fstream ifile;
   string dummy; //Generic string
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout);
   double E = 0.0;
   //Set up energy calculation
@@ -310,7 +310,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   //Runs psi4 for energy calculations
   fstream ifile;
   string dummy; //Generic string
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout);
   double E = 0.0;
   //Set up QM only optimization

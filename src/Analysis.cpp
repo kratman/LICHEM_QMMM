@@ -42,7 +42,7 @@ void BurstTraj(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
 {
   //Function to split reaction path and path-integral trajectory frames
   int ct; //Generic counter
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   fstream burstfile;
   string dummy; //Generic string
   //Open new split trajectory file

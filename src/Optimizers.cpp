@@ -24,7 +24,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
      bool QMregion)
 {
   //Check convergence of QMMM optimizations
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   string dummy; //Generic string
   call.str("");
   //Initialize stats variables
@@ -196,7 +196,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
   //Cartesian steepest descent optimizer
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout);
   string dummy; //Generic string
   int stepct = 0; //Counter for optimization steps
@@ -398,7 +398,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //A simple DFP optimizer, which is similar to BFGS updating
   //Note: This optimizer does not have a true line search, instead
   //a steepest descent step is performed if the energy rises
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout);
   string dummy; //Generic string
   int stepct = 0; //Counter for optimization steps
@@ -748,7 +748,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
      QMMMSettings& QMMMOpts, int Bead)
 {
   //Ensemble steepest descent optimizer
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout);
   string dummy; //Generic string
   int stepct = 0; //Counter for optimization steps

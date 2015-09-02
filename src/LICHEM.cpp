@@ -197,7 +197,7 @@ int main(int argc, char* argv[])
       SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    stringstream call;
+    stringstream call; //Steam for system calls and reading/writing files
     call.copyfmt(cout); //Save settings
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
@@ -320,7 +320,7 @@ int main(int argc, char* argv[])
       SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    stringstream call;
+    stringstream call; //Steam for system calls and reading/writing files
     call.copyfmt(cout); //Save settings
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
@@ -424,7 +424,7 @@ int main(int argc, char* argv[])
       SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    stringstream call;
+    stringstream call; //Steam for system calls and reading/writing files
     call.copyfmt(cout); //Save settings
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
@@ -686,7 +686,7 @@ int main(int argc, char* argv[])
         SumE += LAMMPSEnergy(Struct,QMMMOpts,p);
         MMTime += (unsigned)time(0)-tstart;
       }
-      stringstream call;
+      stringstream call; //Steam for system calls and reading/writing files
       call.copyfmt(cout); //Save settings
       cout << "   Bead: ";
       cout << p << " | Energy: ";
@@ -805,7 +805,7 @@ int main(int argc, char* argv[])
       SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    stringstream call;
+    stringstream call; //Steam for system calls and reading/writing files
     call.copyfmt(cout); //Save settings
     cout << " | Opt. step: 0";
     cout << " | Energy: ";
@@ -856,7 +856,7 @@ int main(int argc, char* argv[])
   if (Gaussian == 1)
   {
     //Clear any remaining Gaussian files
-    stringstream call;
+    stringstream call; //Steam for system calls and reading/writing files
     call.copyfmt(cout);
     call.str("");
     call << "rm -f Gau-*"; //Produced if there is a crash
@@ -865,7 +865,7 @@ int main(int argc, char* argv[])
   if (PSI4 == 1)
   {
     //Clear any remaining PSI4 files
-    stringstream call;
+    stringstream call; //Steam for system calls and reading/writing files
     call.copyfmt(cout);
     call.str("");
     call << "rm -f psi*";
@@ -874,7 +874,7 @@ int main(int argc, char* argv[])
   if (SinglePoint)
   {
     //Clear worthless output xyz file
-    stringstream call;
+    stringstream call; //Steam for system calls and reading/writing files
     call.copyfmt(cout);
     call.str("");
     call << "rm -f ";

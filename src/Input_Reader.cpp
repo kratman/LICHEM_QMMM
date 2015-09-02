@@ -18,7 +18,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
      fstream& connectfile, fstream& regionfile, fstream& outfile)
 {
   string dummy; //Generic string
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   //Read command line arguments
   if (argc == 1)
   {

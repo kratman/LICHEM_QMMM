@@ -41,7 +41,7 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Function for calculating the MM forces on a set of QM atoms
   fstream ofile,ifile;
   string dummy; //Generic string
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout);
   double E = 0.0;
   int ct;
@@ -238,7 +238,7 @@ double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Function for optimizing with LAMMPS
   fstream ofile,ifile;
   string dummy; //Generic string
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout);
   double E = 0.0;
   int ct;

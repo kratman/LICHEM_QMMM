@@ -17,7 +17,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
      QMMMSettings& QMMMOpts, int Bead)
 {
   //Write Gaussian input files
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout);
   string dummy,chrgfilename; //Generic strings
   fstream ifile,ofile; //Generic file names
@@ -176,9 +176,9 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
      QMMMSettings& QMMMOpts, int Bead)
 {
   //Write NWChem input files
-  fstream ofile,ifile;
+  fstream ofile,ifile; //Generic file streams
   string dummy,chrgfilename;
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout);
   bool UseChrgFile = 0;
   //Calculate inverse box lengths for PBC
@@ -392,7 +392,7 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
      QMMMSettings& QMMMOpts, int Bead)
 {
   //Write PSI4 input files
-  stringstream call;
+  stringstream call; //Steam for system calls and reading/writing files
   call.copyfmt(cout);
   string dummy; //Generic string
   fstream ifile,ofile; //Generic file names
