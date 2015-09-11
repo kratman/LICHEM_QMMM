@@ -50,7 +50,7 @@ An approximate list of packages is given below.
 
 To install LICHEM, clone the git repository
 ```
-user:$ mkdir LICHEM 
+user:$ mkdir LICHEM
 user:$ git clone https://github.com/kratman/LICHEM_QMMM.git ./LICHEM/
 ```
 
