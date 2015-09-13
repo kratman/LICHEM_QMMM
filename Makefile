@@ -6,23 +6,25 @@
 #                                                 #
 ###################################################
 
-### Compiler settings
+### Compiler settings ###
 
 CXX=g++
 CXXFLAGS=-static -fopenmp -O3
 DEVFLAGS=-g -Wall
 LDFLAGS=-I./src/ -I/usr/include/eigen3/
 
-### Python settings
+### Python settings ###
 
 PYPATH=/usr/bin/python
 
-### Manual settings
+### Manual settings ###
 
 TEX=pdflatex
 BIB=bibtex
 
-### Compile rules for users and devs
+###################################################
+
+### Compile rules for users and devs ###
 
 install:	title binary testexe manual compdone
 
@@ -30,7 +32,9 @@ Dev:	title devbin testexe manual stats compdone
 
 clean:	title delbin compdone
 
-### Rules for building various parts of the code
+###################################################
+
+### Rules for building various parts of the code ###
 
 binary:	
 	@echo ""; \
