@@ -88,7 +88,7 @@ Additional make rules can be found in the Makefile.
 
 LICHEM is still in the early stages of development. Please report all bugs so
 that the code can be updated quickly. A list of known issues and the
-development time-line are available in the doc directory.
+development timeline are available in the doc directory.
 
 Development versions of LICHEM are kept in a private repository. Large changes
 to the code or the addition of new features (multipoles, diffuse charges,

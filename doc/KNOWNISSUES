@@ -11,6 +11,7 @@ methods are not implemented.
 -Optimizations with the native NWChem optimizer (Calculation_type: Opt) cannot
 be performed. However, DFP, SD, and ESD are implemented. Pure QM optimizations
 within NWChem will be implemented in the future.
+-The accuracy of the QMMM PBC calculations has not been tested.
 
 PSI4 interface:
 -PSI4 gradients do not include the contribution from the external field.
