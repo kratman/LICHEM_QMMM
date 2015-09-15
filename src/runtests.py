@@ -302,10 +302,10 @@ DirPath += "/"
 os.chdir(DirPath)
 
 #Start printing results
-line = "Results:"
-line += '\n'
+print("Results:")
 
 #Check QMMM point-charge energy results
+line = ""
 PassEnergy = 0
 cmd = "cp pchrg.key tinker.key"
 subprocess.call(cmd,shell=True) #Copy key file
@@ -352,7 +352,7 @@ RunTime = subprocess.check_output(cmd,shell=True) #Get run time
 RunTime = RunTime.split()
 RunTime = " "+RunTime[3]+" "+RunTime[4]
 line += RunTime
-line += '\n'
+print(line)
 
 #Clean up files
 cmd = ""
@@ -366,6 +366,7 @@ if (QMPack == "PSI4"):
 subprocess.call(cmd,shell=True)
 
 #Check QMMM polarizable energy results
+line = ""
 PassEnergy = 0
 cmd = "cp pol.key tinker.key"
 subprocess.call(cmd,shell=True) #Copy key file
