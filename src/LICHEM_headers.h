@@ -39,14 +39,16 @@
 #include <Eigen/StdList>
 #include <Eigen/Eigen>
 #include <Eigen/StdVector>
+
+//Set namespaces for common libraries
 using namespace Eigen;
 using namespace std;
 
 //Compile options
 const bool Jokes = 0; //Print humorous comments
 const bool Isotrop = 1; //Force isotropic expansion in NPT Monte Carlo
-const double StepMin = 0.01; //Minimum Monte Carlo step size
-const double StepMax = 1.0; //Maximum Monte Carlo step size
+const double StepMin = 0.01; //Minimum Monte Carlo step size (Angstroms)
+const double StepMax = 1.0; //Maximum Monte Carlo step size (Angstroms)
 const double Centratio= 5.0; //Scales step size for path-integral centroids
 const int Acc_Check = 1000; //Eq Monte Carlo steps before checking accratio
 
@@ -86,7 +88,7 @@ const double ToeV = amu2kg*SI2eV/(m2Ang*m2Ang); //Convert to eV units (PIMC)
 const double kcal2eV = 4184*SI2eV/Na; //kcal/mol to eV
 
 //Globals
-int GlobalSys; //Global dummy return for all system calls
+int GlobalSys = 0; //Global dummy return for all system calls
 string xyzfilename; //Saves a filename given in the arguments
 string confilename; //Saves a filename given in the arguments
 string regfilename; //Saves a filename given in the arguments

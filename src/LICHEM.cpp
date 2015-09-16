@@ -517,11 +517,13 @@ int main(int argc, char* argv[])
     double Nacc = 0; //Number of accepted moves
     double Nrej = 0; //Number of rejected moves
     double Emc = 0; //Monte Carlo energy
+    double Et = 0; //Total energy for printing
     bool acc; //Flag for accepting a step
+    //Start equilibration run
     cout << "Starting equilibration..." << '\n';
     cout.flush();
     Nct = 0;
-    while (Nct < QMMMOpts.Neq) //Equilibration
+    while (Nct < QMMMOpts.Neq)
     {
       Emc = 0;
       if(ct == Acc_Check)
@@ -558,21 +560,37 @@ int main(int argc, char* argv[])
         Nrej += 1;
       }
     }
+    //Start production run
     Nct = 0;
     Nacc = 0;
     Nrej = 0;
     cout << "Starting production run..." << '\n';
     cout.flush();
+    //Print starting conditions
     Print_traj(Struct,outfile,QMMMOpts);
+    Et = Ek+Emc; //Calculate total energy using previous saved energy
+    Et -= 2*Get_PI_Espring(Struct,QMMMOpts);
+    cout << " | Step: " << Nct;
+    cout << " | Energy: " << Et << " eV";
+    if (QMMMOpts.Ensemble == "NPT")
+    {
+      cout << " | Volume: " << Lx*Ly*Lz << " \u212B^3";
+    }
+    cout << '\n';
+    cout.flush(); //Print results
+    //Continue simulation
     while (Nct < QMMMOpts.Nsteps)
     {
       Emc = 0; //Set energy to zero
       acc = MCMove(Struct,QMMMOpts,Emc);
       if (acc)
       {
+        //Increase counters
         Nct += 1;
         Nacc += 1;
-        double Et = Ek+Emc;
+        //Calculate energy
+        Et = 0;
+        Et += Ek+Emc;
         Et -= 2*Get_PI_Espring(Struct,QMMMOpts);
         VolAvg += Lx*Ly*Lz;
         SumE += Et;
@@ -604,7 +622,7 @@ int main(int argc, char* argv[])
     SumE /= QMMMOpts.Nsteps; //Average energy
     SumE2 /= QMMMOpts.Nsteps; //Variance of the energy
     VolAvg /= QMMMOpts.Nsteps; //Average volume
-    //Print output
+    //Print simulation details and statistics
     cout << '\n';
     cout << "Temperature: ";
     cout << QMMMOpts.Temp;

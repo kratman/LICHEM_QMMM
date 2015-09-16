@@ -515,9 +515,9 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
         }
         Coord temp; //Bead coordinates
         //Set random bead displacements
-        temp.x = Struct[i].P[0].x+(randx-0.5)*StepMin*Centratio;
-        temp.y = Struct[i].P[0].y+(randy-0.5)*StepMin*Centratio;
-        temp.z = Struct[i].P[0].z+(randz-0.5)*StepMin*Centratio;
+        temp.x = Struct[i].P[0].x+(2*(randx-0.5)*StepMin*Centratio);
+        temp.y = Struct[i].P[0].y+(2*(randy-0.5)*StepMin*Centratio);
+        temp.z = Struct[i].P[0].z+(2*(randz-0.5)*StepMin*Centratio);
         Struct[i].P.push_back(temp);
         Mpole temp2 = Struct[i].MP[0];
         Struct[i].MP.push_back(temp2);
