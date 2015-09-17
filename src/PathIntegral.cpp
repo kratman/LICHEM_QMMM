@@ -283,8 +283,6 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
   }
   //Calculate energies
   double Eold = QMMMOpts.Eold;
-  //Eold += Get_PI_Epot(parts,QMMMOpts);
-  //Eold += Get_PI_Espring(parts,QMMMOpts);
   double Enew = 0;
   double Lxtmp = Lx;
   double Lytmp = Ly;
@@ -327,7 +325,6 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
       }
     }
     #pragma omp barrier
-    //Eold += QMMMOpts.Press*Lxtmp*Lytmp*Lztmp*atm2eV;
     Enew += QMMMOpts.Press*Lx*Ly*Lz*atm2eV;
   }
   Enew += Get_PI_Epot(parts2,QMMMOpts);

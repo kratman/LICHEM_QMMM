@@ -515,10 +515,14 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
         }
         Coord temp; //Bead coordinates
         //Set random bead displacements
-        temp.x = Struct[i].P[0].x+(2*(randx-0.5)*StepMin*Centratio);
-        temp.y = Struct[i].P[0].y+(2*(randy-0.5)*StepMin*Centratio);
-        temp.z = Struct[i].P[0].z+(2*(randz-0.5)*StepMin*Centratio);
+        double MassScale = sqrt(12.0/Struct[i].m); //Relative to carbon
+        MassScale *= StepMin*Centratio; //Scale based on settings
+        temp.x = Struct[i].P[0].x+(2*(randx-0.5)*MassScale);
+        temp.y = Struct[i].P[0].y+(2*(randy-0.5)*MassScale);
+        temp.z = Struct[i].P[0].z+(2*(randz-0.5)*MassScale);
+        //Save coordinates
         Struct[i].P.push_back(temp);
+        //Copy charges from the first replica
         Mpole temp2 = Struct[i].MP[0];
         Struct[i].MP.push_back(temp2);
         OctCharges temp3 = Struct[i].PC[0];

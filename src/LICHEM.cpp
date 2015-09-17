@@ -197,7 +197,7 @@ int main(int argc, char* argv[])
       SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    stringstream call; //Steam for system calls and reading/writing files
+    stringstream call; //Stream for system calls and reading/writing files
     call.copyfmt(cout); //Save settings
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
@@ -491,6 +491,7 @@ int main(int argc, char* argv[])
     }
     if (QMMMOpts.Ensemble == "NVT")
     {
+      //Remove volume changes
       VolProb = 0.0;
     }
     //Calculate initial energy
@@ -503,15 +504,16 @@ int main(int argc, char* argv[])
     }
     //Run simulations
     cout << '\n';
-    SumE = 0;
-    SumE2 = 0;
-    VolAvg = 0;
-    Ek = 0;
+    SumE = 0; //Average energy
+    SumE2 = 0; //Average squared energy
+    VolAvg = 0; //Average volume
+    Ek = 0; //PIMC kinietic energy
     if (QMMMOpts.Nbeads > 1)
     {
-      //PIMC kinetic energy
+      //Set kinetic energy
       Ek = 3*Natoms*QMMMOpts.Nbeads/(2*QMMMOpts.Beta);
     }
+    //Initialize local variables
     int Nct = 0; //Step counter
     int ct = 0; //Secondary counter
     double Nacc = 0; //Number of accepted moves
@@ -526,28 +528,41 @@ int main(int argc, char* argv[])
     while (Nct < QMMMOpts.Neq)
     {
       Emc = 0;
+      //Check step size
       if(ct == Acc_Check)
       {
         if ((Nacc/(Nrej+Nacc)) > QMMMOpts.accratio)
         {
+          //Increase step size
           step *= 1.10;
         }
         if ((Nacc/(Nrej+Nacc)) < QMMMOpts.accratio)
         {
+          //Decrease step size
           step *= 0.91;
         }
         if (step < StepMin)
         {
+          //Set to minimum
           step = StepMin;
         }
         if (step > StepMax)
         {
+          //Set to maximum
           step = StepMax;
         }
+        //Statistics
+        cout << " | Step: " << Nct;
+        cout << " | Step size: " << step;
+        cout << " | Accept ratio: " << (Nacc/(Nrej+Nacc));
+        cout << '\n';
+        cout.flush(); //Print stats
+        //Reset counters
         ct = 0;
         Nacc = 0;
         Nrej = 0;
       }
+      //Continue simulation
       ct += 1;
       acc = MCMove(Struct,QMMMOpts,Emc);
       if (acc)
@@ -638,7 +653,7 @@ int main(int argc, char* argv[])
     cout << SumE;
     cout << " eV    ";
     cout << "Variance: ";
-    cout << (SumE2-SumE*SumE);
+    cout << (SumE2-(SumE*SumE));
     cout << " eV^2";
     cout << '\n';
     cout << "Acceptance ratio: ";
