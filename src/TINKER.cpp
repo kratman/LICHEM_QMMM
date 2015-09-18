@@ -155,6 +155,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile << '\n'; //Make sure current line is empty
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
+  ofile << "openmp-threads " << Ncpus << '\n';
   if (PBCon)
   {
     //Put here for safety
@@ -339,6 +340,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile << '\n';
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
+  ofile << "openmp-threads " << Ncpus << '\n';
   if (PBCon)
   {
     //Put here for safety
@@ -490,6 +492,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   ofile << '\n';
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
+  ofile << "openmp-threads " << Ncpus << '\n';
   if (PBCon)
   {
     //Put here for safety
@@ -736,6 +739,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   ofile << '\n';
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
+  ofile << "openmp-threads " << Ncpus << '\n';
   if (PBCon)
   {
     //Put here for safety
@@ -957,6 +961,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     ofile << '\n';
     ofile << "#QM force field parameters"; //Marks the changes
     ofile << '\n';
+    ofile << "openmp-threads " << Ncpus << '\n';
     if (PBCon)
     {
       //Put here for safety
@@ -1152,6 +1157,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ofile << '\n';
     ofile << "#QM force field parameters"; //Marks the changes
     ofile << '\n';
+    ofile << "openmp-threads " << Ncpus << '\n';
     if (PBCon)
     {
       //Put here for safety
@@ -1374,6 +1380,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     ofile << '\n';
     ofile << "#QM force field parameters"; //Marks the changes
     ofile << '\n';
+    ofile << "openmp-threads " << Ncpus << '\n';
     if (PBCon)
     {
       //Put here for safety
