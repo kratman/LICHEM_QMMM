@@ -207,7 +207,7 @@ Additional make rules can be found in the Makefile.
  \end{tabular}
  \caption{
  QM wrapper capabilities for single-point energy, geometry optimization,
- steepest descent or Davidson-Fletcher-Powell (SD/DFP), Monte Carlo (MC),
+ steepest descent or Davidon-Fletcher-Powell (SD/DFP), Monte Carlo (MC),
  path-integral Monte Carlo (PIMC), and reaction path (RP) calculations.}
  \label{tab:QMWrapCap}
 \end{table}
@@ -232,7 +232,7 @@ Additional make rules can be found in the Makefile.
  \end{tabular}
  \caption{
  MM wrapper capabilities for single-point energy, geometry optimization,
- steepest descent or Davidson-Fletcher-Powell (SD/DFP), Monte Carlo (MC),
+ steepest descent or Davidon-Fletcher-Powell (SD/DFP), Monte Carlo (MC),
  path-integral Monte Carlo (PIMC), and reaction path (RP) calculations.}
  \label{tab:MMWrapCap}
 \end{table}
@@ -834,14 +834,14 @@ reaches $\alpha_{max}$.
 If the energy increases, the step size is reduced by 40\% and the optimization
 continues.
 
-\subsection{Davidson-Fletcher-Powell}
+\subsection{Davidon-Fletcher-Powell}
 
 SD optimizations move along the first derivative of the potential (gradient).
 Optimzations are more efficient if the atoms move along a path chosen using
 both the first and second derivatives of the potential.
 The second derivative matrix (Hessian) can be expensive to calculate, however,
 there are several quasi-Newton algorithms which can improve a guess Hessian.
-The most common procedures are the Davidson-Fletcher-Powell (DFP) and
+The most common procedures are the Davidon-Fletcher-Powell (DFP) and
 Broyden-Fletcher-Goldfarb-Shanno (BFGS) algorithms.
 These two methods are mathematically related and can theoretically start from
 any initial guess of the inverse Hessian, $H^{-1}$. \\

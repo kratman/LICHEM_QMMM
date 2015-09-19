@@ -534,12 +534,32 @@ int main(int argc, char* argv[])
         if ((Nacc/(Nrej+Nacc)) > QMMMOpts.accratio)
         {
           //Increase step size
-          step *= 1.10;
+          double randval;
+          randval = (((double)rand())/((double)RAND_MAX));
+          //Use random values to keep from cycling up and down
+          if (randval >= 0.5)
+          {
+            step *= 1.10;
+          }
+          else
+          {
+            step *= 1.09;
+          }
         }
         if ((Nacc/(Nrej+Nacc)) < QMMMOpts.accratio)
         {
           //Decrease step size
-          step *= 0.91;
+          double randval;
+          randval = (((double)rand())/((double)RAND_MAX));
+          //Use random values to keep from cycling up and down
+          if (randval >= 0.5)
+          {
+            step *= 0.90;
+          }
+          else
+          {
+            step *= 0.91;
+          }
         }
         if (step < StepMin)
         {

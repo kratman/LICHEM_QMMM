@@ -147,9 +147,9 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     double randx = (((double)rand())/((double)RAND_MAX));
     double randy = (((double)rand())/((double)RAND_MAX));
     double randz = (((double)rand())/((double)RAND_MAX));
-    double dx = 2*(randx-0.5)*step*Centratio;
-    double dy = 2*(randy-0.5)*step*Centratio;
-    double dz = 2*(randz-0.5)*step*Centratio;
+    double dx = 2*(randx-0.5)*step*CentRatio;
+    double dy = 2*(randy-0.5)*step*CentRatio;
+    double dz = 2*(randz-0.5)*step*CentRatio;
     #pragma omp parallel for
     for (int i=0;i<QMMMOpts.Nbeads;i++)
     {

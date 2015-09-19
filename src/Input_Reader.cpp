@@ -516,7 +516,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
         Coord temp; //Bead coordinates
         //Set random bead displacements
         double MassScale = sqrt(12.0/Struct[i].m); //Relative to carbon
-        MassScale *= StepMin*Centratio; //Scale based on settings
+        MassScale *= 2*StepMin*CentRatio; //Scale based on settings
         temp.x = Struct[i].P[0].x+(2*(randx-0.5)*MassScale);
         temp.y = Struct[i].P[0].y+(2*(randy-0.5)*MassScale);
         temp.z = Struct[i].P[0].z+(2*(randz-0.5)*MassScale);

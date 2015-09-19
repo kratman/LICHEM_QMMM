@@ -47,10 +47,10 @@ using namespace std;
 //Compile options
 const bool Jokes = 0; //Print humorous comments
 const bool Isotrop = 1; //Force isotropic expansion in NPT Monte Carlo
-const double StepMin = 0.01; //Minimum Monte Carlo step size (Angstroms)
+const double StepMin = 0.005; //Minimum Monte Carlo step size (Angstroms)
 const double StepMax = 1.0; //Maximum Monte Carlo step size (Angstroms)
-const double Centratio= 5.0; //Scales step size for path-integral centroids
-const int Acc_Check = 1000; //Eq Monte Carlo steps before checking accratio
+const double CentRatio= 5.0; //Scales step size for path-integral centroids
+const int Acc_Check = 2000; //Eq Monte Carlo steps before checking accratio
 
 //Move Probabilities for PIMC
 //Note: These probabilities allow for multi-particle moves
@@ -100,7 +100,7 @@ int Nbound = 0; //Number of boundary-atoms
 int Natoms = 0; //Total number of atoms
 int Nqm = 0; //Number of QM atoms
 int Nmm = 0; //Number of MM atoms
-double step = StepMin; //PIMC step size
+double step = 2*StepMin; //Monte Carlo step size
 double Lx = 10000.0; //Box length
 double Ly = 10000.0; //Box length
 double Lz = 10000.0; //Box length
