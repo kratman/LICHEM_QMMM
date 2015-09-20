@@ -53,7 +53,7 @@ DryRun = 0 #Only check packages
 if (len(sys.argv) < 4):
   #Print help if arguments are missing
   line = ""
-  line += "Usage: python runtests.py Ncpus QMPackage MMPackage"
+  line += "Usage: ./runtests Ncpus QMPackage MMPackage"
   line += '\n'
   line += '\n'
   #Find LICHEM

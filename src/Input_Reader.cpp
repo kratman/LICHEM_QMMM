@@ -1131,10 +1131,10 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
     }
     cout << '\n';
   }
-  cout << '\n';
   //Print convergence criteria for optimizations
   if (OptSim or SteepSim or DFPSim or ESDSim or ENEBSim)
   {
+    cout << '\n';
     cout << "Optimization settings:" << '\n';
     if (SteepSim or DFPSim or ESDSim or ENEBSim)
     {

@@ -17,6 +17,18 @@
 
 */
 
+//Tangent functions
+VectorXd SymmTangent(vector<QMMMAtom>& OldStruct,
+         QMMMSettings& QMMMOpts, int Bead)
+{
+  //Calculate NEB tangents with the transition state in the center
+  
+  //Initialize tangent and structures
+  VectorXd QMTangent(3*(Nqm+Npseudo));
+  
+  return QMTangent;
+};
+
 //Convergence test functions
 bool PathConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
      vector<vector<double> >& ForceStats, int stepct, QMMMSettings& QMMMOpts,
