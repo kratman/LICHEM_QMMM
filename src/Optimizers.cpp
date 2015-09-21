@@ -24,7 +24,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
      bool QMregion)
 {
   //Check convergence of QMMM optimizations
-  stringstream call; //Steam for system calls and reading/writing files
+  stringstream call; //Stream for system calls and reading/writing files
   string dummy; //Generic string
   call.str("");
   //Initialize stats variables
@@ -196,8 +196,8 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
      int Bead)
 {
   //Cartesian steepest descent optimizer
-  stringstream call; //Steam for system calls and reading/writing files
-  call.copyfmt(cout);
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Save settings
   string dummy; //Generic string
   int stepct = 0; //Counter for optimization steps
   fstream qmfile, ifile, ofile; //Generic file names
@@ -229,7 +229,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     call.str("");
     call << "MMCharges_" << Bead << ".txt";
     ofile.open(call.str().c_str(),ios_base::out);
-    ofile.copyfmt(cout);
+    ofile.copyfmt(cout); //Save settings
     for (int i=0;i<Natoms;i++)
     {
       if (Struct[i].MMregion)
@@ -267,7 +267,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         ofile << '\n';
       }
     }
-    ofile.copyfmt(cout);
+    ofile.copyfmt(cout); //Save settings
     ofile.flush();
     ofile.close();
   }
@@ -398,8 +398,8 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //A simple DFP optimizer, which is similar to BFGS updating
   //Note: This optimizer does not have a true line search, instead
   //a steepest descent step is performed if the energy rises
-  stringstream call; //Steam for system calls and reading/writing files
-  call.copyfmt(cout);
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Save settings
   string dummy; //Generic string
   int stepct = 0; //Counter for optimization steps
   fstream qmfile,ifile,ofile; //Generic file names
@@ -434,7 +434,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     call.str("");
     call << "MMCharges_" << Bead << ".txt";
     ofile.open(call.str().c_str(),ios_base::out);
-    ofile.copyfmt(cout);
+    ofile.copyfmt(cout); //Save settings
     for (int i=0;i<Natoms;i++)
     {
       if (Struct[i].MMregion)
@@ -472,7 +472,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         ofile << '\n';
       }
     }
-    ofile.copyfmt(cout);
+    ofile.copyfmt(cout); //Save settings
     ofile.flush();
     ofile.close();
   }
@@ -748,8 +748,8 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
      QMMMSettings& QMMMOpts, int Bead)
 {
   //Ensemble steepest descent optimizer
-  stringstream call; //Steam for system calls and reading/writing files
-  call.copyfmt(cout);
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Save settings
   string dummy; //Generic string
   int stepct = 0; //Counter for optimization steps
   fstream ifile, ofile; //Generic file names

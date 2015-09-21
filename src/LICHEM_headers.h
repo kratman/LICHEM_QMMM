@@ -144,6 +144,8 @@ class PeriodicTable
     vector<string> Typs; //Atomic symbols
     //Approximate 1s Gaussian widths of the atoms
     vector<double> GauWids; //Diffuse charge widths
+    //Bond distances
+    vector<double> CovRadii; //Covalent radii
   public:
     //Set data (hard coded)
     PeriodicTable();
@@ -151,6 +153,7 @@ class PeriodicTable
     string Typing(int); //Atom type
     int RevTyping(string); //Atomic number
     double GetGauWid(string); //Gaussian (1s) width
+    double GetCovRadius(string); //Covalent radius
 };
 
 class Coord
@@ -342,7 +345,6 @@ class QMMMSettings
     int Nprint; //Number of steps before printing
     double dt; //MD timestep
     double tautemp; //Thermostat time constant
-    double taupress; //Barostat time constant
     //Input needed for optimizations
     int MaxOptSteps; //Maximum iterative optimization steps
     double MMOptTol; //Criteria to end the optimization
@@ -390,8 +392,6 @@ double EFFEnergy(QMMMAtom&,QMMMElec&,int);
 void EnsembleNEB(vector<QMMMAtom>&,fstream&,QMMMSettings&);
 
 void EnsembleSD(vector<QMMMAtom>&,fstream&,QMMMSettings&,int);
-
-VectorXd EnsembleTangent(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void ExternalGaussian(int&,char**&);
 
@@ -481,6 +481,8 @@ void RotateTINKCharges(vector<QMMMAtom>&,int);
 OctCharges SphHarm2Charges(RedMpole);
 
 double SpringEnergy(double,double);
+
+VectorXd SymmTangent(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double TINKEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 

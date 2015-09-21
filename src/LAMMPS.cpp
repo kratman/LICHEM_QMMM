@@ -39,12 +39,12 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
        int Bead)
 {
   //Function for calculating the MM forces on a set of QM atoms
-  fstream ofile,ifile;
+  fstream ofile,ifile; //Generic file streams
   string dummy; //Generic string
-  stringstream call; //Steam for system calls and reading/writing files
-  call.copyfmt(cout);
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy settings from cout
   double E = 0.0;
-  int ct;
+  int ct; //Generic counter
   //Construct LAMMPS data file
   call.str("");
   call << "LICHM_" << Bead << ".data";
@@ -236,12 +236,12 @@ double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
        int Bead)
 {
   //Function for optimizing with LAMMPS
-  fstream ofile,ifile;
+  fstream ofile,ifile; //Generic file streams
   string dummy; //Generic string
-  stringstream call; //Steam for system calls and reading/writing files
-  call.copyfmt(cout);
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy settings from cout
   double E = 0.0;
-  int ct;
+  int ct; //Generic counter
   //Construct LAMMPS data file
   call.str("");
   call << "LICHM_" << Bead << ".data";

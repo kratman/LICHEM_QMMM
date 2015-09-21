@@ -97,12 +97,12 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
 
 //MM wrapper functions
 void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-       int Bead)
+     int Bead)
 {
   //Function to extract induced dipoles
   fstream ofile,ifile; //Generic file streams
-  stringstream call; //Steam for system calls and reading/writing files
-  call.copyfmt(cout);
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy settings from cout
   string dummy; //Generic string
   int ct; //Generic counter
   //Create TINKER xyz file
@@ -137,7 +137,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
     }
-    ofile.copyfmt(cout);
+    ofile.copyfmt(cout); //Copy settings from cout
     ofile << '\n';
   }
   ofile.flush();
@@ -284,8 +284,8 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 {
   //Function to extract the polarization energy
   fstream ofile,ifile; //Generic file streams
-  stringstream call; //Steam for system calls and reading/writing files
-  call.copyfmt(cout);
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy settings from cout
   string dummy; //Generic string
   double Epol = 0;
   double E = 0;
@@ -322,7 +322,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
     }
-    ofile.copyfmt(cout);
+    ofile.copyfmt(cout); //Copy settings from cout
     ofile << '\n';
   }
   ofile.flush();
@@ -475,8 +475,8 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   //Function for calculating the MM forces on a set of QM atoms
   fstream ofile,ifile; //Generic file streams
   string dummy; //Generic string
-  stringstream call; //Steam for system calls and reading/writing files
-  call.copyfmt(cout);
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy settings from cout
   double Emm = 0.0;
   int ct; //Generic counter
   //Construct MM forces input for TINKER
@@ -633,7 +633,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
     }
-    ofile.copyfmt(cout);
+    ofile.copyfmt(cout); //Copy settings from cout
     ofile << '\n';
   }
   ofile.flush();
@@ -722,8 +722,8 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   //Function for calculating the MM forces on a set of QM atoms
   fstream ofile,ifile; //Generic file streams
   string dummy; //Generic string
-  stringstream call; //Steam for system calls and reading/writing files
-  call.copyfmt(cout);
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy settings from cout
   double Emm = 0.0;
   int ct; //Generic counter
   //Construct MM forces input for TINKER
@@ -853,7 +853,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
     }
-    ofile.copyfmt(cout);
+    ofile.copyfmt(cout); //Copy settings from cout
     ofile << '\n';
   }
   ofile.flush();
@@ -940,8 +940,8 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs TINKER MM energy calculations
   fstream ofile,ifile; //Generic file streams
-  stringstream call; //Steam for system calls and reading/writing files
-  call.copyfmt(cout);
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy settings from cout
   string dummy; //Generic string
   double E = 0;
   int ct; //Generic counter
@@ -1074,7 +1074,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
     }
-    ofile.copyfmt(cout);
+    ofile.copyfmt(cout); //Copy settings from cout
     ofile << '\n';
   }
   ofile.flush();
@@ -1137,8 +1137,8 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 {
   //Runs TINKER MD (for MM atoms only)
   fstream ofile,ifile; //Generic file streams
-  stringstream call; //Steam for system calls and reading/writing files
-  call.copyfmt(cout);
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy settings from cout
   string dummy; //Generic string
   int ct; //Generic counter
   call.str("");
@@ -1308,7 +1308,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
     }
-    ofile.copyfmt(cout);
+    ofile.copyfmt(cout); //Copy settings from cout
     ofile << '\n';
   }
   ofile.flush();
@@ -1359,8 +1359,8 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs TINKER MM optimization
   fstream ofile,ifile; //Generic file streams
-  stringstream call; //Steam for system calls and reading/writing files
-  call.copyfmt(cout);
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy settings from cout
   string dummy; //Generic string
   double E = 0;
   int ct; //Generic counter
@@ -1527,7 +1527,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
     }
-    ofile.copyfmt(cout);
+    ofile.copyfmt(cout); //Copy settings from cout
     ofile << '\n';
   }
   ofile.flush();
@@ -1572,3 +1572,4 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   E *= kcal2eV;
   return E;
 };
+

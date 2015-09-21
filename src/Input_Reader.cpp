@@ -18,7 +18,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
      fstream& connectfile, fstream& regionfile, fstream& outfile)
 {
   string dummy; //Generic string
-  stringstream call; //Steam for system calls and reading/writing files
+  stringstream call; //Stream for system calls and reading/writing files
   //Read command line arguments
   if (argc == 1)
   {
@@ -227,7 +227,6 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
   QMMMOpts.Nprint = 0;
   QMMMOpts.dt = 0;
   QMMMOpts.tautemp = 0;
-  QMMMOpts.taupress = 0;
   QMMMOpts.MaxOptSteps = 0;
   QMMMOpts.MMOptTol = 0;
   QMMMOpts.QMOptTol = 0;
@@ -650,7 +649,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     }
   }
   if ((dummy == "SP") or (dummy == "sp") or
-  (dummy == "energy") or (dummy == "Energy"))
+     (dummy == "energy") or (dummy == "Energy"))
   {
     //Read energy minimization options
     SinglePoint = 1;

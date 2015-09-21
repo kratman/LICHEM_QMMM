@@ -17,8 +17,8 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
      QMMMSettings& QMMMOpts, int Bead)
 {
   //Write Gaussian input files
-  stringstream call; //Steam for system calls and reading/writing files
-  call.copyfmt(cout);
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy settings from cout
   string dummy,chrgfilename; //Generic strings
   fstream ifile,ofile; //Generic file names
   //Check if a list of point-charges exists
@@ -67,7 +67,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
       call << " " << setprecision(12) << Struct[i].P[Bead].x;
       call << " " << setprecision(12) << Struct[i].P[Bead].y;
       call << " " << setprecision(12) << Struct[i].P[Bead].z;
-      call.copyfmt(cout);
+      call.copyfmt(cout); //Copy settings from cout
       call << '\n';
     }
     if (Struct[i].PBregion)
@@ -77,7 +77,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
       call << " " << setprecision(12) << Struct[i].P[Bead].x;
       call << " " << setprecision(12) << Struct[i].P[Bead].y;
       call << " " << setprecision(12) << Struct[i].P[Bead].z;
-      call.copyfmt(cout);
+      call.copyfmt(cout); //Copy settings from cout
       call << '\n';
     }
   }
@@ -94,7 +94,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
         call << " " << setprecision(12) << Struct[i].P[Bead].y;
         call << " " << setprecision(12) << Struct[i].P[Bead].z;
         call << " " << setprecision(12) << Struct[i].MP[Bead].q;
-        call.copyfmt(cout);
+        call.copyfmt(cout); //Copy settings from cout
         call << '\n';
       }
     }
@@ -136,7 +136,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
         call << " " << setprecision(12) << Struct[i].PC[Bead].y6;
         call << " " << setprecision(12) << Struct[i].PC[Bead].z6;
         call << " " << setprecision(12) << Struct[i].PC[Bead].q6;
-        call.copyfmt(cout);
+        call.copyfmt(cout); //Copy settings from cout
         call << '\n';
       }
     }
@@ -177,9 +177,9 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
 {
   //Write NWChem input files
   fstream ofile,ifile; //Generic file streams
-  string dummy,chrgfilename;
-  stringstream call; //Steam for system calls and reading/writing files
-  call.copyfmt(cout);
+  string dummy,chrgfilename; //Generic strings
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy settings from cout
   bool UseChrgFile = 0;
   //Calculate inverse box lengths for PBC
   double ix,iy,iz; //Inverse x,y,z
@@ -299,7 +299,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
         ofile << " " << setprecision(12) << (Struct[i].P[Bead].y*iy);
         ofile << " " << setprecision(12) << (Struct[i].P[Bead].z*iz);
         ofile << " " << setprecision(12) << Struct[i].MP[Bead].q;
-        ofile.copyfmt(cout);
+        ofile.copyfmt(cout); //Copy settings from cout
         ofile << '\n';
       }
     }
@@ -363,7 +363,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
           ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y6*iy);
           ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z6*iz);
           ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
-          ofile.copyfmt(cout);
+          ofile.copyfmt(cout); //Copy settings from cout
           ofile << '\n';
         }
       }
@@ -392,8 +392,8 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
      QMMMSettings& QMMMOpts, int Bead)
 {
   //Write PSI4 input files
-  stringstream call; //Steam for system calls and reading/writing files
-  call.copyfmt(cout);
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy settings from cout
   string dummy; //Generic string
   fstream ifile,ofile; //Generic file names
   if (AMOEBA and (TINKER == 1))
@@ -566,3 +566,4 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
   ofile.close();
   return;
 };
+

@@ -26,8 +26,8 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   //Runs NWChem force calculations
   fstream ifile; //Generic file stream
   string dummy; //Genric string
-  stringstream call; //Steam for system calls and reading/writing files
-  call.copyfmt(cout);
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy print settings
   double E = 0.0;
   //Set up force calculations
   call.str("");
@@ -162,12 +162,12 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
 };
 
 void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-       int Bead)
+     int Bead)
 {
   //Calculates atomic charges with NWChem
   fstream ifile; //Generic file stream
   string dummy; //Generic string
-  stringstream call; //Steam for system calls and reading/writing files
+  stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy print settings
   double E = 0.0; //QM energy
   //Remove multipoles file
@@ -268,7 +268,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Runs NWChem energy calculations
   fstream ifile; //Generic file stream
   string dummy; //Generic string
-  stringstream call; //Steam for system calls and reading/writing files
+  stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy print settings
   double E = 0.0; //QM energy
   //Remove multipoles file
@@ -369,7 +369,7 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Runs NWChem optimizations
   fstream ifile; //Generic file stream
   string dummy; //Generic string
-  stringstream call; //Steam for system calls and reading/writing files
+  stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Save print settings
   double E = 0.0; //QM energy
   //Remove multipoles file

@@ -124,6 +124,7 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
 
 bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
 {
+  //Function to perform Monte Carlo moves and accept/reject the moves
   bool acc = 0;
   //Copy parts
   vector<QMMMAtom> parts2;

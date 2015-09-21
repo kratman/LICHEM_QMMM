@@ -20,8 +20,8 @@ void Print_traj(vector<QMMMAtom>& parts, fstream& traj, QMMMSettings& QMMMOpts)
   stringstream call; //Only used to save traj stream settings
   call.copyfmt(traj); //Save settings
   traj.precision(8); //Adjust printing
-  int Ntot = QMMMOpts.Nbeads*Natoms;
-  traj << Ntot << '\n' << '\n';
+  int Ntot = QMMMOpts.Nbeads*Natoms; //Total number of particles
+  traj << Ntot << '\n' << '\n'; //Print number of particles and a blank line
   for (int i=0;i<Natoms;i++)
   {
     //Print all replicas of atom i
@@ -42,7 +42,7 @@ void BurstTraj(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
 {
   //Function to split reaction path and path-integral trajectory frames
   int ct; //Generic counter
-  stringstream call; //Steam for system calls and reading/writing files
+  stringstream call; //Stream for system calls and reading/writing files
   fstream burstfile;
   string dummy; //Generic string
   //Open new split trajectory file
@@ -62,10 +62,12 @@ void BurstTraj(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   burstfile.precision(8);
   for (int j=0;j<QMMMOpts.Nbeads;j++)
   {
+    //Print all atoms in replica j
     burstfile << Natoms; //Number of atoms
-    burstfile << '\n' << '\n';
+    burstfile << '\n' << '\n'; //Print blank comment line
     for (int i=0;i<Natoms;i++)
     {
+      //Print data for atom i
       burstfile << setw(3) << Struct[i].QMTyp << " ";
       burstfile << setw(10) << Struct[i].P[j].x << " ";
       burstfile << setw(10) << Struct[i].P[j].y << " ";
@@ -81,10 +83,8 @@ void BurstTraj(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
 void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
 {
   //Function to translate/rotate two structures for maximum overlap
-  //Note: This is relatively expensive due to the linear algebra,
-  //use with caution.
   MatrixXd CoVar(MatSize,MatSize); //Covariance matrix
-  MatrixXd RotMat(MatSize,MatSize); //Rotation matrix
+  MatrixXd RotMat(3,3); //Rotation matrix
   //Translate to the centroid
   double Ax = 0; //Average x position of matrix A
   double Ay = 0; //Average y position of matrix A
@@ -158,8 +158,6 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
 VectorXd KabschDisplacement(MatrixXd& A, MatrixXd& B, int MatSize)
 {
   //Returns the distance between two superimposed structures
-  //Note: This is relatively expensive due to the linear algebra,
-  //use with caution.
   VectorXd Dist(MatSize);
   //Rotate structures
   KabschRotation(A,B,MatSize);
