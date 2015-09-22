@@ -55,3 +55,4 @@ void EnsembleNEB(vector<QMMMAtom>& Struct, fstream& traj,
   
   return;
 };
+

@@ -65,3 +65,4 @@ OctCharges SphHarm2Charges(RedMpole poles)
 
   return PCgrid;
 };
+

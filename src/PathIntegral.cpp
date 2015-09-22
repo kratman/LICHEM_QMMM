@@ -125,7 +125,7 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
 bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
 {
   //Function to perform Monte Carlo moves and accept/reject the moves
-  bool acc = 0;
+  bool acc = 0; //Accept or reject
   //Copy parts
   vector<QMMMAtom> parts2;
   parts2 = parts;
@@ -151,6 +151,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     double dx = 2*(randx-0.5)*step*CentRatio;
     double dy = 2*(randy-0.5)*step*CentRatio;
     double dz = 2*(randz-0.5)*step*CentRatio;
+    //Check PBC
     #pragma omp parallel for
     for (int i=0;i<QMMMOpts.Nbeads;i++)
     {
@@ -203,7 +204,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
   }
   if (randnum < BeadProb)
   {
-    //Move a single bead
+    //Move all beads in a centroid
     int p;
     bool FrozenAt = 1;
     while (FrozenAt)
@@ -217,16 +218,21 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     }
     for (int i=0;i<QMMMOpts.Nbeads;i++)
     {
+      //Randomly displace each bead
       double randx = (((double)rand())/((double)RAND_MAX));
       double randy = (((double)rand())/((double)RAND_MAX));
       double randz = (((double)rand())/((double)RAND_MAX));
       double dx = 2*(randx-0.5)*step;
       double dy = 2*(randy-0.5)*step;
       double dz = 2*(randz-0.5)*step;
-      bool check = 1;
       parts2[p].P[i].x += dx;
+      parts2[p].P[i].y += dy;
+      parts2[p].P[i].z += dz;
+      //Check PBC
+      bool check;
       if (PBCon)
       {
+        check = 1;
         while (check)
         {
           check = 0;
@@ -241,10 +247,6 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
             check = 1;
           }
         }
-      }
-      parts2[p].P[i].y += dy;
-      if (PBCon)
-      {
         check = 1;
         while (check)
         {
@@ -260,10 +262,6 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
             check = 1;
           }
         }
-      }
-      parts2[p].P[i].z += dz;
-      if (PBCon)
-      {
         check = 1;
         while (check)
         {
@@ -282,15 +280,18 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
       }
     }
   }
-  //Calculate energies
+  //Initialize energies
   double Eold = QMMMOpts.Eold;
   double Enew = 0;
+  //Save box lengths
   double Lxtmp = Lx;
   double Lytmp = Ly;
   double Lztmp = Lz;
+  //Attempt a volume move
   randnum = (((double)rand())/((double)RAND_MAX));
   if (randnum < VolProb)
   {
+    //Anisotropic volume change
     if (Isotrop == 0)
     {
       randnum = (((double)rand())/((double)RAND_MAX));
@@ -306,6 +307,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
       Lmax = 1.10*Lz;
       Lz = Lmin+randnum*(Lmax-Lmin);
     }
+    //Isotropic volume change
     if (Isotrop == 1)
     {
       //Currently assumes that MM cutoffs are safe
@@ -315,6 +317,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
       Ly *= expan;
       Lz *= expan;
     }
+    //Scale positions
     #pragma omp parallel for
     for (int i=0;i<Natoms;i++)
     {
@@ -326,6 +329,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
       }
     }
     #pragma omp barrier
+    //Add PV energy term
     Enew += QMMMOpts.Press*Lx*Ly*Lz*atm2eV;
   }
   Enew += Get_PI_Epot(parts2,QMMMOpts);
@@ -340,6 +344,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
   randnum = (((double)rand())/((double)RAND_MAX));
   if ((dE <= 0) or (randnum < Prob))
   {
+    //Accept
     parts = parts2;
     Emc = Enew;
     QMMMOpts.Eold = Enew;
@@ -347,11 +352,14 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
   }
   else
   {
+    //Reject
     Emc = Eold;
+    //Revert to old box sizes
     Lx = Lxtmp;
     Ly = Lytmp;
     Lz = Lztmp;
   }
+  //Return decision
   return acc;
 };
 
