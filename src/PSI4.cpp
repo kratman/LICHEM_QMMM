@@ -86,9 +86,9 @@ double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           getline(ifile,dummy);
           stringstream line(dummy);
           line >> dummy; //Clear junk
-          line >> Fx;
-          line >> Fy;
-          line >> Fz;
+          line >> Fx; //Read value
+          line >> Fy; //Read value
+          line >> Fz; //Read value
           //Switch to eV/A and save forces
           if (abs(Fx) >= 1e-12)
           {
@@ -108,7 +108,7 @@ double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     line >> dummy; //Get rid of junk
     if (dummy == "Final")
     {
-      line >> dummy;
+      line >> dummy; //Check value
       if (dummy == "Energy:")
       {
         line >> E;
@@ -124,7 +124,7 @@ double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   {
     getline(ifile,dummy);
     stringstream line(dummy);
-    line >> dummy;
+    line >> dummy; //Check value
     if (dummy == "Energy:")
     {
       line >> E;
@@ -257,7 +257,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     line >> dummy; //Get rid of junk
     if (dummy == "Final")
     {
-      line >> dummy;
+      line >> dummy; //Check value
       if (dummy == "Energy:")
       {
         //Read energy
@@ -385,7 +385,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
     line >> dummy; //Get rid of junk
     if (dummy == "Final")
     {
-      line >> dummy;
+      line >> dummy; //Check value
       if (dummy == "Energy:")
       {
         //Read energy
@@ -403,7 +403,7 @@ double PSIOpt(vector<QMMMAtom>& Struct,
   {
     getline(ifile,dummy);
     stringstream line(dummy);
-    line >> dummy;
+    line >> dummy; //Check value
     if (dummy == "Energy:")
     {
       line >> E;

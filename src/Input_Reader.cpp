@@ -17,6 +17,7 @@
 void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
      fstream& connectfile, fstream& regionfile, fstream& outfile)
 {
+  //Function to read arguments
   string dummy; //Generic string
   stringstream call; //Stream for system calls and reading/writing files
   //Read command line arguments

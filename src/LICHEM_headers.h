@@ -1,11 +1,13 @@
 /*
 
-##############################################################################
-#                                                                            #
-#              LICHEM: Fields Layered Under Kohn-sham Electrons               #
-#                             By: Eric G. Kratz                              #
-#                                                                            #
-##############################################################################
+###############################################################################
+#                                                                             #
+#                 LICHEM: Layered Interacting CHEmical Models                 #
+#                              By: Eric G. Kratz                              #
+#                                                                             #
+#                      Symbiotic Computational Chemistry                      #
+#                                                                             #
+###############################################################################
 
  Headers and globals for LICHEM.
 
@@ -398,6 +400,8 @@ void ExternalGaussian(int&,char**&);
 void ExtractGlobalPoles(int& argc, char**& argv);
 
 void ExtractTINKpoles(vector<QMMMAtom>&,int);
+
+int FindMaxThreads();
 
 void FindTINKERClasses(vector<QMMMAtom>&);
 

@@ -52,8 +52,8 @@ void BurstTraj(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   while (CheckFile(call.str()))
   {
     //Avoids overwriting files
-    ct += 1;
-    call.str("");
+    ct += 1; //Increase file counter
+    call.str(""); //Change file name
     call << "BurstStruct_";
     call << ct << ".xyz";
   }
@@ -146,7 +146,7 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
     }
     Ident(i,i) = 1;
   }
-  Ident(2,2) *= SignVal;
+  Ident(2,2) *= SignVal; //Change sign for rotation
   //Find optimal rotation matrix
   RotMat = SVDMat.matrixV()*Ident*SVDMat.matrixU().transpose();
   //Rotate matrix A
