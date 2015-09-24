@@ -177,32 +177,29 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
   {
     cout << "Error: Could not open xyz file.";
     cout << '\n';
-    cout.flush();
     DoQuit = 1;
   }
   if (!connectfile.good())
   {
     cout << "Error: Could not open connectivity file.";
     cout << '\n';
-    cout.flush();
     DoQuit = 1;
   }
   if (!regionfile.good())
   {
     cout << "Error: Could not open region file.";
     cout << '\n';
-    cout.flush();
     DoQuit = 1;
   }
   if (!outfile.good())
   {
     cout << "Error: Could not create output file.";
     cout << '\n';
-    cout.flush();
     DoQuit = 1;
   }
   if (DoQuit)
   {
+    cout.flush(); //Print errors
     exit(0);
   }
   return;
@@ -850,6 +847,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout << " Ncpus set to 1";
     cout << '\n';
     Ncpus = 1;
+    cout.flush(); //Print warning
   }
   if ((PSI4 == 1) and QMMM)
   {
@@ -867,6 +865,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       cout << '\n';
       cout << " the external field.";
       cout << '\n';
+      cout.flush(); //Print warning
     }
     if ((Npseudo != 0) or (Nbound != 0))
     {
@@ -903,9 +902,9 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout.flush();
     exit(0);
   }
-  if (!DoQuit)
+  else
   {
-    //Sarcastically continues
+    //Sarcastically continue
     cout << "No fatal errors detected.";
     cout << '\n';
     if (Jokes)

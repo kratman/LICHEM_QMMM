@@ -295,16 +295,16 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     if (Isotrop == 0)
     {
       randnum = (((double)rand())/((double)RAND_MAX));
-      double Lmin = 0.90*Lx;
-      double Lmax = 1.10*Lx;
+      double Lmin = 0.95*Lx;
+      double Lmax = 1.05*Lx;
       Lx = Lmin+randnum*(Lmax-Lmin);
       randnum = (((double)rand())/((double)RAND_MAX));
-      Lmin = 0.90*Ly;
-      Lmax = 1.10*Ly;
+      Lmin = 0.95*Ly;
+      Lmax = 1.05*Ly;
       Ly = Lmin+randnum*(Lmax-Lmin);
       randnum = (((double)rand())/((double)RAND_MAX));
-      Lmin = 0.90*Lz;
-      Lmax = 1.10*Lz;
+      Lmin = 0.95*Lz;
+      Lmax = 1.05*Lz;
       Lz = Lmin+randnum*(Lmax-Lmin);
     }
     //Isotropic volume change
@@ -312,7 +312,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     {
       //Currently assumes that MM cutoffs are safe
       randnum = (((double)rand())/((double)RAND_MAX));
-      double expan = 0.9+randnum*0.20;
+      double expan = 0.95+randnum*0.10;
       Lx *= expan;
       Ly *= expan;
       Lz *= expan;
