@@ -607,7 +607,8 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.tautemp;
     regionfile >> dummy >> QMMMOpts.Nsteps;
   }
-  if ((dummy == "ENEB") or (dummy == "eneb"))
+  if ((dummy == "ENEB") or (dummy == "eneb") or
+     (dummy == "EnsembleNEB") or (dummy == "ensembeneb"))
   {
     //Read energy minimization options for ensemble NEB
     ENEBSim = 1;

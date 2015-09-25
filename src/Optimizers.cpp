@@ -489,13 +489,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     GradDiff(i) = 0;
     Forces(i) = 0;
     //Create an identity matrix as the initial Hessian
-    for (int j=0;j<i;j++)
-    {
-      //Set off diagonal terms
-      IHess(i,j) = 0;
-      IHess(j,i) = 0;
-    }
-    IHess(i,i) = 1.0; //Already an "inverse Hessian"
+    IHess.setIdentity(); //Already an "inverse" Hessian
   }
   #pragma omp barrier
   //Calculate forces (QM part)
@@ -669,18 +663,8 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         //Reduce step size further
         StepScale *= 0.75;
       }
-      #pragma omp parallel for
-      for (int i=0;i<(3*(Nqm+Npseudo));i++)
-      {
-        //Create identity matrix
-        for (int j=0;j<i;j++)
-        {
-          IHess(i,j) = 0.0;
-          IHess(j,i) = 0.0;
-        }
-        IHess(i,i) = 1.0; //Already an "inverse Hessian"
-      }
-      #pragma omp barrier
+      //Create new Hessian as an identity matrix
+      IHess.setIdentity(); //Already an "inverse" Hessian
     }
     else if (E < Eold)
     {
@@ -715,18 +699,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         //Reduce step size further
         StepScale *= 0.75;
       }
-      #pragma omp parallel for
-      for (int i=0;i<(3*(Nqm+Npseudo));i++)
-      {
-        //Create new identity matrix
-        for (int j=0;j<i;j++)
-        {
-          IHess(i,j) = 0.0;
-          IHess(j,i) = 0.0;
-        }
-        IHess(i,i) = 1.0; //Already an "inverse Hessian"
-      }
-      #pragma omp barrier
+      IHess.setIdentity(); //Already an "inverse" Hessian
     }
     //Save energy
     Eold = E;

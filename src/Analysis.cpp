@@ -11,6 +11,9 @@
 
  Functions for data analysis and trajectory processing.
 
+ Reference for Kabsch algorithm:
+ 
+
 */
 
 //Trajectory analysis functions
@@ -83,8 +86,8 @@ void BurstTraj(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
 void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
 {
   //Function to translate/rotate two structures for maximum overlap
-  MatrixXd CoVar(MatSize,MatSize); //Covariance matrix
-  MatrixXd RotMat(3,3); //Rotation matrix
+  MatrixXd CoVar; //Covariance matrix
+  MatrixXd RotMat; //Rotation matrix
   //Translate to the centroid
   double Ax = 0; //Average x position of matrix A
   double Ay = 0; //Average y position of matrix A
@@ -111,6 +114,7 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
   Bx /= MatSize;
   By /= MatSize;
   Bz /= MatSize;
+  //Translate centroids
   #pragma omp parallel for
   for (int i=0;i<MatSize;i++)
   {
@@ -124,11 +128,11 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
   }
   #pragma omp barrier
   //Calculate covariance matrix
-  CoVar = A.transpose()*B;
-  //Compute rotation matrix and identity matrix
+  CoVar = (A.transpose())*B;
+  //Compute SVD and identity matrix
   JacobiSVD<MatrixXd> SVDMat(CoVar,ComputeFullU|ComputeFullV);
-  MatrixXd DetMat = SVDMat.matrixV()*SVDMat.matrixU().transpose();
-  int SignVal = DetMat.determinant();
+  MatrixXd DetMat = SVDMat.matrixV()*(SVDMat.matrixU().transpose());
+  double SignVal = DetMat.determinant();
   if (SignVal < 0)
   {
     SignVal = -1;
@@ -138,17 +142,10 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
     SignVal = 1;
   }
   MatrixXd Ident(3,3);
-  for (int i=0;i<3;i++)
-  {
-    for (int j=0;j<3;j++)
-    {
-      Ident(i,j) = 0;
-    }
-    Ident(i,i) = 1;
-  }
+  Ident.setIdentity();
   Ident(2,2) *= SignVal; //Change sign for rotation
   //Find optimal rotation matrix
-  RotMat = SVDMat.matrixV()*Ident*SVDMat.matrixU().transpose();
+  RotMat = SVDMat.matrixV()*Ident*(SVDMat.matrixU().transpose());
   //Rotate matrix A
   A *= RotMat;
   //Return the modified positions
@@ -158,7 +155,8 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
 VectorXd KabschDisplacement(MatrixXd& A, MatrixXd& B, int MatSize)
 {
   //Returns the distance between two superimposed structures
-  VectorXd Dist(MatSize);
+  VectorXd Dist(3*MatSize);
+  Dist.setZero();
   //Rotate structures
   KabschRotation(A,B,MatSize);
   //Calculate displacement

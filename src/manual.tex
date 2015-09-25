@@ -451,11 +451,22 @@ Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
 Calculation\_type: EnsembleSD (or ESD) \\
 Opt\_step\_size: $<$Scale factor for the step size$>$ \\
 Max\_opt\_step: $<$Maximum displacement for each step (\AA)$>$ \\
-QM\_opt\_steps: $<$Run N QM steps$>$ \\
+QM\_opt\_steps: $<$Perform N QM steps$>$ \\
 Timestep: $<$MD timestep (fs)$>$ \\
 Temperature: $<$MD temperature (K)$>$ \\
 Tau: $<$Thermostat time constant ($\tau$)$>$ \\
-MD\_steps: $<$Run N MD steps per iteration$>$ \\
+MD\_steps: $<$Run N MD steps per QM step$>$ \\
+
+Calculation\_type: EnsembleNEB (or ENEB) \\
+Number\_of\_beads: $<$Number of replicas, must be odd$>$ \\
+Opt\_step\_size: $<$Scale factor for the step size$>$ \\
+Max\_opt\_step: $<$Maximum displacement for each step (\AA)$>$ \\
+QM\_opt\_steps: $<$Perform N QM steps$>$ \\
+Spring\_constant: $<$NEB spring constant (eV/\AA$^2$)$>$ \\
+Timestep: $<$MD timestep (fs)$>$ \\
+Temperature: $<$MD temperature (K)$>$ \\
+Tau: $<$Thermostat time constant ($\tau$)$>$ \\
+MD\_steps: $<$Run N MD steps per QM step$>$ \\
 
 Calculation\_type: PIMC \\
 Ensemble: $<$NVT or NPT$>$ \\
