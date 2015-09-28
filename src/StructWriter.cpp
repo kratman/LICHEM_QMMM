@@ -483,8 +483,7 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
       }
     }
     call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
-    call << '\n';
-    call << '\n';
+    call << '\n' << '\n';
   }
   if (QMMM and AMOEBA)
   {

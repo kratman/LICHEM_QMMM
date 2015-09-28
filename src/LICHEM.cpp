@@ -79,6 +79,7 @@ int main(int argc, char* argv[])
     double Eqm = 0; //QM energy
     double Emm = 0; //MM energy
     cout << fixed;
+    cout << '\n'; //Print blank line
     //Calculate QM energy
     if (Gaussian == 1)
     {
@@ -92,7 +93,7 @@ int main(int argc, char* argv[])
       Eqm += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      GlobalSys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem == 1)
     {
@@ -170,7 +171,7 @@ int main(int argc, char* argv[])
       SumE += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      GlobalSys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem == 1)
     {
@@ -250,7 +251,7 @@ int main(int argc, char* argv[])
         SumE = PSIOpt(Struct,QMMMOpts,0);
         QMTime += (unsigned)time(0)-tstart;
         //Clean up annoying useless files
-        GlobalSys = system("rm -f psi.*");
+        GlobalSys = system("rm -f psi.* timer.*");
       }
       if (NWChem == 1)
       {
@@ -293,7 +294,7 @@ int main(int argc, char* argv[])
       SumE += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      GlobalSys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.* timer.* ");
     }
     if (NWChem == 1)
     {
@@ -397,7 +398,7 @@ int main(int argc, char* argv[])
       SumE += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      GlobalSys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem == 1)
     {
@@ -712,7 +713,7 @@ int main(int argc, char* argv[])
         SumE += PSIEnergy(Struct,QMMMOpts,p);
         QMTime += (unsigned)time(0)-tstart;
         //Clean up annoying useless files
-        GlobalSys = system("rm -f psi.*");
+        GlobalSys = system("rm -f psi.* timer.*");
       }
       if (NWChem == 1)
       {
@@ -831,7 +832,7 @@ int main(int argc, char* argv[])
       SumE += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      GlobalSys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem == 1)
     {

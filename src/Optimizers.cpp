@@ -121,7 +121,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       SumE += PSIEnergy(Struct,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      GlobalSys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem == 1)
     {
@@ -298,7 +298,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       E += PSIForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      GlobalSys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem == 1)
     {
@@ -505,7 +505,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     E += PSIForces(Struct,Forces,QMMMOpts,Bead);
     QMTime += (unsigned)time(0)-tstart;
     //Clean up annoying useless files
-    GlobalSys = system("rm -f psi.*");
+    GlobalSys = system("rm -f psi.* timer.*");
   }
   if (NWChem == 1)
   {
@@ -615,7 +615,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       E += PSIForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      GlobalSys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem == 1)
     {
@@ -763,7 +763,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
       SumE += PSIForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Clean up annoying useless files
-      GlobalSys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem == 1)
     {

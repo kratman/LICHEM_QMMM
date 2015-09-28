@@ -85,7 +85,7 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
       Es += PSIEnergy(parts,QMMMOpts,i);
       Times_qm += (unsigned)time(0)-t_qm_start;
       //Clean up annoying useless files
-      GlobalSys = system("rm -f psi.*");
+      GlobalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem == 1)
     {
