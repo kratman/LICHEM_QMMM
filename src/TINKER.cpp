@@ -158,7 +158,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile << "openmp-threads " << Ncpus << '\n';
   if (PBCon)
   {
-    //Put here for safety
+    //PBC defined twice for safety
     ofile << "a-axis " << Lx << '\n';
     ofile << "b-axis " << Ly << '\n';
     ofile << "c-axis " << Lz << '\n';
@@ -343,7 +343,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile << "openmp-threads " << Ncpus << '\n';
   if (PBCon)
   {
-    //Put here for safety
+    //PBC defined twice for safety
     ofile << "a-axis " << Lx << '\n';
     ofile << "b-axis " << Ly << '\n';
     ofile << "c-axis " << Lz << '\n';
@@ -495,7 +495,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   ofile << "openmp-threads " << Ncpus << '\n';
   if (PBCon)
   {
-    //Put here for safety
+    //PBC defined twice for safety
     ofile << "a-axis " << Lx << '\n';
     ofile << "b-axis " << Ly << '\n';
     ofile << "c-axis " << Lz << '\n';
@@ -742,7 +742,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   ofile << "openmp-threads " << Ncpus << '\n';
   if (PBCon)
   {
-    //Put here for safety
+    //PBC defined twice for safety
     ofile << "a-axis " << Lx << '\n';
     ofile << "b-axis " << Ly << '\n';
     ofile << "c-axis " << Lz << '\n';
@@ -964,7 +964,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     ofile << "openmp-threads " << Ncpus << '\n';
     if (PBCon)
     {
-      //Put here for safety
+      //PBC defined twice for safety
       ofile << "a-axis " << Lx << '\n';
       ofile << "b-axis " << Ly << '\n';
       ofile << "c-axis " << Lz << '\n';
@@ -1160,7 +1160,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ofile << "openmp-threads " << Ncpus << '\n';
     if (PBCon)
     {
-      //Put here for safety
+      //PBC defined twice for safety
       ofile << "a-axis " << Lx << '\n';
       ofile << "b-axis " << Ly << '\n';
       ofile << "c-axis " << Lz << '\n';
@@ -1383,7 +1383,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     ofile << "openmp-threads " << Ncpus << '\n';
     if (PBCon)
     {
-      //Put here for safety
+      //PBC defined twice for safety
       ofile << "a-axis " << Lx << '\n';
       ofile << "b-axis " << Ly << '\n';
       ofile << "c-axis " << Lz << '\n';

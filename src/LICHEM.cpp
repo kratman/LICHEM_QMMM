@@ -80,6 +80,8 @@ int main(int argc, char* argv[])
     double Emm = 0; //MM energy
     cout << fixed;
     cout << '\n'; //Print blank line
+    cout << "Single-point energy:" << '\n';
+    cout.flush(); //Print progress
     //Calculate QM energy
     if (Gaussian == 1)
     {
@@ -156,6 +158,8 @@ int main(int argc, char* argv[])
     int optct = 0; //Counter for optimization steps
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
+    cout << "Optimization:" << '\n';
+    cout.flush(); //Print progress
     //Calculate initial energy
     SumE = 0; //Clear old energies
     //Calculate QM energy
@@ -279,6 +283,8 @@ int main(int argc, char* argv[])
     int optct = 0; //Counter for optimization steps
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
+    cout << "Steepest descent optimization:" << '\n';
+    cout.flush(); //Print progress
     //Calculate initial energy
     SumE = 0; //Clear old energies
     //Calculate QM energy
@@ -383,6 +389,8 @@ int main(int argc, char* argv[])
     int optct = 0; //Counter for optimization steps
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
+    cout << "DFP optimization:" << '\n';
+    cout.flush(); //Print progress
     //Calculate initial energy
     SumE = 0; //Clear old energies
     //Calculate QM energy
@@ -523,7 +531,7 @@ int main(int argc, char* argv[])
     double Et = 0; //Total energy for printing
     bool acc; //Flag for accepting a step
     //Start equilibration run
-    cout << "Starting equilibration..." << '\n';
+    cout << "Monte Carlo equilibration:" << '\n';
     cout.flush();
     Nct = 0;
     while (Nct < QMMMOpts.Neq)
@@ -596,11 +604,13 @@ int main(int argc, char* argv[])
         Nrej += 1;
       }
     }
+    cout << " Equilibration complete." << '\n';
     //Start production run
     Nct = 0;
     Nacc = 0;
     Nrej = 0;
-    cout << "Starting production run..." << '\n';
+    cout << '\n';
+    cout << "Monte Carlo production:" << '\n';
     cout.flush();
     //Print starting conditions
     Print_traj(Struct,outfile,QMMMOpts);
@@ -817,6 +827,8 @@ int main(int argc, char* argv[])
   {
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
+    cout << "Ensemble optimization:" << '\n';
+    cout.flush(); //Print progress
     //Calculate initial energy
     SumE = 0; //Clear old energies
     //Calculate QM energy
@@ -883,6 +895,8 @@ int main(int argc, char* argv[])
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
     //Optimize path
+    cout << "Ensemble NEB path optimization:" << '\n';
+    cout.flush(); //Print progress
     EnsembleNEB(Struct,outfile,QMMMOpts);
     //Finish output
     cout << '\n';

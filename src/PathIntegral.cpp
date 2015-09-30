@@ -295,16 +295,16 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     if (Isotrop == 0)
     {
       randnum = (((double)rand())/((double)RAND_MAX));
-      double Lmin = 0.95*Lx;
-      double Lmax = 1.05*Lx;
+      double Lmin = 0.97*Lx;
+      double Lmax = 1.03*Lx;
       Lx = Lmin+randnum*(Lmax-Lmin);
       randnum = (((double)rand())/((double)RAND_MAX));
-      Lmin = 0.95*Ly;
-      Lmax = 1.05*Ly;
+      Lmin = 0.97*Ly;
+      Lmax = 1.03*Ly;
       Ly = Lmin+randnum*(Lmax-Lmin);
       randnum = (((double)rand())/((double)RAND_MAX));
-      Lmin = 0.95*Lz;
-      Lmax = 1.05*Lz;
+      Lmin = 0.97*Lz;
+      Lmax = 1.03*Lz;
       Lz = Lmin+randnum*(Lmax-Lmin);
     }
     //Isotropic volume change
@@ -312,7 +312,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     {
       //Currently assumes that MM cutoffs are safe
       randnum = (((double)rand())/((double)RAND_MAX));
-      double expan = 0.95+randnum*0.10;
+      double expan = 0.97+randnum*0.06;
       Lx *= expan;
       Ly *= expan;
       Lz *= expan;
@@ -326,6 +326,56 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
         parts2[i].P[j].x *= Lx/Lxtmp;
         parts2[i].P[j].y *= Ly/Lytmp;
         parts2[i].P[j].z *= Lz/Lztmp;
+        //Fix PBC for all atoms
+        if (PBCon)
+        {
+          bool check;
+          check = 1;
+          while (check)
+          {
+            check = 0;
+            if (parts2[i].P[j].x > Lx)
+            {
+              parts2[i].P[j].x -= Lx;
+              check = 1;
+            }
+            if (parts2[i].P[j].x < 0.0)
+            {
+              parts2[i].P[j].x += Lx;
+              check = 1;
+            }
+          }
+          check = 1;
+          while (check)
+          {
+            check = 0;
+            if (parts2[i].P[j].y > Ly)
+            {
+              parts2[i].P[j].y -= Ly;
+              check = 1;
+            }
+            if (parts2[i].P[j].y < 0.0)
+            {
+              parts2[i].P[j].y += Ly;
+              check = 1;
+            }
+          }
+          check = 1;
+          while (check)
+          {
+            check = 0;
+            if (parts2[i].P[j].z > Lz)
+            {
+              parts2[i].P[j].z -= Lz;
+              check = 1;
+            }
+            if (parts2[i].P[j].z < 0.0)
+            {
+              parts2[i].P[j].z += Lz;
+              check = 1;
+            }
+          }
+        }
       }
     }
     #pragma omp barrier

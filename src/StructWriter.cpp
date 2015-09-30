@@ -547,6 +547,7 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
         call << dummy << '\n';
       }
       //If the file was opened, save the field
+      call << "activate(QMregion)" << '\n';
       call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
       call << '\n';
       call << '\n';

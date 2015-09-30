@@ -119,6 +119,8 @@ The development of LICHEM was supported by funding from the NIH (Grant No.
 R01GM108583) and Wayne State University. LICHEM is maintained by the Cisneros
 research group at Wayne State University.
 
-Developers: <br>
-  Cisneros group, Wayne State University <br>
-  Piquemal group, UPMC University
+Developers:
+<ul>
+  <li>Cisneros group, Wayne State University
+  <li>Piquemal group, UPMC University
+</ul>

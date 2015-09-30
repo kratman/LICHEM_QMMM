@@ -425,6 +425,11 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       //Frozen density
       GEM = 1;
+      if (TINKER == 1)
+      {
+        //For polarization energy, should be replaced with GEM-DM
+        ExtractTINKpoles(Struct,0);
+      }
     }
   }
   if ((dummy == "MM") or (dummy == "mm"))
@@ -470,6 +475,11 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       //Frozen density
       GEM = 1;
+      if (TINKER == 1)
+      {
+        //For polarization energy, should be replaced with GEM-DM
+        ExtractTINKpoles(Struct,0);
+      }
     }
   }
   regionfile >> dummy >> dummy; //Calculation type
@@ -1094,6 +1104,10 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
       if (AMOEBA)
       {
         cout << "Polarizable force field" << '\n';
+      }
+      if (GEM)
+      {
+        cout << "Frozen density force field" << '\n';
       }
     }
   }

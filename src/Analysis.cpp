@@ -30,7 +30,7 @@ void Print_traj(vector<QMMMAtom>& parts, fstream& traj, QMMMSettings& QMMMOpts)
     //Print all replicas of atom i
     for (int j=0;j<QMMMOpts.Nbeads;j++)
     {
-      traj << setw(3) << parts[i].QMTyp << " ";
+      traj << setw(3) << left << parts[i].QMTyp << " ";
       traj << setw(10) << parts[i].P[j].x << " ";
       traj << setw(10) << parts[i].P[j].y << " ";
       traj << setw(10) << parts[i].P[j].z << '\n';
@@ -71,7 +71,7 @@ void BurstTraj(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     for (int i=0;i<Natoms;i++)
     {
       //Print data for atom i
-      burstfile << setw(3) << Struct[i].QMTyp << " ";
+      burstfile << setw(3) << left << Struct[i].QMTyp << " ";
       burstfile << setw(10) << Struct[i].P[j].x << " ";
       burstfile << setw(10) << Struct[i].P[j].y << " ";
       burstfile << setw(10) << Struct[i].P[j].z << '\n';
