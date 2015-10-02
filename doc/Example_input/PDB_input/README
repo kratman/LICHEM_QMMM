@@ -3,8 +3,9 @@
 
 This tutorial will walk a user through the process of creating LICHEM input
 from a PDB. The starting structure is an unsolvated (NHCH3)AWWAFYYFAWWA(COCH3)
-mini-peptide. The PDB will be converted to the LICHEM format by using the
-TINKER software package.
+peptide chain. The PDB will be converted to a TINKER XYZ file format by using
+the TINKER software package. LICHEM can then convert the TINKER input into a
+connectivity file, region file, and a standard XYZ file.
 
 # PDB creation #
 
@@ -13,6 +14,8 @@ find/create a PDB file for your system. In this example the PDB file is called
 peptide_orig.pdb and the AMOEBAPRO13 force field will be used for atom typing.
 The starting input for the tutorial can be found in the Original_files
 directory.
+
+user$: cd /PATH/TO/LICHEM/doc/Example_input/PDB_input/Original_files/
 
 # Checking the PDB #
 
@@ -37,7 +40,7 @@ user:$ pdbxyz peptide.pdb ALL
 
 This command uses all residues in the final structure. Next use a text editor
 and/or a GUI to examine the peptide.xyz output file. Notice that the caps
-were deleted the peptide ends with (NH3+) and (COO-) groups.
+were deleted. The peptide is now capped with (NH3+) and (COO-) groups.
 
 # Replacing the caps #
 
