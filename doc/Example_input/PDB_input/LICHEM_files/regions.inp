@@ -2,7 +2,7 @@ Potential_type: QMMM
 QM_type: Gaussian
 QM_functional: B97D
 QM_basis: GEN
-QM_memory: 80 GB
+QM_memory: 10 GB
 QM_charge: 0
 QM_spin: 1
 MM_type: TINKER
@@ -19,7 +19,7 @@ QM_atoms: 86
 126 127 128 129 130 131 132 133 134 135
 136 137 138 139 140 141 142 143 144 145
 146 147 148 149 150 154
-Pseudo_atoms: 2
+Pseudobond_atoms: 2
  59 151
 Boundary_atoms: 14
  58  62  63  64  65  66  67 152 153 155

@@ -29,22 +29,19 @@ class ClrSet:
 
 #Print title
 line = '\n'
-line += "###################################################"
+line += "***************************************************"
 line += '\n'
-line += "#                                                 #"
+line += "*                                                 *"
 line += '\n'
-line += "#   LICHEM: Layered Interacting CHEmical Models   #"
+line += "*   LICHEM: Layered Interacting CHEmical Models   *"
 line += '\n'
-line += "#                                                 #"
+line += "*                                                 *"
 line += '\n'
-line += "#        Symbiotic Computational Chemistry        #"
+line += "*        Symbiotic Computational Chemistry        *"
 line += '\n'
-line += "#                                                 #"
+line += "*                                                 *"
 line += '\n'
-line += "###################################################"
-line += '\n'
-line += '\n'
-line += "Running LICHEM tests..."
+line += "***************************************************"
 line += '\n'
 print(line)
 
@@ -53,7 +50,13 @@ DryRun = 0 #Only check packages
 if (len(sys.argv) < 4):
   #Print help if arguments are missing
   line = ""
-  line += "Usage: ./runtests Ncpus QMPackage MMPackage"
+  line += "Usage:"
+  line += '\n'
+  line += " user:$ ./runtests Ncpus QMPackage MMPackage"
+  line += '\n'
+  line += "  or "
+  line += '\n'
+  line += " user:$ ./runtests Ncpus QMPackage MMPackage dry"
   line += '\n'
   line += '\n'
   #Find LICHEM
@@ -137,6 +140,11 @@ if (len(sys.argv) < 4):
   line += '\n'
   print(line)
   exit(0)
+
+line = "Running LICHEM tests..."
+line += '\n'
+print(line)
+
 Ncpus = int(sys.argv[1]) #Threads
 QMPack = sys.argv[2] #QM wrapper for calculations
 QMPack = QMPack.lower()

@@ -62,6 +62,7 @@ Since you deleted atoms and added new ones, the connectivity and atom types
 are no longer accurate. The atom types for the {N,H,C,O} atoms at the end of
 the peptide need to be manually changed to the types defined by the force
 field. Finally, connectivity of the caps has to be added to the XYZ file.
+This is relatively straight-forward if you are familiar with MM force fields.
 
 # Testing the file #
 
@@ -86,14 +87,22 @@ user:$ lichem -convert -t peptide.xyz -k tinker.key
 This command will convert a TINKER XYZ file (-t) to a standard XYZ file
 (xyzfile.xyz) and a connectivity file (connect.inp). The TINKER key file (-k)
 is used for atom typing and finding frozen atoms (via active/inactive keywords
-in the key file).
+in the key file). Frozen atoms will be added to an incomplete region file
+(regions.inp) created by LICHEM.
 
-Since this is a polarizable force field, lichem will not be able to detect the
-point-charges. With polarizable models, point-charge warnings are often false
-alarms. The warnings are intended to alert users that zeros were added for the
-default point-charges in the connectivity file. This is useful for
-point-charge based models, but pointless for multipole based force fields.
-The multipoles will be checked later in the tutorial.
+Since this is a multipolar force field, lichem will not be able to detect any
+point-charges for the atoms. With multipolar/polarizable models, point-charge
+warnings are often false alarms. The warnings are intended to alert users that
+zeros were added for the default point-charges in the connectivity file. This
+is useful for point-charge based models, but pointless for multipole based
+force fields. The multipoles will be checked later in the tutorial.
+
+# The BASIS file for Gaussian calculations
+
+QMMM calculations with Gaussian require a file (BASIS) that contains basis set
+and pseudopotential information for the QM and PB regions. The syntax of the
+file matches the Gaussian format for the GEN and Pseudo=Read options. A sample
+BASIS file is given in the LICHEM_files directory.
 
 # Updating the region file #
 
@@ -101,6 +110,9 @@ The next step is to add simulation input to the region.inp file. The region
 file input syntax can be found in the LICHEM manual. It is useful to start
 with a simple single-point energy calculation. If the force field was
 point-charge based, then this would be the last step.
+
+user:$ lichem -n Ncpus -x xyzfile.xyz -r regions.inp
+       -c connect.inp -o Output.xyz
 
 # Checking the multipoles #
 
@@ -112,11 +124,11 @@ user:$ lichem -GlobalPoles -n Ncpus -x xyzfile.xyz -r regions.inp
        -c connect.inp > tmp.txt
 
 Here Ncpus can be set to 1 or the number of cores on your machine. For large
-systems LICHEM will use OpenMP to divide the multipole rotations. The LICHEM
-output can be checked for atoms with zero multipole moments and the total
-charge. If the total charge does not match your expectations or if there are
-atoms with zero multipole moments, then there may be a problem with the
-force field file.
+systems LICHEM will use OpenMP to divide the multipole rotations, but the
+speed-up in negligible for most systems. The LICHEM output can be checked for
+atoms with zero multipole moments and the total charge. If the total charge
+does not match your expectations or if there are atoms with zero multipole
+moments, then there may be a problem with the force field parameters file.
 
 In this example the force field should match the PDB file and the total charge
 is zero.

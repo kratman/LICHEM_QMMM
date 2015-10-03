@@ -7,7 +7,7 @@
 %                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%Documentation for LICHEM copyright 2014 Eric G. Kratz
+%Documentation for LICHEM copyright 2014-2015 Eric G. Kratz
 
 %Package settings
 \documentclass[12pt]{report}
@@ -32,7 +32,7 @@
 \centering\includegraphics[scale=0.1]{../doc/images/trimer.png}
 \end{center}}
 \author{A QMMM Interface for Polarizable Force Fields}
-\date{Eric G.\ Kratz, 2014}
+\date{Eric G.\ Kratz, 2015}
 
 %Main document
 \begin{document}
@@ -418,12 +418,23 @@ A description of the methods are given in Chapter \ref{chap:Theory} and the
 input for all calculation types are documented below.
 Synonyms for the simulation keywords are given in parentheses. \\
 
+\subsubsection{Energy calculations}
+
 Calculation\_type: Energy (or SP) \\
+
+\subsubsection{Geometry optimizations}
+
+There are currently three options for geometry optimizations in LICHEM. \\
 
 Calculation\_type: Opt \\
 Max\_opt\_step: $<$Size of the maximum optimization step (\AA)$>$ \\
 MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
 Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
+
+The Opt keyword performs a geometry optimization using the native optimization
+routines in the QM package.
+Pure QM systems can be otpimized with any of the QM packages, but only
+Gaussian can be used for QMMM optimizations with this keyword. \\
 
 Calculation\_type: Steep (or SD) \\
 Opt\_step\_size: $<$Initial scale factor for the step size$>$ \\
@@ -432,12 +443,21 @@ QM\_opt\_tolerance: $<$Criteria to stop the QM optimization$>$ \\
 MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
 Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
 
-Calculation\_type: DFP (or BFGS) \\
+LICHEM has a steepest descent routine which optimizes the structure in
+Cartesian coordinates. \\
+
+Calculation\_type: DFP \\
 Opt\_step\_size: $<$Initial scale factor for the step size$>$ \\
 Max\_opt\_step: $<$Size of the maximum optimization step (\AA)$>$ \\
 QM\_opt\_tolerance: $<$Criteria to stop the QM optimization$>$ \\
 MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
 Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
+
+LICHEM has a built in Davidon-Fletcher-Powell (DFP) optimizer.
+Like the steepest descent routine, the DFP optimizer uses Cartesian
+coordinates.
+
+\subsubsection{Reaction path optimizations}
 
 Calculation\_type: NEB \\
 Number\_of\_beads: $<$Number of replicas, must be odd$>$ \\
@@ -447,6 +467,8 @@ Spring\_constant: $<$NEB spring constant (eV/\AA$^2$)$>$ \\
 QM\_opt\_tolerance: $<$Criteria to stop the QM optimization$>$ \\
 MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
 Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
+
+\subsubsection{Ensemble samping and Monte Carlo}
 
 Calculation\_type: EnsembleSD (or ESD) \\
 Opt\_step\_size: $<$Scale factor for the step size$>$ \\
@@ -634,6 +656,34 @@ Here M is the number of atoms times the number of beads, and
 $j$.
 Note that the atom types given in the XYZ file are ignored since this
 information is read from the files given by the -x and -c flags.
+
+\subsection{Examples and tests}
+
+Example LICHEM input and tutorials can be found in the doc directory.
+Most of the examples are not intended to be used for calculations. \\
+
+Gaussian\_files: Example files for Gaussian basis and pseudopotential
+input (e.g. BASIS). \\
+
+PDB\_input: A tutorial for creating LICHEM (Gaussian/TINKER) input from a
+PDB file.
+The PDB tutorial contains complete input to run a single-point energy
+calculation on a peptide chain. \\
+
+Region\_files: Example region files for a variety of calculations. \\
+
+TINKER\_files: Contains tinker.key files. \\
+
+LICHEM also has a semi-automated test suite. \\
+
+user:\$ ./runtests [Ncpus] [QM package] [MM package] [dry (optional)] \\
+
+The test suite searches for QM and MM binaries matching the given names
+and runs a set of single-point energy calculations.
+If no arguments are given to runtests, the test suite will print all available
+QM and MM binaries.
+A dry run can also be performed, where the test suite does not run any of the
+actual calculations.
 
 \chapter{Theoretical Background}
 \label{chap:Theory}

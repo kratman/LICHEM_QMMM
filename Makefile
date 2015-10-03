@@ -49,10 +49,15 @@ devbin:
 testexe:	
 	@echo ""; \
 	echo "### Creating test suite executable ###"
-	echo "#!$(PYPATH)" > ./tests/runtests
-	@echo "" >> ./tests/runtests
+	@echo 'echo "#!$(PYPATH)" > ./tests/runtests'; \
+	echo "!!$(PYPATH)" > ./tests/runtests; \
+	echo "" >> ./tests/runtests
 	cat ./src/runtests.py >> ./tests/runtests
-	@chmod a+x ./tests/runtests
+	@sed -i 's/\#.*//g' ./tests/runtests; \
+	sed -i 's/\s*$$//g' ./tests/runtests; \
+	sed -i '/^$$/d' ./tests/runtests; \
+	sed -i 's/\!\!/\#\!/g' ./tests/runtests; \
+	chmod a+x ./tests/runtests
 
 checksyntax:	
 	@echo ""; \
