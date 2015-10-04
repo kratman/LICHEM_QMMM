@@ -757,7 +757,17 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     fstream beadfile;
     beadfile.open("BeadStartStruct.xyz",ios_base::in);
     //Read and discard number of atoms
-    beadfile >> dummy;
+    int AtTest = 0;
+    beadfile >> AtTest;
+    if (AtTest != (Natoms*QMMMOpts.Nbeads))
+    {
+      //Print warning if the XYZ file has incorrect dimensions
+      cout << "Error: Restart file does not have the correct format!";
+      cout << '\n' << '\n';
+      cout.flush();
+      //Quit
+      exit(0);
+    }
     //Read atom/bead positions
     for (int i=0;i<Natoms;i++)
     {

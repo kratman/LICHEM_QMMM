@@ -128,7 +128,7 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
   }
   #pragma omp barrier
   //Calculate covariance matrix
-  CoVar = (A.transpose())*B;
+  CoVar = (B.transpose())*A;
   //Compute SVD and identity matrix
   JacobiSVD<MatrixXd> SVDMat(CoVar,ComputeFullU|ComputeFullV);
   MatrixXd DetMat = SVDMat.matrixV()*(SVDMat.matrixU().transpose());
@@ -147,7 +147,7 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
   //Find optimal rotation matrix
   RotMat = SVDMat.matrixV()*Ident*(SVDMat.matrixU().transpose());
   //Rotate matrix A
-  A *= RotMat;
+  B *= RotMat;
   //Return the modified positions
   return;
 };
