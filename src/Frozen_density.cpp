@@ -12,6 +12,9 @@
  LICHEM wrapper functions for frozen density QMMM calculations using the
  Gaussian electrostatic model (GEM).
 
+ NB: Frozen density and GEM routines are being held back until they are
+ tested and the work is published.
+
  Reference for GEM:
  
 

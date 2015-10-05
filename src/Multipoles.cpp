@@ -11,6 +11,9 @@
 
  LICHEM functions for manipulating multipoles.
 
+ NB: Multipole routines are being held back until the LICHEM paper
+ is published.
+
  Reference for TINKER and frame of reference rotations:
  
 

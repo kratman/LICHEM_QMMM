@@ -12,6 +12,9 @@
 
  Reaction path and transition state search functions for LICHEM.
 
+ NB: Reaction path routines are being held back until they are tested and
+ the work is published.
+
  References for NEB:
   
 
