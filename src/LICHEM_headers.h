@@ -335,6 +335,7 @@ class QMMMSettings
     bool MemMB; //Is the RAM in mb or gb
     string Charge; //QM total charge
     string Spin; //QM total spin
+    string BackDir; //Directory for log file backups
     //Input needed for MC and MD functions
     string Ensemble; //NVT or NPT
     double Temp; //Temperature

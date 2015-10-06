@@ -214,6 +214,7 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
   QMMMOpts.MemMB = 0;
   QMMMOpts.Charge = "N/A";
   QMMMOpts.Spin = "N/A";
+  QMMMOpts.BackDir = "N/A";
   QMMMOpts.Ensemble = "N/A";
   QMMMOpts.Temp = 0;
   QMMMOpts.Beta = 0;
@@ -792,6 +793,25 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
   {
     //Classes are not used in the QMMM, but looking for them can spot errors
     FindTINKERClasses(Struct);
+  }
+  //Check if QM log files should be saved
+  if (CheckFile("BACKUPQM"))
+  {
+    //Read backup directory
+    fstream backfile;
+    //Set to default value
+    QMMMOpts.BackDir = "Old_files";
+    //Check directory
+    backfile.open("BACKUPQM",ios_base::in);
+    if (backfile.good())
+    {
+      string newname;
+      backfile >> newname;
+      if (!backfile.eof())
+      {
+        QMMMOpts.BackDir = newname;
+      }
+    }
   }
   //Set OpenMP threads based on QM CPUs and total CPUs
   if (!GauExternal)

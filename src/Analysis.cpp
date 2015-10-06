@@ -156,7 +156,6 @@ VectorXd KabschDisplacement(MatrixXd& A, MatrixXd& B, int MatSize)
 {
   //Returns the distance between two superimposed structures
   VectorXd Dist(3*MatSize);
-  Dist.setZero();
   //Rotate structures
   KabschRotation(A,B,MatSize);
   //Calculate displacement
