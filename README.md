@@ -44,7 +44,7 @@ be simple, only a small number of packages are required to compile the code.
 An approximate list of packages is given below.
 ```
  LICHEM binary: OpenMP, Eigen3
- LICHEM manual: LaTeX, BibTeX
+ LICHEM manual: LaTeX, BibTeX, TeXLive
 ```
 
 To install LICHEM, clone the git repository

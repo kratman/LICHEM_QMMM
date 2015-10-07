@@ -702,7 +702,7 @@ int main(int argc, char* argv[])
   //NEB optimization
   else if (NEBSim)
   {
-    VectorXd Forces; //Dummy array needed for convergence tests
+    MatrixXd ForceStats; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
@@ -773,8 +773,8 @@ int main(int argc, char* argv[])
       }
     }
     //Run optimization
-    bool OptDone = 0;
-    while (!OptDone)
+    bool PathDone = 0;
+    while (!PathDone)
     {
       //Copy structure
       OldStruct = Struct;
@@ -813,7 +813,7 @@ int main(int argc, char* argv[])
       Print_traj(Struct,outfile,QMMMOpts);
       //Check convergence
       optct += 1;
-      OptDone = OptConverged(Struct,OldStruct,Forces,optct,QMMMOpts,0,0);
+      PathDone = PathConverged(Struct,OldStruct,ForceStats,optct,QMMMOpts,0);
     }
     cout << '\n';
     cout << "Optimization complete.";
@@ -963,16 +963,16 @@ int main(int argc, char* argv[])
   EndTime = (unsigned)time(0); //Time the program completes
   double TotalHours = (double(EndTime)-double(StartTime));
   double TotalQM = double(QMTime);
-  if (QMMMOpts.Nbeads > 1)
+  if ((QMMMOpts.Nbeads > 1) and (!ENEBSim))
   {
-    //Average over the number of beads
-    TotalQM /= QMMMOpts.Nbeads;
+    //Average over the number of running simulations
+    TotalQM /= Nthreads;
   }
   double TotalMM = double(MMTime);
-  if (QMMMOpts.Nbeads > 1)
+  if ((QMMMOpts.Nbeads > 1) and (!ENEBSim))
   {
-    //Average over the number of beads
-    TotalMM /= QMMMOpts.Nbeads;
+    //Average over the number of running simulations
+    TotalMM /= Nthreads;
   }
   double OtherTime = TotalHours-TotalQM-TotalMM;
   TotalHours /= 3600.0; //Convert from seconds to hours
@@ -1013,16 +1013,20 @@ int main(int argc, char* argv[])
   }
   //End of section
 
-  //Quit
+  //Finish output
   cout << '\n';
   cout << "Done.";
   cout << '\n';
   cout << '\n';
   cout.flush();
+  //End of section
 
   //Useless but supresses unused return errors for system calls
   int RetValue = GlobalSys;
   RetValue = 0; //This can be changed to error messages later
+  //End of section
+
+  //Quit
   return RetValue;
 };
 

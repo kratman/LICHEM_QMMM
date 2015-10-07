@@ -341,14 +341,14 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     Eold = E;
     OldStruct = Struct;
     //Check optimization step size
-    VecMax = 0;
-    for (int i=0;i<(3*(Nqm+Npseudo));i++)
+    VecMax = abs(Forces.maxCoeff());
+    if (abs(Forces.minCoeff()) > VecMax)
     {
-      //Check if the step size is too large
-      if (abs(StepScale*Forces(i)) > VecMax)
-      {
-        VecMax = abs(StepScale*Forces(i));
-      }
+      VecMax = StepScale*abs(Forces.minCoeff());
+    }
+    else
+    {
+      VecMax *= StepScale;
     }
     stepsize = StepScale;
     if (VecMax > QMMMOpts.MaxStep)
@@ -411,7 +411,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   double E = 0; //Energy
   double Eold = 0; //Energy from previous step
   double VecMax = 0; //Maxium atomic displacement
-  //Initialize multipoles for Gaussian optimizations
+  //Initialize multipoles for Gaussian and NWChem
   if (AMOEBA and ((Gaussian == 1) or (NWChem == 1)))
   {
     if (TINKER == 1)
@@ -481,17 +481,12 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   VectorXd GradDiff(3*(Nqm+Npseudo)); //Change in the gradient
   VectorXd Forces(3*(Nqm+Npseudo)); //Forces
   MatrixXd IHess(3*(Nqm+Npseudo),3*(Nqm+Npseudo)); //Inverse Hessian
-  #pragma omp parallel for
-  for (int i=0;i<(3*(Nqm+Npseudo));i++)
-  {
-    //Initialize arrays
-    OptVec(i) = 0;
-    GradDiff(i) = 0;
-    Forces(i) = 0;
-    //Create an identity matrix as the initial Hessian
-    IHess.setIdentity(); //Already an "inverse" Hessian
-  }
-  #pragma omp barrier
+  //Initialize arrays
+  OptVec.setZero();
+  GradDiff.setZero();
+  Forces.setZero();
+  //Create an identity matrix as the initial Hessian
+  IHess.setIdentity(); //Already an "inverse" Hessian
   //Calculate forces (QM part)
   if (Gaussian == 1)
   {
@@ -538,11 +533,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   }
   //Save forces
   VecMax = 0; //Using this variable to avoid creating a new one
-  for (int i=0;i<(3*(Nqm+Npseudo));i++)
-  {
-    //Calculate initial RMS force
-    VecMax += Forces(i)*Forces(i);
-  }
+  VecMax = Forces.squaredNorm(); //Calculate initial RMS force
   //Output initial RMS force
   VecMax = sqrt(VecMax/(3*(Nqm+Npseudo)));
   call.copyfmt(cout); //Save settings
@@ -573,20 +564,18 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     //Determine new structure
     OptVec = IHess*Forces;
     OptVec *= StepScale;
-    VecMax = 0;
-    for (int i=0;i<(3*(Nqm+Npseudo));i++)
+    //Check step size
+    VecMax = abs(OptVec.maxCoeff());
+    if (abs(OptVec.minCoeff()) > VecMax)
     {
-      //Check if the step size is too large
-      if (abs(OptVec(i)) > VecMax)
-      {
-        VecMax = abs(OptVec(i));
-      }
+      VecMax = abs(OptVec.minCoeff());
     }
     if (VecMax > QMMMOpts.MaxStep)
     {
       //Scale step size
       OptVec *= (QMMMOpts.MaxStep/VecMax);
     }
+    //Update positions
     int ct = 0; //Counter
     for (int i=0;i<Natoms;i++)
     {

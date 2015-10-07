@@ -461,8 +461,8 @@ double NWChemOpt(vector<QMMMAtom>&,QMMMSettings&,int);
 bool OptConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,vector<Coord>&,
      int,QMMMSettings& QMMMOpts,int,bool);
 
-bool PathConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,
-     vector<vector<double> >&,int,QMMMSettings& QMMMOpts,bool);
+bool PathConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,MatrixXd&,
+     int,QMMMSettings&,bool);
 
 void PrintFancyTitle();
 
@@ -487,7 +487,7 @@ OctCharges SphHarm2Charges(RedMpole);
 
 double SpringEnergy(double,double);
 
-VectorXd SymmTangent(vector<QMMMAtom>&,QMMMSettings&,int);
+VectorXd SymmTangent(VectorXd&,VectorXd&,QMMMSettings&,int);
 
 double TINKEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
