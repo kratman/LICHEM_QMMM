@@ -16,24 +16,17 @@
 */
 
 //Path integral Monte Carlo functions
-double SpringEnergy(double k, double r2)
-{
-  //General harmonic bond for PI rings
-  double E = 0.5*k*r2;
-  return E;
-};
-
-double Get_PI_Espring(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
+double Get_PI_Espring(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
 {
   //Calculate total harmonic PI ring energy
   double E = 0.0;
   double w0 = 1/(QMMMOpts.Beta*hbar);
-  w0 *= w0*ToeV;
+  w0 *= w0*ToeV*QMMMOpts.Nbeads;
   #pragma omp parallel for reduction(+:E)
   for (int i=0;i<Natoms;i++)
   {
-    parts[i].Ep = 0.0;
-    double w = w0*parts[i].m*QMMMOpts.Nbeads;
+    Struct[i].Ep = 0.0;
+    double w = w0*Struct[i].m;
     for (int j=0;j<QMMMOpts.Nbeads;j++)
     {
       //Bead energy, one bond to avoid double counting
@@ -42,16 +35,17 @@ double Get_PI_Espring(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
       {
         j2 = QMMMOpts.Nbeads-1; //Ring PBC
       }
-      double dr2 = CoordDist2(parts[i].P[j],parts[i].P[j2]);
-      parts[i].Ep += SpringEnergy(w,dr2);
+      //Calculate displacement with PBC
+      double dr2 = CoordDist2(Struct[i].P[j],Struct[i].P[j2]);
+      Struct[i].Ep += 0.5*w*dr2; //Harmonic energy
     }
-    E += parts[i].Ep;
+    E += Struct[i].Ep; //Save energy
   }
   #pragma omp barrier
   return E;
 };
 
-double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
+double Get_PI_Epot(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
 {
   //Potential for all beads
   double E = 0.0;
@@ -76,40 +70,40 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
     if (Gaussian == 1)
     {
       t_qm_start = (unsigned)time(0);
-      Es += GaussianEnergy(parts,QMMMOpts,i);
+      Es += GaussianEnergy(Struct,QMMMOpts,i);
       Times_qm += (unsigned)time(0)-t_qm_start;
     }
     if (PSI4 == 1)
     {
       t_qm_start = (unsigned)time(0);
-      Es += PSIEnergy(parts,QMMMOpts,i);
+      Es += PSIEnergy(Struct,QMMMOpts,i);
       Times_qm += (unsigned)time(0)-t_qm_start;
-      //Clean up annoying useless files
+      //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem == 1)
     {
       t_qm_start = (unsigned)time(0);
-      Es += NWChemEnergy(parts,QMMMOpts,i);
+      Es += NWChemEnergy(Struct,QMMMOpts,i);
       Times_qm += (unsigned)time(0)-t_qm_start;
     }
     //Calculate MM energy
     if (TINKER == 1)
     {
       t_mm_start = (unsigned)time(0);
-      Es += TINKEREnergy(parts,QMMMOpts,i);
+      Es += TINKEREnergy(Struct,QMMMOpts,i);
       Times_mm += (unsigned)time(0)-t_mm_start;
     }
     if (AMBER == 1)
     {
       t_mm_start = (unsigned)time(0);
-      Es += AMBEREnergy(parts,QMMMOpts,i);
+      Es += AMBEREnergy(Struct,QMMMOpts,i);
       Times_mm += (unsigned)time(0)-t_mm_start;
     }
     if (LAMMPS == 1)
     {
       t_mm_start = (unsigned)time(0);
-      Es += LAMMPSEnergy(parts,QMMMOpts,i);
+      Es += LAMMPSEnergy(Struct,QMMMOpts,i);
       Times_mm += (unsigned)time(0)-t_mm_start;
     }
     //Add temp variables to the totals
@@ -122,13 +116,13 @@ double Get_PI_Epot(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts)
   return E;
 };
 
-bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
+bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
 {
   //Function to perform Monte Carlo moves and accept/reject the moves
   bool acc = 0; //Accept or reject
-  //Copy parts
-  vector<QMMMAtom> parts2;
-  parts2 = parts;
+  //Copy Struct
+  vector<QMMMAtom> Struct2;
+  Struct2 = Struct;
   //Pick random move and apply PBC
   double randnum = (((double)rand())/((double)RAND_MAX));
   if (randnum > (1-CentProb))
@@ -140,7 +134,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     {
       //Make sure the atom is not frozen
       p = (rand()%Natoms);
-      if (parts[p].Frozen == 0)
+      if (Struct[p].Frozen == 0)
       {
         FrozenAt = 0;
       }
@@ -151,54 +145,13 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     double dx = 2*(randx-0.5)*step*CentRatio;
     double dy = 2*(randy-0.5)*step*CentRatio;
     double dz = 2*(randz-0.5)*step*CentRatio;
-    //Check PBC
+    //Update positions
     #pragma omp parallel for
     for (int i=0;i<QMMMOpts.Nbeads;i++)
     {
-      double xp = parts2[p].P[i].x+dx;
-      double yp = parts2[p].P[i].y+dy;
-      double zp = parts2[p].P[i].z+dz;
-      if (PBCon)
-      {
-        bool check = 1;
-        while (check)
-        {
-          check = 0;
-          if (xp > Lx)
-          {
-            xp -= Lx;
-            check = 1;
-          }
-          if (xp < 0.0)
-          {
-            xp += Lx;
-            check = 1;
-          }
-          if (yp > Ly)
-          {
-            yp -= Ly;
-            check = 1;
-          }
-          if (yp < 0.0)
-          {
-            yp += Ly;
-            check = 1;
-          }
-          if (zp > Lz)
-          {
-            zp -= Lz;
-            check = 1;
-          }
-          if (zp < 0.0)
-          {
-            zp += Lz;
-            check = 1;
-          }
-        }
-      }
-      parts2[p].P[i].x = xp;
-      parts2[p].P[i].y = yp;
-      parts2[p].P[i].z = zp;
+      Struct2[p].P[i].x += dx;
+      Struct2[p].P[i].y += dy;
+      Struct2[p].P[i].z += dz;
     }
     #pragma omp barrier
   }
@@ -211,7 +164,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     {
       //Make sure the atom is not frozen
       p = (rand()%Natoms);
-      if (parts[p].Frozen == 0)
+      if (Struct[p].Frozen == 0)
       {
         FrozenAt = 0;
       }
@@ -225,59 +178,9 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
       double dx = 2*(randx-0.5)*step;
       double dy = 2*(randy-0.5)*step;
       double dz = 2*(randz-0.5)*step;
-      parts2[p].P[i].x += dx;
-      parts2[p].P[i].y += dy;
-      parts2[p].P[i].z += dz;
-      //Check PBC
-      bool check;
-      if (PBCon)
-      {
-        check = 1;
-        while (check)
-        {
-          check = 0;
-          if (parts2[p].P[i].x > Lx)
-          {
-            parts2[p].P[i].x -= Lx;
-            check = 1;
-          }
-          if (parts2[p].P[i].x < 0.0)
-          {
-            parts2[p].P[i].x += Lx;
-            check = 1;
-          }
-        }
-        check = 1;
-        while (check)
-        {
-          check = 0;
-          if (parts2[p].P[i].y > Ly)
-          {
-            parts2[p].P[i].y -= Ly;
-            check = 1;
-          }
-          if (parts2[p].P[i].y < 0.0)
-          {
-            parts2[p].P[i].y += Ly;
-            check = 1;
-          }
-        }
-        check = 1;
-        while (check)
-        {
-          check = 0;
-          if (parts2[p].P[i].z > Lz)
-          {
-            parts2[p].P[i].z -= Lz;
-            check = 1;
-          }
-          if (parts2[p].P[i].z < 0.0)
-          {
-            parts2[p].P[i].z += Lz;
-            check = 1;
-          }
-        }
-      }
+      Struct2[p].P[i].x += dx;
+      Struct2[p].P[i].y += dy;
+      Struct2[p].P[i].z += dz;
     }
   }
   //Initialize energies
@@ -323,71 +226,25 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
     {
       for (int j=0;j<QMMMOpts.Nbeads;j++)
       {
-        parts2[i].P[j].x *= Lx/Lxtmp;
-        parts2[i].P[j].y *= Ly/Lytmp;
-        parts2[i].P[j].z *= Lz/Lztmp;
-        //Fix PBC for all atoms
-        if (PBCon)
-        {
-          bool check;
-          check = 1;
-          while (check)
-          {
-            check = 0;
-            if (parts2[i].P[j].x > Lx)
-            {
-              parts2[i].P[j].x -= Lx;
-              check = 1;
-            }
-            if (parts2[i].P[j].x < 0.0)
-            {
-              parts2[i].P[j].x += Lx;
-              check = 1;
-            }
-          }
-          check = 1;
-          while (check)
-          {
-            check = 0;
-            if (parts2[i].P[j].y > Ly)
-            {
-              parts2[i].P[j].y -= Ly;
-              check = 1;
-            }
-            if (parts2[i].P[j].y < 0.0)
-            {
-              parts2[i].P[j].y += Ly;
-              check = 1;
-            }
-          }
-          check = 1;
-          while (check)
-          {
-            check = 0;
-            if (parts2[i].P[j].z > Lz)
-            {
-              parts2[i].P[j].z -= Lz;
-              check = 1;
-            }
-            if (parts2[i].P[j].z < 0.0)
-            {
-              parts2[i].P[j].z += Lz;
-              check = 1;
-            }
-          }
-        }
+        Struct2[i].P[j].x *= Lx/Lxtmp;
+        Struct2[i].P[j].y *= Ly/Lytmp;
+        Struct2[i].P[j].z *= Lz/Lztmp;
       }
     }
     #pragma omp barrier
     //Add PV energy term
     Enew += QMMMOpts.Press*Lx*Ly*Lz*atm2eV;
   }
-  Enew += Get_PI_Epot(parts2,QMMMOpts);
-  Enew += Get_PI_Espring(parts2,QMMMOpts);
+  Enew += Get_PI_Epot(Struct2,QMMMOpts);
+  Enew += Get_PI_Espring(Struct2,QMMMOpts);
   //Accept or reject
   double dE = Enew-Eold;
   if (QMMMOpts.Ensemble == "NPT")
   {
+    //Flip sign on PV terms
+    dE -= 2*QMMMOpts.Press*Lx*Ly*Lz*atm2eV; //Flip Enew PV
+    dE += 2*QMMMOpts.Press*Lxtmp*Lytmp*Lztmp*atm2eV; //Flip Eold PV
+    //Add log term
     dE -= Natoms*log((Lx*Ly*Lz)/(Lxtmp*Lytmp*Lztmp))/QMMMOpts.Beta;
   }
   double Prob = exp(-1*dE*QMMMOpts.Beta);
@@ -395,7 +252,7 @@ bool MCMove(vector<QMMMAtom>& parts, QMMMSettings& QMMMOpts, double& Emc)
   if ((dE <= 0) or (randnum < Prob))
   {
     //Accept
-    parts = parts2;
+    Struct = Struct2;
     Emc = Enew;
     QMMMOpts.Eold = Enew;
     acc = 1;

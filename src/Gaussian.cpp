@@ -581,7 +581,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     RotateTINKCharges(Struct,Bead);
   }
   //Write a new XYZ
-  //Note: GauExternal needs different input than the rest of the wrappers
+  //NB: GauExternal needs different input than the rest of the wrappers
   call.str("");
   call << "LICHMExt_" << Bead << ".xyz";
   ofile.open(call.str().c_str(),ios_base::out);

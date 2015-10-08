@@ -99,6 +99,18 @@ Relatively minor updates (documentation, printing, bug fixes, comments, etc)
 are released ASAP. Updates from the private development branch are generally
 merged into the public repository as a single commit around midnight.
 
+### Jokes
+
+Jokes and Easter eggs can be included by changing
+```
+ const bool Jokes = 0; //Print humorous comments
+```
+in LICHEM_headers.h to
+```
+ const bool Jokes = 1; //Print humorous comments
+```
+and then recompiling the code.
+
 ### Testing
 
 Test calculations can be performed with the runtests script in the tests
@@ -129,3 +141,4 @@ Developers:
   <li>Cisneros group, Wayne State University
   <li>Piquemal group, UPMC University
 </ul>
+

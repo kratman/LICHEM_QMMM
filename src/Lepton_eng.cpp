@@ -150,20 +150,20 @@ double KineticE_eFF(vector<QMMMElec>& elecs, QMMMSettings& QMMMOpts)
   return E;
 };
 
-double Get_EeFF(vector<QMMMAtom>& parts, vector<QMMMElec>& elecs,
+double Get_EeFF(vector<QMMMAtom>& Struct, vector<QMMMElec>& elecs,
        QMMMSettings& QMMMOpts)
 {
   //Total eFF interaction energy
   double E = 0;
   #pragma omp parallel for
-  for (unsigned int i=0;i<parts.size();i++)
+  for (int i=0;i<Natoms;i++)
   {
-    parts[i].Ep = 0;
+    Struct[i].Ep = 0;
     for (unsigned int j=0;j<elecs.size();j++)
     {
       for (int k=0;k<QMMMOpts.Nbeads;k++)
       {
-        parts[i].Ep += EFFEnergy(parts[i],elecs[j],k);
+        Struct[i].Ep += EFFEnergy(Struct[i],elecs[j],k);
       }
     }
   }
@@ -183,9 +183,9 @@ double Get_EeFF(vector<QMMMAtom>& parts, vector<QMMMElec>& elecs,
     }
   }
   #pragma omp barrier
-  for (unsigned int i=0;i<parts.size();i++)
+  for (int i=0;i<Natoms;i++)
   {
-    E += parts[i].Ep;
+    E += Struct[i].Ep;
   }
   for (unsigned int i=0;i<elecs.size();i++)
   {

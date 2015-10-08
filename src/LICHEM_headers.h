@@ -55,10 +55,26 @@ const double CentRatio= 5.0; //Scales step size for path-integral centroids
 const int Acc_Check = 2000; //Eq Monte Carlo steps before checking accratio
 
 //Move Probabilities for PIMC
-//Note: These probabilities allow for multi-particle moves
+/*
+
+NB: The Monte Carlo engine allows for multi-particle moves:
+
+If (BeadProb+CentProb) > 1) then there is a chance that multiple particles
+move during a step.
+
+If (BeadProb+CentProb) < 1) then there is a chance that no prarticles move
+during a step.
+
+If (VolProb > 0) and the simulation is not periodic, then VolProb does
+nothing.
+
+If the simulation is periodic, multi-particle moves will be common since
+changing the box size moves all particles.
+
+*/
 double BeadProb = 0.55; //Probability to move all beads for an atom
 double CentProb = 0.55; //Probability to move a centroid
-double VolProb = 0.10; //Volume change probability
+double VolProb = 0.25; //Volume change probability
 
 //Global exact constants
 const double pi = 4*atan(1); //Pi
@@ -356,6 +372,7 @@ class QMMMSettings
     double MaxStep; //Maximum size of the optimization step
     //Input needed for reaction paths
     double Kspring; //Elastic band spring constant
+    double TSBead; //Current guess of the transition state
     //Storage of energies (PIMC)
     double Eold; //Temporary storage
 };
@@ -484,8 +501,6 @@ void ReadLICHEMInput(fstream&,fstream&,fstream&,
 void RotateTINKCharges(vector<QMMMAtom>&,int);
 
 OctCharges SphHarm2Charges(RedMpole);
-
-double SpringEnergy(double,double);
 
 VectorXd SymmTangent(VectorXd&,VectorXd&,QMMMSettings&,int);
 

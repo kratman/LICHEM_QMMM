@@ -232,6 +232,7 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
   QMMMOpts.StepScale = 0;
   QMMMOpts.MaxStep = 0;
   QMMMOpts.Kspring = 0;
+  QMMMOpts.TSBead = 0;
   QMMMOpts.Eold = 0;
   return;
 };
@@ -579,6 +580,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
+    //Error check
     if ((QMMMOpts.Nbeads%2) != 1)
     {
       //The number of beads must be odd
@@ -590,6 +592,9 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       cerr << '\n' << '\n';
       cerr.flush();
     }
+    //Set transition state
+    QMMMOpts.TSBead = ((QMMMOpts.Nbeads-1)/2); //Middle bead
+    //Duplicate data
     for (int i=0;i<Natoms;i++)
     {
       //Create reaction-path beads
@@ -632,6 +637,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.Temp;
     regionfile >> dummy >> QMMMOpts.tautemp;
     regionfile >> dummy >> QMMMOpts.Nsteps;
+    //Error check
     if ((QMMMOpts.Nbeads%2) != 1)
     {
       //The number of beads must be odd
@@ -643,6 +649,9 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       cerr << '\n' << '\n';
       cerr.flush();
     }
+    //Set transition state
+    QMMMOpts.TSBead = ((QMMMOpts.Nbeads-1)/2); //Middle bead
+    //Duplicate data
     for (int i=0;i<Natoms;i++)
     {
       //Create reaction-path beads

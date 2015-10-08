@@ -11,6 +11,9 @@
 
  LICHEM is licensed under GPLv3, for more information see GPL_LICENSE
 
+ References for the LICHEM package:
+ 
+
 */
 
 //Main header
@@ -94,7 +97,7 @@ int main(int argc, char* argv[])
       int tstart = (unsigned)time(0);
       Eqm += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
-      //Clean up annoying useless files
+      //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem == 1)
@@ -153,7 +156,7 @@ int main(int argc, char* argv[])
   //Optimize structure (native QM and MM package optimizers)
   else if (OptSim)
   {
-    //Note: Currently only Gaussian works with this option
+    //NB: Currently only Gaussian works with this option
     VectorXd Forces; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
     //Print initial structure
@@ -174,7 +177,7 @@ int main(int argc, char* argv[])
       int tstart = (unsigned)time(0);
       SumE += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
-      //Clean up annoying useless files
+      //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem == 1)
@@ -212,6 +215,10 @@ int main(int argc, char* argv[])
     cout.copyfmt(call); //Replace settings
     //Run optimization
     bool OptDone = 0;
+    if (QMMMOpts.MaxOptSteps == 0)
+    {
+      OptDone = 1;
+    }
     while (!OptDone)
     {
       //Copy structure
@@ -254,7 +261,7 @@ int main(int argc, char* argv[])
         int tstart = (unsigned)time(0);
         SumE = PSIOpt(Struct,QMMMOpts,0);
         QMTime += (unsigned)time(0)-tstart;
-        //Clean up annoying useless files
+        //Delete annoying useless files
         GlobalSys = system("rm -f psi.* timer.*");
       }
       if (NWChem == 1)
@@ -299,7 +306,7 @@ int main(int argc, char* argv[])
       int tstart = (unsigned)time(0);
       SumE += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
-      //Clean up annoying useless files
+      //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.* ");
     }
     if (NWChem == 1)
@@ -405,7 +412,7 @@ int main(int argc, char* argv[])
       int tstart = (unsigned)time(0);
       SumE += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
-      //Clean up annoying useless files
+      //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem == 1)
@@ -527,7 +534,7 @@ int main(int argc, char* argv[])
     int ct = 0; //Secondary counter
     double Nacc = 0; //Number of accepted moves
     double Nrej = 0; //Number of rejected moves
-    double Emc = 0; //Monte Carlo energy
+    double Emc = QMMMOpts.Eold; //Monte Carlo energy
     double Et = 0; //Total energy for printing
     bool acc; //Flag for accepting a step
     //Start equilibration run
@@ -722,7 +729,7 @@ int main(int argc, char* argv[])
         int tstart = (unsigned)time(0);
         SumE += PSIEnergy(Struct,QMMMOpts,p);
         QMTime += (unsigned)time(0)-tstart;
-        //Clean up annoying useless files
+        //Delete annoying useless files
         GlobalSys = system("rm -f psi.* timer.*");
       }
       if (NWChem == 1)
@@ -843,7 +850,7 @@ int main(int argc, char* argv[])
       int tstart = (unsigned)time(0);
       SumE += PSIEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
-      //Clean up annoying useless files
+      //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem == 1)

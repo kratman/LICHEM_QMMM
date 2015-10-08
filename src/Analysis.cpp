@@ -17,7 +17,7 @@
 */
 
 //Trajectory analysis functions
-void Print_traj(vector<QMMMAtom>& parts, fstream& traj, QMMMSettings& QMMMOpts)
+void Print_traj(vector<QMMMAtom>& Struct, fstream& traj, QMMMSettings& QMMMOpts)
 {
   //Function to print the trajectory or restart files for all beads
   stringstream call; //Only used to save traj stream settings
@@ -30,10 +30,10 @@ void Print_traj(vector<QMMMAtom>& parts, fstream& traj, QMMMSettings& QMMMOpts)
     //Print all replicas of atom i
     for (int j=0;j<QMMMOpts.Nbeads;j++)
     {
-      traj << setw(3) << left << parts[i].QMTyp << " ";
-      traj << setw(10) << parts[i].P[j].x << " ";
-      traj << setw(10) << parts[i].P[j].y << " ";
-      traj << setw(10) << parts[i].P[j].z << '\n';
+      traj << setw(3) << left << Struct[i].QMTyp << " ";
+      traj << setw(10) << Struct[i].P[j].x << " ";
+      traj << setw(10) << Struct[i].P[j].y << " ";
+      traj << setw(10) << Struct[i].P[j].z << '\n';
     }
   }
   traj.flush(); //Force printing

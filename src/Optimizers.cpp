@@ -120,7 +120,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       int tstart = (unsigned)time(0);
       SumE += PSIEnergy(Struct,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
-      //Clean up annoying useless files
+      //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem == 1)
@@ -297,7 +297,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       int tstart = (unsigned)time(0);
       E += PSIForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
-      //Clean up annoying useless files
+      //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem == 1)
@@ -396,7 +396,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //A simple DFP optimizer, which is similar to BFGS updating
-  //Note: This optimizer does not have a true line search, instead
+  //NB: This optimizer does not have a true line search, instead
   //a steepest descent step is performed if the energy rises
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Save settings
@@ -499,7 +499,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     int tstart = (unsigned)time(0);
     E += PSIForces(Struct,Forces,QMMMOpts,Bead);
     QMTime += (unsigned)time(0)-tstart;
-    //Clean up annoying useless files
+    //Delete annoying useless files
     GlobalSys = system("rm -f psi.* timer.*");
   }
   if (NWChem == 1)
@@ -603,7 +603,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       int tstart = (unsigned)time(0);
       E += PSIForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
-      //Clean up annoying useless files
+      //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem == 1)
@@ -751,7 +751,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
       int tstart = (unsigned)time(0);
       SumE += PSIForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
-      //Clean up annoying useless files
+      //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem == 1)

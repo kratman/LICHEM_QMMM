@@ -17,7 +17,7 @@
 PeriodicTable::PeriodicTable()
 {
   //Set atomic properties
-  //Note: The widths were calculated for the all-electron density
+  //NB: The widths were calculated for the all-electron density
   Typs.push_back("H"); //Hydrogen, 1
   GauWids.push_back(0.33046422838582712); //Method: PBE0/aug-cc-pVQZ
   CovRadii.push_back(1.0); //Default value
