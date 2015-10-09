@@ -26,7 +26,8 @@ void ExternalGaussian(int& argc, char**& argv)
   double Emm = 0; //Stores partial energies
   vector<QMMMAtom> Struct; //Atomic data
   QMMMSettings QMMMOpts; //Simulation settings
-  int DerType,Bead;
+  int DerType = 0; //Type of derivatives
+  int Bead = 0; //Which replica
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy print settings
   string dummy,Stub; //Generic strings
@@ -109,7 +110,7 @@ void ExternalGaussian(int& argc, char**& argv)
   //QM forces
   Eqm = GaussianForces(Struct,Forces,QMMMOpts,Bead);
   //MM forces
-  if (TINKER == 1)
+  if (TINKER)
   {
     Emm = TINKERForces(Struct,Forces,QMMMOpts,Bead);
     if (AMOEBA)
@@ -117,11 +118,11 @@ void ExternalGaussian(int& argc, char**& argv)
       Emm += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
     }
   }
-  if (AMBER == 1)
+  if (AMBER)
   {
     Emm = AMBERForces(Struct,Forces,QMMMOpts,Bead);
   }
-  if (LAMMPS == 1)
+  if (LAMMPS)
   {
     Emm = LAMMPSForces(Struct,Forces,QMMMOpts,Bead);
   }
@@ -576,7 +577,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.copyfmt(cout); //Copy print settings
   double E = 0.0; //QM energy
   int ExtCPUs = 1; //Number of CPUs for GauExternal
-  if (AMOEBA and (TINKER == 1))
+  if (AMOEBA and TINKER)
   {
     RotateTINKCharges(Struct,Bead);
   }

@@ -127,12 +127,12 @@ double Lz = 10000.0; //Box length
 bool GEM = 0; //Flag for frozen density QMMM potential
 bool AMOEBA = 0; //Flag for polarizable QMMM potential
 bool CHRG = 0; //Flag for point-charge QMMM potential
-int PSI4 = 0; //Wrapper flag
-int NWChem = 0; //Wrapper flag
-int Gaussian = 0; //Wrapper flag
-int TINKER = 0; //Wrapper flag
-int LAMMPS = 0; //Wrapper flag
-int AMBER = 0; //Wrapper flag
+bool PSI4 = 0; //Wrapper flag
+bool NWChem = 0; //Wrapper flag
+bool Gaussian = 0; //Wrapper flag
+bool TINKER = 0; //Wrapper flag
+bool LAMMPS = 0; //Wrapper flag
+bool AMBER = 0; //Wrapper flag
 bool PBCon = 0; //Flag for the boundary conditions
 bool QMMM = 0; //Flag for the type of wrapper
 bool MMonly = 0; //Flag for the type of wrapper
@@ -463,9 +463,13 @@ void LICHEMPrintSettings(QMMMSettings&);
 
 void LICHEMSteepest(vector<QMMMAtom>&,QMMMSettings&,int);
 
+void LICHEM2BASIS(int&,char**&);
+
 void LICHEM2TINK(int&,char**&);
 
 bool MCMove(vector<QMMMAtom>&,QMMMSettings&,double&);
+
+VectorXd NEBTangent(VectorXd&,VectorXd&,QMMMSettings&,int);
 
 void NWChemCharges(vector<QMMMAtom>&,QMMMSettings&,int);
 
@@ -480,6 +484,8 @@ bool OptConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,vector<Coord>&,
 
 bool PathConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,MatrixXd&,
      int,QMMMSettings&,bool);
+
+void PBCCenter(vector<QMMMAtom>&,QMMMSettings&);
 
 void PrintFancyTitle();
 
@@ -501,8 +507,6 @@ void ReadLICHEMInput(fstream&,fstream&,fstream&,
 void RotateTINKCharges(vector<QMMMAtom>&,int);
 
 OctCharges SphHarm2Charges(RedMpole);
-
-VectorXd SymmTangent(VectorXd&,VectorXd&,QMMMSettings&,int);
 
 double TINKEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
@@ -532,6 +536,7 @@ void WriteTINKMpole(vector<QMMMAtom>&,fstream&,int,int);
 
 //Function definitions (alphabetical)
 #include "Analysis.cpp"
+#include "Basis.cpp"
 #include "Core_funcs.cpp"
 #include "Frozen_density.cpp"
 #include "Input_Reader.cpp"

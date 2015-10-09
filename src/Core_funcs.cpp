@@ -467,8 +467,10 @@ bool CheckFile(const string& file)
   struct stat buffer;
   if (stat(file.c_str(),&buffer) != -1)
   {
+    //Yep...
     return 1;
   }
+  //Nope...
   return 0;
 };
 
@@ -528,8 +530,9 @@ double CoordDist2(Coord& a, Coord& b)
 
 vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int AtID)
 {
-  bool BondError = 0;
-  vector<int> BoundAtoms;
+  //Function to find all boundary atoms connected to a pseudobond atom
+  bool BondError = 0; //Checks if the molecular structure "breaks" the math
+  vector<int> BoundAtoms; //Final list of atoms
   //Add atoms bonded to atom "AtID"
   for (unsigned int i=0;i<Struct[AtID].Bonds.size();i++)
   {
@@ -598,6 +601,7 @@ vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int AtID)
       }
     }
   }
+  //Check for errors
   if (BondError)
   {
     cerr << "Error: Two pseudo-bonds are connected through boudary atoms!!!";
@@ -605,8 +609,10 @@ vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int AtID)
     cerr << " The connections prevent LICHEM from correctly updating";
     cerr << " the charges" << '\n' << '\n';
     cerr.flush();
+    //Quit to avoid unphysical results
     exit(0);
   }
+  //Return list if there are no errors
   return BoundAtoms;
 };
 
@@ -664,3 +670,51 @@ bool Dihedraled(vector<QMMMAtom>& Struct, int Atom1, int Atom4)
   return IsBound;
 };
 
+//Structure correction functions
+void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
+{
+  //Move the system to the center of the simulation box
+  double avgx = 0;
+  double avgy = 0;
+  double avgz = 0;
+  #pragma omp parallel for reduction(+:avgx,avgy,avgz)
+  for (int i=0;i<Natoms;i++)
+  {
+    //Loop over all beads
+    double centx = 0;
+    double centy = 0;
+    double centz = 0;
+    for (int j=0;j<QMMMOpts.Nbeads;j++)
+    {
+      //Update local average postion
+      centx += Struct[i].P[j].x;
+      centy += Struct[i].P[j].y;
+      centz += Struct[i].P[j].z;
+    }
+    //Upate full averages
+    avgx += centx;
+    avgy += centy;
+    avgz += centz;
+  }
+  #pragma omp barrier
+  //Convert sums to averages
+  avgx /= Natoms*QMMMOpts.Nbeads;
+  avgy /= Natoms*QMMMOpts.Nbeads;
+  avgz /= Natoms*QMMMOpts.Nbeads;
+  //Move atoms to the center of the box
+  #pragma omp parallel for
+  for (int i=0;i<Natoms;i++)
+  {
+    //Loop over all beads
+    for (int j=0;j<QMMMOpts.Nbeads;j++)
+    {
+      //Move bead to the center
+      Struct[i].P[j].x -= avgx;
+      Struct[i].P[j].y -= avgy;
+      Struct[i].P[j].z -= avgz;
+    }
+  }
+  #pragma omp barrier
+  //Return with updated structure
+  return;
+};

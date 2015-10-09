@@ -91,13 +91,14 @@ development timeline are available in the doc directory.
 
 Development versions of LICHEM are kept in a private repository. Large changes
 to the code or the addition of new features (multipoles, diffuse charges,
-reaction path ways, etc) are tested before they are merged into the public
-repository. To ensure that LICHEM compiles properly, dummy function calls are
-added for incomplete or untested features.
+reaction path ways, etc) are tested and published before they are merged into
+the public repository. To ensure that LICHEM compiles properly, dummy function
+calls are added for incomplete or untested features.
 
-Relatively minor updates (documentation, printing, bug fixes, comments, etc)
-are released ASAP. Updates from the private development branch are generally
-merged into the public repository as a single commit around midnight.
+Relatively minor updates (documentation, output printing, bug fixes, comments,
+etc) are released ASAP. Updates from the private development branch are
+generally merged into the public repository as a single commit around
+midnight.
 
 ### Jokes
 

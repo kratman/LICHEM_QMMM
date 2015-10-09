@@ -29,7 +29,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
   {
     chrgfilename = call.str();
   }
-  if (AMOEBA and (TINKER == 1) and (!UseChrgFile))
+  if (AMOEBA and TINKER and (!UseChrgFile))
   {
     //Set up multipoles
     RotateTINKCharges(Struct,Bead);
@@ -192,7 +192,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
     iy /= Ly;
     iz /= Lz;
   }
-  if (AMOEBA and (TINKER == 1))
+  if (AMOEBA and TINKER)
   {
     //Check if charges are saved
     call.str("");
@@ -396,7 +396,7 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
   call.copyfmt(cout); //Copy settings from cout
   string dummy; //Generic string
   fstream ifile,ofile; //Generic file names
-  if (AMOEBA and (TINKER == 1))
+  if (AMOEBA and TINKER)
   {
     //Set up multipoles
     RotateTINKCharges(Struct,Bead);

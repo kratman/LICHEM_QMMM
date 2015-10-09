@@ -46,7 +46,13 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     dummy = string(argv[2]);
     if (dummy == "-t")
     {
+      //Create LICHEM input from Gaussian input
       TINK2LICHEM(argc,argv);
+    }
+    if (dummy == "-b")
+    {
+      //Create BASIS files
+      LICHEM2BASIS(argc,argv);
     }
     else
     {
@@ -326,7 +332,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       NWChem = 1;
     }
-    if ((dummy == "gaussian") or (dummy == "Gaussian"))
+    if ((dummy == "gaussian") or (dummy == "Gaussian") or (dummy == "g09"))
     {
       Gaussian = 1;
     }
@@ -411,7 +417,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       //AMOEBA polarizable force field
       AMOEBA = 1;
-      if (TINKER == 1)
+      if (TINKER)
       {
         ExtractTINKpoles(Struct,0);
       }
@@ -427,7 +433,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       //Frozen density
       GEM = 1;
-      if (TINKER == 1)
+      if (TINKER)
       {
         //For polarization energy, should be replaced with GEM-DM
         ExtractTINKpoles(Struct,0);
@@ -461,7 +467,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       //AMOEBA polarizable force field
       AMOEBA = 1;
-      if (TINKER == 1)
+      if (TINKER)
       {
         ExtractTINKpoles(Struct,0);
       }
@@ -477,7 +483,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       //Frozen density
       GEM = 1;
-      if (TINKER == 1)
+      if (TINKER)
       {
         //For polarization energy, should be replaced with GEM-DM
         ExtractTINKpoles(Struct,0);
@@ -744,7 +750,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     int AtomID;
     regionfile >> AtomID;
     Struct[AtomID].Frozen = 1;
-    if (PIMCSim or ENEBSim)
+    if (PIMCSim or ENEBSim or NEBSim)
     {
       //Frozen atoms must be the same for all replicas
       #pragma omp parallel for
@@ -792,13 +798,13 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       }
     }
   }
-  else if (NEBSim)
+  else if (ENEBSim or NEBSim)
   {
     //Create initial reaction pathway
     
   }
   //Collect additonal TINKER input
-  if ((TINKER == 1) and (!GauExternal))
+  if (TINKER and (!GauExternal))
   {
     //Classes are not used in the QMMM, but looking for them can spot errors
     FindTINKERClasses(Struct);
@@ -837,7 +843,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       Ncpus = Nthreads;
     }
     //Modify threads for multi-replica simulations
-    if ((QMMMOpts.Nbeads > 1) and (!ENEBSim))
+    if ((QMMMOpts.Nbeads > 1) and (!ENEBSim) and (!NEBSim))
     {
       //Divide threads between the beads
       Nthreads = int(floor(Procs/Ncpus));
@@ -854,7 +860,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
 {
   //Checks for basic errors and conflicts
   bool DoQuit = 0; //Bool, quit with error
-  if (((TINKER+AMBER+LAMMPS) == 0) and (!QMonly))
+  if ((!TINKER) and (!AMBER) and (!LAMMPS) and (!QMonly))
   {
     //Check the MM wrappers
     cout << " Error: No valid MM wrapper selected.";
@@ -864,7 +870,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout << '\n';
     DoQuit = 1;
   }
-  if (((PSI4+Gaussian+NWChem) == 0) and (!MMonly))
+  if ((!Gaussian) and (!PSI4) and (!NWChem) and (!MMonly))
   {
     //Check the QM wrappers
     cout << " Error: No valid QM wrapper selected.";
@@ -899,7 +905,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     Ncpus = 1;
     cout.flush(); //Print warning
   }
-  if ((PSI4 == 1) and QMMM)
+  if (PSI4 and QMMM)
   {
     if (OptSim)
     {
@@ -926,7 +932,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       DoQuit = 1;
     }
   }
-  if ((NWChem == 1) and QMMM)
+  if (NWChem and QMMM)
   {
     if (OptSim)
     {
@@ -937,7 +943,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       DoQuit = 1;
     }
   }
-  if ((LAMMPS == 1) and AMOEBA)
+  if (LAMMPS and AMOEBA)
   {
     cout << " Error: LAMMPS calculations cannot be performed with";
     cout << '\n';
@@ -985,7 +991,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
   {
     cout << " Frozen atoms: " << Nfreeze << '\n';
   }
-  if (ENEBSim)
+  if (ENEBSim or NEBSim)
   {
     //Print input for error checking
     if (QMMMOpts.Nbeads > 1)
@@ -1102,15 +1108,15 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
   if (QMonly or QMMM)
   {
     cout << " QM wrapper: ";
-    if (PSI4 == 1)
+    if (PSI4)
     {
       cout << "PSI4" << '\n';
     }
-    if (Gaussian == 1)
+    if (Gaussian)
     {
       cout << "Gaussian" << '\n';
     }
-    if (NWChem == 1)
+    if (NWChem)
     {
       cout << "NWChem" << '\n';
     }
@@ -1121,15 +1127,15 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
   if (MMonly or QMMM)
   {
     cout << " MM wrapper: ";
-    if (TINKER == 1)
+    if (TINKER)
     {
       cout << "TINKER" << '\n';
     }
-    if (AMBER == 1)
+    if (AMBER)
     {
       cout << "AMBER" << '\n';
     }
-    if (LAMMPS == 1)
+    if (LAMMPS)
     {
       cout << "LAMMPS" << '\n';
     }
@@ -1155,7 +1161,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
   cout << " OpenMP threads: " << Nthreads << '\n';
   if (QMonly or QMMM)
   {
-    if (OptSim and (Gaussian == 1))
+    if (OptSim and Gaussian)
     {
       //Print modified threading for GauExternal
       if (Ncpus <= 2)
@@ -1189,7 +1195,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
   {
     cout << '\n';
     cout << "Optimization settings:" << '\n';
-    if (SteepSim or DFPSim or ESDSim or ENEBSim)
+    if (SteepSim or DFPSim or ESDSim or ENEBSim or NEBSim)
     {
       cout << " Step scale factor: " << QMMMOpts.StepScale;
       cout << '\n';
@@ -1197,14 +1203,15 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
     cout << " Max. step size: " << QMMMOpts.MaxStep;
     cout << " \u212B" << '\n';
     cout << " Max. steps: " << QMMMOpts.MaxOptSteps;
-    if (ENEBSim)
+    if (ENEBSim or NEBSim)
     {
+      //Spring constant for the path
       cout << '\n';
       cout << " Spring constant: " << QMMMOpts.Kspring;
       cout << " eV/\u212B";
     }
     cout << '\n' << '\n';
-    if (SteepSim or DFPSim)
+    if (SteepSim or DFPSim or NEBSim)
     {
       cout << "QM convergence criteria:" << '\n';
       cout << "  RMS deviation: " << QMMMOpts.QMOptTol;

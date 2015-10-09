@@ -109,13 +109,13 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     //Check energy and convergence of the whole system
     SumE = 0;
     //Calculate QM energy
-    if (Gaussian == 1)
+    if (Gaussian)
     {
       int tstart = (unsigned)time(0);
       SumE += GaussianEnergy(Struct,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
     }
-    if (PSI4 == 1)
+    if (PSI4)
     {
       int tstart = (unsigned)time(0);
       SumE += PSIEnergy(Struct,QMMMOpts,Bead);
@@ -123,26 +123,26 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
     }
-    if (NWChem == 1)
+    if (NWChem)
     {
       int tstart = (unsigned)time(0);
       SumE += NWChemEnergy(Struct,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
     }
     //Calculate MM energy
-    if (TINKER == 1)
+    if (TINKER)
     {
       int tstart = (unsigned)time(0);
       SumE += TINKEREnergy(Struct,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (AMBER == 1)
+    if (AMBER)
     {
       int tstart = (unsigned)time(0);
       SumE += AMBEREnergy(Struct,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (LAMMPS == 1)
+    if (LAMMPS)
     {
       int tstart = (unsigned)time(0);
       SumE += LAMMPSEnergy(Struct,QMMMOpts,Bead);
@@ -207,9 +207,9 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "QMOpt_" << Bead << ".xyz";
   qmfile.open(call.str().c_str(),ios_base::out);
   //Initialize charges for Gaussian
-  if (AMOEBA and ((Gaussian == 1) or (NWChem == 1)))
+  if (AMOEBA and (Gaussian or NWChem))
   {
-    if (TINKER == 1)
+    if (TINKER)
     {
       //Set up current multipoles
       RotateTINKCharges(Struct,Bead);
@@ -219,7 +219,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ix = 1;
     iy = 1;
     iz = 1;
-    if (PBCon and (NWChem == 1))
+    if (PBCon and NWChem)
     {
       ix /= Lx;
       iy /= Ly;
@@ -286,13 +286,13 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     VectorXd Forces(3*(Nqm+Npseudo));
     Forces.setZero();
     //Calculate forces (QM part)
-    if (Gaussian == 1)
+    if (Gaussian)
     {
       int tstart = (unsigned)time(0);
       E += GaussianForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
     }
-    if (PSI4 == 1)
+    if (PSI4)
     {
       int tstart = (unsigned)time(0);
       E += PSIForces(Struct,Forces,QMMMOpts,Bead);
@@ -300,14 +300,14 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
     }
-    if (NWChem == 1)
+    if (NWChem)
     {
       int tstart = (unsigned)time(0);
       E += NWChemForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
     }
     //Calculate forces (MM part)
-    if (TINKER == 1)
+    if (TINKER)
     {
       int tstart = (unsigned)time(0);
       E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
@@ -317,13 +317,13 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       }
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (AMBER == 1)
+    if (AMBER)
     {
       int tstart = (unsigned)time(0);
       E += AMBERForces(Struct,Forces,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (LAMMPS == 1)
+    if (LAMMPS)
     {
       int tstart = (unsigned)time(0);
       E += LAMMPSForces(Struct,Forces,QMMMOpts,Bead);
@@ -412,9 +412,9 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   double Eold = 0; //Energy from previous step
   double VecMax = 0; //Maxium atomic displacement
   //Initialize multipoles for Gaussian and NWChem
-  if (AMOEBA and ((Gaussian == 1) or (NWChem == 1)))
+  if (AMOEBA and (Gaussian or NWChem))
   {
-    if (TINKER == 1)
+    if (TINKER)
     {
       //Set up current multipoles
       RotateTINKCharges(Struct,Bead);
@@ -424,7 +424,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     ix = 1;
     iy = 1;
     iz = 1;
-    if (PBCon and (NWChem == 1))
+    if (PBCon and NWChem)
     {
       ix /= Lx;
       iy /= Ly;
@@ -488,13 +488,13 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Create an identity matrix as the initial Hessian
   IHess.setIdentity(); //Already an "inverse" Hessian
   //Calculate forces (QM part)
-  if (Gaussian == 1)
+  if (Gaussian)
   {
     int tstart = (unsigned)time(0);
     E += GaussianForces(Struct,Forces,QMMMOpts,Bead);
     QMTime += (unsigned)time(0)-tstart;
   }
-  if (PSI4 == 1)
+  if (PSI4)
   {
     int tstart = (unsigned)time(0);
     E += PSIForces(Struct,Forces,QMMMOpts,Bead);
@@ -502,14 +502,14 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     //Delete annoying useless files
     GlobalSys = system("rm -f psi.* timer.*");
   }
-  if (NWChem == 1)
+  if (NWChem)
   {
     int tstart = (unsigned)time(0);
     E += NWChemForces(Struct,Forces,QMMMOpts,Bead);
     QMTime += (unsigned)time(0)-tstart;
   }
   //Calculate forces (MM part)
-  if (TINKER == 1)
+  if (TINKER)
   {
     int tstart = (unsigned)time(0);
     E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
@@ -519,13 +519,13 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     }
     MMTime += (unsigned)time(0)-tstart;
   }
-  if (AMBER == 1)
+  if (AMBER)
   {
     int tstart = (unsigned)time(0);
     E += AMBERForces(Struct,Forces,QMMMOpts,Bead);
     MMTime += (unsigned)time(0)-tstart;
   }
-  if (LAMMPS == 1)
+  if (LAMMPS)
   {
     int tstart = (unsigned)time(0);
     E += LAMMPSForces(Struct,Forces,QMMMOpts,Bead);
@@ -592,13 +592,13 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     Print_traj(Struct,qmfile,QMMMOpts);
     //Calculate forces (QM part)
     Forces.setZero();
-    if (Gaussian == 1)
+    if (Gaussian)
     {
       int tstart = (unsigned)time(0);
       E += GaussianForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
     }
-    if (PSI4 == 1)
+    if (PSI4)
     {
       int tstart = (unsigned)time(0);
       E += PSIForces(Struct,Forces,QMMMOpts,Bead);
@@ -606,14 +606,14 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
     }
-    if (NWChem == 1)
+    if (NWChem)
     {
       int tstart = (unsigned)time(0);
       E += NWChemForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
     }
     //Calculate forces (MM part)
-    if (TINKER == 1)
+    if (TINKER)
     {
       int tstart = (unsigned)time(0);
       E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
@@ -623,13 +623,13 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       }
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (AMBER == 1)
+    if (AMBER)
     {
       int tstart = (unsigned)time(0);
       E += AMBERForces(Struct,Forces,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (LAMMPS == 1)
+    if (LAMMPS)
     {
       int tstart = (unsigned)time(0);
       E += LAMMPSForces(Struct,Forces,QMMMOpts,Bead);
@@ -722,7 +722,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
   while (stepct < QMMMOpts.MaxOptSteps)
   {
     //Run MD
-    if (TINKER == 1)
+    if (TINKER)
     {
       int tstart = (unsigned)time(0);
       TINKERDynamics(Struct,QMMMOpts,Bead);
@@ -740,13 +740,13 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
     VectorXd Forces(3*(Nqm+Npseudo));
     Forces.setZero();
     //Calculate forces and energy (QM part)
-    if (Gaussian == 1)
+    if (Gaussian)
     {
       int tstart = (unsigned)time(0);
       SumE += GaussianForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
     }
-    if (PSI4 == 1)
+    if (PSI4)
     {
       int tstart = (unsigned)time(0);
       SumE += PSIForces(Struct,Forces,QMMMOpts,Bead);
@@ -754,14 +754,14 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
     }
-    if (NWChem == 1)
+    if (NWChem)
     {
       int tstart = (unsigned)time(0);
       SumE += NWChemForces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
     }
     //Calculate forces and energy (MM part)
-    if (TINKER == 1)
+    if (TINKER)
     {
       int tstart = (unsigned)time(0);
       E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
@@ -773,14 +773,14 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
       }
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (AMBER == 1)
+    if (AMBER)
     {
       int tstart = (unsigned)time(0);
       E += AMBERForces(Struct,Forces,QMMMOpts,Bead);
       SumE += AMBEREnergy(Struct,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (LAMMPS == 1)
+    if (LAMMPS)
     {
       int tstart = (unsigned)time(0);
       E += LAMMPSForces(Struct,Forces,QMMMOpts,Bead);

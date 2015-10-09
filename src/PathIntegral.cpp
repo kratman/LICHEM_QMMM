@@ -67,13 +67,13 @@ double Get_PI_Epot(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     int Times_qm = 0;
     int Times_mm = 0;
     //Calculate QM energy
-    if (Gaussian == 1)
+    if (Gaussian)
     {
       t_qm_start = (unsigned)time(0);
       Es += GaussianEnergy(Struct,QMMMOpts,i);
       Times_qm += (unsigned)time(0)-t_qm_start;
     }
-    if (PSI4 == 1)
+    if (PSI4)
     {
       t_qm_start = (unsigned)time(0);
       Es += PSIEnergy(Struct,QMMMOpts,i);
@@ -81,26 +81,26 @@ double Get_PI_Epot(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
     }
-    if (NWChem == 1)
+    if (NWChem)
     {
       t_qm_start = (unsigned)time(0);
       Es += NWChemEnergy(Struct,QMMMOpts,i);
       Times_qm += (unsigned)time(0)-t_qm_start;
     }
     //Calculate MM energy
-    if (TINKER == 1)
+    if (TINKER)
     {
       t_mm_start = (unsigned)time(0);
       Es += TINKEREnergy(Struct,QMMMOpts,i);
       Times_mm += (unsigned)time(0)-t_mm_start;
     }
-    if (AMBER == 1)
+    if (AMBER)
     {
       t_mm_start = (unsigned)time(0);
       Es += AMBEREnergy(Struct,QMMMOpts,i);
       Times_mm += (unsigned)time(0)-t_mm_start;
     }
-    if (LAMMPS == 1)
+    if (LAMMPS)
     {
       t_mm_start = (unsigned)time(0);
       Es += LAMMPSEnergy(Struct,QMMMOpts,i);

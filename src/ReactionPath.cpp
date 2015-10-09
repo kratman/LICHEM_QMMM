@@ -21,7 +21,7 @@
 */
 
 //Tangent functions
-VectorXd SymmTangent(VectorXd& Distp1, VectorXd& Distm1,
+VectorXd NEBTangent(VectorXd& Distp1, VectorXd& Distm1,
          QMMMSettings& QMMMOpts, int Bead)
 {
   //Calculate NEB tangents with the transition state in the center

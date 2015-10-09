@@ -481,13 +481,13 @@ void TINK2LICHEM(int& argc, char**& argv)
 
 void LICHEM2TINK(int& argc, char**& argv)
 {
-  //Local variables
-  fstream posfile,confile,ofile; //Files
+  //Creates TINKER input from LICHEM input
+  fstream posfile,confile,ofile; //File streams
   string dummy; //Generic string
-  string POSfilename = "NOFILE";
-  string CONfilename = "NOFILE";
+  string POSfilename = "NOFILE"; //Position filename
+  string CONfilename = "NOFILE"; //Connectivity filename
   //Read arguments
-  bool DoQuit = 0;
+  bool DoQuit = 0; //Exit with an error
   cout << "Reading LICHEM input: ";
   for (int i=0;i<argc;i++)
   {
@@ -524,6 +524,7 @@ void LICHEM2TINK(int& argc, char**& argv)
     }
   }
   cout << '\n' << '\n'; //Terminate output
+  //Error check
   if ((!CheckFile(POSfilename)) or (!CheckFile(POSfilename)))
   {
     cout << "Error: Missing files!!!";

@@ -68,6 +68,13 @@ int main(int argc, char* argv[])
   LICHEMPrintSettings(QMMMOpts);
   //End of section
 
+  //Center the system
+  if (PBCon)
+  {
+    PBCCenter(Struct,QMMMOpts);
+  }
+  //End of section
+
   /*
     NB: All optional simulation types should be wrapped in comments and
     else-if statements. The first comment should define what calculation is
@@ -86,13 +93,13 @@ int main(int argc, char* argv[])
     cout << "Single-point energy:" << '\n';
     cout.flush(); //Print progress
     //Calculate QM energy
-    if (Gaussian == 1)
+    if (Gaussian)
     {
       int tstart = (unsigned)time(0);
       Eqm += GaussianEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
     }
-    if (PSI4 == 1)
+    if (PSI4)
     {
       int tstart = (unsigned)time(0);
       Eqm += PSIEnergy(Struct,QMMMOpts,0);
@@ -100,7 +107,7 @@ int main(int argc, char* argv[])
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
     }
-    if (NWChem == 1)
+    if (NWChem)
     {
       int tstart = (unsigned)time(0);
       Eqm += NWChemEnergy(Struct,QMMMOpts,0);
@@ -113,19 +120,19 @@ int main(int argc, char* argv[])
       cout << '\n';
     }
     //Calculate MM energy
-    if (TINKER == 1)
+    if (TINKER)
     {
       int tstart = (unsigned)time(0);
       Emm += TINKEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (AMBER == 1)
+    if (AMBER)
     {
       int tstart = (unsigned)time(0);
       Emm += AMBEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (LAMMPS == 1)
+    if (LAMMPS)
     {
       int tstart = (unsigned)time(0);
       Emm += LAMMPSEnergy(Struct,QMMMOpts,0);
@@ -166,13 +173,13 @@ int main(int argc, char* argv[])
     //Calculate initial energy
     SumE = 0; //Clear old energies
     //Calculate QM energy
-    if (Gaussian == 1)
+    if (Gaussian)
     {
       int tstart = (unsigned)time(0);
       SumE += GaussianEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
     }
-    if (PSI4 == 1)
+    if (PSI4)
     {
       int tstart = (unsigned)time(0);
       SumE += PSIEnergy(Struct,QMMMOpts,0);
@@ -180,26 +187,26 @@ int main(int argc, char* argv[])
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
     }
-    if (NWChem == 1)
+    if (NWChem)
     {
       int tstart = (unsigned)time(0);
       SumE += NWChemEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
     }
     //Calculate MM energy
-    if (TINKER == 1)
+    if (TINKER)
     {
       int tstart = (unsigned)time(0);
       SumE += TINKEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (AMBER == 1)
+    if (AMBER)
     {
       int tstart = (unsigned)time(0);
       SumE += AMBEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (LAMMPS == 1)
+    if (LAMMPS)
     {
       int tstart = (unsigned)time(0);
       SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
@@ -224,19 +231,19 @@ int main(int argc, char* argv[])
       //Copy structure
       OldStruct = Struct;
       //Run MM optimization
-      if (TINKER == 1)
+      if (TINKER)
       {
         int tstart = (unsigned)time(0);
         SumE = TINKEROpt(Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
-      if (AMBER == 1)
+      if (AMBER)
       {
         int tstart = (unsigned)time(0);
         SumE = AMBEROpt(Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
-      if (LAMMPS == 1)
+      if (LAMMPS)
       {
         int tstart = (unsigned)time(0);
         SumE = LAMMPSOpt(Struct,QMMMOpts,0);
@@ -250,13 +257,13 @@ int main(int argc, char* argv[])
       }
       cout << '\n';
       //Run QM optimization
-      if (Gaussian == 1)
+      if (Gaussian)
       {
         int tstart = (unsigned)time(0);
         SumE = GaussianOpt(Struct,QMMMOpts,0);
         QMTime += (unsigned)time(0)-tstart;
       }
-      if (PSI4 == 1)
+      if (PSI4)
       {
         int tstart = (unsigned)time(0);
         SumE = PSIOpt(Struct,QMMMOpts,0);
@@ -264,7 +271,7 @@ int main(int argc, char* argv[])
         //Delete annoying useless files
         GlobalSys = system("rm -f psi.* timer.*");
       }
-      if (NWChem == 1)
+      if (NWChem)
       {
         int tstart = (unsigned)time(0);
         SumE = NWChemOpt(Struct,QMMMOpts,0);
@@ -295,13 +302,13 @@ int main(int argc, char* argv[])
     //Calculate initial energy
     SumE = 0; //Clear old energies
     //Calculate QM energy
-    if (Gaussian == 1)
+    if (Gaussian)
     {
       int tstart = (unsigned)time(0);
       SumE += GaussianEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
     }
-    if (PSI4 == 1)
+    if (PSI4)
     {
       int tstart = (unsigned)time(0);
       SumE += PSIEnergy(Struct,QMMMOpts,0);
@@ -309,26 +316,26 @@ int main(int argc, char* argv[])
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.* ");
     }
-    if (NWChem == 1)
+    if (NWChem)
     {
       int tstart = (unsigned)time(0);
       SumE += NWChemEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
     }
     //Calculate MM energy
-    if (TINKER == 1)
+    if (TINKER)
     {
       int tstart = (unsigned)time(0);
       SumE += TINKEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (AMBER == 1)
+    if (AMBER)
     {
       int tstart = (unsigned)time(0);
       SumE += AMBEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (LAMMPS == 1)
+    if (LAMMPS)
     {
       int tstart = (unsigned)time(0);
       SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
@@ -349,19 +356,19 @@ int main(int argc, char* argv[])
       //Copy structure
       OldStruct = Struct;
       //Run MM optimization
-      if (TINKER == 1)
+      if (TINKER)
       {
         int tstart = (unsigned)time(0);
         SumE = TINKEROpt(Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
-      if (AMBER == 1)
+      if (AMBER)
       {
         int tstart = (unsigned)time(0);
         SumE = AMBEROpt(Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
-      if (LAMMPS == 1)
+      if (LAMMPS)
       {
         int tstart = (unsigned)time(0);
         SumE = LAMMPSOpt(Struct,QMMMOpts,0);
@@ -401,13 +408,13 @@ int main(int argc, char* argv[])
     //Calculate initial energy
     SumE = 0; //Clear old energies
     //Calculate QM energy
-    if (Gaussian == 1)
+    if (Gaussian)
     {
       int tstart = (unsigned)time(0);
       SumE += GaussianEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
     }
-    if (PSI4 == 1)
+    if (PSI4)
     {
       int tstart = (unsigned)time(0);
       SumE += PSIEnergy(Struct,QMMMOpts,0);
@@ -415,26 +422,26 @@ int main(int argc, char* argv[])
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
     }
-    if (NWChem == 1)
+    if (NWChem)
     {
       int tstart = (unsigned)time(0);
       SumE += NWChemEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
     }
     //Calculate MM energy
-    if (TINKER == 1)
+    if (TINKER)
     {
       int tstart = (unsigned)time(0);
       SumE += TINKEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (AMBER == 1)
+    if (AMBER)
     {
       int tstart = (unsigned)time(0);
       SumE += AMBEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (LAMMPS == 1)
+    if (LAMMPS)
     {
       int tstart = (unsigned)time(0);
       SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
@@ -455,19 +462,19 @@ int main(int argc, char* argv[])
       //Copy structure
       OldStruct = Struct;
       //Run MM optimization
-      if (TINKER == 1)
+      if (TINKER)
       {
         int tstart = (unsigned)time(0);
         SumE = TINKEROpt(Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
-      if (AMBER == 1)
+      if (AMBER)
       {
         int tstart = (unsigned)time(0);
         SumE = AMBEROpt(Struct,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tstart;
       }
-      if (LAMMPS == 1)
+      if (LAMMPS)
       {
         int tstart = (unsigned)time(0);
         SumE = LAMMPSOpt(Struct,QMMMOpts,0);
@@ -718,13 +725,13 @@ int main(int argc, char* argv[])
     {
       SumE = 0; //Clear old energies
       //Calculate QM energy
-      if (Gaussian == 1)
+      if (Gaussian)
       {
         int tstart = (unsigned)time(0);
         SumE += GaussianEnergy(Struct,QMMMOpts,p);
         QMTime += (unsigned)time(0)-tstart;
       }
-      if (PSI4 == 1)
+      if (PSI4)
       {
         int tstart = (unsigned)time(0);
         SumE += PSIEnergy(Struct,QMMMOpts,p);
@@ -732,26 +739,26 @@ int main(int argc, char* argv[])
         //Delete annoying useless files
         GlobalSys = system("rm -f psi.* timer.*");
       }
-      if (NWChem == 1)
+      if (NWChem)
       {
         int tstart = (unsigned)time(0);
         SumE += NWChemEnergy(Struct,QMMMOpts,p);
         QMTime += (unsigned)time(0)-tstart;
       }
       //Calculate MM energy
-      if (TINKER == 1)
+      if (TINKER)
       {
         int tstart = (unsigned)time(0);
         SumE += TINKEREnergy(Struct,QMMMOpts,p);
         MMTime += (unsigned)time(0)-tstart;
       }
-      if (AMBER == 1)
+      if (AMBER)
       {
         int tstart = (unsigned)time(0);
         SumE += AMBEREnergy(Struct,QMMMOpts,p);
         MMTime += (unsigned)time(0)-tstart;
       }
-      if (LAMMPS == 1)
+      if (LAMMPS)
       {
         int tstart = (unsigned)time(0);
         SumE += LAMMPSEnergy(Struct,QMMMOpts,p);
@@ -768,7 +775,7 @@ int main(int argc, char* argv[])
       //Copy checkpoint data to speed up first step
       if (p != (QMMMOpts.Nbeads-1))
       {
-        if (Gaussian == 1)
+        if (Gaussian)
         {
           call.str("");
           call << "cp LICHM_" << (p);
@@ -788,19 +795,19 @@ int main(int argc, char* argv[])
       //Run MM optimization
       for (int p=0;p<QMMMOpts.Nbeads;p++)
       {
-        if (TINKER == 1)
+        if (TINKER)
         {
           int tstart = (unsigned)time(0);
           SumE = TINKEROpt(Struct,QMMMOpts,p);
           MMTime += (unsigned)time(0)-tstart;
         }
-        if (AMBER == 1)
+        if (AMBER)
         {
           int tstart = (unsigned)time(0);
           SumE = AMBEROpt(Struct,QMMMOpts,p);
           MMTime += (unsigned)time(0)-tstart;
         }
-        if (LAMMPS == 1)
+        if (LAMMPS)
         {
           int tstart = (unsigned)time(0);
           SumE = LAMMPSOpt(Struct,QMMMOpts,p);
@@ -839,13 +846,13 @@ int main(int argc, char* argv[])
     //Calculate initial energy
     SumE = 0; //Clear old energies
     //Calculate QM energy
-    if (Gaussian == 1)
+    if (Gaussian)
     {
       int tstart = (unsigned)time(0);
       SumE += GaussianEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
     }
-    if (PSI4 == 1)
+    if (PSI4)
     {
       int tstart = (unsigned)time(0);
       SumE += PSIEnergy(Struct,QMMMOpts,0);
@@ -853,26 +860,26 @@ int main(int argc, char* argv[])
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
     }
-    if (NWChem == 1)
+    if (NWChem)
     {
       int tstart = (unsigned)time(0);
       SumE += NWChemEnergy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
     }
     //Calculate MM energy
-    if (TINKER == 1)
+    if (TINKER)
     {
       int tstart = (unsigned)time(0);
       SumE += TINKEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (AMBER == 1)
+    if (AMBER)
     {
       int tstart = (unsigned)time(0);
       SumE += AMBEREnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    if (LAMMPS == 1)
+    if (LAMMPS)
     {
       int tstart = (unsigned)time(0);
       SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
@@ -928,7 +935,7 @@ int main(int argc, char* argv[])
   outfile.close();
   regionfile.close();
   connectfile.close();
-  if (Gaussian == 1)
+  if (Gaussian)
   {
     //Clear any remaining Gaussian files
     stringstream call; //Stream for system calls and reading/writing files
@@ -937,7 +944,7 @@ int main(int argc, char* argv[])
     call << "rm -f Gau-*"; //Produced if there is a crash
     GlobalSys = system(call.str().c_str());
   }
-  if (PSI4 == 1)
+  if (PSI4)
   {
     //Clear any remaining PSI4 files
     stringstream call; //Stream for system calls and reading/writing files
@@ -970,16 +977,16 @@ int main(int argc, char* argv[])
   EndTime = (unsigned)time(0); //Time the program completes
   double TotalHours = (double(EndTime)-double(StartTime));
   double TotalQM = double(QMTime);
-  if ((QMMMOpts.Nbeads > 1) and (!ENEBSim))
+  if ((QMMMOpts.Nbeads > 1) and (!ENEBSim) and (!NEBSim))
   {
     //Average over the number of running simulations
-    TotalQM /= Nthreads;
+    TotalQM /= QMMMOpts.Nbeads;
   }
   double TotalMM = double(MMTime);
-  if ((QMMMOpts.Nbeads > 1) and (!ENEBSim))
+  if ((QMMMOpts.Nbeads > 1) and (!ENEBSim) and (!NEBSim))
   {
     //Average over the number of running simulations
-    TotalMM /= Nthreads;
+    TotalMM /= QMMMOpts.Nbeads;
   }
   double OtherTime = TotalHours-TotalQM-TotalMM;
   TotalHours /= 3600.0; //Convert from seconds to hours
