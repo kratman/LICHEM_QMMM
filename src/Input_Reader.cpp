@@ -569,6 +569,15 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
   {
     //Read energy minimization options for the DFP optimizer
     DFPSim = 1;
+    if ((dummy == "bfgs") or (dummy == "BFGS"))
+    {
+      //Print BFGS error
+      cerr << "Warning: A BFGS optimizer is not implemented.";
+      cerr << '\n';
+      cerr << " The DFP algorithm will be used instead of BFGS.";
+      cerr << '\n' << '\n';
+      cerr.flush(); //Print error immediately
+    }
     regionfile >> dummy >> QMMMOpts.StepScale;
     regionfile >> dummy >> QMMMOpts.MaxStep;
     regionfile >> dummy >> QMMMOpts.QMOptTol;
@@ -577,7 +586,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
   }
   if ((dummy == "NEB") or (dummy == "neb"))
   {
-    //Read energy minimization options for ensemble NEB
+    //Read energy minimization options for climbing image NEB
     NEBSim = 1;
     regionfile >> dummy >> QMMMOpts.Nbeads;
     regionfile >> dummy >> QMMMOpts.StepScale;
@@ -590,13 +599,13 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     if ((QMMMOpts.Nbeads%2) != 1)
     {
       //The number of beads must be odd
-      QMMMOpts.Nbeads += 1;
+      QMMMOpts.Nbeads += 1; //Change the number of beads
       cerr << "Warning: The number of replicas should be odd.";
       cerr << '\n';
       cerr << " Starting calculations with " << QMMMOpts.Nbeads;
       cerr << " beads.";
       cerr << '\n' << '\n';
-      cerr.flush();
+      cerr.flush(); //Print error immediately
     }
     //Set transition state
     QMMMOpts.TSBead = ((QMMMOpts.Nbeads-1)/2); //Middle bead
@@ -637,8 +646,8 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.Nbeads;
     regionfile >> dummy >> QMMMOpts.StepScale;
     regionfile >> dummy >> QMMMOpts.MaxStep;
-    regionfile >> dummy >> QMMMOpts.MaxOptSteps;
     regionfile >> dummy >> QMMMOpts.Kspring;
+    regionfile >> dummy >> QMMMOpts.MaxOptSteps;
     regionfile >> dummy >> QMMMOpts.dt;
     regionfile >> dummy >> QMMMOpts.Temp;
     regionfile >> dummy >> QMMMOpts.tautemp;
@@ -647,13 +656,13 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     if ((QMMMOpts.Nbeads%2) != 1)
     {
       //The number of beads must be odd
-      QMMMOpts.Nbeads += 1;
+      QMMMOpts.Nbeads += 1; //Change number of beads
       cerr << "Warning: The number of replicas must be odd.";
       cerr << '\n';
       cerr << " Starting calculations with " << QMMMOpts.Nbeads;
       cerr << " beads.";
       cerr << '\n' << '\n';
-      cerr.flush();
+      cerr.flush(); //Print error immediately
     }
     //Set transition state
     QMMMOpts.TSBead = ((QMMMOpts.Nbeads-1)/2); //Middle bead
@@ -1012,7 +1021,12 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
     {
       cout << "Pure MM";
     }
-    cout << " ensemble NEB" << '\n';
+    cout << " ";
+    if (ENEBSim)
+    {
+      cout << "ensemble ";
+    }
+    cout << "NEB" << '\n';
   }
   if (PIMCSim)
   {
@@ -1191,7 +1205,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
     cout << '\n';
   }
   //Print convergence criteria for optimizations
-  if (OptSim or SteepSim or DFPSim or ESDSim or ENEBSim)
+  if (OptSim or SteepSim or DFPSim or ESDSim or ENEBSim or NEBSim)
   {
     cout << '\n';
     cout << "Optimization settings:" << '\n';

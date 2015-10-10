@@ -720,7 +720,12 @@ int main(int argc, char* argv[])
     int optct = 0; //Counter for optimization steps
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
+    cout << "Nudged elastic band optimization:" << '\n';
+    cout << " | Opt. step: 0 | Bead energies:";
+    cout << '\n';
+    cout.flush(); //Print progress
     //Calculate initial energies
+    double TSEnergy = -1*HugeNum; //Locate the initial
     for (int p=0;p<QMMMOpts.Nbeads;p++)
     {
       SumE = 0; //Clear old energies
@@ -772,6 +777,13 @@ int main(int argc, char* argv[])
       cout << '\n';
       cout.flush(); //Print progress
       cout.copyfmt(call); //Replace settings
+      //Update transition state
+      if (SumE > TSEnergy)
+      {
+        //Save new properties
+        QMMMOpts.TSBead = p;
+        TSEnergy = SumE;
+      }
       //Copy checkpoint data to speed up first step
       if (p != (QMMMOpts.Nbeads-1))
       {
@@ -829,6 +841,7 @@ int main(int argc, char* argv[])
       optct += 1;
       PathDone = PathConverged(Struct,OldStruct,ForceStats,optct,QMMMOpts,0);
     }
+    BurstTraj(Struct,QMMMOpts);
     cout << '\n';
     cout << "Optimization complete.";
     cout << '\n' << '\n';
@@ -977,13 +990,13 @@ int main(int argc, char* argv[])
   EndTime = (unsigned)time(0); //Time the program completes
   double TotalHours = (double(EndTime)-double(StartTime));
   double TotalQM = double(QMTime);
-  if ((QMMMOpts.Nbeads > 1) and (!ENEBSim) and (!NEBSim))
+  if (PIMCSim)
   {
     //Average over the number of running simulations
     TotalQM /= QMMMOpts.Nbeads;
   }
   double TotalMM = double(MMTime);
-  if ((QMMMOpts.Nbeads > 1) and (!ENEBSim) and (!NEBSim))
+  if (PIMCSim)
   {
     //Average over the number of running simulations
     TotalMM /= QMMMOpts.Nbeads;

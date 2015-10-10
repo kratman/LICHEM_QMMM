@@ -9,10 +9,13 @@
 #                                                                             #
 ###############################################################################
 
- Functions for creating and modifying basis sets
+ Functions for creating and modifying basis sets for specific QM packages
 
  Reference for Gaussian:
  Frisch et al., Gaussian 09 Rev D.01, (2009)
+
+ Reference for NWChem:
+ Valiev et al., Comput. Phys. Commun., 181, 1477, (2010)
 
 */
 

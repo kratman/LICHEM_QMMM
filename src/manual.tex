@@ -424,7 +424,10 @@ Calculation\_type: Energy (or SP) \\
 
 \subsubsection{Geometry optimizations}
 
-There are currently three options for geometry optimizations in LICHEM. \\
+There are currently three options for geometry optimizations in LICHEM.
+The optimization types only differ in the method used to optimize the
+QM atoms.
+MM atoms are always optimized using the native MM wrappers. \\
 
 Calculation\_type: Opt \\
 Max\_opt\_step: $<$Size of the maximum optimization step (\AA)$>$ \\
@@ -433,7 +436,7 @@ Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
 
 The Opt keyword performs a geometry optimization using the native optimization
 routines in the QM package.
-Pure QM systems can be otpimized with any of the QM packages, but only
+Pure QM systems can be optimized with any of the QM packages, but only
 Gaussian can be used for QMMM optimizations with this keyword. \\
 
 Calculation\_type: Steep (or SD) \\
@@ -459,6 +462,8 @@ coordinates.
 
 \subsubsection{Reaction path optimizations}
 
+LICHEM has built in reaction path and transition state optimizers. \\
+
 Calculation\_type: NEB \\
 Number\_of\_beads: $<$Number of replicas, must be odd$>$ \\
 Opt\_step\_size: $<$Initial scale factor for the step size$>$ \\
@@ -467,6 +472,12 @@ Spring\_constant: $<$NEB spring constant (eV/\AA$^2$)$>$ \\
 QM\_opt\_tolerance: $<$Criteria to stop the QM optimization$>$ \\
 MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
 Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
+
+The NEB method implemented in LICHEM is the climbing
+image nudged elastic band method.
+The replica with the highest energy moves upwards along the reaction
+path to locate a transition state.
+For more details on the method, see Chapter \ref{chap:Theory}.
 
 \subsubsection{Ensemble samping and Monte Carlo}
 
@@ -483,8 +494,8 @@ Calculation\_type: EnsembleNEB (or ENEB) \\
 Number\_of\_beads: $<$Number of replicas, must be odd$>$ \\
 Opt\_step\_size: $<$Scale factor for the step size$>$ \\
 Max\_opt\_step: $<$Maximum displacement for each step (\AA)$>$ \\
-QM\_opt\_steps: $<$Perform N QM steps$>$ \\
 Spring\_constant: $<$NEB spring constant (eV/\AA$^2$)$>$ \\
+QM\_opt\_steps: $<$Perform N QM steps$>$ \\
 Timestep: $<$MD timestep (fs)$>$ \\
 Temperature: $<$MD temperature (K)$>$ \\
 Tau: $<$Thermostat time constant ($\tau$)$>$ \\

@@ -61,6 +61,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     for (int i=0;i<Natoms;i++)
     {
       //Calculate RMS displacement (QM-QM distance matrix)
+      double RMStmp = 0; //Store a local sum
       if (Struct[i].QMregion or Struct[i].PBregion)
       {
         for (int j=0;j<i;j++)
@@ -73,10 +74,13 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
             Rold = CoordDist2(OldStruct[i].P[Bead],OldStruct[j].P[Bead]);
             Rnew = sqrt(Rnew);
             Rold = sqrt(Rold);
-            RMSdiff += (Rnew-Rold)*(Rnew-Rold);
+            //Update local sum
+            RMStmp += (Rnew-Rold)*(Rnew-Rold);
           }
         }
       }
+      //Update sum
+      RMSdiff += RMStmp;
     }
     #pragma omp barrier
     RMSdiff /= (Nqm+Npseudo)*(Nqm+Npseudo-1)/2;
@@ -152,6 +156,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     #pragma omp parallel for reduction(+:RMSdiff)
     for (int i=0;i<Natoms;i++)
     {
+      double RMStmp = 0; //Store a local sum
       for (int j=0;j<i;j++)
       {
         double Rnew = 0;
@@ -160,8 +165,11 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
         Rold = CoordDist2(OldStruct[i].P[Bead],OldStruct[j].P[Bead]);
         Rnew = sqrt(Rnew);
         Rold = sqrt(Rold);
-        RMSdiff += (Rnew-Rold)*(Rnew-Rold);
+        //Update local sum
+        RMStmp += (Rnew-Rold)*(Rnew-Rold);
       }
+      //Update sum
+      RMSdiff += RMStmp;
     }
     #pragma omp barrier
     RMSdiff /= (Natoms-Nfreeze)*(Natoms-Nfreeze-1)/2;
@@ -199,7 +207,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Save settings
   string dummy; //Generic string
-  int stepct = 0; //Counter for optimization steps
+  int stepct = -1; //Counter for optimization steps
   fstream qmfile, ifile, ofile; //Generic file names
   double Eold = 0; //Old saved energy
   //Initialize files
@@ -402,8 +410,8 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call.copyfmt(cout); //Save settings
   string dummy; //Generic string
   int stepct = 0; //Counter for optimization steps
-  fstream qmfile,ifile,ofile; //Generic file names
-  //Initialize files
+  fstream qmfile,ifile,ofile; //Generic file streams
+  //Initialize trajectory file
   call.str("");
   call << "QMOpt_" << Bead << ".xyz";
   qmfile.open(call.str().c_str(),ios_base::out);
