@@ -517,7 +517,7 @@ Four different regions of the structure need to be defined even if the
 regions contain zero atoms. \\
 
 QM\_atoms: Nqm [list of ids] \\
-Pseudo-bond\_atoms: Npseudo [list of ids] \\
+Pseudobond\_atoms: Npseudo [list of ids] \\
 Boundary\_atoms: Nbound [list of ids] \\
 Frozen\_atoms: Ninact [list of ids] \\
 
@@ -539,9 +539,30 @@ or newlines.
 
 While LICHEM does not handle atom typing or structure generation, it is
 possible to use the native input/output functions to create LICHEM input from
-input used for MM packages.
+input used for QM and MM packages.
 In all cases the converter produces three files: xyzfile.xyz connect.inp
 regions.inp \\
+
+{\textbf{Gaussian/NWChem}} \\
+
+LICHEM can use a region file to create a BASIS set file for the Gaussian
+and NWChem basis set input.
+A BASIS file is required when mixed basis sets or pseudobonds are included
+in the QMMM calculations. \\
+
+user:\$ lichem -convert -b regions.inp \\
+
+The convert flag checks for specific keywords in the region file to construct
+a BASIS file in the correct order. \\
+
+Required keywords: \\
+'QM\_type:' \\
+'QM\_basis:' \\
+'QM\_atoms:' \\
+'Pseudobond\_atoms:' \\
+
+Currently, these keywords must be spelled and formatted exactly as given
+above. \\
 
 {\textbf{TINKER:}} \\
 
