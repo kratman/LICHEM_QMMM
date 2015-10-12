@@ -1000,7 +1000,41 @@ QM atoms should stay near the minimum while the MM atoms sample phase space.
 
 \subsection{Nudged elastic band}
 
-{\color{red}Comming soon...}
+Algorithms for geometry optimizations can only locate stationary points (e.g.
+minima and transition states).
+An entire reaction path can be optimized by performing an optimization with
+multiple replicas between the reactant and product states.
+Unfortunately, all of the replicas would optimize to either a minimum or
+a transition state. \\
+
+In order to sample regions between the stationary points, spring forces
+can be added to the forces.
+The modified elastic band forces ($F'$) on bead $p$ and step $n$ are given
+by
+\begin{equation}
+ F'_{p,n} = F_{p,n}+K\Delta R_{p,n} \; ,
+\end{equation}
+where $K$ is the spring constant, and $\Delta R$ is the displacement between
+replicas.
+The spring forces help the elastic band method locate the minimum energy
+path, however, the beads still want to slide down to the minima. \\
+
+The forces can be further modified by subtracting the forces parallel to the
+reaction path.
+The forces are then given by \cite{}
+\begin{equation}
+ F'_{p,n} = F_{p,n}-F_{p,n}\cdot\tau_{p,n}\tau_{p,n}
+            +K\Delta R_{p,n}\tau_{p,n} \; ,
+\end{equation}
+where $\tau$ is a unit tanget vector representing the direction of the
+reaction path.
+Removing the tangent components of the forces is referred to as nudging in
+the literature \cite{}.
+
+The nudged elastic band method (NEB) is relatively insensitive to the
+magnitude of the spring constant.
+Unfortunately, the NEB method is still unlikely to locate a transition state.
+
 
 \subsection{Quadradic string method}
 
