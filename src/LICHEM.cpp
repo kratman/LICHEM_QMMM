@@ -725,7 +725,7 @@ int main(int argc, char* argv[])
     cout << '\n';
     cout.flush(); //Print progress
     //Calculate initial energies
-    double TSEnergy = -1*HugeNum; //Locate the initial
+    QMMMOpts.Ets = -1*HugeNum; //Locate the initial transition state
     for (int p=0;p<QMMMOpts.Nbeads;p++)
     {
       SumE = 0; //Clear old energies
@@ -769,6 +769,16 @@ int main(int argc, char* argv[])
         SumE += LAMMPSEnergy(Struct,QMMMOpts,p);
         MMTime += (unsigned)time(0)-tstart;
       }
+      if (p == 0)
+      {
+        //Save reactant energy
+        QMMMOpts.Ereact = SumE;
+      }
+      else if (p == (QMMMOpts.Nbeads-1))
+      {
+        //Save product energy
+        QMMMOpts.Eprod = SumE;
+      }
       stringstream call; //Stream for system calls and reading/writing files
       call.copyfmt(cout); //Save settings
       cout << "   Bead: ";
@@ -778,11 +788,11 @@ int main(int argc, char* argv[])
       cout.flush(); //Print progress
       cout.copyfmt(call); //Replace settings
       //Update transition state
-      if (SumE > TSEnergy)
+      if (SumE > QMMMOpts.Ets)
       {
         //Save new properties
         QMMMOpts.TSBead = p;
-        TSEnergy = SumE;
+        QMMMOpts.Ets = SumE;
       }
       //Copy checkpoint data to speed up first step
       if (p != (QMMMOpts.Nbeads-1))

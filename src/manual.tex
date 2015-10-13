@@ -1034,7 +1034,15 @@ the literature \cite{}.
 The nudged elastic band method (NEB) is relatively insensitive to the
 magnitude of the spring constant.
 Unfortunately, the NEB method is still unlikely to locate a transition state.
-
+The climbing image (CI) NEB method \cite{} further modifies the forces of the
+highest energy.
+The CI travels upwards along the tangent to find a transition
+state structure.
+Transition state forces on the CI are now given by
+\begin{equation}
+ F'_{ci,n} = F_{ci,n}-2F_{ci,n}\cdot\tau_{ci,n}\tau_{ci,n} \; ,
+\end{equation}
+where the forces are inverted along the tangent \cite{}.
 
 \subsection{Quadradic string method}
 

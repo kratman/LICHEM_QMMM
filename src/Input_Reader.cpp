@@ -240,6 +240,9 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
   QMMMOpts.Kspring = 0;
   QMMMOpts.TSBead = 0;
   QMMMOpts.Eold = 0;
+  QMMMOpts.Ereact = 0;
+  QMMMOpts.Eprod = 0;
+  QMMMOpts.Ets = 0;
   return;
 };
 
@@ -1222,7 +1225,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
       //Spring constant for the path
       cout << '\n';
       cout << " Spring constant: " << QMMMOpts.Kspring;
-      cout << " eV/\u212B";
+      cout << " eV/\u212B\u00B2";
     }
     cout << '\n' << '\n';
     if (SteepSim or DFPSim or NEBSim)

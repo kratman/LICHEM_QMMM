@@ -373,8 +373,11 @@ class QMMMSettings
     //Input needed for reaction paths
     double Kspring; //Elastic band spring constant
     double TSBead; //Current guess of the transition state
-    //Storage of energies (PIMC)
+    //Storage of energies (NEB and PIMC)
     double Eold; //Temporary storage
+    double Ereact; //Reactant energy
+    double Eprod; //Product energy
+    double Ets; //Transition state energy
 };
 
 //Set up periodic table
