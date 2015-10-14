@@ -23,6 +23,7 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
   fstream ifile; //Generic file stream
   string dummy; //Generic string
   ifile.open("tinker.key",ios_base::in);
+  int ct; //Generic counter
   if (!ifile.good())
   {
     //Exit if files do not exist
@@ -62,7 +63,7 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
     cout.flush();
     exit(0);
   }
-  int ct = 0; //Generic counter
+  ct = 0; //Generic counter
   while (!ifile.eof())
   {
     getline(ifile,dummy);
@@ -170,35 +171,38 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile << "thermostat berendsen" << '\n';
   ofile << "tau-temperature 0.1" << '\n';
   ct = 0; //Generic counter
-  for (int i=0;i<Natoms;i++)
+  if (QMMM)
   {
-    //Add active atoms
-    if (Struct[i].MMregion or Struct[i].BAregion)
+    for (int i=0;i<Natoms;i++)
     {
-      if (ct == 0)
+      //Add active atoms
+      if (Struct[i].MMregion or Struct[i].BAregion)
       {
-        //Start a new active line
-        ofile << "active ";
-      }
-      else
-      {
-        //Place a space to separate values
-        ofile << " ";
-      }
-      ofile << (Struct[i].id+1);
-      ct += 1;
-      if (ct == 10)
-      {
-        //terminate an active line
-        ct = 0;
-        ofile << '\n';
+        if (ct == 0)
+        {
+          //Start a new active line
+          ofile << "active ";
+        }
+        else
+        {
+          //Place a space to separate values
+          ofile << " ";
+        }
+        ofile << (Struct[i].id+1);
+        ct += 1;
+        if (ct == 10)
+        {
+          //terminate an active line
+          ct = 0;
+          ofile << '\n';
+        }
       }
     }
-  }
-  if (ct != 0)
-  {
-    //Terminate trailing actives line
-    ofile << '\n';
+    if (ct != 0)
+    {
+      //Terminate trailing actives line
+      ofile << '\n';
+    }
   }
   for (int i=0;i<Natoms;i++)
   {
@@ -353,35 +357,38 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   ofile << "polarizeterm only" << '\n'; //Get rid of other interactions
   ct = 0; //Generic counter
-  for (int i=0;i<Natoms;i++)
+  if (QMMM)
   {
-    //Add active atoms
-    if (Struct[i].MMregion or Struct[i].BAregion)
+    for (int i=0;i<Natoms;i++)
     {
-      if (ct == 0)
+      //Add active atoms
+      if (Struct[i].MMregion or Struct[i].BAregion)
       {
-        //Start a new active line
-        ofile << "active ";
-      }
-      else
-      {
-        //Place a space to separate values
-        ofile << " ";
-      }
-      ofile << (Struct[i].id+1);
-      ct += 1;
-      if (ct == 10)
-      {
-        //terminate an active line
-        ct = 0;
-        ofile << '\n';
+        if (ct == 0)
+        {
+          //Start a new active line
+          ofile << "active ";
+        }
+        else
+        {
+          //Place a space to separate values
+          ofile << " ";
+        }
+        ofile << (Struct[i].id+1);
+        ct += 1;
+        if (ct == 10)
+        {
+          //terminate an active line
+          ct = 0;
+          ofile << '\n';
+        }
       }
     }
-  }
-  if (ct != 0)
-  {
-    //Terminate trailing actives line
-    ofile << '\n';
+    if (ct != 0)
+    {
+      //Terminate trailing actives line
+      ofile << '\n';
+    }
   }
   for (int i=0;i<Natoms;i++)
   {
@@ -750,7 +757,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     ofile << "beta 90.0" << '\n';
     ofile << "gamma 90.0" << '\n';
   }
-  ofile << "polarizeterm only" << '\n';
+  ofile << "polarizeterm only" << '\n'; //Get rid of other interactions
   ct = 0; //Generic counter
   for (int i=0;i<Natoms;i++)
   {
@@ -947,33 +954,36 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   int ct; //Generic counter
   call.str("");
   //Copy the original key file and make changes
+  call.str("");
+  call << "cp tinker.key LICHM_";
+  call << Bead << ".key";
+  GlobalSys = system(call.str().c_str());
+  //Update key file
+  call.str("");
+  call << "LICHM_";
+  call << Bead << ".key";
+  ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
+  ofile << '\n';
+  ofile << "#QM force field parameters"; //Marks the changes
+  ofile << '\n';
+  ofile << "openmp-threads " << Ncpus << '\n';
+  if (PBCon)
+  {
+    //PBC defined twice for safety
+    ofile << "a-axis " << Lx << '\n';
+    ofile << "b-axis " << Ly << '\n';
+    ofile << "c-axis " << Lz << '\n';
+    ofile << "alpha 90.0" << '\n';
+    ofile << "beta 90.0" << '\n';
+    ofile << "gamma 90.0" << '\n';
+  }
   if (QMMM)
   {
-    call.str("");
-    call << "cp tinker.key LICHM_";
-    call << Bead << ".key";
-    GlobalSys = system(call.str().c_str());
-    //Update key file
-    call.str("");
-    call << "LICHM_";
-    call << Bead << ".key";
-    ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
-    ofile << '\n';
-    ofile << "#QM force field parameters"; //Marks the changes
-    ofile << '\n';
-    ofile << "openmp-threads " << Ncpus << '\n';
-    if (PBCon)
-    {
-      //PBC defined twice for safety
-      ofile << "a-axis " << Lx << '\n';
-      ofile << "b-axis " << Ly << '\n';
-      ofile << "c-axis " << Lz << '\n';
-      ofile << "alpha 90.0" << '\n';
-      ofile << "beta 90.0" << '\n';
-      ofile << "gamma 90.0" << '\n';
-    }
     ofile << "polarizeterm none" << '\n'; //Remove polarization energy
-    ct = 0; //Generic counter
+  }
+  ct = 0; //Generic counter
+  if (QMMM)
+  {
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
@@ -1004,43 +1014,43 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       //Terminate trailing actives line
       ofile << '\n';
     }
-    if (CHRG)
-    {
-      for (int i=0;i<Natoms;i++)
-      {
-        //Add nuclear charges
-        if (Struct[i].QMregion or Struct[i].PBregion or Struct[i].BAregion)
-        {
-          //New charges are only needed for QM atoms
-          ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
-          ofile << "0.0" << '\n';
-        }
-      }
-    }
-    if (AMOEBA or GEM)
-    {
-      for (int i=0;i<Natoms;i++)
-      {
-        //Add multipoles
-        if (Struct[i].QMregion or Struct[i].PBregion or Struct[i].BAregion)
-        {
-          double qi = 0;
-          //remove charge
-          qi = Struct[i].MP[Bead].q;
-          Struct[i].MP[Bead].q = 0;
-          //Write new multipole definition for the atom ID
-          WriteTINKMpole(Struct,ofile,i,Bead);
-          //Restore charge
-          Struct[i].MP[Bead].q = qi;
-          //Remove polarization
-          ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
-          ofile << '\n';
-        }
-      }
-    }
-    ofile.flush();
-    ofile.close();
   }
+  if (CHRG)
+  {
+    for (int i=0;i<Natoms;i++)
+    {
+      //Add nuclear charges
+      if (Struct[i].QMregion or Struct[i].PBregion or Struct[i].BAregion)
+      {
+        //New charges are only needed for QM atoms
+        ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
+        ofile << "0.0" << '\n';
+      }
+    }
+  }
+  if (AMOEBA or GEM)
+  {
+    for (int i=0;i<Natoms;i++)
+    {
+      //Add multipoles
+      if (Struct[i].QMregion or Struct[i].PBregion or Struct[i].BAregion)
+      {
+        double qi = 0;
+        //remove charge
+        qi = Struct[i].MP[Bead].q;
+        Struct[i].MP[Bead].q = 0;
+        //Write new multipole definition for the atom ID
+        WriteTINKMpole(Struct,ofile,i,Bead);
+        //Restore charge
+        Struct[i].MP[Bead].q = qi;
+        //Remove polarization
+        ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        ofile << '\n';
+      }
+    }
+  }
+  ofile.flush();
+  ofile.close();
   //Create TINKER xyz file from the structure
   call.str("");
   call << "LICHM_" << Bead << ".xyz";
@@ -1143,36 +1153,36 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   int ct; //Generic counter
   call.str("");
   //Copy the original key file and make changes
-  if (QMMM)
+  call.str("");
+  call << "cp tinker.key LICHM_";
+  call << Bead << ".key";
+  GlobalSys = system(call.str().c_str());
+  //Update key file
+  call.str("");
+  call << "LICHM_";
+  call << Bead << ".key";
+  ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
+  ofile << '\n';
+  ofile << "#QM force field parameters"; //Marks the changes
+  ofile << '\n';
+  ofile << "openmp-threads " << Ncpus << '\n';
+  if (PBCon)
   {
-    call.str("");
-    call << "cp tinker.key LICHM_";
-    call << Bead << ".key";
-    GlobalSys = system(call.str().c_str());
-    //Update key file
-    call.str("");
-    call << "LICHM_";
-    call << Bead << ".key";
-    ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
-    ofile << '\n';
-    ofile << "#QM force field parameters"; //Marks the changes
-    ofile << '\n';
-    ofile << "openmp-threads " << Ncpus << '\n';
-    if (PBCon)
-    {
-      //PBC defined twice for safety
-      ofile << "a-axis " << Lx << '\n';
-      ofile << "b-axis " << Ly << '\n';
-      ofile << "c-axis " << Lz << '\n';
-      ofile << "alpha 90.0" << '\n';
-      ofile << "beta 90.0" << '\n';
-      ofile << "gamma 90.0" << '\n';
-    }
-    ofile << "thermostat berendsen";
-    ofile << '\n';
-    ofile << "tau-temperature ";
-    ofile << QMMMOpts.tautemp << '\n';
-    ct = 0; //Generic counter
+    //PBC defined twice for safety
+    ofile << "a-axis " << Lx << '\n';
+    ofile << "b-axis " << Ly << '\n';
+    ofile << "c-axis " << Lz << '\n';
+    ofile << "alpha 90.0" << '\n';
+    ofile << "beta 90.0" << '\n';
+    ofile << "gamma 90.0" << '\n';
+  }
+  ofile << "thermostat berendsen";
+  ofile << '\n';
+  ofile << "tau-temperature ";
+  ofile << QMMMOpts.tautemp << '\n';
+  ct = 0; //Generic counter
+  if (QMMM or (Nfreeze > 0))
+  {
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
@@ -1206,75 +1216,75 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Terminate trailing actives line
       ofile << '\n';
     }
-    if (CHRG)
-    {
-      for (int i=0;i<Natoms;i++)
-      {
-        //Add nuclear charges
-        if (Struct[i].QMregion)
-        {
-          //New charges are only needed for QM atoms
-          ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
-          ofile << Struct[i].MP[Bead].q;
-          ofile << '\n';
-        }
-        if (Struct[i].PBregion)
-        {
-          //Modify the charge to force charge balance with the boundaries
-          vector<int> Boundaries;
-          Boundaries = TraceBoundary(Struct,i);
-          double qnew = Struct[i].MP[Bead].q;
-          for (unsigned int j=0;j<Boundaries.size();j++)
-          {
-            //Subtract boundary atom charge
-            qnew -= Struct[Boundaries[j]].MP[Bead].q;
-          }
-          ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
-          ofile << qnew;
-          ofile << '\n';
-        }
-      }
-    }
-    if (AMOEBA)
-    {
-      for (int i=0;i<Natoms;i++)
-      {
-        //Add nuclear charges
-        if (Struct[i].QMregion)
-        {
-          //Write new multipole definition for the atom ID
-          WriteTINKMpole(Struct,ofile,i,Bead);
-          ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
-          ofile << '\n';
-        }
-        if (Struct[i].PBregion)
-        {
-          //Modify the charge to force charge balance with the boundaries
-          double qi = Struct[i].MP[Bead].q; //Save a copy
-          vector<int> Boundaries;
-          Boundaries = TraceBoundary(Struct,i);
-          double qnew = qi;
-          for (unsigned int j=0;j<Boundaries.size();j++)
-          {
-            //Subtract boundary atom charge
-            qnew -= Struct[Boundaries[j]].MP[Bead].q;
-          }
-          Struct[i].MP[Bead].q = qnew; //Save modified charge
-          WriteTINKMpole(Struct,ofile,i,Bead);
-          Struct[i].MP[Bead].q = qi; //Return to unmodified charge
-          ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
-          ofile << '\n';
-        }
-        if (Struct[i].BAregion)
-        {
-          ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
-          ofile << '\n';
-        }
-      }
-    }
-    ofile.flush();
-    ofile.close();
   }
+  if (CHRG)
+  {
+    for (int i=0;i<Natoms;i++)
+    {
+      //Add nuclear charges
+      if (Struct[i].QMregion)
+      {
+        //New charges are only needed for QM atoms
+        ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
+        ofile << Struct[i].MP[Bead].q;
+        ofile << '\n';
+      }
+      if (Struct[i].PBregion)
+      {
+        //Modify the charge to force charge balance with the boundaries
+        vector<int> Boundaries;
+        Boundaries = TraceBoundary(Struct,i);
+        double qnew = Struct[i].MP[Bead].q;
+        for (unsigned int j=0;j<Boundaries.size();j++)
+        {
+          //Subtract boundary atom charge
+          qnew -= Struct[Boundaries[j]].MP[Bead].q;
+        }
+        ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
+        ofile << qnew;
+        ofile << '\n';
+      }
+    }
+  }
+  if (AMOEBA)
+  {
+    for (int i=0;i<Natoms;i++)
+    {
+      //Add nuclear charges
+      if (Struct[i].QMregion)
+      {
+        //Write new multipole definition for the atom ID
+        WriteTINKMpole(Struct,ofile,i,Bead);
+        ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        ofile << '\n';
+      }
+      if (Struct[i].PBregion)
+      {
+        //Modify the charge to force charge balance with the boundaries
+        double qi = Struct[i].MP[Bead].q; //Save a copy
+        vector<int> Boundaries;
+        Boundaries = TraceBoundary(Struct,i);
+        double qnew = qi;
+        for (unsigned int j=0;j<Boundaries.size();j++)
+        {
+          //Subtract boundary atom charge
+          qnew -= Struct[Boundaries[j]].MP[Bead].q;
+        }
+        Struct[i].MP[Bead].q = qnew; //Save modified charge
+        WriteTINKMpole(Struct,ofile,i,Bead);
+        Struct[i].MP[Bead].q = qi; //Return to unmodified charge
+        ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        ofile << '\n';
+      }
+      if (Struct[i].BAregion)
+      {
+        ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        ofile << '\n';
+      }
+    }
+  }
+  ofile.flush();
+  ofile.close();
   //Create TINKER xyz file from the structure
   call.str("");
   call << "LICHM_" << Bead << ".xyz";
@@ -1366,32 +1376,32 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   int ct; //Generic counter
   call.str("");
   //Copy the original key file and make changes
-  if (QMMM)
+  call.str("");
+  call << "cp tinker.key LICHM_";
+  call << Bead << ".key";
+  GlobalSys = system(call.str().c_str());
+  //Update key file
+  call.str("");
+  call << "LICHM_";
+  call << Bead << ".key";
+  ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
+  ofile << '\n';
+  ofile << "#QM force field parameters"; //Marks the changes
+  ofile << '\n';
+  ofile << "openmp-threads " << Ncpus << '\n';
+  if (PBCon)
   {
-    call.str("");
-    call << "cp tinker.key LICHM_";
-    call << Bead << ".key";
-    GlobalSys = system(call.str().c_str());
-    //Update key file
-    call.str("");
-    call << "LICHM_";
-    call << Bead << ".key";
-    ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
-    ofile << '\n';
-    ofile << "#QM force field parameters"; //Marks the changes
-    ofile << '\n';
-    ofile << "openmp-threads " << Ncpus << '\n';
-    if (PBCon)
-    {
-      //PBC defined twice for safety
-      ofile << "a-axis " << Lx << '\n';
-      ofile << "b-axis " << Ly << '\n';
-      ofile << "c-axis " << Lz << '\n';
-      ofile << "alpha 90.0" << '\n';
-      ofile << "beta 90.0" << '\n';
-      ofile << "gamma 90.0" << '\n';
-    }
-    ct = 0; //Generic counter
+    //PBC defined twice for safety
+    ofile << "a-axis " << Lx << '\n';
+    ofile << "b-axis " << Ly << '\n';
+    ofile << "c-axis " << Lz << '\n';
+    ofile << "alpha 90.0" << '\n';
+    ofile << "beta 90.0" << '\n';
+    ofile << "gamma 90.0" << '\n';
+  }
+  ct = 0; //Generic counter
+  if (QMMM or (Nfreeze > 0))
+  {
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
@@ -1425,75 +1435,75 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       //Terminate trailing actives line
       ofile << '\n';
     }
-    if (CHRG)
-    {
-      for (int i=0;i<Natoms;i++)
-      {
-        //Add nuclear charges
-        if (Struct[i].QMregion)
-        {
-          //New charges are only needed for QM atoms
-          ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
-          ofile << Struct[i].MP[Bead].q;
-          ofile << '\n';
-        }
-        if (Struct[i].PBregion)
-        {
-          //Modify the charge to force charge balance with the boundaries
-          vector<int> Boundaries;
-          Boundaries = TraceBoundary(Struct,i);
-          double qnew = Struct[i].MP[Bead].q;
-          for (unsigned int j=0;j<Boundaries.size();j++)
-          {
-            //Subtract boundary atom charge
-            qnew -= Struct[Boundaries[j]].MP[Bead].q;
-          }
-          ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
-          ofile << qnew;
-          ofile << '\n';
-        }
-      }
-    }
-    if (AMOEBA)
-    {
-      for (int i=0;i<Natoms;i++)
-      {
-        //Add nuclear charges
-        if (Struct[i].QMregion)
-        {
-          //Write new multipole definition for the atom ID
-          WriteTINKMpole(Struct,ofile,i,Bead);
-          ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
-          ofile << '\n';
-        }
-        if (Struct[i].PBregion)
-        {
-          //Modify the charge to force charge balance with the boundaries
-          double qi = Struct[i].MP[Bead].q; //Save a copy
-          vector<int> Boundaries;
-          Boundaries = TraceBoundary(Struct,i);
-          double qnew = qi;
-          for (unsigned int j=0;j<Boundaries.size();j++)
-          {
-            //Subtract boundary atom charge
-            qnew -= Struct[Boundaries[j]].MP[Bead].q;
-          }
-          Struct[i].MP[Bead].q = qnew; //Save modified charge
-          WriteTINKMpole(Struct,ofile,i,Bead);
-          Struct[i].MP[Bead].q = qi; //Return to unmodified charge
-          ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
-          ofile << '\n';
-        }
-        if (Struct[i].BAregion)
-        {
-          ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
-          ofile << '\n';
-        }
-      }
-    }
-    ofile.flush();
-    ofile.close();
   }
+  if (CHRG)
+  {
+    for (int i=0;i<Natoms;i++)
+    {
+      //Add nuclear charges
+      if (Struct[i].QMregion)
+      {
+        //New charges are only needed for QM atoms
+        ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
+        ofile << Struct[i].MP[Bead].q;
+        ofile << '\n';
+      }
+      if (Struct[i].PBregion)
+      {
+        //Modify the charge to force charge balance with the boundaries
+        vector<int> Boundaries;
+        Boundaries = TraceBoundary(Struct,i);
+        double qnew = Struct[i].MP[Bead].q;
+        for (unsigned int j=0;j<Boundaries.size();j++)
+        {
+          //Subtract boundary atom charge
+          qnew -= Struct[Boundaries[j]].MP[Bead].q;
+        }
+        ofile << "charge " << (-1*(Struct[i].id+1)) << " ";
+        ofile << qnew;
+        ofile << '\n';
+      }
+    }
+  }
+  if (AMOEBA)
+  {
+    for (int i=0;i<Natoms;i++)
+    {
+      //Add nuclear charges
+      if (Struct[i].QMregion)
+      {
+        //Write new multipole definition for the atom ID
+        WriteTINKMpole(Struct,ofile,i,Bead);
+        ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        ofile << '\n';
+      }
+      if (Struct[i].PBregion)
+      {
+        //Modify the charge to force charge balance with the boundaries
+        double qi = Struct[i].MP[Bead].q; //Save a copy
+        vector<int> Boundaries;
+        Boundaries = TraceBoundary(Struct,i);
+        double qnew = qi;
+        for (unsigned int j=0;j<Boundaries.size();j++)
+        {
+          //Subtract boundary atom charge
+          qnew -= Struct[Boundaries[j]].MP[Bead].q;
+        }
+        Struct[i].MP[Bead].q = qnew; //Save modified charge
+        WriteTINKMpole(Struct,ofile,i,Bead);
+        Struct[i].MP[Bead].q = qi; //Return to unmodified charge
+        ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        ofile << '\n';
+      }
+      if (Struct[i].BAregion)
+      {
+        ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        ofile << '\n';
+      }
+    }
+  }
+  ofile.flush();
+  ofile.close();
   //Create TINKER xyz file from the structure
   call.str("");
   call << "LICHM_" << Bead << ".xyz";

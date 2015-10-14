@@ -373,6 +373,7 @@ class QMMMSettings
     //Input needed for reaction paths
     double Kspring; //Elastic band spring constant
     double TSBead; //Current guess of the transition state
+    bool Climb; //Flag to turn on climbing image NEB
     //Storage of energies (NEB and PIMC)
     double Eold; //Temporary storage
     double Ereact; //Reactant energy

@@ -331,10 +331,13 @@ cmd = ""
 cmd += "grep -e"
 cmd += ' "QMMM energy: " '
 cmd += "tests.out"
-QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
-QMMMEnergy = QMMMEnergy.split()
-QMMMEnergy = float(QMMMEnergy[2])
-QMMMEnergy = round(QMMMEnergy,5)
+try:
+  QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
+  QMMMEnergy = QMMMEnergy.split()
+  QMMMEnergy = float(QMMMEnergy[2])
+  QMMMEnergy = round(QMMMEnergy,5)
+except:
+  QMMMEnergy = 0.0
 if (QMPack == "PSI4"):
   #Check again saved energy
   if (QMMMEnergy == round(-2077.868473998802,5)):
@@ -356,9 +359,12 @@ cmd = ""
 cmd += "grep -e"
 cmd += ' "Total wall time: " '
 cmd += "tests.out"
-RunTime = subprocess.check_output(cmd,shell=True) #Get run time
-RunTime = RunTime.split()
-RunTime = " "+RunTime[3]+" "+RunTime[4]
+try:
+  RunTime = subprocess.check_output(cmd,shell=True) #Get run time
+  RunTime = RunTime.split()
+  RunTime = " "+RunTime[3]+" "+RunTime[4]
+except:
+  RunTime = " N/A"
 line += RunTime
 print(line)
 
@@ -392,10 +398,13 @@ cmd = ""
 cmd += "grep -e"
 cmd += ' "QMMM energy: " '
 cmd += "tests.out"
-QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
-QMMMEnergy = QMMMEnergy.split()
-QMMMEnergy = float(QMMMEnergy[2])
-QMMMEnergy = round(QMMMEnergy,5)
+try:
+  QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
+  QMMMEnergy = QMMMEnergy.split()
+  QMMMEnergy = float(QMMMEnergy[2])
+  QMMMEnergy = round(QMMMEnergy,5)
+except:
+  QMMMEnergy = 0.0
 if (QMPack == "PSI4"):
   #Check again saved energy
   if (QMMMEnergy == round(-2077.771998247412,5)):
@@ -417,9 +426,12 @@ cmd = ""
 cmd += "grep -e"
 cmd += ' "Total wall time: " '
 cmd += "tests.out"
-RunTime = subprocess.check_output(cmd,shell=True) #Get run time
-RunTime = RunTime.split()
-RunTime = " "+RunTime[3]+" "+RunTime[4]
+try:
+  RunTime = subprocess.check_output(cmd,shell=True) #Get run time
+  RunTime = RunTime.split()
+  RunTime = " "+RunTime[3]+" "+RunTime[4]
+except:
+  RunTime = " N/A"
 line += RunTime
 line += '\n'
 

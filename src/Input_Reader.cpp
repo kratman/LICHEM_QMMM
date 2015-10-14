@@ -239,6 +239,7 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
   QMMMOpts.MaxStep = 0;
   QMMMOpts.Kspring = 0;
   QMMMOpts.TSBead = 0;
+  QMMMOpts.Climb = 0;
   QMMMOpts.Eold = 0;
   QMMMOpts.Ereact = 0;
   QMMMOpts.Eprod = 0;

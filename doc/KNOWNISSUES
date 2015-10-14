@@ -1,6 +1,6 @@
 General:
--Currently only DFT and HF energies can be used in the calculations. Post-HF
-methods will be implemented in the future.
+-Currently only DFT and HF energies can be used in most of the QM
+calculations. Post-HF methods are currently only implemented in PSI4.
 -MM wrappers can easily include PBC, but only the NWChem wrapper can handle
 PBC for QM calculations. The QM region should always be placed near the center
 of the simulation box.
@@ -41,8 +41,9 @@ create a new Hessian if the optimization does not converge within 30 steps.
 Reaction paths:
 -The NEB optimizer uses a steepest descent algorithm. It should be replaced
 by a damped Verlet algorithm.
--The climbing image algorithm should go a few steps before the climbing
-begins.
+
+Testing:
+-The test set needs to be expanded beyond single-point energies.
 
 Manual:
 -The theory sections need citations

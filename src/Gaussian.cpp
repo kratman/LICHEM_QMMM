@@ -554,6 +554,18 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ifile.close();
   //Clean up files and save checkpoint file
   call.str("");
+  if (CheckFile("BACKUPQM"))
+  {
+    //Save old files
+    call << "rm -rf ";
+    call << QMMMOpts.BackDir;
+    call << " && mkdir ";
+    call << QMMMOpts.BackDir;
+    call << " && cp LICHM_";
+    call << Bead << ".* ";
+    call << QMMMOpts.BackDir;
+    call << "/. && ";
+  }
   call << "rm -f ";
   call << "LICHM_" << Bead;
   call << ".log";

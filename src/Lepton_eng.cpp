@@ -66,14 +66,14 @@ double EFFCorr(QMMMElec& elec1, QMMMElec& elec2, int Bead)
   double E = 0.0;
   double r = CoordDist2(elec1.P[Bead],elec2.P[Bead]);
   //Electrostatic energy
-  if (r <= ElecCutoff*ElecCutoff)
+  if (r <= (ElecCutoff*ElecCutoff))
   {
     r = sqrt(r);
     if (r == 0.0)
     {
       E = C2eV*elec1.q*elec2.q*sqrt(8/pi);
       E /= sqrt(elec1.rad[Bead]*elec1.rad[Bead]
-        +elec2.rad[Bead]*elec2.rad[Bead]);
+           +elec2.rad[Bead]*elec2.rad[Bead]);
       return HugeNum; //Escape to avoid singularities later
     }
     else
@@ -101,12 +101,12 @@ double EFFCorr(QMMMElec& elec1, QMMMElec& elec2, int Bead)
       Tij += 1/(elec2.rad[Bead]*elec2.rad[Bead]);
       Tij *= 3/(2*sbar*sbar);
       tmp = 6*sbar*sbar*(elec1.rad[Bead]*elec1.rad[Bead]
-          +elec2.rad[Bead]*elec2.rad[Bead]);
+            +elec2.rad[Bead]*elec2.rad[Bead]);
       tmp -= 4*rbar*rbar*r*r;
       tmp /= sbar*sbar*(elec1.rad[Bead]*elec1.rad[Bead]
-          +elec2.rad[Bead]*elec2.rad[Bead]);
+             +elec2.rad[Bead]*elec2.rad[Bead]);
       tmp /= sbar*sbar*(elec1.rad[Bead]*elec1.rad[Bead]
-          +elec2.rad[Bead]*elec2.rad[Bead]);
+             +elec2.rad[Bead]*elec2.rad[Bead]);
       Tij -= tmp;
       Tij *= Har2eV*BohrRad*BohrRad;
       if (elec1.spin == elec2.spin)

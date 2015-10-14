@@ -1014,6 +1014,10 @@ by
 \begin{equation}
  F'_{p,n} = F_{p,n}+K\Delta R_{p,n} \; ,
 \end{equation}
+and
+\begin{equation}
+ \Delta R_{p,n} = |R_{p+1,n}-R_{p,n}|-|R_{p,n}-R_{p-1,n}| \; ,
+\end{equation}
 where $K$ is the spring constant, and $\Delta R$ is the displacement between
 replicas.
 The spring forces help the elastic band method locate the minimum energy
@@ -1029,7 +1033,7 @@ The forces are then given by \cite{}
 where $\tau$ is a unit tanget vector representing the direction of the
 reaction path.
 Removing the tangent components of the forces is referred to as nudging in
-the literature \cite{}.
+the literature \cite{}. \\
 
 The nudged elastic band method (NEB) is relatively insensitive to the
 magnitude of the spring constant.
@@ -1038,11 +1042,38 @@ The climbing image (CI) NEB method \cite{} further modifies the forces of the
 highest energy.
 The CI travels upwards along the tangent to find a transition
 state structure.
-Transition state forces on the CI are now given by
+Transition state forces on the CI (replica $c$) are now given by
 \begin{equation}
- F'_{ci,n} = F_{ci,n}-2F_{ci,n}\cdot\tau_{ci,n}\tau_{ci,n} \; ,
+ F'_{c,n} = F_{c,n}-2F_{c,n}\cdot\tau_{c,n}\tau_{c,n} \; ,
 \end{equation}
-where the forces are inverted along the tangent \cite{}.
+where the forces are inverted along the tangent \cite{}. \\
+
+The tangent vectors are given by \cite{}
+\begin{equation}
+ \tau_{p,n} = \tau_{p,n}^{+}
+ \quad , \quad
+ p < c \; ,
+\end{equation}
+\begin{equation}
+ \tau_{p,n} = \tau_{p,n}^{-}
+ \quad , \quad
+ p > c \; ,
+\end{equation}
+\begin{equation}
+ \tau_{p,n} = \frac{\tau_{p,n}^{+}+\tau_{p,n}^{-}}
+ {|\tau_{p,n}^{+}+\tau_{p,n}^{-}|}
+ \quad , \quad
+ p = c \; ,
+\end{equation}
+\begin{equation}
+ \tau_{p,n}^{+} = \frac{R_{p+1,n}-R_{p,n}}{|R_{p+1,n}-R_{p,n}|} \; ,
+\end{equation}
+and
+\begin{equation}
+ \tau_{p,n}^{-} = \frac{R_{p,n}-R_{p-1,n}}{|R_{p,n}-R_{p-1,n}|} \; .
+\end{equation}
+Here the tangents are only calculated in the direction of the transition
+state.
 
 \subsection{Quadradic string method}
 

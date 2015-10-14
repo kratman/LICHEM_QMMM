@@ -347,6 +347,27 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   //Clean up files
   call.str("");
+  if (CheckFile("BACKUPQM"))
+  {
+    //Save old files
+    call << "rm -rf ";
+    call << QMMMOpts.BackDir;
+    call << " && mkdir ";
+    call << QMMMOpts.BackDir;
+    call << " && ";
+    call << "cp LICHM_";
+    call << Bead << ".nw ";
+    call << QMMMOpts.BackDir;
+    call << "/. && ";
+    call << "cp LICHM_";
+    call << Bead << ".db ";
+    call << QMMMOpts.BackDir;
+    call << "/. && ";
+    call << "cp LICHM_";
+    call << Bead << ".log ";
+    call << QMMMOpts.BackDir;
+    call << "/. && ";
+  }
   call << "rm -f ";
   call << "LICHM_" << Bead << ".b*" << " ";
   call << "LICHM_" << Bead << ".c*" << " ";
