@@ -240,6 +240,7 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
   QMMMOpts.Kspring = 0;
   QMMMOpts.TSBead = 0;
   QMMMOpts.Climb = 0;
+  QMMMOpts.FrznEnds = 0;
   QMMMOpts.Eold = 0;
   QMMMOpts.Ereact = 0;
   QMMMOpts.Eprod = 0;
@@ -596,6 +597,12 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.StepScale;
     regionfile >> dummy >> QMMMOpts.MaxStep;
     regionfile >> dummy >> QMMMOpts.Kspring;
+    regionfile >> dummy >> dummy;
+    if ((dummy == "Yes") or (dummy == "yes") or
+       (dummy == "True") or (dummy == "true"))
+    {
+      QMMMOpts.FrznEnds = 1;
+    }
     regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;

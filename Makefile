@@ -59,7 +59,7 @@ testexe:
 	sed -i 's/\!\!/\#\!/g' ./tests/runtests; \
 	chmod a+x ./tests/runtests
 
-checksyntax:	
+checksyntax:	title
 	@echo ""; \
 	echo "### Checking for warnings and syntax errors ###"
 	$(CXX) $(CXXFLAGS) $(DEVFLAGS) -fsyntax-only ./src/LICHEM.cpp -o lichem $(LDFLAGS)

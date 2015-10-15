@@ -374,6 +374,7 @@ class QMMMSettings
     double Kspring; //Elastic band spring constant
     double TSBead; //Current guess of the transition state
     bool Climb; //Flag to turn on climbing image NEB
+    bool FrznEnds; //Flag to freeze the NEB end points
     //Storage of energies (NEB and PIMC)
     double Eold; //Temporary storage
     double Ereact; //Reactant energy

@@ -12,7 +12,8 @@
  Functions for data analysis and trajectory processing.
 
  Reference for Kabsch algorithm:
- 
+ Kabsch, Acta Crystallogr. Sect. A, 32, 922, (1976)
+ Kabsch, Acta Crystallogr. Sect. A, 34, 827, (1978)
 
 */
 
