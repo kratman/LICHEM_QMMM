@@ -396,6 +396,112 @@ int main(int argc, char* argv[])
   }
   //End of section
 
+  //Damped Verlet (QuickMin) optimization
+  else if (QuickSim)
+  {
+    VectorXd Forces; //Dummy array needed for convergence tests
+    int optct = 0; //Counter for optimization steps
+    //Print initial structure
+    Print_traj(Struct,outfile,QMMMOpts);
+    cout << "Damped Verlet optimization:" << '\n';
+    cout.flush(); //Print progress
+    //Calculate initial energy
+    SumE = 0; //Clear old energies
+    //Calculate QM energy
+    if (Gaussian)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += GaussianEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tstart;
+    }
+    if (PSI4)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += PSIEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tstart;
+      //Delete annoying useless files
+      GlobalSys = system("rm -f psi.* timer.* ");
+    }
+    if (NWChem)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += NWChemEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tstart;
+    }
+    //Calculate MM energy
+    if (TINKER)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += TINKEREnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    if (AMBER)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += AMBEREnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    if (LAMMPS)
+    {
+      int tstart = (unsigned)time(0);
+      SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    stringstream call; //Stream for system calls and reading/writing files
+    call.copyfmt(cout); //Save settings
+    cout << " | Opt. step: ";
+    cout << optct << " | Energy: ";
+    cout << setprecision(12) << SumE << " eV";
+    cout << '\n';
+    cout.flush(); //Print progress
+    cout.copyfmt(call); //Replace settings
+    //Run optimization
+    bool OptDone = 0;
+    while (!OptDone)
+    {
+      //Copy structure
+      OldStruct = Struct;
+      //Run MM optimization
+      if (TINKER)
+      {
+        int tstart = (unsigned)time(0);
+        SumE = TINKEROpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      if (AMBER)
+      {
+        int tstart = (unsigned)time(0);
+        SumE = AMBEROpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      if (LAMMPS)
+      {
+        int tstart = (unsigned)time(0);
+        SumE = LAMMPSOpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      if (QMMM)
+      {
+        cout << "    MM optimization complete.";
+        cout << '\n';
+        cout.flush();
+      }
+      cout << '\n';
+      //Run QM optimization
+      LICHEMQuickMin(Struct,QMMMOpts,0);
+      //Print Optimized geometry
+      Print_traj(Struct,outfile,QMMMOpts);
+      //Check convergence
+      optct += 1;
+      OptDone = OptConverged(Struct,OldStruct,Forces,optct,QMMMOpts,0,0);
+    }
+    cout << '\n';
+    cout << "Optimization complete.";
+    cout << '\n' << '\n';
+    cout.flush();
+  }
+  //End of section
+
   //DFP minimization
   else if (DFPSim)
   {

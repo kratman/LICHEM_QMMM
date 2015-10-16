@@ -559,10 +559,22 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
   }
   if ((dummy == "Steep") or (dummy == "steep") or
-  (dummy == "SD") or (dummy == "sd"))
+     (dummy == "SD") or (dummy == "sd"))
   {
-    //Read energy minimization options
+    //Read SD energy minimization options
     SteepSim = 1;
+    regionfile >> dummy >> QMMMOpts.StepScale;
+    regionfile >> dummy >> QMMMOpts.MaxStep;
+    regionfile >> dummy >> QMMMOpts.QMOptTol;
+    regionfile >> dummy >> QMMMOpts.MMOptTol;
+    regionfile >> dummy >> QMMMOpts.MaxOptSteps;
+  }
+  if ((dummy == "QuickMin") or (dummy == "Quick") or
+     (dummy == "quick") or (dummy == "quickmin") or
+     (dummy == "DV") or (dummy == "dv"))
+  {
+    //Read damped Verlet energy minimization options
+    QuickSim = 1;
     regionfile >> dummy >> QMMMOpts.StepScale;
     regionfile >> dummy >> QMMMOpts.MaxStep;
     regionfile >> dummy >> QMMMOpts.QMOptTol;

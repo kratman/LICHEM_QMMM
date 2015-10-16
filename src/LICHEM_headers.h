@@ -139,6 +139,7 @@ bool MMonly = 0; //Flag for the type of wrapper
 bool QMonly = 0; //Flag for the type of wrapper
 bool OptSim = 0; //Flag for energy minimization with QM packages
 bool SteepSim = 0; //Flag for steepest descent minimization in LICHEM
+bool QuickSim = 0; //Flag for QuickMin optimization in LICHEM
 bool DFPSim = 0; //Flag for DFP minimization in LICHEM
 bool NEBSim = 0; //Flag for NEB path optimization in LICHEM
 bool ESDSim = 0; //Flag for ensemble steepest descent
@@ -465,6 +466,8 @@ void LICHEMErrorChecker(QMMMSettings&);
 void LICHEMNEB(vector<QMMMAtom>&,QMMMSettings&);
 
 void LICHEMPrintSettings(QMMMSettings&);
+
+void LICHEMQuickMin(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void LICHEMSteepest(vector<QMMMAtom>&,QMMMSettings&,int);
 

@@ -207,7 +207,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Save settings
   string dummy; //Generic string
-  int stepct = -1; //Counter for optimization steps
+  int stepct = 0; //Counter for optimization steps
   fstream qmfile, ifile, ofile; //Generic file names
   double Eold = 0; //Old saved energy
   //Initialize files
@@ -382,8 +382,8 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Print structure
     Print_traj(Struct,qmfile,QMMMOpts);
     //Check convergence
-    stepct += 1;
     OptDone = OptConverged(Struct,OldStruct,Forces,stepct,QMMMOpts,Bead,1);
+    stepct += 1;
     //Increase step size
     StepScale *= 1.05;
     if (StepScale > QMMMOpts.StepScale)
@@ -391,6 +391,204 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Prevent step size from getting too large
       StepScale = QMMMOpts.StepScale;
     }
+  }
+  //Clean up files
+  call.str("");
+  call << "rm -f QMOpt_" << Bead << ".xyz";
+  call << " MMCharges_" << Bead << ".txt";
+  GlobalSys = system(call.str().c_str());
+  //Finish and return
+  return;
+};
+
+void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
+     int Bead)
+{
+  //Cartesian damped Verlet optimizer (aka QuickMin)
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Save settings
+  string dummy; //Generic string
+  int stepct = 0; //Counter for optimization steps
+  fstream qmfile, ifile, ofile; //Generic file names
+  //Initialize files
+  call.str("");
+  call << "QMOpt_" << Bead << ".xyz";
+  qmfile.open(call.str().c_str(),ios_base::out);
+  //Initialize charges for Gaussian
+  if (AMOEBA and (Gaussian or NWChem))
+  {
+    if (TINKER)
+    {
+      //Set up current multipoles
+      RotateTINKCharges(Struct,Bead);
+    }
+    //Calculate inverse box lengths for PBC
+    double ix,iy,iz; //Inverse x,y,z
+    ix = 1;
+    iy = 1;
+    iz = 1;
+    if (PBCon and NWChem)
+    {
+      ix /= Lx;
+      iy /= Ly;
+      iz /= Lz;
+    }
+    //Save file
+    call.str("");
+    call << "MMCharges_" << Bead << ".txt";
+    ofile.open(call.str().c_str(),ios_base::out);
+    ofile.copyfmt(cout); //Save settings
+    for (int i=0;i<Natoms;i++)
+    {
+      if (Struct[i].MMregion)
+      {
+        ofile << fixed; //Forces numbers to be floats
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x1*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y1*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z1*iz);
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x2*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y2*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z2*iz);
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x3*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y3*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z3*iz);
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x4*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y4*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z4*iz);
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x5*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y5*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z5*iz);
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x6*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y6*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z6*iz);
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
+        ofile << '\n';
+      }
+    }
+    ofile.copyfmt(cout); //Save settings
+    ofile.flush();
+    ofile.close();
+  }
+  //Initialize optimization variables
+  double timestep = 1;
+  double VecMax = 0;
+  bool OptDone = 0;
+  vector<QMMMAtom> OldStruct = Struct; //Previous structure
+  VectorXd QMVel(3*(Nqm+Npseudo)); //Velocity vector
+  QMVel.setZero(); //Start at zero Kelvin
+  //Run optimization
+  double StepScale = QMMMOpts.StepScale; //Make a local copy
+  while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
+  {
+    double E = 0;
+    OldStruct = Struct; //Save old structure
+    //Create blank force array
+    VectorXd Forces(3*(Nqm+Npseudo));
+    Forces.setZero();
+    //Calculate forces (QM part)
+    if (Gaussian)
+    {
+      int tstart = (unsigned)time(0);
+      E += GaussianForces(Struct,Forces,QMMMOpts,Bead);
+      QMTime += (unsigned)time(0)-tstart;
+    }
+    if (PSI4)
+    {
+      int tstart = (unsigned)time(0);
+      E += PSIForces(Struct,Forces,QMMMOpts,Bead);
+      QMTime += (unsigned)time(0)-tstart;
+      //Delete annoying useless files
+      GlobalSys = system("rm -f psi.* timer.*");
+    }
+    if (NWChem)
+    {
+      int tstart = (unsigned)time(0);
+      E += NWChemForces(Struct,Forces,QMMMOpts,Bead);
+      QMTime += (unsigned)time(0)-tstart;
+    }
+    //Calculate forces (MM part)
+    if (TINKER)
+    {
+      int tstart = (unsigned)time(0);
+      E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
+      if (AMOEBA)
+      {
+        E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
+      }
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    if (AMBER)
+    {
+      int tstart = (unsigned)time(0);
+      E += AMBERForces(Struct,Forces,QMMMOpts,Bead);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    if (LAMMPS)
+    {
+      int tstart = (unsigned)time(0);
+      E += LAMMPSForces(Struct,Forces,QMMMOpts,Bead);
+      MMTime += (unsigned)time(0)-tstart;
+    }
+    //Project velocities
+    timestep = StepScale;
+    double VdotF = QMVel.dot(Forces);
+    if (VdotF <= 0)
+    {
+      //Delete velocities and take a steepest descent step
+      QMVel = timestep*Forces;
+    }
+    else
+    {
+      //Damp velocities
+      QMVel = VdotF*Forces;
+    }
+    //Check optimization step size
+    VecMax = abs(QMVel.maxCoeff());
+    if (abs(QMVel.minCoeff()) > VecMax)
+    {
+      VecMax = StepScale*abs(QMVel.minCoeff());
+    }
+    else
+    {
+      VecMax *= StepScale;
+    }
+    if (VecMax > QMMMOpts.MaxStep)
+    {
+      //Scale timestep
+      cout << "    Scaling timestep to match the maximum displacement...";
+      cout << '\n';
+      timestep *= (QMMMOpts.MaxStep/VecMax);
+    }
+    //Determine new structure
+    int ct = 0; //Counter
+    for (int i=0;i<Natoms;i++)
+    {
+      //Move QM atoms
+      if (Struct[i].QMregion or Struct[i].PBregion)
+      {
+        Struct[i].P[Bead].x += timestep*QMVel(ct);
+        Struct[i].P[Bead].y += timestep*QMVel(ct+1);
+        Struct[i].P[Bead].z += timestep*QMVel(ct+2);
+        ct += 3;
+      }
+    }
+    //Print structure
+    Print_traj(Struct,qmfile,QMMMOpts);
+    //Check convergence
+    OptDone = OptConverged(Struct,OldStruct,Forces,stepct,QMMMOpts,Bead,1);
+    stepct += 1;
+    //Update velocities
+    QMVel += timestep*Forces;
   }
   //Clean up files
   call.str("");
