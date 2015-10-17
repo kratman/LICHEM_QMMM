@@ -943,11 +943,11 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     {
       cout << " Error: QMMM PSI4 optimizations can only be performed with";
       cout << '\n';
-      cout << " the steepest descent or DFP.";
+      cout << " the steepest descent, damped Verlet, or DFP.";
       cout << '\n';
       DoQuit = 1;
     }
-    if (DFPSim or SteepSim)
+    if (DFPSim or SteepSim or QuickSim or ESDSim or ENEBSim or NEBSim)
     {
       cout << " Warning: PSI4 gradients might not include components from";
       cout << '\n';
@@ -1081,7 +1081,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
     cout << " Equilibration MC steps: " << QMMMOpts.Neq << '\n';
     cout << " Production MC steps: " << QMMMOpts.Nsteps << '\n';
   }
-  if (OptSim or SteepSim or DFPSim or ESDSim)
+  if (OptSim or SteepSim or QuickSim or DFPSim or ESDSim)
   {
     cout << '\n';
     cout << "Simulation mode: ";
@@ -1113,6 +1113,10 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
       if (SteepSim)
       {
         cout << "LICHEM steepest descent" << '\n';
+      }
+      if (QuickSim)
+      {
+        cout << "LICHEM damped Verlet" << '\n';
       }
       if (DFPSim)
       {
@@ -1228,11 +1232,12 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
     cout << '\n';
   }
   //Print convergence criteria for optimizations
-  if (OptSim or SteepSim or DFPSim or ESDSim or ENEBSim or NEBSim)
+  if (OptSim or SteepSim or QuickSim or DFPSim or
+     ESDSim or ENEBSim or NEBSim)
   {
     cout << '\n';
     cout << "Optimization settings:" << '\n';
-    if (SteepSim or DFPSim or ESDSim or ENEBSim or NEBSim)
+    if (SteepSim or QuickSim or DFPSim or ESDSim or ENEBSim or NEBSim)
     {
       cout << " Step scale factor: " << QMMMOpts.StepScale;
       cout << '\n';
@@ -1248,7 +1253,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
       cout << " eV/\u212B\u00B2";
     }
     cout << '\n' << '\n';
-    if (SteepSim or DFPSim or NEBSim)
+    if (SteepSim or QuickSim or DFPSim or NEBSim)
     {
       cout << "QM convergence criteria:" << '\n';
       cout << "  RMS deviation: " << QMMMOpts.QMOptTol;

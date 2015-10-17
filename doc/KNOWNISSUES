@@ -38,10 +38,6 @@ search algorithm. Instead, the optimizer will take a small steepest descent
 step (and create a new guess Hessian) if the QMMM energy rises. It will also
 create a new Hessian if the optimization does not converge within 30 steps.
 
-Reaction paths:
--The NEB optimizer uses a steepest descent algorithm. It should be replaced
-by a damped Verlet algorithm.
-
 Testing:
 -The test set needs to be expanded beyond single-point energies.
 
