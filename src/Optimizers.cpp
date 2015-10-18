@@ -544,29 +544,31 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (VdotF <= 0)
     {
       //Delete velocities and take a steepest descent step
+      cout << "    Taking a SD step...";
       QMVel = 0.5*TimeStep*Forces;
       NoVelScale = 1; //Skip velocity scaling
     }
     else
     {
       //Damp velocities
+      cout << "    Taking a DV step...";
       QMVel = VdotF*Forces;
     }
     //Check optimization step size
+    double tsscale = 7.5; //Fast max. force relaxation, large overshoots
+    double maxscale = 40; //Fast rms force relaxation, large overshoots
     VecMax = TimeStep*QMVel.norm();
     if (VecMax > QMMMOpts.MaxStep)
     {
       //Take a smaller step
-      cout << "    Scaling velocities to match the maximum displacement...";
-      cout << '\n';
+      cout << " Reducing velocities...";
       VecMax = (QMMMOpts.MaxStep/VecMax); //Save to scale forces
       QMVel *= VecMax; //Reduce velocities
     }
-    else if ((VecMax < (5*QMMMOpts.QMOptTol)) and (!NoVelScale))
+    else if ((VecMax < (tsscale*QMMMOpts.QMOptTol)) and (!NoVelScale))
     {
       //Take a larger step
-      double tsscale = 5; //Fast max. force relaxation, large overshoots
-      double maxscale = 40; //Fast rms force relaxation, large overshoots
+      cout << " Increasing velocities...";
       VecMax = tsscale*(QMMMOpts.QMOptTol/VecMax); //Save to scale forces
       if (VecMax > maxscale)
       {
@@ -581,6 +583,7 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Reset scale factor
       VecMax = 1; //Avoid scaling forces
     }
+    cout << '\n'; //Print a black line after printing the update method
     //Determine new structure
     int ct = 0; //Counter
     for (int i=0;i<Natoms;i++)
