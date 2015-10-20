@@ -486,7 +486,9 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   VectorXd QMVel(3*(Nqm+Npseudo)); //Velocity vector
   QMVel.setZero(); //Start at zero Kelvin
   //Run optimization
-  double TimeStep = QMMMOpts.StepScale; //Make a local copy
+  double sdscale = 0.01; //Scale factor for SD steps
+  double TimeStep; //Timestep for the Verlet algorithm
+  TimeStep = sdscale*QMMMOpts.StepScale; //Make a local copy
   while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
   {
     double E = 0;
@@ -541,54 +543,45 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Project velocities
     double VdotF = QMVel.dot(Forces); //Overlap of forces and velocities
     bool NoVelScale = 0; //Do not increase the timestep
-    double sdscale = 1; //Scale factor for the SD step
     if (VdotF <= 0)
     {
       //Delete velocities and take a steepest descent step
       cout << "    Taking a SD step...";
-      QMVel = sdscale*TimeStep*Forces;
+      TimeStep = sdscale*QMMMOpts.StepScale; //Reset timestep
+      QMVel = TimeStep*Forces; //SD step
       NoVelScale = 1; //Skip velocity scaling
     }
     else
     {
       //Damp velocities
       cout << "    Taking a DV step...";
-      QMVel = VdotF*Forces;
+      QMVel = VdotF*Forces; //Scale forces based on curvature
+      TimeStep *= 1.30; //Increase timestep
+      if (TimeStep > QMMMOpts.StepScale)
+      {
+        //Set to the maximum value
+        TimeStep = QMMMOpts.StepScale;
+      }
     }
     //Check optimization step size
-    double tsscale = 25; //When to begin accelerated relaxation
-    double maxscale = 30; //Maximum acceleration
-    VecMax = TimeStep*QMVel.norm();
+    VecMax = TimeStep*QMVel.norm(); //Displacement after the update
     if (VecMax > QMMMOpts.MaxStep)
     {
       //Take a smaller step
-      cout << " Reducing velocities...";
+      cout << " Reducing timestep and velocites...";
       VecMax = (QMMMOpts.MaxStep/VecMax); //Save to scale forces
       QMVel *= VecMax; //Reduce velocities
-    }
-    else if ((VecMax < (tsscale*QMMMOpts.QMOptTol)) and (!NoVelScale))
-    {
-      //Take a larger step
-      cout << " Increasing velocities (~";
-      VecMax = tsscale*(QMMMOpts.QMOptTol/VecMax); //Save to scale forces
-      if (VecMax > maxscale)
+      TimeStep *= VecMax; //Reduce timestep
+      if (TimeStep < (sdscale*QMMMOpts.StepScale))
       {
-        //Maximum scale factor
-        VecMax = maxscale;
+        //Revert to the minimum value
+        TimeStep = sdscale*QMMMOpts.StepScale;
       }
-      call.copyfmt(cout); //Save settings
-      cout.precision(1); //Print only 1 decimal place
-      cout << fixed; //Force output to be a floating point number
-      cout << VecMax; //Print scale factor
-      cout.copyfmt(call); //Replace settings
-      cout << "x)..."; //Finish output
-      //Increase velocities
-      QMVel *= VecMax;
     }
-    else
+    else if ((TimeStep < QMMMOpts.StepScale) and (!NoVelScale))
     {
-      //Reset scale factor
-      VecMax = 1; //Avoid scaling forces
+      //Finish update method output
+      cout << " Increasing timestep...";
     }
     cout << '\n'; //Print a black line after printing the update method
     //Determine new structure
@@ -610,7 +603,7 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     OptDone = OptConverged(Struct,OldStruct,Forces,stepct,QMMMOpts,Bead,1);
     stepct += 1;
     //Update velocities
-    QMVel += (VecMax*TimeStep)*Forces;
+    QMVel += TimeStep*Forces;
   }
   //Clean up files
   call.str("");
