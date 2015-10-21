@@ -628,11 +628,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call.str("");
   call << "QMOpt_" << Bead << ".xyz";
   qmfile.open(call.str().c_str(),ios_base::out);
-  //Initialize variables
-  double E = 0; //Energy
-  double Eold = 0; //Energy from previous step
-  double VecMax = 0; //Maxium atomic displacement
-  //Initialize multipoles for Gaussian and NWChem
+  //Initialize multipoles
   if (AMOEBA and (Gaussian or NWChem))
   {
     if (TINKER)
@@ -708,6 +704,12 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   Forces.setZero();
   //Create an identity matrix as the initial Hessian
   IHess.setIdentity(); //Already an "inverse" Hessian
+  //Initialize optimization variables
+  double StepScale; //Local copy
+  double E = 0; //Energy
+  double Eold = 0; //Energy from previous step
+  double VecMax = 0; //Maxium atomic displacement
+  bool OptDone = 0; //Flag to end the optimization
   //Calculate forces (QM part)
   if (Gaussian)
   {
@@ -752,10 +754,9 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     E += LAMMPSForces(Struct,Forces,QMMMOpts,Bead);
     MMTime += (unsigned)time(0)-tstart;
   }
-  //Save forces
+  //Output initial RMS force
   VecMax = 0; //Using this variable to avoid creating a new one
   VecMax = Forces.squaredNorm(); //Calculate initial RMS force
-  //Output initial RMS force
   VecMax = sqrt(VecMax/(3*(Nqm+Npseudo)));
   call.copyfmt(cout); //Save settings
   cout << setprecision(12);
@@ -767,8 +768,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   cout.copyfmt(call); //Return to previous settings
   //Optimize structure
   Eold = E;
-  bool OptDone = 0;
-  double StepScale = QMMMOpts.StepScale;
+  StepScale = QMMMOpts.StepScale;
   StepScale *= 0.02; //Take a very small first step
   while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
   {

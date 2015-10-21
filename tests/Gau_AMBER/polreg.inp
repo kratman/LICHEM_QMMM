@@ -1,0 +1,17 @@
+Potential_type: QMMM
+QM_type: Gaussian
+QM_functional: PBE1PBE
+QM_basis: 6-31++G**
+QM_memory: 256 MB
+QM_charge: 0
+QM_spin: 1
+MM_type: AMBER
+Potential_type: AMOEBA
+Calculation_type: SP
+PBC: No
+QM_atoms: 3
+0 1 2
+Pseudo_atoms: 0
+Boundary_atoms: 0
+Frozen_atoms: 0
+

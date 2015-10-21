@@ -52,6 +52,10 @@ if (len(sys.argv) < 4):
   line = ""
   line += "Usage:"
   line += '\n'
+  line += " user:$ ./runtests Ncpus All"
+  line += '\n'
+  line += "  or "
+  line += '\n'
   line += " user:$ ./runtests Ncpus QMPackage MMPackage"
   line += '\n'
   line += "  or "

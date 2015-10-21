@@ -5,6 +5,11 @@ calculations. Post-HF methods are currently only implemented in PSI4.
 PBC for QM calculations. The QM region should always be placed near the center
 of the simulation box.
 
+Gaussian interface:
+-Using the external interface to Gaussian interferes with timing the MM
+wrapper. This is harmless, but the statistics should not be trusted in the
+external optimizations.
+
 NWChem interface:
 -NWChem calculations can only be performed with DFT. Wavefunction based
 methods are not implemented.
@@ -27,10 +32,8 @@ insignificant if the chiral atoms are far from the QM region.
 LAMMPS interface:
 -The LAMMPS wrapper is currently being rewritten.
 
-Gaussian interface:
--Using the external interface to Gaussian interferes with timing the MM
-wrapper. This is harmless, but the statistics should not be trusted in the
-external optimizations.
+AMBER interface:
+-The AMBER wrapper is still in the early stages of development.
 
 Optimization:
 -The DFP optimizer included in Optimizers.cpp does not have a true line
