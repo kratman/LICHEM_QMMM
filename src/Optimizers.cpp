@@ -767,13 +767,13 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   cout.flush();
   cout.copyfmt(call); //Return to previous settings
   //Optimize structure
-  Eold = E;
+  Eold = E; //Save energy
   StepScale = QMMMOpts.StepScale;
   StepScale *= 0.02; //Take a very small first step
   while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
   {
     E = 0; // Reinitialize energy
-    //Copy old structure and delete old forces force array
+    //Copy old structure and old forces
     vector<QMMMAtom> OldStruct = Struct;
     #pragma omp parallel for
     for (int i=0;i<(3*(Nqm+Npseudo));i++)
@@ -786,11 +786,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     OptVec = IHess*Forces;
     OptVec *= StepScale;
     //Check step size
-    VecMax = abs(OptVec.maxCoeff());
-    if (abs(OptVec.minCoeff()) > VecMax)
-    {
-      VecMax = abs(OptVec.minCoeff());
-    }
+    VecMax = OptVec.norm();
     if (VecMax > QMMMOpts.MaxStep)
     {
       //Scale step size

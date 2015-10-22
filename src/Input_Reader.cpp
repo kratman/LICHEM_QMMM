@@ -606,7 +606,6 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     //Read energy minimization options for climbing image NEB
     NEBSim = 1;
     regionfile >> dummy >> QMMMOpts.Nbeads;
-    regionfile >> dummy >> QMMMOpts.StepScale;
     regionfile >> dummy >> QMMMOpts.MaxStep;
     regionfile >> dummy >> QMMMOpts.Kspring;
     regionfile >> dummy >> dummy;
@@ -832,8 +831,12 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
   }
   else if (ENEBSim or NEBSim)
   {
-    //Create initial reaction pathway
-    
+    //Exit with an error
+    cout << "Error: No initial reaction path found in the restart file!!!";
+    cout << '\n' << '\n';
+    cout.flush();
+    //Quit
+    exit(0);
   }
   //Collect additonal TINKER input
   if (TINKER and (!GauExternal))
@@ -1237,7 +1240,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
   {
     cout << '\n';
     cout << "Optimization settings:" << '\n';
-    if (SteepSim or QuickSim or DFPSim or ESDSim or ENEBSim or NEBSim)
+    if (SteepSim or QuickSim or DFPSim or ESDSim or ENEBSim)
     {
       cout << " Step scale factor: " << QMMMOpts.StepScale;
       cout << '\n';
