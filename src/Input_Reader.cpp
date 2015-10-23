@@ -606,6 +606,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     //Read energy minimization options for climbing image NEB
     NEBSim = 1;
     regionfile >> dummy >> QMMMOpts.Nbeads;
+    regionfile >> dummy >> QMMMOpts.StepScale;
     regionfile >> dummy >> QMMMOpts.MaxStep;
     regionfile >> dummy >> QMMMOpts.Kspring;
     regionfile >> dummy >> dummy;
@@ -1240,7 +1241,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
   {
     cout << '\n';
     cout << "Optimization settings:" << '\n';
-    if (SteepSim or QuickSim or DFPSim or ESDSim or ENEBSim)
+    if (!OptSim)
     {
       cout << " Step scale factor: " << QMMMOpts.StepScale;
       cout << '\n';

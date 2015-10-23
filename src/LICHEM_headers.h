@@ -373,7 +373,7 @@ class QMMMSettings
     double MaxStep; //Maximum size of the optimization step
     //Input needed for reaction paths
     double Kspring; //Elastic band spring constant
-    double TSBead; //Current guess of the transition state
+    int TSBead; //Current guess of the transition state
     bool Climb; //Flag to turn on climbing image NEB
     bool FrznEnds; //Flag to freeze the NEB end points
     //Storage of energies (NEB and PIMC)

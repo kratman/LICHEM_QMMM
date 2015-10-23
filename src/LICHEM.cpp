@@ -830,6 +830,38 @@ int main(int argc, char* argv[])
     cout << " | Opt. step: 0 | Bead energies:";
     cout << '\n';
     cout.flush(); //Print progress
+    //Calculate reaction coordinate positions
+    VectorXd ReactCoord(QMMMOpts.Nbeads); //Reaction coordinate
+    ReactCoord.setZero();
+    for (int p=0;p<(QMMMOpts.Nbeads-1);p++)
+    {
+      MatrixXd Geom1((Nqm+Npseudo),3); //Current replica
+      MatrixXd Geom2((Nqm+Npseudo),3); //Next replica
+      VectorXd Disp; //Store the displacement
+      //Save geometries
+      int ct = 0; //Reset counter for the number of atoms
+      for (int i=0;i<Natoms;i++)
+      {
+        //Only include QM and PB regions
+        if (Struct[i].QMregion or Struct[i].PBregion)
+        {
+          //Save current replica
+          Geom1(ct,0) = Struct[i].P[p].x;
+          Geom1(ct,1) = Struct[i].P[p].y;
+          Geom1(ct,2) = Struct[i].P[p].z;
+          //Save replica p+1
+          Geom2(ct,0) = Struct[i].P[p+1].x;
+          Geom2(ct,1) = Struct[i].P[p+1].y;
+          Geom2(ct,2) = Struct[i].P[p+1].z;
+          ct += 1;
+        }
+      }
+      //Calculate displacement
+      Disp = KabschDisplacement(Geom1,Geom2,(Nqm+Npseudo));
+      ReactCoord(p+1) = ReactCoord(p); //Start from previous bead
+      ReactCoord(p+1) += Disp.norm(); //Add magnitude of the displacement
+    }
+    ReactCoord /= ReactCoord.maxCoeff(); //Must be between 0 and 1
     //Calculate initial energies
     QMMMOpts.Ets = -1*HugeNum; //Locate the initial transition state
     for (int p=0;p<QMMMOpts.Nbeads;p++)
@@ -887,8 +919,11 @@ int main(int argc, char* argv[])
       }
       stringstream call; //Stream for system calls and reading/writing files
       call.copyfmt(cout); //Save settings
+      cout << fixed;
       cout << "   Bead: ";
-      cout << p << " | Energy: ";
+      cout << p << " | React. coord: ";
+      cout << setprecision(3) << ReactCoord(p);
+      cout << " | Energy: ";
       cout << setprecision(12) << SumE << " eV";
       cout << '\n';
       cout.flush(); //Print progress
@@ -1106,16 +1141,16 @@ int main(int argc, char* argv[])
   EndTime = (unsigned)time(0); //Time the program completes
   double TotalHours = (double(EndTime)-double(StartTime));
   double TotalQM = double(QMTime);
-  if (PIMCSim)
+  if (PIMCSim and (QMMMOpts.Nbeads > 1))
   {
     //Average over the number of running simulations
-    TotalQM /= QMMMOpts.Nbeads;
+    TotalQM /= Nthreads;
   }
   double TotalMM = double(MMTime);
-  if (PIMCSim)
+  if (PIMCSim and (QMMMOpts.Nbeads > 1))
   {
     //Average over the number of running simulations
-    TotalMM /= QMMMOpts.Nbeads;
+    TotalMM /= Nthreads;
   }
   double OtherTime = TotalHours-TotalQM-TotalMM;
   TotalHours /= 3600.0; //Convert from seconds to hours

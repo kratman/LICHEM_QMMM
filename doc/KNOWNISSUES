@@ -28,6 +28,8 @@ TINKER interface:
 simulations. It is possible that these interactions are incorrect. Note that
 even if the interactions are not treated properly, the errors should be
 insignificant if the chiral atoms are far from the QM region.
+-All QM point charges are added as Z-then-X multipoles. Since only the
+monopole is retained, the frame of reference is not important.
 
 LAMMPS interface:
 -The LAMMPS wrapper is currently being rewritten.
