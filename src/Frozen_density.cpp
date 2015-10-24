@@ -75,14 +75,5 @@ double GauDen1s::TwoCoul(GauDen1s gau2, double Rcut)
   return E;
 };
 
-//Functions for Gaussian integrals
-double BoysFunc(int n, double x)
-{
-  //Recursive Boys function
-  double Val = 0.0;
-  
-  return Val;
-};
-
 //Functions for conversion to point-charges
 
