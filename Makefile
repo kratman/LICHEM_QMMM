@@ -10,6 +10,7 @@
 
 CXX=g++
 CXXFLAGS=-static -fopenmp -O3
+GPUFLAGS=-fopenacc
 DEVFLAGS=-g -Wall
 LDFLAGS=-I./src/ -I/usr/include/eigen3/
 
@@ -44,7 +45,7 @@ binary:
 devbin:	
 	@echo ""; \
 	echo "### Compiling the LICHEM development binary ###"
-	$(CXX) $(CXXFLAGS) $(DEVFLAGS) ./src/LICHEM.cpp -o lichem $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(GPUFLAGS) $(DEVFLAGS) ./src/LICHEM.cpp -o lichem $(LDFLAGS)
 
 testexe:	
 	@echo ""; \

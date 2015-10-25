@@ -547,6 +547,7 @@ void WriteTINKMpole(vector<QMMMAtom>&,fstream&,int,int);
 #include "Basis.cpp"
 #include "Core_funcs.cpp"
 #include "Frozen_density.cpp"
+#include "Hermite_eng.cpp"
 #include "Input_Reader.cpp"
 #include "Multipoles.cpp"
 #include "Optimizers.cpp"
