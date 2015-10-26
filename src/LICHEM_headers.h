@@ -298,6 +298,40 @@ class GauDen1s
     double TwoCoul(GauDen1s,double); //Density-density Coulomb repulsion
 };
 
+class HermGau
+{
+  //Class for Hermite Gaussians
+  private:
+    //Gaussian properties
+    double ci; //Coefficient in front of the Gaussian
+    double alpha; //Exponent
+    int powx; //Power in the x direction
+    int powy; //Power in the y direction
+    int powz; //Power in the z direction
+    //Position
+    double x; //X position in Angstroms
+    double y; //Y position in Angstroms
+    double z; //Z position in Angstroms
+  public:
+    //Constructor
+    HermGau(double c, double a, int ix, int iy, int iz,
+            double xi, double yi, double zi)
+    {
+      //Save data given to the constructor
+      ci = c;
+      alpha = a;
+      powx = ix;
+      powy = iy;
+      powz = iz;
+      x = xi;
+      y = yi;
+      z = zi;
+      //Convert to a.u.
+      alpha *= (BohrRad*BohrRad);
+      return;
+    }
+};
+
 class QMMMAtom
 {
   //Data type for atomic information
