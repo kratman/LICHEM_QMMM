@@ -303,8 +303,8 @@ class HermGau
   //Class for Hermite Gaussians
   private:
     //Gaussian properties
-    double ci; //Coefficient in front of the Gaussian
-    double alpha; //Exponent
+    double mag; //Coefficient in front of the Gaussian
+    double alpha; //Exponent (width)
     int powx; //Power in the x direction
     int powy; //Power in the y direction
     int powz; //Power in the z direction
@@ -314,11 +314,11 @@ class HermGau
     double z; //Z position in Angstroms
   public:
     //Constructor
-    HermGau(double c, double a, int ix, int iy, int iz,
+    HermGau(double ci, double a, int ix, int iy, int iz,
             double xi, double yi, double zi)
     {
       //Save data given to the constructor
-      ci = c;
+      mag = ci;
       alpha = a;
       powx = ix;
       powy = iy;
@@ -330,6 +330,14 @@ class HermGau
       alpha *= (BohrRad*BohrRad);
       return;
     }
+    double Coeff(); //Return the coefficient
+    double XPos(); //Return the x position
+    double YPos(); //Return the y position
+    double ZPos(); //Return the z position
+    double Alpha(); //Return the Gaussian coefficient (width)
+    int XPow(); //Return the Hermite power in the x direction
+    int YPow(); //Return the Hermite power in the y direction
+    int ZPow(); //Return the Hermite power in the z direction
 };
 
 class QMMMAtom
@@ -369,9 +377,9 @@ class QMMMElec
     string typ; //Lepton type
     double m; //mass (amu)
     double q; //Charge (au)
-    int spin; //Spin
     //Coordinates
-    vector<Coord> P; //Bead coordinates
+    vector<int> spin; //Spin
+    vector<Coord> P; //Bead XYZ coordinates
     vector<double> rad; //Radius (Ang)
 };
 
@@ -478,6 +486,12 @@ double Get_PI_Espring(vector<QMMMAtom>&,QMMMSettings&);
 double Get_PI_Epot(vector<QMMMAtom>&,QMMMSettings&);
 
 void GetQuotes(vector<string>&);
+
+double HermCoul1e(HermGau&,double,Coord&);
+
+double HermCoul2e(HermGau&,HermGau&);
+
+double HermOverlap(HermGau&,HermGau&);
 
 VectorXd KabschDisplacement(MatrixXd&,MatrixXd&,int);
 

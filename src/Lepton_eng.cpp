@@ -109,7 +109,7 @@ double EFFCorr(QMMMElec& elec1, QMMMElec& elec2, int Bead)
              +elec2.rad[Bead]*elec2.rad[Bead]);
       Tij -= tmp;
       Tij *= Har2eV*BohrRad*BohrRad;
-      if (elec1.spin == elec2.spin)
+      if (elec1.spin[Bead] == elec2.spin[Bead])
       {
         //Symmetric VB spin-orbital
         double Etmp = Sij*Sij/(1-(Sij*Sij));

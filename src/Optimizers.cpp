@@ -33,6 +33,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
   double RMSforce = 0;
   double MAXforce = 0;
   double SumE = 0;
+  int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
   //Check progress
   if (QMregion)
   {
@@ -85,7 +86,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     #pragma omp barrier
     RMSdiff /= (Nqm+Npseudo)*(Nqm+Npseudo-1)/2;
     RMSdiff = sqrt(RMSdiff);
-    RMSforce /= 3*(Nqm+Npseudo);
+    RMSforce /= Ndof;
     RMSforce = sqrt(RMSforce);
     //Print progress
     call.copyfmt(cout); //Save settings
@@ -210,6 +211,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   int stepct = 0; //Counter for optimization steps
   fstream qmfile, ifile, ofile; //Generic file names
   double Eold = 0; //Old saved energy
+  int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
   //Initialize files
   call.str("");
   call << "QMOpt_" << Bead << ".xyz";
@@ -291,7 +293,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     double E = 0;
     //Create blank force array
-    VectorXd Forces(3*(Nqm+Npseudo));
+    VectorXd Forces(Ndof);
     Forces.setZero();
     //Calculate forces (QM part)
     if (Gaussian)
@@ -410,6 +412,7 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   string dummy; //Generic string
   int stepct = 0; //Counter for optimization steps
   fstream qmfile, ifile, ofile; //Generic file names
+  int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
   //Initialize files
   call.str("");
   call << "QMOpt_" << Bead << ".xyz";
@@ -483,7 +486,7 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   double VecMax = 0;
   bool OptDone = 0;
   vector<QMMMAtom> OldStruct = Struct; //Previous structure
-  VectorXd QMVel(3*(Nqm+Npseudo)); //Velocity vector
+  VectorXd QMVel(Ndof); //Velocity vector
   QMVel.setZero(); //Start at zero Kelvin
   //Run optimization
   double sdscale = 0.01; //Scale factor for SD steps
@@ -494,7 +497,7 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     double E = 0;
     OldStruct = Struct; //Save old structure
     //Create blank force array
-    VectorXd Forces(3*(Nqm+Npseudo));
+    VectorXd Forces(Ndof);
     Forces.setZero();
     //Calculate forces (QM part)
     if (Gaussian)
@@ -624,6 +627,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   string dummy; //Generic string
   int stepct = 0; //Counter for optimization steps
   fstream qmfile,ifile,ofile; //Generic file streams
+  int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
   //Initialize trajectory file
   call.str("");
   call << "QMOpt_" << Bead << ".xyz";
@@ -694,10 +698,10 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     ofile.close();
   }
   //Create DFP arrays
-  VectorXd OptVec(3*(Nqm+Npseudo)); //Gradient descent direction
-  VectorXd GradDiff(3*(Nqm+Npseudo)); //Change in the gradient
-  VectorXd Forces(3*(Nqm+Npseudo)); //Forces
-  MatrixXd IHess(3*(Nqm+Npseudo),3*(Nqm+Npseudo)); //Inverse Hessian
+  VectorXd OptVec(Ndof); //Gradient descent direction
+  VectorXd GradDiff(Ndof); //Change in the gradient
+  VectorXd Forces(Ndof); //Forces
+  MatrixXd IHess(Ndof,Ndof); //Inverse Hessian
   //Initialize arrays
   OptVec.setZero();
   GradDiff.setZero();
@@ -757,7 +761,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Output initial RMS force
   VecMax = 0; //Using this variable to avoid creating a new one
   VecMax = Forces.squaredNorm(); //Calculate initial RMS force
-  VecMax = sqrt(VecMax/(3*(Nqm+Npseudo)));
+  VecMax = sqrt(VecMax/Ndof);
   call.copyfmt(cout); //Save settings
   cout << setprecision(12);
   cout << "    QM step: 0";
@@ -776,7 +780,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     //Copy old structure and old forces
     vector<QMMMAtom> OldStruct = Struct;
     #pragma omp parallel for
-    for (int i=0;i<(3*(Nqm+Npseudo));i++)
+    for (int i=0;i<Ndof;i++)
     {
       //Reinitialize the change in the gradient
       GradDiff(i) = Forces(i);
@@ -852,6 +856,14 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       E += LAMMPSForces(Struct,Forces,QMMMOpts,Bead);
       MMTime += (unsigned)time(0)-tstart;
     }
+    //Check stability
+    double VecDotForces; //Dot product of the forces and optimization vector
+    VecDotForces = OptVec.dot(Forces);
+    if (VecDotForces < 0)
+    {
+      //Optimizer is going the wrong direction
+      Eold = -1*HugeNum; //Force the Hessian to be rebuilt
+    }
     //Update Hessian
     GradDiff -= Forces;
     if (((stepct%30) == 0) and (stepct != 0))
@@ -893,7 +905,8 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     else
     {
       //Take a small steepest descent step and rebuild Hessian
-      cout << "    Energy did not decrease. Constructing new Hessian...";
+      cout << "    Potentially unstable structure.";
+      cout << " Constructing new Hessian...";
       cout << '\n';
       //Reduce step size
       if (StepScale > (0.02*QMMMOpts.StepScale))
@@ -932,6 +945,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
   string dummy; //Generic string
   int stepct = 0; //Counter for optimization steps
   fstream ifile, ofile; //Generic file names
+  int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
   //Initialize optimization variables
   double stepsize = 1;
   double StepScale = QMMMOpts.StepScale; //Saved copy
@@ -954,7 +968,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
     double E = 0;
     double SumE = 0;
     //Create blank force array
-    VectorXd Forces(3*(Nqm+Npseudo));
+    VectorXd Forces(Ndof);
     Forces.setZero();
     //Calculate forces and energy (QM part)
     if (Gaussian)

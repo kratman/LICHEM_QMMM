@@ -72,6 +72,8 @@ void ExternalGaussian(int& argc, char**& argv)
   GauMsg.open(argv[14],ios_base::out);
   //Read LICHEM input
   ReadLICHEMInput(xyzfile,connectfile,regionfile,Struct,QMMMOpts);
+  //Set degrees of freedom
+  int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
   //Read g09 input for new QM atom positions
   getline(GauInput,dummy);
   stringstream line(dummy);
@@ -104,7 +106,7 @@ void ExternalGaussian(int& argc, char**& argv)
   }
   GauInput.close();
   //Calculate the QMMM forces
-  VectorXd Forces(3*(Nqm+Npseudo)); //Forces for QM and PB
+  VectorXd Forces(Ndof); //Forces for QM and PB
   Forces.setZero();
   fstream MMgrad,QMlog; //QMMM output
   //QM forces
@@ -152,7 +154,7 @@ void ExternalGaussian(int& argc, char**& argv)
   GauOutput << setw(20) << 0.0; //Polarizability
   GauOutput << setw(20) << 0.0; //Polarizability
   GauOutput << '\n';
-  for (int i=0;i<(3*(Nqm+Npseudo));i++)
+  for (int i=0;i<Ndof;i++)
   {
     //Dipole derivatives
     GauOutput << setw(20) << 0.0;
