@@ -101,7 +101,6 @@ const double Debye2au = 0.393430307; //Convert from Debye to au
 const double atm2eV = SI2eV*atm2Pa/(m2Ang*m2Ang*m2Ang); //atmA^3 to eV
 const double C2eV = m2Ang/(4*pi*SI2eV*EpsZero); //Coulomb to eV
 const double ElecMass = Masse/amu2kg; //Mass of an electron (amu)
-const double h = 2*pi*hbar; //Planck Constant (eV)
 const double ToeV = amu2kg*SI2eV/(m2Ang*m2Ang); //Convert to eV units (PIMC)
 const double kcal2eV = 4184*SI2eV/Na; //kcal/mol to eV
 

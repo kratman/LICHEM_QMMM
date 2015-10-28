@@ -619,9 +619,9 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 
 void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
-  //A simple DFP optimizer, which is similar to BFGS updating
+  //A simple Davidon-Fletcher-Powell optimizer
   //NB: This optimizer does not have a true line search, instead
-  //a steepest descent step is performed if the energy rises
+  //a steepest descent step is performed if the optimizer is unstable
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Save settings
   string dummy; //Generic string

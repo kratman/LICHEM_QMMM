@@ -43,6 +43,10 @@ search algorithm. Instead, the optimizer will take a small steepest descent
 step (and create a new guess Hessian) if the QMMM energy rises. It will also
 create a new Hessian if the optimization does not converge within 30 steps.
 
+PIMC:
+-NPT Monte Carlo has a volume change bug. This is being investigated, but
+NPT MC is low priotiry.
+
 Testing:
 -The test set needs to be expanded beyond single-point energies.
 

@@ -86,6 +86,9 @@ double HermCoul2e(HermGau& Gi, HermGau& Gj)
 {
   //Recursive two electron Coulomb integral
   double Eij = 0; //Energy
+  //Combine Gaussians
+  
+  //Calculate integral
   
   Eij *= Gi.Coeff()*Gj.Coeff(); //Scale by magnitude
   //Change units and return
@@ -97,6 +100,7 @@ double HermCoul1e(HermGau& Gi, double qj, Coord& Pos)
 {
   //Recursive one electron Coulomb integral
   double Eij = 0; //Energy
+  //Calculate integral
   
   Eij *= Gi.Coeff()*qj; //Scale by magnitude
   //Change units and return
@@ -108,6 +112,9 @@ double HermOverlap(HermGau& Gi, HermGau& Gj)
 {
   //Recursive two electron overlap integral
   double Sij = 0; //Overlap
+  //Combine Gaussians
+  
+  //Calculate integral
   
   Sij *= Gi.Coeff()*Gj.Coeff(); //Scale by magnitude
   //Return overlap
