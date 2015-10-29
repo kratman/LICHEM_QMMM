@@ -824,6 +824,9 @@ int main(int argc, char* argv[])
   {
     MatrixXd ForceStats; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
+    //Change optimization tolerance for the first step
+    double SavedOptTol = QMMMOpts.QMOptTol; //Save value from input
+    QMMMOpts.QMOptTol *= 10; //Speedy convergance on the first step
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
     cout << "Nudged elastic band optimization:" << '\n';
@@ -986,7 +989,9 @@ int main(int argc, char* argv[])
       cout << '\n';
       //Run QM optimization
       LICHEMNEB(Struct,QMMMOpts);
-      //Print Optimized geometry
+      //Reset tolerance before optimization check
+      QMMMOpts.QMOptTol = SavedOptTol;
+      //Print optimized geometry
       Print_traj(Struct,outfile,QMMMOpts);
       //Check convergence
       optct += 1;

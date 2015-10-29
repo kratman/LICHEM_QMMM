@@ -610,28 +610,25 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.MaxStep;
     regionfile >> dummy >> QMMMOpts.Kspring;
     regionfile >> dummy >> dummy;
-    if ((dummy == "Yes") or (dummy == "yes") or
-       (dummy == "True") or (dummy == "true"))
+    if ((dummy == "Yes") or (dummy == "yes") or (dummy == "YES") or
+       (dummy == "True") or (dummy == "true") or (dummy == "TRUE"))
     {
       QMMMOpts.FrznEnds = 1;
     }
     regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
-    //Error check
-    if ((QMMMOpts.Nbeads%2) != 1)
+    //Set initial transition state
+    if ((QMMMOpts.Nbeads%2) == 0)
     {
-      //The number of beads must be odd
-      QMMMOpts.Nbeads += 1; //Change the number of beads
-      cerr << "Warning: The number of replicas should be odd.";
-      cerr << '\n';
-      cerr << " Starting calculations with " << QMMMOpts.Nbeads;
-      cerr << " beads.";
-      cerr << '\n' << '\n';
-      cerr.flush(); //Print error immediately
+      //Even number of beads
+      QMMMOpts.TSBead = (QMMMOpts.Nbeads/2); //Nearly the middle, product side
     }
-    //Set transition state
-    QMMMOpts.TSBead = ((QMMMOpts.Nbeads-1)/2); //Middle bead
+    else
+    {
+      //Odd number of beads
+      QMMMOpts.TSBead = ((QMMMOpts.Nbeads-1)/2); //Middle bead
+    }
     //Duplicate data
     for (int i=0;i<Natoms;i++)
     {
@@ -1030,10 +1027,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
   if (ENEBSim or NEBSim)
   {
     //Print input for error checking
-    if (QMMMOpts.Nbeads > 1)
-    {
-      cout << " RP beads: " << QMMMOpts.Nbeads << '\n';
-    }
+    cout << " RP beads: " << QMMMOpts.Nbeads << '\n';
     cout << '\n';
     cout << "Simulation mode: ";
     if (QMMM)
@@ -1254,7 +1248,16 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
       //Spring constant for the path
       cout << '\n';
       cout << " Spring constant: " << QMMMOpts.Kspring;
-      cout << " eV/\u212B\u00B2";
+      cout << " eV/\u212B\u00B2" << '\n';
+      cout << " End points: ";
+      if (QMMMOpts.FrznEnds)
+      {
+        cout << "Frozen";
+      }
+      else
+      {
+        cout << "Active";
+      }
     }
     cout << '\n' << '\n';
     if (SteepSim or QuickSim or DFPSim or NEBSim)

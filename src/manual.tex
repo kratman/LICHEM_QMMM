@@ -15,7 +15,6 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
-\usepackage{dtklogos}
 \usepackage{color}
 
 %Formatting settings
@@ -1084,7 +1083,16 @@ and
  \tau_{p,n}^{-} = \frac{R_{p,n}-R_{p-1,n}}{|R_{p,n}-R_{p-1,n}|} \; .
 \end{equation}
 Here the tangents are only calculated in the direction of the transition
-state.
+state. \\
+
+The CI-NEB forces can be utilized in essentially any optimization algorithm.
+Currently, LICHEM employs a global DFP (GDFP) optimization.
+The GDFP optimizer uses all replicas to construct and update a single large
+Hessian matrix.
+With all replicas in the Hessian, the GDFP algorithm minimizes the energy
+along the entire reaction pathway and includes the NEB spring forces in the
+curvature.
+Thus, the beads should smoothly converge to the minimum energy path.
 
 \subsection{Quadradic string method}
 
