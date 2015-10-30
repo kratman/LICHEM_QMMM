@@ -342,6 +342,15 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       Gaussian = 1;
     }
     regionfile >> dummy >> QMMMOpts.Func;
+    if ((QMMMOpts.Func == "SemiEmpirical") or (QMMMOpts.Func == "SE-SCF") or
+       (QMMMOpts.Func == "Semi-Empirical") or (QMMMOpts.Func == "se-scf") or
+       (QMMMOpts.Func == "semi-empirical") or (QMMMOpts.Func == "SESCF") or
+       (QMMMOpts.Func == "semiempirical") or (QMMMOpts.Func == "sescf") or
+       (QMMMOpts.Func == "SemiEmp") or (QMMMOpts.Func == "semiemp"))
+    {
+      //Flag the method as a semi-empirical Hamiltonian
+      QMMMOpts.Func = "SemiEmp";
+    }
     regionfile >> dummy >> QMMMOpts.Basis;
     regionfile >> dummy >> QMMMOpts.RAM;
     regionfile >> dummy;
@@ -387,6 +396,15 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       Gaussian = 1;
     }
     regionfile >> dummy >> QMMMOpts.Func;
+    if ((QMMMOpts.Func == "SemiEmpirical") or (QMMMOpts.Func == "SE-SCF") or
+       (QMMMOpts.Func == "Semi-Empirical") or (QMMMOpts.Func == "se-scf") or
+       (QMMMOpts.Func == "semi-empirical") or (QMMMOpts.Func == "SESCF") or
+       (QMMMOpts.Func == "semiempirical") or (QMMMOpts.Func == "sescf") or
+       (QMMMOpts.Func == "SemiEmp") or (QMMMOpts.Func == "semiemp"))
+    {
+      //Flag the method as a semi-empirical Hamiltonian
+      QMMMOpts.Func = "SemiEmp";
+    }
     regionfile >> dummy >> QMMMOpts.Basis;
     regionfile >> dummy >> QMMMOpts.RAM;
     regionfile >> dummy;
@@ -923,6 +941,17 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout << '\n';
     DoQuit = 1;
   }
+  if (QMMMOpts.StepScale > 1)
+  {
+    //Checks the number of threads and continue
+    cout << " Warning: The optimization step scale cannot be greater";
+    cout << " than 1.";
+    cout << '\n';
+    cout << " Step scale set to 1.";
+    cout << '\n';
+    QMMMOpts.StepScale = 1; //Reset step size
+    cout.flush(); //Print warning
+  }
   if (Ncpus < 1)
   {
     //Checks the number of threads and continue
@@ -1160,7 +1189,11 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
       cout << "NWChem" << '\n';
     }
     cout << " QM method: ";
-    cout << QMMMOpts.Func << "/";
+    if (QMMMOpts.Func != "SemiEmp")
+    {
+      //Avoid printing method and basis for semi-empirical
+      cout << QMMMOpts.Func << "/";
+    }
     cout << QMMMOpts.Basis << '\n';
   }
   if (MMonly or QMMM)

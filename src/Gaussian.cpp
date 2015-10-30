@@ -203,7 +203,12 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   bool UseCheckPoint = CheckFile(call.str());
   //Construct Gaussian input
   call.str("");
-  call << "#P " << QMMMOpts.Func << "/";
+  call << "#P ";
+  if (QMMMOpts.Func != "SemiEmp")
+  {
+    //Avoids defining both a basis set and method for semi-empirical
+    call << QMMMOpts.Func << "/"; //Print the method
+  }
   call << QMMMOpts.Basis << " Force=NoStep Symmetry=None" << '\n';
   call << "Int=UltraFine SCF=(YQC,Big,Direct)"; //Line ended further below
   if (UseCheckPoint)
@@ -220,7 +225,11 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
       call << "Pseudo=Read ";
     }
     call << "Charge=angstroms "; //Read charges
-    call << "Population(MK,ReadRadii)";
+    if (QMMMOpts.Func != "SemiEmp")
+    {
+      //Avoids calculating ESP charges for semi-empirical
+      call << "Population=(MK,ReadRadii)";
+    }
     call << '\n';
   }
   WriteGauInput(Struct,call.str(),QMMMOpts,Bead);
@@ -300,12 +309,33 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
       }
     }
     //Check for charges
-    if (dummy == "ESP")
+    if (dummy == "Mulliken")
     {
+      //Mulliken charges (fallback)
       line >> dummy;
       if (dummy == "charges:")
       {
-        getline(ifile,dummy);
+        getline(ifile,dummy); //Clear junk
+        for (int i=0;i<Natoms;i++)
+        {
+          if (Struct[i].QMregion or Struct[i].PBregion)
+          {
+            //Count through all atoms in the QM calculations
+            getline(ifile,dummy);
+            stringstream line(dummy);
+            line >> dummy >> dummy;
+            line >> Struct[i].MP[Bead].q;
+          }
+        }
+      }
+    }
+    if (dummy == "ESP")
+    {
+      //ESP (MK) charges
+      line >> dummy;
+      if (dummy == "charges:")
+      {
+        getline(ifile,dummy); //Clear junk
         for (int i=0;i<Natoms;i++)
         {
           if (Struct[i].QMregion or Struct[i].PBregion)
@@ -366,7 +396,12 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   bool UseCheckPoint = CheckFile(call.str());
   //Construct Gaussian input
   call.str("");
-  call << "#P " << QMMMOpts.Func << "/";
+  call << "#P ";
+  if (QMMMOpts.Func != "SemiEmp")
+  {
+    //Avoids defining both a basis set and method for semi-empirical
+    call << QMMMOpts.Func << "/"; //Print the method
+  }
   call << QMMMOpts.Basis << " SP Symmetry=None" << '\n';
   call << "Int=UltraFine SCF=(YQC,Big,Direct)" << '\n';
   if (QMMM)
@@ -382,7 +417,11 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       call << "Guess=TCheck ";
     }
     call << "Charge=angstroms "; //Read charges
-    call << "Population(MK,ReadRadii)";
+    if (QMMMOpts.Func != "SemiEmp")
+    {
+      //Avoids calculating ESP charges for semi-empirical
+      call << "Population=(MK,ReadRadii)";
+    }
     call << '\n';
   }
   WriteGauInput(Struct,call.str(),QMMMOpts,Bead);
@@ -399,12 +438,33 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     getline(ifile,dummy);
     stringstream line(dummy);
     line >> dummy;
-    if (dummy == "ESP")
+    if (dummy == "Mulliken")
     {
+      //Mulliken charges (fallback)
       line >> dummy;
       if (dummy == "charges:")
       {
-        getline(ifile,dummy);
+        getline(ifile,dummy); //Clear junk
+        for (int i=0;i<Natoms;i++)
+        {
+          if (Struct[i].QMregion or Struct[i].PBregion)
+          {
+            //Count through all atoms in the QM calculations
+            getline(ifile,dummy);
+            stringstream line(dummy);
+            line >> dummy >> dummy;
+            line >> Struct[i].MP[Bead].q;
+          }
+        }
+      }
+    }
+    if (dummy == "ESP")
+    {
+      //ESP (MK) charges
+      line >> dummy;
+      if (dummy == "charges:")
+      {
+        getline(ifile,dummy); //Clear junk
         for (int i=0;i<Natoms;i++)
         {
           if (Struct[i].QMregion or Struct[i].PBregion)
@@ -458,7 +518,12 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   bool UseCheckPoint = CheckFile(call.str());
   //Construct Gaussian input
   call.str("");
-  call << "#P " << QMMMOpts.Func << "/";
+  call << "#P ";
+  if (QMMMOpts.Func != "SemiEmp")
+  {
+    //Avoids defining both a basis set and method for semi-empirical
+    call << QMMMOpts.Func << "/"; //Print the method
+  }
   call << QMMMOpts.Basis << " SP Symmetry=None" << '\n';
   call << "Int=UltraFine SCF=(YQC,Big,Direct)";
   if (UseCheckPoint)
@@ -474,7 +539,11 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       call << "Pseudo=Read ";
     }
     call << "Charge=angstroms "; //Read charges
-    call << "Population(MK,ReadRadii)";
+    if (QMMMOpts.Func != "SemiEmp")
+    {
+      //Avoids calculating ESP charges for semi-empirical
+      call << "Population=(MK,ReadRadii)";
+    }
     call << '\n';
   }
   WriteGauInput(Struct,call.str(),QMMMOpts,Bead);
@@ -520,12 +589,33 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       }
     }
     //Check for charges
-    if (dummy == "ESP")
+    if (dummy == "Mulliken")
     {
+      //Mulliken charges (fallback)
       line >> dummy;
       if (dummy == "charges:")
       {
-        getline(ifile,dummy);
+        getline(ifile,dummy); //Clear junk
+        for (int i=0;i<Natoms;i++)
+        {
+          if (Struct[i].QMregion or Struct[i].PBregion)
+          {
+            //Count through all atoms in the QM calculations
+            getline(ifile,dummy);
+            stringstream line(dummy);
+            line >> dummy >> dummy;
+            line >> Struct[i].MP[Bead].q;
+          }
+        }
+      }
+    }
+    if (dummy == "ESP")
+    {
+      //ESP (MK) charges
+      line >> dummy;
+      if (dummy == "charges:")
+      {
+        getline(ifile,dummy); //Clear junk
         for (int i=0;i<Natoms;i++)
         {
           if (Struct[i].QMregion or Struct[i].PBregion)

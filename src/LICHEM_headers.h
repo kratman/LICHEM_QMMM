@@ -387,7 +387,7 @@ class QMMMSettings
   //Settings for the simulation and wrappers
   public:
     //Input needed for QM wrappers
-    string Func; //DFT functional
+    string Func; //QM method (functional, HF, etc)
     string Basis; //Basis set for QM calculations
     string RAM; //Ram for QM calculations
     bool MemMB; //Is the RAM in mb or gb

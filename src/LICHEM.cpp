@@ -507,6 +507,12 @@ int main(int argc, char* argv[])
   {
     VectorXd Forces; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
+    //Change optimization tolerance for the first step
+    double SavedOptTol = QMMMOpts.QMOptTol; //Save value from input
+    if (QMMMOpts.QMOptTol < 0.005)
+    {
+      QMMMOpts.QMOptTol = 0.005; //Speedy convergance on the first step
+    }
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
     cout << "DFP optimization:" << '\n';
@@ -595,6 +601,8 @@ int main(int argc, char* argv[])
       cout << '\n';
       //Run QM optimization
       LICHEMDFP(Struct,QMMMOpts,0);
+      //Reset tolerance before optimization check
+      QMMMOpts.QMOptTol = SavedOptTol;
       //Print Optimized geometry
       Print_traj(Struct,outfile,QMMMOpts);
       //Check convergence
@@ -826,7 +834,10 @@ int main(int argc, char* argv[])
     int optct = 0; //Counter for optimization steps
     //Change optimization tolerance for the first step
     double SavedOptTol = QMMMOpts.QMOptTol; //Save value from input
-    QMMMOpts.QMOptTol *= 10; //Speedy convergance on the first step
+    if (QMMMOpts.QMOptTol < 0.005)
+    {
+      QMMMOpts.QMOptTol = 0.005; //Speedy convergance on the first step
+    }
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
     cout << "Nudged elastic band optimization:" << '\n';

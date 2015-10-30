@@ -712,6 +712,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   double StepScale; //Local copy
   double E = 0; //Energy
   double Eold = 0; //Energy from previous step
+  double sdscale = 0.01; //Scale factor for SD steps
   double VecMax = 0; //Maxium atomic displacement
   bool OptDone = 0; //Flag to end the optimization
   //Calculate forces (QM part)
@@ -764,6 +765,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   VecMax = sqrt(VecMax/Ndof);
   call.copyfmt(cout); //Save settings
   cout << setprecision(12);
+  cout << "    Performing a steepest descent step..." << '\n';
   cout << "    QM step: 0";
   cout << " | RMS force: " << VecMax;
   cout << " eV/\u212B";
@@ -773,7 +775,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Optimize structure
   Eold = E; //Save energy
   StepScale = QMMMOpts.StepScale;
-  StepScale *= 0.02; //Take a very small first step
+  StepScale *= sdscale; //Take a very small first step
   while ((!OptDone) and (stepct < QMMMOpts.MaxOptSteps))
   {
     E = 0; // Reinitialize energy
@@ -869,15 +871,19 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     }
     //Update Hessian
     GradDiff -= Forces;
-    if (((stepct%30) == 0) and (stepct != 0))
+    if (((stepct%30) == 0) or (stepct < 15))
     {
       //Build a new Hessian after 30 steps
-      cout << "    Constructing new Hessian...";
+      cout << "    Performing a steepest descent step...";
       cout << '\n';
       //Shrink step size
-      if (StepScale > (0.02*QMMMOpts.StepScale))
+      if (stepct < 15)
       {
-        StepScale = 0.02*QMMMOpts.StepScale;
+        StepScale = sdscale; //Small step
+      }
+      if (StepScale > (sdscale*QMMMOpts.StepScale))
+      {
+        StepScale = sdscale*QMMMOpts.StepScale;
       }
       else
       {
@@ -912,9 +918,9 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       cout << " Constructing new Hessian...";
       cout << '\n';
       //Reduce step size
-      if (StepScale > (0.02*QMMMOpts.StepScale))
+      if (StepScale > (sdscale*QMMMOpts.StepScale))
       {
-        StepScale = 0.02*QMMMOpts.StepScale;
+        StepScale = sdscale*QMMMOpts.StepScale;
       }
       else
       {
