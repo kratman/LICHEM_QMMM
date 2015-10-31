@@ -608,6 +608,11 @@ int main(int argc, char* argv[])
       //Check convergence
       optct += 1;
       OptDone = OptConverged(Struct,OldStruct,Forces,optct,QMMMOpts,0,0);
+      if (optct == 1)
+      {
+        //Avoid terminating restarts on the loose tolerance step
+        OptDone = 0; //Not converged
+      }
     }
     cout << '\n';
     cout << "Optimization complete.";
@@ -1007,6 +1012,11 @@ int main(int argc, char* argv[])
       //Check convergence
       optct += 1;
       PathDone = PathConverged(Struct,OldStruct,ForceStats,optct,QMMMOpts,0);
+      if (optct == 1)
+      {
+        //Avoid terminating restarts on the loose tolerance step
+        PathDone = 0; //Not converged
+      }
     }
     BurstTraj(Struct,QMMMOpts);
     cout << '\n';

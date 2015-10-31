@@ -270,18 +270,9 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           line >> Fy;
           line >> Fz;
           //Save forces
-          if (abs(Fx) >= 1e-8)
-          {
-            Forces(3*i) += Fx*Har2eV/BohrRad;
-          }
-          if (abs(Fy) >= 1e-8)
-          {
-            Forces(3*i+1) += Fy*Har2eV/BohrRad;
-          }
-          if (abs(Fz) >= 1e-8)
-          {
-            Forces(3*i+2) += Fz*Har2eV/BohrRad;
-          }
+          Forces(3*i) += Fx*Har2eV/BohrRad;
+          Forces(3*i+1) += Fy*Har2eV/BohrRad;
+          Forces(3*i+2) += Fz*Har2eV/BohrRad;
         }
       }
     }

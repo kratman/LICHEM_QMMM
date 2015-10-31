@@ -369,8 +369,8 @@ If the potential type is QM or QMMMM, several keywords are required to define
 the QM wrapper and level of theory. \\
 
 QM\_type: $<$Gaussian or PSI4 or NWChem$>$ \\
-QM\_method: $<$HF or functional$>$ \\
-QM\_basis: $<$basis set$>$ \\
+QM\_method: $<$HF or functional or SemiEmp$>$ \\
+QM\_basis: $<$basis set or model$>$ \\
 QM\_memory: $<$RAM$>$ $<$MB or GB$>$ \\
 QM\_charge: $<$charge on the QM region$>$ \\
 QM\_spin: $<$multiplicity of the QM region$>$ \\
@@ -378,6 +378,8 @@ QM\_spin: $<$multiplicity of the QM region$>$ \\
 All of the QM input is read into LICHEM as text, and hence, it must match the
 correct input for the QM package.
 For example, Gaussian can only read integer values for the memory.
+If the QM method is set to SemiEmp, then the QM basis should be set to the
+semi-empirical model Hamiltonian.
 
 \subsection{MM input}
 
@@ -392,8 +394,8 @@ Electrostatics: $<$Charges or AMOEBA or Density$>$ \\
 QMMM input is a combination of the QM and MM input described above. \\
 
 QM\_type: $<$Gaussian or PSI4 or NWChem$>$ \\
-QM\_method: $<$HF or functional$>$ \\
-QM\_basis: $<$basis set$>$ \\
+QM\_method: $<$HF or functional or SemiEmp$>$ \\
+QM\_basis: $<$basis set or model$>$ \\
 QM\_memory: $<$RAM$>$ $<$MB or GB$>$ \\
 QM\_charge: $<$charge on the QM region$>$ \\
 QM\_spin: $<$multiplicity of the QM region$>$ \\
@@ -403,6 +405,8 @@ Electrostatics: $<$Charges or AMOEBA or Density$>$ \\
 All of the QMMM input is read into LICHEM as text, and hence, it must match the
 correct input for the QM and MM packages.
 For example, Gaussian can only read integer values for the memory.
+If the QM method is set to SemiEmp, then the QM basis should be set to the
+semi-empirical model Hamiltonian.
 
 \subsection{Simulation input}
 

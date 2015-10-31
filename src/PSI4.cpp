@@ -90,18 +90,9 @@ double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           line >> Fy; //Read value
           line >> Fz; //Read value
           //Switch to eV/A and save forces
-          if (abs(Fx) >= 1e-12)
-          {
-            Forces(3*i) += Fx*Har2eV/BohrRad;
-          }
-          if (abs(Fy) >= 1e-12)
-          {
-            Forces(3*i+1) += Fy*Har2eV/BohrRad;
-          }
-          if (abs(Fz) >= 1e-12)
-          {
-            Forces(3*i+2) += Fz*Har2eV/BohrRad;
-          }
+          Forces(3*i) += Fx*Har2eV/BohrRad;
+          Forces(3*i+1) += Fy*Har2eV/BohrRad;
+          Forces(3*i+2) += Fz*Har2eV/BohrRad;
         }
       }
     }

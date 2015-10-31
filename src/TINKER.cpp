@@ -121,16 +121,16 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    ofile.precision(8);
+    ofile.precision(12);
     ofile << setw(6) << (Struct[i].id+1);
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].x;
+    ofile << setw(14) << Struct[i].P[Bead].x;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].y;
+    ofile << setw(14) << Struct[i].P[Bead].y;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].z;
+    ofile << setw(14) << Struct[i].P[Bead].z;
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -157,6 +157,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
   ofile << "openmp-threads " << Ncpus << '\n';
+  ofile << "digits 12" << '\n'; //Increase precision
   if (PBCon)
   {
     //PBC defined twice for safety
@@ -309,16 +310,16 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    ofile.precision(8);
+    ofile.precision(12);
     ofile << setw(6) << (Struct[i].id+1);
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].x;
+    ofile << setw(14) << Struct[i].P[Bead].x;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].y;
+    ofile << setw(14) << Struct[i].P[Bead].y;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].z;
+    ofile << setw(14) << Struct[i].P[Bead].z;
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -345,6 +346,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
   ofile << "openmp-threads " << Ncpus << '\n';
+  ofile << "digits 12" << '\n'; //Increase precision
   if (PBCon)
   {
     //PBC defined twice for safety
@@ -500,6 +502,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
   ofile << "openmp-threads " << Ncpus << '\n';
+  ofile << "digits 12" << '\n'; //Increase precision
   if (PBCon)
   {
     //PBC defined twice for safety
@@ -623,16 +626,16 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    ofile.precision(8);
+    ofile.precision(12);
     ofile << setw(6) << (Struct[i].id+1);
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].x;
+    ofile << setw(14) << Struct[i].P[Bead].x;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].y;
+    ofile << setw(14) << Struct[i].P[Bead].y;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].z;
+    ofile << setw(14) << Struct[i].P[Bead].z;
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -685,18 +688,9 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           line >> Fy;
           line >> Fz;
           //Switch to eV/A and change sign
-          if (abs(Fx) >= 1e-4)
-          {
-            Forces(3*i) += -1*Fx*kcal2eV;
-          }
-          if (abs(Fy) >= 1e-4)
-          {
-            Forces(3*i+1) += -1*Fy*kcal2eV;
-          }
-          if (abs(Fz) >= 1e-4)
-          {
-            Forces(3*i+2) += -1*Fz*kcal2eV;
-          }
+          Forces(3*i) += -1*Fx*kcal2eV;
+          Forces(3*i+1) += -1*Fy*kcal2eV;
+          Forces(3*i+2) += -1*Fz*kcal2eV;
         }
       }
     }
@@ -747,6 +741,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
   ofile << "openmp-threads " << Ncpus << '\n';
+  ofile << "digits 12" << '\n'; //Increase precision
   if (PBCon)
   {
     //PBC defined twice for safety
@@ -843,16 +838,16 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    ofile.precision(8);
+    ofile.precision(12);
     ofile << setw(6) << (Struct[i].id+1);
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].x;
+    ofile << setw(14) << Struct[i].P[Bead].x;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].y;
+    ofile << setw(14) << Struct[i].P[Bead].y;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].z;
+    ofile << setw(14) << Struct[i].P[Bead].z;
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -905,18 +900,9 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           line >> Fy;
           line >> Fz;
           //Switch to eV/A and change sign
-          if (abs(Fx) >= 1e-4)
-          {
-            Forces(3*i) += -1*Fx*kcal2eV;
-          }
-          if (abs(Fy) >= 1e-4)
-          {
-            Forces(3*i+1) += -1*Fy*kcal2eV;
-          }
-          if (abs(Fz) >= 1e-4)
-          {
-            Forces(3*i+2) += -1*Fz*kcal2eV;
-          }
+          Forces(3*i) += -1*Fx*kcal2eV;
+          Forces(3*i+1) += -1*Fy*kcal2eV;
+          Forces(3*i+2) += -1*Fz*kcal2eV;
         }
       }
     }
@@ -967,6 +953,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
   ofile << "openmp-threads " << Ncpus << '\n';
+  ofile << "digits 12" << '\n'; //Increase precision
   if (PBCon)
   {
     //PBC defined twice for safety
@@ -1067,16 +1054,16 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    ofile.precision(8);
+    ofile.precision(12);
     ofile << setw(6) << (Struct[i].id+1);
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].x;
+    ofile << setw(14) << Struct[i].P[Bead].x;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].y;
+    ofile << setw(14) << Struct[i].P[Bead].y;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].z;
+    ofile << setw(14) << Struct[i].P[Bead].z;
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -1166,6 +1153,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
   ofile << "openmp-threads " << Ncpus << '\n';
+  ofile << "digits 12" << '\n'; //Increase precision
   if (PBCon)
   {
     //PBC defined twice for safety
@@ -1301,16 +1289,16 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    ofile.precision(8);
+    ofile.precision(12);
     ofile << setw(6) << (Struct[i].id+1);
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].x;
+    ofile << setw(14) << Struct[i].P[Bead].x;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].y;
+    ofile << setw(14) << Struct[i].P[Bead].y;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].z;
+    ofile << setw(14) << Struct[i].P[Bead].z;
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -1389,6 +1377,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
   ofile << "openmp-threads " << Ncpus << '\n';
+  ofile << "digits 12" << '\n'; //Increase precision
   if (PBCon)
   {
     //PBC defined twice for safety
@@ -1520,16 +1509,16 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    ofile.precision(8);
+    ofile.precision(12);
     ofile << setw(6) << (Struct[i].id+1);
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].x;
+    ofile << setw(14) << Struct[i].P[Bead].x;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].y;
+    ofile << setw(14) << Struct[i].P[Bead].y;
     ofile << " ";
-    ofile << setw(10) << Struct[i].P[Bead].z;
+    ofile << setw(14) << Struct[i].P[Bead].z;
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
