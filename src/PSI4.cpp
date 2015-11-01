@@ -89,6 +89,10 @@ double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           line >> Fx; //Read value
           line >> Fy; //Read value
           line >> Fz; //Read value
+          //Change from gradient to force
+          Fx *= -1;
+          Fy *= -1;
+          Fz *= -1;
           //Switch to eV/A and save forces
           Forces(3*i) += Fx*Har2eV/BohrRad;
           Forces(3*i+1) += Fy*Har2eV/BohrRad;

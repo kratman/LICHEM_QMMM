@@ -38,30 +38,16 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
   if (QMregion)
   {
     //Check if a QM calculation is converged
-    for (int i=0;i<(Nqm+Npseudo);i++)
+    MAXforce = abs(Forces.maxCoeff());
+    if (MAXforce < abs(Forces.minCoeff()))
     {
-      //Calculate RMS forces
-      double Fx = Forces(3*i);
-      double Fy = Forces(3*i+1);
-      double Fz = Forces(3*i+2);
-      if (abs(Fx) > MAXforce)
-      {
-        MAXforce = abs(Fx);
-      }
-      if (abs(Fy) > MAXforce)
-      {
-        MAXforce = abs(Fy);
-      }
-      if (abs(Fz) > MAXforce)
-      {
-        MAXforce = abs(Fz);
-      }
-      RMSforce += Fx*Fx+Fy*Fy+Fz*Fz;
+      MAXforce = abs(Forces.minCoeff());
     }
+    RMSforce = sqrt(Forces.squaredNorm()/Ndof);
     #pragma omp parallel for reduction(+:RMSdiff)
     for (int i=0;i<Natoms;i++)
     {
-      //Calculate RMS displacement (QM-QM distance matrix)
+      //Calculate QM-QM distance matrix
       double RMStmp = 0; //Store a local sum
       if (Struct[i].QMregion or Struct[i].PBregion)
       {
@@ -86,8 +72,6 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     #pragma omp barrier
     RMSdiff /= (Nqm+Npseudo)*(Nqm+Npseudo-1)/2;
     RMSdiff = sqrt(RMSdiff);
-    RMSforce /= Ndof;
-    RMSforce = sqrt(RMSforce);
     //Print progress
     call.copyfmt(cout); //Save settings
     cout << setprecision(12);
@@ -112,7 +96,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
   if (!QMregion)
   {
     //Check energy and convergence of the whole system
-    SumE = 0;
+    SumE = 0; //Reinitialize the energy
     //Calculate QM energy
     if (Gaussian)
     {

@@ -687,10 +687,14 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           line >> Fx;
           line >> Fy;
           line >> Fz;
-          //Switch to eV/A and change sign
-          Forces(3*i) += -1*Fx*kcal2eV;
-          Forces(3*i+1) += -1*Fy*kcal2eV;
-          Forces(3*i+2) += -1*Fz*kcal2eV;
+          //Change from gradient to force
+          Fx *= -1;
+          Fy *= -1;
+          Fz *= -1;
+          //Switch to eV/A and save forces
+          Forces(3*i) += Fx*kcal2eV;
+          Forces(3*i+1) += Fy*kcal2eV;
+          Forces(3*i+2) += Fz*kcal2eV;
         }
       }
     }
@@ -899,10 +903,14 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           line >> Fx;
           line >> Fy;
           line >> Fz;
+          //Change from gradient to force
+          Fx *= -1;
+          Fy *= -1;
+          Fz *= -1;
           //Switch to eV/A and change sign
-          Forces(3*i) += -1*Fx*kcal2eV;
-          Forces(3*i+1) += -1*Fy*kcal2eV;
-          Forces(3*i+2) += -1*Fz*kcal2eV;
+          Forces(3*i) += Fx*kcal2eV;
+          Forces(3*i+1) += Fy*kcal2eV;
+          Forces(3*i+2) += Fz*kcal2eV;
         }
       }
     }

@@ -87,10 +87,14 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           line >> Fx;
           line >> Fy;
           line >> Fz;
-          //Change units and check precision
-          Forces(3*i) -= Fx*Har2eV/BohrRad;
-          Forces(3*i+1) -= Fy*Har2eV/BohrRad;
-          Forces(3*i+2) -= Fz*Har2eV/BohrRad;
+          //Change from gradient to force
+          Fx *= -1;
+          Fy *= -1;
+          Fz *= -1;
+          //Switch to eV/A and save forces
+          Forces(3*i) += Fx*Har2eV/BohrRad;
+          Forces(3*i+1) += Fy*Har2eV/BohrRad;
+          Forces(3*i+2) += Fz*Har2eV/BohrRad;
         }
       }
     }
