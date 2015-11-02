@@ -316,6 +316,131 @@ os.chdir(DirPath)
 #Start printing results
 print("Results:")
 
+#Check QM energy
+line = ""
+PassEnergy = 0
+cmd = "lichem -n "
+cmd += `Ncpus`
+cmd += " "
+cmd += "-x xyzfile.xyz "
+cmd += "-r qmreg.inp "
+cmd += "-c connect.inp "
+cmd += "-o trash.xyz "
+cmd += "> tests.out " #Capture stdout
+cmd += "2>&1" #Capture stderr
+subprocess.call(cmd,shell=True) #Run calculations
+cmd = ""
+cmd += "grep -e"
+cmd += ' "QM energy: " '
+cmd += "tests.out"
+try:
+  QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
+  QMMMEnergy = QMMMEnergy.split()
+  QMMMEnergy = float(QMMMEnergy[2])
+  QMMMEnergy = round(QMMMEnergy,5)
+except:
+  QMMMEnergy = 0.0
+if (QMPack == "PSI4"):
+  #Check against saved energy
+  if (QMMMEnergy == round(-4155.414685776608,5)):
+    PassEnergy = 1
+if (QMPack == "Gaussian"):
+  #Check against saved energy
+  if (QMMMEnergy == round(-4155.413972324945,5)):
+    PassEnergy = 1
+if (QMPack == "NWChem"):
+  #Check against saved energy
+  if (QMMMEnergy == round(-4155.414734834268,5)):
+    PassEnergy = 1
+line += " QM energy: "
+if (PassEnergy == 1):
+  line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
+else:
+  line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+cmd = ""
+cmd += "grep -e"
+cmd += ' "Total wall time: " '
+cmd += "tests.out"
+try:
+  RunTime = subprocess.check_output(cmd,shell=True) #Get run time
+  RunTime = RunTime.split()
+  RunTime = " "+RunTime[3]+" "+RunTime[4]
+except:
+  RunTime = " N/A"
+line += RunTime
+print(line)
+
+#Clean up files
+cmd = ""
+cmd += "rm -f tinker.key tests.out trash.xyz"
+if (QMPack == "Gaussian"):
+  #Remove checkpoint files
+  cmd += " *.chk"
+if (QMPack == "PSI4"):
+  #Remove checkpoint files
+  cmd += " timer.* psi.*"
+subprocess.call(cmd,shell=True)
+
+#TINKER tests
+
+#Check MM energy
+line = ""
+PassEnergy = 0
+cmd = "cp pchrg.key tinker.key"
+subprocess.call(cmd,shell=True) #Copy key file
+cmd = "lichem -n "
+cmd += `Ncpus`
+cmd += " "
+cmd += "-x xyzfile.xyz "
+cmd += "-r mmreg.inp "
+cmd += "-c connect.inp "
+cmd += "-o trash.xyz "
+cmd += "> tests.out " #Capture stdout
+cmd += "2>&1" #Capture stderr
+subprocess.call(cmd,shell=True) #Run calculations
+cmd = ""
+cmd += "grep -e"
+cmd += ' "MM energy: " '
+cmd += "tests.out"
+try:
+  QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
+  QMMMEnergy = QMMMEnergy.split()
+  QMMMEnergy = float(QMMMEnergy[2])
+  QMMMEnergy = round(QMMMEnergy,5)
+except:
+  QMMMEnergy = 0.0
+#Check against saved energy
+if (QMMMEnergy == round(-0.259690353622,5)):
+  PassEnergy = 1
+line += " MM energy: "
+if (PassEnergy == 1):
+  line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
+else:
+  line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+cmd = ""
+cmd += "grep -e"
+cmd += ' "Total wall time: " '
+cmd += "tests.out"
+try:
+  RunTime = subprocess.check_output(cmd,shell=True) #Get run time
+  RunTime = RunTime.split()
+  RunTime = " "+RunTime[3]+" "+RunTime[4]
+except:
+  RunTime = " N/A"
+line += RunTime
+print(line)
+
+#Clean up files
+cmd = ""
+cmd += "rm -f tinker.key tests.out trash.xyz"
+if (QMPack == "Gaussian"):
+  #Remove checkpoint files
+  cmd += " *.chk"
+if (QMPack == "PSI4"):
+  #Remove checkpoint files
+  cmd += " timer.* psi.*"
+subprocess.call(cmd,shell=True)
+
 #Check QMMM point-charge energy results
 line = ""
 PassEnergy = 0
@@ -343,16 +468,16 @@ try:
 except:
   QMMMEnergy = 0.0
 if (QMPack == "PSI4"):
-  #Check again saved energy
-  if (QMMMEnergy == round(-2077.868473998802,5)):
+  #Check against saved energy
+  if (QMMMEnergy == round(-2077.868475298003,5)):
     PassEnergy = 1
 if (QMPack == "Gaussian"):
-  #Check again saved energy
-  if (QMMMEnergy == round(-2077.868128282743,5)):
+  #Check against saved energy
+  if (QMMMEnergy == round(-2077.868129577162,5)):
     PassEnergy = 1
 if (QMPack == "NWChem"):
-  #Check again saved energy
-  if (QMMMEnergy == round(-2077.868518657355,5)):
+  #Check against saved energy
+  if (QMMMEnergy == round(-2077.868519717375,5)):
     PassEnergy = 1
 line += " QMMM energy: "
 if (PassEnergy == 1):
@@ -410,16 +535,16 @@ try:
 except:
   QMMMEnergy = 0.0
 if (QMPack == "PSI4"):
-  #Check again saved energy
-  if (QMMMEnergy == round(-2077.771998247412,5)):
+  #Check against saved energy
+  if (QMMMEnergy == round(-2077.771998494848,5)):
     PassEnergy = 1
 if (QMPack == "Gaussian"):
-  #Check again saved energy
-  if (QMMMEnergy == round(-2077.775625181200,5)):
+  #Check against saved energy
+  if (QMMMEnergy == round(-2077.775628449552,5)):
     PassEnergy = 1
 if (QMPack == "NWChem"):
-  #Check again saved energy
-  if (QMMMEnergy == round(-2077.775529980780,5)):
+  #Check against saved energy
+  if (QMMMEnergy == round(-2077.775532434397,5)):
     PassEnergy = 1
 line += " Pol. QMMM energy: "
 if (PassEnergy == 1):

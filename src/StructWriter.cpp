@@ -403,6 +403,7 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
   }
   //Set up memory
   call.str("");
+  call << "set_num_threads(" << Ncpus << ")" << '\n';
   call << "memory " << QMMMOpts.RAM;
   if (QMMMOpts.MemMB)
   {

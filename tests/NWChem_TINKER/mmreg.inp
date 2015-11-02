@@ -1,0 +1,10 @@
+Potential_type: MM
+MM_type: TINKER
+Potential_type: Charges
+Calculation_type: SP
+PBC: No
+QM_atoms: 0
+Pseudo_atoms: 0
+Boundary_atoms: 0
+Frozen_atoms: 0
+
