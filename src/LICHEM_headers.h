@@ -329,11 +329,11 @@ class HermGau
       alpha *= (BohrRad*BohrRad);
       return;
     }
-    double Coeff(); //Return the coefficient
+    double Coeff(); //Return the coefficient (magnitude)
     double XPos(); //Return the x position
     double YPos(); //Return the y position
     double ZPos(); //Return the z position
-    double Alpha(); //Return the Gaussian coefficient (width)
+    double Alpha(); //Return the Gaussian width
     int XPow(); //Return the Hermite power in the x direction
     int YPow(); //Return the Hermite power in the y direction
     int ZPow(); //Return the Hermite power in the z direction

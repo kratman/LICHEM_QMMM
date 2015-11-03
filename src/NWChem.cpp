@@ -149,6 +149,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << "LICHM_" << Bead << ".q*" << " ";
   call << "LICHM_" << Bead << ".nw" << " ";
   call << "LICHM_" << Bead << ".db" << " ";
+  call << "LICHM_" << Bead << ".x*" << " ";
   call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Change units and return
@@ -252,6 +253,7 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "LICHM_" << Bead << ".q*" << " ";
   call << "LICHM_" << Bead << ".nw" << " ";
   call << "LICHM_" << Bead << ".db" << " ";
+  call << "LICHM_" << Bead << ".x*" << " ";
   call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   return;
@@ -373,6 +375,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "LICHM_" << Bead << ".q*" << " ";
   call << "LICHM_" << Bead << ".nw" << " ";
   call << "LICHM_" << Bead << ".db" << " ";
+  call << "LICHM_" << Bead << ".x*" << " ";
   call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Change units and return
@@ -474,6 +477,7 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "LICHM_" << Bead << ".q*" << " ";
   call << "LICHM_" << Bead << ".nw" << " ";
   call << "LICHM_" << Bead << ".db" << " ";
+  call << "LICHM_" << Bead << ".x*" << " ";
   call << "LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Change units and return

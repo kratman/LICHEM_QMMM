@@ -86,11 +86,27 @@ double HermCoul2e(HermGau& Gi, HermGau& Gj)
 {
   //Recursive two electron Coulomb integral
   double Eij = 0; //Energy
-  //Combine Gaussians
-  
+  //Combine Gaussians with the Gaussian product rule
+  double xcent = 0.5*(Gi.XPos()+Gj.XPos()); //Center of the Gaussians
+  double ycent = 0.5*(Gi.YPos()+Gj.YPos()); //Center of the Gaussians
+  double zcent = 0.5*(Gi.ZPos()+Gj.ZPos()); //Center of the Gaussians
+  double anew = Gi.Alpha()+Gj.Alpha(); //New Gaussian coefficient
+  int powx = Gi.XPow()+Gj.XPow(); //New X power
+  int powy = Gi.YPow()+Gj.YPow(); //New Y power
+  int powz = Gi.ZPow()+Gj.ZPow(); //New Z power
+  //Update magnitude based on the separation
+  double mu = Gi.Alpha()*Gj.Alpha()/anew; //Smearing parameter
+  double Xij = Gi.XPos()-Gj.XPos(); //X distance
+  double Yij = Gi.YPos()-Gj.YPos(); //Y distance
+  double Zij = Gi.ZPos()-Gj.ZPos(); //Z distance
+  double Rij2 = Xij*Xij+Yij*Yij+Zij*Zij; //Distance between Gaussians
+  double newmag = Gi.Coeff()*Gj.Coeff(); //Product of old coefficients
+  newmag *= exp(-mu*Rij2); //Scale based on distance
+  //Create product Gaussian
+  HermGau Gij(newmag,anew,powx,powy,powz,xcent,ycent,zcent);
   //Calculate integral
   
-  Eij *= Gi.Coeff()*Gj.Coeff(); //Scale by magnitude
+  Eij *= Gij.Coeff(); //Scale by magnitude
   //Change units and return
   Eij *= Har2eV;
   return Eij;
@@ -112,11 +128,27 @@ double HermOverlap(HermGau& Gi, HermGau& Gj)
 {
   //Recursive two electron overlap integral
   double Sij = 0; //Overlap
-  //Combine Gaussians
-  
+  //Combine Gaussians with the Gaussian product rule
+  double xcent = 0.5*(Gi.XPos()+Gj.XPos()); //Center of the Gaussians
+  double ycent = 0.5*(Gi.YPos()+Gj.YPos()); //Center of the Gaussians
+  double zcent = 0.5*(Gi.ZPos()+Gj.ZPos()); //Center of the Gaussians
+  double anew = Gi.Alpha()+Gj.Alpha(); //New Gaussian coefficient
+  int powx = Gi.XPow()+Gj.XPow(); //New X power
+  int powy = Gi.YPow()+Gj.YPow(); //New Y power
+  int powz = Gi.ZPow()+Gj.ZPow(); //New Z power
+  //Update magnitude based on the separation
+  double mu = Gi.Alpha()*Gj.Alpha()/anew; //Smearing parameter
+  double Xij = Gi.XPos()-Gj.XPos(); //X distance
+  double Yij = Gi.YPos()-Gj.YPos(); //Y distance
+  double Zij = Gi.ZPos()-Gj.ZPos(); //Z distance
+  double Rij2 = Xij*Xij+Yij*Yij+Zij*Zij; //Distance between Gaussians
+  double newmag = Gi.Coeff()*Gj.Coeff(); //Product of old coefficients
+  newmag *= exp(-mu*Rij2); //Scale based on distance
+  //Create product Gaussian
+  HermGau Gij(newmag,anew,powx,powy,powz,xcent,ycent,zcent);
   //Calculate integral
   
-  Sij *= Gi.Coeff()*Gj.Coeff(); //Scale by magnitude
+  Sij *= Gij.Coeff(); //Scale by magnitude
   //Return overlap
   return Sij;
 };
