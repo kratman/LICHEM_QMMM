@@ -166,10 +166,6 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy print settings
   double E = 0.0; //QM energy
-  //Remove multipoles file
-  call.str("");
-  call << "rm -f MMCharges_" << Bead << ".txt";
-  GlobalSys = system(call.str().c_str());
   //Write NWChem input
   call.str("");
   call << "task dft energy" << '\n';
@@ -268,10 +264,6 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy print settings
   double E = 0.0; //QM energy
-  //Remove multipoles file
-  call.str("");
-  call << "rm -f MMCharges_" << Bead << ".txt";
-  GlobalSys = system(call.str().c_str());
   //Write NWChem input
   call.str("");
   call << "task dft energy" << '\n';
@@ -391,10 +383,6 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Save print settings
   double E = 0.0; //QM energy
-  //Remove multipoles file
-  call.str("");
-  call << "rm -f MMCharges_" << Bead << ".txt";
-  GlobalSys = system(call.str().c_str());
   //Write NWChem input
   call.str("");
   call << "task dft optimize" << '\n';

@@ -21,15 +21,8 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
   call.copyfmt(cout); //Copy settings from cout
   string dummy,chrgfilename; //Generic strings
   fstream ifile,ofile; //Generic file names
-  //Check if a list of point-charges exists
-  call.str("");
-  call << "MMCharges_" << Bead << ".txt";
-  bool UseChrgFile = CheckFile(call.str());
-  if (UseChrgFile)
-  {
-    chrgfilename = call.str();
-  }
-  if (AMOEBA and TINKER and (!UseChrgFile))
+  //Initialize multipoles
+  if (AMOEBA and TINKER)
   {
     //Set up multipoles
     RotateTINKCharges(Struct,Bead);
@@ -83,7 +76,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
   }
   call << '\n'; //Blank line needed
   //Add the MM field
-  if (CHRG and (!UseChrgFile))
+  if (CHRG)
   {
     for (int i=0;i<Natoms;i++)
     {
@@ -100,7 +93,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
     }
     call << '\n'; //Blank line needed
   }
-  if (AMOEBA and (!UseChrgFile))
+  if (AMOEBA)
   {
     for (int i=0;i<Natoms;i++)
     {
@@ -142,18 +135,6 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
     }
     call << '\n'; //Blank line needed
   }
-  if (UseChrgFile)
-  {
-    //Add charges to g09 input
-    ifile.open(chrgfilename.c_str(),ios_base::in);
-    while (!ifile.eof())
-    {
-      //Copy charges line by line
-      getline(ifile,dummy);
-      call << dummy << '\n';
-    }
-    ifile.close();
-  }
   //Add basis set information from the BASIS file
   ifile.open("BASIS",ios_base::in);
   if (ifile.good())
@@ -180,7 +161,6 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   string dummy,chrgfilename; //Generic strings
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
-  bool UseChrgFile = 0;
   //Calculate inverse box lengths for PBC
   double ix,iy,iz; //Inverse x,y,z
   ix = 1;
@@ -192,21 +172,11 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
     iy /= Ly;
     iz /= Lz;
   }
+  //Initialize multipoles
   if (AMOEBA and TINKER)
   {
-    //Check if charges are saved
-    call.str("");
-    call << "MMCharges_" << Bead << ".txt";
-    UseChrgFile = CheckFile(call.str());
-    if (UseChrgFile)
-    {
-      chrgfilename = call.str();
-    }
-    else
-    {
-      //Set up multipoles
-      RotateTINKCharges(Struct,Bead);
-    }
+    //Set up multipoles
+    RotateTINKCharges(Struct,Bead);
   }
   //Create NWChem input
   call.str("");
@@ -310,62 +280,42 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   {
     ofile << "set bq:max_nbq " << (Nmm*6) << '\n';
     ofile << "bq mmchrg" << '\n';
-    if (UseChrgFile)
+    for (int i=0;i<Natoms;i++)
     {
-      //Add charges to NWChem input
-      ifile.open(chrgfilename.c_str(),ios_base::in);
-      while (!ifile.eof())
+      if (Struct[i].MMregion)
       {
-        //Copy charges line by line
-        getline(ifile,dummy);
-        stringstream line(dummy);
-        if (line.str() != "")
-        {
-          //Avoid copying extra blank lines
-          ofile << dummy << '\n';
-        }
-      }
-      ifile.close();
-    }
-    else
-    {
-      for (int i=0;i<Natoms;i++)
-      {
-        if (Struct[i].MMregion)
-        {
-          ofile << fixed; //Forces numbers to be floats
-          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x1*ix);
-          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y1*iy);
-          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z1*iz);
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
-          ofile << '\n';
-          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x2*ix);
-          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y2*iy);
-          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z2*iz);
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
-          ofile << '\n';
-          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x3*ix);
-          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y3*iy);
-          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z3*iz);
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
-          ofile << '\n';
-          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x4*ix);
-          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y4*iy);
-          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z4*iz);
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
-          ofile << '\n';
-          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x5*ix);
-          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y5*iy);
-          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z5*iz);
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
-          ofile << '\n';
-          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x6*ix);
-          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y6*iy);
-          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z6*iz);
-          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
-          ofile.copyfmt(cout); //Copy settings from cout
-          ofile << '\n';
-        }
+        ofile << fixed; //Forces numbers to be floats
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x1*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y1*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z1*iz);
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x2*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y2*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z2*iz);
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x3*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y3*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z3*iz);
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x4*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y4*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z4*iz);
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x5*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y5*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z5*iz);
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
+        ofile << '\n';
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x6*ix);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y6*iy);
+        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z6*iz);
+        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
+        ofile.copyfmt(cout); //Copy settings from cout
+        ofile << '\n';
       }
     }
     ofile << "end" << '\n';
@@ -396,6 +346,7 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
   call.copyfmt(cout); //Copy settings from cout
   string dummy; //Generic string
   fstream ifile,ofile; //Generic file names
+  //Initialize multipoles
   if (AMOEBA and TINKER)
   {
     //Set up multipoles

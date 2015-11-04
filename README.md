@@ -11,11 +11,6 @@ LICHEM: Layered Interacting CHEmical Models
 <div align=center> <h3> Symbiotic Computational Chemistry </h3> </div>
 ***
 
-<h4>
-Notice: Multipole routines are being held back until the LICHEM paper
-is published.
-</h4>
-
 ### LICHEM: A QMMM interface for polarizable force fields
 
 ### Introduction

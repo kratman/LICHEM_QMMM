@@ -837,6 +837,12 @@ int main(int argc, char* argv[])
   {
     MatrixXd ForceStats; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
+    //Check number of beads for Climbing image
+    if (QMMMOpts.Nbeads < 4)
+    {
+      //If the system is well behaved, then the TS bead is known.
+      QMMMOpts.Climb = 1; //Turn on climbing image NEB
+    }
     //Change optimization tolerance for the first step
     double SavedOptTol = QMMMOpts.QMOptTol; //Save value from input
     if (QMMMOpts.QMOptTol < 0.005)

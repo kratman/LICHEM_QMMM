@@ -7,22 +7,24 @@ CXXFLAGS in the Makefile.
 
 General:
 -Currently only DFT and HF energies can be used in most of the QM
-calculations. Post-HF methods are currently only implemented in PSI4.
+calculations. Post-HF methods are currently only implemented in PSI4 and
+semiempirical methods are currently only implemented in Gaussian.
 -MM wrappers can easily include PBC, but only the NWChem wrapper can handle
 PBC for QM calculations. The QM region should always be placed near the center
 of the simulation box.
 
 Gaussian interface:
 -Using the external interface to Gaussian interferes with timing the MM
-wrapper. This is harmless, but the statistics should not be trusted in the
-external optimizations.
+wrapper. This is harmless, but the statistics should not be trusted when
+optimizations are performed with the native Gaussian optimizer.
 
 NWChem interface:
 -NWChem calculations can only be performed with DFT. Wavefunction based
 methods are not implemented.
 -Optimizations with the native NWChem optimizer (Calculation_type: Opt) cannot
-be performed. However, DFP, SD, and ESD are implemented. Pure QM optimizations
-within NWChem will be implemented in the future.
+be performed. However, optimizations can be performed with the LICHEM
+optimizers. Pure QM optimizations within NWChem will be implemented in the
+future.
 -The accuracy of the QMMM PBC calculations has not been tested.
 
 PSI4 interface:

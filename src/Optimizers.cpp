@@ -196,75 +196,10 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   fstream qmfile, ifile, ofile; //Generic file names
   double Eold = 0; //Old saved energy
   int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
-  //Initialize files
+  //Initialize QM trajectory file
   call.str("");
   call << "QMOpt_" << Bead << ".xyz";
   qmfile.open(call.str().c_str(),ios_base::out);
-  //Initialize charges for Gaussian
-  if (AMOEBA and (Gaussian or NWChem))
-  {
-    if (TINKER)
-    {
-      //Set up current multipoles
-      RotateTINKCharges(Struct,Bead);
-    }
-    //Calculate inverse box lengths for PBC
-    double ix,iy,iz; //Inverse x,y,z
-    ix = 1;
-    iy = 1;
-    iz = 1;
-    if (PBCon and NWChem)
-    {
-      ix /= Lx;
-      iy /= Ly;
-      iz /= Lz;
-    }
-    //Save file
-    call.str("");
-    call << "MMCharges_" << Bead << ".txt";
-    ofile.open(call.str().c_str(),ios_base::out);
-    ofile.copyfmt(cout); //Save settings
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        ofile << fixed; //Forces numbers to be floats
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x1*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y1*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z1*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x2*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y2*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z2*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x3*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y3*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z3*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x4*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y4*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z4*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x5*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y5*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z5*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x6*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y6*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z6*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
-        ofile << '\n';
-      }
-    }
-    ofile.copyfmt(cout); //Save settings
-    ofile.flush();
-    ofile.close();
-  }
   //Initialize optimization variables
   double stepsize = 1;
   double VecMax = 0;
@@ -381,7 +316,6 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Clean up files
   call.str("");
   call << "rm -f QMOpt_" << Bead << ".xyz";
-  call << " MMCharges_" << Bead << ".txt";
   GlobalSys = system(call.str().c_str());
   //Finish and return
   return;
@@ -397,75 +331,10 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   int stepct = 0; //Counter for optimization steps
   fstream qmfile, ifile, ofile; //Generic file names
   int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
-  //Initialize files
+  //Initialize QM trajectory file
   call.str("");
   call << "QMOpt_" << Bead << ".xyz";
   qmfile.open(call.str().c_str(),ios_base::out);
-  //Initialize charges for Gaussian
-  if (AMOEBA and (Gaussian or NWChem))
-  {
-    if (TINKER)
-    {
-      //Set up current multipoles
-      RotateTINKCharges(Struct,Bead);
-    }
-    //Calculate inverse box lengths for PBC
-    double ix,iy,iz; //Inverse x,y,z
-    ix = 1;
-    iy = 1;
-    iz = 1;
-    if (PBCon and NWChem)
-    {
-      ix /= Lx;
-      iy /= Ly;
-      iz /= Lz;
-    }
-    //Save file
-    call.str("");
-    call << "MMCharges_" << Bead << ".txt";
-    ofile.open(call.str().c_str(),ios_base::out);
-    ofile.copyfmt(cout); //Save settings
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        ofile << fixed; //Forces numbers to be floats
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x1*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y1*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z1*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x2*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y2*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z2*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x3*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y3*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z3*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x4*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y4*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z4*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x5*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y5*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z5*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x6*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y6*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z6*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
-        ofile << '\n';
-      }
-    }
-    ofile.copyfmt(cout); //Save settings
-    ofile.flush();
-    ofile.close();
-  }
   //Initialize optimization variables
   double VecMax = 0;
   bool OptDone = 0;
@@ -595,7 +464,6 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Clean up files
   call.str("");
   call << "rm -f QMOpt_" << Bead << ".xyz";
-  call << " MMCharges_" << Bead << ".txt";
   GlobalSys = system(call.str().c_str());
   //Finish and return
   return;
@@ -612,75 +480,10 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   int stepct = 0; //Counter for optimization steps
   fstream qmfile,ifile,ofile; //Generic file streams
   int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
-  //Initialize trajectory file
+  //Initialize QM trajectory file
   call.str("");
   call << "QMOpt_" << Bead << ".xyz";
   qmfile.open(call.str().c_str(),ios_base::out);
-  //Initialize multipoles
-  if (AMOEBA and (Gaussian or NWChem))
-  {
-    if (TINKER)
-    {
-      //Set up current multipoles
-      RotateTINKCharges(Struct,Bead);
-    }
-    //Calculate inverse box lengths for PBC
-    double ix,iy,iz; //Inverse x,y,z
-    ix = 1;
-    iy = 1;
-    iz = 1;
-    if (PBCon and NWChem)
-    {
-      ix /= Lx;
-      iy /= Ly;
-      iz /= Lz;
-    }
-    //Save file
-    call.str("");
-    call << "MMCharges_" << Bead << ".txt";
-    ofile.open(call.str().c_str(),ios_base::out);
-    ofile.copyfmt(cout); //Save settings
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        ofile << fixed; //Forces numbers to be floats
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x1*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y1*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z1*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x2*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y2*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z2*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x3*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y3*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z3*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x4*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y4*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z4*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x5*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y5*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z5*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x6*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y6*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z6*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
-        ofile << '\n';
-      }
-    }
-    ofile.copyfmt(cout); //Save settings
-    ofile.flush();
-    ofile.close();
-  }
   //Create DFP arrays
   VectorXd OptVec(Ndof); //Gradient descent direction
   VectorXd GradDiff(Ndof); //Change in the gradient
@@ -922,7 +725,6 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Clean up files
   call.str("");
   call << "rm -f QMOpt_" << Bead << ".xyz";
-  call << " MMCharges_" << Bead << ".txt";
   GlobalSys = system(call.str().c_str());
   //Finish and return
   return;

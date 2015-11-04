@@ -377,10 +377,6 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   string dummy; //Generic string
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy print settings
-  //Remove multipoles file
-  call.str("");
-  call << "rm -f MMCharges_" << Bead << ".txt";
-  GlobalSys = system(call.str().c_str());
   //Check if there is a checkpoint file
   call.str("");
   call << "LICHM_" << Bead << ".chk";
@@ -499,10 +495,6 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.copyfmt(cout); //Copy print settings
   double E = 0.0; //QM energy
   double Eself = 0.0; //External field self-energy
-  //Remove multipole file
-  call.str("");
-  call << "rm -f MMCharges_" << Bead << ".txt";
-  GlobalSys = system(call.str().c_str());
   //Check if there is a checkpoint file
   call.str("");
   call << "LICHM_" << Bead << ".chk";
@@ -692,54 +684,6 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   ofile.flush();
   ofile.close();
-  //Write multipole point-charges
-  if (AMOEBA and QMMM)
-  {
-    call.str("");
-    call << "MMCharges_" << Bead << ".txt";
-    ofile.open(call.str().c_str(),ios_base::out);
-    ofile.copyfmt(cout); //Copy print settings
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        ofile << fixed; //Forces numbers to be floats
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z1;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z2;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z3;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z4;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z5;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].x6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].y6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].z6;
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
-        ofile << '\n';
-      }
-    }
-    ofile.copyfmt(cout); //Copy print settings
-    ofile.flush();
-    ofile.close();
-  }
   //Write Gaussian input
   call.str("");
   call << "LICHMExt_" << Bead << ".com";
@@ -867,7 +811,6 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "rm -f LICHMExt_";
   call << Bead << ".*";
-  call << " MMCharges_" << Bead << ".txt";
   GlobalSys = system(call.str().c_str());
   //Print warnings and errors
   if (!Optfinished)
