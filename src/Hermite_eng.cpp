@@ -87,9 +87,6 @@ double HermCoul2e(HermGau& Gi, HermGau& Gj)
   //Recursive two electron Coulomb integral
   double Eij = 0; //Energy
   //Combine Gaussians with the Gaussian product rule
-  double xcent = 0.5*(Gi.XPos()+Gj.XPos()); //Center of the Gaussians
-  double ycent = 0.5*(Gi.YPos()+Gj.YPos()); //Center of the Gaussians
-  double zcent = 0.5*(Gi.ZPos()+Gj.ZPos()); //Center of the Gaussians
   double anew = Gi.Alpha()+Gj.Alpha(); //New Gaussian coefficient
   int powx = Gi.XPow()+Gj.XPow(); //New X power
   int powy = Gi.YPow()+Gj.YPow(); //New Y power
@@ -103,7 +100,7 @@ double HermCoul2e(HermGau& Gi, HermGau& Gj)
   double newmag = Gi.Coeff()*Gj.Coeff(); //Product of old coefficients
   newmag *= exp(-mu*Rij2); //Scale based on distance
   //Create product Gaussian
-  HermGau Gij(newmag,anew,powx,powy,powz,xcent,ycent,zcent);
+  HermGau Gij(newmag,anew,powx,powy,powz,Xij,Yij,Zij);
   //Calculate integral
   
   Eij *= Gij.Coeff(); //Scale by magnitude
@@ -116,9 +113,61 @@ double HermCoul1e(HermGau& Gi, double qj, Coord& Pos)
 {
   //Recursive one electron Coulomb integral
   double Eij = 0; //Energy
-  //Calculate integral
+  //Create a temporary Gaussian
+  double newmag = Gi.Coeff(); //Magnitude
+  double anew = Gi.Alpha(); //Gaussian coefficient
+  int powx = Gi.XPow(); //X power
+  int powy = Gi.YPow(); //Y power
+  int powz = Gi.ZPow(); //Z power
+  double Xij = Gi.XPos()-Pos.x; //X distance
+  double Yij = Gi.YPos()-Pos.y; //Y distance
+  double Zij = Gi.ZPos()-Pos.z; //Z distance
+  double Rij2 = Xij*Xij+Yij*Yij+Zij*Zij; //Distance between Gaussians
+  HermGau Gij(newmag,anew,powx,powy,powz,Xij,Yij,Zij);
+  //Calculate integrals
+  double Ix = 0; //Integral in the x direction
+  if (Gij.XPow() > 0)
+  {
+    //Aspherical Hermite Gaussians
+    vector<double> HermMags; //Magnitude of the Gaussians
+    vector<int> HermOrders; //Order of the Hermite function
+    vector<int> BoysOrders; //Order of the Boys function
+    HermMags.push_back(1.0);
+    HermOrders.push_back(Gij.XPow());
+    BoysOrders.push_back(0);
+    //Recursion
+    bool ContRecurs = 1; //Keeps the while loop going
+    while (ContRecurs)
+    {
+      //Stop recursion unless orders are greater than zero
+      ContRecurs = 0;
+      //Create temporary arrays
+      vector<double> NewMags; //New Gaussian magnitudes
+      vector<int> NewOrders; //New Hermite orders
+      //Loop over Hermite functions
+      for (unsigned int i=0;i<HermOrders.size();i++)
+      {
+        //Create new Hermites
+        
+      }
+      //Combine Hermites
+      
+      //Save new magnitudes and orders
+      
+    }
+  }
+  else
+  {
+    //Spherical Hermite Gaussian
+    
+  }
+  double Iy = 0; //Integral in the y direction
+
+  double Iz = 0; //Integral in the z direction
   
-  Eij *= Gi.Coeff()*qj; //Scale by magnitude
+  //Combine integrals
+  Eij = Ix*Iy*Iz; //Combine the integrals
+  Eij *= Gij.Coeff()*qj; //Scale by magnitude
   //Change units and return
   Eij *= Har2eV;
   return Eij;
