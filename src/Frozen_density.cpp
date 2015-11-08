@@ -21,59 +21,29 @@
  Reference for conversion to point-charges:
  
 
- References for integrals:
- 
-
 */
 
-//Gaussian function classes and structs
-double GauDen1s::ChrgNuc(double qpc, Coord pos, double Rcut)
+//GEM utility functions
+double GEMC6(double C6, Coord& POSi, Coord& POSj, double Rcut)
 {
-  //Function to calculate interactions between nuclei and charges
-  double E = 0;
+  //Function to calculate the LJ style dispersion
+  double Eij = 0; //Dispersion energy
   
-  return E;
+  //Return energy
+  return Eij;
 };
 
-double GauDen1s::NucNuc(GauDen1s gau2, double Rcut)
+double GEMBuffC7()
 {
-  //Function to calculate interactions between nuclei
-  double E = 0;
+  //Function to calculate buffered 14-7 style dispersion
+  double Eij = 0; //Dispersion energy
   
-  return E;
+  //Return energy
+  return Eij;
 };
 
-double GauDen1s::TwoOver(GauDen1s gau2)
-{
-  //Calculates the overlap of two Gaussian functions
-  double Sij = 0.0;
-  
-  return Sij;
-};
+//Functions to calculate GEM energy
 
-double GauDen1s::OneCoulPC(double qpc, Coord pos, double Rcut)
-{
-  //Calculates the electron-charge interactions for a point-charge
-  double E = 0.0;
-  
-  return E;
-};
-
-double GauDen1s::OneCoulNuc(GauDen1s gau2, double Rcut)
-{
-  //Calculates the electron-charge interactions for a point-charge
-  double E = 0.0;
-  
-  return E;
-};
-
-double GauDen1s::TwoCoul(GauDen1s gau2, double Rcut)
-{
-  //Calculates the electron-electron interactions
-  double E = 0.0;
-  
-  return E;
-};
 
 //Functions for conversion to point-charges
 

@@ -144,27 +144,197 @@ double HermCoul1e(HermGau& Gi, double qj, Coord& Pos)
       //Create temporary arrays
       vector<double> NewMags; //New Gaussian magnitudes
       vector<int> NewOrders; //New Hermite orders
+      vector<int> NewBoys; //New Boys function orders
       //Loop over Hermite functions
       for (unsigned int i=0;i<HermOrders.size();i++)
       {
         //Create new Hermites
-        
+        if (HermOrders[i] > 0)
+        {
+          ContRecurs = 1; //Continue recursion
+          double coeffi; //Temp. coefficient storage
+          //First Hermite
+          coeffi = HermOrders[i]-2;
+          coeffi *= HermMags[i];
+          if ((HermOrders[i]-2) >= 0)
+          {
+            NewMags.push_back(coeffi);
+            NewOrders.push_back(HermOrders[i]-2);
+            NewBoys.push_back(BoysOrders[i]+1);
+          }
+          //Second Hermite
+          coeffi = Gij.XPos();
+          coeffi *= HermMags[i];
+          if ((HermOrders[i]-1) >= 0)
+          {
+            NewMags.push_back(coeffi);
+            NewOrders.push_back(HermOrders[i]-1);
+            NewBoys.push_back(BoysOrders[i]+1);
+          }
+        }
       }
-      //Combine Hermites
-      
       //Save new magnitudes and orders
-      
+      HermMags = NewMags;
+      HermOrders = NewOrders;
+      BoysOrders = NewBoys;
+    }
+    //Calculate X integral
+    for (unsigned int i=0;i<BoysOrders.size();i++)
+    {
+      double Itmp; //Temp. storage for integrals
+      Itmp = pow((-1*Gij.Alpha()),BoysOrders[i]);
+      Itmp *= BoysFunc(BoysOrders[i],(Gij.Alpha()*Rij2));
+      Ix += Itmp; //Update integral
     }
   }
   else
   {
     //Spherical Hermite Gaussian
-    
+    double Itmp; //Temp. storage for integrals
+    Itmp = pow((-1*Gij.Alpha()),0);
+    Itmp *= BoysFunc(0,(Gij.Alpha()*Rij2));
+    Ix += Itmp; //Update integral
   }
   double Iy = 0; //Integral in the y direction
-
+  if (Gij.YPow() > 0)
+  {
+    //Aspherical Hermite Gaussians
+    vector<double> HermMags; //Magnitude of the Gaussians
+    vector<int> HermOrders; //Order of the Hermite function
+    vector<int> BoysOrders; //Order of the Boys function
+    HermMags.push_back(1.0);
+    HermOrders.push_back(Gij.YPow());
+    BoysOrders.push_back(0);
+    //Recursion
+    bool ContRecurs = 1; //Keeps the while loop going
+    while (ContRecurs)
+    {
+      //Stop recursion unless orders are greater than zero
+      ContRecurs = 0;
+      //Create temporary arrays
+      vector<double> NewMags; //New Gaussian magnitudes
+      vector<int> NewOrders; //New Hermite orders
+      vector<int> NewBoys; //New Boys function orders
+      //Loop over Hermite functions
+      for (unsigned int i=0;i<HermOrders.size();i++)
+      {
+        //Create new Hermites
+        if (HermOrders[i] > 0)
+        {
+          ContRecurs = 1; //Continue recursion
+          double coeffi; //Temp. coefficient storage
+          //First Hermite
+          coeffi = HermOrders[i]-2;
+          coeffi *= HermMags[i];
+          if ((HermOrders[i]-2) >= 0)
+          {
+            NewMags.push_back(coeffi);
+            NewOrders.push_back(HermOrders[i]-2);
+            NewBoys.push_back(BoysOrders[i]+1);
+          }
+          //Second Hermite
+          coeffi = Gij.YPos();
+          coeffi *= HermMags[i];
+          if ((HermOrders[i]-1) >= 0)
+          {
+            NewMags.push_back(coeffi);
+            NewOrders.push_back(HermOrders[i]-1);
+            NewBoys.push_back(BoysOrders[i]+1);
+          }
+        }
+      }
+      //Save new magnitudes and orders
+      HermMags = NewMags;
+      HermOrders = NewOrders;
+      BoysOrders = NewBoys;
+    }
+    //Calculate Y integral
+    for (unsigned int i=0;i<BoysOrders.size();i++)
+    {
+      double Itmp; //Temp. storage for integrals
+      Itmp = pow((-1*Gij.Alpha()),BoysOrders[i]);
+      Itmp *= BoysFunc(BoysOrders[i],(Gij.Alpha()*Rij2));
+      Iy += Itmp; //Update integral
+    }
+  }
+  else
+  {
+    //Spherical Hermite Gaussian
+    double Itmp; //Temp. storage for integrals
+    Itmp = pow((-1*Gij.Alpha()),0);
+    Itmp *= BoysFunc(0,(Gij.Alpha()*Rij2));
+    Iy += Itmp; //Update integral
+  }
   double Iz = 0; //Integral in the z direction
-  
+  if (Gij.ZPow() > 0)
+  {
+    //Aspherical Hermite Gaussians
+    vector<double> HermMags; //Magnitude of the Gaussians
+    vector<int> HermOrders; //Order of the Hermite function
+    vector<int> BoysOrders; //Order of the Boys function
+    HermMags.push_back(1.0);
+    HermOrders.push_back(Gij.ZPow());
+    BoysOrders.push_back(0);
+    //Recursion
+    bool ContRecurs = 1; //Keeps the while loop going
+    while (ContRecurs)
+    {
+      //Stop recursion unless orders are greater than zero
+      ContRecurs = 0;
+      //Create temporary arrays
+      vector<double> NewMags; //New Gaussian magnitudes
+      vector<int> NewOrders; //New Hermite orders
+      vector<int> NewBoys; //New Boys function orders
+      //Loop over Hermite functions
+      for (unsigned int i=0;i<HermOrders.size();i++)
+      {
+        //Create new Hermites
+        if (HermOrders[i] > 0)
+        {
+          ContRecurs = 1; //Continue recursion
+          double coeffi; //Temp. coefficient storage
+          //First Hermite
+          coeffi = HermOrders[i]-2;
+          coeffi *= HermMags[i];
+          if ((HermOrders[i]-2) >= 0)
+          {
+            NewMags.push_back(coeffi);
+            NewOrders.push_back(HermOrders[i]-2);
+            NewBoys.push_back(BoysOrders[i]+1);
+          }
+          //Second Hermite
+          coeffi = Gij.ZPos();
+          coeffi *= HermMags[i];
+          if ((HermOrders[i]-1) >= 0)
+          {
+            NewMags.push_back(coeffi);
+            NewOrders.push_back(HermOrders[i]-1);
+            NewBoys.push_back(BoysOrders[i]+1);
+          }
+        }
+      }
+      //Save new magnitudes and orders
+      HermMags = NewMags;
+      HermOrders = NewOrders;
+      BoysOrders = NewBoys;
+    }
+    //Calculate Z integral
+    for (unsigned int i=0;i<BoysOrders.size();i++)
+    {
+      double Itmp; //Temp. storage for integrals
+      Itmp = pow((-1*Gij.Alpha()),BoysOrders[i]);
+      Itmp *= BoysFunc(BoysOrders[i],(Gij.Alpha()*Rij2));
+      Iz += Itmp; //Update integral
+    }
+  }
+  else
+  {
+    //Spherical Hermite Gaussian
+    double Itmp; //Temp. storage for integrals
+    Itmp = pow((-1*Gij.Alpha()),0);
+    Itmp *= BoysFunc(0,(Gij.Alpha()*Rij2));
+    Iz += Itmp; //Update integral
+  }
   //Combine integrals
   Eij = Ix*Iy*Iz; //Combine the integrals
   Eij *= Gij.Coeff()*qj; //Scale by magnitude
