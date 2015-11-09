@@ -9,13 +9,176 @@
 #                                                                             #
 ###############################################################################
 
- LICHEM functions for Calculating Hermite Gaussian integrals.
+ LICHEM functions for calculating Hermite Gaussian integrals.
 
  References for integrals:
  Szabo and Ostlund, Modern Quantum Chemistry, (1989)
  Helgaker et al., Molecular Electronic-Structure Theory, (2000)
 
 */
+
+//Definitions for the GauDen1s class
+double GauDen1s::ChrgNuc(double qpc, Coord pos, double Rcut)
+{
+  //Function to calculate interactions between nuclei and charges
+  double E = 0;
+  //Calculate distance
+  double rij = 0.0;
+  Coord tmppos; //Set positions in Angstroms for PBC check
+  tmppos.x = x;
+  tmppos.y = y;
+  tmppos.z = z;
+  rij = CoordDist2(tmppos,pos); //Squared distance in Angstroms
+  //Check cutoff
+  if (rij <= (Rcut*Rcut))
+  {
+    //Calculate Coulomb interaction energy
+    rij = sqrt(rij)/BohrRad; //Switch to a.u.
+    E = q*qpc/rij; //Energy in a.u.
+  }
+  //Change units
+  E *= Har2eV;
+  return E;
+};
+
+double GauDen1s::NucNuc(GauDen1s gau2, double Rcut)
+{
+  //Function to calculate interactions between nuclei
+  double E = 0;
+  //Calculate distance
+  double rij = 0.0;
+  Coord tmppos1; //Set positions in Angstroms for PBC check
+  tmppos1.x = x;
+  tmppos1.y = y;
+  tmppos1.z = z;
+  Coord tmppos2; //Set positions in Angstroms for PBC check
+  tmppos2.x = gau2.x;
+  tmppos2.y = gau2.y;
+  tmppos2.z = gau2.z;
+  rij = CoordDist2(tmppos1,tmppos2); //Squared distance in Angstroms
+  //Check cutoff
+  if (rij <= (Rcut*Rcut))
+  {
+    //Calculate Coulomb interaction energy
+    rij = sqrt(rij)/BohrRad; //Switch to a.u.
+    E = q*gau2.q/rij; //Energy in a.u.
+  }
+  //Change units
+  E *= Har2eV;
+  return E;
+};
+
+double GauDen1s::TwoOver(GauDen1s gau2)
+{
+  //Calculates the overlap of two Gaussian functions
+  double Sij = 0.0;
+  //Calculate new prefactor
+  Sij = pi;
+  Sij /= (wid+gau2.wid);
+  Sij = pow(Sij,1.5);
+  //Calculate distance
+  double rij = 0.0;
+  Coord tmppos1,tmppos2; //Set positions in Angstroms for PBC check
+  tmppos1.x = x;
+  tmppos1.y = y;
+  tmppos1.z = z;
+  tmppos2.x = gau2.x;
+  tmppos2.y = gau2.y;
+  tmppos2.z = gau2.z;
+  rij = CoordDist2(tmppos1,tmppos2); //Squared distance in Angstroms
+  rij = sqrt(rij)/BohrRad; //Change to a.u.
+  //Calculate overlap
+  rij *= -1*wid*gau2.wid*rij;
+  rij /= (wid+gau2.wid);
+  Sij *= exp(rij);
+  //Add original prefactors
+  Sij *= mag*gau2.mag;
+  //Return overlap
+  return Sij;
+};
+
+double GauDen1s::OneCoulPC(double qpc, Coord pos, double Rcut)
+{
+  //Calculates the electron-charge interactions for a point-charge
+  double E = 0.0;
+  //Calculate distance
+  double rij = 0.0;
+  Coord tmppos; //Set positions in Angstroms for PBC check
+  tmppos.x = x;
+  tmppos.y = y;
+  tmppos.z = z;
+  rij = CoordDist2(tmppos,pos); //Squared distance in Angstroms
+  //Check cutoff
+  if (rij <= (Rcut*Rcut))
+  {
+    //Calculate Coulomb interaction energy
+    rij = sqrt(rij)/BohrRad; //Switch to a.u.
+    E = erf(sqrt(wid)*rij);
+    E *= -1*mag*qpc/rij; //Negative due to electron charge
+  }
+  //Change units
+  E *= Har2eV;
+  return E;
+};
+
+double GauDen1s::OneCoulNuc(GauDen1s gau2, double Rcut)
+{
+  //Calculates the electron-charge interactions for a point-charge
+  double E = 0.0;
+  //Calculate distance
+  double rij = 0.0;
+  Coord tmppos1,tmppos2; //Set positions in Angstroms for PBC check
+  tmppos1.x = x;
+  tmppos1.y = y;
+  tmppos1.z = z;
+  tmppos2.x = gau2.x;
+  tmppos2.y = gau2.y;
+  tmppos2.z = gau2.z;
+  rij = CoordDist2(tmppos1,tmppos2); //Squared distance in Angstroms
+  //Check cutoff
+  if (rij <= (Rcut*Rcut))
+  {
+    //Calculate Coulomb interaction energy
+    rij = sqrt(rij)/BohrRad; //Switch to a.u.
+    E = erf(sqrt(wid)*rij);
+    E *= -1*mag*gau2.q/rij; //Negative due to electron charge
+  }
+  //Change units
+  E *= Har2eV;
+  return E;
+};
+
+double GauDen1s::TwoCoul(GauDen1s gau2, double Rcut)
+{
+  //Calculates the electron-electron interactions
+  double E = 0.0;
+  //Calculate distance
+  double rij = 0.0;
+  Coord tmppos1,tmppos2; //Set positions in Angstroms for PBC check
+  tmppos1.x = x;
+  tmppos1.y = y;
+  tmppos1.z = z;
+  tmppos2.x = gau2.x;
+  tmppos2.y = gau2.y;
+  tmppos2.z = gau2.z;
+  rij = CoordDist2(tmppos1,tmppos2); //Squared distance in Angstroms
+  //Check cutoff
+  if (rij <= (Rcut*Rcut))
+  {
+    //Calculate Coulomb interaction energy
+    rij = sqrt(rij)/BohrRad; //Switch to a.u.
+    //Calculate new gaussian exponent
+    double a = 0.0;
+    a = (wid*gau2.wid);
+    a /= (wid+gau2.wid);
+    //Calculate energy
+    E = erf(sqrt(a)*rij);
+    E *= mag*gau2.mag/rij; //Double negative
+  }
+  //Change units
+  E *= Har2eV;
+  return E;
+};
 
 //Definitions for the HermGau class
 double HermGau::Coeff()
@@ -101,8 +264,219 @@ double HermCoul2e(HermGau& Gi, HermGau& Gj)
   newmag *= exp(-mu*Rij2); //Scale based on distance
   //Create product Gaussian
   HermGau Gij(newmag,anew,powx,powy,powz,Xij,Yij,Zij);
-  //Calculate integral
-  
+  //Calculate integrals
+  double Ix = 0; //Integral in the x direction
+  if (Gij.XPow() > 0)
+  {
+    //Aspherical Hermite Gaussians
+    vector<double> HermMags; //Magnitude of the Gaussians
+    vector<int> HermOrders; //Order of the Hermite function
+    vector<int> BoysOrders; //Order of the Boys function
+    HermMags.push_back(1.0);
+    HermOrders.push_back(Gij.XPow());
+    BoysOrders.push_back(0);
+    //Recursion
+    bool ContRecurs = 1; //Keeps the while loop going
+    while (ContRecurs)
+    {
+      //Stop recursion unless orders are greater than zero
+      ContRecurs = 0;
+      //Create temporary arrays
+      vector<double> NewMags; //New Gaussian magnitudes
+      vector<int> NewOrders; //New Hermite orders
+      vector<int> NewBoys; //New Boys function orders
+      //Loop over Hermite functions
+      for (unsigned int i=0;i<HermOrders.size();i++)
+      {
+        //Create new Hermites
+        if (HermOrders[i] > 0)
+        {
+          ContRecurs = 1; //Continue recursion
+          double coeffi; //Temp. coefficient storage
+          //First Hermite
+          coeffi = HermOrders[i]-2;
+          coeffi *= HermMags[i];
+          if ((HermOrders[i]-2) >= 0)
+          {
+            NewMags.push_back(coeffi);
+            NewOrders.push_back(HermOrders[i]-2);
+            NewBoys.push_back(BoysOrders[i]+1);
+          }
+          //Second Hermite
+          coeffi = Gij.XPos();
+          coeffi *= HermMags[i];
+          if ((HermOrders[i]-1) >= 0)
+          {
+            NewMags.push_back(coeffi);
+            NewOrders.push_back(HermOrders[i]-1);
+            NewBoys.push_back(BoysOrders[i]+1);
+          }
+        }
+      }
+      //Save new magnitudes and orders
+      HermMags = NewMags;
+      HermOrders = NewOrders;
+      BoysOrders = NewBoys;
+    }
+    //Calculate X integral
+    for (unsigned int i=0;i<BoysOrders.size();i++)
+    {
+      double Itmp; //Temp. storage for integrals
+      Itmp = pow((-1*Gij.Alpha()),BoysOrders[i]);
+      Itmp *= BoysFunc(BoysOrders[i],(Gij.Alpha()*Rij2));
+      Ix += Itmp; //Update integral
+    }
+  }
+  else
+  {
+    //Spherical Hermite Gaussian
+    double Itmp; //Temp. storage for integrals
+    Itmp = pow((-1*Gij.Alpha()),0);
+    Itmp *= BoysFunc(0,(Gij.Alpha()*Rij2));
+    Ix += Itmp; //Update integral
+  }
+  double Iy = 0; //Integral in the y direction
+  if (Gij.YPow() > 0)
+  {
+    //Aspherical Hermite Gaussians
+    vector<double> HermMags; //Magnitude of the Gaussians
+    vector<int> HermOrders; //Order of the Hermite function
+    vector<int> BoysOrders; //Order of the Boys function
+    HermMags.push_back(1.0);
+    HermOrders.push_back(Gij.YPow());
+    BoysOrders.push_back(0);
+    //Recursion
+    bool ContRecurs = 1; //Keeps the while loop going
+    while (ContRecurs)
+    {
+      //Stop recursion unless orders are greater than zero
+      ContRecurs = 0;
+      //Create temporary arrays
+      vector<double> NewMags; //New Gaussian magnitudes
+      vector<int> NewOrders; //New Hermite orders
+      vector<int> NewBoys; //New Boys function orders
+      //Loop over Hermite functions
+      for (unsigned int i=0;i<HermOrders.size();i++)
+      {
+        //Create new Hermites
+        if (HermOrders[i] > 0)
+        {
+          ContRecurs = 1; //Continue recursion
+          double coeffi; //Temp. coefficient storage
+          //First Hermite
+          coeffi = HermOrders[i]-2;
+          coeffi *= HermMags[i];
+          if ((HermOrders[i]-2) >= 0)
+          {
+            NewMags.push_back(coeffi);
+            NewOrders.push_back(HermOrders[i]-2);
+            NewBoys.push_back(BoysOrders[i]+1);
+          }
+          //Second Hermite
+          coeffi = Gij.YPos();
+          coeffi *= HermMags[i];
+          if ((HermOrders[i]-1) >= 0)
+          {
+            NewMags.push_back(coeffi);
+            NewOrders.push_back(HermOrders[i]-1);
+            NewBoys.push_back(BoysOrders[i]+1);
+          }
+        }
+      }
+      //Save new magnitudes and orders
+      HermMags = NewMags;
+      HermOrders = NewOrders;
+      BoysOrders = NewBoys;
+    }
+    //Calculate Y integral
+    for (unsigned int i=0;i<BoysOrders.size();i++)
+    {
+      double Itmp; //Temp. storage for integrals
+      Itmp = pow((-1*Gij.Alpha()),BoysOrders[i]);
+      Itmp *= BoysFunc(BoysOrders[i],(Gij.Alpha()*Rij2));
+      Iy += Itmp; //Update integral
+    }
+  }
+  else
+  {
+    //Spherical Hermite Gaussian
+    double Itmp; //Temp. storage for integrals
+    Itmp = pow((-1*Gij.Alpha()),0);
+    Itmp *= BoysFunc(0,(Gij.Alpha()*Rij2));
+    Iy += Itmp; //Update integral
+  }
+  double Iz = 0; //Integral in the z direction
+  if (Gij.ZPow() > 0)
+  {
+    //Aspherical Hermite Gaussians
+    vector<double> HermMags; //Magnitude of the Gaussians
+    vector<int> HermOrders; //Order of the Hermite function
+    vector<int> BoysOrders; //Order of the Boys function
+    HermMags.push_back(1.0);
+    HermOrders.push_back(Gij.ZPow());
+    BoysOrders.push_back(0);
+    //Recursion
+    bool ContRecurs = 1; //Keeps the while loop going
+    while (ContRecurs)
+    {
+      //Stop recursion unless orders are greater than zero
+      ContRecurs = 0;
+      //Create temporary arrays
+      vector<double> NewMags; //New Gaussian magnitudes
+      vector<int> NewOrders; //New Hermite orders
+      vector<int> NewBoys; //New Boys function orders
+      //Loop over Hermite functions
+      for (unsigned int i=0;i<HermOrders.size();i++)
+      {
+        //Create new Hermites
+        if (HermOrders[i] > 0)
+        {
+          ContRecurs = 1; //Continue recursion
+          double coeffi; //Temp. coefficient storage
+          //First Hermite
+          coeffi = HermOrders[i]-2;
+          coeffi *= HermMags[i];
+          if ((HermOrders[i]-2) >= 0)
+          {
+            NewMags.push_back(coeffi);
+            NewOrders.push_back(HermOrders[i]-2);
+            NewBoys.push_back(BoysOrders[i]+1);
+          }
+          //Second Hermite
+          coeffi = Gij.ZPos();
+          coeffi *= HermMags[i];
+          if ((HermOrders[i]-1) >= 0)
+          {
+            NewMags.push_back(coeffi);
+            NewOrders.push_back(HermOrders[i]-1);
+            NewBoys.push_back(BoysOrders[i]+1);
+          }
+        }
+      }
+      //Save new magnitudes and orders
+      HermMags = NewMags;
+      HermOrders = NewOrders;
+      BoysOrders = NewBoys;
+    }
+    //Calculate Z integral
+    for (unsigned int i=0;i<BoysOrders.size();i++)
+    {
+      double Itmp; //Temp. storage for integrals
+      Itmp = pow((-1*Gij.Alpha()),BoysOrders[i]);
+      Itmp *= BoysFunc(BoysOrders[i],(Gij.Alpha()*Rij2));
+      Iz += Itmp; //Update integral
+    }
+  }
+  else
+  {
+    //Spherical Hermite Gaussian
+    double Itmp; //Temp. storage for integrals
+    Itmp = pow((-1*Gij.Alpha()),0);
+    Itmp *= BoysFunc(0,(Gij.Alpha()*Rij2));
+    Iz += Itmp; //Update integral
+  }
+  //Combine integrals
+  Eij = Ix*Iy*Iz; //Combine the integrals
   Eij *= Gij.Coeff(); //Scale by magnitude
   //Change units and return
   Eij *= Har2eV;
@@ -348,9 +722,6 @@ double HermOverlap(HermGau& Gi, HermGau& Gj)
   //Recursive two electron overlap integral
   double Sij = 0; //Overlap
   //Combine Gaussians with the Gaussian product rule
-  double xcent = 0.5*(Gi.XPos()+Gj.XPos()); //Center of the Gaussians
-  double ycent = 0.5*(Gi.YPos()+Gj.YPos()); //Center of the Gaussians
-  double zcent = 0.5*(Gi.ZPos()+Gj.ZPos()); //Center of the Gaussians
   double anew = Gi.Alpha()+Gj.Alpha(); //New Gaussian coefficient
   int powx = Gi.XPow()+Gj.XPow(); //New X power
   int powy = Gi.YPow()+Gj.YPow(); //New Y power
@@ -364,7 +735,7 @@ double HermOverlap(HermGau& Gi, HermGau& Gj)
   double newmag = Gi.Coeff()*Gj.Coeff(); //Product of old coefficients
   newmag *= exp(-mu*Rij2); //Scale based on distance
   //Create product Gaussian
-  HermGau Gij(newmag,anew,powx,powy,powz,xcent,ycent,zcent);
+  HermGau Gij(newmag,anew,powx,powy,powz,Xij,Yij,Zij);
   //Calculate integral
   
   Sij *= Gij.Coeff(); //Scale by magnitude
