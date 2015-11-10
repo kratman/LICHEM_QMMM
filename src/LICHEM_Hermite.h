@@ -82,10 +82,9 @@ class HermGau
       x = xi;
       y = yi;
       z = zi;
-      //Convert to a.u.
-      alpha *= (BohrRad*BohrRad);
       return;
     }
+    //Functions to return private data
     double Coeff(); //Return the coefficient (magnitude)
     double XPos(); //Return the x position
     double YPos(); //Return the y position
@@ -94,6 +93,8 @@ class HermGau
     int XPow(); //Return the Hermite power in the x direction
     int YPow(); //Return the Hermite power in the y direction
     int ZPow(); //Return the Hermite power in the z direction
+    //Functions for calculations
+    double Value(double,double,double); //Return the magnitude at (x,y,z)
 };
 
 #endif

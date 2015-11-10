@@ -461,6 +461,18 @@ void PrintFancyTitle()
   return;
 };
 
+double LICHEMFactorial(int n)
+{
+  //Calculate a factorial
+  double val = 1;
+  while (n > 0)
+  {
+    val *= n;
+    n -= 1;
+  }
+  return val;
+};
+
 bool CheckFile(const string& file)
 {
   //Checks if a file exists

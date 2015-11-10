@@ -229,6 +229,69 @@ int HermGau::ZPow()
   return powz;
 };
 
+double HermGau::Value(double xi, double yi, double zi)
+{
+  //Return the value at point (xi,yi,zi)
+  double Val = 0; //Final value
+  //Calculate distance
+  double Xij = xi-x; //X distance
+  double Yij = yi-y; //Y distance
+  double Zij = zi-z; //Z distance
+  double Rij2 = Xij*Xij+Yij*Yij+Zij*Zij; //Distance between the points
+  //Scale Xij,Yij,Zij by alpha
+  
+  //Calculate the value of the basis function
+  int Ni,signct;
+  double Xval = 0; //Value of the X component
+  Ni = ((int)floor(((double)powx)/2)); //Loop length
+  signct = 1; //Flips the sign during the loop
+  for (int i=0;i<Ni;i++)
+  {
+    //Calculate value for iteration i
+    double valtmp; //Temporary storage
+    valtmp = signct*pow(2*Xij,powx-(2*i));
+    valtmp /= LICHEMFactorial(i)*LICHEMFactorial(powx-(2*i));
+    valtmp *= mag*exp(-1*alpha*Rij2); //Add Gaussian
+    //Update sum and sign
+    Xval += valtmp;
+    signct *= -1; //Change sign
+  }
+  Xval *= LICHEMFactorial(powx);
+  double Yval = 0; //Value of the Y component
+  Ni = ((int)floor(((double)powy)/2)); //Loop length
+  signct = 1; //Flips the sign during the loop
+  for (int i=0;i<Ni;i++)
+  {
+    //Calculate value for iteration i
+    double valtmp; //Temporary storage
+    valtmp = signct*pow(2*Yij,powy-(2*i));
+    valtmp /= LICHEMFactorial(i)*LICHEMFactorial(powy-(2*i));
+    valtmp *= mag*exp(-1*alpha*Rij2); //Add Gaussian
+    //Update sum and sign
+    Yval += valtmp;
+    signct *= -1; //Change sign
+  }
+  Yval *= LICHEMFactorial(powy);
+  double Zval = 0; //Value of the Z component
+  Ni = ((int)floor(((double)powz)/2)); //Loop length
+  signct = 1; //Flips the sign during the loop
+  for (int i=0;i<Ni;i++)
+  {
+    //Calculate value for iteration i
+    double valtmp; //Temporary storage
+    valtmp = signct*pow(2*Zij,powz-(2*i));
+    valtmp /= LICHEMFactorial(i)*LICHEMFactorial(powz-(2*i));
+    valtmp *= mag*exp(-1*alpha*Rij2); //Add Gaussian
+    //Update sum and sign
+    Zval += valtmp;
+    signct *= -1; //Change sign
+  }
+  Zval *= LICHEMFactorial(powz);
+  //Combine values from x,y,z
+  Val = Xval*Yval*Zval;
+  return Val;
+};
+
 //Functions for calculating Gaussian integrals
 double BoysFunc(int n, double x)
 {

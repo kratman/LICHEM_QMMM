@@ -127,6 +127,8 @@ void LICHEMDFP(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void LICHEMErrorChecker(QMMMSettings&);
 
+double LICHEMFactorial(int);
+
 void LICHEMNEB(vector<QMMMAtom>&,QMMMSettings&);
 
 void LICHEMPrintSettings(QMMMSettings&);
