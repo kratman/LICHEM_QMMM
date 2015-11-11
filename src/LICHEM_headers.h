@@ -27,9 +27,10 @@ using namespace Eigen;
 
 //Predefined constants and flags
 #include "LICHEM_options.h"
+using namespace LICHEMOpts;
 #include "LICHEM_constants.h"
-#include "LICHEM_globals.h"
 using namespace LICHEMConst;
+#include "LICHEM_globals.h"
 using namespace LICHEMGlobal;
 
 //LICHEM headers and libraries
@@ -91,7 +92,7 @@ double GaussianForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
 
 double GaussianOpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
-double GEMBuffC7();
+double GEMBuffC7(double,double,Coord&,Coord&,double);
 
 double GEMC6(double,Coord&,Coord&,double);
 

@@ -9,7 +9,7 @@
 #                                                                             #
 ###############################################################################
 
- Physical constants defined in LICHEM.
+ Physical constants used in LICHEM.
 
 */
 

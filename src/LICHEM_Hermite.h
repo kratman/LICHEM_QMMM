@@ -14,8 +14,8 @@
 */
 
 //Make including safe
-#ifndef HERMITE_HEADERS
-#define HERMITE_HEADERS
+#ifndef LICHEM_HERMITE_HEADERS
+#define LICHEM_HERMITE_HEADERS
 
 //Gaussian basis set classes
 class GauDen1s

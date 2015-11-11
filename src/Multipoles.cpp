@@ -46,10 +46,17 @@ void WriteTINKMpole(vector<QMMMAtom>& Struct, fstream& ofile, int i, int Bead)
 };
 
 //General routines
+void WriteChargeFile(vector<QMMMAtom>& Struct, int Bead)
+{
+  //Function to write a file for the MM charges
+  
+  return;
+};
+
 void ExtractGlobalPoles(int& argc, char**& argv)
 {
   //Function to print the multipoles in the global frame
-
+  
   return;
 };
 

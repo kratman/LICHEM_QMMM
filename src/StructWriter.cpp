@@ -9,7 +9,7 @@
 #                                                                             #
 ###############################################################################
 
- Functions write input files for the wrappers.
+ Functions write input files for the QM wrappers.
 
 */
 
