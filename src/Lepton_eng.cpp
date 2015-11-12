@@ -44,7 +44,7 @@ double EFFEnergy(QMMMAtom& atom, QMMMElec& elec, int Bead)
 {
   //Atom-lepton interactions
   double E = 0.0;
-  double r = CoordDist2(atom.P[Bead],elec.P[Bead]);
+  double r = CoordDist2(atom.P[Bead],elec.P[Bead]).VecMag();
   if (r <= ElecCutoff*ElecCutoff)
   {
     if (r == 0.0)
@@ -64,7 +64,7 @@ double EFFCorr(QMMMElec& elec1, QMMMElec& elec2, int Bead)
 {
   //Lepton-lepton interactions
   double E = 0.0;
-  double r = CoordDist2(elec1.P[Bead],elec2.P[Bead]);
+  double r = CoordDist2(elec1.P[Bead],elec2.P[Bead]).VecMag();
   //Electrostatic energy
   if (r <= (ElecCutoff*ElecCutoff))
   {

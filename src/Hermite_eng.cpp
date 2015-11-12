@@ -28,7 +28,7 @@ double GauDen1s::ChrgNuc(double qpc, Coord pos, double Rcut)
   tmppos.x = x;
   tmppos.y = y;
   tmppos.z = z;
-  rij = CoordDist2(tmppos,pos); //Squared distance in Angstroms
+  rij = CoordDist2(tmppos,pos).VecMag(); //Squared distance in Angstroms
   //Check cutoff
   if (rij <= (Rcut*Rcut))
   {
@@ -55,7 +55,7 @@ double GauDen1s::NucNuc(GauDen1s gau2, double Rcut)
   tmppos2.x = gau2.x;
   tmppos2.y = gau2.y;
   tmppos2.z = gau2.z;
-  rij = CoordDist2(tmppos1,tmppos2); //Squared distance in Angstroms
+  rij = CoordDist2(tmppos1,tmppos2).VecMag(); //Squared distance in Angstroms
   //Check cutoff
   if (rij <= (Rcut*Rcut))
   {
@@ -85,7 +85,7 @@ double GauDen1s::TwoOver(GauDen1s gau2)
   tmppos2.x = gau2.x;
   tmppos2.y = gau2.y;
   tmppos2.z = gau2.z;
-  rij = CoordDist2(tmppos1,tmppos2); //Squared distance in Angstroms
+  rij = CoordDist2(tmppos1,tmppos2).VecMag(); //Squared distance in Angstroms
   rij = sqrt(rij)/BohrRad; //Change to a.u.
   //Calculate overlap
   rij *= -1*wid*gau2.wid*rij;
@@ -107,7 +107,7 @@ double GauDen1s::OneCoulPC(double qpc, Coord pos, double Rcut)
   tmppos.x = x;
   tmppos.y = y;
   tmppos.z = z;
-  rij = CoordDist2(tmppos,pos); //Squared distance in Angstroms
+  rij = CoordDist2(tmppos,pos).VecMag(); //Squared distance in Angstroms
   //Check cutoff
   if (rij <= (Rcut*Rcut))
   {
@@ -134,7 +134,7 @@ double GauDen1s::OneCoulNuc(GauDen1s gau2, double Rcut)
   tmppos2.x = gau2.x;
   tmppos2.y = gau2.y;
   tmppos2.z = gau2.z;
-  rij = CoordDist2(tmppos1,tmppos2); //Squared distance in Angstroms
+  rij = CoordDist2(tmppos1,tmppos2).VecMag(); //Squared distance in Angstroms
   //Check cutoff
   if (rij <= (Rcut*Rcut))
   {
@@ -161,7 +161,7 @@ double GauDen1s::TwoCoul(GauDen1s gau2, double Rcut)
   tmppos2.x = gau2.x;
   tmppos2.y = gau2.y;
   tmppos2.z = gau2.z;
-  rij = CoordDist2(tmppos1,tmppos2); //Squared distance in Angstroms
+  rij = CoordDist2(tmppos1,tmppos2).VecMag(); //Squared distance in Angstroms
   //Check cutoff
   if (rij <= (Rcut*Rcut))
   {
@@ -234,12 +234,13 @@ double HermGau::Value(double xi, double yi, double zi)
   //Return the value at point (xi,yi,zi)
   double Val = 0; //Final value
   //Calculate distance
-  double Xij = xi-x; //X distance
-  double Yij = yi-y; //Y distance
-  double Zij = zi-z; //Z distance
-  double Rij2 = Xij*Xij+Yij*Yij+Zij*Zij; //Distance between the points
+  double Xij = (xi-x)/BohrRad; //X distance (a.u.)
+  double Yij = (yi-y)/BohrRad; //Y distance (a.u.)
+  double Zij = (zi-z)/BohrRad; //Z distance (a.u.)
   //Scale Xij,Yij,Zij by alpha
-  
+  Xij *= alpha*Xij; //Alpha*Xij^2
+  Yij *= alpha*Yij; //Alpha*Yij^2
+  Zij *= alpha*Zij; //Alpha*Zij^2
   //Calculate the value of the basis function
   int Ni,signct;
   double Xval = 0; //Value of the X component
@@ -251,11 +252,11 @@ double HermGau::Value(double xi, double yi, double zi)
     double valtmp; //Temporary storage
     valtmp = signct*pow(2*Xij,powx-(2*i));
     valtmp /= LICHEMFactorial(i)*LICHEMFactorial(powx-(2*i));
-    valtmp *= mag*exp(-1*alpha*Rij2); //Add Gaussian
     //Update sum and sign
     Xval += valtmp;
     signct *= -1; //Change sign
   }
+  Xval *= exp(-1*Xij); //Add Gaussian
   Xval *= LICHEMFactorial(powx);
   double Yval = 0; //Value of the Y component
   Ni = ((int)floor(((double)powy)/2)); //Loop length
@@ -266,11 +267,11 @@ double HermGau::Value(double xi, double yi, double zi)
     double valtmp; //Temporary storage
     valtmp = signct*pow(2*Yij,powy-(2*i));
     valtmp /= LICHEMFactorial(i)*LICHEMFactorial(powy-(2*i));
-    valtmp *= mag*exp(-1*alpha*Rij2); //Add Gaussian
     //Update sum and sign
     Yval += valtmp;
     signct *= -1; //Change sign
   }
+  Yval *= exp(-1*Yij); //Add Gaussian
   Yval *= LICHEMFactorial(powy);
   double Zval = 0; //Value of the Z component
   Ni = ((int)floor(((double)powz)/2)); //Loop length
@@ -281,14 +282,14 @@ double HermGau::Value(double xi, double yi, double zi)
     double valtmp; //Temporary storage
     valtmp = signct*pow(2*Zij,powz-(2*i));
     valtmp /= LICHEMFactorial(i)*LICHEMFactorial(powz-(2*i));
-    valtmp *= mag*exp(-1*alpha*Rij2); //Add Gaussian
     //Update sum and sign
     Zval += valtmp;
     signct *= -1; //Change sign
   }
+  Zval *= exp(-1*Zij); //Add Gaussian
   Zval *= LICHEMFactorial(powz);
   //Combine values from x,y,z
-  Val = Xval*Yval*Zval;
+  Val = mag*Xval*Yval*Zval;
   return Val;
 };
 
@@ -319,10 +320,18 @@ double HermCoul2e(HermGau& Gi, HermGau& Gj)
   int powz = Gi.ZPow()+Gj.ZPow(); //New Z power
   //Update magnitude based on the separation
   double mu = Gi.Alpha()*Gj.Alpha()/anew; //Smearing parameter
-  double Xij = Gi.XPos()-Gj.XPos(); //X distance
-  double Yij = Gi.YPos()-Gj.YPos(); //Y distance
-  double Zij = Gi.ZPos()-Gj.ZPos(); //Z distance
-  double Rij2 = Xij*Xij+Yij*Yij+Zij*Zij; //Distance between Gaussians
+  Coord posi,posj; //Temporary storage for positions
+  posi.x = Gi.XPos();
+  posi.y = Gi.YPos();
+  posi.z = Gi.ZPos();
+  posj.x = Gj.XPos();
+  posj.y = Gj.YPos();
+  posj.z = Gj.ZPos();
+  Coord Disp = CoordDist2(posi,posj); //Calculate distances
+  double Xij = Disp.x/BohrRad; //X distance (a.u.)
+  double Yij = Disp.y/BohrRad; //Y distance (a.u.)
+  double Zij = Disp.z/BohrRad; //Z distance (a.u.)
+  double Rij2 = Xij*Xij+Yij*Yij+Zij*Zij; //Distance between Gaussians (a.u.)
   double newmag = Gi.Coeff()*Gj.Coeff(); //Product of old coefficients
   newmag *= exp(-mu*Rij2); //Scale based on distance
   //Create product Gaussian
@@ -546,7 +555,7 @@ double HermCoul2e(HermGau& Gi, HermGau& Gj)
   return Eij;
 };
 
-double HermCoul1e(HermGau& Gi, double qj, Coord& Pos)
+double HermCoul1e(HermGau& Gi, double qj, Coord& Posj)
 {
   //Recursive one electron Coulomb integral
   double Eij = 0; //Energy
@@ -556,10 +565,15 @@ double HermCoul1e(HermGau& Gi, double qj, Coord& Pos)
   int powx = Gi.XPow(); //X power
   int powy = Gi.YPow(); //Y power
   int powz = Gi.ZPow(); //Z power
-  double Xij = Gi.XPos()-Pos.x; //X distance
-  double Yij = Gi.YPos()-Pos.y; //Y distance
-  double Zij = Gi.ZPos()-Pos.z; //Z distance
-  double Rij2 = Xij*Xij+Yij*Yij+Zij*Zij; //Distance between Gaussians
+  Coord posi; //Temporary storage for positions
+  posi.x = Gi.XPos();
+  posi.y = Gi.YPos();
+  posi.z = Gi.ZPos();
+  Coord Disp = CoordDist2(posi,Posj); //Calculate distances
+  double Xij = Disp.x/BohrRad; //X distance (a.u.)
+  double Yij = Disp.y/BohrRad; //Y distance (a.u.)
+  double Zij = Disp.z/BohrRad; //Z distance (a.u.)
+  double Rij2 = Xij*Xij+Yij*Yij+Zij*Zij; //Distance between Gaussians (a.u.)
   HermGau Gij(newmag,anew,powx,powy,powz,Xij,Yij,Zij);
   //Calculate integrals
   double Ix = 0; //Integral in the x direction
@@ -791,10 +805,18 @@ double HermOverlap(HermGau& Gi, HermGau& Gj)
   int powz = Gi.ZPow()+Gj.ZPow(); //New Z power
   //Update magnitude based on the separation
   double mu = Gi.Alpha()*Gj.Alpha()/anew; //Smearing parameter
-  double Xij = Gi.XPos()-Gj.XPos(); //X distance
-  double Yij = Gi.YPos()-Gj.YPos(); //Y distance
-  double Zij = Gi.ZPos()-Gj.ZPos(); //Z distance
-  double Rij2 = Xij*Xij+Yij*Yij+Zij*Zij; //Distance between Gaussians
+  Coord posi,posj; //Temporary storage for positions
+  posi.x = Gi.XPos();
+  posi.y = Gi.YPos();
+  posi.z = Gi.ZPos();
+  posj.x = Gj.XPos();
+  posj.y = Gj.YPos();
+  posj.z = Gj.ZPos();
+  Coord Disp = CoordDist2(posi,posj); //Calculate distances
+  double Xij = Disp.x/BohrRad; //X distance (a.u.)
+  double Yij = Disp.y/BohrRad; //Y distance (a.u.)
+  double Zij = Disp.z/BohrRad; //Z distance (a.u.)
+  double Rij2 = Xij*Xij+Yij*Yij+Zij*Zij; //Distance between Gaussians (a.u.)
   double newmag = Gi.Coeff()*Gj.Coeff(); //Product of old coefficients
   newmag *= exp(-mu*Rij2); //Scale based on distance
   //Create product Gaussian

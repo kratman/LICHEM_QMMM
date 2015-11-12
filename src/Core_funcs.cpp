@@ -505,7 +505,7 @@ double Bohring(double ri)
   return r;
 };
 
-double CoordDist2(Coord& a, Coord& b)
+Coord CoordDist2(Coord& a, Coord& b)
 {
   //Displacements
   double dx = a.x-b.x;
@@ -535,9 +535,12 @@ double CoordDist2(Coord& a, Coord& b)
       }
     }
   }
-  //Squared radius
-  double r2 = dx*dx+dy*dy+dz*dz;
-  return r2;
+  //Save displacements
+  Coord DispAB; //Distance between A and B
+  DispAB.x = dx;
+  DispAB.y = dy;
+  DispAB.z = dz;
+  return DispAB;
 };
 
 vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int AtID)

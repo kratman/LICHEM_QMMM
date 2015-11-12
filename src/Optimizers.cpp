@@ -57,8 +57,9 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
           {
             double Rnew = 0;
             double Rold = 0;
-            Rnew = CoordDist2(Struct[i].P[Bead],Struct[j].P[Bead]);
-            Rold = CoordDist2(OldStruct[i].P[Bead],OldStruct[j].P[Bead]);
+            Rnew = CoordDist2(Struct[i].P[Bead],Struct[j].P[Bead]).VecMag();
+            Rold = CoordDist2(OldStruct[i].P[Bead],
+                              OldStruct[j].P[Bead]).VecMag();
             Rnew = sqrt(Rnew);
             Rold = sqrt(Rold);
             //Update local sum
@@ -146,8 +147,8 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       {
         double Rnew = 0;
         double Rold = 0;
-        Rnew = CoordDist2(Struct[i].P[Bead],Struct[j].P[Bead]);
-        Rold = CoordDist2(OldStruct[i].P[Bead],OldStruct[j].P[Bead]);
+        Rnew = CoordDist2(Struct[i].P[Bead],Struct[j].P[Bead]).VecMag();
+        Rold = CoordDist2(OldStruct[i].P[Bead],OldStruct[j].P[Bead]).VecMag();
         Rnew = sqrt(Rnew);
         Rold = sqrt(Rold);
         //Update local sum

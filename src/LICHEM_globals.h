@@ -20,7 +20,7 @@
 //Namespace for global variables
 namespace LICHEMGlobal
 {
-  //Globals
+  //Global variables
   int GlobalSys = 0; //Global dummy return for all system calls
   string xyzfilename; //Saves a filename given in the arguments
   string confilename; //Saves a filename given in the arguments

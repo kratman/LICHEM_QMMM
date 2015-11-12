@@ -458,7 +458,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       GEM = 1;
       if (TINKER)
       {
-        //For polarization energy, should be replaced with GEM-DM
+        //Collect TINKER multipoles or GEM-DM
         ExtractTINKpoles(Struct,0);
       }
     }
@@ -508,7 +508,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       GEM = 1;
       if (TINKER)
       {
-        //For polarization energy, should be replaced with GEM-DM
+        //Collect TINKER multipoles or GEM-DM
         ExtractTINKpoles(Struct,0);
       }
     }

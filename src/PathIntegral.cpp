@@ -36,7 +36,7 @@ double Get_PI_Espring(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
         j2 = QMMMOpts.Nbeads-1; //Ring PBC
       }
       //Calculate displacement with PBC
-      double dr2 = CoordDist2(Struct[i].P[j],Struct[i].P[j2]);
+      double dr2 = CoordDist2(Struct[i].P[j],Struct[i].P[j2]).VecMag();
       Struct[i].Ep += 0.5*w*dr2; //Harmonic energy
     }
     E += Struct[i].Ep; //Save energy

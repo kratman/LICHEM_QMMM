@@ -62,7 +62,7 @@ RedMpole Cart2SphHarm(Mpole&);
 
 bool CheckFile(const string&);
 
-double CoordDist2(Coord&,Coord&);
+Coord CoordDist2(Coord&,Coord&);
 
 bool Dihedraled(vector<QMMMAtom>&,int,int);
 
@@ -200,6 +200,8 @@ double TINKERPolEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 void TINK2LICHEM(int&,char**&);
 
 vector<int> TraceBoundary(vector<QMMMAtom>&,int);
+
+void WriteChargeFile(vector<QMMMAtom>&,int);
 
 void WriteGauInput(vector<QMMMAtom>&,string,QMMMSettings&,int);
 

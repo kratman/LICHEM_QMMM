@@ -41,9 +41,19 @@ class PeriodicTable
 class Coord
 {
   public:
+    //Constructor
+    Coord()
+    {
+      x = 0;
+      y = 0;
+      z = 0;
+    }
+    //Positions or displacements
     double x; //x position
     double y; //y position
     double z; //z position
+    //Functions
+    double VecMag(); //Return the squared vector magnitude
 };
 
 class Mpole
@@ -123,6 +133,16 @@ class OctCharges
     double x6; //Position of charge 6
     double y6; //Position of charge 6
     double z6; //Position of charge 6
+};
+
+//Base class function definitions
+double Coord::VecMag()
+{
+  //Return the squared vector magnitude
+  double R2; //Squared distance
+  R2 = x*x+y*y+z*z; //Calculate using local variables
+  //Return value
+  return R2;
 };
 
 #endif
