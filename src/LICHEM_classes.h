@@ -17,6 +17,26 @@
 #ifndef LICHEM_STRUCTURES
 #define LICHEM_STRUCTURES
 
+//GEM electron density
+class GEMDen
+{
+  //Class for GEM diffuse charge density
+  private:
+    //Definition of the local frame of reference
+    bool ChiralFlip; //Flip y axis
+    string Type; //Bisector, Z-then-X, Z-Only, 3-Fold, or Z-Bisect
+    int Atom1; //Atom which defines the z axis
+    int Atom2; //Atom which defines the x axis
+    int Atom3; //Atom which defines the y axis (chiral only)
+    //Basis functions and density
+    vector<HermGau> Dens; //GEM density
+  public:
+    //Constructor
+    GEMDen();
+    //Functions to manipulate GEM density
+    Mpole GEMDM(); //Function to generate multipoles from density
+};
+
 //LICHEM data structures
 class QMMMAtom
 {
@@ -43,6 +63,8 @@ class QMMMAtom
     //Multipoles
     vector<Mpole> MP; //Multipoles
     vector<OctCharges> PC; //Point-charge multipoles
+    //Electron density
+    vector<GEMDen> GEM; //GEM frozen density
 };
 
 class QMMMElec
@@ -101,6 +123,101 @@ class QMMMSettings
     double Ereact; //Reactant energy
     double Eprod; //Product energy
     double Ets; //Transition state energy
+};
+
+//GEMDen class function definitions
+Mpole GEMDen::GEMDM()
+{
+  //Function to convert GEM density to distributed multipoles
+  Mpole dmpole; //Blank set of multipoles
+  //Save frame of reference
+  dmpole.ChiralFlip = ChiralFlip;
+  dmpole.Type = Type;
+  dmpole.Atom1 = Atom1;
+  dmpole.Atom2 = Atom2;
+  dmpole.Atom3 = Atom3;
+  //Initialize multipoles
+  dmpole.q = 0;
+  dmpole.Dx = 0;
+  dmpole.Dy = 0;
+  dmpole.Dz = 0;
+  dmpole.IDx = 0;
+  dmpole.IDy = 0;
+  dmpole.IDz = 0;
+  dmpole.Qxx = 0;
+  dmpole.Qxy = 0;
+  dmpole.Qxz = 0;
+  dmpole.Qyy = 0;
+  dmpole.Qxz = 0;
+  dmpole.Qzz = 0;
+  //Convert Hermite Gaussians to multipoles
+  for (unsigned int i=0;i<Dens.size();i++)
+  {
+    //Check for a monopole
+    if ((Dens[i].XPow() == 0) and (Dens[i].YPow() == 0) and
+       (Dens[i].ZPow() == 0))
+    {
+      //Update monopole
+      dmpole.q += Dens[i].Coeff();
+    }
+    //Check for a dipole
+    if ((Dens[i].XPow() == 1) and (Dens[i].YPow() == 0) and
+       (Dens[i].ZPow() == 0))
+    {
+      //Update x dipole
+      dmpole.Dx += Dens[i].Coeff();
+    }
+    if ((Dens[i].XPow() == 0) and (Dens[i].YPow() == 1) and
+       (Dens[i].ZPow() == 0))
+    {
+      //Update y dipole
+      dmpole.Dy += Dens[i].Coeff();
+    }
+    if ((Dens[i].XPow() == 0) and (Dens[i].YPow() == 0) and
+       (Dens[i].ZPow() == 1))
+    {
+      //Update z dipole
+      dmpole.Dz += Dens[i].Coeff();
+    }
+    //Check for a quadrupole
+    if ((Dens[i].XPow() == 2) and (Dens[i].YPow() == 0) and
+       (Dens[i].ZPow() == 0))
+    {
+      //Update xx quadrupole
+      dmpole.Qxx += Dens[i].Coeff();
+    }
+    if ((Dens[i].XPow() == 1) and (Dens[i].YPow() == 1) and
+       (Dens[i].ZPow() == 0))
+    {
+      //Update xy quadrupole
+      dmpole.Qxy += Dens[i].Coeff();
+    }
+    if ((Dens[i].XPow() == 1) and (Dens[i].YPow() == 0) and
+       (Dens[i].ZPow() == 1))
+    {
+      //Update xz quadrupole
+      dmpole.Qxz += Dens[i].Coeff();
+    }
+    if ((Dens[i].XPow() == 0) and (Dens[i].YPow() == 2) and
+       (Dens[i].ZPow() == 0))
+    {
+      //Update xx quadrupole
+      dmpole.Qyy += Dens[i].Coeff();
+    }
+    if ((Dens[i].XPow() == 0) and (Dens[i].YPow() == 1) and
+       (Dens[i].ZPow() == 1))
+    {
+      //Update yz quadrupole
+      dmpole.Qyz += Dens[i].Coeff();
+    }
+    if ((Dens[i].XPow() == 0) and (Dens[i].YPow() == 0) and
+       (Dens[i].ZPow() == 2))
+    {
+      //Update yz quadrupole
+      dmpole.Qzz += Dens[i].Coeff();
+    }
+  }
+  return dmpole;
 };
 
 #endif

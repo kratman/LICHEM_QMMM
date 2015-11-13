@@ -43,7 +43,7 @@ class GauDen1s
       //Convert to a.u.
       wid *= (BohrRad*BohrRad);
       return;
-    }
+    };
     //Point-charge interactions
     double ChrgNuc(double,Coord,double); //Nuclei-charge electrostatic term
     double NucNuc(GauDen1s,double); //Nuclei-nuclei electrostatic term
@@ -83,7 +83,7 @@ class HermGau
       y = yi;
       z = zi;
       return;
-    }
+    };
     //Functions to return private data
     double Coeff(); //Return the coefficient (magnitude)
     double XPos(); //Return the x position
