@@ -31,19 +31,9 @@ class GauDen1s
     double z; //Z position
   public:
     //Constructor
-    GauDen1s(double magi,double widi,double qi,double xi,double yi,double zi)
-    {
-      //Save data given to the constructor
-      mag = magi;
-      wid = widi;
-      q = qi;
-      x = xi;
-      y = yi;
-      z = zi;
-      //Convert to a.u.
-      wid *= (BohrRad*BohrRad);
-      return;
-    };
+    GauDen1s(double,double,double,double,double,double);
+    //Destructor
+    ~GauDen1s();
     //Point-charge interactions
     double ChrgNuc(double,Coord,double); //Nuclei-charge electrostatic term
     double NucNuc(GauDen1s,double); //Nuclei-nuclei electrostatic term
@@ -70,20 +60,9 @@ class HermGau
     double z; //Z position in Angstroms
   public:
     //Constructor
-    HermGau(double ci, double a, int ix, int iy, int iz,
-            double xi, double yi, double zi)
-    {
-      //Save data given to the constructor
-      mag = ci;
-      alpha = a;
-      powx = ix;
-      powy = iy;
-      powz = iz;
-      x = xi;
-      y = yi;
-      z = zi;
-      return;
-    };
+    HermGau(double,double,int,int,int,double,double,double);
+    //Destructor
+    ~HermGau();
     //Functions to return private data
     double Coeff(); //Return the coefficient (magnitude)
     double XPos(); //Return the x position

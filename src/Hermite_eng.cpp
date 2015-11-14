@@ -18,6 +18,27 @@
 */
 
 //Definitions for the GauDen1s class
+GauDen1s::GauDen1s(double magi,double widi,double qi,
+                   double xi,double yi,double zi)
+{
+  //Save data given to the constructor
+  mag = magi;
+  wid = widi;
+  q = qi;
+  x = xi;
+  y = yi;
+  z = zi;
+  //Convert to a.u.
+  wid *= (BohrRad*BohrRad);
+  return;
+};
+
+GauDen1s::~GauDen1s()
+{
+  //Generic destructor
+  return;
+};
+
 double GauDen1s::ChrgNuc(double qpc, Coord pos, double Rcut)
 {
   //Function to calculate interactions between nuclei and charges
@@ -181,6 +202,27 @@ double GauDen1s::TwoCoul(GauDen1s gau2, double Rcut)
 };
 
 //Definitions for the HermGau class
+HermGau::HermGau(double ci, double a, int ix, int iy, int iz,
+                 double xi, double yi, double zi)
+{
+  //Save data given to the constructor
+  mag = ci;
+  alpha = a;
+  powx = ix;
+  powy = iy;
+  powz = iz;
+  x = xi;
+  y = yi;
+  z = zi;
+  return;
+};
+
+HermGau::~HermGau()
+{
+  //Generic destructor
+  return;
+};
+
 double HermGau::Coeff()
 {
   //Return the coefficient

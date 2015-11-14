@@ -31,6 +31,8 @@ class PeriodicTable
   public:
     //Set data (hard coded constructor)
     PeriodicTable();
+    //Destructor
+    ~PeriodicTable();
     //Retrieve data
     string Typing(int); //Atom type
     int RevTyping(string); //Atomic number
@@ -42,12 +44,9 @@ class Coord
 {
   public:
     //Constructor
-    Coord()
-    {
-      x = 0;
-      y = 0;
-      z = 0;
-    };
+    Coord();
+    //Destructor
+    ~Coord();
     //Positions or displacements
     double x; //x position
     double y; //y position
@@ -60,6 +59,10 @@ class Mpole
 {
   //Cartesian multipoles
   public:
+    //Constructor
+    Mpole();
+    //Destructor
+    ~Mpole();
     //Definition of the local frame of reference
     bool ChiralFlip; //Flip y axis
     string Type; //Bisector, Z-then-X, Z-Only, 3-Fold, or Z-Bisect
@@ -89,6 +92,10 @@ class RedMpole
 {
   //Reduced multipole from sph. harm. and diagonalization
   public:
+    //Constructor
+    RedMpole();
+    //Destructor
+    ~RedMpole();
     //Monopole
     double Q00;
     //Dipole moments
@@ -108,6 +115,10 @@ class OctCharges
 {
   //A grid of point-charges which replaces multipoles
   public:
+    //Constructor
+    OctCharges();
+    //Destructor
+    ~OctCharges();
     //Octahedral charges
     double q1; //Charge in the +x direction
     double q2; //Charge in the +y direction
@@ -136,7 +147,22 @@ class OctCharges
     double z6; //Position of charge 6
 };
 
-//Base class function definitions
+//Coord class function definitions
+Coord::Coord()
+{
+  //Constructor
+  x = 0;
+  y = 0;
+  z = 0;
+  return;
+};
+
+Coord::~Coord()
+{
+  //Generic destructor
+  return;
+};
+
 double Coord::VecMag()
 {
   //Return the squared vector magnitude
@@ -146,7 +172,46 @@ double Coord::VecMag()
   return R2;
 };
 
-//Periodic Table functions
+//Mpole class function definitions
+Mpole::Mpole()
+{
+  //Generic constructor
+  return;
+};
+
+Mpole::~Mpole()
+{
+  //Generic destructor
+  return;
+};
+
+//RedMpole class function definitions
+RedMpole::RedMpole()
+{
+  //Generic constructor
+  return;
+};
+
+RedMpole::~RedMpole()
+{
+  //Generic destructor
+  return;
+};
+
+//OctCharges class function definitions
+OctCharges::OctCharges()
+{
+  //Generic constructor
+  return;
+};
+
+OctCharges::~OctCharges()
+{
+  //Generic destructor
+  return;
+};
+
+//PeriodicTable class function definitions
 PeriodicTable::PeriodicTable()
 {
   //Set atomic properties
@@ -505,6 +570,13 @@ PeriodicTable::PeriodicTable()
   Typs.push_back(""); //Num. 118
   GauWids.push_back(0.3); //Default value
   CovRadii.push_back(1.0); //Default value
+  return;
+};
+
+PeriodicTable::~PeriodicTable()
+{
+  //Generic destructor
+  return;
 };
 
 string PeriodicTable::Typing(int Z)

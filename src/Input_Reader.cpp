@@ -977,14 +977,6 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       cout << '\n';
       DoQuit = 1;
     }
-    if (DFPSim or SteepSim or QuickSim or ESDSim or ENEBSim or NEBSim)
-    {
-      cout << " Warning: PSI4 gradients might not include components from";
-      cout << '\n';
-      cout << " the external field.";
-      cout << '\n';
-      cout.flush(); //Print warning
-    }
     if ((Npseudo != 0) or (Nbound != 0))
     {
       cout << " Error: The PSI4 wrapper can only use QM and MM atoms.";
@@ -1000,7 +992,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     {
       cout << " Error: QMMM NWChem optimizations can only be performed with";
       cout << '\n';
-      cout << " the steepest descent or DFP.";
+      cout << " the steepest descent, damped Verlet, or DFP.";
       cout << '\n';
       DoQuit = 1;
     }

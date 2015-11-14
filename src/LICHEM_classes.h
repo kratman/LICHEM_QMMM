@@ -33,6 +33,8 @@ class GEMDen
   public:
     //Constructor
     GEMDen();
+    //Destructor
+    ~GEMDen();
     //Functions to manipulate GEM density
     Mpole GEMDM(); //Function to generate multipoles from density
 };
@@ -42,6 +44,10 @@ class QMMMAtom
 {
   //Data type for atomic information
   public:
+    //Constructor
+    QMMMAtom();
+    //Destructor
+    ~QMMMAtom();
     //Temporary storage
     double Ep; //Path-integral energies
     //Regions
@@ -71,6 +77,10 @@ class QMMMElec
 {
   //Data type for electronic information (eFF model)
   public:
+    //Constructor
+    QMMMElec();
+    //Destructor
+    ~QMMMElec();
     //Temporary storage
     double Ep; //Path-integral energies
     //Particle properties
@@ -87,6 +97,10 @@ class QMMMSettings
 {
   //Settings for the simulation and wrappers
   public:
+    //Constructor
+    QMMMSettings();
+    //Destructor
+    ~QMMMSettings();
     //Input needed for QM wrappers
     string Func; //QM method (functional, HF, etc)
     string Basis; //Basis set for QM calculations
@@ -126,6 +140,18 @@ class QMMMSettings
 };
 
 //GEMDen class function definitions
+GEMDen::GEMDen()
+{
+  //Generic constructor
+  return;
+};
+
+GEMDen::~GEMDen()
+{
+  //Generic destructor
+  return;
+};
+
 Mpole GEMDen::GEMDM()
 {
   //Function to convert GEM density to distributed multipoles
@@ -218,6 +244,45 @@ Mpole GEMDen::GEMDM()
     }
   }
   return dmpole;
+};
+
+//QMMMAtom class function definitions
+QMMMAtom::QMMMAtom()
+{
+  //Generic constructor
+  return;
+};
+
+QMMMAtom::~QMMMAtom()
+{
+  //Generic destructor
+  return;
+};
+
+//QMMMElec class function definitions
+QMMMElec::QMMMElec()
+{
+  //Generic constructor
+  return;
+};
+
+QMMMElec::~QMMMElec()
+{
+  //Generic destructor
+  return;
+};
+
+//QMMMSettings class function definitions
+QMMMSettings::QMMMSettings()
+{
+  //Generic constructor
+  return;
+};
+
+QMMMSettings::~QMMMSettings()
+{
+  //Generic destructor
+  return;
 };
 
 #endif

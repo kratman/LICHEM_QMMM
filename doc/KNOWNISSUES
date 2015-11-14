@@ -28,11 +28,6 @@ optimizers. Pure QM optimizations within NWChem will be implemented in the
 future.
 -The accuracy of the QMMM PBC calculations has not been tested.
 
-PSI4 interface:
--PSI4 gradients do not include the contribution from the external field.
-This is not a LICHEM bug, but rather a bug in PSI4. Due to this bug, PSI4
-optimizations currently do not work.
-
 TINKER interface:
 -Chiral atoms with multipoles have not been thoroughly tested in QMMM
 simulations. It is possible that these interactions are incorrect. Note that
