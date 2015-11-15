@@ -31,11 +31,14 @@ class GEMDen
     //Basis functions and density
     vector<HermGau> Dens; //GEM density
   public:
-    //Constructor
+    //Constructors
     GEMDen();
+    GEMDen(string,string);
     //Destructor
     ~GEMDen();
     //Functions to manipulate GEM density
+    void SetBasis(string,string); //Sets the Hermite basis
+    void SetFrame(bool,string,int,int,int); //Sets the frame of reference
     Mpole GEMDM(); //Function to generate multipoles from density
 };
 
@@ -137,152 +140,6 @@ class QMMMSettings
     double Ereact; //Reactant energy
     double Eprod; //Product energy
     double Ets; //Transition state energy
-};
-
-//GEMDen class function definitions
-GEMDen::GEMDen()
-{
-  //Generic constructor
-  return;
-};
-
-GEMDen::~GEMDen()
-{
-  //Generic destructor
-  return;
-};
-
-Mpole GEMDen::GEMDM()
-{
-  //Function to convert GEM density to distributed multipoles
-  Mpole dmpole; //Blank set of multipoles
-  //Save frame of reference
-  dmpole.ChiralFlip = ChiralFlip;
-  dmpole.Type = Type;
-  dmpole.Atom1 = Atom1;
-  dmpole.Atom2 = Atom2;
-  dmpole.Atom3 = Atom3;
-  //Initialize multipoles
-  dmpole.q = 0;
-  dmpole.Dx = 0;
-  dmpole.Dy = 0;
-  dmpole.Dz = 0;
-  dmpole.IDx = 0;
-  dmpole.IDy = 0;
-  dmpole.IDz = 0;
-  dmpole.Qxx = 0;
-  dmpole.Qxy = 0;
-  dmpole.Qxz = 0;
-  dmpole.Qyy = 0;
-  dmpole.Qxz = 0;
-  dmpole.Qzz = 0;
-  //Convert Hermite Gaussians to multipoles
-  for (unsigned int i=0;i<Dens.size();i++)
-  {
-    //Check for a monopole
-    if ((Dens[i].XPow() == 0) and (Dens[i].YPow() == 0) and
-       (Dens[i].ZPow() == 0))
-    {
-      //Update monopole
-      dmpole.q += Dens[i].Coeff();
-    }
-    //Check for a dipole
-    if ((Dens[i].XPow() == 1) and (Dens[i].YPow() == 0) and
-       (Dens[i].ZPow() == 0))
-    {
-      //Update x dipole
-      dmpole.Dx += Dens[i].Coeff();
-    }
-    if ((Dens[i].XPow() == 0) and (Dens[i].YPow() == 1) and
-       (Dens[i].ZPow() == 0))
-    {
-      //Update y dipole
-      dmpole.Dy += Dens[i].Coeff();
-    }
-    if ((Dens[i].XPow() == 0) and (Dens[i].YPow() == 0) and
-       (Dens[i].ZPow() == 1))
-    {
-      //Update z dipole
-      dmpole.Dz += Dens[i].Coeff();
-    }
-    //Check for a quadrupole
-    if ((Dens[i].XPow() == 2) and (Dens[i].YPow() == 0) and
-       (Dens[i].ZPow() == 0))
-    {
-      //Update xx quadrupole
-      dmpole.Qxx += Dens[i].Coeff();
-    }
-    if ((Dens[i].XPow() == 1) and (Dens[i].YPow() == 1) and
-       (Dens[i].ZPow() == 0))
-    {
-      //Update xy quadrupole
-      dmpole.Qxy += Dens[i].Coeff();
-    }
-    if ((Dens[i].XPow() == 1) and (Dens[i].YPow() == 0) and
-       (Dens[i].ZPow() == 1))
-    {
-      //Update xz quadrupole
-      dmpole.Qxz += Dens[i].Coeff();
-    }
-    if ((Dens[i].XPow() == 0) and (Dens[i].YPow() == 2) and
-       (Dens[i].ZPow() == 0))
-    {
-      //Update xx quadrupole
-      dmpole.Qyy += Dens[i].Coeff();
-    }
-    if ((Dens[i].XPow() == 0) and (Dens[i].YPow() == 1) and
-       (Dens[i].ZPow() == 1))
-    {
-      //Update yz quadrupole
-      dmpole.Qyz += Dens[i].Coeff();
-    }
-    if ((Dens[i].XPow() == 0) and (Dens[i].YPow() == 0) and
-       (Dens[i].ZPow() == 2))
-    {
-      //Update yz quadrupole
-      dmpole.Qzz += Dens[i].Coeff();
-    }
-  }
-  return dmpole;
-};
-
-//QMMMAtom class function definitions
-QMMMAtom::QMMMAtom()
-{
-  //Generic constructor
-  return;
-};
-
-QMMMAtom::~QMMMAtom()
-{
-  //Generic destructor
-  return;
-};
-
-//QMMMElec class function definitions
-QMMMElec::QMMMElec()
-{
-  //Generic constructor
-  return;
-};
-
-QMMMElec::~QMMMElec()
-{
-  //Generic destructor
-  return;
-};
-
-//QMMMSettings class function definitions
-QMMMSettings::QMMMSettings()
-{
-  //Generic constructor
-  return;
-};
-
-QMMMSettings::~QMMMSettings()
-{
-  //Generic destructor
-  return;
 };
 
 #endif

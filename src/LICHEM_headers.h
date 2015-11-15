@@ -104,6 +104,8 @@ double Get_PI_Epot(vector<QMMMAtom>&,QMMMSettings&);
 
 void GetQuotes(vector<string>&);
 
+vector<HermGau> HermBasis(string,string);
+
 double HermCoul1e(HermGau&,double,Coord&);
 
 double HermCoul2e(HermGau&,HermGau&);
@@ -214,10 +216,12 @@ void WriteTINKMpole(vector<QMMMAtom>&,fstream&,int,int);
 //Function definitions (alphabetical)
 #include "Analysis.cpp"
 #include "Basis.cpp"
+#include "BasisSets.cpp"
 #include "Core_funcs.cpp"
 #include "Frozen_density.cpp"
 #include "Hermite_eng.cpp"
 #include "Input_Reader.cpp"
+#include "LICHEM_classes.cpp"
 #include "Multipoles.cpp"
 #include "Optimizers.cpp"
 #include "PathIntegral.cpp"
