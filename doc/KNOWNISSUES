@@ -19,6 +19,10 @@ Gaussian interface:
 wrapper. This is harmless, but the statistics should not be trusted when
 optimizations are performed with the native Gaussian optimizer.
 
+PSI4 interface:
+-The PSI4 wrapper coded and tested using the development version of PSI4.
+It is recommended to use the anaconda version of PSI4.
+
 NWChem interface:
 -NWChem calculations can only be performed with DFT. Wavefunction based
 methods are not implemented.

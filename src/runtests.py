@@ -327,8 +327,10 @@ else:
 #Loop over tests
 for qmtest in QMTests:
   for mmtest in MMTests:
+    #Set packages
     QMPack = qmtest
     MMPack = mmtest
+
     #Set path based on packages
     DirPath = ""
     if (QMPack == "PSI4"):
@@ -339,14 +341,18 @@ for qmtest in QMTests:
       DirPath += "NWChem_"
     DirPath += MMPack
     DirPath += "/"
+
     #Change directory
     os.chdir(DirPath)
+
     #Start printing results
     line = QMPack+"/"+MMPack
     line += " results:"
     print(line)
+
     #Delete line to avoid bugs
     line = ""
+
     #Check QM energy
     PassEnergy = 0
     cmd = "lichem -n "
@@ -399,6 +405,7 @@ for qmtest in QMTests:
       RunTime = " N/A"
     line += RunTime
     print(line)
+
     #Clean up files
     cmd = ""
     cmd += "rm -f tinker.key tests.out trash.xyz"
@@ -409,8 +416,10 @@ for qmtest in QMTests:
       #Remove checkpoint files
       cmd += " timer.* psi.*"
     subprocess.call(cmd,shell=True)
+
     #Delete line to avoid bugs
     line = ""
+
     #TINKER tests
     if (MMPack == "TINKER"):
       #Check MM energy
@@ -439,6 +448,7 @@ for qmtest in QMTests:
         QMMMEnergy = round(QMMMEnergy,5)
       except:
         QMMMEnergy = 0.0
+
       #Check against saved energy
       if (QMMMEnergy == round(-0.259690353622,5)):
         PassEnergy = 1
@@ -459,6 +469,7 @@ for qmtest in QMTests:
          RunTime = " N/A"
       line += RunTime
       print(line)
+
       #Clean up files
       cmd = ""
       cmd += "rm -f tinker.key tests.out trash.xyz"
@@ -469,6 +480,7 @@ for qmtest in QMTests:
         #Remove checkpoint files
         cmd += " timer.* psi.*"
       subprocess.call(cmd,shell=True)
+
       #Check QMMM point-charge energy results
       line = ""
       PassEnergy = 0
@@ -497,7 +509,7 @@ for qmtest in QMTests:
         QMMMEnergy = 0.0
       if (QMPack == "PSI4"):
         #Check against saved energy
-        if (QMMMEnergy == round(-2077.868475298003,5)):
+        if (QMMMEnergy == round(-2077.868475296541,5)):
           PassEnergy = 1
       if (QMPack == "Gaussian"):
         #Check against saved energy
@@ -524,6 +536,7 @@ for qmtest in QMTests:
         RunTime = " N/A"
       line += RunTime
       print(line)
+
       #Clean up files
       cmd = ""
       cmd += "rm -f tinker.key tests.out trash.xyz"
@@ -534,6 +547,7 @@ for qmtest in QMTests:
         #Remove checkpoint files
         cmd += " timer.* psi.*"
       subprocess.call(cmd,shell=True)
+
       #Check QMMM polarizable energy results
       line = ""
       PassEnergy = 0
@@ -562,7 +576,7 @@ for qmtest in QMTests:
         QMMMEnergy = 0.0
       if (QMPack == "PSI4"):
         #Check against saved energy
-        if (QMMMEnergy == round(-2077.771998494848,5)):
+        if (QMMMEnergy == round(-2077.771998493576,5)):
           PassEnergy = 1
       if (QMPack == "Gaussian"):
         #Check against saved energy
@@ -589,6 +603,7 @@ for qmtest in QMTests:
         RunTime = " N/A"
       line += RunTime
       line += '\n'
+
       #Clean up files
       cmd = ""
       cmd += "rm -f tinker.key tests.out trash.xyz"
@@ -599,7 +614,8 @@ for qmtest in QMTests:
         #Remove checkpoint files
         cmd += " timer.* psi.*"
       subprocess.call(cmd,shell=True)
-    #Print all results
+
+    #Print remaining results
     print(line)
     #Change directory
     os.chdir("../")
