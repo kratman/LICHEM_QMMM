@@ -19,7 +19,7 @@
 //QM utility functions
 
 //QM wrapper functions
-double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
+double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the forces and charges on a set of atoms
@@ -138,7 +138,7 @@ double PSIForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   return E;
 };
 
-void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
+void PSI4Charges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Function to update QM point-charges
   fstream ifile; //Generic file stream
@@ -198,7 +198,7 @@ void PSICharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   return;
 };
 
-double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
+double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs PSI4 for energy calculations
   fstream ifile; //Generic file stream
@@ -311,7 +311,7 @@ double PSIEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   return E;
 };
 
-double PSIOpt(vector<QMMMAtom>& Struct,
+double PSI4Opt(vector<QMMMAtom>& Struct,
        QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs psi4 for energy calculations

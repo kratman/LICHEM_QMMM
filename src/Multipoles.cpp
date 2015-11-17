@@ -64,7 +64,7 @@ RedMpole Cart2SphHarm(Mpole& poles)
 {
   //Converts Cartesian multipoles to spherical harmonic multipoles
   RedMpole SHpoles; //Spherical harmonic multipoles
-
+  
   return SHpoles;
 };
 
@@ -72,7 +72,7 @@ OctCharges SphHarm2Charges(RedMpole poles)
 {
   //Converts spherical harmonic multipoles to point-charges
   OctCharges PCgrid; //New point-charge multipoles
-
+  
   return PCgrid;
 };
 

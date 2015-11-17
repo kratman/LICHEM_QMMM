@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
     if (PSI4)
     {
       int tstart = (unsigned)time(0);
-      Eqm += PSIEnergy(Struct,QMMMOpts,0);
+      Eqm += PSI4Energy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
@@ -182,7 +182,7 @@ int main(int argc, char* argv[])
     if (PSI4)
     {
       int tstart = (unsigned)time(0);
-      SumE += PSIEnergy(Struct,QMMMOpts,0);
+      SumE += PSI4Energy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
@@ -266,7 +266,7 @@ int main(int argc, char* argv[])
       if (PSI4)
       {
         int tstart = (unsigned)time(0);
-        SumE = PSIOpt(Struct,QMMMOpts,0);
+        SumE = PSI4Opt(Struct,QMMMOpts,0);
         QMTime += (unsigned)time(0)-tstart;
         //Delete annoying useless files
         GlobalSys = system("rm -f psi.* timer.*");
@@ -311,7 +311,7 @@ int main(int argc, char* argv[])
     if (PSI4)
     {
       int tstart = (unsigned)time(0);
-      SumE += PSIEnergy(Struct,QMMMOpts,0);
+      SumE += PSI4Energy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.* ");
@@ -417,7 +417,7 @@ int main(int argc, char* argv[])
     if (PSI4)
     {
       int tstart = (unsigned)time(0);
-      SumE += PSIEnergy(Struct,QMMMOpts,0);
+      SumE += PSI4Energy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.* ");
@@ -529,7 +529,7 @@ int main(int argc, char* argv[])
     if (PSI4)
     {
       int tstart = (unsigned)time(0);
-      SumE += PSIEnergy(Struct,QMMMOpts,0);
+      SumE += PSI4Energy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
@@ -902,7 +902,7 @@ int main(int argc, char* argv[])
       if (PSI4)
       {
         int tstart = (unsigned)time(0);
-        SumE += PSIEnergy(Struct,QMMMOpts,p);
+        SumE += PSI4Energy(Struct,QMMMOpts,p);
         QMTime += (unsigned)time(0)-tstart;
         //Delete annoying useless files
         GlobalSys = system("rm -f psi.* timer.*");
@@ -1051,7 +1051,7 @@ int main(int argc, char* argv[])
     if (PSI4)
     {
       int tstart = (unsigned)time(0);
-      SumE += PSIEnergy(Struct,QMMMOpts,0);
+      SumE += PSI4Energy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");

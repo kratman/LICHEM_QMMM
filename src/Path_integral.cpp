@@ -76,7 +76,7 @@ double Get_PI_Epot(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     if (PSI4)
     {
       t_qm_start = (unsigned)time(0);
-      Es += PSIEnergy(Struct,QMMMOpts,i);
+      Es += PSI4Energy(Struct,QMMMOpts,i);
       Times_qm += (unsigned)time(0)-t_qm_start;
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");

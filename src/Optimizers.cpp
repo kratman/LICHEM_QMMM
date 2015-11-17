@@ -108,7 +108,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     if (PSI4)
     {
       int tstart = (unsigned)time(0);
-      SumE += PSIEnergy(Struct,QMMMOpts,Bead);
+      SumE += PSI4Energy(Struct,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
@@ -225,7 +225,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (PSI4)
     {
       int tstart = (unsigned)time(0);
-      E += PSIForces(Struct,Forces,QMMMOpts,Bead);
+      E += PSI4Forces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
@@ -363,7 +363,7 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (PSI4)
     {
       int tstart = (unsigned)time(0);
-      E += PSIForces(Struct,Forces,QMMMOpts,Bead);
+      E += PSI4Forces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
@@ -513,7 +513,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (PSI4)
   {
     int tstart = (unsigned)time(0);
-    E += PSIForces(Struct,Forces,QMMMOpts,Bead);
+    E += PSI4Forces(Struct,Forces,QMMMOpts,Bead);
     QMTime += (unsigned)time(0)-tstart;
     //Delete annoying useless files
     GlobalSys = system("rm -f psi.* timer.*");
@@ -612,7 +612,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     if (PSI4)
     {
       int tstart = (unsigned)time(0);
-      E += PSIForces(Struct,Forces,QMMMOpts,Bead);
+      E += PSI4Forces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");
@@ -776,7 +776,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
     if (PSI4)
     {
       int tstart = (unsigned)time(0);
-      SumE += PSIForces(Struct,Forces,QMMMOpts,Bead);
+      SumE += PSI4Forces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
       GlobalSys = system("rm -f psi.* timer.*");

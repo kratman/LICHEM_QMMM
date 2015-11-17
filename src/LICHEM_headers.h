@@ -168,13 +168,13 @@ void PrintFancyTitle();
 
 void Print_traj(vector<QMMMAtom>&,fstream&,QMMMSettings&);
 
-void PSICharges(vector<QMMMAtom>&,QMMMSettings&,int);
+void PSI4Charges(vector<QMMMAtom>&,QMMMSettings&,int);
 
-double PSIEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
+double PSI4Energy(vector<QMMMAtom>&,QMMMSettings&,int);
 
-double PSIForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
+double PSI4Forces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
 
-double PSIOpt(vector<QMMMAtom>&,QMMMSettings&,int);
+double PSI4Opt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void ReadArgs(int&,char**&,fstream&,fstream&,fstream&,fstream&);
 
@@ -216,17 +216,17 @@ void WriteTINKMpole(vector<QMMMAtom>&,fstream&,int,int);
 //Function definitions (alphabetical)
 #include "Analysis.cpp"
 #include "Basis.cpp"
-#include "BasisSets.cpp"
+#include "Basis_sets.cpp"
 #include "Core_funcs.cpp"
 #include "Frozen_density.cpp"
 #include "Hermite_eng.cpp"
-#include "Input_Reader.cpp"
+#include "Input_reader.cpp"
 #include "LICHEM_classes.cpp"
 #include "Multipoles.cpp"
 #include "Optimizers.cpp"
-#include "PathIntegral.cpp"
-#include "ReactionPath.cpp"
-#include "StructWriter.cpp"
+#include "Path_integral.cpp"
+#include "Reaction_path.cpp"
+#include "Struct_writer.cpp"
 #include "TINK2LICHEM.cpp"
 
 //Wrapper definitions (alphabetical)

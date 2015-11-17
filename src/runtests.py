@@ -602,7 +602,7 @@ for qmtest in QMTests:
       except:
         RunTime = " N/A"
       line += RunTime
-      line += '\n'
+      print(line)
 
       #Clean up files
       cmd = ""
@@ -615,9 +615,9 @@ for qmtest in QMTests:
         cmd += " timer.* psi.*"
       subprocess.call(cmd,shell=True)
 
-    #Print remaining results
+    #Print blank line and change directory
+    line = ""
     print(line)
-    #Change directory
     os.chdir("../")
 
 #Quit
