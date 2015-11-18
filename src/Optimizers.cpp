@@ -197,6 +197,8 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   fstream qmfile, ifile, ofile; //Generic file names
   double Eold = 0; //Old saved energy
   int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
+  //Initialize charges
+  WriteChargeFile(Struct,Bead);
   //Initialize QM trajectory file
   call.str("");
   call << "QMOpt_" << Bead << ".xyz";
@@ -317,6 +319,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Clean up files
   call.str("");
   call << "rm -f QMOpt_" << Bead << ".xyz";
+  call << " MMCharges_" << Bead << ".txt";
   GlobalSys = system(call.str().c_str());
   //Finish and return
   return;
@@ -332,6 +335,8 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   int stepct = 0; //Counter for optimization steps
   fstream qmfile, ifile, ofile; //Generic file names
   int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
+  //Initialize charges
+  WriteChargeFile(Struct,Bead);
   //Initialize QM trajectory file
   call.str("");
   call << "QMOpt_" << Bead << ".xyz";
@@ -465,6 +470,7 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Clean up files
   call.str("");
   call << "rm -f QMOpt_" << Bead << ".xyz";
+  call << " MMCharges_" << Bead << ".txt";
   GlobalSys = system(call.str().c_str());
   //Finish and return
   return;
@@ -481,6 +487,8 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   int stepct = 0; //Counter for optimization steps
   fstream qmfile,ifile,ofile; //Generic file streams
   int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
+  //Initialize charges
+  WriteChargeFile(Struct,Bead);
   //Initialize QM trajectory file
   call.str("");
   call << "QMOpt_" << Bead << ".xyz";
@@ -726,6 +734,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Clean up files
   call.str("");
   call << "rm -f QMOpt_" << Bead << ".xyz";
+  call << " MMCharges_" << Bead << ".txt";
   GlobalSys = system(call.str().c_str());
   //Finish and return
   return;

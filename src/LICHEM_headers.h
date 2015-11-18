@@ -209,7 +209,7 @@ void WriteGauInput(vector<QMMMAtom>&,string,QMMMSettings&,int);
 
 void WriteNWChemInput(vector<QMMMAtom>&,string,QMMMSettings&,int);
 
-void WritePSIInput(vector<QMMMAtom>&,string,QMMMSettings&,int);
+void WritePSI4Input(vector<QMMMAtom>&,string,QMMMSettings&,int);
 
 void WriteTINKMpole(vector<QMMMAtom>&,fstream&,int,int);
 

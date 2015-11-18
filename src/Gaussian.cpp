@@ -471,14 +471,14 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "mv LICHM_" << Bead;
   call << ".chk tmp_" << Bead;
-  call << ".chk && ";
+  call << ".chk; ";
   call << "rm -f ";
   call << "LICHM_" << Bead;
   call << ".log";
   call << " ";
   call << "LICHM_" << Bead;
   call << ".com";
-  call << " && mv tmp_" << Bead;
+  call << "; mv tmp_" << Bead;
   call << ".chk LICHM_" << Bead;
   call << ".chk";
   GlobalSys = system(call.str().c_str());
@@ -634,12 +634,12 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Save old files
     call << "rm -rf ";
     call << QMMMOpts.BackDir;
-    call << " && mkdir ";
+    call << "; mkdir ";
     call << QMMMOpts.BackDir;
-    call << " && cp LICHM_";
+    call << "; cp LICHM_";
     call << Bead << ".* ";
     call << QMMMOpts.BackDir;
-    call << "/. && ";
+    call << "/.; ";
   }
   call << "rm -f ";
   call << "LICHM_" << Bead;

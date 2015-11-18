@@ -11,7 +11,7 @@
 CXX=g++
 CXXFLAGS=-static -fopenmp -O3
 GPUFLAGS=-fopenacc
-DEVFLAGS=-g -Wall
+DEVFLAGS=-g -Wall -std=c++14
 LDFLAGS=-I./src/ -I/usr/include/eigen3/
 
 ### Python settings ###

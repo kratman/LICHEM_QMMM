@@ -414,7 +414,7 @@ for qmtest in QMTests:
       cmd += " *.chk"
     if (QMPack == "PSI4"):
       #Remove checkpoint files
-      cmd += " timer.* psi.*"
+      cmd += " timer.* psi.* *.32 *.180"
     subprocess.call(cmd,shell=True)
 
     #Delete line to avoid bugs
@@ -478,7 +478,7 @@ for qmtest in QMTests:
         cmd += " *.chk"
       if (QMPack == "PSI4"):
         #Remove checkpoint files
-        cmd += " timer.* psi.*"
+        cmd += " timer.* psi.* *.32 *.180"
       subprocess.call(cmd,shell=True)
 
       #Check QMMM point-charge energy results
@@ -545,7 +545,7 @@ for qmtest in QMTests:
         cmd += " *.chk"
       if (QMPack == "PSI4"):
         #Remove checkpoint files
-        cmd += " timer.* psi.*"
+        cmd += " timer.* psi.* *.32 *.180"
       subprocess.call(cmd,shell=True)
 
       #Check QMMM polarizable energy results
@@ -612,7 +612,7 @@ for qmtest in QMTests:
         cmd += " *.chk"
       if (QMPack == "PSI4"):
         #Remove checkpoint files
-        cmd += " timer.* psi.*"
+        cmd += " timer.* psi.* *.32 *.180"
       subprocess.call(cmd,shell=True)
 
     #Print blank line and change directory

@@ -972,6 +972,19 @@ int main(int argc, char* argv[])
           call << ".chk";
           GlobalSys = system(call.str().c_str());
         }
+        if (PSI4)
+        {
+          call.str("");
+          call << "cp LICHM_" << (p);
+          call << ".32";
+          call << " LICHM_" << (p+1);
+          call << ".32; ";
+          call << "cp LICHM_" << (p);
+          call << ".180";
+          call << " LICHM_" << (p+1);
+          call << ".180";
+          GlobalSys = system(call.str().c_str());
+        }
       }
     }
     //Run optimization

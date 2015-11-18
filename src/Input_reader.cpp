@@ -911,6 +911,39 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
 {
   //Checks for basic errors and conflicts
   bool DoQuit = 0; //Bool, quit with error
+  //General errors
+  if (QMMM)
+  {
+    //Check number of QM and MM atoms
+    if ((Nqm+Npseudo) < 1)
+    {
+      cout << " Error: No QM or PB atoms defined for the QMMM calculations.";
+      cout << '\n';
+      DoQuit = 1;
+    }
+    if ((Nmm+Nbound) < 1)
+    {
+      cout << " Error: No MM or BA atoms defined for the QMMM calculations.";
+      cout << '\n';
+      DoQuit = 1;
+    }
+  }
+  if (Ncpus < 1)
+  {
+    //Checks the number of threads and continue
+    cout << " Warning: Calculations cannot run with ";
+    cout << Ncpus << " CPUs.";
+    cout << '\n';
+    if (Jokes)
+    {
+      cout << " Do you know how computers work?";
+    }
+    cout << " Ncpus set to 1";
+    cout << '\n';
+    Ncpus = 1;
+    cout.flush(); //Print warning
+  }
+  //Wrapper errors
   if ((!TINKER) and (!AMBER) and (!LAMMPS) and (!QMonly))
   {
     //Check the MM wrappers
@@ -930,42 +963,6 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout << "of calculation.";
     cout << '\n';
     DoQuit = 1;
-  }
-  if ((QMMMOpts.Ensemble == "NPT") and (!PBCon))
-  {
-    //Check the PBC options
-    cout << " Error: NPT simulation without PBC.";
-    cout << '\n';
-    cout << "  Turn PBC on if you want to run this type ";
-    cout << "of calculation.";
-    cout << '\n';
-    DoQuit = 1;
-  }
-  if (QMMMOpts.StepScale > 1)
-  {
-    //Checks the number of threads and continue
-    cout << " Warning: The optimization step scale cannot be greater";
-    cout << " than 1.";
-    cout << '\n';
-    cout << " Step scale set to 1.";
-    cout << '\n';
-    QMMMOpts.StepScale = 1; //Reset step size
-    cout.flush(); //Print warning
-  }
-  if (Ncpus < 1)
-  {
-    //Checks the number of threads and continue
-    cout << " Warning: Calculations cannot run with ";
-    cout << Ncpus << " CPUs.";
-    cout << '\n';
-    if (Jokes)
-    {
-      cout << " Do you know how computers work?";
-    }
-    cout << " Ncpus set to 1";
-    cout << '\n';
-    Ncpus = 1;
-    cout.flush(); //Print warning
   }
   if (PSI4 and QMMM)
   {
@@ -1004,6 +1001,28 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout << " polarizable force fields.";
     cout << '\n';
     DoQuit = 1;
+  }
+  //Simulation errors
+  if ((QMMMOpts.Ensemble == "NPT") and (!PBCon))
+  {
+    //Check the PBC options
+    cout << " Error: NPT simulation without PBC.";
+    cout << '\n';
+    cout << "  Turn PBC on if you want to run this type ";
+    cout << "of calculation.";
+    cout << '\n';
+    DoQuit = 1;
+  }
+  if (QMMMOpts.StepScale > 1)
+  {
+    //Checks the number of threads and continue
+    cout << " Warning: The optimization step scale cannot be greater";
+    cout << " than 1.";
+    cout << '\n';
+    cout << " Step scale set to 1.";
+    cout << '\n';
+    QMMMOpts.StepScale = 1; //Reset step size
+    cout.flush(); //Print warning
   }
   if (DoQuit)
   {

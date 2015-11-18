@@ -21,11 +21,23 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
   call.copyfmt(cout); //Copy settings from cout
   string dummy,chrgfilename; //Generic strings
   fstream ifile,ofile; //Generic file names
+  //Check for a charge file
+  bool UseChargeFile = 0;
+  call.str("");
+  call << "MMCharges_" << Bead << ".txt";
+  chrgfilename = call.str();
+  UseChargeFile = CheckFile(call.str());
   //Initialize multipoles
-  if (AMOEBA and TINKER)
+  if (!UseChargeFile)
   {
-    //Set up multipoles
-    RotateTINKCharges(Struct,Bead);
+    if (AMOEBA)
+    {
+      if (TINKER)
+      {
+        //Set up multipoles
+        RotateTINKCharges(Struct,Bead);
+      }
+    }
   }
   //Construct g09 input
   call.str("");
@@ -76,64 +88,82 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
   }
   call << '\n'; //Blank line needed
   //Add the MM field
-  if (CHRG)
+  if (QMMM and UseChargeFile)
   {
-    for (int i=0;i<Natoms;i++)
+    ifile.open(chrgfilename.c_str(),ios_base::in);
+    if (ifile.good())
     {
-      if (Struct[i].MMregion)
+      while (!ifile.eof())
       {
-        call << fixed; //Forces numbers to be floats
-        call << " " << setprecision(12) << Struct[i].P[Bead].x;
-        call << " " << setprecision(12) << Struct[i].P[Bead].y;
-        call << " " << setprecision(12) << Struct[i].P[Bead].z;
-        call << " " << setprecision(12) << Struct[i].MP[Bead].q;
-        call.copyfmt(cout); //Copy settings from cout
-        call << '\n';
+        //Copy charge file line by line
+        getline(ifile,dummy);
+        call << dummy << '\n';
       }
+      call << '\n';
+      ifile.close();
     }
-    call << '\n'; //Blank line needed
   }
-  if (AMOEBA)
+  else if (QMMM)
   {
-    for (int i=0;i<Natoms;i++)
+    if (CHRG)
     {
-      if (Struct[i].MMregion)
+      for (int i=0;i<Natoms;i++)
       {
-        call << fixed; //Forces numbers to be floats
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x1;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y1;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z1;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q1;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x2;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y2;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z2;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q2;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x3;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y3;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z3;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q3;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x4;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y4;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z4;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q4;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x5;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y5;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z5;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q5;
-        call << '\n';
-        call << " " << setprecision(12) << Struct[i].PC[Bead].x6;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].y6;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].z6;
-        call << " " << setprecision(12) << Struct[i].PC[Bead].q6;
-        call.copyfmt(cout); //Copy settings from cout
-        call << '\n';
+        if (Struct[i].MMregion)
+        {
+          call << fixed; //Forces numbers to be floats
+          call << " " << setprecision(12) << Struct[i].P[Bead].x;
+          call << " " << setprecision(12) << Struct[i].P[Bead].y;
+          call << " " << setprecision(12) << Struct[i].P[Bead].z;
+          call << " " << setprecision(12) << Struct[i].MP[Bead].q;
+          call.copyfmt(cout); //Copy settings from cout
+          call << '\n';
+        }
       }
+      call << '\n'; //Blank line needed
     }
-    call << '\n'; //Blank line needed
+    if (AMOEBA)
+    {
+      for (int i=0;i<Natoms;i++)
+      {
+        if (Struct[i].MMregion)
+        {
+          call << fixed; //Forces numbers to be floats
+          call << " " << setprecision(12) << Struct[i].PC[Bead].x1;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].y1;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].z1;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].q1;
+          call << '\n';
+          call << " " << setprecision(12) << Struct[i].PC[Bead].x2;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].y2;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].z2;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].q2;
+          call << '\n';
+          call << " " << setprecision(12) << Struct[i].PC[Bead].x3;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].y3;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].z3;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].q3;
+          call << '\n';
+          call << " " << setprecision(12) << Struct[i].PC[Bead].x4;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].y4;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].z4;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].q4;
+          call << '\n';
+          call << " " << setprecision(12) << Struct[i].PC[Bead].x5;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].y5;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].z5;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].q5;
+          call << '\n';
+          call << " " << setprecision(12) << Struct[i].PC[Bead].x6;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].y6;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].z6;
+          call << " " << setprecision(12) << Struct[i].PC[Bead].q6;
+          call.copyfmt(cout); //Copy settings from cout
+          call << '\n';
+        }
+      }
+      call << '\n'; //Blank line needed
+    }
   }
   //Add basis set information from the BASIS file
   ifile.open("BASIS",ios_base::in);
@@ -161,6 +191,24 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   string dummy,chrgfilename; //Generic strings
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
+  //Check for a charge file
+  bool UseChargeFile = 0;
+  call.str("");
+  call << "MMCharges_" << Bead << ".txt";
+  chrgfilename = call.str();
+  UseChargeFile = CheckFile(call.str());
+  //Initialize multipoles
+  if (!UseChargeFile)
+  {
+    if (AMOEBA)
+    {
+      if (TINKER)
+      {
+        //Set up multipoles
+        RotateTINKCharges(Struct,Bead);
+      }
+    }
+  }
   //Calculate inverse box lengths for PBC
   double ix,iy,iz; //Inverse x,y,z
   ix = 1;
@@ -171,12 +219,6 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
     ix /= Lx;
     iy /= Ly;
     iz /= Lz;
-  }
-  //Initialize multipoles
-  if (AMOEBA and TINKER)
-  {
-    //Set up multipoles
-    RotateTINKCharges(Struct,Bead);
   }
   //Create NWChem input
   call.str("");
@@ -256,70 +298,92 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
     ofile << '\n';
     ofile << "end" << '\n';
   }
-  if (CHRG)
+  if (QMMM and UseChargeFile)
   {
-    ofile << "set bq:max_nbq " << Nmm << '\n';
-    ofile << "bq mmchrg" << '\n';
-    for (int i=0;i<Natoms;i++)
+    ifile.open(chrgfilename.c_str(),ios_base::in);
+    if (ifile.good())
     {
-      if (Struct[i].MMregion)
+      ofile << "set bq:max_nbq " << (6*(Nmm+Nbound)) << '\n';
+      ofile << "bq mmchrg";
+      while (!ifile.eof())
       {
-        ofile << fixed; //Forces numbers to be floats
-        ofile << " " << setprecision(12) << (Struct[i].P[Bead].x*ix);
-        ofile << " " << setprecision(12) << (Struct[i].P[Bead].y*iy);
-        ofile << " " << setprecision(12) << (Struct[i].P[Bead].z*iz);
-        ofile << " " << setprecision(12) << Struct[i].MP[Bead].q;
-        ofile.copyfmt(cout); //Copy settings from cout
-        ofile << '\n';
+        //Copy charge file line by line
+        ofile << '\n'; //Avoid adding an extra blank line
+        getline(ifile,dummy);
+        ofile << dummy; //Print the line
       }
+      ifile.close();
+      ofile << "end" << '\n';
+      ofile << "set bq mmchrg" << '\n';
     }
-    ofile << "end" << '\n';
-    ofile << "set bq mmchrg" << '\n';
   }
-  if (AMOEBA)
+  else if (QMMM)
   {
-    ofile << "set bq:max_nbq " << (Nmm*6) << '\n';
-    ofile << "bq mmchrg" << '\n';
-    for (int i=0;i<Natoms;i++)
+    if (CHRG)
     {
-      if (Struct[i].MMregion)
+      ofile << "set bq:max_nbq " << (Nmm+Nbound) << '\n';
+      ofile << "bq mmchrg" << '\n';
+      for (int i=0;i<Natoms;i++)
       {
-        ofile << fixed; //Forces numbers to be floats
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x1*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y1*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z1*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x2*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y2*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z2*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x3*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y3*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z3*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x4*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y4*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z4*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x5*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y5*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z5*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
-        ofile << '\n';
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x6*ix);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y6*iy);
-        ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z6*iz);
-        ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
-        ofile.copyfmt(cout); //Copy settings from cout
-        ofile << '\n';
+        if (Struct[i].MMregion)
+        {
+          ofile << fixed; //Forces numbers to be floats
+          ofile << " " << setprecision(12) << (Struct[i].P[Bead].x*ix);
+          ofile << " " << setprecision(12) << (Struct[i].P[Bead].y*iy);
+          ofile << " " << setprecision(12) << (Struct[i].P[Bead].z*iz);
+          ofile << " " << setprecision(12) << Struct[i].MP[Bead].q;
+          ofile.copyfmt(cout); //Copy settings from cout
+          ofile << '\n';
+        }
       }
+      ofile << "end" << '\n';
+      ofile << "set bq mmchrg" << '\n';
     }
-    ofile << "end" << '\n';
-    ofile << "set bq mmchrg" << '\n';
+    if (AMOEBA)
+    {
+      ofile << "set bq:max_nbq " << (6*(Nmm+Nbound)) << '\n';
+      ofile << "bq mmchrg" << '\n';
+      for (int i=0;i<Natoms;i++)
+      {
+        if (Struct[i].MMregion)
+        {
+          ofile << fixed; //Forces numbers to be floats
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x1*ix);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y1*iy);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z1*iz);
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q1;
+          ofile << '\n';
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x2*ix);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y2*iy);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z2*iz);
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q2;
+          ofile << '\n';
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x3*ix);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y3*iy);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z3*iz);
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q3;
+          ofile << '\n';
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x4*ix);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y4*iy);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z4*iz);
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q4;
+          ofile << '\n';
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x5*ix);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y5*iy);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z5*iz);
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q5;
+          ofile << '\n';
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].x6*ix);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].y6*iy);
+          ofile << " " << setprecision(12) << (Struct[i].PC[Bead].z6*iz);
+          ofile << " " << setprecision(12) << Struct[i].PC[Bead].q6;
+          ofile.copyfmt(cout); //Copy settings from cout
+          ofile << '\n';
+        }
+      }
+      ofile << "end" << '\n';
+      ofile << "set bq mmchrg" << '\n';
+    }
   }
   ofile << "dft" << '\n';
   ofile << " mult " << QMMMOpts.Spin << '\n';
@@ -338,19 +402,44 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   return;
 };
 
-void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
+void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
      QMMMSettings& QMMMOpts, int Bead)
 {
   //Write PSI4 input files
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
-  string dummy; //Generic string
+  string dummy,chrgfilename; //Generic string
   fstream ifile,ofile; //Generic file names
+  //Check for a charge file
+  bool UseChargeFile = 0;
+  call.str("");
+  call << "MMCharges_" << Bead << ".txt";
+  chrgfilename = call.str();
+  UseChargeFile = CheckFile(call.str());
   //Initialize multipoles
-  if (AMOEBA and TINKER)
+  if (!UseChargeFile)
   {
-    //Set up multipoles
-    RotateTINKCharges(Struct,Bead);
+    if (AMOEBA)
+    {
+      if (TINKER)
+      {
+        //Set up multipoles
+        RotateTINKCharges(Struct,Bead);
+      }
+    }
+  }
+  //Check if there is a checkpoint file
+  bool UseCheckPoint;
+  call.str("");
+  call << "LICHM_" << Bead << ".32";
+  UseCheckPoint = CheckFile(call.str());
+  if (UseCheckPoint)
+  {
+    //Check second file
+    UseCheckPoint = 0;
+    call.str("");
+    call << "LICHM_" << Bead << ".180";
+    UseCheckPoint = CheckFile(call.str());
   }
   //Set up memory
   call.str("");
@@ -382,11 +471,27 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
   }
   call << "set basis ";
   call << QMMMOpts.Basis << '\n';
-  call << "set guess sad" << '\n';
+  if (UseCheckPoint)
+  {
+    call << "set guess read";
+  }
+  else
+  {
+    call << "set guess sad";
+  }
+  call << '\n';
   call << "set scf_type df" << '\n';
   call << '\n';
+  //Keep the checkpoint files
+  //NB: checkpoint->32, MOs->180
+  call << "psi4_io.set_specific_path(32,'./')" << '\n';
+  call << "psi4_io.set_specific_retention(32,True)" << '\n';
+  call << "psi4_io.set_specific_path(180,'./')" << '\n';
+  call << "psi4_io.set_specific_retention(180,True)" << '\n';
+  call << '\n';
   //Set up molecules
-  call << "molecule QMregion {" << '\n';
+  call << "molecule LICHM_";
+  call << Bead << " {" << '\n';
   call << "  " << QMMMOpts.Charge;
   call << " " << QMMMOpts.Spin << '\n';
   for (int i=0;i<Natoms;i++)
@@ -405,91 +510,111 @@ void WritePSIInput(vector<QMMMAtom>& Struct, string CalcTyp,
   call << "  no_com" << '\n';
   call << "}" << '\n' << '\n';
   //Set up MM field
-  if (QMMM and CHRG)
+  if (QMMM and UseChargeFile)
   {
-    call << "Chrgfield = QMMM()" << '\n';
-    for (int i=0;i<Natoms;i++)
+    ifile.open(chrgfilename.c_str(),ios_base::in);
+    if (ifile.good())
     {
-      if (Struct[i].MMregion)
+      call << "Chrgfield = QMMM()" << '\n';
+      while (!ifile.eof())
       {
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].MP[Bead].q << ",";
-        call << Struct[i].P[Bead].x << ",";
-        call << Struct[i].P[Bead].y << ",";
-        call << Struct[i].P[Bead].z;
-        call << ")" << '\n';
-      }
-    }
-    call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
-    call << '\n' << '\n';
-  }
-  if (QMMM and AMOEBA)
-  {
-    call << "Chrgfield = QMMM()" << '\n';
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].MMregion)
-      {
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q1 << ",";
-        call << Struct[i].PC[Bead].x1 << ",";
-        call << Struct[i].PC[Bead].y1 << ",";
-        call << Struct[i].PC[Bead].z1;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q2 << ",";
-        call << Struct[i].PC[Bead].x2 << ",";
-        call << Struct[i].PC[Bead].y2 << ",";
-        call << Struct[i].PC[Bead].z2;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q3 << ",";
-        call << Struct[i].PC[Bead].x3 << ",";
-        call << Struct[i].PC[Bead].y3 << ",";
-        call << Struct[i].PC[Bead].z3;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q4 << ",";
-        call << Struct[i].PC[Bead].x4 << ",";
-        call << Struct[i].PC[Bead].y4 << ",";
-        call << Struct[i].PC[Bead].z4;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q5 << ",";
-        call << Struct[i].PC[Bead].x5 << ",";
-        call << Struct[i].PC[Bead].y5 << ",";
-        call << Struct[i].PC[Bead].z5;
-        call << ")" << '\n';
-        call << "Chrgfield.extern.addCharge(";
-        call << Struct[i].PC[Bead].q6 << ",";
-        call << Struct[i].PC[Bead].x6 << ",";
-        call << Struct[i].PC[Bead].y6 << ",";
-        call << Struct[i].PC[Bead].z6;
-        call << ")" << '\n';
-      }
-    }
-    call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
-    call << '\n';
-    call << '\n';
-  }
-  if (QMMM and GEM)
-  {
-    //Add generic field field from a file (psithon)
-    if (CheckFile("FIELD"))
-    {
-      //Read a block of psithon code
-      ifile.open("FIELD",ios_base::in);
-      while ((!ifile.eof()) and ifile.good())
-      {
+        //Copy charge file line by line
         getline(ifile,dummy);
         call << dummy << '\n';
       }
-      //If the file was opened, save the field
-      call << "activate(QMregion)" << '\n';
+      ifile.close();
+      call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
+      call << '\n' << '\n';
+    }
+  }
+  else if (QMMM)
+  {
+    if (CHRG)
+    {
+      call << "Chrgfield = QMMM()" << '\n';
+      for (int i=0;i<Natoms;i++)
+      {
+        if (Struct[i].MMregion)
+        {
+          call << "Chrgfield.extern.addCharge(";
+          call << Struct[i].MP[Bead].q << ",";
+          call << Struct[i].P[Bead].x << ",";
+          call << Struct[i].P[Bead].y << ",";
+          call << Struct[i].P[Bead].z;
+          call << ")" << '\n';
+        }
+      }
+      call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
+      call << '\n' << '\n';
+    }
+    if (AMOEBA)
+    {
+      call << "Chrgfield = QMMM()" << '\n';
+      for (int i=0;i<Natoms;i++)
+      {
+        if (Struct[i].MMregion)
+        {
+          call << "Chrgfield.extern.addCharge(";
+          call << Struct[i].PC[Bead].q1 << ",";
+          call << Struct[i].PC[Bead].x1 << ",";
+          call << Struct[i].PC[Bead].y1 << ",";
+          call << Struct[i].PC[Bead].z1;
+          call << ")" << '\n';
+          call << "Chrgfield.extern.addCharge(";
+          call << Struct[i].PC[Bead].q2 << ",";
+          call << Struct[i].PC[Bead].x2 << ",";
+          call << Struct[i].PC[Bead].y2 << ",";
+          call << Struct[i].PC[Bead].z2;
+          call << ")" << '\n';
+          call << "Chrgfield.extern.addCharge(";
+          call << Struct[i].PC[Bead].q3 << ",";
+          call << Struct[i].PC[Bead].x3 << ",";
+          call << Struct[i].PC[Bead].y3 << ",";
+          call << Struct[i].PC[Bead].z3;
+          call << ")" << '\n';
+          call << "Chrgfield.extern.addCharge(";
+          call << Struct[i].PC[Bead].q4 << ",";
+          call << Struct[i].PC[Bead].x4 << ",";
+          call << Struct[i].PC[Bead].y4 << ",";
+          call << Struct[i].PC[Bead].z4;
+          call << ")" << '\n';
+          call << "Chrgfield.extern.addCharge(";
+          call << Struct[i].PC[Bead].q5 << ",";
+          call << Struct[i].PC[Bead].x5 << ",";
+          call << Struct[i].PC[Bead].y5 << ",";
+          call << Struct[i].PC[Bead].z5;
+          call << ")" << '\n';
+          call << "Chrgfield.extern.addCharge(";
+          call << Struct[i].PC[Bead].q6 << ",";
+          call << Struct[i].PC[Bead].x6 << ",";
+          call << Struct[i].PC[Bead].y6 << ",";
+          call << Struct[i].PC[Bead].z6;
+          call << ")" << '\n';
+        }
+      }
       call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
       call << '\n';
       call << '\n';
-      ifile.close();
+    }
+    if (GEM)
+    {
+      //Add generic field field from a file (psithon)
+      if (CheckFile("FIELD"))
+      {
+        //Read a block of psithon code
+        ifile.open("FIELD",ios_base::in);
+        while ((!ifile.eof()) and ifile.good())
+        {
+          getline(ifile,dummy);
+          call << dummy << '\n';
+        }
+        //If the file was opened, save the field
+        call << "activate(QMregion)" << '\n';
+        call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
+        call << '\n';
+        call << '\n';
+        ifile.close();
+      }
     }
   }
   //Add calculation type
