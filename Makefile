@@ -31,6 +31,8 @@ install:	title binary testexe manual compdone
 
 Dev:	title devbin testexe manual stats compdone
 
+GPUDev:	title gpubin testexe manual stats compdone
+
 clean:	title delbin compdone
 
 ###################################################
@@ -43,6 +45,11 @@ binary:
 	$(CXX) $(CXXFLAGS) ./src/LICHEM.cpp -o lichem $(LDFLAGS)
 
 devbin:	
+	@echo ""; \
+	echo "### Compiling the LICHEM development binary ###"
+	$(CXX) $(CXXFLAGS) $(DEVFLAGS) ./src/LICHEM.cpp -o lichem $(LDFLAGS)
+
+gpubin:	
 	@echo ""; \
 	echo "### Compiling the LICHEM development binary ###"
 	$(CXX) $(CXXFLAGS) $(GPUFLAGS) $(DEVFLAGS) ./src/LICHEM.cpp -o lichem $(LDFLAGS)
