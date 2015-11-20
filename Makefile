@@ -23,7 +23,7 @@ PYPATH=/usr/bin/python
 TEX=pdflatex
 BIB=bibtex
 
-###################################################
+#####################################################
 
 ### Compile rules for users and devs ###
 
@@ -35,7 +35,7 @@ GPUDev:	title gpubin testexe manual stats compdone
 
 clean:	title delbin compdone
 
-###################################################
+#####################################################
 
 ### Rules for building various parts of the code ###
 

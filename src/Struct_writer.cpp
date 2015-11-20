@@ -99,7 +99,6 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
         getline(ifile,dummy);
         call << dummy << '\n';
       }
-      call << '\n';
       ifile.close();
     }
   }
