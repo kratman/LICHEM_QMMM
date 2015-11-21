@@ -384,6 +384,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
       ofile << "set bq mmchrg" << '\n';
     }
   }
+  //Add DFT settings
   ofile << "dft" << '\n';
   ofile << " mult " << QMMMOpts.Spin << '\n';
   ofile << " direct" << '\n';

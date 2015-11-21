@@ -16,10 +16,10 @@
 
 */
 
-//MM utility functions
+//QM utility functions
 
 
-//MM wrapper functions
+//QM wrapper functions
 double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
        QMMMSettings& QMMMOpts, int Bead)
 {
