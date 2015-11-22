@@ -455,20 +455,17 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   }
   call << '\n';
   //Set options
-  if (QMMMOpts.Spin != "1")
+  if (QMMMOpts.Spin == "1")
   {
-    if ((QMMMOpts.Func == "HF") or (QMMMOpts.Func == "hf")
-       or (QMMMOpts.Func == "SCF") or (QMMMOpts.Func == "scf"))
-    {
-      //Hartree-Fock only setting
-      call << "set reference uhf" << '\n';
-    }
-    else
-    {
-      //Assume it is a DFT method
-      call << "set reference uks" << '\n';
-    }
+    //Closed shell reference
+    call << "set reference rhf";
   }
+  else
+  {
+    //Open shell reference
+    call << "set reference uhf";
+  }
+  call << '\n';
   call << "set basis ";
   call << QMMMOpts.Basis << '\n';
   if (UseCheckPoint)

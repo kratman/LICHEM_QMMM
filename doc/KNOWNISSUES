@@ -8,8 +8,7 @@ CXXFLAGS in the Makefile.
 General:
 -Currently only DFT and HF energies can be used in most of the QM
 calculations. Post-HF methods are currently only implemented in PSI4
-(closed shell) and semiempirical methods are currently only implemented in
-Gaussian.
+and semiempirical methods are currently only implemented in Gaussian.
 -MM wrappers can easily include PBC, but only the NWChem wrapper can handle
 PBC for QM calculations. The QM region should always be placed near the center
 of the simulation box.

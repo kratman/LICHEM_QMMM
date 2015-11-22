@@ -60,7 +60,10 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   }
   call << ")" << '\n';
   call << "print('Energy: '+`Eqm`)" << '\n';
-  call << "oeprop('MULLIKEN_CHARGES',bypass_scf=True)" << '\n';
+  if (QMMM)
+  {
+    call << "oeprop('MULLIKEN_CHARGES',bypass_scf=True)" << '\n';
+  }
   WritePSI4Input(Struct,call.str(),QMMMOpts,Bead);
   //Call PSI4
   call.str("");
@@ -72,9 +75,10 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   //Save checkpoint file for the next calculation
   call.str("");
   call << "mv *.LICHM_" << Bead << ".32 ";
-  call << "LICHM_" << Bead << ".32; ";
+  call << "LICHM_" << Bead << ".32 2> LICHM_" << Bead << ".trash; ";
   call << "mv *.LICHM_" << Bead << ".180 ";
-  call << "LICHM_" << Bead << ".180";
+  call << "LICHM_" << Bead << ".180 2> LICHM_" << Bead << ".trash; ";
+  call << "rm -f LICHM_" << Bead << ".trash";
   GlobalSys = system(call.str().c_str());
   //Extract charges
   call.str("");
@@ -203,7 +207,10 @@ void PSI4Charges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     call << "'./LICHM_" << Bead << ".180']";
   }
   call << ")" << '\n';
-  call << "oeprop('MULLIKEN_CHARGES',bypass_scf=True)" << '\n';
+  if (QMMM)
+  {
+    call << "oeprop('MULLIKEN_CHARGES',bypass_scf=True)" << '\n';
+  }
   WritePSI4Input(Struct,call.str(),QMMMOpts,Bead);
   //Call PSI4
   call.str("");
@@ -215,9 +222,10 @@ void PSI4Charges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Save checkpoint file for the next calculation
   call.str("");
   call << "mv *.LICHM_" << Bead << ".32 ";
-  call << "LICHM_" << Bead << ".32; ";
+  call << "LICHM_" << Bead << ".32 2> LICHM_" << Bead << ".trash; ";
   call << "mv *.LICHM_" << Bead << ".180 ";
-  call << "LICHM_" << Bead << ".180";
+  call << "LICHM_" << Bead << ".180 2> LICHM_" << Bead << ".trash; ";
+  call << "rm -f LICHM_" << Bead << ".trash";
   GlobalSys = system(call.str().c_str());
   //Extract charges
   call.str("");
@@ -292,7 +300,10 @@ double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   }
   call << ")" << '\n';
   call << "print('Energy: '+`Eqm`)" << '\n';
-  call << "oeprop('MULLIKEN_CHARGES',bypass_scf=True)" << '\n';
+  if (QMMM)
+  {
+    call << "oeprop('MULLIKEN_CHARGES',bypass_scf=True)" << '\n';
+  }
   WritePSI4Input(Struct,call.str(),QMMMOpts,Bead);
   //Call PSI4
   call.str("");
@@ -304,9 +315,10 @@ double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Save checkpoint file for the next calculation
   call.str("");
   call << "mv *.LICHM_" << Bead << ".32 ";
-  call << "LICHM_" << Bead << ".32; ";
+  call << "LICHM_" << Bead << ".32 2> LICHM_" << Bead << ".trash; ";
   call << "mv *.LICHM_" << Bead << ".180 ";
-  call << "LICHM_" << Bead << ".180";
+  call << "LICHM_" << Bead << ".180 2> LICHM_" << Bead << ".trash; ";
+  call << "rm -f LICHM_" << Bead << ".trash";
   GlobalSys = system(call.str().c_str());
   //Read energy
   call.str("");
@@ -440,7 +452,10 @@ double PSI4Opt(vector<QMMMAtom>& Struct,
   }
   call << "Eqm = optimize('" << QMMMOpts.Func << "')" << '\n';
   call << "print('Energy: '+`Eqm`)" << '\n';
-  call << "oeprop('MULLIKEN_CHARGES',bypass_scf=True)" << '\n';
+  if (QMMM)
+  {
+    call << "oeprop('MULLIKEN_CHARGES',bypass_scf=True)" << '\n';
+  }
   WritePSI4Input(Struct,call.str(),QMMMOpts,Bead);
   //Call PSI4
   call.str("");
@@ -452,9 +467,10 @@ double PSI4Opt(vector<QMMMAtom>& Struct,
   //Save checkpoint file for the next calculation
   call.str("");
   call << "mv *.LICHM_" << Bead << ".32 ";
-  call << "LICHM_" << Bead << ".32; ";
+  call << "LICHM_" << Bead << ".32 2> LICHM_" << Bead << ".trash; ";
   call << "mv *.LICHM_" << Bead << ".180 ";
-  call << "LICHM_" << Bead << ".180";
+  call << "LICHM_" << Bead << ".180 2> LICHM_" << Bead << ".trash; ";
+  call << "rm -f LICHM_" << Bead << ".trash";
   GlobalSys = system(call.str().c_str());
   //Read energy and structure
   call.str("");

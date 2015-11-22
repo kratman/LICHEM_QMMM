@@ -677,6 +677,15 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       {
         StepScale = sdscale; //Small step
       }
+      //Create new Hessian as an identity matrix
+      IHess.setIdentity(); //Already an "inverse" Hessian
+    }
+    else if (((stepct+1)%30) == 0)
+    {
+      //Prepare for the upcoming SD step
+      cout << "    Reducing the step size...";
+      cout << '\n';
+      //Shrink step size
       if (StepScale > (sdscale*QMMMOpts.StepScale))
       {
         StepScale = sdscale*QMMMOpts.StepScale;
