@@ -390,7 +390,6 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   ofile << " direct" << '\n';
   ofile << " grid xfine nodisk" << '\n';
   ofile << " noio" << '\n';
-  ofile << " cgmin" << '\n';
   ofile << " tolerances tight" << '\n';
   ofile << " xc " << QMMMOpts.Func << '\n';
   ofile << "end" << '\n';

@@ -386,7 +386,7 @@ for qmtest in QMTests:
         PassEnergy = 1
     if (QMPack == "NWChem"):
       #Check against saved energy
-      if (QMMMEnergy == round(-4155.414734834268,5)):
+      if (QMMMEnergy == round(-4155.414752998248,5)):
         PassEnergy = 1
     line += " QM energy: "
     if (PassEnergy == 1):
@@ -517,7 +517,7 @@ for qmtest in QMTests:
           PassEnergy = 1
       if (QMPack == "NWChem"):
         #Check against saved energy
-        if (QMMMEnergy == round(-2077.868519717375,5)):
+        if (QMMMEnergy == round(-2077.868520035367,5)):
           PassEnergy = 1
       line += " QMMM energy: "
       if (PassEnergy == 1):
@@ -584,7 +584,7 @@ for qmtest in QMTests:
           PassEnergy = 1
       if (QMPack == "NWChem"):
         #Check against saved energy
-        if (QMMMEnergy == round(-2077.775532434397,5)):
+        if (QMMMEnergy == round(-2077.775539771866,5)):
           PassEnergy = 1
       line += " Pol. QMMM energy: "
       if (PassEnergy == 1):
