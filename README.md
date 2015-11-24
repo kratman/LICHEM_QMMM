@@ -20,15 +20,14 @@ and MM software so that QMMM calculations can be performed with polarizable
 and frozen electron density force fields. Functionality is also present for
 standard point-charge based force fields, pure MM, and pure QM calculations.
 
-Available calculations: single-point energies, optimized geometries, classical
-molecular dynamics, classical Monte Carlo, path-integral Monte Carlo, and
-reaction pathways
+Available calculations: single-point energies, geometry optimizations,
+classical Monte Carlo, path-integral Monte Carlo, and reaction pathways.
 ```
 Available QM wrappers: Gaussian, NWChem, PSI4
 
 Available MM wrappers: TINKER
 
-MM wrappers in development: AMBER, LAMMPS
+MM wrappers in development: AMBER, LAMMPS, OpenMM
 ```
 
 ### Installation
@@ -61,10 +60,11 @@ The LICHEM binary will eventually be included with the zipped source code,
 however, modified or git source code can be compiled with the Makefile
 provided with LICHEM. On Ubuntu boxes, the Makefile should function
 without modifications. However, with other operating systems it may be
-necessary to change the path to the Eigen3 package.
+necessary to change the path to the Eigen3 package,
 ```
 Default: -I/usr/include/eigen3/
 ```
+or install additional LaTeX packages.
 
 The Makefile can produce both the documentation and the binary.
 ```
@@ -81,8 +81,9 @@ Additional make rules can be found in the Makefile.
 ### Updates
 
 LICHEM is still in the early stages of development. Please report all bugs so
-that the code can be updated quickly. A list of known issues and the
-development timeline are available in the doc directory.
+that the code can be updated quickly. Bugs should be reported through the
+GitHub issues interface. A list of known issues and the development timeline
+are available in the doc directory or on the GitHub page.
 
 Development versions of LICHEM are kept in a private repository. Large changes
 to the code or the addition of new features (multipoles, diffuse charges,
@@ -95,13 +96,16 @@ etc) are released ASAP. Updates from the private development branch are
 generally merged into the public repository as a single commit around
 midnight.
 
+Further development details can be found in the doc directory, or the GitHub
+issues section.
+
 ### Jokes
 
 Jokes and Easter eggs can be included by changing
 ```
  const bool Jokes = 0; //Print humorous comments
 ```
-in LICHEM_headers.h to
+in LICHEM_options.h to
 ```
  const bool Jokes = 1; //Print humorous comments
 ```
@@ -112,9 +116,14 @@ and then recompiling the code.
 Test calculations can be performed with the runtests script in the tests
 directory.
 
-Tests are performed for pairs of QM and MM wrappers.
+Tests can be performed for pairs of QM and MM wrappers.
 ```
 user:$ ./runtests Ncpus QMPackage MMPackage
+```
+
+Additionally, tests can be run for all wrappers at once.
+```
+user:$ ./runtests Ncpus All
 ```
 
 A dry run can be performed to check packages without performing the

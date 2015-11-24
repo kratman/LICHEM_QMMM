@@ -124,7 +124,7 @@ compdone:
 
 delbin:	
 	@echo ""; \
-	if grep -q "Jokes = 1" src/LICHEM_headers.h; then \
+	if grep -q "Jokes = 1" src/LICHEM_options.h; then \
 	echo '     ___'; \
 	echo '    |_  |'; \
 	echo '      \ \'; \

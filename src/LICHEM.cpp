@@ -636,14 +636,6 @@ int main(int argc, char* argv[])
       //Remove volume changes
       VolProb = 0.0;
     }
-    //Calculate initial energy
-    QMMMOpts.Eold = 0;
-    QMMMOpts.Eold += Get_PI_Epot(Struct,QMMMOpts);
-    QMMMOpts.Eold += Get_PI_Espring(Struct,QMMMOpts);
-    if (VolProb > 0)
-    {
-      QMMMOpts.Eold += QMMMOpts.Press*Lx*Ly*Lz*atm2eV;
-    }
     //Run simulations
     cout << '\n';
     SumE = 0; //Average energy
@@ -660,12 +652,21 @@ int main(int argc, char* argv[])
     int ct = 0; //Secondary counter
     double Nacc = 0; //Number of accepted moves
     double Nrej = 0; //Number of rejected moves
-    double Emc = QMMMOpts.Eold; //Monte Carlo energy
+    double Emc = 0; //Monte Carlo energy
     double Et = 0; //Total energy for printing
     bool acc; //Flag for accepting a step
-    //Start equilibration run
+    //Start equilibration run and calculate initial energy
     cout << "Monte Carlo equilibration:" << '\n';
     cout.flush();
+    QMMMOpts.Eold = 0;
+    QMMMOpts.Eold += Get_PI_Epot(Struct,QMMMOpts);
+    QMMMOpts.Eold += Get_PI_Espring(Struct,QMMMOpts);
+    if (VolProb > 0)
+    {
+      //Add PV term
+      QMMMOpts.Eold += QMMMOpts.Press*Lx*Ly*Lz*atm2eV;
+    }
+    Emc = QMMMOpts.Eold; //Needed if equilibration is skipped
     Nct = 0;
     while (Nct < QMMMOpts.Neq)
     {
