@@ -44,7 +44,9 @@ void ExternalGaussian(int& argc, char**& argv)
     {
       Ncpus = atoi(argv[i+1]);
       //Set OpenMP threads for the external routine
-      omp_set_num_threads(Ncpus);
+      #ifdef _OPENMP
+        omp_set_num_threads(Ncpus);
+      #endif
     }
     if (dummy == "-GauExtern")
     {

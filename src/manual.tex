@@ -119,7 +119,7 @@ requiring the user to be an expert with the QM and MM software. \\
 
 LICHEM should be tested with extremely difficult systems.
 During the early stages of the development, test systems with highly distorted
-structures were employed to make sure that crashing the software was rare.
+structures were employed to make sure that crashing the software was rare. \\
 
 A simple way to avoid modifying the QM and MM packages is to search for
 iterative or perturbative approximations for the QMMM equations.
@@ -284,7 +284,7 @@ user:\$ lichem -n Ncpus -x xyzfile.xyz -c confile.inp
 -n: Number of CPUs used in the calculations.
 Note that during PIMC and reaction path calculations each replica uses this
 many CPUs.
-A reaction path calculation with 8 points and Ncpus=2 may require 16 CPUs. \\
+A PIMC simulation with 8 beads and Ncpus=2 may require 16 CPUs. \\
 
 -x: File name for the input structure in XYZ format.
 The XYZ input should be in the standard format and have a blank comment

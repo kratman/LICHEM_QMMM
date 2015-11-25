@@ -18,7 +18,11 @@
 #define LICHEM_CLIBS
 
 //Header files
-#include <omp.h>
+#ifdef _OPENMP
+ //Use OpenMP
+ #pragma message("OpenMP is enabled.")
+ #include <omp.h>
+#endif
 #include <cstdlib>
 #include <ctime>
 #include <iostream>

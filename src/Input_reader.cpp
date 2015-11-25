@@ -886,7 +886,9 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     double Procs = double(FindMaxThreads());
     //Set default number of threads
     Nthreads = FindMaxThreads();
-    omp_set_num_threads(Nthreads);
+    #ifdef _OPENMP
+      omp_set_num_threads(Nthreads);
+    #endif
     //Sanity check
     if (Ncpus > Nthreads)
     {
@@ -899,7 +901,9 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       //Divide threads between the beads
       Nthreads = int(floor(Procs/Ncpus));
       //Set number of threads for wrappers
-      omp_set_num_threads(Nthreads);
+      #ifdef _OPENMP
+        omp_set_num_threads(Nthreads);
+      #endif
     }
     //Set eigen threads
     setNbThreads(Nthreads);
@@ -1044,6 +1048,10 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       cout.flush();
     }
   }
+  if (CheckFile("EASTEREGG") and Jokes)
+  {
+    PrintLapin();
+  }
   return;
 };
 
@@ -1053,16 +1061,24 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
   cout << "Setting up simulation..." << '\n';
   cout << '\n';
   cout << "Atoms: " << Natoms << '\n';
-  if (QMMM)
+  if (QMonly or QMMM)
   {
     cout << " QM atoms: " << Nqm << '\n';
-    cout << " MM atoms: " << Nmm << '\n';
-    cout << " Pseudo-atoms: " << Npseudo << '\n';
-    cout << " Boundary-atoms: " << Nbound << '\n';
+    cout << "   Charge: " << QMMMOpts.Charge << '\n';
+    cout << "   Spin: " << QMMMOpts.Spin << '\n';
   }
-  if (Nfreeze > 0)
+  if (MMonly or QMMM)
   {
-    cout << " Frozen atoms: " << Nfreeze << '\n';
+    cout << " MM atoms: " << Nmm << '\n';
+    if (QMMM)
+    {
+      cout << " Pseudo-atoms: " << Npseudo << '\n';
+      cout << " Boundary-atoms: " << Nbound << '\n';
+    }
+    if (Nfreeze > 0)
+    {
+      cout << " Frozen atoms: " << Nfreeze << '\n';
+    }
   }
   if (ENEBSim or NEBSim)
   {

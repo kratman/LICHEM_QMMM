@@ -126,6 +126,8 @@ double LAMMPSOpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void LAMMPSTopology(vector<QMMMAtom>&,stringstream&,int);
 
+void PrintLapin();
+
 void LICHEMDFP(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void LICHEMErrorChecker(QMMMSettings&);

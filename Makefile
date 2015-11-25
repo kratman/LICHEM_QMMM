@@ -9,7 +9,7 @@
 ### Compiler settings ###
 
 CXX=g++
-CXXFLAGS=-static -fopenmp -O3
+CXXFLAGS=-static -O3 -fopenmp
 GPUFLAGS=-fopenacc
 DEVFLAGS=-g -Wall -std=c++14
 LDFLAGS=-I./src/ -I/usr/include/eigen3/
