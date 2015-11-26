@@ -17,12 +17,23 @@
 #ifndef LICHEM_CLIBS
 #define LICHEM_CLIBS
 
-//Header files
+//Header files for parallelization
 #ifdef _OPENMP
  //Use OpenMP
  #pragma message("OpenMP is enabled.")
  #include <omp.h>
+#else
+ #pragma message("OpenMP is disabled.")
 #endif
+#ifdef _OPENACC
+ //Use OpenMP
+ #pragma message("OpenACC is enabled.")
+ #include <openacc.h>
+#else
+ #pragma message("OpenACC is disabled.")
+#endif
+
+//General header files
 #include <cstdlib>
 #include <ctime>
 #include <iostream>

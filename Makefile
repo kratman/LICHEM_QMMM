@@ -51,8 +51,8 @@ devbin:
 
 gpubin:	
 	@echo ""; \
-	echo "### Compiling the LICHEM development binary ###"
-	$(CXX) $(CXXFLAGS) $(GPUFLAGS) $(DEVFLAGS) ./src/LICHEM.cpp -o lichem $(LDFLAGS)
+	echo "### Compiling the LICHEM GPU binary ###"
+	$(CXX) $(CXXFLAGS) $(GPUFLAGS) ./src/LICHEM.cpp -o lichem $(LDFLAGS)
 
 testexe:	
 	@echo ""; \
