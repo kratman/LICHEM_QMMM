@@ -1091,16 +1091,22 @@ state. \\
 
 The CI-NEB forces can be utilized in essentially any optimization algorithm.
 Currently, LICHEM employs a global DFP (GDFP) optimization.
-The GDFP optimizer uses all replicas to construct and update a single large
-Hessian matrix.
-With all replicas in the Hessian, the GDFP algorithm minimizes the energy
-along the entire reaction pathway and includes the NEB spring forces in the
-curvature.
-Thus, the beads should smoothly converge to the minimum energy path.
+The GDFP optimizer uses all replicas between the end points to construct and
+update a single large Hessian matrix.
+With all of the replicas in the Hessian, the GDFP algorithm minimizes the
+energy along the entire reaction pathway and includes the NEB spring forces
+in the curvature.
+Thus, the beads should smoothly converge to the minimum energy path. \\
+
+If the CI-NEB optimization is performed without freezing the reactant and
+product end points, then the reactant and product structures each get their
+own Hessian matrix.
+Optimizing the end points separately from the remainder of the path prevents
+nearly converged end points from influencing the GDFP step size.
 
 \subsection{Quadradic string method}
 
-{\color{red}Comming soon...}
+{\color{red}Coming soon...}
 
 \section{Quantum Methods}
 
@@ -1690,7 +1696,7 @@ the number of atoms.
 
 \subsection{Path-integral formalism}
 
-{\color{red}Comming soon...}
+{\color{red}Coming soon...}
 
 \subsection{PIMC simulations}
 
