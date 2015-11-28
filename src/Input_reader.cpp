@@ -1064,8 +1064,8 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
   if (QMonly or QMMM)
   {
     cout << " QM atoms: " << Nqm << '\n';
-    cout << "   Charge: " << QMMMOpts.Charge << '\n';
-    cout << "   Spin: " << QMMMOpts.Spin << '\n';
+    cout << "  Charge: " << QMMMOpts.Charge << '\n';
+    cout << "  Spin: " << QMMMOpts.Spin << '\n';
   }
   if (MMonly or QMMM)
   {

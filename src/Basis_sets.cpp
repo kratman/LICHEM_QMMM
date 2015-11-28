@@ -9,7 +9,7 @@
 #                                                                             #
 ###############################################################################
 
- Compiled databases for looking up basis sets
+ Compiled databases for looking up Cartesian or Hermite Gaussian basis sets
 
  Reference for basis sets:
  
