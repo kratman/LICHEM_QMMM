@@ -126,6 +126,7 @@ Coord CoordDist2(Coord& a, Coord& b)
   return DispAB;
 };
 
+//Functions to check connectivity
 vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int AtID)
 {
   //Function to find all boundary atoms connected to a pseudobond atom
@@ -322,6 +323,7 @@ void PrintLapin()
   //Print a nice picture
   stringstream lapin;
   lapin.str("");
+  //Add obfuscated text
   lapin << '\n';
   lapin << "                   /^\\";
   lapin << "     /^\\";
@@ -422,6 +424,7 @@ void PrintLapin()
   lapin << "______";
   lapin << "/";
   lapin << '\n' << '\n' << '\n';
+  //Print text and return
   cout << lapin.str();
   cout.flush();
   return;

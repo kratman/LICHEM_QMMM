@@ -58,17 +58,21 @@ void ExternalGaussian(int& argc, char**& argv)
     }
     if (dummy == "-c")
     {
+      //Open the connectivity file
       connectfile.open(argv[i+1],ios_base::in);
     }
     if (dummy == "-r")
     {
+      //Open the region file
       regionfile.open(argv[i+1],ios_base::in);
     }
     if (dummy == "-b")
     {
+      //Read the current bead
       Bead = atoi(argv[i+1]);
     }
   }
+  //Open files passed by Gaussian
   GauInput.open(argv[12],ios_base::in);
   GauOutput.open(argv[13],ios_base::out);
   GauMsg.open(argv[14],ios_base::out);
@@ -82,6 +86,7 @@ void ExternalGaussian(int& argc, char**& argv)
   line >> dummy >> DerType;
   if (DerType == 2)
   {
+    //Make sure Gaussian is only requesting energies or forces
     cerr << "Error: Second derivatives of the energy were requested!!!";
     cerr << '\n';
     cerr << "Something is wrong.";
@@ -89,6 +94,7 @@ void ExternalGaussian(int& argc, char**& argv)
     cerr.flush();
     exit(0);
   }
+  //Read updated positions from Gaussian files
   for (int i=0;i<Natoms;i++)
   {
     if (Struct[i].QMregion or Struct[i].PBregion)
@@ -119,6 +125,7 @@ void ExternalGaussian(int& argc, char**& argv)
     Emm = TINKERForces(Struct,Forces,QMMMOpts,Bead);
     if (AMOEBA)
     {
+      //Calculate polarization forces for AMOEBA
       Emm += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
     }
   }
@@ -164,6 +171,7 @@ void ExternalGaussian(int& argc, char**& argv)
     GauOutput << setw(20) << 0.0;
     GauOutput << '\n';
   }
+  //Write output and close the file
   GauOutput.flush();
   GauOutput.close();
   //Write new XYZ for recovery of failed optimizations
@@ -287,7 +295,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
         line >> dummy; //Ditto
         line >> dummy; //Ditto
         line >> dummy; //Ditto
-        line >> Eself;
+        line >> Eself; //Actual self energy of the charges
       }
     }
     //Check for partial QMMM energy
@@ -298,7 +306,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
       {
         line >> dummy; //Clear junk
         line >> dummy; //Ditto
-        line >> Eqm;
+        line >> Eqm; //QM energy
       }
     }
     //Check for charges
@@ -344,6 +352,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     }
   }
   QMlog.close();
+  //Check for errors
   if (!GradDone)
   {
     cerr << "Warning: No forces recovered!!!";
@@ -558,7 +567,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         line >> dummy; //Ditto
         line >> dummy; //Ditto
         line >> dummy; //Ditto
-        line >> Eself;
+        line >> Eself; //Actual self energy of the charges
       }
     }
     //Search for energy
@@ -569,7 +578,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       {
         line >> dummy; //Clear junk
         line >> dummy; //Ditto
-        line >> E;
+        line >> E; //QM energy
         QMfinished = 1;
       }
     }
@@ -615,6 +624,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       }
     }
   }
+  //Check for errors
   if (!QMfinished)
   {
     cerr << "Warning: SCF did not converge!!!";

@@ -37,6 +37,7 @@ void LICHEM2BASIS(int& argc,char**& argv)
   for (int i=0;i<argc;i++)
   {
     dummy = string(argv[i]);
+    //Check regions file
     if (dummy == "-b")
     {
       stringstream file;
@@ -60,7 +61,7 @@ void LICHEM2BASIS(int& argc,char**& argv)
     cout << '\n' << '\n';
     DoQuit = 1;
   }
-  //Parse input if files exist
+  //Parse input
   if (!DoQuit)
   {
     //Parse region file
@@ -275,3 +276,4 @@ void LICHEM2BASIS(int& argc,char**& argv)
   exit(0);
   return;
 };
+

@@ -13,7 +13,7 @@
 
 */
 
-//Misc. functions
+//Various input and error checking functions
 void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
      fstream& connectfile, fstream& regionfile, fstream& outfile)
 {

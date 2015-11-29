@@ -25,8 +25,10 @@ void Print_traj(vector<QMMMAtom>& Struct, fstream& traj,
   stringstream call; //Only used to save traj stream settings
   call.copyfmt(traj); //Save settings
   traj.precision(12); //Adjust printing
+  //Print XYZ file
   int Ntot = QMMMOpts.Nbeads*Natoms; //Total number of particles
   traj << Ntot << '\n' << '\n'; //Print number of particles and a blank line
+  //Loop over the atoms in the structure
   for (int i=0;i<Natoms;i++)
   {
     //Print all replicas of atom i
@@ -38,6 +40,7 @@ void Print_traj(vector<QMMMAtom>& Struct, fstream& traj,
       traj << setw(14) << Struct[i].P[j].z << '\n';
     }
   }
+  //Write data and return
   traj.flush(); //Force printing
   traj.copyfmt(call); //Replace settings
   return;
@@ -50,7 +53,7 @@ void BurstTraj(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   stringstream call; //Stream for system calls and reading/writing files
   fstream burstfile;
   string dummy; //Generic string
-  //Open new split trajectory file
+  //Open new trajectory file
   call.str("");
   call << "BurstStruct.xyz";
   ct = 0; //Start counting at the second file
@@ -79,6 +82,7 @@ void BurstTraj(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       burstfile << setw(14) << Struct[i].P[j].z << '\n';
     }
   }
+  //Write data and return
   burstfile.flush(); //Print trajectory
   burstfile.close(); //File is nolonger needed
   return;
@@ -90,7 +94,7 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
   //Function to translate/rotate two structures for maximum overlap
   MatrixXd CoVar; //Covariance matrix
   MatrixXd RotMat; //Rotation matrix
-  //Translate to the centroid
+  //Calculate the center of the structures
   double Ax = 0; //Average x position of matrix A
   double Ay = 0; //Average y position of matrix A
   double Az = 0; //Average z position of matrix A
@@ -167,7 +171,7 @@ VectorXd KabschDisplacement(MatrixXd& A, MatrixXd& B, int MatSize)
     //Find the correct location in the arrays
     int Direc = i%3; //Find the remainder: x=0,y=1,z=2
     int AtID = (i-Direc)/3; //Find array index
-    //Displacement
+    //Calculate displacement
     Dist(i) = A(AtID,Direc)-B(AtID,Direc);
   }
   #pragma omp barrier

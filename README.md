@@ -33,9 +33,9 @@ MM wrappers in development: AMBER, LAMMPS, OpenMM
 ### Installation
 
 Currently, the binary and user's manual are not included in the repository.
-The Makefile can be used to generate both files. Since LICHEM is designed to
-be simple, only a small number of packages are required to compile the code.
-An approximate list of packages is given below.
+However, the Makefile can be used to generate both files. Since LICHEM is
+designed to be simple, only a small number of packages are required to compile
+the code. An approximate list of packages is given below.
 ```
  LICHEM binary: OpenMP, Eigen3
  LICHEM manual: LaTeX, BibTeX, TeXLive
@@ -77,6 +77,13 @@ user:$ make Dev
 ```
 
 Additional make rules can be found in the Makefile.
+
+### QM and MM packages
+
+LICHEM uses QM and MM packages that are pre-installed and located in the
+user's path. The LICHEM wrappers are kept up-to-date with the development of
+the QM and MM packages. It is best to use packages from conda, git, or other
+package management systems.
 
 ### Updates
 

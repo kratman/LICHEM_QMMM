@@ -25,7 +25,7 @@ using namespace std;
 #include "LICHEM_matrix.h"
 using namespace Eigen;
 
-//Predefined constants and flags
+//Predefined constants, variables, and flags
 #include "LICHEM_options.h"
 using namespace LICHEMOpts;
 #include "LICHEM_constants.h"
