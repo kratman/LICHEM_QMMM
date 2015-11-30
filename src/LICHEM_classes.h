@@ -42,7 +42,7 @@ class GEMDen
     Mpole GEMDM(); //Function to generate multipoles from density
 };
 
-//LICHEM data structures
+//LICHEM particle data structures
 class QMMMAtom
 {
   //Data type for atomic information
@@ -96,6 +96,7 @@ class QMMMElec
     vector<double> rad; //Radius (Ang)
 };
 
+//LICHEM simulation data
 class QMMMSettings
 {
   //Settings for the simulation and wrappers

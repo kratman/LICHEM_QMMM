@@ -15,7 +15,7 @@
 
 //Various input and error checking functions
 void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
-     fstream& connectfile, fstream& regionfile, fstream& outfile)
+              fstream& connectfile, fstream& regionfile, fstream& outfile)
 {
   //Function to read arguments
   string dummy; //Generic string
@@ -56,6 +56,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     }
     else
     {
+      //Bad arguments
       cout << '\n';
       cout << "Unrecognized file format.";
       cout << '\n';
@@ -70,10 +71,12 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
   }
   if (dummy == "-GlobalPoles")
   {
+    //Print multipole moments in the global frame of reference
     ExtractGlobalPoles(argc,argv);
   }
   if ((argc % 2) != 1)
   {
+    //Check for help or missing arguments
     dummy = string(argv[1]);
     if ((dummy != "-h") and (dummy != "--help"))
     {
@@ -115,25 +118,30 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     }
     if (dummy == "-n")
     {
+      //Read the number of CPUs
       Ncpus = atoi(argv[i+1]);
     }
     if (dummy == "-x")
     {
+      //Read the XYZ filename
       xyzfilename = string(argv[i+1]);
       xyzfile.open(argv[i+1],ios_base::in);
     }
     if (dummy == "-c")
     {
+      //Read the connectivity filename
       confilename = string(argv[i+1]);
       connectfile.open(argv[i+1],ios_base::in);
     }
     if (dummy == "-r")
     {
+      //Read the regions filename
       regfilename = string(argv[i+1]);
       regionfile.open(argv[i+1],ios_base::in);
     }
     if (dummy == "-o")
     {
+      //Read the output XYZ filename
       outfile.open(argv[i+1],ios_base::out);
     }
   }
@@ -181,30 +189,35 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
   bool DoQuit = 0;
   if (!xyzfile.good())
   {
+    //Coordinate file does not exist
     cout << "Error: Could not open xyz file.";
     cout << '\n';
     DoQuit = 1;
   }
   if (!connectfile.good())
   {
+    //Connectivity file does not exist
     cout << "Error: Could not open connectivity file.";
     cout << '\n';
     DoQuit = 1;
   }
   if (!regionfile.good())
   {
+    //Regions file does not exist
     cout << "Error: Could not open region file.";
     cout << '\n';
     DoQuit = 1;
   }
   if (!outfile.good())
   {
+    //No write permissions
     cout << "Error: Could not create output file.";
     cout << '\n';
     DoQuit = 1;
   }
   if (DoQuit)
   {
+    //Quit with an error
     cout.flush(); //Print errors
     exit(0);
   }
@@ -214,6 +227,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
 void InitializeVariables(QMMMSettings& QMMMOpts)
 {
   //Initialize all variables at once
+  //QM wrapper settings
   QMMMOpts.Func = "N/A";
   QMMMOpts.Basis = "N/A";
   QMMMOpts.RAM = "N/A";
@@ -221,6 +235,7 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
   QMMMOpts.Charge = "N/A";
   QMMMOpts.Spin = "N/A";
   QMMMOpts.BackDir = "N/A";
+  //MC, MD, and RP settings
   QMMMOpts.Ensemble = "N/A";
   QMMMOpts.Temp = 0;
   QMMMOpts.Beta = 0;
@@ -232,15 +247,18 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
   QMMMOpts.Nprint = 0;
   QMMMOpts.dt = 0;
   QMMMOpts.tautemp = 0;
+  //OPtimization settings
   QMMMOpts.MaxOptSteps = 0;
   QMMMOpts.MMOptTol = 0;
   QMMMOpts.QMOptTol = 0;
   QMMMOpts.StepScale = 0;
   QMMMOpts.MaxStep = 0;
+  //Additional RP settings
   QMMMOpts.Kspring = 0;
   QMMMOpts.TSBead = 0;
   QMMMOpts.Climb = 0;
   QMMMOpts.FrznEnds = 0;
+  //Temporary energy storage
   QMMMOpts.Eold = 0;
   QMMMOpts.Ereact = 0;
   QMMMOpts.Eprod = 0;
@@ -249,7 +267,8 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
 };
 
 void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
-     fstream& regionfile, vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
+                     fstream& regionfile, vector<QMMMAtom>& Struct,
+                     QMMMSettings& QMMMOpts)
 {
   //Read input
   string dummy; //Generic string
@@ -321,7 +340,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
   regionfile >> dummy >> dummy; //Potential type
   if ((dummy == "QM") or (dummy == "qm"))
   {
-    //Read only QM options
+    //Read QMonly options
     QMonly = 1;
     MMonly = 0;
     QMMM = 0;
@@ -376,7 +395,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
   }
   if ((dummy == "QMMM") or (dummy == "qmmm"))
   {
-    //Read QM and MM options
+    //Read QMMM options
     QMMM = 1;
     QMonly = 0;
     MMonly = 0;
@@ -465,7 +484,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
   }
   if ((dummy == "MM") or (dummy == "mm"))
   {
-    //Read only MM options
+    //Read MMonly options
     MMonly = 1;
     QMonly = 0;
     QMMM = 0;
@@ -521,10 +540,12 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> dummy; //Ensemble
     if ((dummy == "NVT") or (dummy == "nvt"))
     {
+      //Set a consistent name for the ensemble
       QMMMOpts.Ensemble = "NVT";
     }
     if ((dummy == "NPT") or (dummy == "npt"))
     {
+      //Set a consistent name for the ensemble
       QMMMOpts.Ensemble = "NPT";
     }
     regionfile >> dummy >> QMMMOpts.Temp;
@@ -728,8 +749,8 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
   }
   regionfile >> dummy >> dummy; //PBC options
   if ((dummy == "Yes") or (dummy == "yes") or
-  (dummy == "YES") or (dummy == "true") or
-  (dummy == "True") or (dummy == "TRUE"))
+     (dummy == "YES") or (dummy == "true") or
+     (dummy == "True") or (dummy == "TRUE"))
   {
     //Read box sizes
     PBCon = 1;
@@ -970,8 +991,10 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
   }
   if (PSI4 and QMMM)
   {
+    //Avoid options that conflict with PSI4 capabilities
     if (OptSim)
     {
+      //The PSI4 optimizer cannot incorporate MM forces
       cout << " Error: QMMM PSI4 optimizations can only be performed with";
       cout << '\n';
       cout << " the steepest descent, damped Verlet, or DFP.";
@@ -980,6 +1003,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     }
     if ((Npseudo != 0) or (Nbound != 0))
     {
+      //PSI4 does not currently have pseudopotentials
       cout << " Error: The PSI4 wrapper can only use QM and MM atoms.";
       cout << '\n';
       cout << " Remove the pseudo-bonds and boundary-atoms.";
@@ -989,8 +1013,10 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
   }
   if (NWChem and QMMM)
   {
+    //Avoid options that conflict with NWChem capabilities
     if (OptSim)
     {
+      //The NWChem optimizer cannot incorporate MM forces
       cout << " Error: QMMM NWChem optimizations can only be performed with";
       cout << '\n';
       cout << " the steepest descent, damped Verlet, or DFP.";
@@ -1000,6 +1026,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
   }
   if (LAMMPS and AMOEBA)
   {
+    //Avoid options that conflict with LAMMPS capabilities
     cout << " Error: LAMMPS calculations cannot be performed with";
     cout << '\n';
     cout << " polarizable force fields.";
@@ -1035,22 +1062,19 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout.flush();
     exit(0);
   }
-  else
+  //Sarcastically continue
+  cout << "No fatal errors detected.";
+  cout << '\n';
+  if (Jokes)
   {
-    //Sarcastically continue
-    cout << "No fatal errors detected.";
+    cout << " And there was much rejoicing. Yay...";
     cout << '\n';
-    if (Jokes)
+    cout << '\n';
+    cout.flush();
+    if (CheckFile("EASTEREGG"))
     {
-      cout << " And there was much rejoicing. Yay...";
-      cout << '\n';
-      cout << '\n';
-      cout.flush();
+      PrintLapin();
     }
-  }
-  if (CheckFile("EASTEREGG") and Jokes)
-  {
-    PrintLapin();
   }
   return;
 };
@@ -1063,12 +1087,14 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
   cout << "Atoms: " << Natoms << '\n';
   if (QMonly or QMMM)
   {
+    //QM regions
     cout << " QM atoms: " << Nqm << '\n';
     cout << "  Charge: " << QMMMOpts.Charge << '\n';
     cout << "  Spin: " << QMMMOpts.Spin << '\n';
   }
   if (MMonly or QMMM)
   {
+    //MM regions
     cout << " MM atoms: " << Nmm << '\n';
     if (QMMM)
     {
@@ -1082,7 +1108,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
   }
   if (ENEBSim or NEBSim)
   {
-    //Print input for error checking
+    //Print reaction path input for error checking
     cout << " RP beads: " << QMMMOpts.Nbeads << '\n';
     cout << '\n';
     cout << "Simulation mode: ";
@@ -1107,7 +1133,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
   }
   if (PIMCSim)
   {
-    //Print input for error checking
+    //Print PIMC input for error checking
     if (QMMMOpts.Nbeads > 1)
     {
       cout << " PI beads: " << QMMMOpts.Nbeads << '\n';
@@ -1137,6 +1163,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
   }
   if (OptSim or SteepSim or QuickSim or DFPSim or ESDSim)
   {
+    //Print optimization input for error checking
     cout << '\n';
     cout << "Simulation mode: ";
     if (QMMM)
@@ -1184,6 +1211,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
   }
   if (SinglePoint)
   {
+    //Print single-point energy settings for error checking
     cout << '\n';
     cout << "Simulation mode: ";
     if (QMMM)
@@ -1202,6 +1230,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
   }
   if (QMonly or QMMM)
   {
+    //Print QM wrapper input for error checking
     cout << " QM wrapper: ";
     if (PSI4)
     {
@@ -1225,6 +1254,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
   }
   if (MMonly or QMMM)
   {
+    //Print MM wrapper input for error checking
     cout << " MM wrapper: ";
     if (TINKER)
     {
@@ -1240,6 +1270,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
     }
     if (QMMM)
     {
+      //Print QMMM wrapper input for error checking
       cout << " QMMM potential: ";
       if (CHRG)
       {
@@ -1256,6 +1287,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
     }
   }
   cout << '\n';
+  //Print parallelization settings
   cout << "Parallelization and memory settings:" << '\n';
   cout << " OpenMP threads: " << Nthreads << '\n';
   if (QMonly or QMMM)

@@ -98,7 +98,7 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
 
 //MM wrapper functions
 void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-     int Bead)
+                   int Bead)
 {
   //Function to extract induced dipoles
   fstream ofile,ifile; //Generic file streams
@@ -285,7 +285,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 };
 
 double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-       int Bead)
+                       int Bead)
 {
   //Function to extract the polarization energy
   fstream ofile,ifile; //Generic file streams
@@ -479,7 +479,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 };
 
 double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
-       QMMMSettings& QMMMOpts, int Bead)
+                    QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the MM forces on a set of QM atoms
   fstream ofile,ifile; //Generic file streams
@@ -722,7 +722,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
 };
 
 double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
-       QMMMSettings& QMMMOpts, int Bead)
+                       QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the MM forces on a set of QM atoms
   fstream ofile,ifile; //Generic file streams
@@ -1138,7 +1138,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 };
 
 void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-     int Bead)
+                    int Bead)
 {
   //Runs TINKER MD (for MM atoms only)
   fstream ofile,ifile; //Generic file streams

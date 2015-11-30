@@ -14,7 +14,7 @@
 */
 
 void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
-     QMMMSettings& QMMMOpts, int Bead)
+                   QMMMSettings& QMMMOpts, int Bead)
 {
   //Write Gaussian input files
   stringstream call; //Stream for system calls and reading/writing files
@@ -183,7 +183,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
 };
 
 void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
-     QMMMSettings& QMMMOpts, int Bead)
+                      QMMMSettings& QMMMOpts, int Bead)
 {
   //Write NWChem input files
   fstream ofile,ifile; //Generic file streams
@@ -215,6 +215,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   iz = 1;
   if (PBCon)
   {
+    //NWChem uses fractional coordinates
     ix /= Lx;
     iy /= Ly;
     iz /= Lz;
@@ -402,7 +403,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
 };
 
 void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
-     QMMMSettings& QMMMOpts, int Bead)
+                    QMMMSettings& QMMMOpts, int Bead)
 {
   //Write PSI4 input files
   stringstream call; //Stream for system calls and reading/writing files

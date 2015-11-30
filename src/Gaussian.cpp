@@ -198,7 +198,7 @@ void ExternalGaussian(int& argc, char**& argv)
 
 //QM wrapper functions
 double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
-       QMMMSettings& QMMMOpts, int Bead)
+                      QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the forces on a set of atoms
   stringstream call; //Stream for system calls and reading/writing files
@@ -381,7 +381,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
 };
 
 void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-     int Bead)
+                     int Bead)
 {
   //Function to update QM point-charges
   fstream ofile,ifile; //Generic file streams
@@ -497,7 +497,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 };
 
 double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-       int Bead)
+                      int Bead)
 {
   //Calculates the QM energy with Gaussian
   fstream ofile,ifile; //Generic file streams
@@ -667,7 +667,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 };
 
 double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-       int Bead)
+                   int Bead)
 {
   //Runs Gaussian optimizations with GauExternal
   fstream ofile,ifile; //Generic file streams

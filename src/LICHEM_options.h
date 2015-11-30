@@ -25,7 +25,7 @@ namespace LICHEMOpts
   const double StepMin = 0.005; //Minimum Monte Carlo step size (Angstroms)
   const double StepMax = 1.0; //Maximum Monte Carlo step size (Angstroms)
   const double CentRatio= 5.0; //Scales step size for path-integral centroids
-  const int Acc_Check = 2000; //Eq Monte Carlo steps before checking accratio
+  const int Acc_Check = 2000; //Eq. Monte Carlo steps before checking accratio
 
   //Move Probabilities for PIMC
   /*

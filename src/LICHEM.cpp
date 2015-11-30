@@ -16,7 +16,7 @@
 
 */
 
-//Main header
+//Primary LICHEM header
 #include "LICHEM_headers.h"
 
 int main(int argc, char* argv[])
@@ -71,7 +71,8 @@ int main(int argc, char* argv[])
   //Center the system
   if (PBCon)
   {
-    PBCCenter(Struct,QMMMOpts);
+    //PBC corrections that are compatible with all packages
+    PBCCenter(Struct,QMMMOpts); //Center the atoms in the box
   }
   //End of section
 

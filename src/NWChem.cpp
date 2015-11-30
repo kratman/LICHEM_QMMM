@@ -21,7 +21,7 @@
 
 //QM wrapper functions
 double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
-       QMMMSettings& QMMMOpts, int Bead)
+                    QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs NWChem force calculations
   fstream ifile; //Generic file stream
@@ -43,7 +43,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << "nwchem LICHM_" << Bead << ".nw";
   call << " > LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
-  //Parse output
+  //Parse output for forces and energies
   call.str("");
   call << "LICHM_" << Bead << ".log";
   ifile.open(call.str().c_str(),ios_base::in);
@@ -62,7 +62,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
       if (dummy == "energy")
       {
         line >> dummy; //Clear junk
-        line >> E;
+        line >> E; //Read energy
         QMfinished = 1;
       }
     }
@@ -100,6 +100,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     }
   }
   ifile.close();
+  //Parse output for charges
   call.str("");
   call << "LICHM_" << Bead << ".q";
   ifile.open(call.str().c_str(),ios_base::in);
@@ -120,6 +121,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     }
   }
   ifile.close();
+  //Check for errors
   if (!QMfinished)
   {
     cerr << "Warning: SCF did not converge!!!";
@@ -158,7 +160,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
 };
 
 void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-     int Bead)
+                   int Bead)
 {
   //Calculates atomic charges with NWChem
   fstream ifile; //Generic file stream
@@ -181,7 +183,7 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "nwchem LICHM_" << Bead << ".nw";
   call << " > LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
-  //Parse output
+  //Parse output for energy
   call.str("");
   call << "LICHM_" << Bead << ".log";
   ifile.open(call.str().c_str(),ios_base::in);
@@ -199,12 +201,13 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       if (dummy == "energy")
       {
         line >> dummy; //Clear junk
-        line >> E;
+        line >> E; //Read energy
         QMfinished = 1;
       }
     }
   }
   ifile.close();
+  //Parse output for charges
   call.str("");
   call << "LICHM_" << Bead << ".q";
   ifile.open(call.str().c_str(),ios_base::in);
@@ -228,6 +231,7 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     }
   }
   ifile.close();
+  //Check for errors
   if (!QMfinished)
   {
     cerr << "Warning: SCF did not converge!!!";
@@ -256,7 +260,7 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 };
 
 double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-       int Bead)
+                    int Bead)
 {
   //Runs NWChem energy calculations
   fstream ifile; //Generic file stream
@@ -278,7 +282,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "nwchem LICHM_" << Bead << ".nw";
   call << " > LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
-  //Parse output
+  //Parse output for energy
   call.str("");
   call << "LICHM_" << Bead << ".log";
   ifile.open(call.str().c_str(),ios_base::in);
@@ -296,12 +300,13 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       if (dummy == "energy")
       {
         line >> dummy; //Clear junk
-        line >> E;
+        line >> E; //Read energy
         QMfinished = 1;
       }
     }
   }
   ifile.close();
+  //Parse output for charges
   call.str("");
   call << "LICHM_" << Bead << ".q";
   ifile.open(call.str().c_str(),ios_base::in);
@@ -325,6 +330,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     }
   }
   ifile.close();
+  //Check for errors
   if (!QMfinished)
   {
     cerr << "Warning: SCF did not converge!!!";
@@ -415,12 +421,13 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       if (dummy == "energy")
       {
         line >> dummy; //Clear junk
-        line >> E;
+        line >> E; //Read energy
         QMfinished = 1;
       }
     }
   }
   ifile.close();
+  //Parse output for charges
   call.str("");
   call << "LICHM_" << Bead << ".q";
   ifile.open(call.str().c_str(),ios_base::in);
@@ -444,6 +451,7 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     }
   }
   ifile.close();
+  //Check for errors
   if (!QMfinished)
   {
     cerr << "Warning: SCF did not converge!!!";

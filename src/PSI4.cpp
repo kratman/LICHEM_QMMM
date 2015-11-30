@@ -20,7 +20,7 @@
 
 //QM wrapper functions
 double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
-       QMMMSettings& QMMMOpts, int Bead)
+                  QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the forces and charges on a set of atoms
   fstream ifile; //Generic file name
@@ -142,10 +142,10 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     line >> dummy; //Get rid of junk
     if (dummy == "Final")
     {
-      line >> dummy; //Check value
+      line >> dummy; //Check property
       if (dummy == "Energy:")
       {
-        line >> E;
+        line >> E; //Read energy
       }
     }
   }
@@ -158,10 +158,10 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   {
     getline(ifile,dummy);
     stringstream line(dummy);
-    line >> dummy; //Check value
+    line >> dummy; //Check property
     if (dummy == "Energy:")
     {
-      line >> E;
+      line >> E; //Read post-SCF energy
     }
   }
   ifile.close();
@@ -353,11 +353,11 @@ double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     line >> dummy; //Get rid of junk
     if (dummy == "Final")
     {
-      line >> dummy; //Check value
+      line >> dummy; //Check property
       if (dummy == "Energy:")
       {
         //Read energy
-        line >> E;
+        line >> E; //Read energy
         QMfinished = 1;
       }
     }
@@ -374,11 +374,12 @@ double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     line >> dummy;
     if (dummy == "Energy:")
     {
-      line >> E;
+      line >> E; //Read post-SCF energy
       QMfinished = 1;
     }
   }
   ifile.close();
+  //Check for errors
   if (!QMfinished)
   {
     cerr << "Warning: SCF did not converge!!!";
@@ -418,7 +419,7 @@ double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 };
 
 double PSI4Opt(vector<QMMMAtom>& Struct,
-       QMMMSettings& QMMMOpts, int Bead)
+               QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs PSI4 for energy calculations
   fstream ifile; //Generic file stream
@@ -535,7 +536,7 @@ double PSI4Opt(vector<QMMMAtom>& Struct,
       if (dummy == "Energy:")
       {
         //Read energy
-        line >> E;
+        line >> E; //Read energy
         QMfinished = 1;
       }
     }
@@ -552,11 +553,12 @@ double PSI4Opt(vector<QMMMAtom>& Struct,
     line >> dummy; //Check value
     if (dummy == "Energy:")
     {
-      line >> E;
+      line >> E; //Read post-SCF energy
       QMfinished = 1;
     }
   }
   ifile.close();
+  //Check for errors
   if (!QMfinished)
   {
     cerr << "Warning: SCF did not converge!!!";

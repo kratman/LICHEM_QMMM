@@ -19,7 +19,7 @@
 
 //Trajectory analysis functions
 void Print_traj(vector<QMMMAtom>& Struct, fstream& traj,
-     QMMMSettings& QMMMOpts)
+                QMMMSettings& QMMMOpts)
 {
   //Function to print the trajectory or restart files for all beads
   stringstream call; //Only used to save traj stream settings

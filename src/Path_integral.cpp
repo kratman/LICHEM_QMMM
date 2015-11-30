@@ -242,8 +242,8 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
   if (QMMMOpts.Ensemble == "NPT")
   {
     //Flip sign on PV terms
-    dE -= 2*QMMMOpts.Press*Lx*Ly*Lz*atm2eV; //Flip Enew PV
-    dE += 2*QMMMOpts.Press*Lxtmp*Lytmp*Lztmp*atm2eV; //Flip Eold PV
+    //dE -= 2*QMMMOpts.Press*Lx*Ly*Lz*atm2eV; //Flip Enew PV
+    //dE += 2*QMMMOpts.Press*Lxtmp*Lytmp*Lztmp*atm2eV; //Flip Eold PV
     //Add log term
     dE -= Natoms*log((Lx*Ly*Lz)/(Lxtmp*Lytmp*Lztmp))/QMMMOpts.Beta;
   }

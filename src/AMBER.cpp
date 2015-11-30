@@ -21,7 +21,7 @@
 
 //MM wrapper functions
 double AMBERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
-       QMMMSettings& QMMMOpts, int Bead)
+                   QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs AMBER energy calculations
   

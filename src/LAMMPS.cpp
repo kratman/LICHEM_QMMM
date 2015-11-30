@@ -18,7 +18,7 @@
 
 //MM utility functions
 void LAMMPSTopology(vector<QMMMAtom>& Struct, stringstream& topology,
-     int Bead)
+                    int Bead)
 {
   //Function to write bond and angle information for LAMMPS
   
@@ -27,7 +27,7 @@ void LAMMPSTopology(vector<QMMMAtom>& Struct, stringstream& topology,
 
 //MM wrapper functions
 double LAMMPSForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
-       QMMMSettings& QMMMOpts, int Bead)
+                    QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the MM forces on a set of QM atoms
   double E = 0.0;
@@ -36,7 +36,7 @@ double LAMMPSForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
 };
 
 double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-       int Bead)
+                    int Bead)
 {
   //Function for calculating the MM forces on a set of QM atoms
   fstream ofile,ifile; //Generic file streams
@@ -233,7 +233,7 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 };
 
 double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-       int Bead)
+                 int Bead)
 {
   //Function for optimizing with LAMMPS
   fstream ofile,ifile; //Generic file streams

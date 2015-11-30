@@ -20,8 +20,8 @@
 
 //Convergence test functions
 bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
-     VectorXd& Forces, int stepct, QMMMSettings& QMMMOpts, int Bead,
-     bool QMregion)
+                  VectorXd& Forces, int stepct, QMMMSettings& QMMMOpts,
+                  int Bead, bool QMregion)
 {
   //Check convergence of QMMM optimizations
   stringstream call; //Stream for system calls and reading/writing files
@@ -187,7 +187,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
 
 //Optimizer functions
 void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-     int Bead)
+                    int Bead)
 {
   //Cartesian steepest descent optimizer
   stringstream call; //Stream for system calls and reading/writing files
@@ -326,7 +326,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 };
 
 void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-     int Bead)
+                    int Bead)
 {
   //Cartesian damped Verlet optimizer (aka QuickMin)
   stringstream call; //Stream for system calls and reading/writing files
@@ -751,7 +751,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 
 //Ensemble optimizers
 void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
-     QMMMSettings& QMMMOpts, int Bead)
+                QMMMSettings& QMMMOpts, int Bead)
 {
   //Ensemble steepest descent optimizer
   stringstream call; //Stream for system calls and reading/writing files
