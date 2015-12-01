@@ -234,7 +234,10 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
       //Read pseudo potential
       call << "Pseudo=Read ";
     }
-    call << "Charge=angstroms "; //Read charges
+    if (Nmm > 0)
+    {
+      call << "Charge=angstroms "; //Read charges
+    }
     if (QMMMOpts.Func != "SemiEmp")
     {
       //Avoids calculating ESP charges for semi-empirical
@@ -414,7 +417,10 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Read pseudo potential
       call << "Guess=TCheck ";
     }
-    call << "Charge=angstroms "; //Read charges
+    if (Nmm > 0)
+    {
+      call << "Charge=angstroms "; //Read charges
+    }
     if (QMMMOpts.Func != "SemiEmp")
     {
       //Avoids calculating ESP charges for semi-empirical
@@ -532,7 +538,10 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Read pseudo potential
       call << "Pseudo=Read ";
     }
-    call << "Charge=angstroms "; //Read charges
+    if (Nmm > 0)
+    {
+      call << "Charge=angstroms "; //Read charges
+    }
     if (QMMMOpts.Func != "SemiEmp")
     {
       //Avoids calculating ESP charges for semi-empirical

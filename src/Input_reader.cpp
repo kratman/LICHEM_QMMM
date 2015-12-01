@@ -942,12 +942,14 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     //Check number of QM and MM atoms
     if ((Nqm+Npseudo) < 1)
     {
+      //Make sure there are some atoms in the QM calculation
       cout << " Error: No QM or PB atoms defined for the QMMM calculations.";
       cout << '\n';
       DoQuit = 1;
     }
     if ((Nmm+Nbound) < 1)
     {
+      //Make sure there are some atoms in the MM calculations
       cout << " Error: No MM or BA atoms defined for the QMMM calculations.";
       cout << '\n';
       DoQuit = 1;

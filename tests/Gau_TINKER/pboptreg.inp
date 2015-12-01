@@ -1,0 +1,23 @@
+Potential_type: QMMM
+QM_type: Gaussian
+QM_functional: PBE1PBE
+QM_basis: GEN
+QM_memory: 256 MB
+QM_charge: 0
+QM_spin: 1
+MM_type: TINKER
+Potential_type: Charges
+Calculation_type: DFP
+Opt_step_size: 1.00
+Max_opt_step: 0.10
+QM_opt_tolerance: 5e-4
+MM_opt_tolerance: 1e-2
+Max_opt_steps: 400
+PBC: No
+QM_atoms: 2
+4 5
+Pseudobond_atoms: 2
+0 6
+Boundary_atoms: 6
+1 2 3 7 8 9
+Frozen_atoms: 0

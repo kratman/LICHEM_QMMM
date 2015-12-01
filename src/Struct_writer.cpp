@@ -119,7 +119,10 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
           call << '\n';
         }
       }
-      call << '\n'; //Blank line needed
+      if (Nmm > 0)
+      {
+        call << '\n'; //Blank line needed
+      }
     }
     if (AMOEBA)
     {
@@ -161,7 +164,10 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
           call << '\n';
         }
       }
-      call << '\n'; //Blank line needed
+      if (Nmm > 0)
+      {
+        call << '\n'; //Blank line needed
+      }
     }
   }
   //Add basis set information from the BASIS file
