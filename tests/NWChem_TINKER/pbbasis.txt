@@ -1,0 +1,4 @@
+basis
+ C library 6-31++G**
+ F library STO-2G
+end

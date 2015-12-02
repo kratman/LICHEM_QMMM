@@ -173,7 +173,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     if (RMSdiff <= QMMMOpts.MMOptTol)
     {
       OptDone = 1;
-      if (QMMM)
+      if (QMMM and (stepct > 1))
       {
         cout << "    QMMM relaxation satisfactory.";
         cout << '\n';
@@ -673,9 +673,15 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       cout << "    Performing a steepest descent step...";
       cout << '\n';
       //Shrink step size
-      if (stepct < 15)
+      if ((stepct < 15) and (E < Eold))
       {
-        StepScale = sdscale; //Small step
+        //Reduce step size
+        StepScale = sdscale*QMMMOpts.StepScale; //Small step
+      }
+      else
+      {
+        //Reduce step size further
+        StepScale *= 0.75;
       }
       //Create new Hessian as an identity matrix
       IHess.setIdentity(); //Already an "inverse" Hessian
@@ -688,6 +694,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       //Shrink step size
       if (StepScale > (sdscale*QMMMOpts.StepScale))
       {
+        //Reduce step size
         StepScale = sdscale*QMMMOpts.StepScale;
       }
       else

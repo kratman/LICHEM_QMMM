@@ -10,8 +10,12 @@
 
 #Modules
 import subprocess
+import time
 import sys
 import os
+
+#Start timer immediately
+StartTime = time.time()
 
 #Classes
 class ClrSet:
@@ -400,7 +404,7 @@ for qmtest in QMTests:
     try:
       RunTime = subprocess.check_output(cmd,shell=True) #Get run time
       RunTime = RunTime.split()
-      RunTime = " "+`round(float(RunTime[3]),4)`+" "+RunTime[4]
+      RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
     except:
       RunTime = " N/A"
     line += RunTime
@@ -408,7 +412,7 @@ for qmtest in QMTests:
 
     #Clean up files
     cmd = ""
-    cmd += "rm -f tinker.key tests.out trash.xyz"
+    cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
     if (QMPack == "Gaussian"):
       #Remove checkpoint files
       cmd += " *.chk"
@@ -460,7 +464,7 @@ for qmtest in QMTests:
       try:
         RunTime = subprocess.check_output(cmd,shell=True) #Get run time
         RunTime = RunTime.split()
-        RunTime = " "+`round(float(RunTime[3]),4)`+" "+RunTime[4]
+        RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
       except:
         RunTime = " N/A"
       line += RunTime
@@ -468,7 +472,7 @@ for qmtest in QMTests:
 
       #Clean up files
       cmd = ""
-      cmd += "rm -f tinker.key tests.out trash.xyz"
+      cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
       if (QMPack == "Gaussian"):
         #Remove checkpoint files
         cmd += " *.chk"
@@ -524,7 +528,7 @@ for qmtest in QMTests:
       try:
         RunTime = subprocess.check_output(cmd,shell=True) #Get run time
         RunTime = RunTime.split()
-        RunTime = " "+`round(float(RunTime[3]),4)`+" "+RunTime[4]
+        RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
       except:
          RunTime = " N/A"
       line += RunTime
@@ -532,7 +536,7 @@ for qmtest in QMTests:
 
       #Clean up files
       cmd = ""
-      cmd += "rm -f tinker.key tests.out trash.xyz"
+      cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
       if (QMPack == "Gaussian"):
         #Remove checkpoint files
         cmd += " *.chk"
@@ -591,7 +595,7 @@ for qmtest in QMTests:
       try:
         RunTime = subprocess.check_output(cmd,shell=True) #Get run time
         RunTime = RunTime.split()
-        RunTime = " "+`round(float(RunTime[3]),4)`+" "+RunTime[4]
+        RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
       except:
         RunTime = " N/A"
       line += RunTime
@@ -599,7 +603,7 @@ for qmtest in QMTests:
 
       #Clean up files
       cmd = ""
-      cmd += "rm -f tinker.key tests.out trash.xyz"
+      cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
       if (QMPack == "Gaussian"):
         #Remove checkpoint files
         cmd += " *.chk"
@@ -658,7 +662,7 @@ for qmtest in QMTests:
       try:
         RunTime = subprocess.check_output(cmd,shell=True) #Get run time
         RunTime = RunTime.split()
-        RunTime = " "+`round(float(RunTime[3]),4)`+" "+RunTime[4]
+        RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
       except:
         RunTime = " N/A"
       line += RunTime
@@ -666,7 +670,7 @@ for qmtest in QMTests:
 
       #Clean up files
       cmd = ""
-      cmd += "rm -f tinker.key tests.out trash.xyz"
+      cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
       if (QMPack == "Gaussian"):
         #Remove checkpoint files
         cmd += " *.chk"
@@ -675,13 +679,96 @@ for qmtest in QMTests:
         cmd += " timer.* psi.* *.32 *.180"
       subprocess.call(cmd,shell=True)
 
+      #Check pseudobond optimizations
+      if ((QMPack == "Gaussian") or (QMPack == "NWChem")):
+        line = ""
+        PassEnergy = 0
+        cmd = "cp pbopt.key tinker.key"
+        subprocess.call(cmd,shell=True) #Copy key file
+        cmd = "cp pbbasis.txt BASIS"
+        subprocess.call(cmd,shell=True) #Copy BASIS set file
+        cmd = "lichem -n "
+        cmd += `Ncpus`
+        cmd += " "
+        cmd += "-x alkyl.xyz "
+        cmd += "-r pboptreg.inp "
+        cmd += "-c alkcon.inp "
+        cmd += "-o trash.xyz "
+        cmd += "> tests.out " #Capture stdout
+        cmd += "2>&1" #Capture stderr
+        subprocess.call(cmd,shell=True) #Run calculations
+        cmd = ""
+        cmd += "grep -e"
+        cmd += ' "Opt. step: 2 " '
+        cmd += "tests.out"
+        try:
+          QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
+          QMMMEnergy = QMMMEnergy.split()
+          QMMMEnergy = float(QMMMEnergy[6])
+          QMMMEnergy = round(QMMMEnergy,5)
+        except:
+          QMMMEnergy = 0.0
+        if (QMPack == "Gaussian"):
+          #Check against saved energy
+          if (QMMMEnergy == round(-3015.7006962,5)):
+            PassEnergy = 1
+        if (QMPack == "NWChem"):
+          #Check against saved energy
+          if (QMMMEnergy == round(-7265.23095875,5)):
+            PassEnergy = 1
+        line += " DFP/Pseudobonds:     "
+        if (PassEnergy == 1):
+          line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
+        else:
+          line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+        cmd = ""
+        cmd += "grep -e"
+        cmd += ' "Total wall time: " '
+        cmd += "tests.out"
+        try:
+          RunTime = subprocess.check_output(cmd,shell=True) #Get run time
+          RunTime = RunTime.split()
+          RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
+        except:
+          RunTime = " N/A"
+        line += RunTime
+        print(line)
+
+        #Clean up files
+        cmd = ""
+        cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
+        if (QMPack == "Gaussian"):
+          #Remove checkpoint files
+          cmd += " *.chk"
+        if (QMPack == "PSI4"):
+          #Remove checkpoint files
+          cmd += " timer.* psi.* *.32 *.180"
+        subprocess.call(cmd,shell=True)
+
     #Print blank line and change directory
     line = ""
     print(line)
     os.chdir("../")
+
+#Stop timer
+EndTime = time.time()
+TotalTime = (EndTime-StartTime)
+TimeUnits = " seconds"
+if (TotalTime > 60):
+  TotalTime /= 60.0
+  TimeUnits = " minutes"
+  if (TotalTime > 60):
+    TotalTime /= 60.0
+    TimeUnits = " hours"
+    if (TotalTime > 24):
+      TotalTime /= 24
+      TimeUnits = " days"
+TotalTime = "Total run time: "+('%.2f'%round(TotalTime,2))+TimeUnits+'\n'
+print(TotalTime)
 
 #Quit
 line = "Done."
 line += '\n'
 print(line)
 exit(0)
+

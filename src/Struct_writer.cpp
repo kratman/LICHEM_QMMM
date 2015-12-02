@@ -256,9 +256,17 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   ofile << "noautoz noautosym" << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion or Struct[i].PBregion)
+    if (Struct[i].QMregion)
     {
       ofile << " " << Struct[i].QMTyp;
+      ofile << " " << (Struct[i].P[Bead].x*ix);
+      ofile << " " << (Struct[i].P[Bead].y*iy);
+      ofile << " " << (Struct[i].P[Bead].z*iz);
+      ofile << '\n';
+    }
+    if (Struct[i].PBregion)
+    {
+      ofile << " " << "F";
       ofile << " " << (Struct[i].P[Bead].x*ix);
       ofile << " " << (Struct[i].P[Bead].y*iy);
       ofile << " " << (Struct[i].P[Bead].z*iz);
@@ -304,7 +312,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
     ofile << '\n';
     ofile << "end" << '\n';
   }
-  if (QMMM and UseChargeFile)
+  if (QMMM and UseChargeFile and (Nmm > 0))
   {
     ifile.open(chrgfilename.c_str(),ios_base::in);
     if (ifile.good())
@@ -323,7 +331,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
       ofile << "set bq mmchrg" << '\n';
     }
   }
-  else if (QMMM)
+  else if (QMMM and (Nmm > 0))
   {
     if (CHRG)
     {

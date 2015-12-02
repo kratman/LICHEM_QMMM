@@ -139,8 +139,8 @@ calculations.
 user:$ ./runtests Ncpus QMPackage MMPackage Dry
 ```
 
-Currently, only single-point energies and packages are tested. Optimizations
-and pseudo-bond calculations will be added in the future.
+If tests are consistently failing, please post details on the GitHub issues
+section.
 
 ### Development
 

@@ -1,6 +1,6 @@
 Potential_type: QMMM
-QM_type: Gaussian
-QM_functional: PBE1PBE
+QM_type: NWChem
+QM_functional: PBE0
 QM_basis: GEN
 QM_memory: 256 MB
 QM_charge: 0

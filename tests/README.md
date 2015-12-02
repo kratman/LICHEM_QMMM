@@ -34,6 +34,9 @@ calculations.
 user:$ ./runtests Ncpus QMPackage MMPackage Dry
 ```
 
+If tests are consistently failing, please post details on the GitHub issues
+section.
+
 ### Notes
 
 The test suite prints run times for the tests. Since LICHEM has different
