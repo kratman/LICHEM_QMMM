@@ -22,8 +22,9 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
   //Parses TINKER parameter files to find atom classes
   fstream ifile; //Generic file stream
   string dummy; //Generic string
-  ifile.open("tinker.key",ios_base::in);
   int ct; //Generic counter
+  //Open generic key file
+  ifile.open("tinker.key",ios_base::in);
   if (!ifile.good())
   {
     //Exit if files do not exist
@@ -32,6 +33,7 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
     cout.flush();
     exit(0);
   }
+  //Find the parameter file
   bool FileFound = 0; //Bool to break loops
   while ((!ifile.eof()) and (!FileFound))
   {
@@ -43,6 +45,7 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
       FileFound = 1;
     }
   }
+  //Open the parameters
   ifile.close();
   ifile.open(dummy.c_str(),ios_base::in);
   if (!FileFound)
@@ -63,6 +66,7 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
     cout.flush();
     exit(0);
   }
+  //Find parameters for all atoms
   ct = 0; //Generic counter
   while (!ifile.eof())
   {
@@ -84,6 +88,7 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
       }
     }
   }
+  //Check for errors
   if (ct < Natoms)
   {
     cout << "Error: Atom type not found in TINKER parameters.";

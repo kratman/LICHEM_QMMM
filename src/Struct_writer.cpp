@@ -521,7 +521,7 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   call << "  no_com" << '\n';
   call << "}" << '\n' << '\n';
   //Set up MM field
-  if (QMMM and UseChargeFile)
+  if (QMMM and UseChargeFile and (Nmm > 0))
   {
     ifile.open(chrgfilename.c_str(),ios_base::in);
     if (ifile.good())
@@ -538,7 +538,7 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
       call << '\n' << '\n';
     }
   }
-  else if (QMMM)
+  else if (QMMM and (Nmm > 0))
   {
     if (CHRG)
     {
