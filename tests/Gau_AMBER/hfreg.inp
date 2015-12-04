@@ -1,0 +1,14 @@
+Potential_type: QM
+QM_type: Gaussian
+QM_functional: HF
+QM_basis: 6-31++G**
+QM_memory: 256 MB
+QM_charge: 0
+QM_spin: 1
+Calculation_type: SP
+PBC: No
+QM_atoms: 0
+Pseudobond_atoms: 0
+Boundary_atoms: 0
+Frozen_atoms: 0
+

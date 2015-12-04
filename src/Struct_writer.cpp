@@ -407,6 +407,16 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   ofile << " noio" << '\n';
   ofile << " tolerances tight" << '\n';
   ofile << " xc " << QMMMOpts.Func << '\n';
+  //Use the checkpoint file
+  call.str("");
+  call << "LICHM_" << Bead << ".movecs";
+  if (CheckFile(call.str()))
+  {
+    //Tell the DFT module to read the initial vectors
+    ofile << " vectors input ";
+    ofile << call.str(); //Defined above
+    ofile << '\n';
+  }
   ofile << "end" << '\n';
   //Set calculation type
   ofile << CalcTyp;

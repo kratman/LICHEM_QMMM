@@ -42,18 +42,21 @@ void TINK2LICHEM(int& argc, char**& argv)
     dummy = string(argv[i]);
     if (dummy == "-t")
     {
+      //TINKER XYZ file
       TINKxyz.open(argv[i+1],ios_base::in);
       cout << argv[i+1];
       cout << " ";
     }
     if (dummy == "-k")
     {
+      //TINKER key file
       TINKkey.open(argv[i+1],ios_base::in);
       cout << argv[i+1];
       cout << " ";
     }
     if (dummy == "-p")
     {
+      //Flag for PBC
       dummy = string(argv[i+1]);
       if ((dummy == "Yes") or (dummy == "yes") or
          (dummy == "YES") or (dummy == "true") or
@@ -63,8 +66,10 @@ void TINK2LICHEM(int& argc, char**& argv)
       }
     }
   }
+  //Start writing the files
   if (PBCon)
   {
+    //Remind forgetful users that they said the system was periodic
     cout << '\n';
     cout << " with PBC";
   }
@@ -76,11 +81,15 @@ void TINK2LICHEM(int& argc, char**& argv)
   line >> Nqm;
   if (!line.eof())
   {
+    //Read QMMM information
+    //NB: This only works if the atoms are in the correct order:
+    // QM->PB->BA->MM
     line >> Npseudo;
     line >> Nbound;
   }
   else
   {
+    //Not needed for a standard MM XYZ file
     Nqm = 0;
     Npseudo = 0;
     Nbound = 0;
@@ -88,6 +97,7 @@ void TINK2LICHEM(int& argc, char**& argv)
   Nmm = Natoms-Nqm-Npseudo-Nbound;
   if (Natoms != Nmm)
   {
+    //QMMM input
     cout << '\n';
     cout << "Auto-detected file type: ";
     cout << "TINKER QMMM xyz";
@@ -95,11 +105,13 @@ void TINK2LICHEM(int& argc, char**& argv)
   }
   if (Natoms == Nmm)
   {
+    //MM input
     cout << '\n';
     cout << "Auto-detected file type: ";
     cout << "TINKER xyz";
     cout << '\n';
   }
+  //Print settings
   cout << "  Total atoms: " << Natoms << '\n';
   cout << "  QM atoms: " << Nqm << '\n';
   cout << "  Pseudo-atoms: " << Npseudo << '\n';
@@ -239,6 +251,7 @@ void TINK2LICHEM(int& argc, char**& argv)
   regfile << "PBC: ";
   if (PBCon)
   {
+    //Print PBC settings
     regfile << "Yes" << '\n';
     regfile << "Box_size: ";
     regfile << Lx << " ";
@@ -247,6 +260,7 @@ void TINK2LICHEM(int& argc, char**& argv)
   }
   else
   {
+    //Not periodic
     regfile << "No" << '\n';
   }
   regfile << "QM_atoms: ";
@@ -394,7 +408,7 @@ void TINK2LICHEM(int& argc, char**& argv)
       cout << '\n';
       cout << "LICHEM cannot continue...";
       cout << '\n';
-      //Dump files and exit
+      //Dump data to the files and exit
       posfile.flush();
       confile.flush();
       regfile.flush();
@@ -494,6 +508,7 @@ void LICHEM2TINK(int& argc, char**& argv)
     dummy = string(argv[i]);
     if (dummy == "-x")
     {
+      //Open XYZ file
       stringstream file;
       file << argv[i+1];
       if (!CheckFile(file.str()))
@@ -509,6 +524,7 @@ void LICHEM2TINK(int& argc, char**& argv)
     }
     if (dummy == "-c")
     {
+      //Open connectivity file
       stringstream file;
       file << argv[i+1];
       if (!CheckFile(file.str()))

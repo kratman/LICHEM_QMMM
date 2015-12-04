@@ -110,7 +110,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
       cout << "  -c    Connectivity and force field input file." << '\n';
       cout << '\n';
       cout << "  -r    Information about how the system is subdivided" << '\n';
-      cout << "        into QM, MM, and psuedo-atom regions." << '\n' << '\n';
+      cout << "        into QM, MM, and pseudo-atom regions." << '\n' << '\n';
       cout << "  -o    Output xyz file for the optimized structures.";
       cout << '\n' << '\n';
       cout.flush();

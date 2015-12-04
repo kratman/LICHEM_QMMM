@@ -32,6 +32,8 @@ using namespace LICHEMOpts;
 using namespace LICHEMConst;
 #include "LICHEM_globals.h"
 using namespace LICHEMGlobal;
+#include "LICHEM_Lepton.h"
+using namespace LICHEMLepton;
 
 //LICHEM headers and libraries
 #include "LICHEM_base_classes.h"

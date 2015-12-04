@@ -130,6 +130,10 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     cerr << '\n';
     E = HugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
+    //Remove checkpoint file
+    call.str("");
+    call << "rm -f LICHM_" << Bead << ".movecs";
+    GlobalSys = system(call.str().c_str());
   }
   if (!GradDone)
   {
@@ -145,7 +149,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << "LICHM_" << Bead << ".b*" << " ";
   call << "LICHM_" << Bead << ".c*" << " ";
   call << "LICHM_" << Bead << ".g*" << " ";
-  call << "LICHM_" << Bead << ".m*" << " ";
+  //call << "LICHM_" << Bead << ".m*" << " ";
   call << "LICHM_" << Bead << ".z*" << " ";
   call << "LICHM_" << Bead << ".p*" << " ";
   call << "LICHM_" << Bead << ".q*" << " ";
@@ -240,6 +244,10 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cerr << '\n';
     E = HugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
+    //Remove checkpoint file
+    call.str("");
+    call << "rm -f LICHM_" << Bead << ".movecs";
+    GlobalSys = system(call.str().c_str());
   }
   //Clean up files and return
   call.str("");
@@ -247,7 +255,7 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "LICHM_" << Bead << ".b*" << " ";
   call << "LICHM_" << Bead << ".c*" << " ";
   call << "LICHM_" << Bead << ".g*" << " ";
-  call << "LICHM_" << Bead << ".m*" << " ";
+  //call << "LICHM_" << Bead << ".m*" << " ";
   call << "LICHM_" << Bead << ".z*" << " ";
   call << "LICHM_" << Bead << ".p*" << " ";
   call << "LICHM_" << Bead << ".q*" << " ";
@@ -339,6 +347,10 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cerr << '\n';
     E = HugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
+    //Remove checkpoint file
+    call.str("");
+    call << "rm -f LICHM_" << Bead << ".movecs";
+    GlobalSys = system(call.str().c_str());
   }
   //Clean up files
   call.str("");
@@ -355,7 +367,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     call << QMMMOpts.BackDir;
     call << "/.; ";
     call << "cp LICHM_";
-    call << Bead << ".db ";
+    call << Bead << ".movecs ";
     call << QMMMOpts.BackDir;
     call << "/.; ";
     call << "cp LICHM_";
@@ -367,7 +379,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "LICHM_" << Bead << ".b*" << " ";
   call << "LICHM_" << Bead << ".c*" << " ";
   call << "LICHM_" << Bead << ".g*" << " ";
-  call << "LICHM_" << Bead << ".m*" << " ";
+  //call << "LICHM_" << Bead << ".m*" << " ";
   call << "LICHM_" << Bead << ".z*" << " ";
   call << "LICHM_" << Bead << ".p*" << " ";
   call << "LICHM_" << Bead << ".q*" << " ";
@@ -460,6 +472,10 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     cerr << '\n';
     E = HugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
+    //Remove checkpoint file
+    call.str("");
+    call << "rm -f LICHM_" << Bead << ".movecs";
+    GlobalSys = system(call.str().c_str());
   }
   //Clean up files
   call.str("");
@@ -467,7 +483,7 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "LICHM_" << Bead << ".b*" << " ";
   call << "LICHM_" << Bead << ".c*" << " ";
   call << "LICHM_" << Bead << ".g*" << " ";
-  call << "LICHM_" << Bead << ".m*" << " ";
+  //call << "LICHM_" << Bead << ".m*" << " ";
   call << "LICHM_" << Bead << ".z*" << " ";
   call << "LICHM_" << Bead << ".p*" << " ";
   call << "LICHM_" << Bead << ".q*" << " ";

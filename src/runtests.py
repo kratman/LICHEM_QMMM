@@ -357,13 +357,82 @@ for qmtest in QMTests:
     #Delete line to avoid bugs
     line = ""
 
-    #Check QM energy
+    #Check HF energy
+    if ((QMPack == "PSI4") or (QMPack == "Gaussian")):
+      PassEnergy = 0
+      cmd = "lichem -n "
+      cmd += `Ncpus`
+      cmd += " "
+      cmd += "-x waterdimer.xyz "
+      cmd += "-r hfreg.inp "
+      cmd += "-c watercon.inp "
+      cmd += "-o trash.xyz "
+      cmd += "> tests.out " #Capture stdout
+      cmd += "2>&1" #Capture stderr
+      subprocess.call(cmd,shell=True) #Run calculations
+      cmd = ""
+      cmd += "grep -e"
+      cmd += ' "QM energy: " ' #Find final energy
+      cmd += "tests.out"
+      try:
+        #Safely check energy
+        QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
+        QMMMEnergy = QMMMEnergy.split()
+        QMMMEnergy = float(QMMMEnergy[2])
+        QMMMEnergy = round(QMMMEnergy,5)
+      except:
+        #Calculation failed
+        QMMMEnergy = 0.0
+      if (QMPack == "PSI4"):
+        #Check against saved energy
+        if (QMMMEnergy == round(-4138.008005323923,5)):
+          PassEnergy = 1
+      if (QMPack == "Gaussian"):
+        #Check against saved energy
+        if (QMMMEnergy == round(-4138.009530010847,5)):
+          PassEnergy = 1
+      line += " HF energy:           "
+      if (PassEnergy == 1):
+        line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
+      else:
+        line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+      cmd = ""
+      cmd += "grep -e"
+      cmd += ' "Total wall time: " ' #Find run time
+      cmd += "tests.out"
+      try:
+        RunTime = subprocess.check_output(cmd,shell=True) #Get run time
+        RunTime = RunTime.split()
+        RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
+      except:
+        RunTime = " N/A"
+      line += RunTime
+      print(line)
+
+      #Clean up files
+      cmd = ""
+      cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
+      if (QMPack == "Gaussian"):
+        #Remove checkpoint files
+        cmd += " *.chk"
+      if (QMPack == "PSI4"):
+        #Remove checkpoint files
+        cmd += " timer.* psi.* *.32 *.180"
+      if (QMPack == "NWChem"):
+        #Remove checkpoint files
+        cmd += " *.movecs"
+      subprocess.call(cmd,shell=True)
+
+      #Delete line to avoid bugs
+      line = ""
+
+    #Check DFT energy
     PassEnergy = 0
     cmd = "lichem -n "
     cmd += `Ncpus`
     cmd += " "
     cmd += "-x waterdimer.xyz "
-    cmd += "-r qmreg.inp "
+    cmd += "-r pbereg.inp "
     cmd += "-c watercon.inp "
     cmd += "-o trash.xyz "
     cmd += "> tests.out " #Capture stdout
@@ -371,14 +440,16 @@ for qmtest in QMTests:
     subprocess.call(cmd,shell=True) #Run calculations
     cmd = ""
     cmd += "grep -e"
-    cmd += ' "QM energy: " '
+    cmd += ' "QM energy: " ' #Find final energy
     cmd += "tests.out"
     try:
+      #Safely check energy
       QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
       QMMMEnergy = QMMMEnergy.split()
       QMMMEnergy = float(QMMMEnergy[2])
       QMMMEnergy = round(QMMMEnergy,5)
     except:
+      #Calculation failed
       QMMMEnergy = 0.0
     if (QMPack == "PSI4"):
       #Check against saved energy
@@ -399,7 +470,7 @@ for qmtest in QMTests:
       line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
     cmd = ""
     cmd += "grep -e"
-    cmd += ' "Total wall time: " '
+    cmd += ' "Total wall time: " ' #Find run time
     cmd += "tests.out"
     try:
       RunTime = subprocess.check_output(cmd,shell=True) #Get run time
@@ -419,6 +490,9 @@ for qmtest in QMTests:
     if (QMPack == "PSI4"):
       #Remove checkpoint files
       cmd += " timer.* psi.* *.32 *.180"
+    if (QMPack == "NWChem"):
+      #Remove checkpoint files
+      cmd += " *.movecs"
     subprocess.call(cmd,shell=True)
 
     #Delete line to avoid bugs
@@ -439,14 +513,16 @@ for qmtest in QMTests:
       subprocess.call(cmd,shell=True) #Run calculations
       cmd = ""
       cmd += "grep -e"
-      cmd += ' "QM energy: " '
+      cmd += ' "QM energy: " ' #Find final energy
       cmd += "tests.out"
       try:
+        #Safely check energy
         QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
         QMMMEnergy = QMMMEnergy.split()
         QMMMEnergy = float(QMMMEnergy[2])
         QMMMEnergy = round(QMMMEnergy,5)
       except:
+        #Calculation failed
         QMMMEnergy = 0.0
       if (QMPack == "PSI4"):
         #Check against saved energy
@@ -459,7 +535,7 @@ for qmtest in QMTests:
         line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
       cmd = ""
       cmd += "grep -e"
-      cmd += ' "Total wall time: " '
+      cmd += ' "Total wall time: " ' #Find run time
       cmd += "tests.out"
       try:
         RunTime = subprocess.check_output(cmd,shell=True) #Get run time
@@ -479,6 +555,74 @@ for qmtest in QMTests:
       if (QMPack == "PSI4"):
         #Remove checkpoint files
         cmd += " timer.* psi.* *.32 *.180"
+      if (QMPack == "NWChem"):
+        #Remove checkpoint files
+        cmd += " *.movecs"
+      subprocess.call(cmd,shell=True)
+
+      #Delete line to avoid bugs
+      line = ""
+
+    #Check PM6 energy
+    if (QMPack == "Gaussian"):
+      PassEnergy = 0
+      cmd = "lichem -n "
+      cmd += `Ncpus`
+      cmd += " "
+      cmd += "-x waterdimer.xyz "
+      cmd += "-r pm6reg.inp "
+      cmd += "-c watercon.inp "
+      cmd += "-o trash.xyz "
+      cmd += "> tests.out " #Capture stdout
+      cmd += "2>&1" #Capture stderr
+      subprocess.call(cmd,shell=True) #Run calculations
+      cmd = ""
+      cmd += "grep -e"
+      cmd += ' "QM energy: " ' #Find final energy
+      cmd += "tests.out"
+      try:
+        #Safely check energy
+        QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
+        QMMMEnergy = QMMMEnergy.split()
+        QMMMEnergy = float(QMMMEnergy[2])
+        QMMMEnergy = round(QMMMEnergy,5)
+      except:
+        #Calculation failed
+        QMMMEnergy = 0.0
+      if (QMPack == "Gaussian"):
+        #Check against saved energy
+        if (QMMMEnergy == round(-4.862302763500,5)):
+          PassEnergy = 1
+      line += " PM6 energy:          "
+      if (PassEnergy == 1):
+        line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
+      else:
+        line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+      cmd = ""
+      cmd += "grep -e"
+      cmd += ' "Total wall time: " ' #Find run time
+      cmd += "tests.out"
+      try:
+        RunTime = subprocess.check_output(cmd,shell=True) #Get run time
+        RunTime = RunTime.split()
+        RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
+      except:
+        RunTime = " N/A"
+      line += RunTime
+      print(line)
+
+      #Clean up files
+      cmd = ""
+      cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
+      if (QMPack == "Gaussian"):
+        #Remove checkpoint files
+        cmd += " *.chk"
+      if (QMPack == "PSI4"):
+        #Remove checkpoint files
+        cmd += " timer.* psi.* *.32 *.180"
+      if (QMPack == "NWChem"):
+        #Remove checkpoint files
+        cmd += " *.movecs"
       subprocess.call(cmd,shell=True)
 
       #Delete line to avoid bugs
@@ -503,16 +647,17 @@ for qmtest in QMTests:
       subprocess.call(cmd,shell=True) #Run calculations
       cmd = ""
       cmd += "grep -e"
-      cmd += ' "MM energy: " '
+      cmd += ' "MM energy: " ' #Find final energy
       cmd += "tests.out"
       try:
+        #Safely check energy
         QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
         QMMMEnergy = QMMMEnergy.split()
         QMMMEnergy = float(QMMMEnergy[2])
         QMMMEnergy = round(QMMMEnergy,5)
       except:
+        #Calculation failed
         QMMMEnergy = 0.0
-
       #Check against saved energy
       if (QMMMEnergy == round(-0.259690353622,5)):
         PassEnergy = 1
@@ -523,7 +668,7 @@ for qmtest in QMTests:
         line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
       cmd = ""
       cmd += "grep -e"
-      cmd += ' "Total wall time: " '
+      cmd += ' "Total wall time: " ' #Find run time
       cmd += "tests.out"
       try:
         RunTime = subprocess.check_output(cmd,shell=True) #Get run time
@@ -543,6 +688,9 @@ for qmtest in QMTests:
       if (QMPack == "PSI4"):
         #Remove checkpoint files
         cmd += " timer.* psi.* *.32 *.180"
+      if (QMPack == "NWChem"):
+        #Remove checkpoint files
+        cmd += " *.movecs"
       subprocess.call(cmd,shell=True)
 
       #Check QMMM point-charge energy results
@@ -562,14 +710,16 @@ for qmtest in QMTests:
       subprocess.call(cmd,shell=True) #Run calculations
       cmd = ""
       cmd += "grep -e"
-      cmd += ' "QMMM energy: " '
+      cmd += ' "QMMM energy: " ' #Find final energy
       cmd += "tests.out"
       try:
+        #Safely check energy
         QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
         QMMMEnergy = QMMMEnergy.split()
         QMMMEnergy = float(QMMMEnergy[2])
         QMMMEnergy = round(QMMMEnergy,5)
       except:
+        #Calculation failed
         QMMMEnergy = 0.0
       if (QMPack == "PSI4"):
         #Check against saved energy
@@ -590,7 +740,7 @@ for qmtest in QMTests:
         line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
       cmd = ""
       cmd += "grep -e"
-      cmd += ' "Total wall time: " '
+      cmd += ' "Total wall time: " ' #Find run time
       cmd += "tests.out"
       try:
         RunTime = subprocess.check_output(cmd,shell=True) #Get run time
@@ -610,6 +760,9 @@ for qmtest in QMTests:
       if (QMPack == "PSI4"):
         #Remove checkpoint files
         cmd += " timer.* psi.* *.32 *.180"
+      if (QMPack == "NWChem"):
+        #Remove checkpoint files
+        cmd += " *.movecs"
       subprocess.call(cmd,shell=True)
 
       #Check QMMM polarizable energy results
@@ -629,14 +782,16 @@ for qmtest in QMTests:
       subprocess.call(cmd,shell=True) #Run calculations
       cmd = ""
       cmd += "grep -e"
-      cmd += ' "QMMM energy: " '
+      cmd += ' "QMMM energy: " ' #Find final energy
       cmd += "tests.out"
       try:
+        #Safely check energy
         QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
         QMMMEnergy = QMMMEnergy.split()
         QMMMEnergy = float(QMMMEnergy[2])
         QMMMEnergy = round(QMMMEnergy,5)
       except:
+        #Calculation failed
         QMMMEnergy = 0.0
       if (QMPack == "PSI4"):
         #Check against saved energy
@@ -657,7 +812,7 @@ for qmtest in QMTests:
         line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
       cmd = ""
       cmd += "grep -e"
-      cmd += ' "Total wall time: " '
+      cmd += ' "Total wall time: " ' #Find run time
       cmd += "tests.out"
       try:
         RunTime = subprocess.check_output(cmd,shell=True) #Get run time
@@ -677,6 +832,9 @@ for qmtest in QMTests:
       if (QMPack == "PSI4"):
         #Remove checkpoint files
         cmd += " timer.* psi.* *.32 *.180"
+      if (QMPack == "NWChem"):
+        #Remove checkpoint files
+        cmd += " *.movecs"
       subprocess.call(cmd,shell=True)
 
       #Check pseudobond optimizations
@@ -699,14 +857,16 @@ for qmtest in QMTests:
         subprocess.call(cmd,shell=True) #Run calculations
         cmd = ""
         cmd += "grep -e"
-        cmd += ' "Opt. step: 2 " '
+        cmd += ' "Opt. step: 2 " ' #Find final energy
         cmd += "tests.out"
         try:
+          #Safely check energy
           QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
           QMMMEnergy = QMMMEnergy.split()
           QMMMEnergy = float(QMMMEnergy[6])
           QMMMEnergy = round(QMMMEnergy,5)
         except:
+          #calculation failed
           QMMMEnergy = 0.0
         if (QMPack == "Gaussian"):
           #Check against saved energy
@@ -714,7 +874,7 @@ for qmtest in QMTests:
             PassEnergy = 1
         if (QMPack == "NWChem"):
           #Check against saved energy
-          if (QMMMEnergy == round(-7265.23095875,5)):
+          if (QMMMEnergy == round(-3015.83160943,5)):
             PassEnergy = 1
         line += " DFP/Pseudobonds:     "
         if (PassEnergy == 1):
@@ -723,7 +883,7 @@ for qmtest in QMTests:
           line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
         cmd = ""
         cmd += "grep -e"
-        cmd += ' "Total wall time: " '
+        cmd += ' "Total wall time: " ' #Find run time
         cmd += "tests.out"
         try:
           RunTime = subprocess.check_output(cmd,shell=True) #Get run time
@@ -743,6 +903,9 @@ for qmtest in QMTests:
         if (QMPack == "PSI4"):
           #Remove checkpoint files
           cmd += " timer.* psi.* *.32 *.180"
+        if (QMPack == "NWChem"):
+          #Remove checkpoint files
+          cmd += " *.movecs"
         subprocess.call(cmd,shell=True)
 
     #Print blank line and change directory
@@ -753,6 +916,8 @@ for qmtest in QMTests:
 #Stop timer
 EndTime = time.time()
 TotalTime = (EndTime-StartTime)
+
+#Find the correct units
 TimeUnits = " seconds"
 if (TotalTime > 60):
   TotalTime /= 60.0
@@ -763,12 +928,14 @@ if (TotalTime > 60):
     if (TotalTime > 24):
       TotalTime /= 24
       TimeUnits = " days"
+
+#Print the final results
 TotalTime = "Total run time: "+('%.2f'%round(TotalTime,2))+TimeUnits+'\n'
 print(TotalTime)
-
-#Quit
 line = "Done."
 line += '\n'
 print(line)
+
+#Quit
 exit(0)
 
