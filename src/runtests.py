@@ -14,8 +14,10 @@ import time
 import sys
 import os
 
-#Start timer immediately
+#Start timer and counters immediately
 StartTime = time.time()
+passct = 0
+failct = 0
 
 #Classes
 class ClrSet:
@@ -168,9 +170,11 @@ if (AllTests == 0):
       #Quit early
       DryRun = 1
 
+#Initialize variables
 LICHEMbin = ""
 QMbin = ""
 MMbin = ""
+
 #Check packages and identify missing binaries
 BadLICHEM = 0
 cmd = "which lichem"
@@ -292,6 +296,12 @@ if (AllTests == 0):
   line += " Binary: "
   line += MMbin
   line += '\n'
+else:
+  line += " Mode: All tests"
+  line += '\n'
+if (DryRun == 1):
+  line += " Mode: Dry run"
+  line += '\n'
 print(line)
 
 #Escape for dry runs
@@ -310,7 +320,10 @@ if (((QMbin == "N/A") or (MMbin == "N/A")) and (AllTests == 0)):
   print(line)
   exit(0)
 
-line = "Running LICHEM tests..."
+line = "***************************************************"
+line += '\n'
+line += '\n'
+line += "Running LICHEM tests..."
 line += '\n'
 print(line)
 
@@ -394,8 +407,10 @@ for qmtest in QMTests:
       line += " HF energy:           "
       if (PassEnergy == 1):
         line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
+        passct += 1
       else:
         line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+        failct += 1
       cmd = ""
       cmd += "grep -e"
       cmd += ' "Total wall time: " ' #Find run time
@@ -466,8 +481,10 @@ for qmtest in QMTests:
     line += " PBE0 energy:         "
     if (PassEnergy == 1):
       line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
+      passct += 1
     else:
       line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+      failct += 1
     cmd = ""
     cmd += "grep -e"
     cmd += ' "Total wall time: " ' #Find run time
@@ -531,8 +548,10 @@ for qmtest in QMTests:
       line += " CCSD energy:         "
       if (PassEnergy == 1):
         line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
+        passct += 1
       else:
         line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+        failct += 1
       cmd = ""
       cmd += "grep -e"
       cmd += ' "Total wall time: " ' #Find run time
@@ -596,8 +615,10 @@ for qmtest in QMTests:
       line += " PM6 energy:          "
       if (PassEnergy == 1):
         line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
+        passct += 1
       else:
         line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+        failct += 1
       cmd = ""
       cmd += "grep -e"
       cmd += ' "Total wall time: " ' #Find run time
@@ -664,8 +685,10 @@ for qmtest in QMTests:
       line += " TIP3P energy:        "
       if (PassEnergy == 1):
         line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
+        passct += 1
       else:
         line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+        failct += 1
       cmd = ""
       cmd += "grep -e"
       cmd += ' "Total wall time: " ' #Find run time
@@ -736,8 +759,10 @@ for qmtest in QMTests:
       line += " PBE0/TIP3P energy:   "
       if (PassEnergy == 1):
         line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
+        passct += 1
       else:
         line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+        failct += 1
       cmd = ""
       cmd += "grep -e"
       cmd += ' "Total wall time: " ' #Find run time
@@ -808,8 +833,10 @@ for qmtest in QMTests:
       line += " PBE0/AMOEBA energy:  "
       if (PassEnergy == 1):
         line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
+        passct += 1
       else:
         line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+        failct += 1
       cmd = ""
       cmd += "grep -e"
       cmd += ' "Total wall time: " ' #Find run time
@@ -879,8 +906,10 @@ for qmtest in QMTests:
         line += " DFP/Pseudobonds:     "
         if (PassEnergy == 1):
           line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
+          passct += 1
         else:
           line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+          failct += 1
         cmd = ""
         cmd += "grep -e"
         cmd += ' "Total wall time: " ' #Find run time
@@ -913,6 +942,16 @@ for qmtest in QMTests:
     print(line)
     os.chdir("../")
 
+#Start printing the statistics
+line = ""
+line += "***************************************************"
+line += '\n'
+line += '\n'
+line += "Statistics:"
+line += '\n'
+line += " Tests passed: "+`passct`+'\n'
+line += " Tests failed: "+`failct`+'\n'
+
 #Stop timer
 EndTime = time.time()
 TotalTime = (EndTime-StartTime)
@@ -929,10 +968,13 @@ if (TotalTime > 60):
       TotalTime /= 24
       TimeUnits = " days"
 
-#Print the final results
-TotalTime = "Total run time: "+('%.2f'%round(TotalTime,2))+TimeUnits+'\n'
-print(TotalTime)
-line = "Done."
+#Finish printing the statistics
+line += " Total run time: "+('%.2f'%round(TotalTime,2))+TimeUnits+'\n'
+line += '\n'
+line += "***************************************************"
+line += '\n'
+line += '\n'
+line += "Done."
 line += '\n'
 print(line)
 
