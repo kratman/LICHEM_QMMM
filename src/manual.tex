@@ -46,9 +46,9 @@ LICHEM is in development with four guiding principles: \\
 \begin{quote}
  \normalfont{
  1) {\textbf{LICHEM should primarily be an interface.}}
- In order to make the code function with a variety of software packages and
- for different versions of the packages, LICHEM should not require
- modifications to other software packages or tools. \\
+ In order to make the code function with a variety of continuously updated
+ software packages, LICHEM should not require modifications to other software
+ packages or tools. \\
  2) {\textbf{LICHEM should be a single executable.}}
  Since LICHEM is an interface, there is no need for a large collection of
  binaries.
@@ -74,11 +74,12 @@ LICHEM is in development with four guiding principles: \\
 
 \subsection{Language and style}
 
-The LICHEM repository contains code written in C++, \LaTeX, and markdown.
+The LICHEM repository contains code written in C++, \LaTeX, python,
+and markdown.
 All lines of code should be less than 80 characters wide.
 This has nothing to do with compiling or tracking changes, but helps to make
 the code readable on smaller portable devices such as tablets and netbooks.
-Also for readability purposes, avoid tabulars for indenting.
+Also for readability purposes, tabulars should not be used to indent the code.
 Tabulars can appear to be different sizes in some text editors. \\
 
 When updating the documentation, there should be a newline after each
@@ -112,14 +113,15 @@ for most QM calculations, however, these options assure that difficult cases
 will converge.
 Additionally, the "Direct", YQC, and "Big" options are helpful for
 larger systems, but they are not disabled for small systems.
-Most of the wrappers contain assumptions that the QMMM calculations will be
-large and quite difficult to simulate.
+Most of the wrappers should be developed with the assumption that the QMMM
+calculations will be large and quite difficult to simulate.
 These sorts of options ensure that LICHEM will work on all systems without
 requiring the user to be an expert with the QM and MM software. \\
 
 LICHEM should be tested with extremely difficult systems.
-During the early stages of the development, test systems with highly distorted
-structures were employed to make sure that crashing the software was rare. \\
+During the earliest stages of the development, test systems with highly
+distorted structures were employed to make sure that crashing the software
+was rare. \\
 
 A simple way to avoid modifying the QM and MM packages is to search for
 iterative or perturbative approximations for the QMMM equations.
@@ -127,10 +129,10 @@ This is extremely useful for multipolar/polarizable force fields.
 
 \subsection{Parallelization}
 
-LICHEM is parallelized with OpenMP, however, the packages called by the
-wrappers can use any form of parallelization.
-Care must be taken to avoid creating too many threads when calling multiple
-parallel functions with the wrappers. \\
+LICHEM is primarily parallelized with OpenMP, however, the packages called by
+the wrappers can use any form of parallelization.
+Special care must be taken to avoid creating too many threads when calling
+multiple parallel functions with the wrappers. \\
 
 In multi-replica simulations, the number of CPUs given as a command line
 argument is used to divide the OpenMP threads between the replicas.
@@ -182,7 +184,11 @@ For development, debugging, or testing an alternate binary can be compiled. \\
 
 user:\$ make Dev \\
 
-Additional make rules can be found in the Makefile.
+Additional make rules can be found in the Makefile. \\
+
+QM and MM packages are installed separately from LICHEM.
+Users only need to install the packages that they wish to use in the
+QMMM calculations.
 
 \section{Capabilities}
 
@@ -242,9 +248,9 @@ LICHEM can perform QM, MM, or QMMM calculations via an interface to packages
 in the user's path.
 Temporary input files are created for each package and the results are
 collected from the temporary output files.
-This is a relatively inefficient procedure, however, reading and writing
-input/output files is often negligible compared to the computational cost of
-the QM calculation.
+This procedure is less efficient than linking to the packages directly,
+however, reading and writing input/output files is often negligible compared
+to the computational cost of the QM calculation.
 Currently, calculations can be performed using Gaussian \cite{Frisch2009},
 PSI4 \cite{Turney2012}, TINKER \cite{Ponder2015}, AMBER \cite{Case2015}, and
 LAMMPS \cite{Plimpton1995}.
