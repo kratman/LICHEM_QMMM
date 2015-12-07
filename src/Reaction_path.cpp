@@ -44,7 +44,7 @@ bool PathConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
 };
 
 //Path optimization routines
-void LICHEMNEB(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
+void LICHEMNEB(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int optct)
 {
   //Cartesian NEB optimizer which runs sequentially
   

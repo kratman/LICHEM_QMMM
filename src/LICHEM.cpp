@@ -1025,7 +1025,7 @@ int main(int argc, char* argv[])
       }
       cout << '\n';
       //Run QM optimization
-      LICHEMNEB(Struct,QMMMOpts);
+      LICHEMNEB(Struct,QMMMOpts,optct);
       //Reset tolerance before optimization check
       QMMMOpts.QMOptTol = SavedOptTol;
       //Print optimized geometry

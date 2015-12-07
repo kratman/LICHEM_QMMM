@@ -136,7 +136,7 @@ void LICHEMErrorChecker(QMMMSettings&);
 
 double LICHEMFactorial(int);
 
-void LICHEMNEB(vector<QMMMAtom>&,QMMMSettings&);
+void LICHEMNEB(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void LICHEMPrintSettings(QMMMSettings&);
 

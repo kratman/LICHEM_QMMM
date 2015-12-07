@@ -200,15 +200,15 @@ QMMM calculations.
  QM energy & Yes & Yes & Yes \\
  QMMM energy & Yes & Yes & Yes \\ \hline
  QM opt. & Yes & Yes & No \\
- QMMM opt. & Yes & No & No \\ \hline
+ QMMM opt. & Yes & Yes & No \\ \hline
  QM SD/DFP & Yes & Yes & Yes \\
- QMMM SD/DFP & Yes & No & Yes \\ \hline
+ QMMM SD/DFP & Yes & Yes & Yes \\ \hline
  QM MC & Yes & Yes & Yes \\
  QMMM MC & Yes & Yes & Yes\\ \hline
  QM PIMC & Yes & Yes & Yes \\
  QMMM PIMC & Yes & Yes & Yes \\ \hline
- QM RP & Yes & No & Yes\\
- QMMM RP & Yes & No & Yes \\ \hline
+ QM RP & Yes & Yes & Yes\\
+ QMMM RP & Yes & Yes & Yes \\ \hline
  \end{tabular}
  \caption{
  QM wrapper capabilities for single-point energy, geometry optimization,
@@ -222,18 +222,18 @@ QMMM calculations.
  \begin{tabular}{|c|c c c|}
  \hline
   & TINKER & AMBER & LAMMPS \\ \hline
- MM energy &  Yes & Yes & Yes \\
- QMMM energy & Yes & Yes & Yes \\ \hline
- MM opt. & Yes & Yes & Yes \\
- QMMM opt. & Yes & Yes & Yes \\ \hline
+ MM energy &  Yes & No & No \\
+ QMMM energy & Yes & No & No \\ \hline
+ MM opt. & Yes & No & No \\
+ QMMM opt. & Yes & No & No \\ \hline
  MM SD/DFP & No & No & No \\
- QMMM SD/DFP & Yes & Yes & Yes \\ \hline
- MM MC & Yes & Yes & Yes \\
- QMMM MC & Yes & Yes & Yes \\ \hline
- MM PIMC & Yes & Yes & Yes \\
- QMMM PIMC & Yes & Yes & Yes \\ \hline
+ QMMM SD/DFP & Yes & No & No \\ \hline
+ MM MC & Yes & No & No \\
+ QMMM MC & Yes & No & No \\ \hline
+ MM PIMC & Yes & No & No \\
+ QMMM PIMC & Yes & No & No \\ \hline
  MM RP & No & No & No \\
- QMMM RP & Yes & Yes & Yes \\ \hline
+ QMMM RP & Yes & No & No \\ \hline
  \end{tabular}
  \caption{
  MM wrapper capabilities for single-point energy, geometry optimization,
@@ -269,7 +269,7 @@ and \ref{tab:MMWrapCap}. \\
 
 Some additional restrictions are also present when there are bonds between
 the QM and MM regions.
-Currently PSI4 cannot be used as a QM wrapper for calculations where the QM
+Currently, PSI4 cannot be used as a QM wrapper for calculations where the QM
 and MM regions are bonded.
 
 \section{Acknowledgements}
