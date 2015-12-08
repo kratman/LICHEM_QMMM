@@ -509,10 +509,15 @@ int main(int argc, char* argv[])
     VectorXd Forces; //Dummy array needed for convergence tests
     int optct = 0; //Counter for optimization steps
     //Change optimization tolerance for the first step
-    double SavedOptTol = QMMMOpts.QMOptTol; //Save value from input
+    double SavedQMOptTol = QMMMOpts.QMOptTol; //Save value from input
+    double SavedMMOptTol = QMMMOpts.MMOptTol; //Save value from input
     if (QMMMOpts.QMOptTol < 0.005)
     {
       QMMMOpts.QMOptTol = 0.005; //Speedy convergance on the first step
+    }
+    if (QMMMOpts.MMOptTol < 0.5)
+    {
+      QMMMOpts.MMOptTol = 0.50; //Speedy convergance on the first step
     }
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
@@ -603,7 +608,8 @@ int main(int argc, char* argv[])
       //Run QM optimization
       LICHEMDFP(Struct,QMMMOpts,0);
       //Reset tolerance before optimization check
-      QMMMOpts.QMOptTol = SavedOptTol;
+      QMMMOpts.QMOptTol = SavedQMOptTol;
+      QMMMOpts.MMOptTol = SavedMMOptTol;
       //Print Optimized geometry
       Print_traj(Struct,outfile,QMMMOpts);
       //Check convergence
@@ -846,10 +852,15 @@ int main(int argc, char* argv[])
       QMMMOpts.Climb = 1; //Turn on climbing image NEB
     }
     //Change optimization tolerance for the first step
-    double SavedOptTol = QMMMOpts.QMOptTol; //Save value from input
+    double SavedQMOptTol = QMMMOpts.QMOptTol; //Save value from input
+    double SavedMMOptTol = QMMMOpts.MMOptTol; //Save value from input
     if (QMMMOpts.QMOptTol < 0.005)
     {
       QMMMOpts.QMOptTol = 0.005; //Speedy convergance on the first step
+    }
+    if (QMMMOpts.MMOptTol < 0.5)
+    {
+      QMMMOpts.MMOptTol = 0.50; //Speedy convergance on the first step
     }
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
@@ -965,7 +976,7 @@ int main(int argc, char* argv[])
       //Copy checkpoint data to speed up first step
       if (p != (QMMMOpts.Nbeads-1))
       {
-        if (Gaussian)
+        if (Gaussian and (QMMMOpts.Func != "SemiEmp"))
         {
           call.str("");
           call << "cp LICHM_" << (p);
@@ -1027,7 +1038,8 @@ int main(int argc, char* argv[])
       //Run QM optimization
       LICHEMNEB(Struct,QMMMOpts,optct);
       //Reset tolerance before optimization check
-      QMMMOpts.QMOptTol = SavedOptTol;
+      QMMMOpts.QMOptTol = SavedQMOptTol;
+      QMMMOpts.MMOptTol = SavedMMOptTol;
       //Print optimized geometry
       Print_traj(Struct,outfile,QMMMOpts);
       //Check convergence
