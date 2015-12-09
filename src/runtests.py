@@ -897,11 +897,11 @@ for qmtest in QMTests:
           QMMMEnergy = 0.0
         if (QMPack == "Gaussian"):
           #Check against saved energy
-          if (QMMMEnergy == round(-3015.7006962,5)):
+          if (QMMMEnergy == round(-3015.70069315,5)):
             PassEnergy = 1
         if (QMPack == "NWChem"):
           #Check against saved energy
-          if (QMMMEnergy == round(-3015.83160943,5)):
+          if (QMMMEnergy == round(-3015.8316093,5)):
             PassEnergy = 1
         line += " DFP/Pseudobonds:     "
         if (PassEnergy == 1):

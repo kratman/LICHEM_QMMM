@@ -515,9 +515,9 @@ int main(int argc, char* argv[])
     {
       QMMMOpts.QMOptTol = 0.005; //Speedy convergance on the first step
     }
-    if (QMMMOpts.MMOptTol < 0.5)
+    if (QMMMOpts.MMOptTol < 0.25)
     {
-      QMMMOpts.MMOptTol = 0.50; //Speedy convergance on the first step
+      QMMMOpts.MMOptTol = 0.25; //Speedy convergance on the first step
     }
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
@@ -858,13 +858,18 @@ int main(int argc, char* argv[])
     {
       QMMMOpts.QMOptTol = 0.005; //Speedy convergance on the first step
     }
-    if (QMMMOpts.MMOptTol < 0.5)
+    if (QMMMOpts.MMOptTol < 0.25)
     {
-      QMMMOpts.MMOptTol = 0.50; //Speedy convergance on the first step
+      QMMMOpts.MMOptTol = 0.25; //Speedy convergance on the first step
     }
     //Print initial structure
     Print_traj(Struct,outfile,QMMMOpts);
     cout << "Nudged elastic band optimization:" << '\n';
+    if (QMMMOpts.Climb)
+    {
+      cout << " | Short path detected. Starting climbing image NEB. |";
+      cout << '\n' << '\n';
+    }
     cout << " | Opt. step: 0 | Bead energies:";
     cout << '\n';
     cout.flush(); //Print progress
