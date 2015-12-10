@@ -23,7 +23,12 @@ int main(int argc, char* argv[])
 {
   //Misc. initialization
   StartTime = (unsigned)time(0); //Time the program starts
+  //End of section
+
+  //Output stream settings
+  //NB: The streams should always be returned to these settings
   cout.precision(12);
+  cerr.precision(12);
   //End of section
 
   //Initialize local variables
@@ -89,6 +94,8 @@ int main(int argc, char* argv[])
   {
     double Eqm = 0; //QM energy
     double Emm = 0; //MM energy
+    stringstream call; //Used to save settings
+    call.copyfmt(cout); //Save settings
     cout << fixed;
     cout << '\n'; //Print blank line
     cout << "Single-point energy:" << '\n';
@@ -157,7 +164,8 @@ int main(int argc, char* argv[])
       cout << '\n';
     }
     cout << '\n';
-    cout.flush();
+    cout.flush(); //Print output
+    cout.copyfmt(call); //Replace settings
   }
   //End of section
 
@@ -215,6 +223,7 @@ int main(int argc, char* argv[])
     }
     stringstream call; //Stream for system calls and reading/writing files
     call.copyfmt(cout); //Save settings
+    cout << fixed; //Force floating point numbers
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
     cout << setprecision(12) << SumE << " eV";
@@ -344,6 +353,7 @@ int main(int argc, char* argv[])
     }
     stringstream call; //Stream for system calls and reading/writing files
     call.copyfmt(cout); //Save settings
+    cout << fixed; //Force floating point numbers
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
     cout << setprecision(12) << SumE << " eV";
@@ -450,6 +460,7 @@ int main(int argc, char* argv[])
     }
     stringstream call; //Stream for system calls and reading/writing files
     call.copyfmt(cout); //Save settings
+    cout << fixed; //Force floating point numbers
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
     cout << setprecision(12) << SumE << " eV";
@@ -567,6 +578,7 @@ int main(int argc, char* argv[])
     }
     stringstream call; //Stream for system calls and reading/writing files
     call.copyfmt(cout); //Save settings
+    cout << fixed; //Force floating point numbers
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
     cout << setprecision(12) << SumE << " eV";
@@ -962,12 +974,12 @@ int main(int argc, char* argv[])
       }
       stringstream call; //Stream for system calls and reading/writing files
       call.copyfmt(cout); //Save settings
-      cout << fixed;
+      cout << fixed; //Force floating point numbers
       cout << "   Bead: ";
       cout << p << " | React. coord: ";
       cout << setprecision(3) << ReactCoord(p);
       cout << " | Energy: ";
-      cout << setprecision(12) << SumE << " eV";
+      cout << setprecision(16) << SumE << " eV";
       cout << '\n';
       cout.flush(); //Print progress
       cout.copyfmt(call); //Replace settings
@@ -1115,6 +1127,7 @@ int main(int argc, char* argv[])
     }
     stringstream call; //Stream for system calls and reading/writing files
     call.copyfmt(cout); //Save settings
+    cout << fixed; //Force floating point numbers
     cout << " | Opt. step: 0";
     cout << " | Energy: ";
     cout << setprecision(16) << SumE;
@@ -1221,19 +1234,22 @@ int main(int argc, char* argv[])
   TotalQM /= 3600.0; //Convert from seconds to hours
   TotalMM /= 3600.0; //Convert from seconds to hours
   OtherTime /= 3600.0; //Convert from seconds to hours
+  //NB: Skipping cout reset since LICHEM is about to quit
+  cout.precision(4); //Time cannot be less than 1 second
+  cout << fixed; //Forces floating point numbers
   cout << "################# Usage Statistics #################";
   cout << '\n';
-  cout << "  Total wall time: ";
-  cout << TotalHours << " hours";
+  cout << "  Total wall time:                     ";
+  cout << setw(5) << TotalHours << " hours";
   cout << '\n';
-  cout << "  Wall time for QM Wrappers: ";
-  cout << TotalQM << " hours";
+  cout << "  Wall time for QM Wrappers:           ";
+  cout << setw(5) << TotalQM << " hours";
   cout << '\n';
-  cout << "  Wall time for MM Wrappers: ";
-  cout << TotalMM << " hours";
+  cout << "  Wall time for MM Wrappers:           ";
+  cout << setw(5) << TotalMM << " hours";
   cout << '\n';
-  cout << "  Wall time for LICHEM: ";
-  cout << OtherTime << " hours";
+  cout << "  Wall time for LICHEM:                ";
+  cout << setw(5) << OtherTime << " hours";
   cout << '\n';
   cout << "####################################################";
   cout << '\n';
