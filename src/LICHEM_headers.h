@@ -136,6 +136,10 @@ void LICHEMErrorChecker(QMMMSettings&);
 
 double LICHEMFactorial(int);
 
+string LICHEMFormDouble(double,int);
+
+string LICHEMFormFloat(double,int);
+
 void LICHEMNEB(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void LICHEMPrintSettings(QMMMSettings&);

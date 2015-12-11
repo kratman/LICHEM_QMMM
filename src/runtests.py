@@ -427,6 +427,7 @@ for qmtest in QMTests:
       #Clean up files
       cmd = ""
       cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
+      cmd += " BeadStartStruct.xyz BurstStruct.xyz"
       if (QMPack == "Gaussian"):
         #Remove checkpoint files
         cmd += " *.chk"
@@ -501,6 +502,7 @@ for qmtest in QMTests:
     #Clean up files
     cmd = ""
     cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
+    cmd += " BeadStartStruct.xyz BurstStruct.xyz"
     if (QMPack == "Gaussian"):
       #Remove checkpoint files
       cmd += " *.chk"
@@ -568,6 +570,7 @@ for qmtest in QMTests:
       #Clean up files
       cmd = ""
       cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
+      cmd += " BeadStartStruct.xyz BurstStruct.xyz"
       if (QMPack == "Gaussian"):
         #Remove checkpoint files
         cmd += " *.chk"
@@ -635,6 +638,7 @@ for qmtest in QMTests:
       #Clean up files
       cmd = ""
       cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
+      cmd += " BeadStartStruct.xyz BurstStruct.xyz"
       if (QMPack == "Gaussian"):
         #Remove checkpoint files
         cmd += " *.chk"
@@ -648,6 +652,83 @@ for qmtest in QMTests:
 
       #Delete line to avoid bugs
       line = ""
+
+    #Check NEB optimization
+    PassEnergy = 0
+    cmd = "cp methflbeads.xyz BeadStartStruct.xyz"
+    subprocess.call(cmd,shell=True) #Copy restart file
+    cmd = "lichem -n "
+    cmd += `Ncpus`
+    cmd += " "
+    cmd += "-x methfluor.xyz "
+    cmd += "-r nebreg.inp "
+    cmd += "-c methflcon.inp "
+    cmd += "-o trash.xyz "
+    cmd += "> tests.out " #Capture stdout
+    cmd += "2>&1" #Capture stderr
+    subprocess.call(cmd,shell=True) #Run calculations
+    cmd = ""
+    cmd += "grep -e"
+    cmd += ' "Opt. step: 2 " ' #Find final energy
+    cmd += "tests.out"
+    try:
+      #Safely check energy
+      QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
+      QMMMEnergy = QMMMEnergy.split()
+      QMMMEnergy = float(QMMMEnergy[11])
+      QMMMEnergy = round(QMMMEnergy,5)
+    except:
+      #Calculation failed
+      QMMMEnergy = 0.0
+    if (QMPack == "PSI4"):
+      #Check against saved energy
+      if (QMMMEnergy == round(-6513.4630137817,5)):
+        PassEnergy = 1
+    if (QMPack == "Gaussian"):
+      #Check against saved energy
+      if (QMMMEnergy == round(-6513.4616060768,5)):
+        PassEnergy = 1
+    if (QMPack == "NWChem"):
+      #Check against saved energy
+      if (QMMMEnergy == round(-6513.4627662488,5)):
+        PassEnergy = 1
+    line += " NEB TS energy:       "
+    if (PassEnergy == 1):
+      line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
+      passct += 1
+    else:
+      line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+      failct += 1
+    cmd = ""
+    cmd += "grep -e"
+    cmd += ' "Total wall time: " ' #Find run time
+    cmd += "tests.out"
+    try:
+      RunTime = subprocess.check_output(cmd,shell=True) #Get run time
+      RunTime = RunTime.split()
+      RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
+    except:
+      RunTime = " N/A"
+    line += RunTime
+    print(line)
+
+    #Clean up files
+    cmd = ""
+    cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
+    cmd += " BeadStartStruct.xyz BurstStruct.xyz"
+    if (QMPack == "Gaussian"):
+      #Remove checkpoint files
+      cmd += " *.chk"
+    if (QMPack == "PSI4"):
+      #Remove checkpoint files
+      cmd += " timer.* psi.* *.32 *.180"
+    if (QMPack == "NWChem"):
+      #Remove checkpoint files
+      cmd += " *.movecs"
+    subprocess.call(cmd,shell=True)
+
+    #Delete line to avoid bugs
+    line = ""
 
     #TINKER tests
     if (MMPack == "TINKER"):
@@ -705,6 +786,7 @@ for qmtest in QMTests:
       #Clean up files
       cmd = ""
       cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
+      cmd += " BeadStartStruct.xyz BurstStruct.xyz"
       if (QMPack == "Gaussian"):
         #Remove checkpoint files
         cmd += " *.chk"
@@ -779,6 +861,7 @@ for qmtest in QMTests:
       #Clean up files
       cmd = ""
       cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
+      cmd += " BeadStartStruct.xyz BurstStruct.xyz"
       if (QMPack == "Gaussian"):
         #Remove checkpoint files
         cmd += " *.chk"
@@ -853,6 +936,7 @@ for qmtest in QMTests:
       #Clean up files
       cmd = ""
       cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
+      cmd += " BeadStartStruct.xyz BurstStruct.xyz"
       if (QMPack == "Gaussian"):
         #Remove checkpoint files
         cmd += " *.chk"
@@ -926,6 +1010,7 @@ for qmtest in QMTests:
         #Clean up files
         cmd = ""
         cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
+        cmd += " BeadStartStruct.xyz BurstStruct.xyz"
         if (QMPack == "Gaussian"):
           #Remove checkpoint files
           cmd += " *.chk"

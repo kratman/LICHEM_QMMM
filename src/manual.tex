@@ -190,6 +190,47 @@ QM and MM packages are installed separately from LICHEM.
 Users only need to install the packages that they wish to use in the
 QMMM calculations.
 
+\section{Testing}
+
+\begin{table}[hbt]
+ \centering
+ \begin{tabular}{|c|c|}
+ \hline
+ Test & Description \\ \hline
+ HF energy & HF/6-31++G(d,p) energy of the water dimer \\
+ PBE0 energy & PBE0/6-31++G(d,p) energy of the water dimer \\
+ CCSD energy & CCSD/6-31++G(d,p) energy of the water dimer \\
+ PM6 energy & PM6 energy of the water dimer \\
+ NEB TS energy &  \\
+ TIP3P energy &  \\
+ PBE0/TIP3P energy &  \\
+ PBE0/AMOEBA energy &  \\ \hline
+ \end{tabular}
+ \caption{Approximate descriptions of the tests in the LICHEM test suite.}
+ \label{tab:Tests}
+\end{table}
+
+Test calculations can be performed with the runtests script in the tests
+directory. \\
+
+Tests can be performed for pairs of QM and MM wrappers. \\
+
+user:\$ ./runtests Ncpus QMPackage MMPackage \\
+
+Additionally, tests can be run for all wrappers at once. \\
+
+user:\$ ./runtests Ncpus All \\
+
+A dry run can be performed to check packages without performing the
+calculations. \\
+
+user:\$ ./runtests Ncpus QMPackage MMPackage Dry \\
+
+Descriptsions of the tests can be found in Table \ref{tab:Tests}.
+If tests are consistently failing, please post details on the GitHub issues
+section.
+
+
 \section{Capabilities}
 
 \begin{table}[hbt]
@@ -204,10 +245,10 @@ QMMM calculations.
  QM SD/DFP & Yes & Yes & Yes \\
  QMMM SD/DFP & Yes & Yes & Yes \\ \hline
  QM MC & Yes & Yes & Yes \\
- QMMM MC & Yes & Yes & Yes\\ \hline
+ QMMM MC & Yes & Yes & Yes \\ \hline
  QM PIMC & Yes & Yes & Yes \\
  QMMM PIMC & Yes & Yes & Yes \\ \hline
- QM RP & Yes & Yes & Yes\\
+ QM RP & Yes & Yes & Yes \\
  QMMM RP & Yes & Yes & Yes \\ \hline
  \end{tabular}
  \caption{

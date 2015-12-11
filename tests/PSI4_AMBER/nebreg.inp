@@ -1,0 +1,21 @@
+Potential_type: QM
+QM_type: PSI4
+QM_functional: PBE0
+QM_basis: 6-31++G**
+QM_memory: 256 MB
+QM_charge: -1
+QM_spin: 1
+Calculation_type: NEB
+Beads: 3
+Opt_step_size: 1.00
+Max_opt_step: 0.10
+Spring_const: 1.00
+Frozen_ends: No
+QM_opt_tolerance: 5e-4
+MM_opt_tolerance: 1e-2
+Max_opt_steps: 400
+PBC: No
+QM_atoms: 0
+Pseudo_atoms: 0
+Boundary_atoms: 0
+Frozen_atoms: 0

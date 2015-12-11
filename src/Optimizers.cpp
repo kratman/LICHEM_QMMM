@@ -24,15 +24,11 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
                   int Bead, bool QMregion)
 {
   //Check convergence of QMMM optimizations
-  stringstream call; //Stream for system calls and reading/writing files
-  string dummy; //Generic string
-  call.str("");
-  //Initialize stats variables
-  bool OptDone = 0;
-  double RMSdiff = 0;
-  double RMSforce = 0;
-  double MAXforce = 0;
-  double SumE = 0;
+  bool OptDone = 0; //Ends the simulation
+  double RMSdiff = 0; //RMS deviation
+  double RMSforce = 0; //RMS force
+  double MAXforce = 0; //Maximum force
+  double SumE = 0; //Storage for energies
   int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
   //Check progress
   if (QMregion)
@@ -74,15 +70,12 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     RMSdiff /= (Nqm+Npseudo)*(Nqm+Npseudo-1)/2;
     RMSdiff = sqrt(RMSdiff);
     //Print progress
-    call.copyfmt(cout); //Save settings
-    cout << setprecision(12);
     cout << "    QM step: " << stepct;
-    cout << " | RMS dev: " << RMSdiff;
+    cout << " | RMS dev: " << LICHEMFormDouble(RMSdiff,12);
     cout << " \u212B" << '\n';
-    cout << "    Max. force: " << MAXforce;
-    cout << " eV/\u212B | RMS force: " << RMSforce;
+    cout << "    Max. force: " << LICHEMFormDouble(MAXforce,12);
+    cout << " eV/\u212B | RMS force: " << LICHEMFormDouble(RMSforce,12);
     cout << " eV/\u212B" << '\n';
-    cout.copyfmt(call); //Return to previous settings
     //Check convergence criteria
     if ((RMSdiff <= QMMMOpts.QMOptTol) and
        (RMSforce <= (10*QMMMOpts.QMOptTol)) and
@@ -161,14 +154,11 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     RMSdiff /= (Natoms-Nfreeze)*(Natoms-Nfreeze-1)/2;
     RMSdiff = sqrt(RMSdiff);
     //Print progress
-    call.copyfmt(cout); //Save settings
-    cout << setprecision(12);
     cout << " | Opt. step: ";
     cout << stepct << " | Energy: ";
-    cout << SumE << " eV ";
-    cout << " | RMS dev: " << RMSdiff;
+    cout << LICHEMFormDouble(SumE,16) << " eV ";
+    cout << " | RMS dev: " << LICHEMFormDouble(RMSdiff,12);
     cout << " \u212B" << '\n';
-    cout.copyfmt(call); //Replace settings
     //Check convergence
     if (RMSdiff <= QMMMOpts.MMOptTol)
     {
@@ -191,8 +181,6 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 {
   //Cartesian steepest descent optimizer
   stringstream call; //Stream for system calls and reading/writing files
-  call.copyfmt(cout); //Save settings
-  string dummy; //Generic string
   int stepct = 0; //Counter for optimization steps
   fstream qmfile, ifile, ofile; //Generic file names
   double Eold = 0; //Old saved energy
@@ -330,8 +318,6 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
 {
   //Cartesian damped Verlet optimizer (aka QuickMin)
   stringstream call; //Stream for system calls and reading/writing files
-  call.copyfmt(cout); //Save settings
-  string dummy; //Generic string
   int stepct = 0; //Counter for optimization steps
   fstream qmfile, ifile, ofile; //Generic file names
   int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
@@ -482,8 +468,6 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //NB: This optimizer does not have a true line search, instead
   //a steepest descent step is performed if the optimizer is unstable
   stringstream call; //Stream for system calls and reading/writing files
-  call.copyfmt(cout); //Save settings
-  string dummy; //Generic string
   int stepct = 0; //Counter for optimization steps
   fstream qmfile,ifile,ofile; //Generic file streams
   int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
@@ -559,15 +543,12 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   VecMax = 0; //Using this variable to avoid creating a new one
   VecMax = Forces.squaredNorm(); //Calculate initial RMS force
   VecMax = sqrt(VecMax/Ndof);
-  call.copyfmt(cout); //Save settings
-  cout << setprecision(12);
   cout << "    Performing a steepest descent step..." << '\n';
   cout << "    QM step: 0";
-  cout << " | RMS force: " << VecMax;
+  cout << " | RMS force: " << LICHEMFormDouble(VecMax,12);
   cout << " eV/\u212B";
   cout << '\n' << '\n';
   cout.flush();
-  cout.copyfmt(call); //Return to previous settings
   //Optimize structure
   Eold = E; //Save energy
   StepScale = QMMMOpts.StepScale;
@@ -762,8 +743,6 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
 {
   //Ensemble steepest descent optimizer
   stringstream call; //Stream for system calls and reading/writing files
-  call.copyfmt(cout); //Save settings
-  string dummy; //Generic string
   int stepct = 0; //Counter for optimization steps
   fstream ifile, ofile; //Generic file names
   int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
@@ -876,14 +855,11 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
     //Print structure and energy
     stepct += 1;
     Print_traj(Struct,traj,QMMMOpts);
-    call.copyfmt(cout); //Save settings
-    cout << setprecision(16);
     cout << " | Step: " << stepct;
     cout << " | Simulation time: ";
     cout << (stepct*QMMMOpts.dt*QMMMOpts.Nsteps/1000);
-    cout << " ps | Energy: " << SumE;
+    cout << " ps | Energy: " << LICHEMFormDouble(SumE,16);
     cout << " eV" << '\n';
-    cout.copyfmt(call); //Replace settings
     cout.flush();
   }
   //Clean up files and return

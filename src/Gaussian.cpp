@@ -139,36 +139,34 @@ void ExternalGaussian(int& argc, char**& argv)
   }
   //Write formatted output for g09
   double E = (Eqm+Emm)/Har2eV; //Calculate
-  GauOutput << fixed; //Formatting
   GauOutput << left; //More formatting
-  GauOutput.precision(12);
-  GauOutput << setw(20) << E; //QM+MM partial energy
-  GauOutput << setw(20) << 0.0; //Dipole moment
-  GauOutput << setw(20) << 0.0; //Dipole moment
-  GauOutput << setw(20) << 0.0; //Dipole moment
+  GauOutput << LICHEMFormDouble(E,20); //QM+MM partial energy
+  GauOutput << LICHEMFormDouble(0.0,20); //Dipole moment
+  GauOutput << LICHEMFormDouble(0.0,20); //Dipole moment
+  GauOutput << LICHEMFormDouble(0.0,20); //Dipole moment
   GauOutput << '\n';
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
     //Write forces
-    GauOutput << setw(20) << (-1*Forces(3*i)*BohrRad/Har2eV);
-    GauOutput << setw(20) << (-1*Forces(3*i+1)*BohrRad/Har2eV);
-    GauOutput << setw(20) << (-1*Forces(3*i+2)*BohrRad/Har2eV);
+    GauOutput << LICHEMFormDouble(-1*Forces(3*i)*BohrRad/Har2eV,20);
+    GauOutput << LICHEMFormDouble(-1*Forces(3*i+1)*BohrRad/Har2eV,20);
+    GauOutput << LICHEMFormDouble(-1*Forces(3*i+2)*BohrRad/Har2eV,20);
     GauOutput << '\n';
   }
-  GauOutput << setw(20) << 0.0; //Polarizability
-  GauOutput << setw(20) << 0.0; //Polarizability
-  GauOutput << setw(20) << 0.0; //Polarizability
+  GauOutput << LICHEMFormDouble(0.0,20); //Polarizability
+  GauOutput << LICHEMFormDouble(0.0,20); //Polarizability
+  GauOutput << LICHEMFormDouble(0.0,20); //Polarizability
   GauOutput << '\n';
-  GauOutput << setw(20) << 0.0; //Polarizability
-  GauOutput << setw(20) << 0.0; //Polarizability
-  GauOutput << setw(20) << 0.0; //Polarizability
+  GauOutput << LICHEMFormDouble(0.0,20); //Polarizability
+  GauOutput << LICHEMFormDouble(0.0,20); //Polarizability
+  GauOutput << LICHEMFormDouble(0.0,20); //Polarizability
   GauOutput << '\n';
   for (int i=0;i<Ndof;i++)
   {
     //Dipole derivatives
-    GauOutput << setw(20) << 0.0;
-    GauOutput << setw(20) << 0.0;
-    GauOutput << setw(20) << 0.0;
+    GauOutput << LICHEMFormDouble(0.0,20);
+    GauOutput << LICHEMFormDouble(0.0,20);
+    GauOutput << LICHEMFormDouble(0.0,20);
     GauOutput << '\n';
   }
   //Write output and close the file
@@ -183,9 +181,9 @@ void ExternalGaussian(int& argc, char**& argv)
   {
     //Write XYZ coordinates
     ofile << Struct[i].QMTyp << " ";
-    ofile << setprecision(12) << Struct[i].P[Bead].x << " ";
-    ofile << setprecision(12) << Struct[i].P[Bead].y << " ";
-    ofile << setprecision(12) << Struct[i].P[Bead].z << '\n';
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].x,16) << " ";
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].y,16) << " ";
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].z,16) << '\n';
   }
   ofile.flush();
   ofile.close();
@@ -712,10 +710,10 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   for (int i=0;i<Natoms;i++)
   {
     //Print XYZ coordinates
-    ofile << setprecision(12) << Struct[i].QMTyp << " ";
-    ofile << setprecision(12) << Struct[i].P[Bead].x << " ";
-    ofile << setprecision(12) << Struct[i].P[Bead].y << " ";
-    ofile << setprecision(12) << Struct[i].P[Bead].z << '\n';
+    ofile << Struct[i].QMTyp << " ";
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].x,16) << " ";
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].y,16) << " ";
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].z,16) << '\n';
   }
   ofile.flush();
   ofile.close();
@@ -767,21 +765,17 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (Struct[i].QMregion)
     {
       call << Struct[i].QMTyp;
-      call << fixed; //Forces numbers to be floats
-      call << " " << setprecision(12) << Struct[i].P[Bead].x;
-      call << " " << setprecision(12) << Struct[i].P[Bead].y;
-      call << " " << setprecision(12) << Struct[i].P[Bead].z;
-      call.copyfmt(cout); //Copy print settings
+      call << " " << LICHEMFormDouble(Struct[i].P[Bead].x,16);
+      call << " " << LICHEMFormDouble(Struct[i].P[Bead].y,16);
+      call << " " << LICHEMFormDouble(Struct[i].P[Bead].z,16);
       call << '\n';
     }
     if (Struct[i].PBregion)
     {
       call << "F";
-      call << fixed; //Forces numbers to be floats
-      call << " " << setprecision(12) << Struct[i].P[Bead].x;
-      call << " " << setprecision(12) << Struct[i].P[Bead].y;
-      call << " " << setprecision(12) << Struct[i].P[Bead].z;
-      call.copyfmt(cout); //Copy print settings
+      call << " " << LICHEMFormDouble(Struct[i].P[Bead].x,16);
+      call << " " << LICHEMFormDouble(Struct[i].P[Bead].y,16);
+      call << " " << LICHEMFormDouble(Struct[i].P[Bead].z,16);
       call << '\n';
     }
   }

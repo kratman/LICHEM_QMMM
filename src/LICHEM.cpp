@@ -27,8 +27,8 @@ int main(int argc, char* argv[])
 
   //Output stream settings
   //NB: The streams should always be returned to these settings
-  cout.precision(12);
-  cerr.precision(12);
+  cout.precision(16);
+  cerr.precision(16);
   //End of section
 
   //Initialize local variables
@@ -94,9 +94,6 @@ int main(int argc, char* argv[])
   {
     double Eqm = 0; //QM energy
     double Emm = 0; //MM energy
-    stringstream call; //Used to save settings
-    call.copyfmt(cout); //Save settings
-    cout << fixed;
     cout << '\n'; //Print blank line
     cout << "Single-point energy:" << '\n';
     cout.flush(); //Print progress
@@ -124,7 +121,7 @@ int main(int argc, char* argv[])
     if (QMMM or QMonly)
     {
       //Print QM partial energy
-      cout << "QM energy: " << Eqm << " eV";
+      cout << "QM energy: " << LICHEMFormDouble(Eqm,16) << " eV";
       cout << '\n';
     }
     //Calculate MM energy
@@ -150,7 +147,7 @@ int main(int argc, char* argv[])
     if (QMMM or MMonly)
     {
       //Print MM partial energy
-      cout << "MM energy: " << Emm << " eV";
+      cout << "MM energy: " << LICHEMFormDouble(Emm,16) << " eV";
       cout << '\n';
     }
     SumE = Eqm+Emm; //Total energy
@@ -158,14 +155,13 @@ int main(int argc, char* argv[])
     {
       //Print total energy
       cout << "QMMM energy: ";
-      cout << SumE << " eV";
+      cout << LICHEMFormDouble(SumE,16) << " eV";
       cout << " ";
-      cout << SumE/Har2eV << " a.u.";
+      cout << LICHEMFormDouble(SumE/Har2eV,16) << " a.u.";
       cout << '\n';
     }
     cout << '\n';
     cout.flush(); //Print output
-    cout.copyfmt(call); //Replace settings
   }
   //End of section
 
@@ -221,15 +217,11 @@ int main(int argc, char* argv[])
       SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    stringstream call; //Stream for system calls and reading/writing files
-    call.copyfmt(cout); //Save settings
-    cout << fixed; //Force floating point numbers
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
-    cout << setprecision(12) << SumE << " eV";
+    cout << LICHEMFormDouble(SumE,12) << " eV";
     cout << '\n';
     cout.flush(); //Print progress
-    cout.copyfmt(call); //Replace settings
     //Run optimization
     bool OptDone = 0;
     if (QMMMOpts.MaxOptSteps == 0)
@@ -351,15 +343,11 @@ int main(int argc, char* argv[])
       SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    stringstream call; //Stream for system calls and reading/writing files
-    call.copyfmt(cout); //Save settings
-    cout << fixed; //Force floating point numbers
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
-    cout << setprecision(12) << SumE << " eV";
+    cout << LICHEMFormDouble(SumE,12) << " eV";
     cout << '\n';
     cout.flush(); //Print progress
-    cout.copyfmt(call); //Replace settings
     //Run optimization
     bool OptDone = 0;
     while (!OptDone)
@@ -458,15 +446,11 @@ int main(int argc, char* argv[])
       SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    stringstream call; //Stream for system calls and reading/writing files
-    call.copyfmt(cout); //Save settings
-    cout << fixed; //Force floating point numbers
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
-    cout << setprecision(12) << SumE << " eV";
+    cout << LICHEMFormDouble(SumE,12) << " eV";
     cout << '\n';
     cout.flush(); //Print progress
-    cout.copyfmt(call); //Replace settings
     //Run optimization
     bool OptDone = 0;
     while (!OptDone)
@@ -576,15 +560,11 @@ int main(int argc, char* argv[])
       SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    stringstream call; //Stream for system calls and reading/writing files
-    call.copyfmt(cout); //Save settings
-    cout << fixed; //Force floating point numbers
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
-    cout << setprecision(12) << SumE << " eV";
+    cout << LICHEMFormDouble(SumE,12) << " eV";
     cout << '\n';
     cout.flush(); //Print progress
-    cout.copyfmt(call); //Replace settings
     //Run optimization
     bool OptDone = 0;
     while (!OptDone)
@@ -972,17 +952,13 @@ int main(int argc, char* argv[])
         //Save product energy
         QMMMOpts.Eprod = SumE;
       }
-      stringstream call; //Stream for system calls and reading/writing files
-      call.copyfmt(cout); //Save settings
-      cout << fixed; //Force floating point numbers
       cout << "   Bead: ";
       cout << p << " | React. coord: ";
-      cout << setprecision(3) << ReactCoord(p);
+      cout << LICHEMFormDouble(ReactCoord(p),5);
       cout << " | Energy: ";
-      cout << setprecision(16) << SumE << " eV";
+      cout << LICHEMFormDouble(SumE,16) << " eV";
       cout << '\n';
       cout.flush(); //Print progress
-      cout.copyfmt(call); //Replace settings
       //Update transition state
       if (SumE > QMMMOpts.Ets)
       {
@@ -993,6 +969,7 @@ int main(int argc, char* argv[])
       //Copy checkpoint data to speed up first step
       if (p != (QMMMOpts.Nbeads-1))
       {
+        stringstream call;
         if (Gaussian and (QMMMOpts.Func != "SemiEmp"))
         {
           call.str("");
@@ -1125,15 +1102,11 @@ int main(int argc, char* argv[])
       SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tstart;
     }
-    stringstream call; //Stream for system calls and reading/writing files
-    call.copyfmt(cout); //Save settings
-    cout << fixed; //Force floating point numbers
     cout << " | Opt. step: 0";
     cout << " | Energy: ";
-    cout << setprecision(16) << SumE;
+    cout << LICHEMFormDouble(SumE,16);
     cout << " eV" << '\n';
     cout.flush(); //Print progress
-    cout.copyfmt(call); //Replace settings
     //Run optimization
     EnsembleSD(Struct,outfile,QMMMOpts,0);
     //Finish output
@@ -1180,7 +1153,6 @@ int main(int argc, char* argv[])
   {
     //Clear any remaining Gaussian files
     stringstream call; //Stream for system calls and reading/writing files
-    call.copyfmt(cout); //Save settings
     call.str("");
     call << "rm -f Gau-*"; //Produced if there is a crash
     GlobalSys = system(call.str().c_str());
@@ -1189,7 +1161,6 @@ int main(int argc, char* argv[])
   {
     //Clear any remaining PSI4 files
     stringstream call; //Stream for system calls and reading/writing files
-    call.copyfmt(cout); //Save settings
     call.str("");
     call << "rm -f psi*";
     GlobalSys = system(call.str().c_str());
@@ -1198,7 +1169,6 @@ int main(int argc, char* argv[])
   {
     //Clear worthless output xyz file
     stringstream call; //Stream for system calls and reading/writing files
-    call.copyfmt(cout); //Save settings
     call.str("");
     call << "rm -f ";
     for (int i=0;i<argc;i++)
@@ -1234,22 +1204,19 @@ int main(int argc, char* argv[])
   TotalQM /= 3600.0; //Convert from seconds to hours
   TotalMM /= 3600.0; //Convert from seconds to hours
   OtherTime /= 3600.0; //Convert from seconds to hours
-  //NB: Skipping cout reset since LICHEM is about to quit
-  cout.precision(4); //Time cannot be less than 1 second
-  cout << fixed; //Forces floating point numbers
   cout << "################# Usage Statistics #################";
   cout << '\n';
   cout << "  Total wall time:                     ";
-  cout << setw(5) << TotalHours << " hours";
+  cout << LICHEMFormDouble(TotalHours,6) << " hours";
   cout << '\n';
   cout << "  Wall time for QM Wrappers:           ";
-  cout << setw(5) << TotalQM << " hours";
+  cout << LICHEMFormDouble(TotalQM,6) << " hours";
   cout << '\n';
   cout << "  Wall time for MM Wrappers:           ";
-  cout << setw(5) << TotalMM << " hours";
+  cout << LICHEMFormDouble(TotalMM,6) << " hours";
   cout << '\n';
   cout << "  Wall time for LICHEM:                ";
-  cout << setw(5) << OtherTime << " hours";
+  cout << LICHEMFormDouble(OtherTime,6) << " hours";
   cout << '\n';
   cout << "####################################################";
   cout << '\n';

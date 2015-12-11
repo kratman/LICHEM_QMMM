@@ -126,16 +126,15 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    ofile.precision(12);
     ofile << setw(6) << (Struct[i].id+1);
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].x;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].x,16);
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].y;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].y,16);
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].z;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].z,16);
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -143,7 +142,6 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
     }
-    ofile.copyfmt(cout); //Copy settings from cout
     ofile << '\n';
   }
   ofile.flush();
@@ -315,16 +313,15 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    ofile.precision(12);
     ofile << setw(6) << (Struct[i].id+1);
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].x;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].x,16);
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].y;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].y,16);
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].z;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].z,16);
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -332,7 +329,6 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
     }
-    ofile.copyfmt(cout); //Copy settings from cout
     ofile << '\n';
   }
   ofile.flush();
@@ -631,16 +627,15 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    ofile.precision(12);
     ofile << setw(6) << (Struct[i].id+1);
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].x;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].x,16);
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].y;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].y,16);
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].z;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].z,16);
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -648,7 +643,6 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
     }
-    ofile.copyfmt(cout); //Copy settings from cout
     ofile << '\n';
   }
   ofile.flush();
@@ -847,16 +841,15 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    ofile.precision(12);
     ofile << setw(6) << (Struct[i].id+1);
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].x;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].x,16);
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].y;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].y,16);
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].z;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].z,16);
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -864,7 +857,6 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
     }
-    ofile.copyfmt(cout); //Copy settings from cout
     ofile << '\n';
   }
   ofile.flush();
@@ -1067,16 +1059,15 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    ofile.precision(12);
     ofile << setw(6) << (Struct[i].id+1);
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].x;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].x,16);
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].y;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].y,16);
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].z;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].z,16);
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -1084,7 +1075,6 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
     }
-    ofile.copyfmt(cout); //Copy settings from cout
     ofile << '\n';
   }
   ofile.flush();
@@ -1302,16 +1292,15 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    ofile.precision(12);
     ofile << setw(6) << (Struct[i].id+1);
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].x;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].x,16);
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].y;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].y,16);
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].z;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].z,16);
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -1319,7 +1308,6 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
     }
-    ofile.copyfmt(cout); //Copy settings from cout
     ofile << '\n';
   }
   ofile.flush();
@@ -1522,16 +1510,15 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    ofile.precision(12);
     ofile << setw(6) << (Struct[i].id+1);
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].x;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].x,16);
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].y;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].y,16);
     ofile << " ";
-    ofile << setw(14) << Struct[i].P[Bead].z;
+    ofile << LICHEMFormDouble(Struct[i].P[Bead].z,16);
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -1539,7 +1526,6 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       ofile << " "; //Avoids trailing spaces
       ofile << setw(6) << (Struct[i].Bonds[j]+1);
     }
-    ofile.copyfmt(cout); //Copy settings from cout
     ofile << '\n';
   }
   ofile.flush();
