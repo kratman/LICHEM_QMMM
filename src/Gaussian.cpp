@@ -383,11 +383,6 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << " ";
   call << "LICHM_" << Bead;
   call << ".com";
-  if (QMMMOpts.Func == "SemiEmp")
-  {
-    //Remove SemiEmp checkpoints to avoid errors
-    call << " LICHM_" << Bead << ".chk";
-  }
   GlobalSys = system(call.str().c_str());
   //Change units and return
   Eqm -= Eself;
@@ -407,6 +402,15 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "LICHM_" << Bead << ".chk";
   bool UseCheckPoint = CheckFile(call.str());
+  if (QMMMOpts.Func == "SemiEmp")
+  {
+    //Disable checkpoints for the SemiEmp force calculations
+    UseCheckPoint = 0;
+    //Remove SemiEmp checkpoints to avoid errors
+    call.str("");
+    call << "rm -f LICHM_" << Bead << ".chk";
+    GlobalSys = system(call.str().c_str());
+  }
   //Construct Gaussian input
   call.str("");
   call << "#P ";
@@ -528,6 +532,15 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "LICHM_" << Bead << ".chk";
   bool UseCheckPoint = CheckFile(call.str());
+  if (QMMMOpts.Func == "SemiEmp")
+  {
+    //Disable checkpoints for the SemiEmp force calculations
+    UseCheckPoint = 0;
+    //Remove SemiEmp checkpoints to avoid errors
+    call.str("");
+    call << "rm -f LICHM_" << Bead << ".chk";
+    GlobalSys = system(call.str().c_str());
+  }
   //Construct Gaussian input
   call.str("");
   call << "#P ";

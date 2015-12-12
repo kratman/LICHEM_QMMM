@@ -219,7 +219,7 @@ int main(int argc, char* argv[])
     }
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
-    cout << LICHEMFormDouble(SumE,12) << " eV";
+    cout << LICHEMFormDouble(SumE,16) << " eV";
     cout << '\n';
     cout.flush(); //Print progress
     //Run optimization
@@ -345,7 +345,7 @@ int main(int argc, char* argv[])
     }
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
-    cout << LICHEMFormDouble(SumE,12) << " eV";
+    cout << LICHEMFormDouble(SumE,16) << " eV";
     cout << '\n';
     cout.flush(); //Print progress
     //Run optimization
@@ -448,7 +448,7 @@ int main(int argc, char* argv[])
     }
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
-    cout << LICHEMFormDouble(SumE,12) << " eV";
+    cout << LICHEMFormDouble(SumE,16) << " eV";
     cout << '\n';
     cout.flush(); //Print progress
     //Run optimization
@@ -562,7 +562,7 @@ int main(int argc, char* argv[])
     }
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
-    cout << LICHEMFormDouble(SumE,12) << " eV";
+    cout << LICHEMFormDouble(SumE,16) << " eV";
     cout << '\n';
     cout.flush(); //Print progress
     //Run optimization
@@ -996,12 +996,20 @@ int main(int argc, char* argv[])
     }
     //Run optimization
     bool PathDone = 0;
+    int PathStart = 0; //First bead to optimize
+    int PathEnd = QMMMOpts.Nbeads; //Last bead to optimize
+    if (QMMMOpts.FrznEnds)
+    {
+      //Change the start and end points
+      PathStart = 1;
+      PathEnd = QMMMOpts.Nbeads-1;
+    }
     while (!PathDone)
     {
       //Copy structure
       OldStruct = Struct;
       //Run MM optimization
-      for (int p=0;p<QMMMOpts.Nbeads;p++)
+      for (int p=PathStart;p<PathEnd;p++)
       {
         if (TINKER)
         {
@@ -1049,6 +1057,22 @@ int main(int argc, char* argv[])
     cout << '\n';
     cout << "Optimization complete.";
     cout << '\n' << '\n';
+    //Print the reaction barriers
+    double dEfor = QMMMOpts.Ets-QMMMOpts.Ereact; //Forward barrier
+    double dErev = QMMMOpts.Ets-QMMMOpts.Eprod; //Reverse barrier
+    cout << " | Forward barrier: ";
+    cout << LICHEMFormDouble(dEfor,16) << " eV" << '\n';
+    cout << "     ";
+    cout << LICHEMFormDouble(dEfor/Har2eV,16) << " a.u.";
+    cout << " , ";
+    cout << LICHEMFormDouble(dEfor/kcal2eV,16) << " kcal/mol" << '\n';
+    cout << " | Reverse barrier: ";
+    cout << LICHEMFormDouble(dErev,16) << " eV" << '\n';
+    cout << "     ";
+    cout << LICHEMFormDouble(dErev/Har2eV,16) << " a.u.";
+    cout << " , ";
+    cout << LICHEMFormDouble(dErev/kcal2eV,16) << " kcal/mol" << '\n';
+    cout << '\n';
     cout.flush();
   }
   //End of section

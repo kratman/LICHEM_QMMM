@@ -12,7 +12,7 @@
 %Package settings
 \documentclass[12pt]{report}
 \usepackage[hidelinks,bookmarks]{hyperref}
-\usepackage[margin=1in]{geometry}
+\usepackage[margin=0.75in]{geometry}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{color}
@@ -190,46 +190,65 @@ QM and MM packages are installed separately from LICHEM.
 Users only need to install the packages that they wish to use in the
 QMMM calculations.
 
-\section{Testing}
+\section{LICHEM test suite}
 
 \begin{table}[hbt]
  \centering
- \begin{tabular}{|c|c|}
+ \scalebox{0.85}{
+ \begin{tabular}{|l|l|}
  \hline
- Test & Description \\ \hline
+ Test suite label & Description \\ \hline
+  & \\
  HF energy & HF/6-31++G(d,p) energy of the water dimer \\
+  & \\
  PBE0 energy & PBE0/6-31++G(d,p) energy of the water dimer \\
+  & \\
  CCSD energy & CCSD/6-31++G(d,p) energy of the water dimer \\
+  & \\
  PM6 energy & PM6 energy of the water dimer \\
- NEB TS energy &  \\
- TIP3P energy &  \\
- PBE0/TIP3P energy &  \\
- PBE0/AMOEBA energy &  \\ \hline
- \end{tabular}
- \caption{Approximate descriptions of the tests in the LICHEM test suite.}
+  & \\
+ NEB TS energy & Transition state optimization of [F--(CH$_3$)--F]$^-$ \\
+  & \\
+ TIP3P energy & TIP3P energy of the water dimer \\
+  & \\
+ PBE0/TIP3P energy & PBE0/6-31++G(d,p)/TIP3P energy of the water dimer \\
+  & \\
+ PBE0/AMOEBA energy & PBE0/6-31++G(d,p)/AMOEBA energy of the water dimer \\
+  & \\
+ DFP/Pseudobonds & Optimization of butyne with pseudobonds on the methyl
+ groups \\
+  & \\ \hline
+ \end{tabular}}
+ \caption{
+ Approximate descriptions of the tests in the LICHEM test suite.
+ Only some of the tests can be performed by the pairs of wrappers.}
  \label{tab:Tests}
 \end{table}
 
 Test calculations can be performed with the runtests script in the tests
-directory. \\
+directory.
+The test suite is semi-automated and will search the user's path for QM and
+MM packages. \\
 
-Tests can be performed for pairs of QM and MM wrappers. \\
+Tests can be performed for pairs of QM and MM wrappers, \\
 
-user:\$ ./runtests Ncpus QMPackage MMPackage \\
+user:\$ ./runtests [Ncpus] [QMPackage] [MMPackage] \\
 
-Additionally, tests can be run for all wrappers at once. \\
+or for all wrappers at once. \\
 
-user:\$ ./runtests Ncpus All \\
+user:\$ ./runtests [Ncpus] All \\
 
 A dry run can be performed to check packages without performing the
 calculations. \\
 
-user:\$ ./runtests Ncpus QMPackage MMPackage Dry \\
+user:\$ ./runtests [Ncpus] [QMPackage] [MMPackage] Dry \\
+
+Dry runs are useful for checking which QM and MM packages were found in the
+path. \\
 
 Descriptsions of the tests can be found in Table \ref{tab:Tests}.
 If tests are consistently failing, please post details on the GitHub issues
 section.
-
 
 \section{Capabilities}
 
@@ -241,7 +260,7 @@ section.
  QM energy & Yes & Yes & Yes \\
  QMMM energy & Yes & Yes & Yes \\ \hline
  QM opt. & Yes & Yes & No \\
- QMMM opt. & Yes & Yes & No \\ \hline
+ QMMM opt. & Yes & No & No \\ \hline
  QM SD/DFP & Yes & Yes & Yes \\
  QMMM SD/DFP & Yes & Yes & Yes \\ \hline
  QM MC & Yes & Yes & Yes \\
@@ -750,7 +769,7 @@ $j$.
 Note that the atom types given in the XYZ file are ignored since this
 information is read from the files given by the -x and -c flags.
 
-\subsection{Examples and tests}
+\subsection{Examples}
 
 Example LICHEM input and tutorials can be found in the doc directory.
 Most of the examples are not intended to be used for calculations. \\
@@ -767,16 +786,7 @@ Region\_files: Example region files for a variety of calculations. \\
 
 TINKER\_files: Contains tinker.key files. \\
 
-LICHEM also has a semi-automated test suite. \\
-
-user:\$ ./runtests [Ncpus] [QM package] [MM package] [dry (optional)] \\
-
-The test suite searches for QM and MM binaries matching the given names
-and runs a set of single-point energy calculations.
-If no arguments are given to runtests, the test suite will print all available
-QM and MM binaries.
-A dry run can also be performed, where the test suite does not run any of the
-actual calculations.
+Additional examples can be found in the tests directory.
 
 \chapter{Theoretical Background}
 \label{chap:Theory}
@@ -1550,7 +1560,8 @@ $R_{ij}$ is the distance between atoms $i$ and $j$.
 \begin{figure}[hbt]
  \centering
  \includegraphics[scale=0.50]{../doc/images/QMMM_1.png}
- \caption{Schematic of a QMMM simulation box with bonds between the QM and MM
+ \caption{
+ Schematic of a QMMM simulation box with bonds between the QM and MM
  regions.}
  \label{fig:QMMM1}
 \end{figure}
