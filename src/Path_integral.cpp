@@ -22,7 +22,7 @@ double Get_PI_Espring(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   double E = 0.0;
   double w0 = 1/(QMMMOpts.Beta*hbar);
   w0 *= w0*ToeV*QMMMOpts.Nbeads;
-  #pragma omp parallel for reduction(+:E)
+  #pragma omp parallel for schedule(dynamic) reduction(+:E)
   for (int i=0;i<Natoms;i++)
   {
     Struct[i].Ep = 0.0;
@@ -41,7 +41,6 @@ double Get_PI_Espring(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     }
     E += Struct[i].Ep; //Save energy
   }
-  #pragma omp barrier
   return E;
 };
 
@@ -56,7 +55,8 @@ double Get_PI_Epot(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     MCThreads = 1;
   }
   //Calculate energy
-  #pragma omp parallel for num_threads(MCThreads) reduction(+:E,QMTime,MMTime)
+  #pragma omp parallel for schedule(dynamic) num_threads(MCThreads) \
+          reduction(+:E,QMTime,MMTime)
   for (int i=0;i<QMMMOpts.Nbeads;i++)
   {
     //Run the wrappers for all beads
@@ -111,7 +111,6 @@ double Get_PI_Epot(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     QMTime += Times_qm;
     MMTime += Times_mm;
   }
-  #pragma omp barrier
   E /= QMMMOpts.Nbeads;
   return E;
 };
@@ -146,14 +145,13 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
     double dy = 2*(randy-0.5)*step*CentRatio;
     double dz = 2*(randz-0.5)*step*CentRatio;
     //Update positions
-    #pragma omp parallel for
+    #pragma omp parallel for schedule(dynamic)
     for (int i=0;i<QMMMOpts.Nbeads;i++)
     {
       Struct2[p].P[i].x += dx;
       Struct2[p].P[i].y += dy;
       Struct2[p].P[i].z += dz;
     }
-    #pragma omp barrier
   }
   if (randnum < BeadProb)
   {
@@ -221,7 +219,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
       Lz *= expan;
     }
     //Scale positions
-    #pragma omp parallel for
+    #pragma omp parallel for schedule(dynamic)
     for (int i=0;i<Natoms;i++)
     {
       for (int j=0;j<QMMMOpts.Nbeads;j++)
@@ -231,7 +229,6 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
         Struct2[i].P[j].z *= Lz/Lztmp;
       }
     }
-    #pragma omp barrier
     //Add PV energy term
     Enew += QMMMOpts.Press*Lx*Ly*Lz*atm2eV;
   }
@@ -241,9 +238,6 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
   double dE = Enew-Eold;
   if (QMMMOpts.Ensemble == "NPT")
   {
-    //Flip sign on PV terms
-    //dE -= 2*QMMMOpts.Press*Lx*Ly*Lz*atm2eV; //Flip Enew PV
-    //dE += 2*QMMMOpts.Press*Lxtmp*Lytmp*Lztmp*atm2eV; //Flip Eold PV
     //Add log term
     dE -= Natoms*log((Lx*Ly*Lz)/(Lxtmp*Lytmp*Lztmp))/QMMMOpts.Beta;
   }

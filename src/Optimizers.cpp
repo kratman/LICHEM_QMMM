@@ -40,7 +40,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       MAXforce = abs(Forces.minCoeff());
     }
     RMSforce = sqrt(Forces.squaredNorm()/Ndof);
-    #pragma omp parallel for reduction(+:RMSdiff)
+    #pragma omp parallel for schedule(dynamic) reduction(+:RMSdiff)
     for (int i=0;i<Natoms;i++)
     {
       //Calculate QM-QM distance matrix
@@ -66,7 +66,6 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       //Update sum
       RMSdiff += RMStmp;
     }
-    #pragma omp barrier
     RMSdiff /= (Nqm+Npseudo)*(Nqm+Npseudo-1)/2;
     RMSdiff = sqrt(RMSdiff);
     //Print progress
@@ -132,7 +131,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       MMTime += (unsigned)time(0)-tstart;
     }
     //Calculate RMS displacement (distance matrix)
-    #pragma omp parallel for reduction(+:RMSdiff)
+    #pragma omp parallel for schedule(dynamic) reduction(+:RMSdiff)
     for (int i=0;i<Natoms;i++)
     {
       double RMStmp = 0; //Store a local sum
@@ -150,7 +149,6 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       //Update sum
       RMSdiff += RMStmp;
     }
-    #pragma omp barrier
     RMSdiff /= (Natoms-Nfreeze)*(Natoms-Nfreeze-1)/2;
     RMSdiff = sqrt(RMSdiff);
     //Print progress
@@ -558,13 +556,12 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     E = 0; // Reinitialize energy
     //Copy old structure and old forces
     vector<QMMMAtom> OldStruct = Struct;
-    #pragma omp parallel for
+    #pragma omp parallel for schedule(dynamic)
     for (int i=0;i<Ndof;i++)
     {
       //Reinitialize the change in the gradient
       GradDiff(i) = Forces(i);
     }
-    #pragma omp barrier
     //Determine new structure
     OptVec = IHess*Forces;
     OptVec *= StepScale;

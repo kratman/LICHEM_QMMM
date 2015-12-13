@@ -626,7 +626,7 @@ int PeriodicTable::RevTyping(string AtName)
 {
   //Function to convert atom types to nuclear charges
   int Z = 0;
-  #pragma omp parallel for num_threads(Ncpus)
+  #pragma omp parallel for schedule(dynamic) num_threads(Ncpus)
   for (unsigned int i=0;i<Typs.size();i++)
   {
     if (AtName == Typs[i])
@@ -634,7 +634,6 @@ int PeriodicTable::RevTyping(string AtName)
       Z = i+1;
     }
   }
-  #pragma omp barrier
   return Z;
 };
 
@@ -642,7 +641,7 @@ double PeriodicTable::GetGauWid(string AtName)
 {
   //Function to find the 1s Gaussian width of an atom
   double gauwid = 0;
-  #pragma omp parallel for num_threads(Ncpus)
+  #pragma omp parallel for schedule(dynamic) num_threads(Ncpus)
   for (unsigned int i=0;i<Typs.size();i++)
   {
     if (AtName == Typs[i])
@@ -651,7 +650,6 @@ double PeriodicTable::GetGauWid(string AtName)
       gauwid = GauWids[i];
     }
   }
-  #pragma omp barrier
   return gauwid;
 };
 
@@ -659,7 +657,7 @@ double PeriodicTable::GetCovRadius(string AtName)
 {
   //Function to find the 1s Gaussian width of an atom
   double radius = 0;
-  #pragma omp parallel for num_threads(Ncpus)
+  #pragma omp parallel for schedule(dynamic) num_threads(Ncpus)
   for (unsigned int i=0;i<Typs.size();i++)
   {
     if (AtName == Typs[i])
@@ -668,7 +666,6 @@ double PeriodicTable::GetCovRadius(string AtName)
       radius = CovRadii[i];
     }
   }
-  #pragma omp barrier
   return radius;
 };
 

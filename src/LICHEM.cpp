@@ -859,7 +859,7 @@ int main(int argc, char* argv[])
     cout << "Nudged elastic band optimization:" << '\n';
     if (QMMMOpts.Climb)
     {
-      cout << " | Short path detected. Starting climbing image NEB. |";
+      cout << " | Short path detected. Starting climbing image NEB.";
       cout << '\n' << '\n';
     }
     cout << " | Opt. step: 0 | Bead energies:";
@@ -953,7 +953,7 @@ int main(int argc, char* argv[])
         QMMMOpts.Eprod = SumE;
       }
       cout << "   Bead: ";
-      cout << p << " | React. coord: ";
+      cout << setw(3) << p << " | React. coord: ";
       cout << LICHEMFormDouble(ReactCoord(p),5);
       cout << " | Energy: ";
       cout << LICHEMFormDouble(SumE,16) << " eV";
@@ -1058,21 +1058,23 @@ int main(int argc, char* argv[])
     cout << "Optimization complete.";
     cout << '\n' << '\n';
     //Print the reaction barriers
+    cout << "NEB Results:" << '\n';
     double dEfor = QMMMOpts.Ets-QMMMOpts.Ereact; //Forward barrier
     double dErev = QMMMOpts.Ets-QMMMOpts.Eprod; //Reverse barrier
     cout << " | Forward barrier: ";
-    cout << LICHEMFormDouble(dEfor,16) << " eV" << '\n';
-    cout << "     ";
+    cout << LICHEMFormDouble(dEfor,16) << " eV ," << '\n';
+    cout << " |   ";
     cout << LICHEMFormDouble(dEfor/Har2eV,16) << " a.u.";
     cout << " , ";
-    cout << LICHEMFormDouble(dEfor/kcal2eV,16) << " kcal/mol" << '\n';
+    cout << LICHEMFormDouble(dEfor/kcal2eV,16) << " kcal/mol";
+    cout << '\n' << '\n';
     cout << " | Reverse barrier: ";
-    cout << LICHEMFormDouble(dErev,16) << " eV" << '\n';
-    cout << "     ";
+    cout << LICHEMFormDouble(dErev,16) << " eV ," << '\n';
+    cout << " |   ";
     cout << LICHEMFormDouble(dErev/Har2eV,16) << " a.u.";
     cout << " , ";
-    cout << LICHEMFormDouble(dErev/kcal2eV,16) << " kcal/mol" << '\n';
-    cout << '\n';
+    cout << LICHEMFormDouble(dErev/kcal2eV,16) << " kcal/mol";
+    cout << '\n' << '\n';
     cout.flush();
   }
   //End of section

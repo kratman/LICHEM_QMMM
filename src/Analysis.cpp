@@ -97,7 +97,7 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
   double Bx = 0; //Average x position of matrix B
   double By = 0; //Average y position of matrix B
   double Bz = 0; //Average z position of matrix B
-  #pragma omp parallel for reduction(+:Ax,Ay,Az,Bx,By,Bz)
+  #pragma omp parallel for schedule(dynamic) reduction(+:Ax,Ay,Az,Bx,By,Bz)
   for (int i=0;i<MatSize;i++)
   {
     //Update sum of the atomic positions
@@ -108,7 +108,6 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
     By += B(i,1);
     Bz += B(i,2);
   }
-  #pragma omp barrier
   //Take average
   Ax /= MatSize;
   Ay /= MatSize;
@@ -117,7 +116,7 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
   By /= MatSize;
   Bz /= MatSize;
   //Translate centroids
-  #pragma omp parallel for
+  #pragma omp parallel for schedule(dynamic)
   for (int i=0;i<MatSize;i++)
   {
     //Move A and B to (0,0,0)
@@ -128,7 +127,6 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
     B(i,1) -= By;
     B(i,2) -= Bz;
   }
-  #pragma omp barrier
   //Calculate covariance matrix
   CoVar = (B.transpose())*A;
   //Compute SVD and identity matrix
@@ -161,7 +159,7 @@ VectorXd KabschDisplacement(MatrixXd& A, MatrixXd& B, int MatSize)
   //Rotate structures
   KabschRotation(A,B,MatSize);
   //Calculate displacement
-  #pragma omp parallel for
+  #pragma omp parallel for schedule(dynamic)
   for (int i=0;i<(3*MatSize);i++)
   {
     //Find the correct location in the arrays
@@ -170,7 +168,6 @@ VectorXd KabschDisplacement(MatrixXd& A, MatrixXd& B, int MatSize)
     //Calculate displacement
     Dist(i) = A(AtID,Direc)-B(AtID,Direc);
   }
-  #pragma omp barrier
   //Return array
   return Dist;
 };

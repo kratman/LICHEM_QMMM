@@ -132,7 +132,7 @@ double Get_EeFF(vector<QMMMAtom>& Struct, vector<QMMMElec>& elecs,
 {
   //Total eFF interaction energy
   double E = 0;
-  #pragma omp parallel for
+  #pragma omp parallel for schedule(dynamic)
   for (int i=0;i<Natoms;i++)
   {
     Struct[i].Ep = 0;
@@ -144,8 +144,7 @@ double Get_EeFF(vector<QMMMAtom>& Struct, vector<QMMMElec>& elecs,
       }
     }
   }
-  #pragma omp barrier
-  #pragma omp parallel for
+  #pragma omp parallel for schedule(dynamic)
   for (unsigned int i=0;i<elecs.size();i++)
   {
     elecs[i].Ep = 0.0;
@@ -159,7 +158,6 @@ double Get_EeFF(vector<QMMMAtom>& Struct, vector<QMMMElec>& elecs,
       }
     }
   }
-  #pragma omp barrier
   for (int i=0;i<Natoms;i++)
   {
     E += Struct[i].Ep;

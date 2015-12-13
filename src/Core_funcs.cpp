@@ -342,7 +342,7 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   double avgx = 0;
   double avgy = 0;
   double avgz = 0;
-  #pragma omp parallel for reduction(+:avgx,avgy,avgz)
+  #pragma omp parallel for schedule(dynamic) reduction(+:avgx,avgy,avgz)
   for (int i=0;i<Natoms;i++)
   {
     //Loop over all beads
@@ -361,13 +361,12 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     avgy += centy;
     avgz += centz;
   }
-  #pragma omp barrier
   //Convert sums to averages
   avgx /= Natoms*QMMMOpts.Nbeads;
   avgy /= Natoms*QMMMOpts.Nbeads;
   avgz /= Natoms*QMMMOpts.Nbeads;
   //Move atoms to the center of the box
-  #pragma omp parallel for
+  #pragma omp parallel for schedule(dynamic)
   for (int i=0;i<Natoms;i++)
   {
     //Loop over all beads
@@ -379,7 +378,6 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       Struct[i].P[j].z -= avgz;
     }
   }
-  #pragma omp barrier
   //Return with updated structure
   return;
 };

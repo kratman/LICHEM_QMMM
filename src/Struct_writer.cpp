@@ -258,7 +258,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
     }
     if (Struct[i].PBregion)
     {
-      ofile << " " << "F";
+      ofile << " " << "F2pb";
       ofile << " " << (Struct[i].P[Bead].x*ix);
       ofile << " " << (Struct[i].P[Bead].y*iy);
       ofile << " " << (Struct[i].P[Bead].z*iz);

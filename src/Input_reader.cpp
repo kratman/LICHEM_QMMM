@@ -821,14 +821,13 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     if (PIMCSim or ENEBSim or NEBSim)
     {
       //Frozen atoms must be the same for all replicas
-      #pragma omp parallel for
+      #pragma omp parallel for schedule(dynamic)
       for (int j=0;j<QMMMOpts.Nbeads;j++)
       {
         Struct[AtomID].P[j].x = Struct[AtomID].P[0].x;
         Struct[AtomID].P[j].y = Struct[AtomID].P[0].y;
         Struct[AtomID].P[j].z = Struct[AtomID].P[0].z;
       }
-      #pragma omp barrier
     }
   }
   //Read initial structures for all beads or create new ones

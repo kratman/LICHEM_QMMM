@@ -1,11 +1,11 @@
 basis
- C library 6-31++G**
- F SP
-   0.90340 1.00000 1.00000
-   0.21310 1.90904 0.57864
+ * library 6-31++G** except F2pb
+ F2pb SP
+  0.90340 1.00000 1.00000
+  0.21310 1.90904 0.57864
 end
 ecp
- F nelec 2
- F ul
-   1 7.75 16.49
+ F2pb nelec 2
+ F2pb ul
+  1 7.75 16.49
 end
