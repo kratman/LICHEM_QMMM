@@ -346,8 +346,8 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     QMMM = 0;
     Nqm = Natoms; //Save number of QM atoms
     regionfile >> dummy >> dummy;
-    if ((dummy == "psi4") or (dummy == "Psi4")
-       or (dummy == "PSI4"))
+    if ((dummy == "PSI4") or (dummy == "Psi4")
+       or (dummy == "psi4"))
     {
       PSI4 = 1;
     }
@@ -356,7 +356,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       NWChem = 1;
     }
-    if ((dummy == "gaussian") or (dummy == "Gaussian") or (dummy == "g09"))
+    if ((dummy == "Gaussian") or (dummy == "gaussian") or (dummy == "g09"))
     {
       Gaussian = 1;
     }
@@ -400,8 +400,8 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     QMonly = 0;
     MMonly = 0;
     regionfile >> dummy >> dummy;
-    if ((dummy == "psi4") or (dummy == "Psi4")
-       or (dummy == "PSI4"))
+    if ((dummy == "PSI4") or (dummy == "Psi4")
+       or (dummy == "psi4"))
     {
       PSI4 = 1;
     }
@@ -410,7 +410,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       NWChem = 1;
     }
-    if ((dummy == "gaussian") or (dummy == "Gaussian"))
+    if ((dummy == "Gaussian") or (dummy == "gaussian") or (dummy == "g09"))
     {
       Gaussian = 1;
     }
@@ -439,7 +439,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.Charge;
     regionfile >> dummy >> QMMMOpts.Spin;
     regionfile >> dummy >> dummy; //MM wrapper
-    if ((dummy == "Tinker") or (dummy == "TINKER")
+    if ((dummy == "TINKER") or (dummy == "Tinker")
        or (dummy == "tinker"))
     {
       TINKER = 1;
@@ -449,8 +449,8 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       AMBER = 1;
     }
-    if ((dummy == "LAMMPS") or (dummy == "lammps") or
-       (dummy == "Lammps"))
+    if ((dummy == "LAMMPS") or (dummy == "Lammps") or
+       (dummy == "lammps"))
     {
       LAMMPS = 1;
     }
@@ -489,7 +489,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     QMonly = 0;
     QMMM = 0;
     regionfile >> dummy >> dummy; //MM wrapper
-    if ((dummy == "Tinker") or (dummy == "TINKER")
+    if ((dummy == "TINKER") or (dummy == "Tinker")
        or (dummy == "tinker"))
     {
       TINKER = 1;
@@ -499,8 +499,8 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       AMBER = 1;
     }
-    if ((dummy == "LAMMPS") or (dummy == "lammps") or
-       (dummy == "Lammps"))
+    if ((dummy == "LAMMPS") or (dummy == "Lammps") or
+       (dummy == "lammps"))
     {
       LAMMPS = 1;
     }
@@ -589,7 +589,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       }
     }
   }
-  if ((dummy == "OPT") or (dummy == "Opt") or (dummy == "opt"))
+  if ((dummy == "Opt") or (dummy == "OPT") or (dummy == "opt"))
   {
     //Read energy minimization options
     OptSim = 1;
@@ -620,12 +620,12 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
   }
-  if ((dummy == "bfgs") or (dummy == "BFGS") or
-     (dummy == "dfp") or (dummy == "DFP"))
+  if ((dummy == "DFP") or (dummy == "dfp") or
+     (dummy == "BFGS") or (dummy == "bfgs"))
   {
     //Read energy minimization options for the DFP optimizer
     DFPSim = 1;
-    if ((dummy == "bfgs") or (dummy == "BFGS"))
+    if ((dummy == "BFGS") or (dummy == "bfgs"))
     {
       //Print BFGS error
       cerr << "Warning: A BFGS optimizer is not implemented.";
@@ -640,7 +640,8 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
   }
-  if ((dummy == "NEB") or (dummy == "neb"))
+  if ((dummy == "NEB") or (dummy == "neb") or (dummy == "CI-NEB")
+     or (dummy == "ci-neb") or (dummy == "CINEB") or (dummy == "cineb"))
   {
     //Read energy minimization options for climbing image NEB
     NEBSim = 1;

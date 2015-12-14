@@ -139,6 +139,8 @@ Mpole GEMDen::GEMDM()
   dmpole.Qyy = 0;
   dmpole.Qxz = 0;
   dmpole.Qzz = 0;
+  //Add the nuclear charge from the periodic table
+  dmpole.q += PTable.RevTyping(Type);
   //Convert Hermite Gaussians to multipoles
   for (unsigned int i=0;i<Dens.size();i++)
   {

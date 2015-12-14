@@ -257,7 +257,30 @@ void LICHEM2BASIS(int& argc,char**& argv)
             or (WrapperName == "NWCHEM") or (WrapperName == "NWchem"))
     {
       //Write NWChem BASIS file
-      
+      ofile << "basis" << '\n';
+      ofile << " * library ";
+      ofile << BasisSetName;
+      ofile << " except F2pb" << '\n';
+      if (Npseudo > 0)
+      {
+        ofile << " F2pb [PB basis set]" << '\n';
+      }
+      ofile << "end" << '\n';
+      if (Npseudo > 0)
+      {
+        ofile << "ecp" << '\n';
+        ofile << " F2pb nelec 2" << '\n';
+        ofile << " F2pb [Pseudopotential type]" << '\n';
+        ofile << "  [PB pseudopotential]" << '\n';
+        ofile << "end" << '\n';
+      }
+    }
+    else if ((WrapperName == "PSI4") or (WrapperName == "Psi4")
+            or (WrapperName == "psi4"))
+    {
+      cout << "Error: Pseudopotentials are not yet implemented in PSI4.";
+      cout << '\n' << '\n';
+      exit(0);
     }
     else
     {
@@ -266,9 +289,10 @@ void LICHEM2BASIS(int& argc,char**& argv)
       exit(0);
     }
     //Finish up and exit
-    cout << "Gaussian basis set data written to BASIS";
+    cout << "Basis set data written to BASIS";
     cout << '\n' << '\n';
     cout.flush();
+    ofile.flush();
     ofile.close();
   }
   //Quit
