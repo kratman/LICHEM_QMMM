@@ -12,7 +12,7 @@ CXX=g++
 CXXFLAGS=-static -O3 -fopenmp
 GPUFLAGS=-fopenacc
 DEVFLAGS=-g -Wall -std=c++14
-LDFLAGS=-I./src/ -I/usr/include/eigen3/
+LDFLAGS=-I./src/ -I./include/ -I/usr/include/eigen3/
 
 ### Python settings ###
 
@@ -113,9 +113,9 @@ stats:
 	@echo ""; \
         echo "### Source code statistics ###"; \
 	echo "Number of LICHEM source code files:"; \
-	ls -al src/* | wc -l; \
+	ls -al include/* src/* | wc -l; \
 	echo "Total length of LICHEM (lines):"; \
-	cat src/* | wc -l
+	cat include/* src/* | wc -l
 
 compdone:	
 	@echo ""; \

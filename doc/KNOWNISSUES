@@ -45,21 +45,9 @@ LAMMPS interface:
 AMBER interface:
 -The AMBER wrapper is still in the early stages of development.
 
-Optimization:
--The DFP optimizers included in Optimizers.cpp and Reaction_path.cpp do not
-have true line search algorithms. Instead, the optimizers will take a small
-steepest descent step (and create a new guess Hessian) if the QMMM energy
-rises. It will also create a new Hessian if the optimization does not converge
-within 30 steps or if the optimization direction is orthogonal to the forces.
-The optimization procedure is inefficient for gas phase QM optimizations, but
-works well for difficult QMMM systems.
-
 PIMC:
 -NPT Monte Carlo has a volume change bug. This is being investigated, but
 NPT MC is low priority.
-
-Testing:
--The test set needs to be expanded beyond single-point energies.
 
 Manual:
 -The theory sections need citations
