@@ -501,22 +501,22 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   //Set up molecules
   call << "molecule LICHM_";
   call << Bead << " {" << '\n';
-  call << "  " << QMMMOpts.Charge;
+  call << " " << QMMMOpts.Charge;
   call << " " << QMMMOpts.Spin << '\n';
   for (int i=0;i<Natoms;i++)
   {
     if (Struct[i].QMregion)
     {
-      call << "  " << Struct[i].QMTyp;
-      call << "  " << LICHEMFormDouble(Struct[i].P[Bead].x,16);
-      call << "  " << LICHEMFormDouble(Struct[i].P[Bead].y,16);
-      call << "  " << LICHEMFormDouble(Struct[i].P[Bead].z,16);
+      call << " " << Struct[i].QMTyp;
+      call << " " << LICHEMFormDouble(Struct[i].P[Bead].x,16);
+      call << " " << LICHEMFormDouble(Struct[i].P[Bead].y,16);
+      call << " " << LICHEMFormDouble(Struct[i].P[Bead].z,16);
       call << '\n';
     }
   }
-  call << "  symmetry c1" << '\n';
-  call << "  no_reorient" << '\n';
-  call << "  no_com" << '\n';
+  call << " symmetry c1" << '\n';
+  call << " no_reorient" << '\n';
+  call << " no_com" << '\n';
   call << "}" << '\n' << '\n';
   //Set up MM field
   if (QMMM and UseChargeFile and (Nmm > 0))

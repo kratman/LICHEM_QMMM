@@ -74,9 +74,9 @@ checksyntax:	title
 	@echo ""; \
 	echo "### Source code statistics ###"; \
 	echo "Number of LICHEM source code files:"; \
-	ls -al src/* | wc -l; \
+	ls -al include/* src/* | wc -l; \
 	echo "Total length of LICHEM (lines):"; \
-	cat src/* | wc -l; \
+	cat include/* src/* | wc -l; \
 
 manual:	
 	@echo ""; \
@@ -124,7 +124,7 @@ compdone:
 
 delbin:	
 	@echo ""; \
-	if grep -q "Jokes = 1" src/LICHEM_options.h; then \
+	if grep -q "Jokes = 1" include/LICHEM_options.h; then \
 	echo '     ___'; \
 	echo '    |_  |'; \
 	echo '      \ \'; \

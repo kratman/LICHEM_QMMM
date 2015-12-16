@@ -682,15 +682,15 @@ for qmtest in QMTests:
       QMMMEnergy = 0.0
     if (QMPack == "PSI4"):
       #Check against saved energy
-      if (QMMMEnergy == round(-6513.4630137817,5)):
+      if (QMMMEnergy == round(-6513.4630238038,5)):
         PassEnergy = 1
     if (QMPack == "Gaussian"):
       #Check against saved energy
-      if (QMMMEnergy == round(-6513.4616060768,5)):
+      if (QMMMEnergy == round(-6513.4616061312,5)):
         PassEnergy = 1
     if (QMPack == "NWChem"):
       #Check against saved energy
-      if (QMMMEnergy == round(-6513.4627662488,5)):
+      if (QMMMEnergy == round(-6513.4627667753,5)):
         PassEnergy = 1
     line += " NEB TS energy:       "
     if (PassEnergy == 1):
@@ -981,11 +981,11 @@ for qmtest in QMTests:
           QMMMEnergy = 0.0
         if (QMPack == "Gaussian"):
           #Check against saved energy
-          if (QMMMEnergy == round(-3015.7006931501,5)):
+          if (QMMMEnergy == round(-3015.7007284421,5)):
             PassEnergy = 1
         if (QMPack == "NWChem"):
           #Check against saved energy
-          if (QMMMEnergy == round(-3015.8316092953,5)):
+          if (QMMMEnergy == round(-3015.8316266672,5)):
             PassEnergy = 1
         line += " DFP/Pseudobonds:     "
         if (PassEnergy == 1):

@@ -150,6 +150,10 @@ Mpole GEMDen::GEMDM()
     {
       //Update monopole
       dmpole.q += Dens[i].Coeff();
+      //Update diagonal quadrupole moments
+      dmpole.Qxx += Dens[i].Coeff()/(2*Dens[i].Alpha());
+      dmpole.Qyy += Dens[i].Coeff()/(2*Dens[i].Alpha());
+      dmpole.Qzz += Dens[i].Coeff()/(2*Dens[i].Alpha());
     }
     //Check for a dipole
     if ((Dens[i].XPow() == 1) and (Dens[i].YPow() == 0) and
@@ -175,7 +179,7 @@ Mpole GEMDen::GEMDM()
        (Dens[i].ZPow() == 0))
     {
       //Update xx quadrupole
-      dmpole.Qxx += Dens[i].Coeff();
+      dmpole.Qxx += 2*Dens[i].Coeff();
     }
     if ((Dens[i].XPow() == 1) and (Dens[i].YPow() == 1) and
        (Dens[i].ZPow() == 0))
@@ -193,7 +197,7 @@ Mpole GEMDen::GEMDM()
        (Dens[i].ZPow() == 0))
     {
       //Update xx quadrupole
-      dmpole.Qyy += Dens[i].Coeff();
+      dmpole.Qyy += 2*Dens[i].Coeff();
     }
     if ((Dens[i].XPow() == 0) and (Dens[i].YPow() == 1) and
        (Dens[i].ZPow() == 1))
@@ -205,9 +209,15 @@ Mpole GEMDen::GEMDM()
        (Dens[i].ZPow() == 2))
     {
       //Update yz quadrupole
-      dmpole.Qzz += Dens[i].Coeff();
+      dmpole.Qzz += 2*Dens[i].Coeff();
     }
   }
+  //Convert to a traceless quadrupole
+  double QTrace = dmpole.Qxx+dmpole.Qyy+dmpole.Qzz;
+  dmpole.Qxx -= QTrace;
+  dmpole.Qyy -= QTrace;
+  dmpole.Qzz -= QTrace;
+  //Return GEM multipole
   return dmpole;
 };
 
