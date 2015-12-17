@@ -14,6 +14,10 @@ import time
 import sys
 import os
 
+#Development settings
+#NB: These settings should not be modified
+UpdateResults = 0 #Flag to print energies to update tests
+
 #Start timer and counters immediately
 StartTime = time.time()
 passct = 0
@@ -387,11 +391,13 @@ for qmtest in QMTests:
       cmd += "grep -e"
       cmd += ' "QM energy: " ' #Find final energy
       cmd += "tests.out"
+      SavedEnergy = "Crashed..."
       try:
         #Safely check energy
         QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
         QMMMEnergy = QMMMEnergy.split()
         QMMMEnergy = float(QMMMEnergy[2])
+        SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
         QMMMEnergy = round(QMMMEnergy,5)
       except:
         #Calculation failed
@@ -422,6 +428,9 @@ for qmtest in QMTests:
       except:
         RunTime = " N/A"
       line += RunTime
+      if (UpdateResults == 1):
+        line += ", "
+        line += SavedEnergy
       print(line)
 
       #Clean up files
@@ -458,11 +467,13 @@ for qmtest in QMTests:
     cmd += "grep -e"
     cmd += ' "QM energy: " ' #Find final energy
     cmd += "tests.out"
+    SavedEnergy = "Crashed..."
     try:
       #Safely check energy
       QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
       QMMMEnergy = QMMMEnergy.split()
       QMMMEnergy = float(QMMMEnergy[2])
+      SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
       QMMMEnergy = round(QMMMEnergy,5)
     except:
       #Calculation failed
@@ -497,6 +508,9 @@ for qmtest in QMTests:
     except:
       RunTime = " N/A"
     line += RunTime
+    if (UpdateResults == 1):
+      line += ", "
+      line += SavedEnergy
     print(line)
 
     #Clean up files
@@ -534,11 +548,13 @@ for qmtest in QMTests:
       cmd += "grep -e"
       cmd += ' "QM energy: " ' #Find final energy
       cmd += "tests.out"
+      SavedEnergy = "Crashed..."
       try:
         #Safely check energy
         QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
         QMMMEnergy = QMMMEnergy.split()
         QMMMEnergy = float(QMMMEnergy[2])
+        SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
         QMMMEnergy = round(QMMMEnergy,5)
       except:
         #Calculation failed
@@ -565,6 +581,9 @@ for qmtest in QMTests:
       except:
         RunTime = " N/A"
       line += RunTime
+      if (UpdateResults == 1):
+        line += ", "
+        line += SavedEnergy
       print(line)
 
       #Clean up files
@@ -602,11 +621,13 @@ for qmtest in QMTests:
       cmd += "grep -e"
       cmd += ' "QM energy: " ' #Find final energy
       cmd += "tests.out"
+      SavedEnergy = "Crashed..."
       try:
         #Safely check energy
         QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
         QMMMEnergy = QMMMEnergy.split()
         QMMMEnergy = float(QMMMEnergy[2])
+        SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
         QMMMEnergy = round(QMMMEnergy,5)
       except:
         #Calculation failed
@@ -633,6 +654,9 @@ for qmtest in QMTests:
       except:
         RunTime = " N/A"
       line += RunTime
+      if (UpdateResults == 1):
+        line += ", "
+        line += SavedEnergy
       print(line)
 
       #Clean up files
@@ -671,11 +695,13 @@ for qmtest in QMTests:
     cmd += "grep -e"
     cmd += ' "Opt. step: 2 " ' #Find final energy
     cmd += "tests.out"
+    SavedEnergy = "Crashed..."
     try:
       #Safely check energy
       QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
       QMMMEnergy = QMMMEnergy.split()
       QMMMEnergy = float(QMMMEnergy[11])
+      SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
       QMMMEnergy = round(QMMMEnergy,5)
     except:
       #Calculation failed
@@ -710,6 +736,9 @@ for qmtest in QMTests:
     except:
       RunTime = " N/A"
     line += RunTime
+    if (UpdateResults == 1):
+      line += ", "
+      line += SavedEnergy
     print(line)
 
     #Clean up files
@@ -751,11 +780,13 @@ for qmtest in QMTests:
       cmd += "grep -e"
       cmd += ' "MM energy: " ' #Find final energy
       cmd += "tests.out"
+      SavedEnergy = "Crashed..."
       try:
         #Safely check energy
         QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
         QMMMEnergy = QMMMEnergy.split()
         QMMMEnergy = float(QMMMEnergy[2])
+        SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
         QMMMEnergy = round(QMMMEnergy,5)
       except:
         #Calculation failed
@@ -781,6 +812,9 @@ for qmtest in QMTests:
       except:
          RunTime = " N/A"
       line += RunTime
+      if (UpdateResults == 1):
+        line += ", "
+        line += SavedEnergy
       print(line)
 
       #Clean up files
@@ -817,11 +851,13 @@ for qmtest in QMTests:
       cmd += "grep -e"
       cmd += ' "QMMM energy: " ' #Find final energy
       cmd += "tests.out"
+      SavedEnergy = "Crashed..."
       try:
         #Safely check energy
         QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
         QMMMEnergy = QMMMEnergy.split()
         QMMMEnergy = float(QMMMEnergy[2])
+        SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
         QMMMEnergy = round(QMMMEnergy,5)
       except:
         #Calculation failed
@@ -856,6 +892,9 @@ for qmtest in QMTests:
       except:
         RunTime = " N/A"
       line += RunTime
+      if (UpdateResults == 1):
+        line += ", "
+        line += SavedEnergy
       print(line)
 
       #Clean up files
@@ -892,11 +931,13 @@ for qmtest in QMTests:
       cmd += "grep -e"
       cmd += ' "QMMM energy: " ' #Find final energy
       cmd += "tests.out"
+      SavedEnergy = "Crashed..."
       try:
         #Safely check energy
         QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
         QMMMEnergy = QMMMEnergy.split()
         QMMMEnergy = float(QMMMEnergy[2])
+        SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
         QMMMEnergy = round(QMMMEnergy,5)
       except:
         #Calculation failed
@@ -931,6 +972,9 @@ for qmtest in QMTests:
       except:
         RunTime = " N/A"
       line += RunTime
+      if (UpdateResults == 1):
+        line += ", "
+        line += SavedEnergy
       print(line)
 
       #Clean up files
@@ -970,11 +1014,13 @@ for qmtest in QMTests:
         cmd += "grep -e"
         cmd += ' "Opt. step: 2 " ' #Find final energy
         cmd += "tests.out"
+        SavedEnergy = "Crashed..."
         try:
           #Safely check energy
           QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
           QMMMEnergy = QMMMEnergy.split()
           QMMMEnergy = float(QMMMEnergy[6])
+          SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
           QMMMEnergy = round(QMMMEnergy,5)
         except:
           #calculation failed
@@ -1005,6 +1051,9 @@ for qmtest in QMTests:
         except:
           RunTime = " N/A"
         line += RunTime
+        if (UpdateResults == 1):
+          line += ", "
+          line += SavedEnergy
         print(line)
 
         #Clean up files

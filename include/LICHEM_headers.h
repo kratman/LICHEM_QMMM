@@ -130,6 +130,10 @@ void LAMMPSTopology(vector<QMMMAtom>&,stringstream&,int);
 
 void PrintLapin();
 
+void LICHEM2BASIS(int&,char**&);
+
+void LICHEM2TINK(int&,char**&);
+
 void LICHEMDFP(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void LICHEMErrorChecker(QMMMSettings&);
@@ -140,6 +144,8 @@ string LICHEMFormDouble(double,int);
 
 string LICHEMFormFloat(double,int);
 
+void LICHEMLowerText(string&);
+
 void LICHEMNEB(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void LICHEMPrintSettings(QMMMSettings&);
@@ -148,9 +154,7 @@ void LICHEMQuickMin(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void LICHEMSteepest(vector<QMMMAtom>&,QMMMSettings&,int);
 
-void LICHEM2BASIS(int&,char**&);
-
-void LICHEM2TINK(int&,char**&);
+void LICHEMUpperText(string&);
 
 bool MCMove(vector<QMMMAtom>&,QMMMSettings&,double&);
 
@@ -235,6 +239,7 @@ void WriteTINKMpole(vector<QMMMAtom>&,fstream&,int,int);
 #include "Path_integral.cpp"
 #include "Reaction_path.cpp"
 #include "Struct_writer.cpp"
+#include "Text_format.cpp"
 #include "TINK2LICHEM.cpp"
 
 //Wrapper definitions (alphabetical)

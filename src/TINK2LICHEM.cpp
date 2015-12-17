@@ -58,9 +58,8 @@ void TINK2LICHEM(int& argc, char**& argv)
     {
       //Flag for PBC
       dummy = string(argv[i+1]);
-      if ((dummy == "Yes") or (dummy == "yes") or
-         (dummy == "YES") or (dummy == "true") or
-         (dummy == "TRUE") or (dummy == "True"))
+      LICHEMLowerText(dummy);
+      if ((dummy == "yes") or (dummy == "true"))
       {
         PBCon = 1;
       }
@@ -147,6 +146,7 @@ void TINK2LICHEM(int& argc, char**& argv)
     stringstream line(dummy);
     //Read string item by item
     line >> dummy;
+    LICHEMLowerText(dummy);
     if (dummy == "parameters")
     {
       line >> dummy;
@@ -280,7 +280,7 @@ void TINK2LICHEM(int& argc, char**& argv)
       regfile << " ";
     }
   }
-  regfile << "Pseudo_atoms: ";
+  regfile << "Pseudobond_atoms: ";
   regfile << Npseudo << '\n';
   ct = 0;
   for (int i=0;i<Npseudo;i++)

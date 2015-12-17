@@ -12,7 +12,7 @@ CXX=g++
 CXXFLAGS=-static -O3 -fopenmp
 GPUFLAGS=-fopenacc
 DEVFLAGS=-g -Wall -std=c++14
-LDFLAGS=-I./src/ -I./include/ -I/usr/include/eigen3/
+LDFLAGS=-I/usr/include/eigen3/
 
 ### Python settings ###
 
@@ -37,22 +37,32 @@ clean:	title delbin compdone
 
 #####################################################
 
+### Combine variables ###
+
+# NB: Do not modify this section
+
+FLAGSBIN=$(CXXFLAGS) $(LDFLAGS) -I./src/ -I./include/
+FLAGSDEV=$(CXXFLAGS) $(DEVFLAGS) $(LDFLAGS) -I./src/ -I./include/
+FLAGSGPU=$(CXXFLAGS) $(DEVFLAGS) $(GPUFLAGS) $(LDFLAGS) -I./src/ -I./include/
+
+#####################################################
+
 ### Rules for building various parts of the code ###
 
 binary:	
 	@echo ""; \
 	echo "### Compiling the LICHEM binary ###"
-	$(CXX) $(CXXFLAGS) ./src/LICHEM.cpp -o lichem $(LDFLAGS)
+	$(CXX) $(FLAGSBIN) ./src/LICHEM.cpp -o lichem
 
 devbin:	
 	@echo ""; \
 	echo "### Compiling the LICHEM development binary ###"
-	$(CXX) $(CXXFLAGS) $(DEVFLAGS) ./src/LICHEM.cpp -o lichem $(LDFLAGS)
+	$(CXX) $(FLAGSDEV) ./src/LICHEM.cpp -o lichem
 
 gpubin:	
 	@echo ""; \
 	echo "### Compiling the LICHEM GPU binary ###"
-	$(CXX) $(CXXFLAGS) $(GPUFLAGS) ./src/LICHEM.cpp -o lichem $(LDFLAGS)
+	$(CXX) $(FLAGSGPU) ./src/LICHEM.cpp -o lichem
 
 testexe:	
 	@echo ""; \
@@ -70,7 +80,7 @@ testexe:
 checksyntax:	title
 	@echo ""; \
 	echo "### Checking for warnings and syntax errors ###"
-	$(CXX) $(CXXFLAGS) $(DEVFLAGS) -fsyntax-only ./src/LICHEM.cpp -o lichem $(LDFLAGS)
+	$(CXX) $(FLAGSDEV) -fsyntax-only ./src/LICHEM.cpp -o lichem
 	@echo ""; \
 	echo "### Source code statistics ###"; \
 	echo "Number of LICHEM source code files:"; \

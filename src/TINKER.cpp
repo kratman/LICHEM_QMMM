@@ -39,6 +39,7 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
   {
     //Detect the name of the force field file
     ifile >> dummy;
+    LICHEMLowerText(dummy);
     if (dummy == "parameters")
     {
       ifile >> dummy;
@@ -73,6 +74,7 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
     getline(ifile,dummy);
     stringstream FullLine(dummy);
     FullLine >> dummy;
+    LICHEMLowerText(dummy);
     if (dummy == "atom")
     {
       int AtType,AtClass;

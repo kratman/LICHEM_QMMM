@@ -84,19 +84,21 @@ void LICHEM2BASIS(int& argc,char**& argv)
         getline(regfile,dummy); //Read the line
         line << dummy; //Copy to a better container
         line >> dummy; //Read first item in the string
-        if (dummy == "QM_type:")
+        LICHEMLowerText(dummy);
+        if (dummy == "qm_type:")
         {
           //Read basis set information
           line >> WrapperName;
+          LICHEMLowerText(WrapperName);
           FoundWrapper = 1;
         }
-        if (dummy == "QM_basis:")
+        if (dummy == "qm_basis:")
         {
           //Read basis set information
           line >> BasisSetName;
           FoundBasis = 1;
         }
-        if (dummy == "QM_atoms:")
+        if (dummy == "qm_atoms:")
         {
           //Read the list QM atoms
           line >> Nqm;
@@ -109,7 +111,7 @@ void LICHEM2BASIS(int& argc,char**& argv)
           }
           FoundQM = 1;
         }
-        if (dummy == "Pseudobond_atoms:")
+        if (dummy == "pseudobond_atoms:")
         {
           //Read the list of PB atoms
           line >> Npseudo;
@@ -163,8 +165,7 @@ void LICHEM2BASIS(int& argc,char**& argv)
       AtomList.push_back(InQMregion);
     }
     //Write BASIS file
-    if ((WrapperName == "gaussian") or (WrapperName == "Gaussian")
-       or (WrapperName == "g09"))
+    if ((WrapperName == "gaussian") or (WrapperName == "g09"))
     {
       //Write Gaussian BASIS file for GEN input
       int ct; //Generic counter
@@ -253,8 +254,7 @@ void LICHEM2BASIS(int& argc,char**& argv)
         ofile << '\n';
       }
     }
-    else if ((WrapperName == "NWChem") or (WrapperName == "nwchem")
-            or (WrapperName == "NWCHEM") or (WrapperName == "NWchem"))
+    else if (WrapperName == "nwchem")
     {
       //Write NWChem BASIS file
       ofile << "basis" << '\n';
@@ -275,8 +275,7 @@ void LICHEM2BASIS(int& argc,char**& argv)
         ofile << "end" << '\n';
       }
     }
-    else if ((WrapperName == "PSI4") or (WrapperName == "Psi4")
-            or (WrapperName == "psi4"))
+    else if (WrapperName == "psi4")
     {
       cout << "Error: Pseudopotentials are not yet implemented in PSI4.";
       cout << '\n' << '\n';

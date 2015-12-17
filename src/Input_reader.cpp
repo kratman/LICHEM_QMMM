@@ -338,7 +338,8 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
   }
   //Collect misc. simulation options
   regionfile >> dummy >> dummy; //Potential type
-  if ((dummy == "QM") or (dummy == "qm"))
+  LICHEMLowerText(dummy);
+  if (dummy == "qm")
   {
     //Read QMonly options
     QMonly = 1;
@@ -346,26 +347,25 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     QMMM = 0;
     Nqm = Natoms; //Save number of QM atoms
     regionfile >> dummy >> dummy;
-    if ((dummy == "PSI4") or (dummy == "Psi4")
-       or (dummy == "psi4"))
+    LICHEMLowerText(dummy);
+    if (dummy == "psi4")
     {
       PSI4 = 1;
     }
-    if ((dummy == "NWChem") or (dummy == "nwchem")
-       or (dummy == "NWCHEM") or (dummy == "NWchem"))
+    if (dummy == "nwchem")
     {
       NWChem = 1;
     }
-    if ((dummy == "Gaussian") or (dummy == "gaussian") or (dummy == "g09"))
+    if ((dummy == "gaussian") or (dummy == "g09"))
     {
       Gaussian = 1;
     }
     regionfile >> dummy >> QMMMOpts.Func;
-    if ((QMMMOpts.Func == "SemiEmpirical") or (QMMMOpts.Func == "SE-SCF") or
-       (QMMMOpts.Func == "Semi-Empirical") or (QMMMOpts.Func == "se-scf") or
-       (QMMMOpts.Func == "semi-empirical") or (QMMMOpts.Func == "SESCF") or
-       (QMMMOpts.Func == "semiempirical") or (QMMMOpts.Func == "sescf") or
-       (QMMMOpts.Func == "SemiEmp") or (QMMMOpts.Func == "semiemp"))
+    dummy = QMMMOpts.Func;
+    LICHEMLowerText(dummy);
+    if ((dummy == "semiempirical") or (dummy == "se-scf") or
+       (dummy == "semi-empirical") or (dummy == "sescf") or
+       (dummy == "semiemp"))
     {
       //Flag the method as a semi-empirical Hamiltonian
       QMMMOpts.Func = "SemiEmp";
@@ -373,8 +373,8 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.Basis;
     regionfile >> dummy >> QMMMOpts.RAM;
     regionfile >> dummy;
-    if ((dummy == "mb") or (dummy == "MB") or
-       (dummy == "Mb") or (dummy == "mB"))
+    LICHEMLowerText(dummy);
+    if (dummy == "mb")
     {
       QMMMOpts.MemMB = 1;
     }
@@ -393,33 +393,32 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       Struct[i].BAregion = 0;
     }
   }
-  if ((dummy == "QMMM") or (dummy == "qmmm"))
+  if (dummy == "qmmm")
   {
     //Read QMMM options
     QMMM = 1;
     QMonly = 0;
     MMonly = 0;
     regionfile >> dummy >> dummy;
-    if ((dummy == "PSI4") or (dummy == "Psi4")
-       or (dummy == "psi4"))
+    LICHEMLowerText(dummy);
+    if (dummy == "psi4")
     {
       PSI4 = 1;
     }
-    if ((dummy == "NWChem") or (dummy == "nwchem")
-       or (dummy == "NWCHEM") or (dummy == "NWchem"))
+    if (dummy == "nwchem")
     {
       NWChem = 1;
     }
-    if ((dummy == "Gaussian") or (dummy == "gaussian") or (dummy == "g09"))
+    if ((dummy == "gaussian") or (dummy == "g09"))
     {
       Gaussian = 1;
     }
     regionfile >> dummy >> QMMMOpts.Func;
-    if ((QMMMOpts.Func == "SemiEmpirical") or (QMMMOpts.Func == "SE-SCF") or
-       (QMMMOpts.Func == "Semi-Empirical") or (QMMMOpts.Func == "se-scf") or
-       (QMMMOpts.Func == "semi-empirical") or (QMMMOpts.Func == "SESCF") or
-       (QMMMOpts.Func == "semiempirical") or (QMMMOpts.Func == "sescf") or
-       (QMMMOpts.Func == "SemiEmp") or (QMMMOpts.Func == "semiemp"))
+    dummy = QMMMOpts.Func;
+    LICHEMLowerText(dummy);
+    if ((dummy == "semiempirical") or (dummy == "se-scf") or
+       (dummy == "semi-empirical") or (dummy == "sescf") or
+       (dummy == "semiemp"))
     {
       //Flag the method as a semi-empirical Hamiltonian
       QMMMOpts.Func = "SemiEmp";
@@ -427,8 +426,8 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.Basis;
     regionfile >> dummy >> QMMMOpts.RAM;
     regionfile >> dummy;
-    if ((dummy == "mb") or (dummy == "MB") or
-       (dummy == "Mb") or (dummy == "mB"))
+    LICHEMLowerText(dummy);
+    if (dummy == "mb")
     {
       QMMMOpts.MemMB = 1;
     }
@@ -439,23 +438,22 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.Charge;
     regionfile >> dummy >> QMMMOpts.Spin;
     regionfile >> dummy >> dummy; //MM wrapper
-    if ((dummy == "TINKER") or (dummy == "Tinker")
-       or (dummy == "tinker"))
+    LICHEMLowerText(dummy);
+    if (dummy == "tinker")
     {
       TINKER = 1;
     }
-    if ((dummy == "AMBER") or (dummy == "Amber") or
-       (dummy == "amber"))
+    if (dummy == "amber")
     {
       AMBER = 1;
     }
-    if ((dummy == "LAMMPS") or (dummy == "Lammps") or
-       (dummy == "lammps"))
+    if (dummy == "lammps")
     {
       LAMMPS = 1;
     }
     regionfile >> dummy >> dummy; //Potential type
-    if ((dummy == "AMOEBA") or (dummy == "amoeba"))
+    LICHEMLowerText(dummy);
+    if (dummy == "amoeba")
     {
       //AMOEBA polarizable force field
       AMOEBA = 1;
@@ -464,14 +462,13 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
         ExtractTINKpoles(Struct,0);
       }
     }
-    if ((dummy == "Charges") or (dummy == "charges") or
-       (dummy == "Charge") or (dummy == "charge") or
+    if ((dummy == "charges") or (dummy == "charge") or
        (dummy == "point-charge"))
     {
       //Point-charge force fields
       CHRG = 1;
     }
-    if ((dummy == "GEM") or (dummy == "gem") or (dummy == "Gem"))
+    if (dummy == "gem")
     {
       //Frozen density
       GEM = 1;
@@ -482,30 +479,29 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       }
     }
   }
-  if ((dummy == "MM") or (dummy == "mm"))
+  if (dummy == "mm")
   {
     //Read MMonly options
     MMonly = 1;
     QMonly = 0;
     QMMM = 0;
     regionfile >> dummy >> dummy; //MM wrapper
-    if ((dummy == "TINKER") or (dummy == "Tinker")
-       or (dummy == "tinker"))
+    LICHEMLowerText(dummy);
+    if (dummy == "tinker")
     {
       TINKER = 1;
     }
-    if ((dummy == "AMBER") or (dummy == "Amber") or
-       (dummy == "amber"))
+    if (dummy == "amber")
     {
       AMBER = 1;
     }
-    if ((dummy == "LAMMPS") or (dummy == "Lammps") or
-       (dummy == "lammps"))
+    if (dummy == "lammps")
     {
       LAMMPS = 1;
     }
     regionfile >> dummy >> dummy; //Potential type
-    if ((dummy == "AMOEBA") or (dummy == "amoeba"))
+    LICHEMLowerText(dummy);
+    if (dummy == "amoeba")
     {
       //AMOEBA polarizable force field
       AMOEBA = 1;
@@ -514,14 +510,13 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
         ExtractTINKpoles(Struct,0);
       }
     }
-    if ((dummy == "Charges") or (dummy == "charges") or
-       (dummy == "Charge") or (dummy == "charge") or
+    if ((dummy == "charges") or (dummy == "charge") or
        (dummy == "point-charge"))
     {
       //Point-charge force fields
       CHRG = 1;
     }
-    if ((dummy == "GEM") or (dummy == "gem") or (dummy == "Gem"))
+    if (dummy == "gem")
     {
       //Frozen density
       GEM = 1;
@@ -533,17 +528,19 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     }
   }
   regionfile >> dummy >> dummy; //Calculation type
-  if ((dummy == "PIMC") or (dummy == "pimc"))
+  LICHEMLowerText(dummy);
+  if (dummy == "pimc")
   {
     //Read MC and PIMC options
     PIMCSim = 1;
     regionfile >> dummy >> dummy; //Ensemble
-    if ((dummy == "NVT") or (dummy == "nvt"))
+    LICHEMLowerText(dummy);
+    if (dummy == "nvt")
     {
       //Set a consistent name for the ensemble
       QMMMOpts.Ensemble = "NVT";
     }
-    if ((dummy == "NPT") or (dummy == "npt"))
+    if (dummy == "npt")
     {
       //Set a consistent name for the ensemble
       QMMMOpts.Ensemble = "NPT";
@@ -589,7 +586,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       }
     }
   }
-  if ((dummy == "Opt") or (dummy == "OPT") or (dummy == "opt"))
+  if (dummy == "opt")
   {
     //Read energy minimization options
     OptSim = 1;
@@ -597,8 +594,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
   }
-  if ((dummy == "Steep") or (dummy == "steep") or
-     (dummy == "SD") or (dummy == "sd"))
+  if ((dummy == "steep") or (dummy == "sd"))
   {
     //Read SD energy minimization options
     SteepSim = 1;
@@ -608,9 +604,8 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
   }
-  if ((dummy == "QuickMin") or (dummy == "Quick") or
-     (dummy == "quick") or (dummy == "quickmin") or
-     (dummy == "DV") or (dummy == "dv"))
+  if ((dummy == "quickmin") or (dummy == "quick") or
+     (dummy == "dv"))
   {
     //Read damped Verlet energy minimization options
     QuickSim = 1;
@@ -620,12 +615,11 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
   }
-  if ((dummy == "DFP") or (dummy == "dfp") or
-     (dummy == "BFGS") or (dummy == "bfgs"))
+  if ((dummy == "dfp") or (dummy == "bfgs"))
   {
     //Read energy minimization options for the DFP optimizer
     DFPSim = 1;
-    if ((dummy == "BFGS") or (dummy == "bfgs"))
+    if (dummy == "bfgs")
     {
       //Print BFGS error
       cerr << "Warning: A BFGS optimizer is not implemented.";
@@ -640,8 +634,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
   }
-  if ((dummy == "NEB") or (dummy == "neb") or (dummy == "CI-NEB")
-     or (dummy == "ci-neb") or (dummy == "CINEB") or (dummy == "cineb"))
+  if ((dummy == "neb") or (dummy == "ci-neb") or (dummy == "cineb"))
   {
     //Read energy minimization options for climbing image NEB
     NEBSim = 1;
@@ -650,8 +643,8 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.MaxStep;
     regionfile >> dummy >> QMMMOpts.Kspring;
     regionfile >> dummy >> dummy;
-    if ((dummy == "Yes") or (dummy == "yes") or (dummy == "YES") or
-       (dummy == "True") or (dummy == "true") or (dummy == "TRUE"))
+    LICHEMLowerText(dummy);
+    if ((dummy == "yes") or (dummy == "true"))
     {
       QMMMOpts.FrznEnds = 1;
     }
@@ -685,8 +678,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       }
     }
   }
-  if ((dummy == "ESD") or (dummy == "esd") or
-     (dummy == "EnsembleSD") or (dummy == "ensembesd"))
+  if ((dummy == "esd") or (dummy == "ensembesd"))
   {
     //Read energy minimization options for ensemble steepest descent
     ESDSim = 1;
@@ -698,8 +690,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.tautemp;
     regionfile >> dummy >> QMMMOpts.Nsteps;
   }
-  if ((dummy == "ENEB") or (dummy == "eneb") or
-     (dummy == "EnsembleNEB") or (dummy == "ensembeneb"))
+  if ((dummy == "eneb") or (dummy == "ensembeneb"))
   {
     //Read energy minimization options for ensemble NEB
     ENEBSim = 1;
@@ -742,16 +733,14 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       }
     }
   }
-  if ((dummy == "SP") or (dummy == "sp") or
-     (dummy == "energy") or (dummy == "Energy"))
+  if ((dummy == "sp") or (dummy == "Energy"))
   {
     //Read energy minimization options
     SinglePoint = 1;
   }
   regionfile >> dummy >> dummy; //PBC options
-  if ((dummy == "Yes") or (dummy == "yes") or
-     (dummy == "YES") or (dummy == "true") or
-     (dummy == "True") or (dummy == "TRUE"))
+  LICHEMLowerText(dummy);
+  if ((dummy == "yes") or (dummy == "true"))
   {
     //Read box sizes
     PBCon = 1;
