@@ -23,6 +23,7 @@ int main(int argc, char* argv[])
 {
   //Misc. initialization
   StartTime = (unsigned)time(0); //Time the program starts
+  srand((unsigned)time(0)); //Serial only random numbers
   //End of section
 
   //Output stream settings
@@ -32,7 +33,6 @@ int main(int argc, char* argv[])
   //End of section
 
   //Initialize local variables
-  srand((unsigned)time(0)); //Serial only random numbers
   string dummy; //Generic string
   double SumE,SumE2,VolAvg,Ek;
   fstream xyzfile,connectfile,regionfile,outfile; //Input and output files
@@ -1058,9 +1058,11 @@ int main(int argc, char* argv[])
     cout << "Optimization complete.";
     cout << '\n' << '\n';
     //Print the reaction barriers
-    cout << "NEB Results:" << '\n';
     double dEfor = QMMMOpts.Ets-QMMMOpts.Ereact; //Forward barrier
     double dErev = QMMMOpts.Ets-QMMMOpts.Eprod; //Reverse barrier
+    cout << "NEB Results:" << '\n';
+    cout << " | Transition state bead: " << QMMMOpts.TSBead;
+    cout << '\n' << '\n';
     cout << " | Forward barrier: ";
     cout << LICHEMFormDouble(dEfor,16) << " eV ," << '\n';
     cout << " |   ";

@@ -1371,7 +1371,8 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
       cout << "MM convergence criteria:" << '\n';
       cout << "  RMS deviation: " << QMMMOpts.MMOptTol;
       cout << " \u212B" << '\n';
-      cout << "  RMS force: " << QMMMOpts.MMOptTol*kcal2eV;
+      cout << "  RMS force: ";
+      cout << LICHEMFormDouble(QMMMOpts.MMOptTol*kcal2eV,12);
       cout << " eV/\u212B" << '\n';
       cout << '\n';
     }

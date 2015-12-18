@@ -52,17 +52,17 @@ FLAGSGPU=$(CXXFLAGS) $(DEVFLAGS) $(GPUFLAGS) $(LDFLAGS) -I./src/ -I./include/
 binary:	
 	@echo ""; \
 	echo "### Compiling the LICHEM binary ###"
-	$(CXX) $(FLAGSBIN) ./src/LICHEM.cpp -o lichem
+	$(CXX) ./src/LICHEM.cpp -o lichem $(FLAGSBIN)
 
 devbin:	
 	@echo ""; \
 	echo "### Compiling the LICHEM development binary ###"
-	$(CXX) $(FLAGSDEV) ./src/LICHEM.cpp -o lichem
+	$(CXX) ./src/LICHEM.cpp -o lichem $(FLAGSDEV)
 
 gpubin:	
 	@echo ""; \
 	echo "### Compiling the LICHEM GPU binary ###"
-	$(CXX) $(FLAGSGPU) ./src/LICHEM.cpp -o lichem
+	$(CXX) ./src/LICHEM.cpp -o lichem $(FLAGSGPU)
 
 testexe:	
 	@echo ""; \
@@ -80,7 +80,7 @@ testexe:
 checksyntax:	title
 	@echo ""; \
 	echo "### Checking for warnings and syntax errors ###"
-	$(CXX) $(FLAGSDEV) -fsyntax-only ./src/LICHEM.cpp -o lichem
+	$(CXX) -fsyntax-only ./src/LICHEM.cpp -o lichem $(FLAGSDEV)
 	@echo ""; \
 	echo "### Source code statistics ###"; \
 	echo "Number of LICHEM source code files:"; \
