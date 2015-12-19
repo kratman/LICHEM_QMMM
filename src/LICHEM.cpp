@@ -12,7 +12,7 @@
  LICHEM is licensed under GPLv3, for more information see GPL_LICENSE
 
  References for the LICHEM package:
- 
+ Kratz et al., J. Comp. Chem., X, X, X, (2016)
 
 */
 

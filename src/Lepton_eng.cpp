@@ -107,6 +107,7 @@ double KineticE_eFF(vector<QMMMElec>& elecs, QMMMSettings& QMMMOpts)
 {
   //Total electron kinetic energy
   double E = 0;
+  #pragma omp parallel for
   for (unsigned int i=0;i<elecs.size();i++)
   {
     elecs[i].Ep = 0.0;
@@ -124,6 +125,10 @@ double KineticE_eFF(vector<QMMMElec>& elecs, QMMMSettings& QMMMOpts)
       elecs[i].Ep += Etmp;
     }
   }
+  for (unsigned int i=0;i<elecs.size();i++)
+  {
+    E += elecs[i].Ep;
+  }
   return E;
 };
 
@@ -132,32 +137,36 @@ double Get_EeFF(vector<QMMMAtom>& Struct, vector<QMMMElec>& elecs,
 {
   //Total eFF interaction energy
   double E = 0;
-  #pragma omp parallel for schedule(dynamic)
-  for (int i=0;i<Natoms;i++)
+  #pragma omp parallel
   {
-    Struct[i].Ep = 0;
-    for (unsigned int j=0;j<elecs.size();j++)
+    #pragma omp for nowait schedule(dynamic)
+    for (int i=0;i<Natoms;i++)
     {
+      Struct[i].Ep = 0;
+      for (unsigned int j=0;j<elecs.size();j++)
+      {
+        for (int k=0;k<QMMMOpts.Nbeads;k++)
+        {
+          Struct[i].Ep += EFFEnergy(Struct[i],elecs[j],k);
+        }
+      }
+    }
+    #pragma omp for nowait schedule(dynamic)
+    for (unsigned int i=0;i<elecs.size();i++)
+    {
+      elecs[i].Ep = 0.0;
       for (int k=0;k<QMMMOpts.Nbeads;k++)
       {
-        Struct[i].Ep += EFFEnergy(Struct[i],elecs[j],k);
+        //Lepton interaction energy
+        for (unsigned int j=0;j<i;j++)
+        {
+          //Lepton-lepton correlation
+          elecs[i].Ep += EFFCorr(elecs[i],elecs[j],k);
+        }
       }
     }
   }
-  #pragma omp parallel for schedule(dynamic)
-  for (unsigned int i=0;i<elecs.size();i++)
-  {
-    elecs[i].Ep = 0.0;
-    for (int k=0;k<QMMMOpts.Nbeads;k++)
-    {
-      //Lepton interaction energy
-      for (unsigned int j=0;j<i;j++)
-      {
-        //Lepton-lepton correlation
-        elecs[i].Ep += EFFCorr(elecs[i],elecs[j],k);
-      }
-    }
-  }
+  #pragma omp barrier
   for (int i=0;i<Natoms;i++)
   {
     E += Struct[i].Ep;

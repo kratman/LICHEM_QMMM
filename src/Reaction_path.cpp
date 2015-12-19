@@ -41,7 +41,7 @@ bool PathConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
      bool QMregion)
 {
   //Check convergence of QMMM optimizations
-  bool PathDone = 0;
+  bool PathDone = 1;
   
   return PathDone;
 };

@@ -145,12 +145,23 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
     double dy = 2*(randy-0.5)*step*CentRatio;
     double dz = 2*(randz-0.5)*step*CentRatio;
     //Update positions
-    #pragma omp parallel for schedule(dynamic)
-    for (int i=0;i<QMMMOpts.Nbeads;i++)
+    #pragma omp parallel
     {
-      Struct2[p].P[i].x += dx;
-      Struct2[p].P[i].y += dy;
-      Struct2[p].P[i].z += dz;
+      #pragma omp for nowait schedule(dynamic)
+      for (int i=0;i<QMMMOpts.Nbeads;i++)
+      {
+        Struct2[p].P[i].x += dx;
+      }
+      #pragma omp for nowait schedule(dynamic)
+      for (int i=0;i<QMMMOpts.Nbeads;i++)
+      {
+        Struct2[p].P[i].y += dy;
+      }
+      #pragma omp for nowait schedule(dynamic)
+      for (int i=0;i<QMMMOpts.Nbeads;i++)
+      {
+        Struct2[p].P[i].z += dz;
+      }
     }
   }
   if (randnum < BeadProb)
@@ -195,17 +206,19 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
     //Anisotropic volume change
     if (Isotrop == 0)
     {
+      double Lmin;
+      double Lmax;
       randnum = (((double)rand())/((double)RAND_MAX));
-      double Lmin = 0.97*Lx;
-      double Lmax = 1.03*Lx;
+      Lmin = 0.99*Lx;
+      Lmax = 1.01*Lx;
       Lx = Lmin+randnum*(Lmax-Lmin);
       randnum = (((double)rand())/((double)RAND_MAX));
-      Lmin = 0.97*Ly;
-      Lmax = 1.03*Ly;
+      Lmin = 0.99*Ly;
+      Lmax = 1.01*Ly;
       Ly = Lmin+randnum*(Lmax-Lmin);
       randnum = (((double)rand())/((double)RAND_MAX));
-      Lmin = 0.97*Lz;
-      Lmax = 1.03*Lz;
+      Lmin = 0.99*Lz;
+      Lmax = 1.01*Lz;
       Lz = Lmin+randnum*(Lmax-Lmin);
     }
     //Isotropic volume change
@@ -213,37 +226,121 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
     {
       //Currently assumes that MM cutoffs are safe
       randnum = (((double)rand())/((double)RAND_MAX));
-      double expan = 0.97+randnum*0.06;
+      double expan = 0.99+randnum*0.01;
       Lx *= expan;
       Ly *= expan;
       Lz *= expan;
     }
     //Scale positions
-    #pragma omp parallel for schedule(dynamic)
-    for (int i=0;i<Natoms;i++)
+    #pragma omp parallel
     {
-      for (int j=0;j<QMMMOpts.Nbeads;j++)
+      #pragma omp for nowait schedule(dynamic)
+      for (int i=0;i<Natoms;i++)
       {
-        Struct2[i].P[j].x *= Lx/Lxtmp;
-        Struct2[i].P[j].y *= Ly/Lytmp;
-        Struct2[i].P[j].z *= Lz/Lztmp;
+        for (int j=0;j<QMMMOpts.Nbeads;j++)
+        {
+          double shift; //Change in position
+          shift = Struct2[i].P[j].x;
+          //Check PBC without wrapping the molecules
+          bool check = 1; //Continue the PBC checks
+          while (check)
+          {
+            //Check the value
+            check = 0;
+            if (shift > Lx)
+            {
+              shift -= Lx;
+              check = 1;
+            }
+            if (shift < 0)
+            {
+              shift += Lx;
+              check = 1;
+            }
+          }
+          //Calculate the change in position
+          shift = ((Lx/Lxtmp)-1)*shift;
+          //Update the position
+          Struct2[i].P[j].x += shift;
+        }
+      }
+      #pragma omp for nowait schedule(dynamic)
+      for (int i=0;i<Natoms;i++)
+      {
+        for (int j=0;j<QMMMOpts.Nbeads;j++)
+        {
+          double shift; //Change in position
+          shift = Struct2[i].P[j].y;
+          //Check PBC without wrapping the molecules
+          bool check = 1; //Continue the PBC checks
+          while (check)
+          {
+            //Check the value
+            check = 0;
+            if (shift > Ly)
+            {
+              shift -= Ly;
+              check = 1;
+            }
+            if (shift < 0)
+            {
+              shift += Ly;
+              check = 1;
+            }
+          }
+          //Calculate the change in position
+          shift = ((Ly/Lytmp)-1)*shift;
+          //Update the position
+          Struct2[i].P[j].y += shift;
+        }
+      }
+      #pragma omp for nowait schedule(dynamic)
+      for (int i=0;i<Natoms;i++)
+      {
+        for (int j=0;j<QMMMOpts.Nbeads;j++)
+        {
+          double shift; //Change in position
+          shift = Struct2[i].P[j].z;
+          //Check PBC without wrapping the molecules
+          bool check = 1; //Continue the PBC checks
+          while (check)
+          {
+            //Check the value
+            check = 0;
+            if (shift > Lz)
+            {
+              shift -= Lz;
+              check = 1;
+            }
+            if (shift < 0)
+            {
+              shift += Lz;
+              check = 1;
+            }
+          }
+          //Calculate the change in position
+          shift = ((Lz/Lztmp)-1)*shift;
+          //Update the position
+          Struct2[i].P[j].z += shift;
+        }
       }
     }
+    #pragma omp barrier
     //Add PV energy term
     Enew += QMMMOpts.Press*Lx*Ly*Lz*atm2eV;
   }
   Enew += Get_PI_Epot(Struct2,QMMMOpts);
   Enew += Get_PI_Espring(Struct2,QMMMOpts);
   //Accept or reject
-  double dE = Enew-Eold;
+  double dE = QMMMOpts.Beta*(Enew-Eold);
   if (QMMMOpts.Ensemble == "NPT")
   {
     //Add log term
-    dE -= Natoms*log((Lx*Ly*Lz)/(Lxtmp*Lytmp*Lztmp))/QMMMOpts.Beta;
+    dE -= Natoms*log((Lx*Ly*Lz)/(Lxtmp*Lytmp*Lztmp));
   }
-  double Prob = exp(-1*dE*QMMMOpts.Beta);
+  double Prob = exp(-1*dE);
   randnum = (((double)rand())/((double)RAND_MAX));
-  if ((dE <= 0) or (randnum < Prob))
+  if (randnum <= Prob)
   {
     //Accept
     Struct = Struct2;

@@ -93,10 +93,10 @@ GitHub issues interface. A list of known issues and the development timeline
 are available in the doc directory or on the GitHub page.
 
 Development versions of LICHEM are kept in a private repository. Large changes
-to the code or the addition of new features (multipoles, diffuse charges,
-reaction path ways, etc) are tested and published before they are merged into
-the public repository. To ensure that LICHEM compiles properly, dummy function
-calls are added for incomplete or untested features.
+to the code or the addition of new features (diffuse charges, reaction path
+ways, etc) are tested and published before they are merged into the public
+repository. To ensure that LICHEM compiles properly, dummy function calls are
+added for incomplete or untested features.
 
 Relatively minor updates (documentation, output printing, bug fixes, comments,
 etc) are released ASAP. Updates from the private development branch are

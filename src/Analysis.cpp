@@ -97,17 +97,41 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
   double Bx = 0; //Average x position of matrix B
   double By = 0; //Average y position of matrix B
   double Bz = 0; //Average z position of matrix B
-  #pragma omp parallel for schedule(dynamic) reduction(+:Ax,Ay,Az,Bx,By,Bz)
-  for (int i=0;i<MatSize;i++)
+  #pragma omp parallel
   {
     //Update sum of the atomic positions
-    Ax += A(i,0);
-    Ay += A(i,1);
-    Az += A(i,2);
-    Bx += B(i,0);
-    By += B(i,1);
-    Bz += B(i,2);
+    #pragma omp for nowait schedule(dynamic) reduction(+:Ax)
+    for (int i=0;i<MatSize;i++)
+    {
+      Ax += A(i,0);
+    }
+    #pragma omp for nowait schedule(dynamic) reduction(+:Ay)
+    for (int i=0;i<MatSize;i++)
+    {
+      Ay += A(i,1);
+    }
+    #pragma omp for nowait schedule(dynamic) reduction(+:Az)
+    for (int i=0;i<MatSize;i++)
+    {
+      Az += A(i,2);
+    }
+    #pragma omp for nowait schedule(dynamic) reduction(+:Bx)
+    for (int i=0;i<MatSize;i++)
+    {
+      Bx += B(i,0);
+    }
+    #pragma omp for nowait schedule(dynamic) reduction(+:By)
+    for (int i=0;i<MatSize;i++)
+    {
+      By += B(i,1);
+    }
+    #pragma omp for nowait schedule(dynamic) reduction(+:Bz)
+    for (int i=0;i<MatSize;i++)
+    {
+      Bz += B(i,2);
+    }
   }
+  #pragma omp barrier
   //Take average
   Ax /= MatSize;
   Ay /= MatSize;
@@ -116,17 +140,41 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
   By /= MatSize;
   Bz /= MatSize;
   //Translate centroids
-  #pragma omp parallel for schedule(dynamic)
-  for (int i=0;i<MatSize;i++)
+  #pragma omp parallel
   {
     //Move A and B to (0,0,0)
-    A(i,0) -= Ax;
-    A(i,1) -= Ay;
-    A(i,2) -= Az;
-    B(i,0) -= Bx;
-    B(i,1) -= By;
-    B(i,2) -= Bz;
+    #pragma omp for nowait schedule(dynamic)
+    for (int i=0;i<MatSize;i++)
+    {
+      A(i,0) -= Ax;
+    }
+    #pragma omp for nowait schedule(dynamic)
+    for (int i=0;i<MatSize;i++)
+    {
+      A(i,1) -= Ay;
+    }
+    #pragma omp for nowait schedule(dynamic)
+    for (int i=0;i<MatSize;i++)
+    {
+      A(i,2) -= Az;
+    }
+    #pragma omp for nowait schedule(dynamic)
+    for (int i=0;i<MatSize;i++)
+    {
+      B(i,0) -= Bx;
+    }
+    #pragma omp for nowait schedule(dynamic)
+    for (int i=0;i<MatSize;i++)
+    {
+      B(i,1) -= By;
+    }
+    #pragma omp for nowait schedule(dynamic)
+    for (int i=0;i<MatSize;i++)
+    {
+      B(i,2) -= Bz;
+    }
   }
+  #pragma omp barrier
   //Calculate covariance matrix
   CoVar = (B.transpose())*A;
   //Compute SVD and identity matrix

@@ -276,42 +276,88 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   double avgx = 0;
   double avgy = 0;
   double avgz = 0;
-  #pragma omp parallel for schedule(dynamic) reduction(+:avgx,avgy,avgz)
-  for (int i=0;i<Natoms;i++)
+  #pragma omp parallel
   {
-    //Loop over all beads
-    double centx = 0;
-    double centy = 0;
-    double centz = 0;
-    for (int j=0;j<QMMMOpts.Nbeads;j++)
+    #pragma omp for nowait schedule(dynamic) reduction(+:avgx)
+    for (int i=0;i<Natoms;i++)
     {
-      //Update local average postion
-      centx += Struct[i].P[j].x;
-      centy += Struct[i].P[j].y;
-      centz += Struct[i].P[j].z;
+      //Loop over all beads
+      double centx = 0;
+      for (int j=0;j<QMMMOpts.Nbeads;j++)
+      {
+        //Update local average postion
+        centx += Struct[i].P[j].x;
+      }
+      //Upate full average
+      avgx += centx;
     }
-    //Upate full averages
-    avgx += centx;
-    avgy += centy;
-    avgz += centz;
+    #pragma omp for nowait schedule(dynamic) reduction(+:avgy)
+    for (int i=0;i<Natoms;i++)
+    {
+      //Loop over all beads
+      double centy = 0;
+      for (int j=0;j<QMMMOpts.Nbeads;j++)
+      {
+        //Update local average postion
+        centy += Struct[i].P[j].y;
+      }
+      //Upate full average
+      avgy += centy;
+    }
+    #pragma omp for nowait schedule(dynamic) reduction(+:avgz)
+    for (int i=0;i<Natoms;i++)
+    {
+      //Loop over all beads
+      double centz = 0;
+      for (int j=0;j<QMMMOpts.Nbeads;j++)
+      {
+        //Update local average postion
+        centz += Struct[i].P[j].z;
+      }
+      //Upate full average
+      avgz += centz;
+    }
   }
+  #pragma omp barrier
   //Convert sums to averages
   avgx /= Natoms*QMMMOpts.Nbeads;
   avgy /= Natoms*QMMMOpts.Nbeads;
   avgz /= Natoms*QMMMOpts.Nbeads;
   //Move atoms to the center of the box
-  #pragma omp parallel for schedule(dynamic)
-  for (int i=0;i<Natoms;i++)
+  #pragma omp parallel
   {
-    //Loop over all beads
-    for (int j=0;j<QMMMOpts.Nbeads;j++)
+    #pragma omp for nowait schedule(dynamic)
+    for (int i=0;i<Natoms;i++)
     {
-      //Move bead to the center
-      Struct[i].P[j].x -= avgx;
-      Struct[i].P[j].y -= avgy;
-      Struct[i].P[j].z -= avgz;
+      //Loop over all beads
+      for (int j=0;j<QMMMOpts.Nbeads;j++)
+      {
+        //Move bead to the center
+        Struct[i].P[j].x -= avgx;
+      }
+    }
+    #pragma omp for nowait schedule(dynamic)
+    for (int i=0;i<Natoms;i++)
+    {
+      //Loop over all beads
+      for (int j=0;j<QMMMOpts.Nbeads;j++)
+      {
+        //Move bead to the center
+        Struct[i].P[j].y -= avgy;
+      }
+    }
+    #pragma omp for nowait schedule(dynamic)
+    for (int i=0;i<Natoms;i++)
+    {
+      //Loop over all beads
+      for (int j=0;j<QMMMOpts.Nbeads;j++)
+      {
+        //Move bead to the center
+        Struct[i].P[j].z -= avgz;
+      }
     }
   }
+  #pragma omp barrier
   //Return with updated structure
   return;
 };

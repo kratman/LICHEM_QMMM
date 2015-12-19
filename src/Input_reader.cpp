@@ -808,15 +808,27 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     int AtomID;
     regionfile >> AtomID;
     Struct[AtomID].Frozen = 1;
-    if (PIMCSim or ENEBSim or NEBSim)
+    //Adjust positions for PIMC
+    if (PIMCSim)
     {
       //Frozen atoms must be the same for all replicas
-      #pragma omp parallel for schedule(dynamic)
-      for (int j=0;j<QMMMOpts.Nbeads;j++)
+      #pragma omp parallel
       {
-        Struct[AtomID].P[j].x = Struct[AtomID].P[0].x;
-        Struct[AtomID].P[j].y = Struct[AtomID].P[0].y;
-        Struct[AtomID].P[j].z = Struct[AtomID].P[0].z;
+        #pragma omp for nowait schedule(dynamic)
+        for (int j=0;j<QMMMOpts.Nbeads;j++)
+        {
+          Struct[AtomID].P[j].x = Struct[AtomID].P[0].x;
+        }
+        #pragma omp for nowait schedule(dynamic)
+        for (int j=0;j<QMMMOpts.Nbeads;j++)
+        {
+          Struct[AtomID].P[j].y = Struct[AtomID].P[0].y;
+        }
+        #pragma omp for nowait schedule(dynamic)
+        for (int j=0;j<QMMMOpts.Nbeads;j++)
+        {
+          Struct[AtomID].P[j].z = Struct[AtomID].P[0].z;
+        }
       }
     }
   }

@@ -662,9 +662,9 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         StepScale *= 0.75;
       }
       //Check for minimum step size
-      if (StepScale < (0.1*sdscale*QMMMOpts.StepScale))
+      if (StepScale < (0.25*sdscale*QMMMOpts.StepScale))
       {
-        StepScale = 0.1*sdscale*QMMMOpts.StepScale;
+        StepScale = 0.25*sdscale*QMMMOpts.StepScale;
       }
       //Create new Hessian as an identity matrix
       IHess.setIdentity(); //Already an "inverse" Hessian
@@ -686,9 +686,9 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         StepScale *= 0.75;
       }
       //Check for minimum step size
-      if (StepScale < (0.1*sdscale*QMMMOpts.StepScale))
+      if (StepScale < (0.25*sdscale*QMMMOpts.StepScale))
       {
-        StepScale = 0.1*sdscale*QMMMOpts.StepScale;
+        StepScale = 0.25*sdscale*QMMMOpts.StepScale;
       }
       //Create new Hessian as an identity matrix
       IHess.setIdentity(); //Already an "inverse" Hessian
@@ -728,9 +728,9 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
         StepScale *= 0.75;
       }
       //Check for minimum step size
-      if (StepScale < (0.1*sdscale*QMMMOpts.StepScale))
+      if (StepScale < (0.25*sdscale*QMMMOpts.StepScale))
       {
-        StepScale = 0.1*sdscale*QMMMOpts.StepScale;
+        StepScale = 0.25*sdscale*QMMMOpts.StepScale;
       }
       IHess.setIdentity(); //Already an "inverse" Hessian
     }
