@@ -136,6 +136,10 @@ void LICHEM2TINK(int&,char**&);
 
 void LICHEMDFP(vector<QMMMAtom>&,QMMMSettings&,int);
 
+int LICHEMCountChars(string);
+
+int LICHEMCountInt(int);
+
 void LICHEMErrorChecker(QMMMSettings&);
 
 double LICHEMFactorial(int);
@@ -226,6 +230,7 @@ void WritePSI4Input(vector<QMMMAtom>&,string,QMMMSettings&,int);
 void WriteTINKMpole(vector<QMMMAtom>&,fstream&,int,int);
 
 //Function definitions (alphabetical)
+#include "AMBER2LICHEM.cpp"
 #include "Analysis.cpp"
 #include "Basis.cpp"
 #include "Basis_sets.cpp"
@@ -233,6 +238,7 @@ void WriteTINKMpole(vector<QMMMAtom>&,fstream&,int,int);
 #include "Frozen_density.cpp"
 #include "Hermite_eng.cpp"
 #include "Input_reader.cpp"
+#include "LAMMPS2LICHEM.cpp"
 #include "LICHEM_classes.cpp"
 #include "Multipoles.cpp"
 #include "Optimizers.cpp"

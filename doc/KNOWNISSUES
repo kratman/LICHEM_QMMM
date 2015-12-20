@@ -18,10 +18,6 @@ Gaussian interface:
 wrapper. This is harmless, but the statistics should not be trusted when
 optimizations are performed with the native Gaussian optimizer.
 
-PSI4 interface:
--The PSI4 wrapper coded and tested using the development version of PSI4.
-It is recommended to use the anaconda version of PSI4.
-
 NWChem interface:
 -NWChem calculations can only be performed with DFT. Wavefunction based
 methods are not implemented.
@@ -40,7 +36,7 @@ insignificant if the chiral atoms are far from the QM region.
 monopole is retained, the frame of reference is not important.
 
 LAMMPS interface:
--The LAMMPS wrapper is currently being rewritten.
+-The LAMMPS wrapper is still in the early stages of development.
 
 AMBER interface:
 -The AMBER wrapper is still in the early stages of development.
@@ -50,7 +46,7 @@ PIMC:
 NPT MC is low priority.
 
 Manual:
--The theory sections need citations
+-The theory sections need citations.
 -Better descriptions of the simulations methods should be given (i.e. DFP vs
 Opt).
 -The theory for path-integral calculations needs to be documented.

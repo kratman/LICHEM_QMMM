@@ -654,6 +654,10 @@ int main(int argc, char* argv[])
     double Emc = 0; //Monte Carlo energy
     double Et = 0; //Total energy for printing
     bool acc; //Flag for accepting a step
+    //Find the number of characters to print for the step counter
+    int SimCharLen;
+    SimCharLen = QMMMOpts.Neq+QMMMOpts.Nsteps;
+    SimCharLen = LICHEMCountInt(SimCharLen);
     //Start equilibration run and calculate initial energy
     cout << "Monte Carlo equilibration:" << '\n';
     cout.flush();
@@ -714,9 +718,11 @@ int main(int argc, char* argv[])
           step = StepMax;
         }
         //Statistics
-        cout << " | Step: " << Nct;
-        cout << " | Step size: " << step;
-        cout << " | Accept ratio: " << (Nacc/(Nrej+Nacc));
+        cout << " | Step: " << setw(SimCharLen) << Nct;
+        cout << " | Step size: ";
+        cout << LICHEMFormDouble(step,6);
+        cout << " | Accept ratio: ";
+        cout << LICHEMFormDouble((Nacc/(Nrej+Nacc)),6);
         cout << '\n';
         cout.flush(); //Print stats
         //Reset counters
@@ -749,11 +755,14 @@ int main(int argc, char* argv[])
     Print_traj(Struct,outfile,QMMMOpts);
     Et = Ek+Emc; //Calculate total energy using previous saved energy
     Et -= 2*Get_PI_Espring(Struct,QMMMOpts);
-    cout << " | Step: " << Nct;
-    cout << " | Energy: " << Et << " eV";
+    cout << " | Step: " << setw(SimCharLen) << 0;
+    cout << " | Energy: " << LICHEMFormDouble(Et,12);
+    cout << " eV";
     if (QMMMOpts.Ensemble == "NPT")
     {
-      cout << " | Volume: " << Lx*Ly*Lz << " \u212B^3";
+      cout << " | Volume: ";
+      cout << LICHEMFormDouble(Lx*Ly*Lz,10);
+      cout << " \u212B^3";
     }
     cout << '\n';
     cout.flush(); //Print results
@@ -778,11 +787,14 @@ int main(int argc, char* argv[])
         {
           //Print progress
           Print_traj(Struct,outfile,QMMMOpts);
-          cout << " | Step: " << Nct;
-          cout << " | Energy: " << Et << " eV";
+          cout << " | Step: " << setw(SimCharLen) << Nct;
+          cout << " | Energy: " << LICHEMFormDouble(Et,12);
+          cout << " eV";
           if (QMMMOpts.Ensemble == "NPT")
           {
-            cout << " | Volume: " << Lx*Ly*Lz << " \u212B^3";
+            cout << " | Volume: ";
+            cout << LICHEMFormDouble(Lx*Ly*Lz,10);
+            cout << " \u212B^3";
           }
           cout << '\n';
           cout.flush(); //Print results
@@ -803,28 +815,31 @@ int main(int argc, char* argv[])
     VolAvg /= QMMMOpts.Nsteps; //Average volume
     //Print simulation details and statistics
     cout << '\n';
-    cout << "Temperature: ";
+    if (QMMMOpts.Nbeads > 1)
+    {
+      cout << "PI";
+    }
+    cout << "MC statistics:" << '\n';
+    cout << " | Temperature: ";
     cout << QMMMOpts.Temp;
-    cout << " K    ";
+    cout << " K ";
     if (QMMMOpts.Ensemble == "NPT")
     {
-      cout << "Volume: ";
-      cout << VolAvg;
+      cout << " | Volume: ";
+      cout << LICHEMFormDouble(VolAvg,12);
       cout << " \u212B^3";
     }
     cout << '\n';
-    cout << "Average energy: ";
-    cout << SumE;
-    cout << " eV    ";
-    cout << "Variance: ";
-    cout << (SumE2-(SumE*SumE));
+    cout << " | Average energy: ";
+    cout << LICHEMFormDouble(SumE,16);
+    cout << " eV | Variance: ";
+    cout << LICHEMFormDouble((SumE2-(SumE*SumE)),12);
     cout << " eV^2";
     cout << '\n';
-    cout << "Acceptance ratio: ";
-    cout << (Nacc/(Nrej+Nacc));
-    cout << "    ";
-    cout << "Optimum step size: ";
-    cout << step;
+    cout << " | Acceptance ratio: ";
+    cout << LICHEMFormDouble((Nacc/(Nrej+Nacc)),6);
+    cout << " | Optimum step size: ";
+    cout << LICHEMFormDouble(step,6);
     cout << " \u212B";
     cout << '\n';
     cout << '\n';

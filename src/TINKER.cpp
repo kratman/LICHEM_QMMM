@@ -121,8 +121,10 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (PBCon)
   {
     //Write box size
-    ofile << Lx << " " << Ly << " " << Lz;
-    ofile << " 90.0 90.0 90.0";
+    ofile << LICHEMFormDouble(Lx,12) << " ";
+    ofile << LICHEMFormDouble(Ly,12) << " ";
+    ofile << LICHEMFormDouble(Lz,12) << " ";
+    ofile << "90.0 90.0 90.0";
     ofile << '\n';
   }
   ct = 0; //Counter for QM atoms
@@ -166,9 +168,9 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (PBCon)
   {
     //PBC defined twice for safety
-    ofile << "a-axis " << Lx << '\n';
-    ofile << "b-axis " << Ly << '\n';
-    ofile << "c-axis " << Lz << '\n';
+    ofile << "a-axis " << LICHEMFormDouble(Lx,12) << '\n';
+    ofile << "b-axis " << LICHEMFormDouble(Ly,12) << '\n';
+    ofile << "c-axis " << LICHEMFormDouble(Lz,12) << '\n';
     ofile << "alpha 90.0" << '\n';
     ofile << "beta 90.0" << '\n';
     ofile << "gamma 90.0" << '\n';
@@ -308,8 +310,10 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (PBCon)
   {
     //Write box size
-    ofile << Lx << " " << Ly << " " << Lz;
-    ofile << " 90.0 90.0 90.0";
+    ofile << LICHEMFormDouble(Lx,12) << " ";
+    ofile << LICHEMFormDouble(Ly,12) << " ";
+    ofile << LICHEMFormDouble(Lz,12) << " ";
+    ofile << "90.0 90.0 90.0";
     ofile << '\n';
   }
   ct = 0; //Counter for QM atoms
@@ -353,9 +357,9 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (PBCon)
   {
     //PBC defined twice for safety
-    ofile << "a-axis " << Lx << '\n';
-    ofile << "b-axis " << Ly << '\n';
-    ofile << "c-axis " << Lz << '\n';
+    ofile << "a-axis " << LICHEMFormDouble(Lx,12) << '\n';
+    ofile << "b-axis " << LICHEMFormDouble(Ly,12) << '\n';
+    ofile << "c-axis " << LICHEMFormDouble(Lz,12) << '\n';
     ofile << "alpha 90.0" << '\n';
     ofile << "beta 90.0" << '\n';
     ofile << "gamma 90.0" << '\n';
@@ -509,9 +513,9 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   if (PBCon)
   {
     //PBC defined twice for safety
-    ofile << "a-axis " << Lx << '\n';
-    ofile << "b-axis " << Ly << '\n';
-    ofile << "c-axis " << Lz << '\n';
+    ofile << "a-axis " << LICHEMFormDouble(Lx,12) << '\n';
+    ofile << "b-axis " << LICHEMFormDouble(Ly,12) << '\n';
+    ofile << "c-axis " << LICHEMFormDouble(Lz,12) << '\n';
     ofile << "alpha 90.0" << '\n';
     ofile << "beta 90.0" << '\n';
     ofile << "gamma 90.0" << '\n';
@@ -622,8 +626,10 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   if (PBCon)
   {
     //Write box size
-    ofile << Lx << " " << Ly << " " << Lz;
-    ofile << " 90.0 90.0 90.0";
+    ofile << LICHEMFormDouble(Lx,12) << " ";
+    ofile << LICHEMFormDouble(Ly,12) << " ";
+    ofile << LICHEMFormDouble(Lz,12) << " ";
+    ofile << "90.0 90.0 90.0";
     ofile << '\n';
   }
   ct = 0; //Counter for QM atoms
@@ -750,9 +756,9 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   if (PBCon)
   {
     //PBC defined twice for safety
-    ofile << "a-axis " << Lx << '\n';
-    ofile << "b-axis " << Ly << '\n';
-    ofile << "c-axis " << Lz << '\n';
+    ofile << "a-axis " << LICHEMFormDouble(Lx,12) << '\n';
+    ofile << "b-axis " << LICHEMFormDouble(Ly,12) << '\n';
+    ofile << "c-axis " << LICHEMFormDouble(Lz,12) << '\n';
     ofile << "alpha 90.0" << '\n';
     ofile << "beta 90.0" << '\n';
     ofile << "gamma 90.0" << '\n';
@@ -836,8 +842,10 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   if (PBCon)
   {
     //Write box size
-    ofile << Lx << " " << Ly << " " << Lz;
-    ofile << " 90.0 90.0 90.0";
+    ofile << LICHEMFormDouble(Lx,12) << " ";
+    ofile << LICHEMFormDouble(Ly,12) << " ";
+    ofile << LICHEMFormDouble(Lz,12) << " ";
+    ofile << "90.0 90.0 90.0";
     ofile << '\n';
   }
   ct = 0; //Counter for QM atoms
@@ -964,9 +972,9 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (PBCon)
   {
     //PBC defined twice for safety
-    ofile << "a-axis " << Lx << '\n';
-    ofile << "b-axis " << Ly << '\n';
-    ofile << "c-axis " << Lz << '\n';
+    ofile << "a-axis " << LICHEMFormDouble(Lx,12) << '\n';
+    ofile << "b-axis " << LICHEMFormDouble(Ly,12) << '\n';
+    ofile << "c-axis " << LICHEMFormDouble(Lz,12) << '\n';
     ofile << "alpha 90.0" << '\n';
     ofile << "beta 90.0" << '\n';
     ofile << "gamma 90.0" << '\n';
@@ -1054,8 +1062,10 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (PBCon)
   {
     //Write box size
-    ofile << Lx << " " << Ly << " " << Lz;
-    ofile << " 90.0 90.0 90.0";
+    ofile << LICHEMFormDouble(Lx,12) << " ";
+    ofile << LICHEMFormDouble(Ly,12) << " ";
+    ofile << LICHEMFormDouble(Lz,12) << " ";
+    ofile << "90.0 90.0 90.0";
     ofile << '\n';
   }
   ct = 0; //Counter for QM atoms
@@ -1162,9 +1172,9 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (PBCon)
   {
     //PBC defined twice for safety
-    ofile << "a-axis " << Lx << '\n';
-    ofile << "b-axis " << Ly << '\n';
-    ofile << "c-axis " << Lz << '\n';
+    ofile << "a-axis " << LICHEMFormDouble(Lx,12) << '\n';
+    ofile << "b-axis " << LICHEMFormDouble(Ly,12) << '\n';
+    ofile << "c-axis " << LICHEMFormDouble(Lz,12) << '\n';
     ofile << "alpha 90.0" << '\n';
     ofile << "beta 90.0" << '\n';
     ofile << "gamma 90.0" << '\n';
@@ -1287,8 +1297,10 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (PBCon)
   {
     //Write box size
-    ofile << Lx << " " << Ly << " " << Lz;
-    ofile << " 90.0 90.0 90.0";
+    ofile << LICHEMFormDouble(Lx,12) << " ";
+    ofile << LICHEMFormDouble(Ly,12) << " ";
+    ofile << LICHEMFormDouble(Lz,12) << " ";
+    ofile << "90.0 90.0 90.0";
     ofile << '\n';
   }
   ct = 0; //Counter for QM atoms
@@ -1384,9 +1396,9 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (PBCon)
   {
     //PBC defined twice for safety
-    ofile << "a-axis " << Lx << '\n';
-    ofile << "b-axis " << Ly << '\n';
-    ofile << "c-axis " << Lz << '\n';
+    ofile << "a-axis " << LICHEMFormDouble(Lx,12) << '\n';
+    ofile << "b-axis " << LICHEMFormDouble(Ly,12) << '\n';
+    ofile << "c-axis " << LICHEMFormDouble(Lz,12) << '\n';
     ofile << "alpha 90.0" << '\n';
     ofile << "beta 90.0" << '\n';
     ofile << "gamma 90.0" << '\n';
@@ -1505,8 +1517,10 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (PBCon)
   {
     //Write box size
-    ofile << Lx << " " << Ly << " " << Lz;
-    ofile << " 90.0 90.0 90.0";
+    ofile << LICHEMFormDouble(Lx,12) << " ";
+    ofile << LICHEMFormDouble(Ly,12) << " ";
+    ofile << LICHEMFormDouble(Lz,12) << " ";
+    ofile << "90.0 90.0 90.0";
     ofile << '\n';
   }
   ct = 0; //Counter for QM atoms

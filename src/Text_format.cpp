@@ -84,6 +84,24 @@ string LICHEMFormFloat(double InpVal, int wid)
 };
 
 //String formatting functions
+int LICHEMCountChars(string origtext)
+{
+  //Function to count the number of characters in a string
+  int Nchar = origtext.length();
+  return Nchar;
+};
+
+int LICHEMCountInt(int origint)
+{
+  //Function to count the number of characters in a string
+  stringstream origtext; //Stream to hold a text version of the integer
+  origtext << origint;
+  string inttext = origtext.str();
+  //Count characters and return
+  int Nchar = inttext.length();
+  return Nchar;
+};
+
 void LICHEMLowerText(string& origtext)
 {
   //Function to switch a string to lowercase letters

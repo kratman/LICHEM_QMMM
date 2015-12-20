@@ -21,7 +21,10 @@ namespace LICHEMOpts
 {
   //Compile options
   const bool Jokes = 0; //Print humorous comments
+
+  //Monte Carlo options
   const bool Isotrop = 1; //Force isotropic expansion in NPT Monte Carlo
+  const double VolPer = 0.01; //Max box length change (%) for NPT MC steps
   const double StepMin = 0.005; //Minimum Monte Carlo step size (Angstroms)
   const double StepMax = 1.0; //Maximum Monte Carlo step size (Angstroms)
   const double CentRatio= 5.0; //Scales step size for path-integral centroids

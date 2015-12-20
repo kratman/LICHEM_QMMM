@@ -163,6 +163,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
         Struct2[p].P[i].z += dz;
       }
     }
+    #pragma omp barrier
   }
   if (randnum < BeadProb)
   {
@@ -206,30 +207,22 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
     //Anisotropic volume change
     if (Isotrop == 0)
     {
-      double Lmin;
-      double Lmax;
+      //Assumes that MM cutoffs are safe
       randnum = (((double)rand())/((double)RAND_MAX));
-      Lmin = 0.99*Lx;
-      Lmax = 1.01*Lx;
-      Lx = Lmin+randnum*(Lmax-Lmin);
+      Lx *= (1-VolPer)+randnum*VolPer;
       randnum = (((double)rand())/((double)RAND_MAX));
-      Lmin = 0.99*Ly;
-      Lmax = 1.01*Ly;
-      Ly = Lmin+randnum*(Lmax-Lmin);
+      Ly *= (1-VolPer)+randnum*VolPer;
       randnum = (((double)rand())/((double)RAND_MAX));
-      Lmin = 0.99*Lz;
-      Lmax = 1.01*Lz;
-      Lz = Lmin+randnum*(Lmax-Lmin);
+      Lz *= (1-VolPer)+randnum*VolPer;
     }
     //Isotropic volume change
     if (Isotrop == 1)
     {
-      //Currently assumes that MM cutoffs are safe
+      //Assumes that MM cutoffs are safe
       randnum = (((double)rand())/((double)RAND_MAX));
-      double expan = 0.99+randnum*0.01;
-      Lx *= expan;
-      Ly *= expan;
-      Lz *= expan;
+      Lx *= (1-VolPer)+randnum*VolPer;
+      Ly *= (1-VolPer)+randnum*VolPer;
+      Lz *= (1-VolPer)+randnum*VolPer;
     }
     //Scale positions
     #pragma omp parallel
