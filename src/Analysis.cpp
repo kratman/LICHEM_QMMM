@@ -220,3 +220,22 @@ VectorXd KabschDisplacement(MatrixXd& A, MatrixXd& B, int MatSize)
   return Dist;
 };
 
+//Physical property analysis functions
+double LICHEMDensity(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
+{
+  //Function to calculate the density for periodic calculations
+  double rho = 0;
+  //Sum the masses
+  #pragma omp parallel for schedule(dynamic) reduction(+:rho)
+  for (int i=0;i<Natoms;i++)
+  {
+    rho += Struct[i].m;
+  }
+  //Divide by the volume (SI)
+  rho /= (Lx*Ly*Lz);
+  //Change to g/cm^3 and return
+  rho *= amu2kg; //amu to kg
+  rho *= m2Ang*m2Ang*m2Ang/1000; //A^3 to cm^3
+  return rho;
+};
+

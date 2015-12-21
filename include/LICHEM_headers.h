@@ -134,6 +134,8 @@ void LICHEM2BASIS(int&,char**&);
 
 void LICHEM2TINK(int&,char**&);
 
+double LICHEMDensity(vector<QMMMAtom>&,QMMMSettings&);
+
 void LICHEMDFP(vector<QMMMAtom>&,QMMMSettings&,int);
 
 int LICHEMCountChars(string);

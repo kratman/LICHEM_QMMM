@@ -24,7 +24,6 @@ namespace LICHEMOpts
 
   //Monte Carlo options
   const bool Isotrop = 1; //Force isotropic expansion in NPT Monte Carlo
-  const double VolPer = 0.01; //Max box length change (%) for NPT MC steps
   const double StepMin = 0.005; //Minimum Monte Carlo step size (Angstroms)
   const double StepMax = 1.0; //Maximum Monte Carlo step size (Angstroms)
   const double CentRatio= 5.0; //Scales step size for path-integral centroids
@@ -50,7 +49,7 @@ namespace LICHEMOpts
   */
   double BeadProb = 0.55; //Probability to move all beads for an atom
   double CentProb = 0.55; //Probability to move a centroid
-  double VolProb = 0.25; //Volume change probability
+  double VolProb = 0.35; //Volume change probability
 };
 
 #endif

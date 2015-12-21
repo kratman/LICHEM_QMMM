@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 
   //Initialize local variables
   string dummy; //Generic string
-  double SumE,SumE2,VolAvg,Ek;
+  double SumE,SumE2,DenAvg,LxAvg,LyAvg,LzAvg,Ek; //Energies and properties
   fstream xyzfile,connectfile,regionfile,outfile; //Input and output files
   vector<QMMMAtom> Struct; //Atom list
   vector<QMMMAtom> OldStruct; //A copy of the atoms list
@@ -639,7 +639,10 @@ int main(int argc, char* argv[])
     cout << '\n';
     SumE = 0; //Average energy
     SumE2 = 0; //Average squared energy
-    VolAvg = 0; //Average volume
+    DenAvg = 0; //Average density
+    LxAvg = 0; //Average box length
+    LyAvg = 0; //Average box length
+    LzAvg = 0; //Average box length
     Ek = 0; //PIMC kinietic energy
     if (QMMMOpts.Nbeads > 1)
     {
@@ -685,11 +688,11 @@ int main(int argc, char* argv[])
           //Use random values to keep from cycling up and down
           if (randval >= 0.5)
           {
-            step *= 1.10;
+            pimcstep *= 1.10;
           }
           else
           {
-            step *= 1.09;
+            pimcstep *= 1.09;
           }
         }
         if ((Nacc/(Nrej+Nacc)) < QMMMOpts.accratio)
@@ -700,27 +703,27 @@ int main(int argc, char* argv[])
           //Use random values to keep from cycling up and down
           if (randval >= 0.5)
           {
-            step *= 0.90;
+            pimcstep *= 0.90;
           }
           else
           {
-            step *= 0.91;
+            pimcstep *= 0.91;
           }
         }
-        if (step < StepMin)
+        if (pimcstep < StepMin)
         {
           //Set to minimum
-          step = StepMin;
+          pimcstep = StepMin;
         }
-        if (step > StepMax)
+        if (pimcstep > StepMax)
         {
           //Set to maximum
-          step = StepMax;
+          pimcstep = StepMax;
         }
         //Statistics
         cout << " | Step: " << setw(SimCharLen) << Nct;
         cout << " | Step size: ";
-        cout << LICHEMFormDouble(step,6);
+        cout << LICHEMFormDouble(pimcstep,6);
         cout << " | Accept ratio: ";
         cout << LICHEMFormDouble((Nacc/(Nrej+Nacc)),6);
         cout << '\n';
@@ -760,9 +763,11 @@ int main(int argc, char* argv[])
     cout << " eV";
     if (QMMMOpts.Ensemble == "NPT")
     {
-      cout << " | Volume: ";
-      cout << LICHEMFormDouble(Lx*Ly*Lz,10);
-      cout << " \u212B^3";
+      double rho;
+      rho = LICHEMDensity(Struct,QMMMOpts);
+      cout << " | Density: ";
+      cout << LICHEMFormDouble(rho,8);
+      cout << " g/cm^3";
     }
     cout << '\n';
     cout.flush(); //Print results
@@ -780,7 +785,10 @@ int main(int argc, char* argv[])
         Et = 0;
         Et += Ek+Emc;
         Et -= 2*Get_PI_Espring(Struct,QMMMOpts);
-        VolAvg += Lx*Ly*Lz;
+        DenAvg += LICHEMDensity(Struct,QMMMOpts);
+        LxAvg += Lx;
+        LyAvg += Ly;
+        LzAvg += Lz;
         SumE += Et;
         SumE2 += Et*Et;
         if ((Nct%QMMMOpts.Nprint) == 0)
@@ -792,9 +800,11 @@ int main(int argc, char* argv[])
           cout << " eV";
           if (QMMMOpts.Ensemble == "NPT")
           {
-            cout << " | Volume: ";
-            cout << LICHEMFormDouble(Lx*Ly*Lz,10);
-            cout << " \u212B^3";
+            double rho;
+            rho = LICHEMDensity(Struct,QMMMOpts);
+            cout << " | Density: ";
+            cout << LICHEMFormDouble(rho,8);
+            cout << " g/cm^3";
           }
           cout << '\n';
           cout.flush(); //Print results
@@ -812,7 +822,10 @@ int main(int argc, char* argv[])
     }
     SumE /= QMMMOpts.Nsteps; //Average energy
     SumE2 /= QMMMOpts.Nsteps; //Variance of the energy
-    VolAvg /= QMMMOpts.Nsteps; //Average volume
+    DenAvg /= QMMMOpts.Nsteps; //Average density
+    LxAvg /= QMMMOpts.Nsteps; //Average box size
+    LyAvg /= QMMMOpts.Nsteps; //Average box size
+    LzAvg /= QMMMOpts.Nsteps; //Average box size
     //Print simulation details and statistics
     cout << '\n';
     if (QMMMOpts.Nbeads > 1)
@@ -825,9 +838,13 @@ int main(int argc, char* argv[])
     cout << " K ";
     if (QMMMOpts.Ensemble == "NPT")
     {
-      cout << " | Volume: ";
-      cout << LICHEMFormDouble(VolAvg,12);
-      cout << " \u212B^3";
+      cout << " | Density: ";
+      cout << LICHEMFormDouble(DenAvg,8);
+      cout << " g/cm^3" << '\n';
+      cout << " | Average box size (\u212B): " << '\n';
+      cout << " Lx = " << LICHEMFormDouble(LxAvg,10);
+      cout << " Ly = " << LICHEMFormDouble(LyAvg,10);
+      cout << " Lz = " << LICHEMFormDouble(LzAvg,10);
     }
     cout << '\n';
     cout << " | Average energy: ";
@@ -839,7 +856,7 @@ int main(int argc, char* argv[])
     cout << " | Acceptance ratio: ";
     cout << LICHEMFormDouble((Nacc/(Nrej+Nacc)),6);
     cout << " | Optimum step size: ";
-    cout << LICHEMFormDouble(step,6);
+    cout << LICHEMFormDouble(pimcstep,6);
     cout << " \u212B";
     cout << '\n';
     cout << '\n';

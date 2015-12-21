@@ -141,9 +141,9 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
     double randx = (((double)rand())/((double)RAND_MAX));
     double randy = (((double)rand())/((double)RAND_MAX));
     double randz = (((double)rand())/((double)RAND_MAX));
-    double dx = 2*(randx-0.5)*step*CentRatio;
-    double dy = 2*(randy-0.5)*step*CentRatio;
-    double dz = 2*(randz-0.5)*step*CentRatio;
+    double dx = 2*(randx-0.5)*pimcstep*CentRatio;
+    double dy = 2*(randy-0.5)*pimcstep*CentRatio;
+    double dz = 2*(randz-0.5)*pimcstep*CentRatio;
     //Update positions
     #pragma omp parallel
     {
@@ -185,9 +185,9 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
       double randx = (((double)rand())/((double)RAND_MAX));
       double randy = (((double)rand())/((double)RAND_MAX));
       double randz = (((double)rand())/((double)RAND_MAX));
-      double dx = 2*(randx-0.5)*step;
-      double dy = 2*(randy-0.5)*step;
-      double dz = 2*(randz-0.5)*step;
+      double dx = 2*(randx-0.5)*pimcstep;
+      double dy = 2*(randy-0.5)*pimcstep;
+      double dz = 2*(randz-0.5)*pimcstep;
       Struct2[p].P[i].x += dx;
       Struct2[p].P[i].y += dy;
       Struct2[p].P[i].z += dz;
@@ -209,20 +209,20 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
     {
       //Assumes that MM cutoffs are safe
       randnum = (((double)rand())/((double)RAND_MAX));
-      Lx *= (1-VolPer)+randnum*VolPer;
+      Lx += 2*(randnum-0.5)*pimcstep;
       randnum = (((double)rand())/((double)RAND_MAX));
-      Ly *= (1-VolPer)+randnum*VolPer;
+      Ly += 2*(randnum-0.5)*pimcstep;
       randnum = (((double)rand())/((double)RAND_MAX));
-      Lz *= (1-VolPer)+randnum*VolPer;
+      Lz += 2*(randnum-0.5)*pimcstep;
     }
     //Isotropic volume change
     if (Isotrop == 1)
     {
       //Assumes that MM cutoffs are safe
       randnum = (((double)rand())/((double)RAND_MAX));
-      Lx *= (1-VolPer)+randnum*VolPer;
-      Ly *= (1-VolPer)+randnum*VolPer;
-      Lz *= (1-VolPer)+randnum*VolPer;
+      Lx += 2*(randnum-0.5)*pimcstep;
+      Ly += 2*(randnum-0.5)*pimcstep;
+      Lz += 2*(randnum-0.5)*pimcstep;
     }
     //Scale positions
     #pragma omp parallel
@@ -230,29 +230,34 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
       #pragma omp for nowait schedule(dynamic)
       for (int i=0;i<Natoms;i++)
       {
+        //Find centroids
+        double shift = 0; //Change of position for the centroid
         for (int j=0;j<QMMMOpts.Nbeads;j++)
         {
-          double shift; //Change in position
-          shift = Struct2[i].P[j].x;
-          //Check PBC without wrapping the molecules
-          bool check = 1; //Continue the PBC checks
-          while (check)
+          shift += Struct[i].P[j].x; //Add to the position sum
+        }
+        shift /= QMMMOpts.Nbeads; //Average position
+        //Check PBC without wrapping the molecules
+        bool check = 1; //Continue the PBC checks
+        while (check)
+        {
+          //Check the value
+          check = 0;
+          if (shift > Lx)
           {
-            //Check the value
-            check = 0;
-            if (shift > Lx)
-            {
-              shift -= Lx;
-              check = 1;
-            }
-            if (shift < 0)
-            {
-              shift += Lx;
-              check = 1;
-            }
+            shift -= Lx;
+            check = 1;
           }
-          //Calculate the change in position
-          shift = ((Lx/Lxtmp)-1)*shift;
+          if (shift < 0)
+          {
+            shift += Lx;
+            check = 1;
+          }
+        }
+        //Calculate the change in position
+        shift = ((Lx/Lxtmp)-1)*shift;
+        for (int j=0;j<QMMMOpts.Nbeads;j++)
+        {
           //Update the position
           Struct2[i].P[j].x += shift;
         }
@@ -260,29 +265,34 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
       #pragma omp for nowait schedule(dynamic)
       for (int i=0;i<Natoms;i++)
       {
+        //Find centroids
+        double shift = 0; //Change of position for the centroid
         for (int j=0;j<QMMMOpts.Nbeads;j++)
         {
-          double shift; //Change in position
-          shift = Struct2[i].P[j].y;
-          //Check PBC without wrapping the molecules
-          bool check = 1; //Continue the PBC checks
-          while (check)
+          shift += Struct[i].P[j].y; //Add to the position sum
+        }
+        shift /= QMMMOpts.Nbeads; //Average position
+        //Check PBC without wrapping the molecules
+        bool check = 1; //Continue the PBC checks
+        while (check)
+        {
+          //Check the value
+          check = 0;
+          if (shift > Ly)
           {
-            //Check the value
-            check = 0;
-            if (shift > Ly)
-            {
-              shift -= Ly;
-              check = 1;
-            }
-            if (shift < 0)
-            {
-              shift += Ly;
-              check = 1;
-            }
+            shift -= Ly;
+            check = 1;
           }
-          //Calculate the change in position
-          shift = ((Ly/Lytmp)-1)*shift;
+          if (shift < 0)
+          {
+            shift += Ly;
+            check = 1;
+          }
+        }
+        //Calculate the change in position
+        shift = ((Ly/Lytmp)-1)*shift;
+        for (int j=0;j<QMMMOpts.Nbeads;j++)
+        {
           //Update the position
           Struct2[i].P[j].y += shift;
         }
@@ -290,29 +300,34 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
       #pragma omp for nowait schedule(dynamic)
       for (int i=0;i<Natoms;i++)
       {
+        //Find centroids
+        double shift = 0; //Change of position for the centroid
         for (int j=0;j<QMMMOpts.Nbeads;j++)
         {
-          double shift; //Change in position
-          shift = Struct2[i].P[j].z;
-          //Check PBC without wrapping the molecules
-          bool check = 1; //Continue the PBC checks
-          while (check)
+          shift += Struct[i].P[j].z; //Add to the position sum
+        }
+        shift /= QMMMOpts.Nbeads; //Average position
+        //Check PBC without wrapping the molecules
+        bool check = 1; //Continue the PBC checks
+        while (check)
+        {
+          //Check the value
+          check = 0;
+          if (shift > Lz)
           {
-            //Check the value
-            check = 0;
-            if (shift > Lz)
-            {
-              shift -= Lz;
-              check = 1;
-            }
-            if (shift < 0)
-            {
-              shift += Lz;
-              check = 1;
-            }
+            shift -= Lz;
+            check = 1;
           }
-          //Calculate the change in position
-          shift = ((Lz/Lztmp)-1)*shift;
+          if (shift < 0)
+          {
+            shift += Lz;
+            check = 1;
+          }
+        }
+        //Calculate the change in position
+        shift = ((Lz/Lztmp)-1)*shift;
+        for (int j=0;j<QMMMOpts.Nbeads;j++)
+        {
           //Update the position
           Struct2[i].P[j].z += shift;
         }
