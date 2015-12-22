@@ -6,19 +6,25 @@
 #                                                 #
 ###################################################
 
-### Compiler settings ###
+### Standard compiler settings ###
 
 CXX=g++
 CXXFLAGS=-static -O3 -fopenmp
-GPUFLAGS=-fopenacc
+
+### Advanced compiler settings ###
+
 DEVFLAGS=-g -Wall -std=c++14
+GPUFLAGS=-fopenacc
+
+### Libarary settings ###
+
 LDFLAGS=-I/usr/include/eigen3/
 
 ### Python settings ###
 
 PYPATH=/usr/bin/python
 
-### Manual settings ###
+### LaTeX settings ###
 
 TEX=pdflatex
 BIB=bibtex
@@ -37,7 +43,7 @@ clean:	title delbin compdone
 
 #####################################################
 
-### Combine variables ###
+### Combine settings variables ###
 
 # NB: Do not modify this section
 

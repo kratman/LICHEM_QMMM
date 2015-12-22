@@ -1,5 +1,5 @@
 basis
- * library 6-31++G** except F2pb
+ * library 6-31G* except F2pb
  F2pb SP
   0.90340 1.00000 1.00000
   0.21310 1.90904 0.57864
