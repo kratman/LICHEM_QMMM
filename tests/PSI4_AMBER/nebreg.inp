@@ -13,7 +13,7 @@ Spring_const: 1.00
 Frozen_ends: Yes
 QM_opt_tolerance: 5e-4
 MM_opt_tolerance: 1e-2
-Max_opt_steps: 400
+Max_opt_steps: 100
 PBC: No
 QM_atoms: 0
 Pseudo_atoms: 0

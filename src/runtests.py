@@ -404,11 +404,11 @@ for qmtest in QMTests:
         QMMMEnergy = 0.0
       if (QMPack == "PSI4"):
         #Check against saved energy
-        if (QMMMEnergy == round(-4138.0080053023,5)):
+        if (QMMMEnergy == round(-4136.9303981392,5)):
           PassEnergy = 1
       if (QMPack == "Gaussian"):
         #Check against saved energy
-        if (QMMMEnergy == round(-4138.0095300108,5)):
+        if (QMMMEnergy == round(-4136.9317704519,5)):
           PassEnergy = 1
       line += " HF energy:           "
       if (PassEnergy == 1):
@@ -480,15 +480,15 @@ for qmtest in QMTests:
       QMMMEnergy = 0.0
     if (QMPack == "PSI4"):
       #Check against saved energy
-      if (QMMMEnergy == round(-4155.4146857804,5)):
+      if (QMMMEnergy == round(-4154.1683659877,5)):
         PassEnergy = 1
     if (QMPack == "Gaussian"):
       #Check against saved energy
-      if (QMMMEnergy == round(-4155.4139723249,5)):
+      if (QMMMEnergy == round(-4154.1676114324,5)):
         PassEnergy = 1
     if (QMPack == "NWChem"):
       #Check against saved energy
-      if (QMMMEnergy == round(-4155.4147531275,5)):
+      if (QMMMEnergy == round(-4154.1683939169,5)):
         PassEnergy = 1
     line += " PBE0 energy:         "
     if (PassEnergy == 1):
@@ -561,7 +561,7 @@ for qmtest in QMTests:
         QMMMEnergy = 0.0
       if (QMPack == "PSI4"):
         #Check against saved energy
-        if (QMMMEnergy == round(-4149.6602230450,5)):
+        if (QMMMEnergy == round(-4147.730483706,5)):
           PassEnergy = 1
       line += " CCSD energy:         "
       if (PassEnergy == 1):
@@ -708,15 +708,15 @@ for qmtest in QMTests:
       QMMMEnergy = 0.0
     if (QMPack == "PSI4"):
       #Check against saved energy
-      if (QMMMEnergy == round(-6513.4630238038,5)):
+      if (QMMMEnergy == round(-6511.0580192214,5)):
         PassEnergy = 1
     if (QMPack == "Gaussian"):
       #Check against saved energy
-      if (QMMMEnergy == round(-6513.4616061312,5)):
+      if (QMMMEnergy == round(-6511.0567955964,5)):
         PassEnergy = 1
     if (QMPack == "NWChem"):
       #Check against saved energy
-      if (QMMMEnergy == round(-6513.4627667753,5)):
+      if (QMMMEnergy == round(-6511.0579547077,5)):
         PassEnergy = 1
     line += " NEB TS energy:       "
     if (PassEnergy == 1):
@@ -864,15 +864,15 @@ for qmtest in QMTests:
         QMMMEnergy = 0.0
       if (QMPack == "PSI4"):
         #Check against saved energy
-        if (QMMMEnergy == round(-2077.8684752886,5)):
+        if (QMMMEnergy == round(-2077.2021947277,5)):
           PassEnergy = 1
       if (QMPack == "Gaussian"):
         #Check against saved energy
-        if (QMMMEnergy == round(-2077.8681295771,5)):
+        if (QMMMEnergy == round(-2077.2018207808,5)):
           PassEnergy = 1
       if (QMPack == "NWChem"):
         #Check against saved energy
-        if (QMMMEnergy == round(-2077.8685202698,5)):
+        if (QMMMEnergy == round(-2077.2022117306,5)):
           PassEnergy = 1
       line += " PBE0/TIP3P energy:   "
       if (PassEnergy == 1):
@@ -944,15 +944,15 @@ for qmtest in QMTests:
         QMMMEnergy = 0.0
       if (QMPack == "PSI4"):
         #Check against saved energy
-        if (QMMMEnergy == round(-2077.7719984858,5)):
+        if (QMMMEnergy == round(-2077.1114201829,5)):
           PassEnergy = 1
       if (QMPack == "Gaussian"):
         #Check against saved energy
-        if (QMMMEnergy == round(-2077.7756284495,5)):
+        if (QMMMEnergy == round(-2077.1090319595,5)):
           PassEnergy = 1
       if (QMPack == "NWChem"):
         #Check against saved energy
-        if (QMMMEnergy == round(-2077.7755400050,5)):
+        if (QMMMEnergy == round(-2077.1094168459,5)):
           PassEnergy = 1
       line += " PBE0/AMOEBA energy:  "
       if (PassEnergy == 1):
@@ -1027,11 +1027,11 @@ for qmtest in QMTests:
           QMMMEnergy = 0.0
         if (QMPack == "Gaussian"):
           #Check against saved energy
-          if (QMMMEnergy == round(-3015.7007284421,5)):
+          if (QMMMEnergy == round(-3015.0548490566,5)):
             PassEnergy = 1
         if (QMPack == "NWChem"):
           #Check against saved energy
-          if (QMMMEnergy == round(-3015.8316266672,5)):
+          if (QMMMEnergy == round(-3015.2278310975,5)):
             PassEnergy = 1
         line += " DFP/Pseudobonds:     "
         if (PassEnergy == 1):
