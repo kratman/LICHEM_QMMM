@@ -1291,7 +1291,7 @@ int main(int argc, char* argv[])
     cout << '\n';
     string quote; //Random quote
     vector<string> Quotes; //Stores all possible quotes
-    GetQuotes(Quotes); //Fetch list of quotes
+    FetchQuotes(Quotes); //Fetch list of quotes
     randnum = rand() % 1000; //Randomly pick 1 of 1000 quotes
     cout << Quotes[randnum]; //Print quote
     cout << '\n';

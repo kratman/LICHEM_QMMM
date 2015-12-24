@@ -733,7 +733,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       }
     }
   }
-  if ((dummy == "sp") or (dummy == "Energy"))
+  if ((dummy == "sp") or (dummy == "energy"))
   {
     //Read energy minimization options
     SinglePoint = 1;
@@ -1390,21 +1390,6 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
     }
   }
   cout.flush(); //Flush for output being redirected to a file
-  return;
-};
-
-void GetQuotes(vector<string>& Quotes)
-{
-  //Generate random quotes
-  string dummy; //Generic string
-  dummy = "\'It is difficult to prove that this quote is not random.\'";
-  dummy += '\n';
-  dummy += "                                           -Eric G. Kratz";
-  for (int i=0;i<1000;i++)
-  {
-    //Add quotes to the list
-    Quotes.push_back(dummy);
-  }
   return;
 };
 

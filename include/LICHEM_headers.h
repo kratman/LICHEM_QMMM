@@ -82,6 +82,8 @@ void ExtractGlobalPoles(int& argc, char**& argv);
 
 void ExtractTINKpoles(vector<QMMMAtom>&,int);
 
+void FetchQuotes(vector<string>&);
+
 int FindMaxThreads();
 
 void FindTINKERClasses(vector<QMMMAtom>&);
@@ -103,8 +105,6 @@ double Get_EeFF(vector<QMMMAtom>&,vector<QMMMElec>&,QMMMSettings&);
 double Get_PI_Espring(vector<QMMMAtom>&,QMMMSettings&);
 
 double Get_PI_Epot(vector<QMMMAtom>&,QMMMSettings&);
-
-void GetQuotes(vector<string>&);
 
 vector<HermGau> HermBasis(string,string);
 

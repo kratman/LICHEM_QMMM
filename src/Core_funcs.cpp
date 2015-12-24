@@ -474,3 +474,18 @@ void PrintLapin()
   return;
 };
 
+void FetchQuotes(vector<string>& Quotes)
+{
+  //Generate random quotes
+  string dummy; //Generic string
+  dummy = "\'It is difficult to prove that this quote is not random.\'";
+  dummy += '\n';
+  dummy += "                                           -Eric G. Kratz";
+  for (int i=0;i<1000;i++)
+  {
+    //Add quotes to the list
+    Quotes.push_back(dummy);
+  }
+  return;
+};
+
