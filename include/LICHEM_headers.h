@@ -231,6 +231,8 @@ void WritePSI4Input(vector<QMMMAtom>&,string,QMMMSettings&,int);
 
 void WriteTINKMpole(vector<QMMMAtom>&,fstream&,int,int);
 
+void WriteQMConnect(int&,char**&);
+
 //Function definitions (alphabetical)
 #include "AMBER2LICHEM.cpp"
 #include "Analysis.cpp"

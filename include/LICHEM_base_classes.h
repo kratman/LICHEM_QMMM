@@ -28,6 +28,10 @@ class PeriodicTable
     vector<double> GauWids; //Diffuse charge widths
     //Bond distances
     vector<double> CovRadii; //Covalent radii
+    //Radii
+    vector<double> vdWRadii; //Van der Waals radii
+    //Masses
+    vector<double> AtMasses; //Atomic masses (amu)
   public:
     //Set data (hard coded constructor)
     PeriodicTable();
@@ -38,6 +42,8 @@ class PeriodicTable
     int RevTyping(string); //Atomic number
     double GetGauWid(string); //Gaussian (1s) width
     double GetCovRadius(string); //Covalent radius
+    double GetRadius(string); //Van der Waals radius
+    double GetAtMass(string); //Atomic mass
 };
 
 class Coord

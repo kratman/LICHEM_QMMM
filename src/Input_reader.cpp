@@ -54,6 +54,11 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
       //Create BASIS files
       LICHEM2BASIS(argc,argv);
     }
+    if (dummy == "-q")
+    {
+      //Create a QM connectivity file
+      WriteQMConnect(argc,argv);
+    }
     else
     {
       //Bad arguments

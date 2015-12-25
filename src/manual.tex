@@ -623,9 +623,14 @@ input used for QM and MM packages.
 In all cases the converter produces three files: xyzfile.xyz connect.inp
 regions.inp \\
 
-{\textbf{Gaussian/NWChem}} \\
+{\textbf{General QM input}} \\
 
-LICHEM can use a region file to create a BASIS set file for the Gaussian
+For pure QM calculations, LICHEM can create connectivity files using data
+from the periodic table. \\
+
+user:\$ lichem -convert -q xyzfile.xyz \\
+
+LICHEM can also use a region file to create a BASIS set file for the Gaussian
 and NWChem basis set input.
 A BASIS file is required when mixed basis sets or pseudobonds are included
 in the QMMM calculations. \\

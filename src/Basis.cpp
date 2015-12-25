@@ -28,7 +28,7 @@ void LICHEM2BASIS(int& argc,char**& argv)
   //Writes a BASIS file based on a LICHEM regions file
   fstream regfile,ofile; //File streams
   string dummy; //Generic string
-  string REGfilename = "NOFILE"; //Regions filename
+  regfilename = "NOFILE"; //Global regions filename
   //Read arguments
   Nqm = 0; //For safety
   Npseudo = 0; //For safety
@@ -48,14 +48,14 @@ void LICHEM2BASIS(int& argc,char**& argv)
         cout << '\n';
         DoQuit = 1;
       }
-      REGfilename = file.str();
+      regfilename = file.str();
       regfile.open(argv[i+1],ios_base::in);
       cout << argv[i+1];
     }
   }
   cout << '\n' << '\n'; //Terminate output
   //Error check
-  if (!CheckFile(REGfilename))
+  if (!CheckFile(regfilename))
   {
     cout << "Error: Missing region file!!!";
     cout << '\n' << '\n';

@@ -13,6 +13,7 @@
 
 */
 
+//QM input writers
 void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
                    QMMMSettings& QMMMOpts, int Bead)
 {
@@ -638,4 +639,75 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   ofile.close();
   return;
 };
+
+//Other QM files
+void WriteQMConnect(int& argc,char**& argv)
+{
+  //Write the connectivity input for pure QM calculations
+  fstream posfile,ofile; //File streams
+  string dummy; //Generic string
+  xyzfilename = "NOFILE"; //Global XYZ filename
+  //Read arguments
+  Nqm = 0; //For safety
+  Npseudo = 0; //For safety
+  bool DoQuit = 0; //Exit with an error
+  cout << "Reading LICHEM input: ";
+  for (int i=0;i<argc;i++)
+  {
+    dummy = string(argv[i]);
+    //Check regions file
+    if (dummy == "-q")
+    {
+      stringstream file;
+      file << argv[i+1];
+      if (!CheckFile(file.str()))
+      {
+        cout << "Error: Could not open XYZ file!!!";
+        cout << '\n';
+        DoQuit = 1;
+      }
+      xyzfilename = file.str();
+      posfile.open(argv[i+1],ios_base::in);
+      cout << argv[i+1];
+    }
+  }
+  cout << '\n' << '\n'; //Terminate output
+  //Error check
+  if (!CheckFile(xyzfilename))
+  {
+    cout << "Error: Missing XYZ file!!!";
+    cout << '\n' << '\n';
+    DoQuit = 1;
+  }
+  if (!DoQuit)
+  {
+    //Write connectivity information
+    ofile.open("connect.inp",ios_base::out);
+    posfile >> Natoms; //Number of atoms
+    for (int i=0;i<Natoms;i++)
+    {
+      //Read the atom type
+      string AtTyp;
+      posfile >> AtTyp; //Read element
+      //Clear junk position data
+      posfile >> dummy >> dummy >> dummy;
+      //Write connectivity line
+      ofile << i << " "; //Index
+      ofile << AtTyp << " "; //Element
+      ofile << PTable.RevTyping(AtTyp) << " "; //Atomic number
+      ofile << PTable.GetAtMass(AtTyp) << " "; //Mass
+      ofile << "0.00 0" << '\n'; //Charge and bonds
+    }
+    cout << "Connectivity data written to connect.inp";
+    cout << '\n' << '\n';
+    cout.flush();
+    ofile.flush();
+    ofile.close();
+  }
+  //Quit
+  posfile.close();
+  exit(0);
+  return;
+};
+
 
