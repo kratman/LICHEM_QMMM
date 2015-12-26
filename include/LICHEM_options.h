@@ -47,8 +47,8 @@ namespace LICHEMOpts
   changing the box size moves all particles.
 
   */
-  double BeadProb = 0.70; //Probability to move all beads for an atom
-  double CentProb = 0.40; //Probability to move a centroid
+  double BeadProb = 0.60; //Probability to move all beads for an atom
+  double CentProb = 0.50; //Probability to move a centroid
   double VolProb = 0.35; //Volume change probability
 };
 

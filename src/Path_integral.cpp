@@ -224,116 +224,218 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
       Ly += 2*(randnum-0.5)*pimcstep;
       Lz += 2*(randnum-0.5)*pimcstep;
     }
-    //Scale positions
-    #pragma omp parallel
+    //Decide how to scale the centroids
+    bool ScaleRing = 0; //Shift the ring
+    randnum = (((double)rand())/((double)RAND_MAX));
+    if (randnum >= 0.5)
     {
-      #pragma omp for nowait schedule(dynamic)
-      for (int i=0;i<Natoms;i++)
-      {
-        //Find centroids
-        double shift = 0; //Change of position for the centroid
-        for (int j=0;j<QMMMOpts.Nbeads;j++)
-        {
-          shift += Struct[i].P[j].x; //Add to the position sum
-        }
-        shift /= QMMMOpts.Nbeads; //Average position
-        //Check PBC without wrapping the molecules
-        bool check = 1; //Continue the PBC checks
-        while (check)
-        {
-          //Check the value
-          check = 0;
-          if (shift > Lx)
-          {
-            shift -= Lx;
-            check = 1;
-          }
-          if (shift < 0)
-          {
-            shift += Lx;
-            check = 1;
-          }
-        }
-        //Calculate the change in position
-        shift = ((Lx/Lxtmp)-1)*shift;
-        for (int j=0;j<QMMMOpts.Nbeads;j++)
-        {
-          //Update the position
-          Struct2[i].P[j].x += shift;
-        }
-      }
-      #pragma omp for nowait schedule(dynamic)
-      for (int i=0;i<Natoms;i++)
-      {
-        //Find centroids
-        double shift = 0; //Change of position for the centroid
-        for (int j=0;j<QMMMOpts.Nbeads;j++)
-        {
-          shift += Struct[i].P[j].y; //Add to the position sum
-        }
-        shift /= QMMMOpts.Nbeads; //Average position
-        //Check PBC without wrapping the molecules
-        bool check = 1; //Continue the PBC checks
-        while (check)
-        {
-          //Check the value
-          check = 0;
-          if (shift > Ly)
-          {
-            shift -= Ly;
-            check = 1;
-          }
-          if (shift < 0)
-          {
-            shift += Ly;
-            check = 1;
-          }
-        }
-        //Calculate the change in position
-        shift = ((Ly/Lytmp)-1)*shift;
-        for (int j=0;j<QMMMOpts.Nbeads;j++)
-        {
-          //Update the position
-          Struct2[i].P[j].y += shift;
-        }
-      }
-      #pragma omp for nowait schedule(dynamic)
-      for (int i=0;i<Natoms;i++)
-      {
-        //Find centroids
-        double shift = 0; //Change of position for the centroid
-        for (int j=0;j<QMMMOpts.Nbeads;j++)
-        {
-          shift += Struct[i].P[j].z; //Add to the position sum
-        }
-        shift /= QMMMOpts.Nbeads; //Average position
-        //Check PBC without wrapping the molecules
-        bool check = 1; //Continue the PBC checks
-        while (check)
-        {
-          //Check the value
-          check = 0;
-          if (shift > Lz)
-          {
-            shift -= Lz;
-            check = 1;
-          }
-          if (shift < 0)
-          {
-            shift += Lz;
-            check = 1;
-          }
-        }
-        //Calculate the change in position
-        shift = ((Lz/Lztmp)-1)*shift;
-        for (int j=0;j<QMMMOpts.Nbeads;j++)
-        {
-          //Update the position
-          Struct2[i].P[j].z += shift;
-        }
-      }
+      //Evenly scale the size of the ring
+      ScaleRing = 1;
     }
-    #pragma omp barrier
+    //Scale positions
+    if (ScaleRing)
+    {
+      #pragma omp parallel
+      {
+        #pragma omp for nowait schedule(dynamic)
+        for (int i=0;i<Natoms;i++)
+        {
+          for (int j=0;j<QMMMOpts.Nbeads;j++)
+          {
+            double shift;
+            shift = Struct[i].P[j].x;
+            //Check PBC without wrapping the molecules
+            bool check = 1; //Continue the PBC checks
+            while (check)
+            {
+              //Check the value
+              check = 0;
+              if (shift > Lx)
+              {
+                shift -= Lx;
+                check = 1;
+              }
+              if (shift < 0)
+              {
+                shift += Lx;
+                check = 1;
+              }
+            }
+            shift = ((Lx/Lxtmp)-1)*shift;
+            Struct[i].P[j].x += shift;
+          }
+        }
+        #pragma omp for nowait schedule(dynamic)
+        for (int i=0;i<Natoms;i++)
+        {
+          for (int j=0;j<QMMMOpts.Nbeads;j++)
+          {
+            double shift;
+            shift = Struct[i].P[j].y;
+            //Check PBC without wrapping the molecules
+            bool check = 1; //Continue the PBC checks
+            while (check)
+            {
+              //Check the value
+              check = 0;
+              if (shift > Ly)
+              {
+                shift -= Ly;
+                check = 1;
+              }
+              if (shift < 0)
+              {
+                shift += Ly;
+                check = 1;
+              }
+            }
+            shift = ((Ly/Lytmp)-1)*shift;
+            Struct[i].P[j].y += shift;
+          }
+        }
+        #pragma omp for nowait schedule(dynamic)
+        for (int i=0;i<Natoms;i++)
+        {
+          for (int j=0;j<QMMMOpts.Nbeads;j++)
+          {
+            double shift;
+            shift = Struct[i].P[j].z;
+            //Check PBC without wrapping the molecules
+            bool check = 1; //Continue the PBC checks
+            while (check)
+            {
+              //Check the value
+              check = 0;
+              if (shift > Lz)
+              {
+                shift -= Lz;
+                check = 1;
+              }
+              if (shift < 0)
+              {
+                shift += Lz;
+                check = 1;
+              }
+            }
+            shift = ((Lz/Lztmp)-1)*shift;
+            Struct[i].P[j].z += shift;
+          }
+        }
+      }
+      #pragma omp barrier
+    }
+    else
+    {
+      #pragma omp parallel
+      {
+        #pragma omp for nowait schedule(dynamic)
+        for (int i=0;i<Natoms;i++)
+        {
+          //Find centroids
+          double shift = 0; //Change of position for the centroid
+          for (int j=0;j<QMMMOpts.Nbeads;j++)
+          {
+            shift += Struct[i].P[j].x; //Add to the position sum
+          }
+          shift /= QMMMOpts.Nbeads; //Average position
+          //Check PBC without wrapping the molecules
+          bool check = 1; //Continue the PBC checks
+          while (check)
+          {
+            //Check the value
+            check = 0;
+            if (shift > Lx)
+            {
+              shift -= Lx;
+              check = 1;
+            }
+            if (shift < 0)
+            {
+              shift += Lx;
+              check = 1;
+            }
+          }
+          //Calculate the change in position
+          shift = ((Lx/Lxtmp)-1)*shift;
+          for (int j=0;j<QMMMOpts.Nbeads;j++)
+          {
+            //Update the position
+            Struct2[i].P[j].x += shift;
+          }
+        }
+        #pragma omp for nowait schedule(dynamic)
+        for (int i=0;i<Natoms;i++)
+        {
+          //Find centroids
+          double shift = 0; //Change of position for the centroid
+          for (int j=0;j<QMMMOpts.Nbeads;j++)
+          {
+            shift += Struct[i].P[j].y; //Add to the position sum
+          }
+          shift /= QMMMOpts.Nbeads; //Average position
+          //Check PBC without wrapping the molecules
+          bool check = 1; //Continue the PBC checks
+          while (check)
+          {
+            //Check the value
+            check = 0;
+            if (shift > Ly)
+            {
+              shift -= Ly;
+              check = 1;
+            }
+            if (shift < 0)
+            {
+              shift += Ly;
+              check = 1;
+            }
+          }
+          //Calculate the change in position
+          shift = ((Ly/Lytmp)-1)*shift;
+          for (int j=0;j<QMMMOpts.Nbeads;j++)
+          {
+            //Update the position
+            Struct2[i].P[j].y += shift;
+          }
+        }
+        #pragma omp for nowait schedule(dynamic)
+        for (int i=0;i<Natoms;i++)
+        {
+          //Find centroids
+          double shift = 0; //Change of position for the centroid
+          for (int j=0;j<QMMMOpts.Nbeads;j++)
+          {
+            shift += Struct[i].P[j].z; //Add to the position sum
+          }
+          shift /= QMMMOpts.Nbeads; //Average position
+          //Check PBC without wrapping the molecules
+          bool check = 1; //Continue the PBC checks
+          while (check)
+          {
+            //Check the value
+            check = 0;
+            if (shift > Lz)
+            {
+              shift -= Lz;
+              check = 1;
+            }
+            if (shift < 0)
+            {
+              shift += Lz;
+              check = 1;
+            }
+          }
+          //Calculate the change in position
+          shift = ((Lz/Lztmp)-1)*shift;
+          for (int j=0;j<QMMMOpts.Nbeads;j++)
+          {
+            //Update the position
+            Struct2[i].P[j].z += shift;
+          }
+        }
+      }
+      #pragma omp barrier
+    }
     //Add PV energy term
     Enew += QMMMOpts.Press*Lx*Ly*Lz*atm2eV;
   }

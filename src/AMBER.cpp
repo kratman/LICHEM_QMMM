@@ -24,7 +24,6 @@ double AMBERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
                    QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs AMBER energy calculations
-  
   double E = 0.0;
   
   //Change units
@@ -35,7 +34,6 @@ double AMBERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
 double AMBEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs AMBER energy calculations
-  
   double E = 0.0;
   
   //Change units
@@ -46,7 +44,6 @@ double AMBEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 double AMBEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs AMBER optimizations
-  
   double E = 0.0;
   
   //Change units

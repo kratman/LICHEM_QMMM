@@ -710,4 +710,3 @@ void WriteQMConnect(int& argc,char**& argv)
   return;
 };
 
-
