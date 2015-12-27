@@ -133,7 +133,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
     {
       //Make sure the atom is not frozen
       p = (rand()%Natoms);
-      if (Struct[p].Frozen == 0)
+      if (Struct2[p].Frozen == 0)
       {
         FrozenAt = 0;
       }
@@ -174,7 +174,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
     {
       //Make sure the atom is not frozen
       p = (rand()%Natoms);
-      if (Struct[p].Frozen == 0)
+      if (Struct2[p].Frozen == 0)
       {
         FrozenAt = 0;
       }
@@ -243,7 +243,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
           for (int j=0;j<QMMMOpts.Nbeads;j++)
           {
             double shift;
-            shift = Struct[i].P[j].x;
+            shift = Struct2[i].P[j].x;
             //Check PBC without wrapping the molecules
             bool check = 1; //Continue the PBC checks
             while (check)
@@ -262,7 +262,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
               }
             }
             shift = ((Lx/Lxtmp)-1)*shift;
-            Struct[i].P[j].x += shift;
+            Struct2[i].P[j].x += shift;
           }
         }
         #pragma omp for nowait schedule(dynamic)
@@ -271,7 +271,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
           for (int j=0;j<QMMMOpts.Nbeads;j++)
           {
             double shift;
-            shift = Struct[i].P[j].y;
+            shift = Struct2[i].P[j].y;
             //Check PBC without wrapping the molecules
             bool check = 1; //Continue the PBC checks
             while (check)
@@ -290,7 +290,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
               }
             }
             shift = ((Ly/Lytmp)-1)*shift;
-            Struct[i].P[j].y += shift;
+            Struct2[i].P[j].y += shift;
           }
         }
         #pragma omp for nowait schedule(dynamic)
@@ -299,7 +299,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
           for (int j=0;j<QMMMOpts.Nbeads;j++)
           {
             double shift;
-            shift = Struct[i].P[j].z;
+            shift = Struct2[i].P[j].z;
             //Check PBC without wrapping the molecules
             bool check = 1; //Continue the PBC checks
             while (check)
@@ -318,7 +318,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
               }
             }
             shift = ((Lz/Lztmp)-1)*shift;
-            Struct[i].P[j].z += shift;
+            Struct2[i].P[j].z += shift;
           }
         }
       }
@@ -335,7 +335,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
           double shift = 0; //Change of position for the centroid
           for (int j=0;j<QMMMOpts.Nbeads;j++)
           {
-            shift += Struct[i].P[j].x; //Add to the position sum
+            shift += Struct2[i].P[j].x; //Add to the position sum
           }
           shift /= QMMMOpts.Nbeads; //Average position
           //Check PBC without wrapping the molecules
@@ -370,7 +370,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
           double shift = 0; //Change of position for the centroid
           for (int j=0;j<QMMMOpts.Nbeads;j++)
           {
-            shift += Struct[i].P[j].y; //Add to the position sum
+            shift += Struct2[i].P[j].y; //Add to the position sum
           }
           shift /= QMMMOpts.Nbeads; //Average position
           //Check PBC without wrapping the molecules
@@ -405,7 +405,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
           double shift = 0; //Change of position for the centroid
           for (int j=0;j<QMMMOpts.Nbeads;j++)
           {
-            shift += Struct[i].P[j].z; //Add to the position sum
+            shift += Struct2[i].P[j].z; //Add to the position sum
           }
           shift /= QMMMOpts.Nbeads; //Average position
           //Check PBC without wrapping the molecules
