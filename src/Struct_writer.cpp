@@ -648,8 +648,7 @@ void WriteQMConnect(int& argc,char**& argv)
   string dummy; //Generic string
   xyzfilename = "NOFILE"; //Global XYZ filename
   //Read arguments
-  Nqm = 0; //For safety
-  Npseudo = 0; //For safety
+  Natoms = 0; //For safety
   bool DoQuit = 0; //Exit with an error
   cout << "Reading LICHEM input: ";
   for (int i=0;i<argc;i++)
