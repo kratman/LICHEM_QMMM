@@ -282,7 +282,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   {
     //Add basis set and ecp info
     ifile.open("BASIS",ios_base::in);
-    if (ifile.good());
+    if (ifile.good())
     {
       while (!ifile.eof())
       {

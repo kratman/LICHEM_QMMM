@@ -243,7 +243,8 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     }
     if (Nmm > 0)
     {
-      call << "Charge=angstroms "; //Read charges
+      //Read charges
+      call << "Charge=angstroms ";
     }
     if (QMMMOpts.Func != "SemiEmp")
     {
@@ -305,7 +306,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
         line >> dummy; //Ditto
         line >> dummy; //Ditto
         line >> dummy; //Ditto
-        line >> Eself; //Actual self energy of the charges
+        line >> Eself; //Actual self-energy of the charges
       }
     }
     //Check for partial QMMM energy
@@ -435,7 +436,8 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     }
     if (Nmm > 0)
     {
-      call << "Charge=angstroms "; //Read charges
+      //Read charges
+      call << "Charge=angstroms ";
     }
     if (QMMMOpts.Func != "SemiEmp")
     {
@@ -565,7 +567,8 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     }
     if (Nmm > 0)
     {
-      call << "Charge=angstroms "; //Read charges
+      //Read charges
+      call << "Charge=angstroms ";
     }
     if (QMMMOpts.Func != "SemiEmp")
     {
@@ -601,7 +604,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         line >> dummy; //Ditto
         line >> dummy; //Ditto
         line >> dummy; //Ditto
-        line >> Eself; //Actual self energy of the charges
+        line >> Eself; //Actual self-energy of the charges
       }
     }
     //Search for energy

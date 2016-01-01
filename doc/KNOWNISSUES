@@ -4,6 +4,7 @@ Compiling:
 So far I have not seen this cause any errors on Linux machines. If the warning
 causes concern, it can be eliminated by removing "-static" from the list of
 CXXFLAGS in the Makefile.
+-OpenMP support might be disabled when compiling with Clang.
 
 General:
 -Currently only DFT and HF energies can be used in most of the QM
