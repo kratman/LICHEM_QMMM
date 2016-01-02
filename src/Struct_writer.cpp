@@ -69,17 +69,17 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
     if (Struct[i].QMregion)
     {
       call << Struct[i].QMTyp;
-      call << " " << LICHEMFormDouble(Struct[i].P[Bead].x,16);
-      call << " " << LICHEMFormDouble(Struct[i].P[Bead].y,16);
-      call << " " << LICHEMFormDouble(Struct[i].P[Bead].z,16);
+      call << " " << LICHEMFormFloat(Struct[i].P[Bead].x,16);
+      call << " " << LICHEMFormFloat(Struct[i].P[Bead].y,16);
+      call << " " << LICHEMFormFloat(Struct[i].P[Bead].z,16);
       call << '\n';
     }
     if (Struct[i].PBregion)
     {
       call << "F";
-      call << " " << LICHEMFormDouble(Struct[i].P[Bead].x,16);
-      call << " " << LICHEMFormDouble(Struct[i].P[Bead].y,16);
-      call << " " << LICHEMFormDouble(Struct[i].P[Bead].z,16);
+      call << " " << LICHEMFormFloat(Struct[i].P[Bead].x,16);
+      call << " " << LICHEMFormFloat(Struct[i].P[Bead].y,16);
+      call << " " << LICHEMFormFloat(Struct[i].P[Bead].z,16);
       call << '\n';
     }
   }
@@ -107,10 +107,10 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
       {
         if (Struct[i].MMregion)
         {
-          call << " " << LICHEMFormDouble(Struct[i].P[Bead].x,16);
-          call << " " << LICHEMFormDouble(Struct[i].P[Bead].y,16);
-          call << " " << LICHEMFormDouble(Struct[i].P[Bead].z,16);
-          call << " " << LICHEMFormDouble(Struct[i].MP[Bead].q,16);
+          call << " " << LICHEMFormFloat(Struct[i].P[Bead].x,16);
+          call << " " << LICHEMFormFloat(Struct[i].P[Bead].y,16);
+          call << " " << LICHEMFormFloat(Struct[i].P[Bead].z,16);
+          call << " " << LICHEMFormFloat(Struct[i].MP[Bead].q,16);
           call << '\n';
         }
       }
@@ -125,35 +125,35 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
       {
         if (Struct[i].MMregion)
         {
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].x1,16);
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].y1,16);
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].z1,16);
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].q1,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].x1,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].y1,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].z1,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].q1,16);
           call << '\n';
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].x2,16);
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].y2,16);
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].z2,16);
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].q2,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].x2,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].y2,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].z2,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].q2,16);
           call << '\n';
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].x3,16);
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].y3,16);
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].z3,16);
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].q3,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].x3,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].y3,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].z3,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].q3,16);
           call << '\n';
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].x4,16);
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].y4,16);
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].z4,16);
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].q4,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].x4,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].y4,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].z4,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].q4,16);
           call << '\n';
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].x5,16);
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].y5,16);
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].z5,16);
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].q5,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].x5,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].y5,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].z5,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].q5,16);
           call << '\n';
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].x6,16);
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].y6,16);
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].z6,16);
-          call << " " << LICHEMFormDouble(Struct[i].PC[Bead].q6,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].x6,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].y6,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].z6,16);
+          call << " " << LICHEMFormFloat(Struct[i].PC[Bead].q6,16);
           call << '\n';
         }
       }
@@ -334,10 +334,10 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
       {
         if (Struct[i].MMregion)
         {
-          ofile << " " << LICHEMFormDouble(Struct[i].P[Bead].x*ix,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].P[Bead].y*iy,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].P[Bead].z*iz,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].MP[Bead].q,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].P[Bead].x*ix,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].P[Bead].y*iy,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].P[Bead].z*iz,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].MP[Bead].q,16);
           ofile << '\n';
         }
       }
@@ -352,35 +352,35 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
       {
         if (Struct[i].MMregion)
         {
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].x1*ix,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].y1*iy,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].z1*iz,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].q1,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].x1*ix,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].y1*iy,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].z1*iz,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].q1,16);
           ofile << '\n';
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].x2*ix,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].y2*iy,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].z2*iz,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].q2,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].x2*ix,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].y2*iy,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].z2*iz,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].q2,16);
           ofile << '\n';
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].x3*ix,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].y3*iy,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].z3*iz,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].q3,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].x3*ix,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].y3*iy,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].z3*iz,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].q3,16);
           ofile << '\n';
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].x4*ix,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].y4*iy,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].z4*iz,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].q4,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].x4*ix,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].y4*iy,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].z4*iz,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].q4,16);
           ofile << '\n';
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].x5*ix,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].y5*iy,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].z5*iz,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].q5,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].x5*ix,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].y5*iy,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].z5*iz,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].q5,16);
           ofile << '\n';
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].x6*ix,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].y6*iy,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].z6*iz,16);
-          ofile << " " << LICHEMFormDouble(Struct[i].PC[Bead].q6,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].x6*ix,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].y6*iy,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].z6*iz,16);
+          ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].q6,16);
           ofile << '\n';
         }
       }
@@ -509,9 +509,9 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
     if (Struct[i].QMregion)
     {
       call << " " << Struct[i].QMTyp;
-      call << " " << LICHEMFormDouble(Struct[i].P[Bead].x,16);
-      call << " " << LICHEMFormDouble(Struct[i].P[Bead].y,16);
-      call << " " << LICHEMFormDouble(Struct[i].P[Bead].z,16);
+      call << " " << LICHEMFormFloat(Struct[i].P[Bead].x,16);
+      call << " " << LICHEMFormFloat(Struct[i].P[Bead].y,16);
+      call << " " << LICHEMFormFloat(Struct[i].P[Bead].z,16);
       call << '\n';
     }
   }
@@ -547,10 +547,10 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
         if (Struct[i].MMregion)
         {
           call << "Chrgfield.extern.addCharge(";
-          call << LICHEMFormDouble(Struct[i].MP[Bead].q,16) << ",";
-          call << LICHEMFormDouble(Struct[i].P[Bead].x,16) << ",";
-          call << LICHEMFormDouble(Struct[i].P[Bead].y,16) << ",";
-          call << LICHEMFormDouble(Struct[i].P[Bead].z,16);
+          call << LICHEMFormFloat(Struct[i].MP[Bead].q,16) << ",";
+          call << LICHEMFormFloat(Struct[i].P[Bead].x,16) << ",";
+          call << LICHEMFormFloat(Struct[i].P[Bead].y,16) << ",";
+          call << LICHEMFormFloat(Struct[i].P[Bead].z,16);
           call << ")" << '\n';
         }
       }
@@ -565,40 +565,40 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
         if (Struct[i].MMregion)
         {
           call << "Chrgfield.extern.addCharge(";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].q1,16) << ",";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].x1,16) << ",";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].y1,16) << ",";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].z1,16);
+          call << LICHEMFormFloat(Struct[i].PC[Bead].q1,16) << ",";
+          call << LICHEMFormFloat(Struct[i].PC[Bead].x1,16) << ",";
+          call << LICHEMFormFloat(Struct[i].PC[Bead].y1,16) << ",";
+          call << LICHEMFormFloat(Struct[i].PC[Bead].z1,16);
           call << ")" << '\n';
           call << "Chrgfield.extern.addCharge(";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].q2,16) << ",";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].x2,16) << ",";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].y2,16) << ",";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].z2,16);
+          call << LICHEMFormFloat(Struct[i].PC[Bead].q2,16) << ",";
+          call << LICHEMFormFloat(Struct[i].PC[Bead].x2,16) << ",";
+          call << LICHEMFormFloat(Struct[i].PC[Bead].y2,16) << ",";
+          call << LICHEMFormFloat(Struct[i].PC[Bead].z2,16);
           call << ")" << '\n';
           call << "Chrgfield.extern.addCharge(";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].q3,16) << ",";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].x3,16) << ",";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].y3,16) << ",";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].z3,16);
+          call << LICHEMFormFloat(Struct[i].PC[Bead].q3,16) << ",";
+          call << LICHEMFormFloat(Struct[i].PC[Bead].x3,16) << ",";
+          call << LICHEMFormFloat(Struct[i].PC[Bead].y3,16) << ",";
+          call << LICHEMFormFloat(Struct[i].PC[Bead].z3,16);
           call << ")" << '\n';
           call << "Chrgfield.extern.addCharge(";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].q4,16) << ",";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].x4,16) << ",";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].y4,16) << ",";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].z4,16);
+          call << LICHEMFormFloat(Struct[i].PC[Bead].q4,16) << ",";
+          call << LICHEMFormFloat(Struct[i].PC[Bead].x4,16) << ",";
+          call << LICHEMFormFloat(Struct[i].PC[Bead].y4,16) << ",";
+          call << LICHEMFormFloat(Struct[i].PC[Bead].z4,16);
           call << ")" << '\n';
           call << "Chrgfield.extern.addCharge(";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].q5,16) << ",";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].x5,16) << ",";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].y5,16) << ",";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].z5,16);
+          call << LICHEMFormFloat(Struct[i].PC[Bead].q5,16) << ",";
+          call << LICHEMFormFloat(Struct[i].PC[Bead].x5,16) << ",";
+          call << LICHEMFormFloat(Struct[i].PC[Bead].y5,16) << ",";
+          call << LICHEMFormFloat(Struct[i].PC[Bead].z5,16);
           call << ")" << '\n';
           call << "Chrgfield.extern.addCharge(";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].q6,16) << ",";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].x6,16) << ",";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].y6,16) << ",";
-          call << LICHEMFormDouble(Struct[i].PC[Bead].z6,16);
+          call << LICHEMFormFloat(Struct[i].PC[Bead].q6,16) << ",";
+          call << LICHEMFormFloat(Struct[i].PC[Bead].x6,16) << ",";
+          call << LICHEMFormFloat(Struct[i].PC[Bead].y6,16) << ",";
+          call << LICHEMFormFloat(Struct[i].PC[Bead].z6,16);
           call << ")" << '\n';
         }
       }

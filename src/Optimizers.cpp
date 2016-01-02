@@ -70,10 +70,10 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     RMSdiff = sqrt(RMSdiff);
     //Print progress
     cout << "    QM step: " << stepct;
-    cout << " | RMS dev: " << LICHEMFormDouble(RMSdiff,12);
+    cout << " | RMS dev: " << LICHEMFormFloat(RMSdiff,12);
     cout << " \u212B" << '\n';
-    cout << "    Max. force: " << LICHEMFormDouble(MAXforce,12);
-    cout << " eV/\u212B | RMS force: " << LICHEMFormDouble(RMSforce,12);
+    cout << "    Max. force: " << LICHEMFormFloat(MAXforce,12);
+    cout << " eV/\u212B | RMS force: " << LICHEMFormFloat(RMSforce,12);
     cout << " eV/\u212B" << '\n';
     //Check convergence criteria
     if ((RMSdiff <= QMMMOpts.QMOptTol) and
@@ -154,8 +154,8 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     //Print progress
     cout << " | Opt. step: ";
     cout << stepct << " | Energy: ";
-    cout << LICHEMFormDouble(SumE,16) << " eV ";
-    cout << " | RMS dev: " << LICHEMFormDouble(RMSdiff,12);
+    cout << LICHEMFormFloat(SumE,16) << " eV ";
+    cout << " | RMS dev: " << LICHEMFormFloat(RMSdiff,12);
     cout << " \u212B" << '\n';
     //Check convergence
     if (RMSdiff <= QMMMOpts.MMOptTol)
@@ -543,7 +543,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   VecMax = sqrt(VecMax/Ndof);
   cout << "    Performing a steepest descent step..." << '\n';
   cout << "    QM step: 0";
-  cout << " | RMS force: " << LICHEMFormDouble(VecMax,12);
+  cout << " | RMS force: " << LICHEMFormFloat(VecMax,12);
   cout << " eV/\u212B";
   cout << '\n' << '\n';
   cout.flush();
@@ -870,7 +870,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
     cout << " | Step: " << stepct;
     cout << " | Simulation time: ";
     cout << (stepct*QMMMOpts.dt*QMMMOpts.Nsteps/1000);
-    cout << " ps | Energy: " << LICHEMFormDouble(SumE,16);
+    cout << " ps | Energy: " << LICHEMFormFloat(SumE,16);
     cout << " eV" << '\n';
     cout.flush();
   }

@@ -17,42 +17,10 @@
 */
 
 //Number formatting functions
-string LICHEMFormDouble(double InpVal, int wid)
+template<typename T>
+string LICHEMFormFloat(T InpVal, int wid)
 {
-  //Resizes a double to a set number of characters
-  //NB: This was a product of my frustration with stream settings
-  stringstream oldvalue;
-  string newvalue;
-  //Initialize settings
-  oldvalue.str("");
-  oldvalue << fixed;
-  oldvalue.precision(wid);
-  //Save input value to the string
-  oldvalue << InpVal;
-  newvalue = oldvalue.str();
-  int Nchars = newvalue.length();
-  //Resize string
-  if (Nchars > wid)
-  {
-    //Delete characters
-    newvalue.erase(newvalue.begin()+wid,newvalue.end());
-  }
-  else
-  {
-    //Pad with zeros
-    int diff = wid-newvalue.length();
-    for (int i=0;i<diff;i++)
-    {
-      //Add a zero
-      newvalue += "0";
-    }
-  }
-  return newvalue;
-};
-
-string LICHEMFormFloat(double InpVal, int wid)
-{
-  //Resizes a double to a set number of characters
+  //Resizes a floating-point number to a set number of characters
   //NB: This was a product of my frustration with stream settings
   stringstream oldvalue;
   string newvalue;

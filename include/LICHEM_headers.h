@@ -146,9 +146,7 @@ void LICHEMErrorChecker(QMMMSettings&);
 
 double LICHEMFactorial(int);
 
-string LICHEMFormDouble(double,int);
-
-string LICHEMFormFloat(double,int);
+template<typename T> string LICHEMFormFloat(T,int);
 
 void LICHEMLowerText(string&);
 

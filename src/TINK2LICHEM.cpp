@@ -577,9 +577,9 @@ void LICHEM2TINK(int& argc, char**& argv)
       //Write line of TINKER XYZ
       ofile << (i+1) << " ";
       ofile << AtType << " ";
-      ofile << LICHEMFormDouble(x,12) << " ";
-      ofile << LICHEMFormDouble(y,12) << " ";
-      ofile << LICHEMFormDouble(z,12) << " ";
+      ofile << LICHEMFormFloat(x,12) << " ";
+      ofile << LICHEMFormFloat(y,12) << " ";
+      ofile << LICHEMFormFloat(z,12) << " ";
       ofile << AtNum;
       for (unsigned int j=0;j<Bonds.size();j++)
       {

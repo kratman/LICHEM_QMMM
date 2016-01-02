@@ -33,9 +33,9 @@ void Print_traj(vector<QMMMAtom>& Struct, fstream& traj,
     for (int j=0;j<QMMMOpts.Nbeads;j++)
     {
       traj << setw(3) << left << Struct[i].QMTyp << " ";
-      traj << LICHEMFormDouble(Struct[i].P[j].x,16) << " ";
-      traj << LICHEMFormDouble(Struct[i].P[j].y,16) << " ";
-      traj << LICHEMFormDouble(Struct[i].P[j].z,16) << '\n';
+      traj << LICHEMFormFloat(Struct[i].P[j].x,16) << " ";
+      traj << LICHEMFormFloat(Struct[i].P[j].y,16) << " ";
+      traj << LICHEMFormFloat(Struct[i].P[j].z,16) << '\n';
     }
   }
   //Write data and return
@@ -73,9 +73,9 @@ void BurstTraj(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     {
       //Print data for atom i
       burstfile << setw(3) << left << Struct[i].QMTyp << " ";
-      burstfile << LICHEMFormDouble(Struct[i].P[j].x,16) << " ";
-      burstfile << LICHEMFormDouble(Struct[i].P[j].y,16) << " ";
-      burstfile << LICHEMFormDouble(Struct[i].P[j].z,16) << '\n';
+      burstfile << LICHEMFormFloat(Struct[i].P[j].x,16) << " ";
+      burstfile << LICHEMFormFloat(Struct[i].P[j].y,16) << " ";
+      burstfile << LICHEMFormFloat(Struct[i].P[j].z,16) << '\n';
     }
   }
   //Write data and return

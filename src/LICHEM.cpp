@@ -121,7 +121,7 @@ int main(int argc, char* argv[])
     if (QMMM or QMonly)
     {
       //Print QM partial energy
-      cout << "QM energy: " << LICHEMFormDouble(Eqm,16) << " eV";
+      cout << "QM energy: " << LICHEMFormFloat(Eqm,16) << " eV";
       cout << '\n';
     }
     //Calculate MM energy
@@ -147,7 +147,7 @@ int main(int argc, char* argv[])
     if (QMMM or MMonly)
     {
       //Print MM partial energy
-      cout << "MM energy: " << LICHEMFormDouble(Emm,16) << " eV";
+      cout << "MM energy: " << LICHEMFormFloat(Emm,16) << " eV";
       cout << '\n';
     }
     SumE = Eqm+Emm; //Total energy
@@ -155,9 +155,9 @@ int main(int argc, char* argv[])
     {
       //Print total energy
       cout << "QMMM energy: ";
-      cout << LICHEMFormDouble(SumE,16) << " eV";
+      cout << LICHEMFormFloat(SumE,16) << " eV";
       cout << " ";
-      cout << LICHEMFormDouble(SumE/Har2eV,16) << " a.u.";
+      cout << LICHEMFormFloat(SumE/Har2eV,16) << " a.u.";
       cout << '\n';
     }
     cout << '\n';
@@ -219,7 +219,7 @@ int main(int argc, char* argv[])
     }
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
-    cout << LICHEMFormDouble(SumE,16) << " eV";
+    cout << LICHEMFormFloat(SumE,16) << " eV";
     cout << '\n';
     cout.flush(); //Print progress
     //Run optimization
@@ -345,7 +345,7 @@ int main(int argc, char* argv[])
     }
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
-    cout << LICHEMFormDouble(SumE,16) << " eV";
+    cout << LICHEMFormFloat(SumE,16) << " eV";
     cout << '\n';
     cout.flush(); //Print progress
     //Run optimization
@@ -448,7 +448,7 @@ int main(int argc, char* argv[])
     }
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
-    cout << LICHEMFormDouble(SumE,16) << " eV";
+    cout << LICHEMFormFloat(SumE,16) << " eV";
     cout << '\n';
     cout.flush(); //Print progress
     //Run optimization
@@ -562,7 +562,7 @@ int main(int argc, char* argv[])
     }
     cout << " | Opt. step: ";
     cout << optct << " | Energy: ";
-    cout << LICHEMFormDouble(SumE,16) << " eV";
+    cout << LICHEMFormFloat(SumE,16) << " eV";
     cout << '\n';
     cout.flush(); //Print progress
     //Run optimization
@@ -723,9 +723,9 @@ int main(int argc, char* argv[])
         //Statistics
         cout << " | Step: " << setw(SimCharLen) << Nct;
         cout << " | Step size: ";
-        cout << LICHEMFormDouble(pimcstep,6);
+        cout << LICHEMFormFloat(pimcstep,6);
         cout << " | Accept ratio: ";
-        cout << LICHEMFormDouble((Nacc/(Nrej+Nacc)),6);
+        cout << LICHEMFormFloat((Nacc/(Nrej+Nacc)),6);
         cout << '\n';
         cout.flush(); //Print stats
         //Reset counters
@@ -759,14 +759,14 @@ int main(int argc, char* argv[])
     Et = Ek+Emc; //Calculate total energy using previous saved energy
     Et -= 2*Get_PI_Espring(Struct,QMMMOpts);
     cout << " | Step: " << setw(SimCharLen) << 0;
-    cout << " | Energy: " << LICHEMFormDouble(Et,12);
+    cout << " | Energy: " << LICHEMFormFloat(Et,12);
     cout << " eV";
     if (QMMMOpts.Ensemble == "NPT")
     {
       double rho;
       rho = LICHEMDensity(Struct,QMMMOpts);
       cout << " | Density: ";
-      cout << LICHEMFormDouble(rho,8);
+      cout << LICHEMFormFloat(rho,8);
       cout << " g/cm^3";
     }
     cout << '\n';
@@ -796,14 +796,14 @@ int main(int argc, char* argv[])
           //Print progress
           Print_traj(Struct,outfile,QMMMOpts);
           cout << " | Step: " << setw(SimCharLen) << Nct;
-          cout << " | Energy: " << LICHEMFormDouble(Et,12);
+          cout << " | Energy: " << LICHEMFormFloat(Et,12);
           cout << " eV";
           if (QMMMOpts.Ensemble == "NPT")
           {
             double rho;
             rho = LICHEMDensity(Struct,QMMMOpts);
             cout << " | Density: ";
-            cout << LICHEMFormDouble(rho,8);
+            cout << LICHEMFormFloat(rho,8);
             cout << " g/cm^3";
           }
           cout << '\n';
@@ -839,24 +839,24 @@ int main(int argc, char* argv[])
     if (QMMMOpts.Ensemble == "NPT")
     {
       cout << " | Density: ";
-      cout << LICHEMFormDouble(DenAvg,8);
+      cout << LICHEMFormFloat(DenAvg,8);
       cout << " g/cm^3" << '\n';
       cout << " | Average box size (\u212B): " << '\n';
-      cout << " Lx = " << LICHEMFormDouble(LxAvg,10);
-      cout << " Ly = " << LICHEMFormDouble(LyAvg,10);
-      cout << " Lz = " << LICHEMFormDouble(LzAvg,10);
+      cout << " Lx = " << LICHEMFormFloat(LxAvg,10);
+      cout << " Ly = " << LICHEMFormFloat(LyAvg,10);
+      cout << " Lz = " << LICHEMFormFloat(LzAvg,10);
     }
     cout << '\n';
     cout << " | Average energy: ";
-    cout << LICHEMFormDouble(SumE,16);
+    cout << LICHEMFormFloat(SumE,16);
     cout << " eV | Variance: ";
-    cout << LICHEMFormDouble((SumE2-(SumE*SumE)),12);
+    cout << LICHEMFormFloat((SumE2-(SumE*SumE)),12);
     cout << " eV^2";
     cout << '\n';
     cout << " | Acceptance ratio: ";
-    cout << LICHEMFormDouble((Nacc/(Nrej+Nacc)),6);
+    cout << LICHEMFormFloat((Nacc/(Nrej+Nacc)),6);
     cout << " | Optimum step size: ";
-    cout << LICHEMFormDouble(pimcstep,6);
+    cout << LICHEMFormFloat(pimcstep,6);
     cout << " \u212B";
     cout << '\n';
     cout << '\n';
@@ -986,9 +986,9 @@ int main(int argc, char* argv[])
       }
       cout << "   Bead: ";
       cout << setw(3) << p << " | React. coord: ";
-      cout << LICHEMFormDouble(ReactCoord(p),5);
+      cout << LICHEMFormFloat(ReactCoord(p),5);
       cout << " | Energy: ";
-      cout << LICHEMFormDouble(SumE,16) << " eV";
+      cout << LICHEMFormFloat(SumE,16) << " eV";
       cout << '\n';
       cout.flush(); //Print progress
       //Update transition state
@@ -1096,18 +1096,18 @@ int main(int argc, char* argv[])
     cout << " | Transition state bead: " << QMMMOpts.TSBead;
     cout << '\n' << '\n';
     cout << " | Forward barrier: ";
-    cout << LICHEMFormDouble(dEfor,16) << " eV ," << '\n';
+    cout << LICHEMFormFloat(dEfor,16) << " eV ," << '\n';
     cout << " |   ";
-    cout << LICHEMFormDouble(dEfor/Har2eV,16) << " a.u.";
+    cout << LICHEMFormFloat(dEfor/Har2eV,16) << " a.u.";
     cout << " , ";
-    cout << LICHEMFormDouble(dEfor/kcal2eV,16) << " kcal/mol";
+    cout << LICHEMFormFloat(dEfor/kcal2eV,16) << " kcal/mol";
     cout << '\n' << '\n';
     cout << " | Reverse barrier: ";
-    cout << LICHEMFormDouble(dErev,16) << " eV ," << '\n';
+    cout << LICHEMFormFloat(dErev,16) << " eV ," << '\n';
     cout << " |   ";
-    cout << LICHEMFormDouble(dErev/Har2eV,16) << " a.u.";
+    cout << LICHEMFormFloat(dErev/Har2eV,16) << " a.u.";
     cout << " , ";
-    cout << LICHEMFormDouble(dErev/kcal2eV,16) << " kcal/mol";
+    cout << LICHEMFormFloat(dErev/kcal2eV,16) << " kcal/mol";
     cout << '\n' << '\n';
     cout.flush();
   }
@@ -1164,7 +1164,7 @@ int main(int argc, char* argv[])
     }
     cout << " | Opt. step: 0";
     cout << " | Energy: ";
-    cout << LICHEMFormDouble(SumE,16);
+    cout << LICHEMFormFloat(SumE,16);
     cout << " eV" << '\n';
     cout.flush(); //Print progress
     //Run optimization
@@ -1267,16 +1267,16 @@ int main(int argc, char* argv[])
   cout << "################# Usage Statistics #################";
   cout << '\n';
   cout << "  Total wall time:                     ";
-  cout << LICHEMFormDouble(TotalHours,6) << " hours";
+  cout << LICHEMFormFloat(TotalHours,6) << " hours";
   cout << '\n';
   cout << "  Wall time for QM Wrappers:           ";
-  cout << LICHEMFormDouble(TotalQM,6) << " hours";
+  cout << LICHEMFormFloat(TotalQM,6) << " hours";
   cout << '\n';
   cout << "  Wall time for MM Wrappers:           ";
-  cout << LICHEMFormDouble(TotalMM,6) << " hours";
+  cout << LICHEMFormFloat(TotalMM,6) << " hours";
   cout << '\n';
   cout << "  Wall time for LICHEM:                ";
-  cout << LICHEMFormDouble(OtherTime,6) << " hours";
+  cout << LICHEMFormFloat(OtherTime,6) << " hours";
   cout << '\n';
   cout << "####################################################";
   cout << '\n';

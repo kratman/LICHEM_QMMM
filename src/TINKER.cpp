@@ -121,9 +121,9 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (PBCon)
   {
     //Write box size
-    ofile << LICHEMFormDouble(Lx,12) << " ";
-    ofile << LICHEMFormDouble(Ly,12) << " ";
-    ofile << LICHEMFormDouble(Lz,12) << " ";
+    ofile << LICHEMFormFloat(Lx,12) << " ";
+    ofile << LICHEMFormFloat(Ly,12) << " ";
+    ofile << LICHEMFormFloat(Lz,12) << " ";
     ofile << "90.0 90.0 90.0";
     ofile << '\n';
   }
@@ -134,11 +134,11 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].x,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].x,16);
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].y,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].y,16);
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].z,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].z,16);
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -168,9 +168,9 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (PBCon)
   {
     //PBC defined twice for safety
-    ofile << "a-axis " << LICHEMFormDouble(Lx,12) << '\n';
-    ofile << "b-axis " << LICHEMFormDouble(Ly,12) << '\n';
-    ofile << "c-axis " << LICHEMFormDouble(Lz,12) << '\n';
+    ofile << "a-axis " << LICHEMFormFloat(Lx,12) << '\n';
+    ofile << "b-axis " << LICHEMFormFloat(Ly,12) << '\n';
+    ofile << "c-axis " << LICHEMFormFloat(Lz,12) << '\n';
     ofile << "alpha 90.0" << '\n';
     ofile << "beta 90.0" << '\n';
     ofile << "gamma 90.0" << '\n';
@@ -310,9 +310,9 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (PBCon)
   {
     //Write box size
-    ofile << LICHEMFormDouble(Lx,12) << " ";
-    ofile << LICHEMFormDouble(Ly,12) << " ";
-    ofile << LICHEMFormDouble(Lz,12) << " ";
+    ofile << LICHEMFormFloat(Lx,12) << " ";
+    ofile << LICHEMFormFloat(Ly,12) << " ";
+    ofile << LICHEMFormFloat(Lz,12) << " ";
     ofile << "90.0 90.0 90.0";
     ofile << '\n';
   }
@@ -323,11 +323,11 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].x,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].x,16);
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].y,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].y,16);
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].z,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].z,16);
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -357,9 +357,9 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (PBCon)
   {
     //PBC defined twice for safety
-    ofile << "a-axis " << LICHEMFormDouble(Lx,12) << '\n';
-    ofile << "b-axis " << LICHEMFormDouble(Ly,12) << '\n';
-    ofile << "c-axis " << LICHEMFormDouble(Lz,12) << '\n';
+    ofile << "a-axis " << LICHEMFormFloat(Lx,12) << '\n';
+    ofile << "b-axis " << LICHEMFormFloat(Ly,12) << '\n';
+    ofile << "c-axis " << LICHEMFormFloat(Lz,12) << '\n';
     ofile << "alpha 90.0" << '\n';
     ofile << "beta 90.0" << '\n';
     ofile << "gamma 90.0" << '\n';
@@ -513,9 +513,9 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   if (PBCon)
   {
     //PBC defined twice for safety
-    ofile << "a-axis " << LICHEMFormDouble(Lx,12) << '\n';
-    ofile << "b-axis " << LICHEMFormDouble(Ly,12) << '\n';
-    ofile << "c-axis " << LICHEMFormDouble(Lz,12) << '\n';
+    ofile << "a-axis " << LICHEMFormFloat(Lx,12) << '\n';
+    ofile << "b-axis " << LICHEMFormFloat(Ly,12) << '\n';
+    ofile << "c-axis " << LICHEMFormFloat(Lz,12) << '\n';
     ofile << "alpha 90.0" << '\n';
     ofile << "beta 90.0" << '\n';
     ofile << "gamma 90.0" << '\n';
@@ -626,9 +626,9 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   if (PBCon)
   {
     //Write box size
-    ofile << LICHEMFormDouble(Lx,12) << " ";
-    ofile << LICHEMFormDouble(Ly,12) << " ";
-    ofile << LICHEMFormDouble(Lz,12) << " ";
+    ofile << LICHEMFormFloat(Lx,12) << " ";
+    ofile << LICHEMFormFloat(Ly,12) << " ";
+    ofile << LICHEMFormFloat(Lz,12) << " ";
     ofile << "90.0 90.0 90.0";
     ofile << '\n';
   }
@@ -639,11 +639,11 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].x,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].x,16);
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].y,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].y,16);
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].z,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].z,16);
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -756,9 +756,9 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   if (PBCon)
   {
     //PBC defined twice for safety
-    ofile << "a-axis " << LICHEMFormDouble(Lx,12) << '\n';
-    ofile << "b-axis " << LICHEMFormDouble(Ly,12) << '\n';
-    ofile << "c-axis " << LICHEMFormDouble(Lz,12) << '\n';
+    ofile << "a-axis " << LICHEMFormFloat(Lx,12) << '\n';
+    ofile << "b-axis " << LICHEMFormFloat(Ly,12) << '\n';
+    ofile << "c-axis " << LICHEMFormFloat(Lz,12) << '\n';
     ofile << "alpha 90.0" << '\n';
     ofile << "beta 90.0" << '\n';
     ofile << "gamma 90.0" << '\n';
@@ -842,9 +842,9 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   if (PBCon)
   {
     //Write box size
-    ofile << LICHEMFormDouble(Lx,12) << " ";
-    ofile << LICHEMFormDouble(Ly,12) << " ";
-    ofile << LICHEMFormDouble(Lz,12) << " ";
+    ofile << LICHEMFormFloat(Lx,12) << " ";
+    ofile << LICHEMFormFloat(Ly,12) << " ";
+    ofile << LICHEMFormFloat(Lz,12) << " ";
     ofile << "90.0 90.0 90.0";
     ofile << '\n';
   }
@@ -855,11 +855,11 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].x,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].x,16);
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].y,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].y,16);
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].z,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].z,16);
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -972,9 +972,9 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (PBCon)
   {
     //PBC defined twice for safety
-    ofile << "a-axis " << LICHEMFormDouble(Lx,12) << '\n';
-    ofile << "b-axis " << LICHEMFormDouble(Ly,12) << '\n';
-    ofile << "c-axis " << LICHEMFormDouble(Lz,12) << '\n';
+    ofile << "a-axis " << LICHEMFormFloat(Lx,12) << '\n';
+    ofile << "b-axis " << LICHEMFormFloat(Ly,12) << '\n';
+    ofile << "c-axis " << LICHEMFormFloat(Lz,12) << '\n';
     ofile << "alpha 90.0" << '\n';
     ofile << "beta 90.0" << '\n';
     ofile << "gamma 90.0" << '\n';
@@ -1062,9 +1062,9 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (PBCon)
   {
     //Write box size
-    ofile << LICHEMFormDouble(Lx,12) << " ";
-    ofile << LICHEMFormDouble(Ly,12) << " ";
-    ofile << LICHEMFormDouble(Lz,12) << " ";
+    ofile << LICHEMFormFloat(Lx,12) << " ";
+    ofile << LICHEMFormFloat(Ly,12) << " ";
+    ofile << LICHEMFormFloat(Lz,12) << " ";
     ofile << "90.0 90.0 90.0";
     ofile << '\n';
   }
@@ -1075,11 +1075,11 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].x,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].x,16);
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].y,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].y,16);
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].z,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].z,16);
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -1172,9 +1172,9 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (PBCon)
   {
     //PBC defined twice for safety
-    ofile << "a-axis " << LICHEMFormDouble(Lx,12) << '\n';
-    ofile << "b-axis " << LICHEMFormDouble(Ly,12) << '\n';
-    ofile << "c-axis " << LICHEMFormDouble(Lz,12) << '\n';
+    ofile << "a-axis " << LICHEMFormFloat(Lx,12) << '\n';
+    ofile << "b-axis " << LICHEMFormFloat(Ly,12) << '\n';
+    ofile << "c-axis " << LICHEMFormFloat(Lz,12) << '\n';
     ofile << "alpha 90.0" << '\n';
     ofile << "beta 90.0" << '\n';
     ofile << "gamma 90.0" << '\n';
@@ -1297,9 +1297,9 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (PBCon)
   {
     //Write box size
-    ofile << LICHEMFormDouble(Lx,12) << " ";
-    ofile << LICHEMFormDouble(Ly,12) << " ";
-    ofile << LICHEMFormDouble(Lz,12) << " ";
+    ofile << LICHEMFormFloat(Lx,12) << " ";
+    ofile << LICHEMFormFloat(Ly,12) << " ";
+    ofile << LICHEMFormFloat(Lz,12) << " ";
     ofile << "90.0 90.0 90.0";
     ofile << '\n';
   }
@@ -1310,11 +1310,11 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].x,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].x,16);
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].y,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].y,16);
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].z,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].z,16);
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
@@ -1396,9 +1396,9 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (PBCon)
   {
     //PBC defined twice for safety
-    ofile << "a-axis " << LICHEMFormDouble(Lx,12) << '\n';
-    ofile << "b-axis " << LICHEMFormDouble(Ly,12) << '\n';
-    ofile << "c-axis " << LICHEMFormDouble(Lz,12) << '\n';
+    ofile << "a-axis " << LICHEMFormFloat(Lx,12) << '\n';
+    ofile << "b-axis " << LICHEMFormFloat(Ly,12) << '\n';
+    ofile << "c-axis " << LICHEMFormFloat(Lz,12) << '\n';
     ofile << "alpha 90.0" << '\n';
     ofile << "beta 90.0" << '\n';
     ofile << "gamma 90.0" << '\n';
@@ -1517,9 +1517,9 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (PBCon)
   {
     //Write box size
-    ofile << LICHEMFormDouble(Lx,12) << " ";
-    ofile << LICHEMFormDouble(Ly,12) << " ";
-    ofile << LICHEMFormDouble(Lz,12) << " ";
+    ofile << LICHEMFormFloat(Lx,12) << " ";
+    ofile << LICHEMFormFloat(Ly,12) << " ";
+    ofile << LICHEMFormFloat(Lz,12) << " ";
     ofile << "90.0 90.0 90.0";
     ofile << '\n';
   }
@@ -1530,11 +1530,11 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     ofile << " ";
     ofile << setw(3) << Struct[i].MMTyp;
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].x,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].x,16);
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].y,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].y,16);
     ofile << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].z,16);
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].z,16);
     ofile << " ";
     ofile << setw(4) << Struct[i].NumTyp;
     for (unsigned int j=0;j<Struct[i].Bonds.size();j++)

@@ -140,33 +140,33 @@ void ExternalGaussian(int& argc, char**& argv)
   //Write formatted output for g09
   double E = (Eqm+Emm)/Har2eV; //Calculate
   GauOutput << left; //More formatting
-  GauOutput << LICHEMFormDouble(E,20); //QM+MM partial energy
-  GauOutput << LICHEMFormDouble(0.0,20); //Dipole moment
-  GauOutput << LICHEMFormDouble(0.0,20); //Dipole moment
-  GauOutput << LICHEMFormDouble(0.0,20); //Dipole moment
+  GauOutput << LICHEMFormFloat(E,20); //QM+MM partial energy
+  GauOutput << LICHEMFormFloat(0.0,20); //Dipole moment
+  GauOutput << LICHEMFormFloat(0.0,20); //Dipole moment
+  GauOutput << LICHEMFormFloat(0.0,20); //Dipole moment
   GauOutput << '\n';
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
     //Write forces
-    GauOutput << LICHEMFormDouble(-1*Forces(3*i)*BohrRad/Har2eV,20);
-    GauOutput << LICHEMFormDouble(-1*Forces(3*i+1)*BohrRad/Har2eV,20);
-    GauOutput << LICHEMFormDouble(-1*Forces(3*i+2)*BohrRad/Har2eV,20);
+    GauOutput << LICHEMFormFloat(-1*Forces(3*i)*BohrRad/Har2eV,20);
+    GauOutput << LICHEMFormFloat(-1*Forces(3*i+1)*BohrRad/Har2eV,20);
+    GauOutput << LICHEMFormFloat(-1*Forces(3*i+2)*BohrRad/Har2eV,20);
     GauOutput << '\n';
   }
-  GauOutput << LICHEMFormDouble(0.0,20); //Polarizability
-  GauOutput << LICHEMFormDouble(0.0,20); //Polarizability
-  GauOutput << LICHEMFormDouble(0.0,20); //Polarizability
+  GauOutput << LICHEMFormFloat(0.0,20); //Polarizability
+  GauOutput << LICHEMFormFloat(0.0,20); //Polarizability
+  GauOutput << LICHEMFormFloat(0.0,20); //Polarizability
   GauOutput << '\n';
-  GauOutput << LICHEMFormDouble(0.0,20); //Polarizability
-  GauOutput << LICHEMFormDouble(0.0,20); //Polarizability
-  GauOutput << LICHEMFormDouble(0.0,20); //Polarizability
+  GauOutput << LICHEMFormFloat(0.0,20); //Polarizability
+  GauOutput << LICHEMFormFloat(0.0,20); //Polarizability
+  GauOutput << LICHEMFormFloat(0.0,20); //Polarizability
   GauOutput << '\n';
   for (int i=0;i<Ndof;i++)
   {
     //Dipole derivatives
-    GauOutput << LICHEMFormDouble(0.0,20);
-    GauOutput << LICHEMFormDouble(0.0,20);
-    GauOutput << LICHEMFormDouble(0.0,20);
+    GauOutput << LICHEMFormFloat(0.0,20);
+    GauOutput << LICHEMFormFloat(0.0,20);
+    GauOutput << LICHEMFormFloat(0.0,20);
     GauOutput << '\n';
   }
   //Write output and close the file
@@ -181,9 +181,9 @@ void ExternalGaussian(int& argc, char**& argv)
   {
     //Write XYZ coordinates
     ofile << Struct[i].QMTyp << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].x,16) << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].y,16) << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].z,16) << '\n';
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].x,16) << " ";
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].y,16) << " ";
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].z,16) << '\n';
   }
   ofile.flush();
   ofile.close();
@@ -727,9 +727,9 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     //Print XYZ coordinates
     ofile << Struct[i].QMTyp << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].x,16) << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].y,16) << " ";
-    ofile << LICHEMFormDouble(Struct[i].P[Bead].z,16) << '\n';
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].x,16) << " ";
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].y,16) << " ";
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].z,16) << '\n';
   }
   ofile.flush();
   ofile.close();
@@ -781,17 +781,17 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (Struct[i].QMregion)
     {
       call << Struct[i].QMTyp;
-      call << " " << LICHEMFormDouble(Struct[i].P[Bead].x,16);
-      call << " " << LICHEMFormDouble(Struct[i].P[Bead].y,16);
-      call << " " << LICHEMFormDouble(Struct[i].P[Bead].z,16);
+      call << " " << LICHEMFormFloat(Struct[i].P[Bead].x,16);
+      call << " " << LICHEMFormFloat(Struct[i].P[Bead].y,16);
+      call << " " << LICHEMFormFloat(Struct[i].P[Bead].z,16);
       call << '\n';
     }
     if (Struct[i].PBregion)
     {
       call << "F";
-      call << " " << LICHEMFormDouble(Struct[i].P[Bead].x,16);
-      call << " " << LICHEMFormDouble(Struct[i].P[Bead].y,16);
-      call << " " << LICHEMFormDouble(Struct[i].P[Bead].z,16);
+      call << " " << LICHEMFormFloat(Struct[i].P[Bead].x,16);
+      call << " " << LICHEMFormFloat(Struct[i].P[Bead].y,16);
+      call << " " << LICHEMFormFloat(Struct[i].P[Bead].z,16);
       call << '\n';
     }
   }
