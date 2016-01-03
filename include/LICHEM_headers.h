@@ -173,10 +173,10 @@ double NWChemForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
 double NWChemOpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 bool OptConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,vector<Coord>&,
-     int,QMMMSettings& QMMMOpts,int,bool);
+                  int,QMMMSettings& QMMMOpts,int,bool);
 
 bool PathConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,MatrixXd&,
-     int,QMMMSettings&,bool);
+                   int,QMMMSettings&,bool);
 
 void PBCCenter(vector<QMMMAtom>&,QMMMSettings&);
 
@@ -195,7 +195,7 @@ double PSI4Opt(vector<QMMMAtom>&,QMMMSettings&,int);
 void ReadArgs(int&,char**&,fstream&,fstream&,fstream&,fstream&);
 
 void ReadLICHEMInput(fstream&,fstream&,fstream&,
-     vector<QMMMAtom>&,QMMMSettings&);
+                     vector<QMMMAtom>&,QMMMSettings&);
 
 void RotateTINKCharges(vector<QMMMAtom>&,int);
 
