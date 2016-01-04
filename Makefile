@@ -74,8 +74,7 @@ testexe:
 	@echo ""; \
 	echo "### Creating test suite executable ###"
 	@echo 'echo "#!$(PYPATH)" > ./tests/runtests'; \
-	echo "!!$(PYPATH)" > ./tests/runtests; \
-	echo "" >> ./tests/runtests
+	echo "!!$(PYPATH)" > ./tests/runtests
 	cat ./src/runtests.py >> ./tests/runtests
 	@sed -i 's/\#.*//g' ./tests/runtests; \
 	sed -i 's/\s*$$//g' ./tests/runtests; \
