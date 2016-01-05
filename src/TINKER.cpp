@@ -1391,6 +1391,12 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ofile << '\n';
   ofile << "#QM force field parameters"; //Marks the changes
   ofile << '\n';
+  if (QMMMOpts.UseMMCut)
+  {
+    //Apply cutoff
+    ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.MMOptCut,12);
+    ofile << '\n';
+  }
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
   if (PBCon)

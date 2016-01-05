@@ -258,6 +258,8 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
   QMMMOpts.QMOptTol = 0;
   QMMMOpts.StepScale = 0;
   QMMMOpts.MaxStep = 0;
+  QMMMOpts.UseMMCut = 0;
+  QMMMOpts.MMOptCut = 1000.0; //Effectively infinite
   //Additional RP settings
   QMMMOpts.Kspring = 0;
   QMMMOpts.TSBead = 0;
@@ -598,6 +600,13 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.MaxStep;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
+    regionfile >> dummy;
+    LICHEMLowerText(dummy);
+    if ((dummy == "yes") or (dummy == "true"))
+    {
+      QMMMOpts.UseMMCut = 1;
+      regionfile >> dummy >> QMMMOpts.MMOptCut;
+    }
   }
   if ((dummy == "steep") or (dummy == "sd"))
   {
@@ -608,6 +617,13 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
+    regionfile >> dummy;
+    LICHEMLowerText(dummy);
+    if ((dummy == "yes") or (dummy == "true"))
+    {
+      QMMMOpts.UseMMCut = 1;
+      regionfile >> dummy >> QMMMOpts.MMOptCut;
+    }
   }
   if ((dummy == "quickmin") or (dummy == "quick") or
      (dummy == "dv"))
@@ -619,6 +635,13 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
+    regionfile >> dummy;
+    LICHEMLowerText(dummy);
+    if ((dummy == "yes") or (dummy == "true"))
+    {
+      QMMMOpts.UseMMCut = 1;
+      regionfile >> dummy >> QMMMOpts.MMOptCut;
+    }
   }
   if ((dummy == "dfp") or (dummy == "bfgs"))
   {
@@ -638,6 +661,13 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
+    regionfile >> dummy;
+    LICHEMLowerText(dummy);
+    if ((dummy == "yes") or (dummy == "true"))
+    {
+      QMMMOpts.UseMMCut = 1;
+      regionfile >> dummy >> QMMMOpts.MMOptCut;
+    }
   }
   if ((dummy == "neb") or (dummy == "ci-neb") or (dummy == "cineb"))
   {
@@ -656,6 +686,13 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
+    regionfile >> dummy;
+    LICHEMLowerText(dummy);
+    if ((dummy == "yes") or (dummy == "true"))
+    {
+      QMMMOpts.UseMMCut = 1;
+      regionfile >> dummy >> QMMMOpts.MMOptCut;
+    }
     //Set initial transition state
     if ((QMMMOpts.Nbeads%2) == 0)
     {
@@ -1343,6 +1380,14 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
     cout << " Max. step size: " << QMMMOpts.MaxStep;
     cout << " \u212B" << '\n';
     cout << " Max. steps: " << QMMMOpts.MaxOptSteps;
+    if (QMMMOpts.UseMMCut)
+    {
+      //Print MM cutoff settings
+      cout << '\n';
+      cout << " Elec. Stat. cutoff: ";
+      cout << LICHEMFormFloat(QMMMOpts.MMOptCut,8);
+      cout << "\u212B";
+    }
     if (ENEBSim or NEBSim)
     {
       //Spring constant for the path
