@@ -600,7 +600,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.MaxStep;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
-    regionfile >> dummy;
+    regionfile >> dummy >> dummy;
     LICHEMLowerText(dummy);
     if ((dummy == "yes") or (dummy == "true"))
     {
@@ -617,7 +617,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
-    regionfile >> dummy;
+    regionfile >> dummy >> dummy;
     LICHEMLowerText(dummy);
     if ((dummy == "yes") or (dummy == "true"))
     {
@@ -635,7 +635,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
-    regionfile >> dummy;
+    regionfile >> dummy >> dummy;
     LICHEMLowerText(dummy);
     if ((dummy == "yes") or (dummy == "true"))
     {
@@ -661,7 +661,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
-    regionfile >> dummy;
+    regionfile >> dummy >> dummy;
     LICHEMLowerText(dummy);
     if ((dummy == "yes") or (dummy == "true"))
     {
@@ -686,7 +686,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     regionfile >> dummy >> QMMMOpts.QMOptTol;
     regionfile >> dummy >> QMMMOpts.MMOptTol;
     regionfile >> dummy >> QMMMOpts.MaxOptSteps;
-    regionfile >> dummy;
+    regionfile >> dummy >> dummy;
     LICHEMLowerText(dummy);
     if ((dummy == "yes") or (dummy == "true"))
     {
@@ -1380,13 +1380,13 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
     cout << " Max. step size: " << QMMMOpts.MaxStep;
     cout << " \u212B" << '\n';
     cout << " Max. steps: " << QMMMOpts.MaxOptSteps;
-    if (QMMMOpts.UseMMCut)
+    if (QMMMOpts.UseMMCut and (Nmm > 0))
     {
       //Print MM cutoff settings
       cout << '\n';
-      cout << " Elec. Stat. cutoff: ";
+      cout << " MM cutoff: ";
       cout << LICHEMFormFloat(QMMMOpts.MMOptCut,8);
-      cout << "\u212B";
+      cout << " \u212B";
     }
     if (ENEBSim or NEBSim)
     {
