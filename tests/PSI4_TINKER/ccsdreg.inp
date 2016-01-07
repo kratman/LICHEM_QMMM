@@ -5,6 +5,7 @@ QM_basis: 6-31G*
 QM_memory: 256 MB
 QM_charge: 0
 QM_spin: 1
+Use_LREC: No
 Calculation_type: SP
 PBC: No
 QM_atoms: 0

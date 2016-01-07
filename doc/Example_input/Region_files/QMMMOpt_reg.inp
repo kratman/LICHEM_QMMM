@@ -5,6 +5,7 @@ QM_basis: 6-31G*
 QM_memory: 2 GB
 QM_charge: 0
 QM_spin: 1
+Use_LREC: No
 MM_type: TINKER
 Electrostatics: Charges
 Calculation_type: DFP
@@ -13,6 +14,7 @@ Max_opt_step: 0.10
 QM_opt_tolerance: 1e-4
 MM_opt_tolerance: 1e-2
 Max_opt_steps: 400
+Use_cutoff: No
 PBC: No
 QM_atoms: 3
 3 4 5

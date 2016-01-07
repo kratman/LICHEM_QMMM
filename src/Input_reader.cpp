@@ -240,6 +240,8 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
   QMMMOpts.Charge = "N/A";
   QMMMOpts.Spin = "N/A";
   QMMMOpts.BackDir = "N/A";
+  QMMMOpts.UseLREC = 0;
+  QMMMOpts.LRECCut = 1000.0; //Effectively infinite
   //MC, MD, and RP settings
   QMMMOpts.Ensemble = "N/A";
   QMMMOpts.Temp = 0;
@@ -399,6 +401,16 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       Struct[i].PBregion = 0;
       Struct[i].BAregion = 0;
     }
+    //Check for long-range corrections
+    regionfile >> dummy >> dummy;
+    LICHEMLowerText(dummy);
+    if ((dummy == "yes") or (dummy == "true"))
+    {
+      //Turn on long-range corrections
+      QMMMOpts.UseLREC = 1;
+      //Read cutoff
+      regionfile >> dummy >> QMMMOpts.LRECCut;
+    }
   }
   if (dummy == "qmmm")
   {
@@ -444,6 +456,16 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     }
     regionfile >> dummy >> QMMMOpts.Charge;
     regionfile >> dummy >> QMMMOpts.Spin;
+    //Check for long-range corrections
+    regionfile >> dummy >> dummy;
+    LICHEMLowerText(dummy);
+    if ((dummy == "yes") or (dummy == "true"))
+    {
+      //Turn on long-range corrections
+      QMMMOpts.UseLREC = 1;
+      //Read cutoff
+      regionfile >> dummy >> QMMMOpts.LRECCut;
+    }
     regionfile >> dummy >> dummy; //MM wrapper
     LICHEMLowerText(dummy);
     if (dummy == "tinker")

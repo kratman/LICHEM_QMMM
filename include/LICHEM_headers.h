@@ -86,6 +86,8 @@ void FetchQuotes(vector<string>&);
 
 int FindMaxThreads();
 
+Coord FindQMCOM(vector<QMMMAtom>&,QMMMSettings&,int);
+
 void FindTINKERClasses(vector<QMMMAtom>&);
 
 void GaussianCharges(vector<QMMMAtom>&,QMMMSettings&,int);
@@ -219,7 +221,7 @@ void TINK2LICHEM(int&,char**&);
 
 vector<int> TraceBoundary(vector<QMMMAtom>&,int);
 
-void WriteChargeFile(vector<QMMMAtom>&,int);
+void WriteChargeFile(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void WriteGauInput(vector<QMMMAtom>&,string,QMMMSettings&,int);
 

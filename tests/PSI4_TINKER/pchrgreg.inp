@@ -5,6 +5,7 @@ QM_basis: 6-31G*
 QM_memory: 256 MB
 QM_charge: 0
 QM_spin: 1
+Use_LREC: No
 MM_type: TINKER
 Potential_type: Charges
 Calculation_type: SP

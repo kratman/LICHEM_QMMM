@@ -113,6 +113,8 @@ class QMMMSettings
     string Charge; //QM total charge
     string Spin; //QM total spin
     string BackDir; //Directory for log file backups
+    bool UseLREC; //Use a long-range correction
+    double LRECCut; //Cutoff for the long-range correction
     //Input needed for MC and MD functions
     string Ensemble; //NVT or NPT
     double Temp; //Temperature

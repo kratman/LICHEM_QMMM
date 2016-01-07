@@ -5,6 +5,7 @@ QM_basis: 6-31G*
 QM_memory: 256 MB
 QM_charge: -1
 QM_spin: 1
+Use_LREC: No
 Calculation_type: NEB
 Beads: 3
 Opt_step_size: 1.00
@@ -14,6 +15,7 @@ Frozen_ends: Yes
 QM_opt_tolerance: 5e-4
 MM_opt_tolerance: 1e-2
 Max_opt_steps: 100
+Use_cutoff: No
 PBC: No
 QM_atoms: 0
 Pseudo_atoms: 0

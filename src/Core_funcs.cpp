@@ -362,6 +362,58 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   return;
 };
 
+Coord FindQMCOM(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
+{
+  //Find the center of mass for the QM region
+  Coord QMCOM; //Center of mass position
+  double avgx = 0; //Average x position
+  double avgy = 0; //Average y position
+  double avgz = 0; //Average z position
+  double totm = 0; //Total mass
+  #pragma omp parallel
+  {
+    #pragma omp for nowait schedule(dynamic) reduction(+:totm)
+    for (int i=0;i<Natoms;i++)
+    {
+      if (Struct[i].QMregion or Struct[i].PBregion)
+      {
+        totm += Struct[i].m;
+      }
+    }
+    #pragma omp for nowait schedule(dynamic) reduction(+:avgx)
+    for (int i=0;i<Natoms;i++)
+    {
+      if (Struct[i].QMregion or Struct[i].PBregion)
+      {
+        avgx += Struct[i].m*Struct[i].P[Bead].x;
+      }
+    }
+    #pragma omp for nowait schedule(dynamic) reduction(+:avgy)
+    for (int i=0;i<Natoms;i++)
+    {
+      if (Struct[i].QMregion or Struct[i].PBregion)
+      {
+        avgy += Struct[i].m*Struct[i].P[Bead].y;
+      }
+    }
+    #pragma omp for nowait schedule(dynamic) reduction(+:avgz)
+    for (int i=0;i<Natoms;i++)
+    {
+      if (Struct[i].QMregion or Struct[i].PBregion)
+      {
+        avgz += Struct[i].m*Struct[i].P[Bead].z;
+      }
+    }
+  }
+  #pragma omp barrier
+  //Save center of mass
+  QMCOM.x = avgx/totm;
+  QMCOM.y = avgy/totm;
+  QMCOM.z = avgz/totm;
+  return QMCOM;
+};
+
+//Misc.
 void PrintLapin()
 {
   //Print a nice picture
