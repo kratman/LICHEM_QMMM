@@ -14,6 +14,10 @@ and semiempirical methods are currently only implemented in Gaussian.
 PBC for QM calculations. The QM region should always be placed near the center
 of the simulation box.
 
+Input keywords:
+-LICHEM reads keywords in order. An input reader which takes keywords in any
+order is being developed.
+
 Gaussian interface:
 -Using the external interface to Gaussian interferes with timing the MM
 wrapper. This is harmless, but the statistics should not be trusted when
@@ -33,7 +37,7 @@ TINKER interface:
 simulations. It is possible that these interactions are incorrect. Note that
 even if the interactions are not treated properly, the errors should be
 insignificant if the chiral atoms are far from the QM region.
--All QM point charges are added as Z-then-X multipoles. Since only the
+-All QM point-charges are added as Z-then-X multipoles. Since only the
 monopole is retained, the frame of reference is not important.
 
 LAMMPS interface:
