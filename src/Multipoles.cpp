@@ -417,7 +417,7 @@ void RotateTINKCharges(vector<QMMMAtom>& Struct, int Bead)
       NewPoles.Qzz += Vecz(2)*Vecx(2)*Struct[i].MP[Bead].Qxz;
       NewPoles.Qzz += Vecz(2)*Vecy(2)*Struct[i].MP[Bead].Qyz;
       NewPoles.Qzz += Vecz(2)*Vecz(2)*Struct[i].MP[Bead].Qzz;
-      //switch to point charges
+      //switch to point-charges
       Struct[i].PC[Bead] = SphHarm2Charges(Cart2SphHarm(NewPoles));
       //Translate charges to the atom's location in the global frame
       Struct[i].PC[Bead].x1 += Struct[i].P[Bead].x;
