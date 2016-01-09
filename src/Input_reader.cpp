@@ -244,34 +244,34 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
   QMMMOpts.LRECCut = 1000.0; //Effectively infinite
   //MC, MD, and RP settings
   QMMMOpts.Ensemble = "N/A";
-  QMMMOpts.Temp = 0;
-  QMMMOpts.Beta = 0;
-  QMMMOpts.Press = 0;
+  QMMMOpts.Temp = 300.0;
+  QMMMOpts.Beta = 1/(300.0*k);
+  QMMMOpts.Press = 0.0;
   QMMMOpts.Neq = 0;
   QMMMOpts.Nsteps = 0;
   QMMMOpts.Nbeads = 1; //Key for printing
-  QMMMOpts.accratio = 0;
-  QMMMOpts.Nprint = 0;
-  QMMMOpts.dt = 0;
-  QMMMOpts.tautemp = 0;
-  //OPtimization settings
-  QMMMOpts.MaxOptSteps = 0;
-  QMMMOpts.MMOptTol = 0;
-  QMMMOpts.QMOptTol = 0;
-  QMMMOpts.StepScale = 0;
-  QMMMOpts.MaxStep = 0;
+  QMMMOpts.accratio = 0.5;
+  QMMMOpts.Nprint = 5000;
+  QMMMOpts.dt = 1.0;
+  QMMMOpts.tautemp = 1000.0;
+  //Optimization settings
+  QMMMOpts.MaxOptSteps = 400;
+  QMMMOpts.MMOptTol = 1e-2;
+  QMMMOpts.QMOptTol = 5e-4;
+  QMMMOpts.StepScale = 1.0;
+  QMMMOpts.MaxStep = 0.1;
   QMMMOpts.UseMMCut = 0;
   QMMMOpts.MMOptCut = 1000.0; //Effectively infinite
   //Additional RP settings
-  QMMMOpts.Kspring = 0;
+  QMMMOpts.Kspring = 1.0;
   QMMMOpts.TSBead = 0;
   QMMMOpts.Climb = 0;
   QMMMOpts.FrznEnds = 0;
   //Temporary energy storage
-  QMMMOpts.Eold = 0;
-  QMMMOpts.Ereact = 0;
-  QMMMOpts.Eprod = 0;
-  QMMMOpts.Ets = 0;
+  QMMMOpts.Eold = 0.0;
+  QMMMOpts.Ereact = 0.0;
+  QMMMOpts.Eprod = 0.0;
+  QMMMOpts.Ets = 0.0;
   return;
 };
 
@@ -345,496 +345,425 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       Struct[i].Bonds.push_back(AtomID); //Add bond
     }
   }
-  //Collect misc. simulation options
-  regionfile >> dummy >> dummy; //Potential type
-  LICHEMLowerText(dummy);
-  if (dummy == "qm")
+  //Read simulation keywords
+  while (regionfile.good() and (!regionfile.eof()))
   {
-    //Read QMonly options
-    QMonly = 1;
-    MMonly = 0;
-    QMMM = 0;
-    Nqm = Natoms; //Save number of QM atoms
-    regionfile >> dummy >> dummy;
-    LICHEMLowerText(dummy);
-    if (dummy == "psi4")
+    string keyword;
+    regionfile >> keyword;
+    LICHEMLowerText(keyword);
+    if (keyword == "potential_type:")
     {
-      PSI4 = 1;
+      //Set QM, MM, and QMMM options
+      regionfile >> dummy; //Potential type
+      LICHEMLowerText(dummy);
+      if (dummy == "qm")
+      {
+        //Pure QM simulation
+        QMonly = 1;
+        Nqm = Natoms; //Save number of QM atoms
+      }
+      if (dummy == "mm")
+      {
+        //Pure MM simulation
+        MMonly = 1;
+        Nmm = Natoms; //Save number of QM atoms
+      }
+      if (dummy == "qmmm")
+      {
+        //QMMM simulation
+        QMMM = 1;
+      }
     }
-    if (dummy == "nwchem")
+    else if (keyword == "qm_type:")
     {
-      NWChem = 1;
+      //Set QM wrapper
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if (dummy == "psi4")
+      {
+        PSI4 = 1;
+      }
+      if (dummy == "nwchem")
+      {
+        NWChem = 1;
+      }
+      if ((dummy == "gaussian") or (dummy == "g09"))
+      {
+        Gaussian = 1;
+      }
     }
-    if ((dummy == "gaussian") or (dummy == "g09"))
+    else if (keyword == "mm_type:")
     {
-      Gaussian = 1;
+      //Set MM wrapper
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if (dummy == "tinker")
+      {
+        TINKER = 1;
+      }
+      if (dummy == "amber")
+      {
+        AMBER = 1;
+      }
+      if (dummy == "lammps")
+      {
+        LAMMPS = 1;
+      }
     }
-    regionfile >> dummy >> QMMMOpts.Func;
-    dummy = QMMMOpts.Func;
-    LICHEMLowerText(dummy);
-    if ((dummy == "semiempirical") or (dummy == "se-scf") or
-       (dummy == "semi-empirical") or (dummy == "sescf") or
-       (dummy == "semiemp"))
+    else if (keyword == "qm_method:")
     {
-      //Flag the method as a semi-empirical Hamiltonian
-      QMMMOpts.Func = "SemiEmp";
+      //Set QM functional or method
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "semiempirical") or (dummy == "se-scf") or
+         (dummy == "semi-empirical") or (dummy == "sescf") or
+         (dummy == "semiemp"))
+      {
+        //Flag the method as a semi-empirical Hamiltonian
+        dummy = "SemiEmp";
+      }
+      QMMMOpts.Func = dummy; //Save method name
     }
-    regionfile >> dummy >> QMMMOpts.Basis;
-    regionfile >> dummy >> QMMMOpts.RAM;
-    regionfile >> dummy;
-    LICHEMLowerText(dummy);
-    if (dummy == "mb")
+    else if (keyword == "qm_basis:")
     {
-      QMMMOpts.MemMB = 1;
+      //Set the basis set or semi-empirical Hamiltonian
+      regionfile >> QMMMOpts.Basis;
     }
-    else
+    else if (keyword == "qm_memory:")
     {
-      QMMMOpts.MemMB = 0;
+      //Set the amount of memory for the QM calculations
+      regionfile >> QMMMOpts.RAM;
+      //Check units
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if (dummy == "mb")
+      {
+        //RAM is in MB
+        QMMMOpts.MemMB = 1;
+      }
+      else
+      {
+        //RAM is in GB
+        QMMMOpts.MemMB = 0;
+      }
     }
-    regionfile >> dummy >> QMMMOpts.Charge;
-    regionfile >> dummy >> QMMMOpts.Spin;
-    //Place all atoms in the QM region
-    for (int i=0;i<Natoms;i++)
+    else if (keyword == "qm_charge:")
     {
-      Struct[i].QMregion = 1;
-      Struct[i].MMregion = 0;
-      Struct[i].PBregion = 0;
-      Struct[i].BAregion = 0;
+      //Set the total charge on the QM region
+      regionfile >> QMMMOpts.Charge;
     }
-    //Check for long-range corrections
-    regionfile >> dummy >> dummy;
-    LICHEMLowerText(dummy);
-    if ((dummy == "yes") or (dummy == "true"))
+    else if (keyword == "qm_spin:")
+    {
+      //Set the multiplicity
+      regionfile >> QMMMOpts.Spin;
+    }
+    else if (keyword == "use_lrec:")
     {
       //Turn on long-range corrections
-      QMMMOpts.UseLREC = 1;
-      //Read cutoff
-      regionfile >> dummy >> QMMMOpts.LRECCut;
-    }
-  }
-  if (dummy == "qmmm")
-  {
-    //Read QMMM options
-    QMMM = 1;
-    QMonly = 0;
-    MMonly = 0;
-    regionfile >> dummy >> dummy;
-    LICHEMLowerText(dummy);
-    if (dummy == "psi4")
-    {
-      PSI4 = 1;
-    }
-    if (dummy == "nwchem")
-    {
-      NWChem = 1;
-    }
-    if ((dummy == "gaussian") or (dummy == "g09"))
-    {
-      Gaussian = 1;
-    }
-    regionfile >> dummy >> QMMMOpts.Func;
-    dummy = QMMMOpts.Func;
-    LICHEMLowerText(dummy);
-    if ((dummy == "semiempirical") or (dummy == "se-scf") or
-       (dummy == "semi-empirical") or (dummy == "sescf") or
-       (dummy == "semiemp"))
-    {
-      //Flag the method as a semi-empirical Hamiltonian
-      QMMMOpts.Func = "SemiEmp";
-    }
-    regionfile >> dummy >> QMMMOpts.Basis;
-    regionfile >> dummy >> QMMMOpts.RAM;
-    regionfile >> dummy;
-    LICHEMLowerText(dummy);
-    if (dummy == "mb")
-    {
-      QMMMOpts.MemMB = 1;
-    }
-    else
-    {
-      QMMMOpts.MemMB = 0;
-    }
-    regionfile >> dummy >> QMMMOpts.Charge;
-    regionfile >> dummy >> QMMMOpts.Spin;
-    //Check for long-range corrections
-    regionfile >> dummy >> dummy;
-    LICHEMLowerText(dummy);
-    if ((dummy == "yes") or (dummy == "true"))
-    {
-      //Turn on long-range corrections
-      QMMMOpts.UseLREC = 1;
-      //Read cutoff
-      regionfile >> dummy >> QMMMOpts.LRECCut;
-    }
-    regionfile >> dummy >> dummy; //MM wrapper
-    LICHEMLowerText(dummy);
-    if (dummy == "tinker")
-    {
-      TINKER = 1;
-    }
-    if (dummy == "amber")
-    {
-      AMBER = 1;
-    }
-    if (dummy == "lammps")
-    {
-      LAMMPS = 1;
-    }
-    regionfile >> dummy >> dummy; //Potential type
-    LICHEMLowerText(dummy);
-    if (dummy == "amoeba")
-    {
-      //AMOEBA polarizable force field
-      AMOEBA = 1;
-      if (TINKER)
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "yes") or (dummy == "true"))
       {
-        ExtractTINKpoles(Struct,0);
+        //Turn on long-range corrections
+        QMMMOpts.UseLREC = 1;
       }
     }
-    if ((dummy == "charges") or (dummy == "charge") or
-       (dummy == "point-charge"))
+    else if (keyword == "lrec_cut:")
     {
-      //Point-charge force fields
-      CHRG = 1;
+      //Read the QMMM electrostatic cutoff for LREC
+      regionfile >> QMMMOpts.LRECCut;
     }
-    if (dummy == "gem")
+    else if (keyword == "electrostatics:")
     {
-      //Frozen density
-      GEM = 1;
-      if (TINKER)
+      //Check the type of force field
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "charges") or (dummy == "charge") or
+         (dummy == "point-charge"))
       {
-        //Collect TINKER multipoles or GEM-DM
-        ExtractTINKpoles(Struct,0);
+        //Point-charge force fields
+        CHRG = 1;
       }
-    }
-  }
-  if (dummy == "mm")
-  {
-    //Read MMonly options
-    MMonly = 1;
-    QMonly = 0;
-    QMMM = 0;
-    regionfile >> dummy >> dummy; //MM wrapper
-    LICHEMLowerText(dummy);
-    if (dummy == "tinker")
-    {
-      TINKER = 1;
-    }
-    if (dummy == "amber")
-    {
-      AMBER = 1;
-    }
-    if (dummy == "lammps")
-    {
-      LAMMPS = 1;
-    }
-    regionfile >> dummy >> dummy; //Potential type
-    LICHEMLowerText(dummy);
-    if (dummy == "amoeba")
-    {
-      //AMOEBA polarizable force field
-      AMOEBA = 1;
-      if (TINKER)
+      if (dummy == "amoeba")
       {
-        ExtractTINKpoles(Struct,0);
-      }
-    }
-    if ((dummy == "charges") or (dummy == "charge") or
-       (dummy == "point-charge"))
-    {
-      //Point-charge force fields
-      CHRG = 1;
-    }
-    if (dummy == "gem")
-    {
-      //Frozen density
-      GEM = 1;
-      if (TINKER)
-      {
-        //Collect TINKER multipoles or GEM-DM
-        ExtractTINKpoles(Struct,0);
-      }
-    }
-  }
-  regionfile >> dummy >> dummy; //Calculation type
-  LICHEMLowerText(dummy);
-  if (dummy == "pimc")
-  {
-    //Read MC and PIMC options
-    PIMCSim = 1;
-    regionfile >> dummy >> dummy; //Ensemble
-    LICHEMLowerText(dummy);
-    if (dummy == "nvt")
-    {
-      //Set a consistent name for the ensemble
-      QMMMOpts.Ensemble = "NVT";
-    }
-    if (dummy == "npt")
-    {
-      //Set a consistent name for the ensemble
-      QMMMOpts.Ensemble = "NPT";
-    }
-    regionfile >> dummy >> QMMMOpts.Temp;
-    QMMMOpts.Beta = 1/(k*QMMMOpts.Temp);
-    regionfile >> dummy >> QMMMOpts.Press;
-    regionfile >> dummy >> QMMMOpts.Neq;
-    regionfile >> dummy >> QMMMOpts.Nsteps;
-    regionfile >> dummy >> QMMMOpts.Nbeads;
-    regionfile >> dummy >> QMMMOpts.accratio;
-    regionfile >> dummy >> QMMMOpts.Nprint;
-    for (int i=0;i<Natoms;i++)
-    {
-      //Create path-integral beads
-      for (int j=0;j<(QMMMOpts.Nbeads-1);j++)
-      {
-        //Pick random displacements
-        double randx = (((double)rand())/((double)RAND_MAX));
-        double randy = (((double)rand())/((double)RAND_MAX));
-        double randz = (((double)rand())/((double)RAND_MAX));
-        //Place the first bead at the initial position
-        if (j == 0)
+        //AMOEBA polarizable force field
+        AMOEBA = 1;
+        if (TINKER)
         {
-          randx = 0.5;
-          randy = 0.5;
-          randz = 0.5;
+          ExtractTINKpoles(Struct,0);
         }
-        Coord temp; //Bead coordinates
-        //Set random bead displacements
-        double MassScale = sqrt(12.0/Struct[i].m); //Relative to carbon
-        MassScale *= 2*StepMin*CentRatio; //Scale based on settings
-        temp.x = Struct[i].P[0].x+(2*(randx-0.5)*MassScale);
-        temp.y = Struct[i].P[0].y+(2*(randy-0.5)*MassScale);
-        temp.z = Struct[i].P[0].z+(2*(randz-0.5)*MassScale);
-        //Save coordinates
-        Struct[i].P.push_back(temp);
-        //Copy charges from the first replica
-        Mpole temp2 = Struct[i].MP[0];
-        Struct[i].MP.push_back(temp2);
-        OctCharges temp3 = Struct[i].PC[0];
-        Struct[i].PC.push_back(temp3);
       }
-    }
-  }
-  if (dummy == "opt")
-  {
-    //Read energy minimization options
-    OptSim = 1;
-    regionfile >> dummy >> QMMMOpts.MaxStep;
-    regionfile >> dummy >> QMMMOpts.MMOptTol;
-    regionfile >> dummy >> QMMMOpts.MaxOptSteps;
-    regionfile >> dummy >> dummy;
-    LICHEMLowerText(dummy);
-    if ((dummy == "yes") or (dummy == "true"))
-    {
-      QMMMOpts.UseMMCut = 1;
-      regionfile >> dummy >> QMMMOpts.MMOptCut;
-    }
-  }
-  if ((dummy == "steep") or (dummy == "sd"))
-  {
-    //Read SD energy minimization options
-    SteepSim = 1;
-    regionfile >> dummy >> QMMMOpts.StepScale;
-    regionfile >> dummy >> QMMMOpts.MaxStep;
-    regionfile >> dummy >> QMMMOpts.QMOptTol;
-    regionfile >> dummy >> QMMMOpts.MMOptTol;
-    regionfile >> dummy >> QMMMOpts.MaxOptSteps;
-    regionfile >> dummy >> dummy;
-    LICHEMLowerText(dummy);
-    if ((dummy == "yes") or (dummy == "true"))
-    {
-      QMMMOpts.UseMMCut = 1;
-      regionfile >> dummy >> QMMMOpts.MMOptCut;
-    }
-  }
-  if ((dummy == "quickmin") or (dummy == "quick") or
-     (dummy == "dv"))
-  {
-    //Read damped Verlet energy minimization options
-    QuickSim = 1;
-    regionfile >> dummy >> QMMMOpts.StepScale;
-    regionfile >> dummy >> QMMMOpts.MaxStep;
-    regionfile >> dummy >> QMMMOpts.QMOptTol;
-    regionfile >> dummy >> QMMMOpts.MMOptTol;
-    regionfile >> dummy >> QMMMOpts.MaxOptSteps;
-    regionfile >> dummy >> dummy;
-    LICHEMLowerText(dummy);
-    if ((dummy == "yes") or (dummy == "true"))
-    {
-      QMMMOpts.UseMMCut = 1;
-      regionfile >> dummy >> QMMMOpts.MMOptCut;
-    }
-  }
-  if ((dummy == "dfp") or (dummy == "bfgs"))
-  {
-    //Read energy minimization options for the DFP optimizer
-    DFPSim = 1;
-    if (dummy == "bfgs")
-    {
-      //Print BFGS error
-      cerr << "Warning: A BFGS optimizer is not implemented.";
-      cerr << '\n';
-      cerr << " The DFP algorithm will be used instead of BFGS.";
-      cerr << '\n' << '\n';
-      cerr.flush(); //Print error immediately
-    }
-    regionfile >> dummy >> QMMMOpts.StepScale;
-    regionfile >> dummy >> QMMMOpts.MaxStep;
-    regionfile >> dummy >> QMMMOpts.QMOptTol;
-    regionfile >> dummy >> QMMMOpts.MMOptTol;
-    regionfile >> dummy >> QMMMOpts.MaxOptSteps;
-    regionfile >> dummy >> dummy;
-    LICHEMLowerText(dummy);
-    if ((dummy == "yes") or (dummy == "true"))
-    {
-      QMMMOpts.UseMMCut = 1;
-      regionfile >> dummy >> QMMMOpts.MMOptCut;
-    }
-  }
-  if ((dummy == "neb") or (dummy == "ci-neb") or (dummy == "cineb"))
-  {
-    //Read energy minimization options for climbing image NEB
-    NEBSim = 1;
-    regionfile >> dummy >> QMMMOpts.Nbeads;
-    regionfile >> dummy >> QMMMOpts.StepScale;
-    regionfile >> dummy >> QMMMOpts.MaxStep;
-    regionfile >> dummy >> QMMMOpts.Kspring;
-    regionfile >> dummy >> dummy;
-    LICHEMLowerText(dummy);
-    if ((dummy == "yes") or (dummy == "true"))
-    {
-      QMMMOpts.FrznEnds = 1;
-    }
-    regionfile >> dummy >> QMMMOpts.QMOptTol;
-    regionfile >> dummy >> QMMMOpts.MMOptTol;
-    regionfile >> dummy >> QMMMOpts.MaxOptSteps;
-    regionfile >> dummy >> dummy;
-    LICHEMLowerText(dummy);
-    if ((dummy == "yes") or (dummy == "true"))
-    {
-      QMMMOpts.UseMMCut = 1;
-      regionfile >> dummy >> QMMMOpts.MMOptCut;
-    }
-    //Set initial transition state
-    if ((QMMMOpts.Nbeads%2) == 0)
-    {
-      //Even number of beads
-      QMMMOpts.TSBead = (QMMMOpts.Nbeads/2); //Nearly the middle, product side
-    }
-    else
-    {
-      //Odd number of beads
-      QMMMOpts.TSBead = ((QMMMOpts.Nbeads-1)/2); //Middle bead
-    }
-    //Duplicate data
-    for (int i=0;i<Natoms;i++)
-    {
-      //Create reaction-path beads
-      for (int j=0;j<(QMMMOpts.Nbeads-1);j++)
+      if (dummy == "gem")
       {
-        //Create replicas
-        Coord temp = Struct[i].P[0];
-        Struct[i].P.push_back(temp);
-        Mpole temp2 = Struct[i].MP[0];
-        Struct[i].MP.push_back(temp2);
-        OctCharges temp3 = Struct[i].PC[0];
-        Struct[i].PC.push_back(temp3);
+        //Frozen density
+        GEM = 1;
+        if (TINKER)
+        {
+          //Collect TINKER multipoles or GEM-DM
+          ExtractTINKpoles(Struct,0);
+        }
       }
     }
-  }
-  if ((dummy == "esd") or (dummy == "ensembesd"))
-  {
-    //Read energy minimization options for ensemble steepest descent
-    ESDSim = 1;
-    regionfile >> dummy >> QMMMOpts.StepScale;
-    regionfile >> dummy >> QMMMOpts.MaxStep;
-    regionfile >> dummy >> QMMMOpts.MaxOptSteps;
-    regionfile >> dummy >> QMMMOpts.dt;
-    regionfile >> dummy >> QMMMOpts.Temp;
-    regionfile >> dummy >> QMMMOpts.tautemp;
-    regionfile >> dummy >> QMMMOpts.Nsteps;
-  }
-  if ((dummy == "eneb") or (dummy == "ensembeneb"))
-  {
-    //Read energy minimization options for ensemble NEB
-    ENEBSim = 1;
-    regionfile >> dummy >> QMMMOpts.Nbeads;
-    regionfile >> dummy >> QMMMOpts.StepScale;
-    regionfile >> dummy >> QMMMOpts.MaxStep;
-    regionfile >> dummy >> QMMMOpts.Kspring;
-    regionfile >> dummy >> QMMMOpts.MaxOptSteps;
-    regionfile >> dummy >> QMMMOpts.dt;
-    regionfile >> dummy >> QMMMOpts.Temp;
-    regionfile >> dummy >> QMMMOpts.tautemp;
-    regionfile >> dummy >> QMMMOpts.Nsteps;
-    //Error check
-    if ((QMMMOpts.Nbeads%2) != 1)
+    else if (keyword == "calculation_type:")
     {
-      //The number of beads must be odd
-      QMMMOpts.Nbeads += 1; //Change number of beads
-      cerr << "Warning: The number of replicas must be odd.";
-      cerr << '\n';
-      cerr << " Starting calculations with " << QMMMOpts.Nbeads;
-      cerr << " beads.";
-      cerr << '\n' << '\n';
-      cerr.flush(); //Print error immediately
-    }
-    //Set transition state
-    QMMMOpts.TSBead = ((QMMMOpts.Nbeads-1)/2); //Middle bead
-    //Duplicate data
-    for (int i=0;i<Natoms;i++)
-    {
-      //Create reaction-path beads
-      for (int j=0;j<(QMMMOpts.Nbeads-1);j++)
+      //Set the type of calculation
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "sp") or (dummy == "energy"))
       {
-        //Create replicas
-        Coord temp = Struct[i].P[0];
-        Struct[i].P.push_back(temp);
-        Mpole temp2 = Struct[i].MP[0];
-        Struct[i].MP.push_back(temp2);
-        OctCharges temp3 = Struct[i].PC[0];
-        Struct[i].PC.push_back(temp3);
+        //Read energy minimization options
+        SinglePoint = 1;
+      }
+      if ((dummy == "opt") or (dummy == "optimize"))
+      {
+        //Optimize with native QM and MM optimizers
+        OptSim = 1;
+      }
+      if ((dummy == "steep") or (dummy == "sd"))
+      {
+        //Optimize with the LICHEM steepest descent method
+        SteepSim = 1;
+      }
+      if ((dummy == "quickmin") or (dummy == "quick") or
+         (dummy == "dv"))
+      {
+        //Optimize with damped Verlet (QuickMin)
+        QuickSim = 1;
+      }
+      if ((dummy == "dfp") or (dummy == "bfgs"))
+      {
+        //Optimize with the DFP optimizer
+        DFPSim = 1;
+        if (dummy == "bfgs")
+        {
+          //Print BFGS error
+          cerr << "Warning: A BFGS optimizer is not implemented.";
+          cerr << '\n';
+          cerr << " The DFP algorithm will be used instead of BFGS.";
+          cerr << '\n' << '\n';
+          cerr.flush(); //Print error immediately
+        }
+      }
+      if ((dummy == "neb") or (dummy == "ci-neb") or (dummy == "cineb"))
+      {
+        //Optimize a path with climbing image NEB
+        NEBSim = 1;
+      }
+      if (dummy == "esd")
+      {
+        //Optimize the QM region with SD and run dynamics on the MM region
+        ESDSim = 1;
+      }
+      if (dummy == "eneb")
+      {
+        //Optimize the QM path with SD and run dynamics on the MM regions
+        ENEBSim = 1;
+      }
+      if (dummy == "pimc")
+      {
+        //Path-integral Monte Carlo
+        PIMCSim = 1;
       }
     }
+    else if (keyword == "opt_stepsize:")
+    {
+      //Read the optimization stepsize
+      regionfile >> QMMMOpts.StepScale;
+    }
+    else if (keyword == "max_stepsize:")
+    {
+      //Read the maximum displacement during optimizations
+      regionfile >> QMMMOpts.MaxStep;
+    }
+    else if (keyword == "qm_opt_tolerance:")
+    {
+      //Read QM optimization tolerance (RMSD value)
+      regionfile >> QMMMOpts.QMOptTol;
+    }
+    else if (keyword == "mm_opt_tolerance:")
+    {
+      //Read MM optimization tolerance (RMSD value)
+      regionfile >> QMMMOpts.MMOptTol;
+    }
+    else if (keyword == "max_opt_steps:")
+    {
+      //Read maximum number of optimization steps
+      regionfile >> QMMMOpts.MaxOptSteps;
+    }
+    else if (keyword == "use_cutoff:")
+    {
+      //Check for the MM optimization cutoff
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "yes") or (dummy == "true"))
+      {
+        //Turn on the optimization cutoff
+        QMMMOpts.UseMMCut = 1;
+      }
+    }
+    else if (keyword == "mm_opt_cut:")
+    {
+      //Read MM optimization cutoff
+      regionfile >> QMMMOpts.MMOptCut;
+    }
+    else if (keyword == "beads:")
+    {
+      //Read the number of replica beads
+      regionfile >> QMMMOpts.Nbeads;
+    }
+    else if (keyword == "spring_constant:")
+    {
+      //Read the NEB spring constant
+      regionfile >> QMMMOpts.Kspring;
+    }
+    else if (keyword == "frozen_ends:")
+    {
+      //Check for inactive NEB end-points
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "yes") or (dummy == "true"))
+      {
+        QMMMOpts.FrznEnds = 1;
+      }
+    }
+    else if (keyword == "timestep:")
+    {
+      //Read the molecular dynamics timestep
+      regionfile >> QMMMOpts.dt;
+    }
+    else if (keyword == "ensemble:")
+    {
+      //Set the thermodynamic ensemble
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if (dummy == "nvt")
+      {
+        //Set a consistent name for the ensemble
+        QMMMOpts.Ensemble = "NVT";
+      }
+      if (dummy == "npt")
+      {
+        //Set a consistent name for the ensemble
+        QMMMOpts.Ensemble = "NPT";
+      }
+    }
+    else if (keyword == "temperature:")
+    {
+      //Read the temperature
+      regionfile >> QMMMOpts.Temp;
+      //Save the inverse temperature
+      QMMMOpts.Beta = 1/(k*QMMMOpts.Temp);
+    }
+    else if (keyword == "pressure:")
+    {
+      //Read the pressure
+      regionfile >> QMMMOpts.Press;
+    }
+    else if (keyword == "tau_temp:")
+    {
+      //Read the thermostat relaxation constant
+      regionfile >> QMMMOpts.tautemp;
+    }
+    else if (keyword == "eq_steps:")
+    {
+      //Read the number of equilibration steps
+      regionfile >> QMMMOpts.Neq;
+    }
+    else if (keyword == "prod_steps:")
+    {
+      //Read the number of production (MD or MC) steps
+      regionfile >> QMMMOpts.Nsteps;
+    }
+    else if (keyword == "print_steps:")
+    {
+      //Read the number of steps between MD and MC output
+      regionfile >> QMMMOpts.Nprint;
+    }
+    else if (keyword == "acceptance_ratio:")
+    {
+      //Read the Monte Carlo acceptance ratio
+      regionfile >> QMMMOpts.accratio;
+    }
+    else if (keyword == "pbc:")
+    {
+      //Check for periodic boundaries
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "yes") or (dummy == "true"))
+      {
+        PBCon = 1;
+      }
+    }
+    else if (keyword == "box_size:")
+    {
+      //Read the box size
+      regionfile >> Lx >> Ly >> Lz;
+    }
+    else if (keyword == "qm_atoms:")
+    {
+      //Read the list of QM atoms
+      regionfile >> Nqm;
+      for (int i=0;i<Nqm;i++)
+      {
+        int AtomID;
+        regionfile >> AtomID;
+        Struct[AtomID].QMregion = 1;
+        Struct[AtomID].PBregion = 0;
+        Struct[AtomID].BAregion = 0;
+        Struct[AtomID].MMregion = 0;
+      }
+    }
+    else if (keyword == "pseudobond_atoms:")
+    {
+      //Read the list of pseudobond atoms
+      regionfile >> Npseudo;
+      for (int i=0;i<Npseudo;i++)
+      {
+        int AtomID;
+        regionfile >> AtomID;
+        Struct[AtomID].QMregion = 0;
+        Struct[AtomID].PBregion = 1;
+        Struct[AtomID].BAregion = 0;
+        Struct[AtomID].MMregion = 0;
+      }
+    }
+    else if (keyword == "boundary_atoms:")
+    {
+      //Read the list of boundary atoms
+      regionfile >> Nbound;
+      for (int i=0;i<Nbound;i++)
+      {
+        int AtomID;
+        regionfile >> AtomID;
+        Struct[AtomID].QMregion = 0;
+        Struct[AtomID].PBregion = 0;
+        Struct[AtomID].BAregion = 1;
+        Struct[AtomID].MMregion = 0;
+      }
+    }
+    else if (keyword == "frozen_atoms:")
+    {
+      //Read the list of frozen atoms
+      regionfile >> Nfreeze;
+      for (int i=0;i<Nfreeze;i++)
+      {
+        int AtomID;
+        regionfile >> AtomID;
+        Struct[AtomID].Frozen = 1;
+      }
+    }
+    else if (regionfile.good() and (!regionfile.eof()))
+    {
+      //Inform the user about the bad keyword
+      cerr << "Error: Unrecognized keyword: ";
+      cerr << keyword << '\n';
+      cerr.flush();
+      //Quit
+      cout.flush();
+      exit(0);
+    }
   }
-  if ((dummy == "sp") or (dummy == "energy"))
-  {
-    //Read energy minimization options
-    SinglePoint = 1;
-  }
-  regionfile >> dummy >> dummy; //PBC options
-  LICHEMLowerText(dummy);
-  if ((dummy == "yes") or (dummy == "true"))
-  {
-    //Read box sizes
-    PBCon = 1;
-    regionfile >> dummy;
-    regionfile >> Lx >> Ly >> Lz;
-  }
-  regionfile >> dummy >> Nqm; //Number of QM atoms
-  for (int i=0;i<Nqm;i++)
-  {
-    int AtomID;
-    regionfile >> AtomID;
-    Struct[AtomID].QMregion = 1;
-    Struct[AtomID].MMregion = 0;
-  }
-  regionfile >> dummy >> Npseudo; //Number of pseudo-bonds
-  for (int i=0;i<Npseudo;i++)
-  {
-    int AtomID;
-    regionfile >> AtomID;
-    Struct[AtomID].PBregion = 1;
-    Struct[AtomID].MMregion = 0;
-  }
-  regionfile >> dummy >> Nbound; //Number of boundary-atoms
-  for (int i=0;i<Nbound;i++)
-  {
-    int AtomID;
-    regionfile >> AtomID;
-    Struct[AtomID].BAregion = 1;
-    Struct[AtomID].MMregion = 0;
-  }
+  //Reset regions for pure QM and MM
   if (QMonly)
   {
     //Reset the numbers if regions were specified in the input
@@ -866,32 +795,84 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     }
   }
   Nmm = Natoms-Nqm-Npseudo-Nbound; //Set number of MM atoms
-  regionfile >> dummy >> Nfreeze; //Number of frozen atoms
-  for (int i=0;i<Nfreeze;i++)
+  //Replicate atoms
+  if (QMMMOpts.Nbeads > 1)
   {
-    int AtomID;
-    regionfile >> AtomID;
-    Struct[AtomID].Frozen = 1;
-    //Adjust positions for PIMC
+    //Duplicate data
+    for (int i=0;i<Natoms;i++)
+    {
+      //Create reaction-path beads
+      for (int j=0;j<(QMMMOpts.Nbeads-1);j++)
+      {
+        //Create replicas
+        Coord temp = Struct[i].P[0];
+        Struct[i].P.push_back(temp);
+        Mpole temp2 = Struct[i].MP[0];
+        Struct[i].MP.push_back(temp2);
+        OctCharges temp3 = Struct[i].PC[0];
+        Struct[i].PC.push_back(temp3);
+      }
+    }
+    //Set initial transition state for reaction pathways
+    if (NEBSim)
+    {
+      if ((QMMMOpts.Nbeads%2) == 0)
+      {
+        //Even number of beads
+        QMMMOpts.TSBead = (QMMMOpts.Nbeads/2); //Slightly on the product side
+      }
+      else
+      {
+        //Odd number of beads
+        QMMMOpts.TSBead = ((QMMMOpts.Nbeads-1)/2); //Middle bead
+      }
+    }
+    if (ENEBSim)
+    {
+      //Error check
+      if ((QMMMOpts.Nbeads%2) != 1)
+      {
+        //The number of beads must be odd
+        QMMMOpts.Nbeads += 1; //Change number of beads
+        cerr << "Error: The number of replicas must be odd.";
+        cerr << '\n' << '\n';
+        cerr.flush(); //Print error immediately
+        cout.flush();
+        //Quit
+        exit(0);
+      }
+      //Set transition state
+      QMMMOpts.TSBead = ((QMMMOpts.Nbeads-1)/2); //Middle bead
+    }
+    //Add random displacements for PIMC simulations
     if (PIMCSim)
     {
-      //Frozen atoms must be the same for all replicas
-      #pragma omp parallel
+      for (int i=0;i<Natoms;i++)
       {
-        #pragma omp for nowait schedule(dynamic)
-        for (int j=0;j<QMMMOpts.Nbeads;j++)
+        //Shift path-integral beads
+        double MassScale = sqrt(12.0/Struct[i].m); //Relative to carbon
+        MassScale *= 2*StepMin*CentRatio; //Scale based on settings
+        //Update all beads
+        for (int j=0;j<(QMMMOpts.Nbeads-1);j++)
         {
-          Struct[AtomID].P[j].x = Struct[AtomID].P[0].x;
-        }
-        #pragma omp for nowait schedule(dynamic)
-        for (int j=0;j<QMMMOpts.Nbeads;j++)
-        {
-          Struct[AtomID].P[j].y = Struct[AtomID].P[0].y;
-        }
-        #pragma omp for nowait schedule(dynamic)
-        for (int j=0;j<QMMMOpts.Nbeads;j++)
-        {
-          Struct[AtomID].P[j].z = Struct[AtomID].P[0].z;
+          //Pick random displacements
+          double randx = (((double)rand())/((double)RAND_MAX));
+          double randy = (((double)rand())/((double)RAND_MAX));
+          double randz = (((double)rand())/((double)RAND_MAX));
+          //Place the first bead at the initial position
+          if (j == 0)
+          {
+            randx = 0.5;
+            randy = 0.5;
+            randz = 0.5;
+          }
+          //Update positions of active atoms
+          if (!Struct[i].Frozen)
+          {
+            Struct[i].P[j].x += (2*(randx-0.5)*MassScale);
+            Struct[i].P[j].y += (2*(randy-0.5)*MassScale);
+            Struct[i].P[j].z += (2*(randz-0.5)*MassScale);
+          }
         }
       }
     }
@@ -1031,7 +1012,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       cout << " Do you know how computers work?";
     }
     cout << " Ncpus set to 1";
-    cout << '\n';
+    cout << '\n' << '\n';
     Ncpus = 1;
     cout.flush(); //Print warning
   }

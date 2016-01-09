@@ -1,6 +1,6 @@
 Potential_type: QM
 QM_type: Gaussian
-QM_functional: PBE1PBE
+QM_method: PBE1PBE
 QM_basis: 6-31G*
 QM_memory: 256 MB
 QM_charge: 0

@@ -12,11 +12,11 @@ Calculation_type: PIMC
 Ensemble: NVT
 Temperature: 300.0
 Pressure: 0.0
-Number_of_Eq_steps: 1000
-Number_of_MC_steps: 1000
-Number_of_beads: 4
+Eq_steps: 1000
+Prod_steps: 1000
+Beads: 4
 Acceptance_ratio: 0.35
-Traj_steps_before_printing: 10
+Print_steps: 10
 PBC: No
 QM_atoms: 3
 0 1 2

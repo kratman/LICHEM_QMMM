@@ -1,16 +1,16 @@
 Potential_type: QMMM
 QM_type: NWChem
-QM_functional: PBE0
+QM_method: PBE0
 QM_basis: GEN
 QM_memory: 256 MB
 QM_charge: 0
 QM_spin: 1
 Use_LREC: No
 MM_type: TINKER
-Potential_type: Charges
+Electrostatics: Charges
 Calculation_type: DFP
-Opt_step_size: 1.00
-Max_opt_step: 0.10
+Opt_stepsize: 1.00
+Max_stepsize: 0.10
 QM_opt_tolerance: 5e-4
 MM_opt_tolerance: 1e-2
 Max_opt_steps: 100

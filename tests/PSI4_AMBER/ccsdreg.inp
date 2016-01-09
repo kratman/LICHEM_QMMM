@@ -1,6 +1,6 @@
 Potential_type: QM
 QM_type: PSI4
-QM_functional: CCSD
+QM_method: CCSD
 QM_basis: 6-31G*
 QM_memory: 256 MB
 QM_charge: 0

@@ -1,6 +1,6 @@
 Potential_type: MM
 MM_type: TINKER
-Potential_type: Charges
+Electrostatics: Charges
 Calculation_type: SP
 PBC: No
 QM_atoms: 0

@@ -1,6 +1,6 @@
 Potential_type: QM
 QM_type: NWChem
-QM_functional: PBE0
+QM_method: PBE0
 QM_basis: 6-31G*
 QM_memory: 256 MB
 QM_charge: 0
