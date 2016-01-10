@@ -90,7 +90,7 @@ double Bohring(double ri)
 
 Coord CoordDist2(Coord& a, Coord& b)
 {
-  //Displacements
+  //Unsigned displacements
   double dx = a.x-b.x;
   double dy = a.y-b.y;
   double dz = a.z-b.z;

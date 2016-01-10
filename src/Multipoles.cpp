@@ -531,7 +531,7 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   fstream ofile; //Stream for the charge file
   //Find the center of mass
   Coord QMCOM; //QM region center of mass
-  if (QMMMOpts.UseLREC)
+  if (PBCon or QMMMOpts.UseLREC)
   {
     QMCOM = FindQMCOM(Struct,QMMMOpts,Bead);
   }
@@ -548,9 +548,9 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ix = 1;
     iy = 1;
     iz = 1;
-    if (PBCon and NWChem)
+    if (PBCon and NWChem and (!QMMMOpts.UseLREC))
     {
-      //NWChem uses fractional coordinates
+      //NWChem uses fractional coordinates with native PBC
       ix /= Lx;
       iy /= Ly;
       iz /= Lz;
@@ -563,6 +563,76 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     {
       if (Struct[i].MMregion)
       {
+        //Check PBC (minimum image convention)
+        Coord DistCent; //Distance from QM COM
+        double xshft = 0;
+        double yshft = 0;
+        double zshft = 0;
+        if (PBCon or QMMMOpts.UseLREC)
+        {
+          //Initialize displacements
+          double dx,dy,dz; //Starting displacements
+          dx = Struct[i].P[Bead].x-QMCOM.x;
+          dy = Struct[i].P[Bead].y-QMCOM.y;
+          dz = Struct[i].P[Bead].z-QMCOM.z;
+          DistCent.x = dx;
+          DistCent.y = dy;
+          DistCent.z = dz;
+          //NB: CoordDist2 only returns unsigned values
+          bool check = 1; //Continue checking PBC
+          while (check)
+          {
+            //Overkill, but it checks if atoms are wrapped multiple times
+            check = 0; //Stop if there are no changes
+            if (abs(DistCent.x) > (0.5*Lx))
+            {
+              check = 1; //The position was updated
+              if (DistCent.x > 0)
+              {
+                //Move the charge to the other side of the box
+                DistCent.x -= Lx;
+              }
+              else
+              {
+                //Move the charge to the other side of the box
+                DistCent.x += Lx;
+              }
+            }
+            if (abs(DistCent.y) > (0.5*Ly))
+            {
+              check = 1; //The position was updated
+              if (DistCent.y > 0)
+              {
+                //Move the charge to the other side of the box
+                DistCent.y -= Ly;
+              }
+              else
+              {
+                //Move the charge to the other side of the box
+                DistCent.y += Ly;
+              }
+            }
+            if (abs(DistCent.z) > (0.5*Lz))
+            {
+              check = 1; //The position was updated
+              if (DistCent.z > 0)
+              {
+                //Move the charge to the other side of the box
+                DistCent.z -= Lz;
+              }
+              else
+              {
+                //Move the charge to the other side of the box
+                DistCent.z += Lz;
+              }
+            }
+          }
+          //Safely calculate the shift in positions
+          //NB: Generally this work out to be +/- {Lx,Ly,Lz}
+          xshft = DistCent.x-dx;
+          yshft = DistCent.y-dy;
+          zshft = DistCent.z-dz;
+        }
         //Check for long-range corrections
         double scrq = 1;
         if (QMMMOpts.UseLREC)
@@ -570,7 +640,7 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
           //Use the long-range correction
           double rcom = 0; //Distance from center of mass
           //Calculate the distance from the center of mass
-          rcom = CoordDist2(Struct[i].P[Bead],QMCOM).VecMag();
+          rcom = DistCent.VecMag();
           if (rcom <= (QMMMOpts.LRECCut*QMMMOpts.LRECCut))
           {
             //Scale the charge
@@ -592,35 +662,59 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
             scrq = 0;
           }
         }
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].x1*ix,16);
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].y1*iy,16);
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].z1*iz,16);
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].q1*scrq,16);
+        ofile << " ";
+        ofile << LICHEMFormFloat(((Struct[i].PC[Bead].x1+xshft)*ix),16);
+        ofile << " ";
+        ofile << LICHEMFormFloat(((Struct[i].PC[Bead].y1+yshft)*iy),16);
+        ofile << " ";
+        ofile << LICHEMFormFloat(((Struct[i].PC[Bead].z1+zshft)*iz),16);
+        ofile << " ";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q1*scrq),16);
         ofile << '\n';
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].x2*ix,16);
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].y2*iy,16);
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].z2*iz,16);
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].q2*scrq,16);
+        ofile << " ";
+        ofile << LICHEMFormFloat(((Struct[i].PC[Bead].x2+xshft)*ix),16);
+        ofile << " ";
+        ofile << LICHEMFormFloat(((Struct[i].PC[Bead].y2+yshft)*iy),16);
+        ofile << " ";
+        ofile << LICHEMFormFloat(((Struct[i].PC[Bead].z2+zshft)*iz),16);
+        ofile << " ";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q2*scrq),16);
         ofile << '\n';
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].x3*ix,16);
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].y3*iy,16);
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].z3*iz,16);
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].q3*scrq,16);
+        ofile << " ";
+        ofile << LICHEMFormFloat(((Struct[i].PC[Bead].x3+xshft)*ix),16);
+        ofile << " ";
+        ofile << LICHEMFormFloat(((Struct[i].PC[Bead].y3+yshft)*iy),16);
+        ofile << " ";
+        ofile << LICHEMFormFloat(((Struct[i].PC[Bead].z3+zshft)*iz),16);
+        ofile << " ";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q3*scrq),16);
         ofile << '\n';
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].x4*ix,16);
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].y4*iy,16);
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].z4*iz,16);
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].q4*scrq,16);
+        ofile << " ";
+        ofile << LICHEMFormFloat(((Struct[i].PC[Bead].x4+xshft)*ix),16);
+        ofile << " ";
+        ofile << LICHEMFormFloat(((Struct[i].PC[Bead].y4+yshft)*iy),16);
+        ofile << " ";
+        ofile << LICHEMFormFloat(((Struct[i].PC[Bead].z4+zshft)*iz),16);
+        ofile << " ";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q4*scrq),16);
         ofile << '\n';
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].x5*ix,16);
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].y5*iy,16);
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].z5*iz,16);
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].q5*scrq,16);
+        ofile << " ";
+        ofile << LICHEMFormFloat(((Struct[i].PC[Bead].x5+xshft)*ix),16);
+        ofile << " ";
+        ofile << LICHEMFormFloat(((Struct[i].PC[Bead].y5+yshft)*iy),16);
+        ofile << " ";
+        ofile << LICHEMFormFloat(((Struct[i].PC[Bead].z5+zshft)*iz),16);
+        ofile << " ";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q5*scrq),16);
         ofile << '\n';
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].x6*ix,16);
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].y6*iy,16);
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].z6*iz,16);
-        ofile << " " << LICHEMFormFloat(Struct[i].PC[Bead].q6*scrq,16);
+        ofile << " ";
+        ofile << LICHEMFormFloat(((Struct[i].PC[Bead].x6+xshft)*ix),16);
+        ofile << " ";
+        ofile << LICHEMFormFloat(((Struct[i].PC[Bead].y6+yshft)*iy),16);
+        ofile << " ";
+        ofile << LICHEMFormFloat(((Struct[i].PC[Bead].z6+zshft)*iz),16);
+        ofile << " ";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q6*scrq),16);
         ofile << '\n';
       }
     }
@@ -642,6 +736,76 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     {
       if (Struct[i].MMregion)
       {
+        //Check PBC (minimum image convention)
+        Coord DistCent; //Distance from QM COM
+        double xshft = 0;
+        double yshft = 0;
+        double zshft = 0;
+        if (PBCon or QMMMOpts.UseLREC)
+        {
+          //Initialize displacements
+          double dx,dy,dz; //Starting displacements
+          dx = Struct[i].P[Bead].x-QMCOM.x;
+          dy = Struct[i].P[Bead].y-QMCOM.y;
+          dz = Struct[i].P[Bead].z-QMCOM.z;
+          DistCent.x = dx;
+          DistCent.y = dy;
+          DistCent.z = dz;
+          //NB: CoordDist2 only returns unsigned values
+          bool check = 1; //Continue checking PBC
+          while (check)
+          {
+            //Overkill, but it checks if atoms are wrapped multiple times
+            check = 0; //Stop if there are no changes
+            if (abs(DistCent.x) > (0.5*Lx))
+            {
+              check = 1; //The position was updated
+              if (DistCent.x > 0)
+              {
+                //Move the charge to the other side of the box
+                DistCent.x -= Lx;
+              }
+              else
+              {
+                //Move the charge to the other side of the box
+                DistCent.x += Lx;
+              }
+            }
+            if (abs(DistCent.y) > (0.5*Ly))
+            {
+              check = 1; //The position was updated
+              if (DistCent.y > 0)
+              {
+                //Move the charge to the other side of the box
+                DistCent.y -= Ly;
+              }
+              else
+              {
+                //Move the charge to the other side of the box
+                DistCent.y += Ly;
+              }
+            }
+            if (abs(DistCent.z) > (0.5*Lz))
+            {
+              check = 1; //The position was updated
+              if (DistCent.z > 0)
+              {
+                //Move the charge to the other side of the box
+                DistCent.z -= Lz;
+              }
+              else
+              {
+                //Move the charge to the other side of the box
+                DistCent.z += Lz;
+              }
+            }
+          }
+          //Safely calculate the shift in positions
+          //NB: Generally this work out to be +/- {Lx,Ly,Lz}
+          xshft = DistCent.x-dx;
+          yshft = DistCent.y-dy;
+          zshft = DistCent.z-dz;
+        }
         //Check for long-range corrections
         double scrq = 1;
         if (QMMMOpts.UseLREC)
@@ -649,7 +813,7 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
           //Use the long-range correction
           double rcom = 0; //Distance from center of mass
           //Calculate the distance from the center of mass
-          rcom = CoordDist2(Struct[i].P[Bead],QMCOM).VecMag();
+          rcom = DistCent.VecMag();
           if (rcom <= (QMMMOpts.LRECCut*QMMMOpts.LRECCut))
           {
             //Scale the charge
@@ -672,40 +836,40 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
           }
         }
         ofile << "Chrgfield.extern.addCharge(";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].q1*scrq,16) << ",";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].x1,16) << ",";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].y1,16) << ",";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].z1,16);
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q1*scrq),16) << ",";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].x1+xshft),16) << ",";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].y1+yshft),16) << ",";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].z1+zshft),16);
         ofile << ")" << '\n';
         ofile << "Chrgfield.extern.addCharge(";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].q2*scrq,16) << ",";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].x2,16) << ",";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].y2,16) << ",";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].z2,16);
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q2*scrq),16) << ",";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].x2+xshft),16) << ",";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].y2+yshft),16) << ",";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].z2+zshft),16);
         ofile << ")" << '\n';
         ofile << "Chrgfield.extern.addCharge(";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].q3*scrq,16) << ",";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].x3,16) << ",";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].y3,16) << ",";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].z3,16);
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q3*scrq),16) << ",";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].x3+xshft),16) << ",";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].y3+yshft),16) << ",";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].z3+zshft),16);
         ofile << ")" << '\n';
         ofile << "Chrgfield.extern.addCharge(";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].q4*scrq,16) << ",";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].x4,16) << ",";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].y4,16) << ",";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].z4,16);
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q4*scrq),16) << ",";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].x4+xshft),16) << ",";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].y4+yshft),16) << ",";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].z4+zshft),16);
         ofile << ")" << '\n';
         ofile << "Chrgfield.extern.addCharge(";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].q5*scrq,16) << ",";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].x5,16) << ",";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].y5,16) << ",";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].z5,16);
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q5*scrq),16) << ",";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].x5+xshft),16) << ",";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].y5+yshft),16) << ",";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].z5+zshft),16);
         ofile << ")" << '\n';
         ofile << "Chrgfield.extern.addCharge(";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].q6*scrq,16) << ",";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].x6,16) << ",";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].y6,16) << ",";
-        ofile << LICHEMFormFloat(Struct[i].PC[Bead].z6,16);
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q6*scrq),16) << ",";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].x6+xshft),16) << ",";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].y6+yshft),16) << ",";
+        ofile << LICHEMFormFloat((Struct[i].PC[Bead].z6+zshft),16);
         ofile << ")" << '\n';
       }
     }

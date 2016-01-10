@@ -946,32 +946,41 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       }
     }
   }
-  //Set OpenMP threads based on QM CPUs and total CPUs
+  //Set threads based on QM CPUs and total CPUs
   if (!GauExternal)
   {
     //Get total number of processors
-    double Procs = double(FindMaxThreads());
-    //Set default number of threads
-    Nthreads = FindMaxThreads();
     #ifdef _OPENMP
-      omp_set_num_threads(Nthreads);
+      double Procs = double(FindMaxThreads()); //Uses OpenMP
     #endif
-    //Sanity check
-    if (Ncpus > Nthreads)
-    {
-      //Assuming only one node is used for QM
-      Ncpus = Nthreads;
-    }
-    //Modify threads for multi-replica simulations
-    if ((QMMMOpts.Nbeads > 1) and (!ENEBSim) and (!NEBSim))
-    {
-      //Divide threads between the beads
-      Nthreads = int(floor(Procs/Ncpus));
-      //Set number of threads for wrappers
+    //Set default number of threads for serial builds
+    Nthreads = 1;
+    //Set a better more realistic number of threads
+    #ifdef _OPENMP
+      //NB: Sanity checks and error checking are only enabled with OpenMP
+      Nthreads = FindMaxThreads();
       #ifdef _OPENMP
         omp_set_num_threads(Nthreads);
       #endif
-    }
+      //Sanity check
+      if (Ncpus > Nthreads)
+      {
+        //Assuming only one node is used for QM
+        #ifdef _OPENMP
+          Ncpus = Nthreads;
+        #endif
+      }
+      //Modify threads for multi-replica simulations
+      if ((QMMMOpts.Nbeads > 1) and (!ENEBSim) and (!NEBSim))
+      {
+        //Divide threads between the beads
+        Nthreads = int(floor(Procs/Ncpus));
+        //Set number of threads for wrappers
+        #ifdef _OPENMP
+          omp_set_num_threads(Nthreads);
+        #endif
+      }
+    #endif
     //Set eigen threads
     setNbThreads(Nthreads);
   }

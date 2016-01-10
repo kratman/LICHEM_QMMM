@@ -10,13 +10,6 @@ General:
 -Currently only DFT and HF energies can be used in most of the QM
 calculations. Post-HF methods are currently only implemented in PSI4
 and semiempirical methods are currently only implemented in Gaussian.
--MM wrappers can easily include PBC, but only the NWChem wrapper can handle
-PBC for QM calculations. The QM region should always be placed near the center
-of the simulation box.
-
-Input keywords:
--LICHEM reads keywords in order. An input reader which takes keywords in any
-order is being developed.
 
 Gaussian interface:
 -Using the external interface to Gaussian interferes with timing the MM
@@ -30,7 +23,6 @@ methods are not implemented.
 be performed. However, optimizations can be performed with the LICHEM
 optimizers. Pure QM optimizations within NWChem will be implemented in the
 future.
--The accuracy of the QMMM PBC calculations has not been tested.
 
 TINKER interface:
 -Chiral atoms with multipoles have not been thoroughly tested in QMMM
