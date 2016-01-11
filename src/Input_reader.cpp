@@ -235,10 +235,10 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
   //QM wrapper settings
   QMMMOpts.Func = "N/A";
   QMMMOpts.Basis = "N/A";
-  QMMMOpts.RAM = "N/A";
-  QMMMOpts.MemMB = 0;
-  QMMMOpts.Charge = "N/A";
-  QMMMOpts.Spin = "N/A";
+  QMMMOpts.RAM = "256";
+  QMMMOpts.MemMB = 1;
+  QMMMOpts.Charge = "0";
+  QMMMOpts.Spin = "1";
   QMMMOpts.BackDir = "N/A";
   QMMMOpts.UseLREC = 0;
   QMMMOpts.LRECCut = 1000.0; //Effectively infinite
@@ -255,7 +255,7 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
   QMMMOpts.dt = 1.0;
   QMMMOpts.tautemp = 1000.0;
   //Optimization settings
-  QMMMOpts.MaxOptSteps = 400;
+  QMMMOpts.MaxOptSteps = 200;
   QMMMOpts.MMOptTol = 1e-2;
   QMMMOpts.QMOptTol = 5e-4;
   QMMMOpts.StepScale = 1.0;
@@ -414,15 +414,16 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       //Set QM functional or method
       regionfile >> dummy;
+      QMMMOpts.Func = dummy; //Save name with correct case
+      //Check for special methods
       LICHEMLowerText(dummy);
       if ((dummy == "semiempirical") or (dummy == "se-scf") or
          (dummy == "semi-empirical") or (dummy == "sescf") or
          (dummy == "semiemp"))
       {
         //Flag the method as a semi-empirical Hamiltonian
-        dummy = "SemiEmp";
+        QMMMOpts.Func = "SemiEmp";
       }
-      QMMMOpts.Func = dummy; //Save method name
     }
     else if (keyword == "qm_basis:")
     {
@@ -949,12 +950,12 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
   //Set threads based on QM CPUs and total CPUs
   if (!GauExternal)
   {
+    //Set default number of threads for serial builds
+    Nthreads = 1;
     //Get total number of processors
     #ifdef _OPENMP
       double Procs = double(FindMaxThreads()); //Uses OpenMP
     #endif
-    //Set default number of threads for serial builds
-    Nthreads = 1;
     //Set a better more realistic number of threads
     #ifdef _OPENMP
       //NB: Sanity checks and error checking are only enabled with OpenMP

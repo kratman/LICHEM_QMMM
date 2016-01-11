@@ -1182,7 +1182,8 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile << "thermostat berendsen";
   ofile << '\n';
   ofile << "tau-temperature ";
-  ofile << QMMMOpts.tautemp << '\n';
+  ofile << (QMMMOpts.tautemp/1000); //Converted from fs to ps
+  ofile << '\n';
   ct = 0; //Generic counter
   if (QMMM or (Nfreeze > 0))
   {

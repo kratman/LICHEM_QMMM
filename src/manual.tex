@@ -405,224 +405,155 @@ provided.
 \section{Region input files}
 
 The region file contains QMMM regions (QM atoms, pseudo-bond atoms, boundary
-atoms, and frozen atoms) as well as miscellaneous input needed to define the
+atoms, and frozen atoms) as well as input keywords needed to define the
 type of calculations that will be performed.
 Blank templates of region files are provided in the documentation
 directory. \\
 
-The first line of the input file should read: \\
+\subsection{Keywords}
 
-Potential\_type: $<$QM or MM or QMMM$>$ \\
+Potential\_type: Type of interaction potential (QM or MM or QMMM).
+This keyword is required and has no default.
+Default: N/A \\
 
-This line tells LICHEM what type of QM and MM input is listed in the lines
-that follow.
+QM\_type: Name of the QM wrapper.
+Current wrappers: Gaussian or PSI4 or NWChem.
+Default: N/A \\
 
-\subsection{General notes}
-
-Input that is not specific to the wrappers is mostly case insensitive,
-however, users may find exceptions to this rule of thumb.
-Future versions of LICHEM will have a more robust input reader.
-In the mean-time, please report any bugs that are found.
-Some input errors will be caught by the error checking functions.
-
-\subsection{QM input}
-
-If the potential type is QM or QMMMM, several keywords are required to define
-the QM wrapper and level of theory. \\
-
-QM\_type: $<$Gaussian or PSI4 or NWChem$>$ \\
-QM\_method: $<$HF or functional or SemiEmp$>$ \\
-QM\_basis: $<$basis set or model$>$ \\
-QM\_memory: $<$RAM$>$ $<$MB or GB$>$ \\
-QM\_charge: $<$charge on the QM region$>$ \\
-QM\_spin: $<$multiplicity of the QM region$>$ \\
-Use\_LREC: $<$Use a long-range smoothing function, Yes/No$>$ \\
-LREC\_cut: $<$Cutoff (\AA), omitted if Use\_LREC is No$>$ \\
-
-All of the QM input is read into LICHEM as text, and hence, it must match the
-correct input for the QM package.
-For example, Gaussian can only read integer values for the memory.
+QM\_method: QM level of theory (HF or functional name or SemiEmp).
 If the QM method is set to SemiEmp, then the QM basis should be set to the
 semi-empirical model Hamiltonian.
+Default: N/A \\
 
-\subsection{MM input}
+QM\_basis: Basis set for the QM calculations.
+If the QM method is SemiEmp, then this keyword should be a model Hamiltonian.
+Default: N/A \\
 
-If the potential type is MM or QMMM, several keywords are required to define
-the MM wrapper. \\
+QM\_memory: Amount of RAM for the QM calculations.
+This keyword requires two peices of input.
+An integer input for the RAM and a string for the units (MB or GB).
+Default: 256 MB \\
 
-MM\_type: $<$TINKER or AMBER or LAMMPS$>$ \\
-Electrostatics: $<$Charges or AMOEBA or Density$>$ \\
+QM\_charge: Charge on the QM region.
+Default: 0 \\
 
-\subsection{QMMM input}
+QM\_spin: Multiplicity of the QM region.
+Default: 1 \\
 
-QMMM input is a combination of the QM and MM input described above. \\
+MM\_type: Name of the MM wrapper.
+Current wrappers: TINKER or AMBER or LAMMPS.
+Default: N/A \\
 
-QM\_type: $<$Gaussian or PSI4 or NWChem$>$ \\
-QM\_method: $<$HF or functional or SemiEmp$>$ \\
-QM\_basis: $<$basis set or model$>$ \\
-QM\_memory: $<$RAM$>$ $<$MB or GB$>$ \\
-QM\_charge: $<$charge on the QM region$>$ \\
-QM\_spin: $<$multiplicity of the QM region$>$ \\
-Use\_LREC: $<$Use a long-range smoothing function, Yes/No$>$ \\
-LREC\_cut: $<$Cutoff (\AA), omitted if Use\_LREC is No$>$ \\
-MM\_type: $<$TINKER or AMBER or LAMMPS$>$ \\
-Electrostatics: $<$Charges or AMOEBA or Density$>$ \\
+Electrostatics: Type of MM electrostatic potential.
+Current options: Charges or AMOEBA.
+Default: N/A \\
 
-All of the QMMM input is read into LICHEM as text, and hence, it must match the
-correct input for the QM and MM packages.
-For example, Gaussian can only read integer values for the memory.
-If the QM method is set to SemiEmp, then the QM basis should be set to the
-semi-empirical model Hamiltonian.
+Calculation\_type: Type of calculation that will be performed.
+Calculation types are documented in the Chapter \ref{chap:theory}.
+Current options: Energy or Opt or DFP or SD or QuickMin or ESD or NEB or
+ENEB or PIMC.
+Some additional synonyms are accepted for each type of calculation, but not
+all synonyms are well documented.
+Default: N/A \\
 
-\subsection{Simulation input}
+Opt\_stepsize: Initial scale factor for the geometry optimizers.
+A value of zero does nothing and a value of 1.0 takes uses a stepsize based
+on the forces and/or Hessian. The LICHEM optimizers will attempt to adjust
+the stepsize to improve performance.
+Default: 1.0 \\
 
-Input for the calculation types directly follows the wrapper input.
-Each type of calculation requires slightly different input.
-LICHEM can perform single-point energies (SP), geometry optimizations
-(Opt,DFP,ESD,Steep,NEB), and path-integral Monte Carlo simulations (PIMC).
-Classical Monte Carlo simulations can be performed as PIMC simulations with a
-single bead. \\
+Max\_stepsize: Maximum displacement during an optimization step (\AA).
+Default: 0.10 \\
 
-A description of the methods are given in Chapter \ref{chap:Theory} and the
-input for all calculation types are documented below.
-Synonyms for the simulation keywords are given in parentheses. \\
+QM\_opt\_tolerance: RMS deviation criteria for stoping the QM optimizations
+(\AA).
+Force tolerances are generated automatically based on this value.
+Default: 5e-4 \\
 
-\subsubsection{Energy calculations}
+MM\_opt\_tolerance: RMS deviation criteria for stoping the MM and QMMM
+optimizations (\AA).
+Force tolerances are generated automatically based on this value.
+Default: 1e-2 \\
 
-Calculation\_type: Energy (or SP) \\
+Max\_opt\_steps: Maximum number of QM optimization steps during a single
+QMMM iteration.
+Default: 200 \\
 
-\subsubsection{Geometry optimizations}
+Beads: Number of replica beads for reaction pathways and path-integral
+Monte Carlo simulations.
+Default: 1 \\
 
-There are currently three options for geometry optimizations in LICHEM.
-The optimization types only differ in the method used to optimize the
-QM atoms.
-MM atoms are always optimized using the native MM wrappers. \\
+Spring\_constant: Nudged elastic band spring constant (eV/\AA$^2$)
+Default: 1.0 \\
 
-Calculation\_type: Opt \\
-Max\_opt\_step: $<$Size of the maximum optimization step (\AA)$>$ \\
-MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
-Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
-Use\_cutoff: $<$Use a MM cutoff in optimizations, Yes/No$>$ \\
-MM\_opt\_cut: $<$Cutoff (\AA), omitted if Use\_cut is No$>$ \\
+Frozen\_ends: Freeze the end points of the reaction path optimizations 
+(Yes/No).
+Default: No \\
 
-The Opt keyword performs a geometry optimization using the native optimization
-routines in the QM package.
-Pure QM systems can be optimized with any of the QM packages, but only
-Gaussian can be used for QMMM optimizations with this keyword. \\
+Timestep: Molecular dynamics timestep (fs).
+Default: 1.0 \\
 
-Calculation\_type: Steep (or SD) \\
-Opt\_step\_size: $<$Initial scale factor for the step size$>$ \\
-Max\_opt\_step: $<$Size of the maximum optimization step (\AA)$>$ \\
-QM\_opt\_tolerance: $<$Criteria to stop the QM optimization$>$ \\
-MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
-Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
-Use\_cutoff: $<$Use a MM cutoff in optimizations, Yes/No$>$ \\
-MM\_opt\_cut: $<$Cutoff (\AA), omitted if Use\_cut is No$>$ \\
+Ensemble: Thermodynamic ensemble (NVT or NPT).
+Default: NVT \\
 
-LICHEM has a steepest descent routine which optimizes the structure in
-Cartesian coordinates. \\
+Temperature: Temperature of the simulation (Kelvin).
+Default: 300.0 \\
 
-Calculation\_type: QuickMin (Quick or DV) \\
-Opt\_step\_size: $<$Time step (arbitrary units)$>$ \\
-Max\_opt\_step: $<$Size of the maximum optimization step (\AA)$>$ \\
-QM\_opt\_tolerance: $<$Criteria to stop the QM optimization$>$ \\
-MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
-Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
-Use\_cutoff: $<$Use a MM cutoff in optimizations, Yes/No$>$ \\
-MM\_opt\_cut: $<$Cutoff (\AA), omitted if Use\_cut is No$>$ \\
+Tau\_temp: Thermostat time constant (fs) for molecular dynamics simulations.
+Default: 1000.0 \\
 
-LICHEM has a damped Verlet routine which optimizes the structure in
-Cartesian coordinates. \\
+Pressure: Pressure of the simulation (atm).
+Default: 0.0 \\
 
-Calculation\_type: DFP \\
-Opt\_step\_size: $<$Initial scale factor for the step size$>$ \\
-Max\_opt\_step: $<$Size of the maximum optimization step (\AA)$>$ \\
-QM\_opt\_tolerance: $<$Criteria to stop the QM optimization$>$ \\
-MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
-Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
-Use\_cutoff: $<$Use a MM cutoff in optimizations, Yes/No$>$ \\
-MM\_opt\_cut: $<$Cutoff (\AA), omitted if Use\_cut is No$>$ \\
+Eq\_steps: Number of Monte Carlo and molecular dynamics equilibration steps.
+Default: 0 \\
 
-LICHEM has a built in Davidon-Fletcher-Powell (DFP) optimizer.
-Like the steepest descent routine, the DFP optimizer uses Cartesian
-coordinates.
+Prod\_steps: Number of Monte Carlo and molecular dynamics steps for
+production runs.
+Default: 0 \\
 
-\subsubsection{Reaction path optimizations}
+Acceptance\_ratio: Fraction of Monte Carlo moves that will be accepted.
+LICHEM will adjust the Monte Carlo stepsize during the equilibration run to
+maintain the specified acceptance ratio.
+Default: 0.50 \\
 
-LICHEM has built in reaction path and transition state optimizers. \\
+Print\_steps: Print Monte Carlo and molecular dynamics data every N steps.
+Default: 5000 \\ 
 
-Calculation\_type: NEB \\
-Number\_of\_beads: $<$Number of replicas, must be odd$>$ \\
-Opt\_step\_size: $<$Initial scale factor for the step size$>$ \\
-Max\_opt\_step: $<$Size of the maximum optimization step (\AA)$>$ \\
-Spring\_constant: $<$NEB spring constant (eV/\AA$^2$)$>$ \\
-Frozen\_ends: $<$Yes or No$>$ \\
-QM\_opt\_tolerance: $<$Criteria to stop the QM optimization$>$ \\
-MM\_opt\_tolerance: $<$Criteria to stop MM optimization$>$ \\
-Max\_opt\_steps: $<$Run at most N QM steps per iteration$>$ \\
-Use\_cutoff: $<$Use a MM cutoff in optimizations, Yes/No$>$ \\
-MM\_opt\_cut: $<$Cutoff (\AA), omitted if Use\_cut is No$>$ \\
+Use\_cutoff: Use a MM cutoff in optimizations (Yes/No).
+This can greatly speed up the optimizations, but may prevent the optimization
+from locating a true minimum.
+Using PBC and LREC is preferred since QM and QMMM energies are not calculated
+using an electrostatic cutoff.
+Default: No \\
 
-The NEB method implemented in LICHEM is the climbing
-image nudged elastic band method.
-The replica with the highest energy moves upwards along the reaction
-path to locate a transition state.
-For more details on the method, see Chapter \ref{chap:Theory}.
+MM\_opt\_cut: Value of the MM optimization cutoff (\AA).
+Default: 1000.0 \\
 
-\subsubsection{Ensemble samping and Monte Carlo}
+PBC: Use periodic boundary conditions (Yes/No).
+Default: No \\
 
-Calculation\_type: EnsembleSD (or ESD) \\
-Opt\_step\_size: $<$Scale factor for the step size$>$ \\
-Max\_opt\_step: $<$Maximum displacement for each step (\AA)$>$ \\
-QM\_opt\_steps: $<$Perform N QM steps$>$ \\
-Timestep: $<$MD timestep (fs)$>$ \\
-Temperature: $<$MD temperature (K)$>$ \\
-Tau: $<$Thermostat time constant ($\tau$)$>$ \\
-MD\_steps: $<$Run N MD steps per QM step$>$ \\
+Box\_size: Three lattice constants (\AA) for the periodic simulation box.
+Default: 10000.0 10000.0 10000.0 \\
 
-Calculation\_type: EnsembleNEB (or ENEB) \\
-Number\_of\_beads: $<$Number of replicas, must be odd$>$ \\
-Opt\_step\_size: $<$Scale factor for the step size$>$ \\
-Max\_opt\_step: $<$Maximum displacement for each step (\AA)$>$ \\
-Spring\_constant: $<$NEB spring constant (eV/\AA$^2$)$>$ \\
-QM\_opt\_steps: $<$Perform N QM steps$>$ \\
-Timestep: $<$MD timestep (fs)$>$ \\
-Temperature: $<$MD temperature (K)$>$ \\
-Tau: $<$Thermostat time constant ($\tau$)$>$ \\
-MD\_steps: $<$Run N MD steps per QM step$>$ \\
+Use\_LREC: Use a long-range smoothing function (Yes/No) for QM periodic 
+boundary conditions.
+Default: No \\
 
-Calculation\_type: PIMC \\
-Ensemble: $<$NVT or NPT$>$ \\
-Temperature: $<$Temperature in Kelvin$>$ \\
-Pressure: $<$Pressure in atm $>$ \\
-Number\_of\_eq\_steps: $<$Run N steps before collecting data$>$ \\
-Number\_of\_MC\_steps: $<$Collect data for N steps$>$ \\
-Number\_of\_beads: $<$Number of PI beads$>$ \\
-Acceptance\_ratio: $<$Fraction of attempted moves which succeed$>$ \\
-Traj\_steps\_before\_printing: $<$Print every N steps$>$
+LREC\_cut: LREC cutoff (\AA) for the smoothing function.
+Default: 1000.0 \\
 
-\subsection{Boundary conditions}
+\subsection{QMMM regions}
 
-LICHEM requires the MM periodic boundary conditions (PBC) to be specified in
-the region file. \\
-
-PBC: $<$Yes or No$>$ \\
-
-If the system is periodic, LICHEM will look for an additional keyword
-which specifies the size of the simulation box. \\
-
-Box\_size: $<$ Three lattice constants (\AA)$>$ \\
-
-The box size keyword should be omited if the simulation box is finite.
-
-\subsection{Region input}
-
-Four different regions of the structure need to be defined even if the
-regions contain zero atoms. \\
+Four different regions of the structure can be defined for the QMMM
+simulations.
 
 QM\_atoms: Nqm [list of ids] \\
+
 Pseudobond\_atoms: Npseudo [list of ids] \\
+
 Boundary\_atoms: Nbound [list of ids] \\
+
 Frozen\_atoms: Ninact [list of ids] \\
 
 Definitions of the QM, pseudo-bond atoms, and boundary atoms can be found in

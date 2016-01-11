@@ -90,31 +90,56 @@ double Bohring(double ri)
 
 Coord CoordDist2(Coord& a, Coord& b)
 {
-  //Unsigned displacements
+  //Signed displacements
   double dx = a.x-b.x;
   double dy = a.y-b.y;
   double dz = a.z-b.z;
-  //PBC
+  //Check PBC
   if (PBCon)
   {
-    bool check = 1;
+    bool check = 1; //Continue checking PBC
     while (check)
     {
-      check = 0;
+      //Overkill, bit it checks if atoms are wrapped multiple times
+      check = 0; //Stop if there are no changes
       if (abs(dx) > (0.5*Lx))
       {
-        dx = Lx-abs(dx);
-        check = 1;
+        //Update X displacement
+        check = 1; //The displacement was updated
+        if (dx > 0)
+        {
+          dx -= Lx;
+        }
+        else
+        {
+          dx += Lx;
+        }
       }
       if (abs(dy) > (0.5*Ly))
       {
-        dy = Ly-abs(dy);
-        check = 1;
+        //Update Y displacement
+        check = 1; //The displacement was updated
+        if (dy > 0)
+        {
+          dy -= Ly;
+        }
+        else
+        {
+          dy += Ly;
+        }
       }
       if (abs(dz) > (0.5*Lz))
       {
-        dz = Lz-abs(dz);
-        check = 1;
+        //Update Z displacement
+        check = 1; //The displacement was updated
+        if (dz > 0)
+        {
+          dz -= Lz;
+        }
+        else
+        {
+          dz += Lz;
+        }
       }
     }
   }

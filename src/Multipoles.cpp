@@ -575,60 +575,8 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
           dx = Struct[i].P[Bead].x-QMCOM.x;
           dy = Struct[i].P[Bead].y-QMCOM.y;
           dz = Struct[i].P[Bead].z-QMCOM.z;
-          DistCent.x = dx;
-          DistCent.y = dy;
-          DistCent.z = dz;
-          //NB: CoordDist2 only returns unsigned values
-          bool check = 1; //Continue checking PBC
-          while (check)
-          {
-            //Overkill, but it checks if atoms are wrapped multiple times
-            check = 0; //Stop if there are no changes
-            if (abs(DistCent.x) > (0.5*Lx))
-            {
-              check = 1; //The position was updated
-              if (DistCent.x > 0)
-              {
-                //Move the charge to the other side of the box
-                DistCent.x -= Lx;
-              }
-              else
-              {
-                //Move the charge to the other side of the box
-                DistCent.x += Lx;
-              }
-            }
-            if (abs(DistCent.y) > (0.5*Ly))
-            {
-              check = 1; //The position was updated
-              if (DistCent.y > 0)
-              {
-                //Move the charge to the other side of the box
-                DistCent.y -= Ly;
-              }
-              else
-              {
-                //Move the charge to the other side of the box
-                DistCent.y += Ly;
-              }
-            }
-            if (abs(DistCent.z) > (0.5*Lz))
-            {
-              check = 1; //The position was updated
-              if (DistCent.z > 0)
-              {
-                //Move the charge to the other side of the box
-                DistCent.z -= Lz;
-              }
-              else
-              {
-                //Move the charge to the other side of the box
-                DistCent.z += Lz;
-              }
-            }
-          }
-          //Safely calculate the shift in positions
-          //NB: Generally this work out to be +/- {Lx,Ly,Lz}
+          DistCent = CoordDist2(Struct[i].P[Bead],QMCOM);
+          //Calculate the shift in positions
           xshft = DistCent.x-dx;
           yshft = DistCent.y-dy;
           zshft = DistCent.z-dz;
@@ -748,59 +696,8 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
           dx = Struct[i].P[Bead].x-QMCOM.x;
           dy = Struct[i].P[Bead].y-QMCOM.y;
           dz = Struct[i].P[Bead].z-QMCOM.z;
-          DistCent.x = dx;
-          DistCent.y = dy;
-          DistCent.z = dz;
-          //NB: CoordDist2 only returns unsigned values
-          bool check = 1; //Continue checking PBC
-          while (check)
-          {
-            //Overkill, but it checks if atoms are wrapped multiple times
-            check = 0; //Stop if there are no changes
-            if (abs(DistCent.x) > (0.5*Lx))
-            {
-              check = 1; //The position was updated
-              if (DistCent.x > 0)
-              {
-                //Move the charge to the other side of the box
-                DistCent.x -= Lx;
-              }
-              else
-              {
-                //Move the charge to the other side of the box
-                DistCent.x += Lx;
-              }
-            }
-            if (abs(DistCent.y) > (0.5*Ly))
-            {
-              check = 1; //The position was updated
-              if (DistCent.y > 0)
-              {
-                //Move the charge to the other side of the box
-                DistCent.y -= Ly;
-              }
-              else
-              {
-                //Move the charge to the other side of the box
-                DistCent.y += Ly;
-              }
-            }
-            if (abs(DistCent.z) > (0.5*Lz))
-            {
-              check = 1; //The position was updated
-              if (DistCent.z > 0)
-              {
-                //Move the charge to the other side of the box
-                DistCent.z -= Lz;
-              }
-              else
-              {
-                //Move the charge to the other side of the box
-                DistCent.z += Lz;
-              }
-            }
-          }
-          //Safely calculate the shift in positions
+          DistCent = CoordDist2(Struct[i].P[Bead],QMCOM);
+          //Calculate the shift in positions
           //NB: Generally this work out to be +/- {Lx,Ly,Lz}
           xshft = DistCent.x-dx;
           yshft = DistCent.y-dy;
