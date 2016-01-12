@@ -510,7 +510,8 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       //Set the type of calculation
       regionfile >> dummy;
       LICHEMLowerText(dummy);
-      if ((dummy == "sp") or (dummy == "energy"))
+      if ((dummy == "single-point") or (dummy == "sp") or
+         (dummy == "energy"))
       {
         //Read energy minimization options
         SinglePoint = 1;

@@ -486,7 +486,7 @@ Default: 1 \\
 Spring\_constant: Nudged elastic band spring constant (eV/\AA$^2$)
 Default: 1.0 \\
 
-Frozen\_ends: Freeze the end points of the reaction path optimizations 
+Frozen\_ends: Freeze the end points of the reaction path optimizations
 (Yes/No).
 Default: No \\
 
@@ -518,7 +518,7 @@ maintain the specified acceptance ratio.
 Default: 0.50 \\
 
 Print\_steps: Print Monte Carlo and molecular dynamics data every N steps.
-Default: 5000 \\ 
+Default: 5000 \\
 
 Use\_cutoff: Use a MM cutoff in optimizations (Yes/No).
 This can greatly speed up the optimizations, but may prevent the optimization
@@ -536,7 +536,7 @@ Default: No \\
 Box\_size: Three lattice constants (\AA) for the periodic simulation box.
 Default: 10000.0 10000.0 10000.0 \\
 
-Use\_LREC: Use a long-range smoothing function (Yes/No) for QM periodic 
+Use\_LREC: Use a long-range smoothing function (Yes/No) for QM periodic
 boundary conditions.
 Default: No \\
 
@@ -569,6 +569,89 @@ This is because these regions are not relevant unless LICHEM is performing a
 QMMM calculation.
 For all of the regions, the lists of atoms can be separated by either spaces
 or newlines.
+
+\section{Calculation types and synonyms}
+
+\subsection{Single-point energies}
+
+Single-point energies can be calculated for QM, MM, and QMMM potentials.
+Synonyms: Single-point, Energy, SP
+
+\subsection{Optimizations}
+
+Geometry optimizations can be performed with a couple different algorithms.
+\\
+
+Native wrapper optimizers: Perform a geometry optimization with the QM or
+MM optimizers.
+This option is available for QM, MM, and QMMM optimizations.
+QMMM optimizations with the native optimizers are only possible with the
+Gaussian external interface.
+Synonyms: Optimize, opt \\
+
+Steepest descent: LICHEM has steepest descent optimizer \cite{} for the QM
+atoms.
+The stepsize (recommended: 0.0125) is adjusted to improve convergence.
+When using this optimizer, the MM regions are optimized with the MM wrapper
+using a modified force field.
+Synonyms: Steep, SD \\
+
+QuickMin: LICHEM has damped Verlet (QuickMin) optimizer \cite{} for the QM
+atoms.
+The stepsize is adjusted to improve convergence.
+When using this optimizer, the MM regions are optimized with the MM wrapper
+using a modified force field.
+Synonyms: QuickMin, Quick, DV \\
+
+Davidon-Fletcher-Powell: LICHEM has DFP optimizer \cite{} for the QM atoms.
+The DFP algorithm is similar to the BGFS method.
+The stepsize (recommended: 1.0) is adjusted to improve convergence.
+When using this optimizer, the MM regions are optimized with the MM wrapper
+using a modified force field.
+Synonyms: DFP
+
+\subsection{Reaction paths}
+
+Climbing image nudged elastic band: LICHEM has a NEB optimizer \cite{}
+for the QM atoms.
+The highest energy bead is designated as the transition state and the forces
+are modified such that the transition state moves up hill.
+A global DFP optimizer is to used to update the positions of the entire path
+simultaneously.
+The stepsize (recommended: 1.0) is adjusted to improve convergence.
+NEB methods are insensitive to the spring constant (recommended: 1.0).
+When using this optimizer, the MM regions are optimized with the MM wrapper
+using a modified force field.
+Synonyms: NEB, CINEB, CI-NEB \\
+
+Ensemble nudged elastic band: The ENEB method uses a steepest descent
+optimizer \cite{} for the QM reaction path, while running molecular
+dynamics on the MM atoms.
+The goal of an ENEB simulation is to approximately minimize the QM atoms
+in an average MM field.
+The optimizer alternates between QM minimization and a short MD production
+run (recommended 500 steps).
+Synonyms: ENEB
+
+\subsection{Ensemble sampling}
+
+Ensemble steepest descent: The ESD method uses a steepest descent
+optimizer \cite{} for the QM atoms, while running molecular
+dynamics on the MM atoms.
+The goal of an ESD simulation is to approximately minimize the QM atoms
+in an average MM field.
+The optimizer alternates between QM minimization and a short MD production
+run (recommended 500 steps).
+Synonyms: ESD \\
+
+Path-integral Monte Carlo: LICHEM can perform Monte Carlo or path-integral
+Monte Carlo simulations.
+The MC stepsize is adjusted during the equilibration step to maintain the
+specified acceptance ratio.
+Synonyms: PIMC \\
+
+Ensemble nudged elastic band: See above.
+Synonyms: ENEB
 
 \section{File conversion}
 
