@@ -267,6 +267,7 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
   QMMMOpts.TSBead = 0;
   QMMMOpts.Climb = 0;
   QMMMOpts.FrznEnds = 0;
+  QMMMOpts.StartPathChk = 1; //Speeds up reaction pathways
   //Temporary energy storage
   QMMMOpts.Eold = 0.0;
   QMMMOpts.Ereact = 0.0;
@@ -626,6 +627,16 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       if ((dummy == "yes") or (dummy == "true"))
       {
         QMMMOpts.FrznEnds = 1;
+      }
+    }
+    else if (keyword == "init_path_chk:")
+    {
+      //Check for inactive NEB end-points
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "no") or (dummy == "false"))
+      {
+        QMMMOpts.StartPathChk = 0;
       }
     }
     else if (keyword == "timestep:")

@@ -999,7 +999,7 @@ int main(int argc, char* argv[])
         QMMMOpts.Ets = SumE;
       }
       //Copy checkpoint data to speed up first step
-      if (p != (QMMMOpts.Nbeads-1))
+      if ((p != (QMMMOpts.Nbeads-1)) and QMMMOpts.StartPathChk)
       {
         stringstream call;
         if (Gaussian and (QMMMOpts.Func != "SemiEmp"))
