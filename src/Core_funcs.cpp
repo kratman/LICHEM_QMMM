@@ -359,6 +359,7 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       {
         //Move bead to the center
         Struct[i].P[j].x -= avgx;
+        Struct[i].P[j].x += 0.5*Lx;
       }
     }
     #pragma omp for nowait schedule(dynamic)
@@ -369,6 +370,7 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       {
         //Move bead to the center
         Struct[i].P[j].y -= avgy;
+        Struct[i].P[j].y += 0.5*Ly;
       }
     }
     #pragma omp for nowait schedule(dynamic)
@@ -379,6 +381,7 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       {
         //Move bead to the center
         Struct[i].P[j].z -= avgz;
+        Struct[i].P[j].z += 0.5*Lz;
       }
     }
   }

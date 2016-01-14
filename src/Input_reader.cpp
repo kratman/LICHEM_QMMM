@@ -352,7 +352,13 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     string keyword;
     regionfile >> keyword;
     LICHEMLowerText(keyword);
-    if (keyword == "potential_type:")
+    //Check for comments
+    if ((keyword[0] == '#') or (keyword[0] == '!'))
+    {
+      //Skip comment
+    }
+    //Check for input keywords
+    else if (keyword == "potential_type:")
     {
       //Set QM, MM, and QMMM options
       regionfile >> dummy; //Potential type
@@ -765,6 +771,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
         Struct[AtomID].Frozen = 1;
       }
     }
+    //Check for bad keywords
     else if (regionfile.good() and (!regionfile.eof()))
     {
       //Inform the user about the bad keyword
