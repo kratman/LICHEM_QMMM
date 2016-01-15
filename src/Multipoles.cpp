@@ -577,9 +577,13 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
           dz = Struct[i].P[Bead].z-QMCOM.z;
           DistCent = CoordDist2(Struct[i].P[Bead],QMCOM);
           //Calculate the shift in positions
-          xshft = DistCent.x-dx;
-          yshft = DistCent.y-dy;
-          zshft = DistCent.z-dz;
+          //NB: Generally this work out to be +/- {Lx,Ly,Lz}
+          if (PBCon)
+          {
+            xshft = DistCent.x-dx;
+            yshft = DistCent.y-dy;
+            zshft = DistCent.z-dz;
+          }
         }
         //Check for long-range corrections
         double scrq = 1;
@@ -699,9 +703,12 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
           DistCent = CoordDist2(Struct[i].P[Bead],QMCOM);
           //Calculate the shift in positions
           //NB: Generally this work out to be +/- {Lx,Ly,Lz}
-          xshft = DistCent.x-dx;
-          yshft = DistCent.y-dy;
-          zshft = DistCent.z-dz;
+          if (PBCon)
+          {
+            xshft = DistCent.x-dx;
+            yshft = DistCent.y-dy;
+            zshft = DistCent.z-dz;
+          }
         }
         //Check for long-range corrections
         double scrq = 1;

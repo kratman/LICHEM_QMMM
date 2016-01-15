@@ -1029,6 +1029,33 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       cout << '\n';
       DoQuit = 1;
     }
+    if (PBCon)
+    {
+      //Check LREC cutoff
+      if (QMMMOpts.UseLREC)
+      {
+        //Find maximum box length
+        double MinLen = Lx;
+        if (Ly < MinLen)
+        {
+          MinLen = Ly;
+        }
+        if (Lz < MinLen)
+        {
+          MinLen = Lz;
+        }
+        //Check cutoff
+        if (QMMMOpts.LRECCut > (0.5*MinLen))
+        {
+          //Needed to make the minimum image convention safe
+          QMMMOpts.LRECCut = 0.5*MinLen;
+          cout << " Warning: Reducing LREC cutoff (";
+          cout << LICHEMFormFloat(QMMMOpts.LRECCut,8);
+          cout << ") due to the minimum image convention.";
+          cout << '\n';
+        }
+      }
+    }
   }
   if (Ncpus < 1)
   {
@@ -1360,6 +1387,27 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
       if (GEM)
       {
         cout << "Frozen density force field" << '\n';
+      }
+    }
+    //Print PBC information
+    if (PBCon or QMMMOpts.UseLREC)
+    {
+      cout << '\n';
+      cout << "Simulation box settings:" << '\n';
+      if (PBCon)
+      {
+        cout << " Box size: ";
+        cout << LICHEMFormFloat(Lx,10) << " ";
+        cout << LICHEMFormFloat(Ly,10) << " ";
+        cout << LICHEMFormFloat(Lz,10) << '\n';
+        cout << " Boundaries: Periodic" << '\n';
+      }
+      if (QMMMOpts.UseLREC)
+      {
+        cout << " QM LREC: Yes" << '\n';
+        cout << " LREC cutoff: ";
+        cout << LICHEMFormFloat(QMMMOpts.LRECCut,8);
+        cout << " \u212B" << '\n';
       }
     }
   }

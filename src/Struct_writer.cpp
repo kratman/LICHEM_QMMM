@@ -127,9 +127,12 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
             DistCent = CoordDist2(Struct[i].P[Bead],QMCOM);
             //Calculate the shift in positions
             //NB: Generally this work out to be +/- {Lx,Ly,Lz}
-            xshft = DistCent.x-dx;
-            yshft = DistCent.y-dy;
-            zshft = DistCent.z-dz;
+            if (PBCon)
+            {
+              xshft = DistCent.x-dx;
+              yshft = DistCent.y-dy;
+              zshft = DistCent.z-dz;
+            }
           }
           //Check for long-range corrections
           double scrq = 1;
@@ -197,9 +200,12 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
             DistCent = CoordDist2(Struct[i].P[Bead],QMCOM);
             //Calculate the shift in positions
             //NB: Generally this work out to be +/- {Lx,Ly,Lz}
-            xshft = DistCent.x-dx;
-            yshft = DistCent.y-dy;
-            zshft = DistCent.z-dz;
+            if (PBCon)
+            {
+              xshft = DistCent.x-dx;
+              yshft = DistCent.y-dy;
+              zshft = DistCent.z-dz;
+            }
           }
           //Check for long-range corrections
           double scrq = 1;
@@ -483,9 +489,12 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
             DistCent = CoordDist2(Struct[i].P[Bead],QMCOM);
             //Calculate the shift in positions
             //NB: Generally this work out to be +/- {Lx,Ly,Lz}
-            xshft = DistCent.x-dx;
-            yshft = DistCent.y-dy;
-            zshft = DistCent.z-dz;
+            if (PBCon)
+            {
+              xshft = DistCent.x-dx;
+              yshft = DistCent.y-dy;
+              zshft = DistCent.z-dz;
+            }
           }
           //Check for long-range corrections
           double scrq = 1;
@@ -553,9 +562,12 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
             DistCent = CoordDist2(Struct[i].P[Bead],QMCOM);
             //Calculate the shift in positions
             //NB: Generally this work out to be +/- {Lx,Ly,Lz}
-            xshft = DistCent.x-dx;
-            yshft = DistCent.y-dy;
-            zshft = DistCent.z-dz;
+            if (PBCon)
+            {
+              xshft = DistCent.x-dx;
+              yshft = DistCent.y-dy;
+              zshft = DistCent.z-dz;
+            }
           }
           //Check for long-range corrections
           double scrq = 1;
@@ -824,9 +836,12 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
             DistCent = CoordDist2(Struct[i].P[Bead],QMCOM);
             //Calculate the shift in positions
             //NB: Generally this work out to be +/- {Lx,Ly,Lz}
-            xshft = DistCent.x-dx;
-            yshft = DistCent.y-dy;
-            zshft = DistCent.z-dz;
+            if (PBCon)
+            {
+              xshft = DistCent.x-dx;
+              yshft = DistCent.y-dy;
+              zshft = DistCent.z-dz;
+            }
           }
           //Check for long-range corrections
           double scrq = 1;
@@ -890,9 +905,12 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
             DistCent = CoordDist2(Struct[i].P[Bead],QMCOM);
             //Calculate the shift in positions
             //NB: Generally this work out to be +/- {Lx,Ly,Lz}
-            xshft = DistCent.x-dx;
-            yshft = DistCent.y-dy;
-            zshft = DistCent.z-dz;
+            if (PBCon)
+            {
+              xshft = DistCent.x-dx;
+              yshft = DistCent.y-dy;
+              zshft = DistCent.z-dz;
+            }
           }
           //Check for long-range corrections
           double scrq = 1;
