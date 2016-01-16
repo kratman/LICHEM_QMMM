@@ -161,7 +161,14 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << Bead << ".key";
   ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
   ofile << '\n'; //Make sure current line is empty
-  ofile << "#QM force field parameters"; //Marks the changes
+  if (QMMM)
+  {
+    ofile << "#LICHEM QMMM keywords"; //Marks the changes
+  }
+  else
+  {
+    ofile << "#LICHEM MM keywords"; //Marks the changes
+  }
   ofile << '\n';
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
@@ -350,7 +357,14 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << Bead << ".key";
   ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
   ofile << '\n';
-  ofile << "#QM force field parameters"; //Marks the changes
+  if (QMMM)
+  {
+    ofile << "#LICHEM QMMM keywords"; //Marks the changes
+  }
+  else
+  {
+    ofile << "#LICHEM MM keywords"; //Marks the changes
+  }
   ofile << '\n';
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
@@ -506,7 +520,14 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << Bead << ".key";
   ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
   ofile << '\n';
-  ofile << "#QM force field parameters"; //Marks the changes
+  if (QMMM)
+  {
+    ofile << "#LICHEM QMMM keywords"; //Marks the changes
+  }
+  else
+  {
+    ofile << "#LICHEM MM keywords"; //Marks the changes
+  }
   ofile << '\n';
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
@@ -749,7 +770,14 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << Bead << ".key";
   ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
   ofile << '\n';
-  ofile << "#QM force field parameters"; //Marks the changes
+  if (QMMM)
+  {
+    ofile << "#LICHEM QMMM keywords"; //Marks the changes
+  }
+  else
+  {
+    ofile << "#LICHEM MM keywords"; //Marks the changes
+  }
   ofile << '\n';
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
@@ -965,7 +993,14 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << Bead << ".key";
   ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
   ofile << '\n';
-  ofile << "#QM force field parameters"; //Marks the changes
+  if (QMMM)
+  {
+    ofile << "#LICHEM QMMM keywords"; //Marks the changes
+  }
+  else
+  {
+    ofile << "#LICHEM MM keywords"; //Marks the changes
+  }
   ofile << '\n';
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
@@ -1165,7 +1200,14 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << Bead << ".key";
   ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
   ofile << '\n';
-  ofile << "#QM force field parameters"; //Marks the changes
+  if (QMMM)
+  {
+    ofile << "#LICHEM QMMM keywords"; //Marks the changes
+  }
+  else
+  {
+    ofile << "#LICHEM MM keywords"; //Marks the changes
+  }
   ofile << '\n';
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
@@ -1390,7 +1432,14 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << Bead << ".key";
   ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
   ofile << '\n';
-  ofile << "#QM force field parameters"; //Marks the changes
+  if (QMMM)
+  {
+    ofile << "#LICHEM QMMM keywords"; //Marks the changes
+  }
+  else
+  {
+    ofile << "#LICHEM MM keywords"; //Marks the changes
+  }
   ofile << '\n';
   if (QMMMOpts.UseMMCut)
   {
