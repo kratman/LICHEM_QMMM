@@ -1029,31 +1029,31 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       cout << '\n';
       DoQuit = 1;
     }
-    if (PBCon)
+  }
+  if (PBCon)
+  {
+    //Check LREC cutoff
+    if (QMMMOpts.UseLREC)
     {
-      //Check LREC cutoff
-      if (QMMMOpts.UseLREC)
+      //Find maximum box length
+      double MinLen = Lx;
+      if (Ly < MinLen)
       {
-        //Find maximum box length
-        double MinLen = Lx;
-        if (Ly < MinLen)
-        {
-          MinLen = Ly;
-        }
-        if (Lz < MinLen)
-        {
-          MinLen = Lz;
-        }
-        //Check cutoff
-        if (QMMMOpts.LRECCut > (0.5*MinLen))
-        {
-          //Needed to make the minimum image convention safe
-          QMMMOpts.LRECCut = 0.5*MinLen;
-          cout << " Warning: Reducing LREC cutoff (";
-          cout << LICHEMFormFloat(QMMMOpts.LRECCut,8);
-          cout << ") due to the minimum image convention.";
-          cout << '\n';
-        }
+        MinLen = Ly;
+      }
+      if (Lz < MinLen)
+      {
+        MinLen = Lz;
+      }
+      //Check cutoff
+      if (QMMMOpts.LRECCut > (0.5*MinLen))
+      {
+        //Needed to make the minimum image convention safe
+        QMMMOpts.LRECCut = 0.5*MinLen;
+        cout << "Warning: Reducing LREC cutoff (";
+        cout << LICHEMFormFloat(QMMMOpts.LRECCut,6);
+        cout << ") due to the minimum image convention.";
+        cout << '\n' << '\n';
       }
     }
   }

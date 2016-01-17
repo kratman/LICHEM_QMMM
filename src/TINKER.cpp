@@ -170,6 +170,12 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ofile << "#LICHEM MM keywords"; //Marks the changes
   }
   ofile << '\n';
+  if (QMMMOpts.UseLREC)
+  {
+    //Apply cutoff
+    ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
+    ofile << '\n';
+  }
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
   if (PBCon)
@@ -366,6 +372,12 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ofile << "#LICHEM MM keywords"; //Marks the changes
   }
   ofile << '\n';
+  if (QMMMOpts.UseLREC)
+  {
+    //Apply cutoff
+    ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
+    ofile << '\n';
+  }
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
   if (PBCon)
@@ -529,6 +541,12 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     ofile << "#LICHEM MM keywords"; //Marks the changes
   }
   ofile << '\n';
+  if (QMMMOpts.UseLREC)
+  {
+    //Apply cutoff
+    ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
+    ofile << '\n';
+  }
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
   if (PBCon)
@@ -779,6 +797,12 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     ofile << "#LICHEM MM keywords"; //Marks the changes
   }
   ofile << '\n';
+  if (QMMMOpts.UseLREC)
+  {
+    //Apply cutoff
+    ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
+    ofile << '\n';
+  }
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
   if (PBCon)
@@ -1002,6 +1026,12 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     ofile << "#LICHEM MM keywords"; //Marks the changes
   }
   ofile << '\n';
+  if (QMMMOpts.UseLREC)
+  {
+    //Apply cutoff
+    ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
+    ofile << '\n';
+  }
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
   if (PBCon)
@@ -1209,6 +1239,12 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ofile << "#LICHEM MM keywords"; //Marks the changes
   }
   ofile << '\n';
+  if (QMMMOpts.UseLREC)
+  {
+    //Apply cutoff
+    ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
+    ofile << '\n';
+  }
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
   if (PBCon)
@@ -1445,6 +1481,12 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   {
     //Apply cutoff
     ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.MMOptCut,12);
+    ofile << '\n';
+  }
+  else if (QMMMOpts.UseLREC)
+  {
+    //Apply cutoff
+    ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
     ofile << '\n';
   }
   ofile << "openmp-threads " << Ncpus << '\n';

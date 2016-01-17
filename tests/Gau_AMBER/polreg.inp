@@ -5,11 +5,9 @@ QM_basis: 6-31G*
 QM_memory: 256 MB
 QM_charge: 0
 QM_spin: 1
-Use_LREC: No
 MM_type: AMBER
 Electrostatics: AMOEBA
 Calculation_type: SP
-PBC: No
 QM_atoms: 3
 0 1 2
 Pseudobond_atoms: 0

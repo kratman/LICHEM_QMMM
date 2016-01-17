@@ -149,9 +149,8 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
               double scrqA,scrqB; //Temporary variables
               //Calculate temp. variables
               scrqA = (QMMMOpts.LRECCut-rcom)/QMMMOpts.LRECCut;
-              scrqB = scrqA*scrqA;
+              scrqB = -3*scrqA*scrqA;
               scrqA *= 2*scrqA*scrqA;
-              scrqB *= -3;
               //Combine temp. variables
               scrqA += scrqB+1;
               //Set the scale factor
@@ -222,9 +221,8 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
               double scrqA,scrqB; //Temporary variables
               //Calculate temp. variables
               scrqA = (QMMMOpts.LRECCut-rcom)/QMMMOpts.LRECCut;
-              scrqB = scrqA*scrqA;
+              scrqB = -3*scrqA*scrqA;
               scrqA *= 2*scrqA*scrqA;
-              scrqB *= -3;
               //Combine temp. variables
               scrqA += scrqB+1;
               //Set the scale factor
@@ -347,18 +345,6 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
       }
     }
   }
-  //Calculate inverse box lengths for PBC
-  double ix,iy,iz; //Inverse x,y,z
-  ix = 1;
-  iy = 1;
-  iz = 1;
-  if (PBCon and (!QMMMOpts.UseLREC))
-  {
-    //NWChem uses fractional coordinates
-    ix /= Lx;
-    iy /= Ly;
-    iz /= Lz;
-  }
   //Create NWChem input
   call.str("");
   call << "LICHM_" << Bead << ".nw";
@@ -392,30 +378,19 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
     if (Struct[i].QMregion)
     {
       ofile << " " << Struct[i].QMTyp;
-      ofile << " " << (Struct[i].P[Bead].x*ix);
-      ofile << " " << (Struct[i].P[Bead].y*iy);
-      ofile << " " << (Struct[i].P[Bead].z*iz);
+      ofile << " " << (Struct[i].P[Bead].x);
+      ofile << " " << (Struct[i].P[Bead].y);
+      ofile << " " << (Struct[i].P[Bead].z);
       ofile << '\n';
     }
     if (Struct[i].PBregion)
     {
       ofile << " " << "F2pb";
-      ofile << " " << (Struct[i].P[Bead].x*ix);
-      ofile << " " << (Struct[i].P[Bead].y*iy);
-      ofile << " " << (Struct[i].P[Bead].z*iz);
+      ofile << " " << (Struct[i].P[Bead].x);
+      ofile << " " << (Struct[i].P[Bead].y);
+      ofile << " " << (Struct[i].P[Bead].z);
       ofile << '\n';
     }
-  }
-  if (PBCon and (!QMMMOpts.UseLREC))
-  {
-    ofile << " system crystal" << '\n';
-    ofile << "  lat_a " << Lx << '\n';
-    ofile << "  lat_b " << Ly << '\n';
-    ofile << "  lat_c " << Lz << '\n';
-    ofile << "  alpha 90.0" << '\n';
-    ofile << "  beta 90.0" << '\n';
-    ofile << "  gamma 90.0" << '\n';
-    ofile << " end" << '\n';
   }
   ofile << "end" << '\n';
   if (CheckFile("BASIS"))
@@ -511,9 +486,8 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
               double scrqA,scrqB; //Temporary variables
               //Calculate temp. variables
               scrqA = (QMMMOpts.LRECCut-rcom)/QMMMOpts.LRECCut;
-              scrqB = scrqA*scrqA;
+              scrqB = -3*scrqA*scrqA;
               scrqA *= 2*scrqA*scrqA;
-              scrqB *= -3;
               //Combine temp. variables
               scrqA += scrqB+1;
               //Set the scale factor
@@ -526,11 +500,11 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
             }
           }
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].P[Bead].x+xshft)*ix),16);
+          ofile << LICHEMFormFloat((Struct[i].P[Bead].x+xshft),16);
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].P[Bead].y+yshft)*iy),16);
+          ofile << LICHEMFormFloat((Struct[i].P[Bead].y+yshft),16);
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].P[Bead].z+zshft)*iz),16);
+          ofile << LICHEMFormFloat((Struct[i].P[Bead].z+zshft),16);
           ofile << " ";
           ofile << LICHEMFormFloat((Struct[i].MP[Bead].q*scrq),16);
           ofile << '\n';
@@ -584,9 +558,8 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
               double scrqA,scrqB; //Temporary variables
               //Calculate temp. variables
               scrqA = (QMMMOpts.LRECCut-rcom)/QMMMOpts.LRECCut;
-              scrqB = scrqA*scrqA;
+              scrqB = -3*scrqA*scrqA;
               scrqA *= 2*scrqA*scrqA;
-              scrqB *= -3;
               //Combine temp. variables
               scrqA += scrqB+1;
               //Set the scale factor
@@ -599,56 +572,56 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
             }
           }
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].PC[Bead].x1+xshft)*ix),16);
+          ofile << LICHEMFormFloat((Struct[i].PC[Bead].x1+xshft),16);
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].PC[Bead].y1+yshft)*iy),16);
+          ofile << LICHEMFormFloat((Struct[i].PC[Bead].y1+yshft),16);
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].PC[Bead].z1+zshft)*iz),16);
+          ofile << LICHEMFormFloat((Struct[i].PC[Bead].z1+zshft),16);
           ofile << " ";
           ofile << LICHEMFormFloat((Struct[i].PC[Bead].q1*scrq),16);
           ofile << '\n';
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].PC[Bead].x2+xshft)*ix),16);
+          ofile << LICHEMFormFloat((Struct[i].PC[Bead].x2+xshft),16);
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].PC[Bead].y2+yshft)*iy),16);
+          ofile << LICHEMFormFloat((Struct[i].PC[Bead].y2+yshft),16);
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].PC[Bead].z2+zshft)*iz),16);
+          ofile << LICHEMFormFloat((Struct[i].PC[Bead].z2+zshft),16);
           ofile << " ";
           ofile << LICHEMFormFloat((Struct[i].PC[Bead].q2*scrq),16);
           ofile << '\n';
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].PC[Bead].x3+xshft)*ix),16);
+          ofile << LICHEMFormFloat((Struct[i].PC[Bead].x3+xshft),16);
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].PC[Bead].y3+yshft)*iy),16);
+          ofile << LICHEMFormFloat((Struct[i].PC[Bead].y3+yshft),16);
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].PC[Bead].z3+zshft)*iz),16);
+          ofile << LICHEMFormFloat((Struct[i].PC[Bead].z3+zshft),16);
           ofile << " ";
           ofile << LICHEMFormFloat((Struct[i].PC[Bead].q3*scrq),16);
           ofile << '\n';
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].PC[Bead].x4+xshft)*ix),16);
+          ofile << LICHEMFormFloat((Struct[i].PC[Bead].x4+xshft),16);
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].PC[Bead].y4+yshft)*iy),16);
+          ofile << LICHEMFormFloat((Struct[i].PC[Bead].y4+yshft),16);
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].PC[Bead].z4+zshft)*iz),16);
+          ofile << LICHEMFormFloat((Struct[i].PC[Bead].z4+zshft),16);
           ofile << " ";
           ofile << LICHEMFormFloat((Struct[i].PC[Bead].q4*scrq),16);
           ofile << '\n';
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].PC[Bead].x5+xshft)*ix),16);
+          ofile << LICHEMFormFloat((Struct[i].PC[Bead].x5+xshft),16);
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].PC[Bead].y5+yshft)*iy),16);
+          ofile << LICHEMFormFloat((Struct[i].PC[Bead].y5+yshft),16);
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].PC[Bead].z5+zshft)*iz),16);
+          ofile << LICHEMFormFloat((Struct[i].PC[Bead].z5+zshft),16);
           ofile << " ";
           ofile << LICHEMFormFloat((Struct[i].PC[Bead].q5*scrq),16);
           ofile << '\n';
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].PC[Bead].x6+xshft)*ix),16);
+          ofile << LICHEMFormFloat((Struct[i].PC[Bead].x6+xshft),16);
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].PC[Bead].y6+yshft)*iy),16);
+          ofile << LICHEMFormFloat((Struct[i].PC[Bead].y6+yshft),16);
           ofile << " ";
-          ofile << LICHEMFormFloat(((Struct[i].PC[Bead].z6+zshft)*iz),16);
+          ofile << LICHEMFormFloat((Struct[i].PC[Bead].z6+zshft),16);
           ofile << " ";
           ofile << LICHEMFormFloat((Struct[i].PC[Bead].q6*scrq),16);
           ofile << '\n';
@@ -858,9 +831,8 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
               double scrqA,scrqB; //Temporary variables
               //Calculate temp. variables
               scrqA = (QMMMOpts.LRECCut-rcom)/QMMMOpts.LRECCut;
-              scrqB = scrqA*scrqA;
+              scrqB = -3*scrqA*scrqA;
               scrqA *= 2*scrqA*scrqA;
-              scrqB *= -3;
               //Combine temp. variables
               scrqA += scrqB+1;
               //Set the scale factor
@@ -927,9 +899,8 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
               double scrqA,scrqB; //Temporary variables
               //Calculate temp. variables
               scrqA = (QMMMOpts.LRECCut-rcom)/QMMMOpts.LRECCut;
-              scrqB = scrqA*scrqA;
+              scrqB = -3*scrqA*scrqA;
               scrqA *= 2*scrqA*scrqA;
-              scrqB *= -3;
               //Combine temp. variables
               scrqA += scrqB+1;
               //Set the scale factor
