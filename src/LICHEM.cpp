@@ -123,6 +123,8 @@ int main(int argc, char* argv[])
       //Print QM partial energy
       cout << "QM energy: " << LICHEMFormFloat(Eqm,16) << " eV";
       cout << '\n';
+      //Print progress
+      cout.flush();
     }
     //Calculate MM energy
     if (TINKER)
