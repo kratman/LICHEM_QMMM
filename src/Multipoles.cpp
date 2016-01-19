@@ -529,6 +529,7 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Function to write a file for the MM charges
   stringstream call; //Generic stream
   fstream ofile; //Stream for the charge file
+  bool FirstCharge = 1; //Always write the first charge
   //Find the center of mass
   Coord QMCOM; //QM region center of mass
   if (PBCon or QMMMOpts.UseLREC)
@@ -601,60 +602,64 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
             scrq = 0;
           }
         }
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].x1+xshft),16);
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].y1+yshft),16);
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].z1+zshft),16);
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q1*scrq),16);
-        ofile << '\n';
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].x2+xshft),16);
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].y2+yshft),16);
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].z2+zshft),16);
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q2*scrq),16);
-        ofile << '\n';
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].x3+xshft),16);
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].y3+yshft),16);
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].z3+zshft),16);
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q3*scrq),16);
-        ofile << '\n';
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].x4+xshft),16);
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].y4+yshft),16);
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].z4+zshft),16);
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q4*scrq),16);
-        ofile << '\n';
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].x5+xshft),16);
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].y5+yshft),16);
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].z5+zshft),16);
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q5*scrq),16);
-        ofile << '\n';
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].x6+xshft),16);
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].y6+yshft),16);
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].z6+zshft),16);
-        ofile << " ";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q6*scrq),16);
-        ofile << '\n';
+        if ((scrq > 0) or FirstCharge)
+        {
+          FirstCharge = 0; //Skips writing the remaining zeros
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].x1+xshft,16);
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].y1+yshft,16);
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].z1+zshft,16);
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].q1*scrq,16);
+          ofile << '\n';
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].x2+xshft,16);
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].y2+yshft,16);
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].z2+zshft,16);
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].q2*scrq,16);
+          ofile << '\n';
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].x3+xshft,16);
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].y3+yshft,16);
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].z3+zshft,16);
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].q3*scrq,16);
+          ofile << '\n';
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].x4+xshft,16);
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].y4+yshft,16);
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].z4+zshft,16);
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].q4*scrq,16);
+          ofile << '\n';
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].x5+xshft,16);
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].y5+yshft,16);
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].z5+zshft,16);
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].q5*scrq,16);
+          ofile << '\n';
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].x6+xshft,16);
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].y6+yshft,16);
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].z6+zshft,16);
+          ofile << " ";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].q6*scrq,16);
+          ofile << '\n';
+        }
       }
     }
     ofile.flush();
@@ -725,42 +730,45 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
             scrq = 0;
           }
         }
-        ofile << "Chrgfield.extern.addCharge(";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q1*scrq),16) << ",";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].x1+xshft),16) << ",";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].y1+yshft),16) << ",";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].z1+zshft),16);
-        ofile << ")" << '\n';
-        ofile << "Chrgfield.extern.addCharge(";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q2*scrq),16) << ",";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].x2+xshft),16) << ",";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].y2+yshft),16) << ",";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].z2+zshft),16);
-        ofile << ")" << '\n';
-        ofile << "Chrgfield.extern.addCharge(";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q3*scrq),16) << ",";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].x3+xshft),16) << ",";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].y3+yshft),16) << ",";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].z3+zshft),16);
-        ofile << ")" << '\n';
-        ofile << "Chrgfield.extern.addCharge(";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q4*scrq),16) << ",";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].x4+xshft),16) << ",";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].y4+yshft),16) << ",";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].z4+zshft),16);
-        ofile << ")" << '\n';
-        ofile << "Chrgfield.extern.addCharge(";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q5*scrq),16) << ",";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].x5+xshft),16) << ",";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].y5+yshft),16) << ",";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].z5+zshft),16);
-        ofile << ")" << '\n';
-        ofile << "Chrgfield.extern.addCharge(";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].q6*scrq),16) << ",";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].x6+xshft),16) << ",";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].y6+yshft),16) << ",";
-        ofile << LICHEMFormFloat((Struct[i].PC[Bead].z6+zshft),16);
-        ofile << ")" << '\n';
+        if (scrq > 0)
+        {
+          ofile << "Chrgfield.extern.addCharge(";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].q1*scrq,16) << ",";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].x1+xshft,16) << ",";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].y1+yshft,16) << ",";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].z1+zshft,16);
+          ofile << ")" << '\n';
+          ofile << "Chrgfield.extern.addCharge(";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].q2*scrq,16) << ",";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].x2+xshft,16) << ",";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].y2+yshft,16) << ",";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].z2+zshft,16);
+          ofile << ")" << '\n';
+          ofile << "Chrgfield.extern.addCharge(";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].q3*scrq,16) << ",";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].x3+xshft,16) << ",";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].y3+yshft,16) << ",";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].z3+zshft,16);
+          ofile << ")" << '\n';
+          ofile << "Chrgfield.extern.addCharge(";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].q4*scrq,16) << ",";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].x4+xshft,16) << ",";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].y4+yshft,16) << ",";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].z4+zshft,16);
+          ofile << ")" << '\n';
+          ofile << "Chrgfield.extern.addCharge(";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].q5*scrq,16) << ",";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].x5+xshft,16) << ",";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].y5+yshft,16) << ",";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].z5+zshft,16);
+          ofile << ")" << '\n';
+          ofile << "Chrgfield.extern.addCharge(";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].q6*scrq,16) << ",";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].x6+xshft,16) << ",";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].y6+yshft,16) << ",";
+          ofile << LICHEMFormFloat(Struct[i].PC[Bead].z6+zshft,16);
+          ofile << ")" << '\n';
+        }
       }
     }
     ofile.flush();

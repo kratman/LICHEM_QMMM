@@ -29,6 +29,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
   chrgfilename = call.str();
   UseChargeFile = CheckFile(call.str());
   //Initialize multipoles and center of mass
+  bool FirstCharge = 1; //Always write the first charge
   Coord QMCOM;
   if (!UseChargeFile)
   {
@@ -162,15 +163,19 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
               scrq = 0;
             }
           }
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].P[Bead].x+xshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].P[Bead].y+yshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].P[Bead].z+zshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].MP[Bead].q*scrq),16);
-          call << '\n';
+          if ((scrq > 0) or FirstCharge)
+          {
+            FirstCharge = 0; //Skips writing the remaining zeros
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].P[Bead].x+xshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].P[Bead].y+yshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].P[Bead].z+zshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].MP[Bead].q*scrq,16);
+            call << '\n';
+          }
         }
       }
       if (Nmm > 0)
@@ -234,60 +239,64 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
               scrq = 0;
             }
           }
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].x1+xshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].y1+yshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].z1+zshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].q1*scrq),16);
-          call << '\n';
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].x2+xshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].y2+yshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].z2+zshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].q2*scrq),16);
-          call << '\n';
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].x3+xshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].y3+yshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].z3+zshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].q3*scrq),16);
-          call << '\n';
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].x4+xshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].y4+yshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].z4+zshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].q4*scrq),16);
-          call << '\n';
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].x5+xshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].y5+yshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].z5+zshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].q5*scrq),16);
-          call << '\n';
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].x6+xshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].y6+yshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].z6+zshft),16);
-          call << " ";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].q6*scrq),16);
-          call << '\n';
+          if ((scrq > 0) or FirstCharge)
+          {
+            FirstCharge = 0; //Skips writing the remaining zeros
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].x1+xshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].y1+yshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].z1+zshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].q1*scrq,16);
+            call << '\n';
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].x2+xshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].y2+yshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].z2+zshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].q2*scrq,16);
+            call << '\n';
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].x3+xshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].y3+yshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].z3+zshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].q3*scrq,16);
+            call << '\n';
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].x4+xshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].y4+yshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].z4+zshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].q4*scrq,16);
+            call << '\n';
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].x5+xshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].y5+yshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].z5+zshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].q5*scrq,16);
+            call << '\n';
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].x6+xshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].y6+yshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].z6+zshft,16);
+            call << " ";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].q6*scrq,16);
+            call << '\n';
+          }
         }
       }
       if (Nmm > 0)
@@ -329,6 +338,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   chrgfilename = call.str();
   UseChargeFile = CheckFile(call.str());
   //Initialize multipoles and center of mass
+  bool FirstCharge = 1; //Always write the first charge
   Coord QMCOM;
   if (!UseChargeFile)
   {
@@ -499,15 +509,19 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
               scrq = 0;
             }
           }
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].P[Bead].x+xshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].P[Bead].y+yshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].P[Bead].z+zshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].MP[Bead].q*scrq),16);
-          ofile << '\n';
+          if ((scrq > 0) or FirstCharge)
+          {
+            FirstCharge = 0; //Skips writing the remaining zeros
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].P[Bead].x+xshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].P[Bead].y+yshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].P[Bead].z+zshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].MP[Bead].q*scrq,16);
+            ofile << '\n';
+          }
         }
       }
       ofile << "end" << '\n';
@@ -571,60 +585,64 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
               scrq = 0;
             }
           }
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].x1+xshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].y1+yshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].z1+zshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].q1*scrq),16);
-          ofile << '\n';
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].x2+xshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].y2+yshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].z2+zshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].q2*scrq),16);
-          ofile << '\n';
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].x3+xshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].y3+yshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].z3+zshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].q3*scrq),16);
-          ofile << '\n';
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].x4+xshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].y4+yshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].z4+zshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].q4*scrq),16);
-          ofile << '\n';
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].x5+xshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].y5+yshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].z5+zshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].q5*scrq),16);
-          ofile << '\n';
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].x6+xshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].y6+yshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].z6+zshft),16);
-          ofile << " ";
-          ofile << LICHEMFormFloat((Struct[i].PC[Bead].q6*scrq),16);
-          ofile << '\n';
+          if ((scrq > 0) or FirstCharge)
+          {
+            FirstCharge = 0; //Skips writing the remaining zeros
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].x1+xshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].y1+yshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].z1+zshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].q1*scrq,16);
+            ofile << '\n';
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].x2+xshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].y2+yshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].z2+zshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].q2*scrq,16);
+            ofile << '\n';
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].x3+xshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].y3+yshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].z3+zshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].q3*scrq,16);
+            ofile << '\n';
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].x4+xshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].y4+yshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].z4+zshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].q4*scrq,16);
+            ofile << '\n';
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].x5+xshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].y5+yshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].z5+zshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].q5*scrq,16);
+            ofile << '\n';
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].x6+xshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].y6+yshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].z6+zshft,16);
+            ofile << " ";
+            ofile << LICHEMFormFloat(Struct[i].PC[Bead].q6*scrq,16);
+            ofile << '\n';
+          }
         }
       }
       ofile << "end" << '\n';
@@ -844,12 +862,15 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
               scrq = 0;
             }
           }
-          call << "Chrgfield.extern.addCharge(";
-          call << LICHEMFormFloat((Struct[i].MP[Bead].q*scrq),16) << ",";
-          call << LICHEMFormFloat((Struct[i].P[Bead].x+xshft),16) << ",";
-          call << LICHEMFormFloat((Struct[i].P[Bead].y+yshft),16) << ",";
-          call << LICHEMFormFloat((Struct[i].P[Bead].z+zshft),16);
-          call << ")" << '\n';
+          if (scrq > 0)
+          {
+            call << "Chrgfield.extern.addCharge(";
+            call << LICHEMFormFloat(Struct[i].MP[Bead].q*scrq,16) << ",";
+            call << LICHEMFormFloat(Struct[i].P[Bead].x+xshft,16) << ",";
+            call << LICHEMFormFloat(Struct[i].P[Bead].y+yshft,16) << ",";
+            call << LICHEMFormFloat(Struct[i].P[Bead].z+zshft,16);
+            call << ")" << '\n';
+          }
         }
       }
       call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
@@ -912,42 +933,45 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
               scrq = 0;
             }
           }
-          call << "Chrgfield.extern.addCharge(";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].q1*scrq),16) << ",";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].x1+xshft),16) << ",";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].y1+yshft),16) << ",";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].z1+zshft),16);
-          call << ")" << '\n';
-          call << "Chrgfield.extern.addCharge(";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].q2*scrq),16) << ",";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].x2+xshft),16) << ",";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].y2+yshft),16) << ",";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].z2+zshft),16);
-          call << ")" << '\n';
-          call << "Chrgfield.extern.addCharge(";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].q3*scrq),16) << ",";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].x3+xshft),16) << ",";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].y3+yshft),16) << ",";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].z3+zshft),16);
-          call << ")" << '\n';
-          call << "Chrgfield.extern.addCharge(";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].q4*scrq),16) << ",";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].x4+xshft),16) << ",";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].y4+yshft),16) << ",";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].z4+zshft),16);
-          call << ")" << '\n';
-          call << "Chrgfield.extern.addCharge(";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].q5*scrq),16) << ",";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].x5+xshft),16) << ",";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].y5+yshft),16) << ",";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].z5+zshft),16);
-          call << ")" << '\n';
-          call << "Chrgfield.extern.addCharge(";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].q6*scrq),16) << ",";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].x6+xshft),16) << ",";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].y6+yshft),16) << ",";
-          call << LICHEMFormFloat((Struct[i].PC[Bead].z6+zshft),16);
-          call << ")" << '\n';
+          if (scrq > 0)
+          {
+            call << "Chrgfield.extern.addCharge(";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].q1*scrq,16) << ",";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].x1+xshft,16) << ",";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].y1+yshft,16) << ",";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].z1+zshft,16);
+            call << ")" << '\n';
+            call << "Chrgfield.extern.addCharge(";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].q2*scrq,16) << ",";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].x2+xshft,16) << ",";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].y2+yshft,16) << ",";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].z2+zshft,16);
+            call << ")" << '\n';
+            call << "Chrgfield.extern.addCharge(";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].q3*scrq,16) << ",";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].x3+xshft,16) << ",";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].y3+yshft,16) << ",";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].z3+zshft,16);
+            call << ")" << '\n';
+            call << "Chrgfield.extern.addCharge(";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].q4*scrq,16) << ",";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].x4+xshft,16) << ",";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].y4+yshft,16) << ",";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].z4+zshft,16);
+            call << ")" << '\n';
+            call << "Chrgfield.extern.addCharge(";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].q5*scrq,16) << ",";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].x5+xshft,16) << ",";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].y5+yshft,16) << ",";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].z5+zshft,16);
+            call << ")" << '\n';
+            call << "Chrgfield.extern.addCharge(";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].q6*scrq,16) << ",";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].x6+xshft,16) << ",";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].y6+yshft,16) << ",";
+            call << LICHEMFormFloat(Struct[i].PC[Bead].z6+zshft,16);
+            call << ")" << '\n';
+          }
         }
       }
       call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
