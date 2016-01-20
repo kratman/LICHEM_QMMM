@@ -1030,10 +1030,10 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       DoQuit = 1;
     }
   }
-  if (PBCon)
+  if (QMMMOpts.UseLREC or PBCon)
   {
     //Check LREC cutoff
-    if (QMMMOpts.UseLREC)
+    if (PBCon)
     {
       //Find maximum box length
       double MinLen = Lx;
@@ -1055,6 +1055,13 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
         cout << ") due to the minimum image convention.";
         cout << '\n' << '\n';
       }
+    }
+    if (QMMMOpts.UseLREC and (QMMMOpts.LRECCut <= 0.10))
+    {
+      //Adjust cutoff to avoid divide by zero errors
+      QMMMOpts.LRECCut = 0.10; //Minimum value, effectively zero
+      cout << "Warning: LREC cutoffs less than 0.1 are not allowed.";
+      cout << '\n' << '\n';
     }
   }
   if (Ncpus < 1)
