@@ -944,8 +944,8 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
   //Collect additonal TINKER input
   if (TINKER and (!GauExternal))
   {
-    //Classes are not used in the QMMM, but looking for them can spot errors
-    FindTINKERClasses(Struct);
+    //NB: Classes are not used in the QMMM
+    FindTINKERClasses(Struct); //Finds errors
   }
   //Check if QM log files should be saved
   if (CheckFile("BACKUPQM"))
