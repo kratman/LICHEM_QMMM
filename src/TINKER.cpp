@@ -1492,9 +1492,9 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (QMMMOpts.UseMMCut)
   {
     //Apply cutoff
-    ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
+    ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.MMOptCut,12);
     ofile << '\n';
-    ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
+    ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.MMOptCut,12);
     ofile << '\n';
   }
   else if (QMMMOpts.UseLREC)
