@@ -24,8 +24,6 @@ class PeriodicTable
   private:
     //Atom types
     vector<string> Typs; //Atomic symbols
-    //Approximate 1s Gaussian widths of the atoms
-    vector<double> GauWids; //Diffuse charge widths
     //Bond distances
     vector<double> CovRadii; //Covalent radii
     //Radii
@@ -40,7 +38,6 @@ class PeriodicTable
     //Retrieve data
     string Typing(int); //Atom type
     int RevTyping(string); //Atomic number
-    double GetGauWid(string); //Gaussian (1s) width
     double GetCovRadius(string); //Covalent radius
     double GetRadius(string); //Van der Waals radius
     double GetAtMass(string); //Atomic mass

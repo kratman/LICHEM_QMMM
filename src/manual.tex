@@ -531,6 +531,7 @@ Default: 5000 \\
 Use\_cutoff: Use a MM cutoff in optimizations (Yes/No).
 This can greatly speed up the optimizations, but may prevent the optimization
 from locating a true minimum.
+This cutoff only effects the energies and forces in the MM optimizations.
 Using PBC and LREC is preferred since QM and QMMM energies are not calculated
 using an electrostatic cutoff.
 Default: No \\
@@ -550,7 +551,7 @@ boundary conditions.
 Default: No \\
 
 LREC\_cut: LREC cutoff (\AA) for the smoothing function.
-This keyword also sets the MM cutoff.
+This keyword also sets the MM cutoff for energy calculations.
 Default: 1000.0 \\
 
 \subsection{QMMM regions}
