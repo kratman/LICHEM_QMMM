@@ -1515,7 +1515,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
       cout << " MD steps: " << QMMMOpts.Nsteps << '\n';
       cout << '\n';
     }
-    else
+    else if (Nmm > 0)
     {
       cout << "MM convergence criteria:" << '\n';
       cout << "  RMS deviation: " << QMMMOpts.MMOptTol;
