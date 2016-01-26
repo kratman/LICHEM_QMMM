@@ -599,7 +599,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       //Read maximum number of optimization steps
       regionfile >> QMMMOpts.MaxOptSteps;
     }
-    else if (keyword == "use__mm_cutoff:")
+    else if (keyword == "use_mm_cutoff:")
     {
       //Check for the MM optimization cutoff
       regionfile >> dummy;
@@ -798,6 +798,8 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       Struct[i].PBregion = 0;
       Struct[i].BAregion = 0;
     }
+    //Adjust optimization settings
+    QMMMOpts.MMOptTol = QMMMOpts.QMOptTol; //Prevents early termination
   }
   if (MMonly)
   {
