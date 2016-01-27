@@ -2,8 +2,4 @@ Potential_type: MM
 MM_type: TINKER
 Electrostatics: Charges
 Calculation_type: SP
-QM_atoms: 0
-Pseudobond_atoms: 0
-Boundary_atoms: 0
-Frozen_atoms: 0
 

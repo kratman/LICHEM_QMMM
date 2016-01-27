@@ -135,6 +135,7 @@ class QMMMSettings
     double MaxStep; //Maximum size of the optimization step
     bool UseMMCut; //Flag to turn the cutoff on or off
     double MMOptCut; //Electrostatic cutoff for MM optimzations (Ang)
+    bool UseEwald; //Use Ewald summation for MM energy and optimizations
     //Input needed for reaction paths
     double Kspring; //Elastic band spring constant
     int TSBead; //Current guess of the transition state

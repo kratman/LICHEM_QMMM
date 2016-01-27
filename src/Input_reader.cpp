@@ -262,6 +262,7 @@ void InitializeVariables(QMMMSettings& QMMMOpts)
   QMMMOpts.MaxStep = 0.1;
   QMMMOpts.UseMMCut = 0;
   QMMMOpts.MMOptCut = 1000.0; //Effectively infinite
+  QMMMOpts.UseEwald = 0;
   //Additional RP settings
   QMMMOpts.Kspring = 1.0;
   QMMMOpts.TSBead = 0;
@@ -614,6 +615,17 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       //Read MM optimization cutoff
       regionfile >> QMMMOpts.MMOptCut;
+    }
+    else if (keyword == "use_ewald:")
+    {
+      //Check for MM Ewald summation
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "yes") or (dummy == "true"))
+      {
+        //Turn on the optimization cutoff
+        QMMMOpts.UseEwald = 1;
+      }
     }
     else if (keyword == "beads:")
     {

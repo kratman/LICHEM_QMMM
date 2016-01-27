@@ -10,7 +10,3 @@ Electrostatics: Charges
 Calculation_type: SP
 QM_atoms: 3
 0 1 2
-Pseudobond_atoms: 0
-Boundary_atoms: 0
-Frozen_atoms: 0
-

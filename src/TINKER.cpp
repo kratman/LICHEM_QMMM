@@ -173,10 +173,17 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (QMMMOpts.UseLREC)
   {
     //Apply cutoff
-    ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
-    ofile << '\n';
-    ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
-    ofile << '\n';
+    if (QMMMOpts.UseEwald and PBCon)
+    {
+      ofile << "ewald" << '\n';
+    }
+    else
+    {
+      ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
+      ofile << '\n';
+      ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
+      ofile << '\n';
+    }
   }
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
@@ -377,10 +384,17 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (QMMMOpts.UseLREC)
   {
     //Apply cutoff
-    ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
-    ofile << '\n';
-    ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
-    ofile << '\n';
+    if (QMMMOpts.UseEwald and PBCon)
+    {
+      ofile << "ewald" << '\n';
+    }
+    else
+    {
+      ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
+      ofile << '\n';
+      ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
+      ofile << '\n';
+    }
   }
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
@@ -548,10 +562,17 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   if (QMMMOpts.UseLREC)
   {
     //Apply cutoff
-    ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
-    ofile << '\n';
-    ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
-    ofile << '\n';
+    if (QMMMOpts.UseEwald and PBCon)
+    {
+      ofile << "ewald" << '\n';
+    }
+    else
+    {
+      ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
+      ofile << '\n';
+      ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
+      ofile << '\n';
+    }
   }
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
@@ -806,10 +827,17 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   if (QMMMOpts.UseLREC)
   {
     //Apply cutoff
-    ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
-    ofile << '\n';
-    ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
-    ofile << '\n';
+    if (QMMMOpts.UseEwald and PBCon)
+    {
+      ofile << "ewald" << '\n';
+    }
+    else
+    {
+      ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
+      ofile << '\n';
+      ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
+      ofile << '\n';
+    }
   }
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
@@ -1037,10 +1065,17 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (QMMMOpts.UseLREC)
   {
     //Apply cutoff
-    ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
-    ofile << '\n';
-    ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
-    ofile << '\n';
+    if (QMMMOpts.UseEwald and PBCon)
+    {
+      ofile << "ewald" << '\n';
+    }
+    else
+    {
+      ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
+      ofile << '\n';
+      ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
+      ofile << '\n';
+    }
   }
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
@@ -1252,10 +1287,17 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (QMMMOpts.UseLREC)
   {
     //Apply cutoff
-    ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
-    ofile << '\n';
-    ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
-    ofile << '\n';
+    if (QMMMOpts.UseEwald and PBCon)
+    {
+      ofile << "ewald" << '\n';
+    }
+    else
+    {
+      ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
+      ofile << '\n';
+      ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
+      ofile << '\n';
+    }
   }
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision
@@ -1492,18 +1534,32 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (QMMMOpts.UseMMCut)
   {
     //Apply cutoff
-    ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.MMOptCut,12);
-    ofile << '\n';
-    ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.MMOptCut,12);
-    ofile << '\n';
+    if (QMMMOpts.UseEwald and PBCon)
+    {
+      ofile << "ewald" << '\n';
+    }
+    else
+    {
+      ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.MMOptCut,12);
+      ofile << '\n';
+      ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.MMOptCut,12);
+      ofile << '\n';
+    }
   }
   else if (QMMMOpts.UseLREC)
   {
     //Apply cutoff
-    ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
-    ofile << '\n';
-    ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
-    ofile << '\n';
+    if (QMMMOpts.UseEwald and PBCon)
+    {
+      ofile << "ewald" << '\n';
+    }
+    else
+    {
+      ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
+      ofile << '\n';
+      ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
+      ofile << '\n';
+    }
   }
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision

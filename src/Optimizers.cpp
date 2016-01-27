@@ -714,7 +714,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     else
     {
       //Take a small steepest descent step and rebuild Hessian
-      cout << "    Potentially unstable structure.";
+      cout << "    Potentially unstable Hessian.";
       cout << " Constructing new Hessian...";
       cout << '\n';
       //Reduce step size
