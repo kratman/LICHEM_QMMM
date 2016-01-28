@@ -175,10 +175,12 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Apply cutoff
     if (QMMMOpts.UseEwald and PBCon)
     {
+      //Use Ewald or PME
       ofile << "ewald" << '\n';
     }
     else
     {
+      //Use smoothing functions
       ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
       ofile << '\n';
       ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
@@ -386,10 +388,12 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Apply cutoff
     if (QMMMOpts.UseEwald and PBCon)
     {
+      //Use Ewald or PME
       ofile << "ewald" << '\n';
     }
     else
     {
+      //Use smoothing functions
       ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
       ofile << '\n';
       ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
@@ -564,10 +568,12 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     //Apply cutoff
     if (QMMMOpts.UseEwald and PBCon)
     {
+      //Use Ewald or PME
       ofile << "ewald" << '\n';
     }
     else
     {
+      //Use smoothing functions
       ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
       ofile << '\n';
       ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
@@ -829,10 +835,12 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     //Apply cutoff
     if (QMMMOpts.UseEwald and PBCon)
     {
+      //Use Ewald or PME
       ofile << "ewald" << '\n';
     }
     else
     {
+      //Use smoothing functions
       ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
       ofile << '\n';
       ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
@@ -1067,10 +1075,12 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     //Apply cutoff
     if (QMMMOpts.UseEwald and PBCon)
     {
+      //Use Ewald or PME
       ofile << "ewald" << '\n';
     }
     else
     {
+      //Use smoothing functions
       ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
       ofile << '\n';
       ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
@@ -1289,10 +1299,12 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Apply cutoff
     if (QMMMOpts.UseEwald and PBCon)
     {
+      //Use Ewald or PME
       ofile << "ewald" << '\n';
     }
     else
     {
+      //Use smoothing functions
       ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
       ofile << '\n';
       ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
@@ -1536,10 +1548,14 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     //Apply cutoff
     if (QMMMOpts.UseEwald and PBCon)
     {
+      //Use Ewald and truncate vdW forces
+      ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.MMOptCut,12);
+      ofile << '\n';
       ofile << "ewald" << '\n';
     }
     else
     {
+      //Use smoothing functions
       ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.MMOptCut,12);
       ofile << '\n';
       ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.MMOptCut,12);
@@ -1551,10 +1567,12 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     //Apply cutoff
     if (QMMMOpts.UseEwald and PBCon)
     {
+      //Use Ewald or PME
       ofile << "ewald" << '\n';
     }
     else
     {
+      //Use smoothing functions
       ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
       ofile << '\n';
       ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);

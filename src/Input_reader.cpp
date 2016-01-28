@@ -1077,6 +1077,13 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       cout << "Warning: LREC cutoffs less than 0.1 are not allowed.";
       cout << '\n' << '\n';
     }
+    if (QMMMOpts.UseEwald and (!PBCon))
+    {
+      //Check Ewald settings
+      cout << " Error: Ewald summation cannot be used without PBC.";
+      cout << '\n';
+      DoQuit = 1;
+    }
   }
   if (Ncpus < 1)
   {
@@ -1429,6 +1436,14 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
         cout << " LREC cutoff: ";
         cout << LICHEMFormFloat(QMMMOpts.LRECCut,8);
         cout << " \u212B" << '\n';
+      }
+      if (QMMMOpts.UseEwald)
+      {
+        cout << " MM Ewald: Yes" << '\n';
+      }
+      else
+      {
+        cout << " MM Ewald: No" << '\n';
       }
     }
   }
