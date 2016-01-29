@@ -229,8 +229,9 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     {
       int tstart = (unsigned)time(0);
       E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
-      if (AMOEBA)
+      if (AMOEBA or QMMMOpts.UseImpSolv)
       {
+        //Forces from MM polarization
         E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
       }
       MMTime += (unsigned)time(0)-tstart;
@@ -368,8 +369,9 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     {
       int tstart = (unsigned)time(0);
       E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
-      if (AMOEBA)
+      if (AMOEBA or QMMMOpts.UseImpSolv)
       {
+        //Forces from MM polarization
         E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
       }
       MMTime += (unsigned)time(0)-tstart;
@@ -519,8 +521,9 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   {
     int tstart = (unsigned)time(0);
     E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
-    if (AMOEBA)
+    if (AMOEBA or QMMMOpts.UseImpSolv)
     {
+      //Forces from MM polarization
       E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
     }
     MMTime += (unsigned)time(0)-tstart;
@@ -614,8 +617,9 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     {
       int tstart = (unsigned)time(0);
       E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
-      if (AMOEBA)
+      if (AMOEBA or QMMMOpts.UseImpSolv)
       {
+        //Forces from MM polarization
         E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
       }
       MMTime += (unsigned)time(0)-tstart;
@@ -809,9 +813,9 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
       int tstart = (unsigned)time(0);
       E += TINKERForces(Struct,Forces,QMMMOpts,Bead);
       SumE += TINKEREnergy(Struct,QMMMOpts,Bead);
-      if (AMOEBA)
+      if (AMOEBA or QMMMOpts.UseImpSolv)
       {
-        //Force from MM polarization
+        //Forces from MM polarization
         E += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
       }
       MMTime += (unsigned)time(0)-tstart;

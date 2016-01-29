@@ -229,54 +229,6 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
   return;
 };
 
-void InitializeVariables(QMMMSettings& QMMMOpts)
-{
-  //Initialize all variables at once
-  //QM wrapper settings
-  QMMMOpts.Func = "N/A";
-  QMMMOpts.Basis = "N/A";
-  QMMMOpts.RAM = "256";
-  QMMMOpts.MemMB = 1;
-  QMMMOpts.Charge = "0";
-  QMMMOpts.Spin = "1";
-  QMMMOpts.BackDir = "N/A";
-  QMMMOpts.UseLREC = 0;
-  QMMMOpts.LRECCut = 1000.0; //Effectively infinite
-  //MC, MD, and RP settings
-  QMMMOpts.Ensemble = "N/A";
-  QMMMOpts.Temp = 300.0;
-  QMMMOpts.Beta = 1/(300.0*k);
-  QMMMOpts.Press = 0.0;
-  QMMMOpts.Neq = 0;
-  QMMMOpts.Nsteps = 0;
-  QMMMOpts.Nbeads = 1; //Key for printing
-  QMMMOpts.accratio = 0.5;
-  QMMMOpts.Nprint = 5000;
-  QMMMOpts.dt = 1.0;
-  QMMMOpts.tautemp = 1000.0;
-  //Optimization settings
-  QMMMOpts.MaxOptSteps = 200;
-  QMMMOpts.MMOptTol = 1e-2;
-  QMMMOpts.QMOptTol = 5e-4;
-  QMMMOpts.StepScale = 1.0;
-  QMMMOpts.MaxStep = 0.1;
-  QMMMOpts.UseMMCut = 0;
-  QMMMOpts.MMOptCut = 1000.0; //Effectively infinite
-  QMMMOpts.UseEwald = 0;
-  //Additional RP settings
-  QMMMOpts.Kspring = 1.0;
-  QMMMOpts.TSBead = 0;
-  QMMMOpts.Climb = 0;
-  QMMMOpts.FrznEnds = 0;
-  QMMMOpts.StartPathChk = 1; //Speeds up reaction pathways
-  //Temporary energy storage
-  QMMMOpts.Eold = 0.0;
-  QMMMOpts.Ereact = 0.0;
-  QMMMOpts.Eprod = 0.0;
-  QMMMOpts.Ets = 0.0;
-  return;
-};
-
 void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
                      fstream& regionfile, vector<QMMMAtom>& Struct,
                      QMMMSettings& QMMMOpts)
@@ -623,9 +575,25 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       LICHEMLowerText(dummy);
       if ((dummy == "yes") or (dummy == "true"))
       {
-        //Turn on the optimization cutoff
+        //Turn on Ewald or PME
         QMMMOpts.UseEwald = 1;
       }
+    }
+    else if (keyword == "use_solvent:")
+    {
+      //Check for MM implicit solvation
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "yes") or (dummy == "true"))
+      {
+        //Turn on the implicit solvent
+        QMMMOpts.UseImpSolv = 1;
+      }
+    }
+    else if (keyword == "solv_model:")
+    {
+      //Read MM implicit solvent model
+      regionfile >> QMMMOpts.SolvModel;
     }
     else if (keyword == "beads:")
     {
@@ -787,11 +755,10 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (regionfile.good() and (!regionfile.eof()))
     {
       //Inform the user about the bad keyword
-      cerr << "Error: Unrecognized keyword: ";
-      cerr << keyword << '\n';
-      cerr.flush();
-      //Quit
+      cout << "Error: Unrecognized keyword: ";
+      cout << keyword << '\n';
       cout.flush();
+      //Quit
       exit(0);
     }
   }
@@ -1044,6 +1011,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       DoQuit = 1;
     }
   }
+  //Simulation box errors
   if (QMMMOpts.UseLREC or PBCon)
   {
     //Check LREC cutoff
@@ -1077,14 +1045,23 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       cout << "Warning: LREC cutoffs less than 0.1 are not allowed.";
       cout << '\n' << '\n';
     }
-    if (QMMMOpts.UseEwald and (!PBCon))
-    {
-      //Check Ewald settings
-      cout << " Error: Ewald summation cannot be used without PBC.";
-      cout << '\n';
-      DoQuit = 1;
-    }
   }
+  //Check Ewald and implicit solvation settings
+  if (QMMMOpts.UseEwald and (!PBCon))
+  {
+    //Check Ewald settings
+    cout << " Error: Ewald summation cannot be used without PBC.";
+    cout << '\n';
+    DoQuit = 1;
+  }
+  if (QMMMOpts.UseImpSolv and PBCon)
+  {
+    //Check Ewald settings
+    cout << " Error: Implicit solvation models cannot be used with PBC.";
+    cout << '\n';
+    DoQuit = 1;
+  }
+  //Check threading
   if (Ncpus < 1)
   {
     //Checks the number of threads and continue
@@ -1418,7 +1395,7 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
       }
     }
     //Print PBC information
-    if (PBCon or QMMMOpts.UseLREC)
+    if (PBCon or QMMMOpts.UseLREC or QMMMOpts.UseImpSolv)
     {
       cout << '\n';
       cout << "Simulation box settings:" << '\n';
@@ -1441,9 +1418,10 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
       {
         cout << " MM Ewald: Yes" << '\n';
       }
-      else
+      if (QMMMOpts.UseImpSolv)
       {
-        cout << " MM Ewald: No" << '\n';
+        cout << " Implicit solvent: " << QMMMOpts.SolvModel;
+        cout << '\n';
       }
     }
   }

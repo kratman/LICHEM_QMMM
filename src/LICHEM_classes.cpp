@@ -250,7 +250,51 @@ QMMMElec::~QMMMElec()
 //QMMMSettings class function definitions
 QMMMSettings::QMMMSettings()
 {
-  //Generic constructor
+  //QM wrapper settings
+  Func = "N/A";
+  Basis = "N/A";
+  RAM = "256";
+  MemMB = 1;
+  Charge = "0";
+  Spin = "1";
+  BackDir = "N/A";
+  UseLREC = 0;
+  LRECCut = 1000.0; //Effectively infinite
+  //MM wrapper settings
+  UseMMCut = 0;
+  MMOptCut = 1000.0; //Effectively infinite
+  UseEwald = 0;
+  UseImpSolv = 0;
+  SolvModel = "N/A";
+  //MC, MD, and RP settings
+  Ensemble = "N/A";
+  Temp = 300.0;
+  Beta = 1/(300.0*k);
+  Press = 0.0;
+  Neq = 0;
+  Nsteps = 0;
+  Nbeads = 1; //Key for printing
+  accratio = 0.5;
+  Nprint = 5000;
+  dt = 1.0;
+  tautemp = 1000.0;
+  //Optimization settings
+  MaxOptSteps = 200;
+  MMOptTol = 1e-2;
+  QMOptTol = 5e-4;
+  StepScale = 1.0;
+  MaxStep = 0.1;
+  //Additional RP settings
+  Kspring = 1.0;
+  TSBead = 0;
+  Climb = 0;
+  FrznEnds = 0;
+  StartPathChk = 1; //Speeds up reaction pathways
+  //Temporary energy storage
+  Eold = 0.0;
+  Ereact = 0.0;
+  Eprod = 0.0;
+  Ets = 0.0;
   return;
 };
 

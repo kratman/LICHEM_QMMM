@@ -64,11 +64,7 @@ int main(int argc, char* argv[])
   //End of section
 
   //Read input and check for errors
-  InitializeVariables(QMMMOpts);
   ReadLICHEMInput(xyzfile,connectfile,regionfile,Struct,QMMMOpts);
-  //End of section
-
-  //Check input for even more errors
   LICHEMErrorChecker(QMMMOpts);
   LICHEMPrintSettings(QMMMOpts);
   //End of section

@@ -1,0 +1,6 @@
+Potential_type: MM
+MM_type: TINKER
+Electrostatics: AMOEBA
+Calculation_type: SP
+Use_solvent: Yes
+Solv_model: GK

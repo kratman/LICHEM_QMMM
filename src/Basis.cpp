@@ -68,7 +68,6 @@ void LICHEM2BASIS(int& argc,char**& argv)
     bool FoundWrapper = 0;
     bool FoundBasis = 0;
     bool FoundQM = 0;
-    bool FoundPB = 0;
     vector<int> QMatoms;
     vector<int> PBatoms;
     string BasisSetName = "???";
@@ -122,12 +121,11 @@ void LICHEM2BASIS(int& argc,char**& argv)
             regfile >> AtNum;
             PBatoms.push_back(AtNum);
           }
-          FoundPB = 1;
         }
       }
     }
     //Check for read errors
-    if ((!FoundWrapper) or (!FoundBasis) or (!FoundQM) or (!FoundPB))
+    if ((!FoundWrapper) or (!FoundBasis) or (!FoundQM))
     {
       cout << "Error: Missing data in region file!!!";
       cout << '\n';
@@ -198,30 +196,33 @@ void LICHEM2BASIS(int& argc,char**& argv)
       }
       //Write PB atoms
       ct = 0; //Reset counter
-      for (int i=0;i<Ntotal;i++)
+      if (Npseudo > 0)
       {
-        if (!AtomList[i])
+        for (int i=0;i<Ntotal;i++)
         {
-          ct += 1; //Increase counter
-          ofile << (i+1) << " ";
-          if (ct == 8)
+          if (!AtomList[i])
           {
-            //Print basis info
-            ofile << " 0" << '\n';
-            ofile << "[PB basis set]" << '\n';
-            ofile << "****" << '\n';
-            //Start a new line
-            ct = 0;
+            ct += 1; //Increase counter
+            ofile << (i+1) << " ";
+            if (ct == 8)
+            {
+              //Print basis info
+              ofile << " 0" << '\n';
+              ofile << "[PB basis set]" << '\n';
+              ofile << "****" << '\n';
+              //Start a new line
+              ct = 0;
+            }
           }
         }
-      }
-      //Terminate QM basis set information
-      if (ct != 0)
-      {
-        //Print basis info
-        ofile << " 0" << '\n';
-        ofile << "[PB basis set]" << '\n';
-        ofile << "****" << '\n';
+        //Terminate QM basis set information
+        if (ct != 0)
+        {
+          //Print basis info
+          ofile << " 0" << '\n';
+          ofile << "[PB basis set]" << '\n';
+          ofile << "****" << '\n';
+        }
       }
       //Write pseudopotential information
       ofile << '\n';

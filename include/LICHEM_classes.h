@@ -115,6 +115,12 @@ class QMMMSettings
     string BackDir; //Directory for log file backups
     bool UseLREC; //Use a long-range correction
     double LRECCut; //Cutoff for the long-range correction
+    //Input needed for MM wrappers
+    bool UseMMCut; //Flag to turn the cutoff on or off
+    double MMOptCut; //Electrostatic cutoff for MM optimzations (Ang)
+    bool UseEwald; //Use Ewald summation for MM energy and optimizations
+    bool UseImpSolv; //Use implicit solvents for MM energy and optimizations
+    string SolvModel; //Type of implicit solvent
     //Input needed for MC and MD functions
     string Ensemble; //NVT or NPT
     double Temp; //Temperature
@@ -133,9 +139,6 @@ class QMMMSettings
     double QMOptTol; //Criteria to end the optimization
     double StepScale; //Steepest descent step size (Ang)
     double MaxStep; //Maximum size of the optimization step
-    bool UseMMCut; //Flag to turn the cutoff on or off
-    double MMOptCut; //Electrostatic cutoff for MM optimzations (Ang)
-    bool UseEwald; //Use Ewald summation for MM energy and optimizations
     //Input needed for reaction paths
     double Kspring; //Elastic band spring constant
     int TSBead; //Current guess of the transition state

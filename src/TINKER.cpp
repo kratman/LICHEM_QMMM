@@ -178,7 +178,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Use Ewald or PME
       ofile << "ewald" << '\n';
     }
-    else
+    else if (!QMMMOpts.UseImpSolv)
     {
       //Use smoothing functions
       ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
@@ -323,8 +323,9 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
   string dummy; //Generic string
-  double Epol = 0;
-  double E = 0;
+  double Epol = 0; //Polarization energy
+  double Esolv = 0; //Solvation energy
+  double E = 0; //Total energy for error checking
   int ct; //Generic counter
   //Create TINKER xyz file
   call.str("");
@@ -391,7 +392,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Use Ewald or PME
       ofile << "ewald" << '\n';
     }
-    else
+    else if (!QMMMOpts.UseImpSolv)
     {
       //Use smoothing functions
       ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
@@ -412,7 +413,18 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ofile << "beta 90.0" << '\n';
     ofile << "gamma 90.0" << '\n';
   }
-  ofile << "polarizeterm only" << '\n'; //Get rid of other interactions
+  if (AMOEBA)
+  {
+    //Get rid of non-polarization interactions
+    ofile << "polarizeterm only" << '\n';
+  }
+  if (QMMMOpts.UseImpSolv)
+  {
+    //Add the implicit solvation model
+    ofile << "solvateterm" << '\n';
+    ofile << "solvate " << QMMMOpts.SolvModel;
+    ofile << '\n';
+  }
   ct = 0; //Generic counter
   if (QMMM)
   {
@@ -510,6 +522,14 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     {
       ifile >> Epol;
     }
+    if (dummy == "Implicit")
+    {
+      ifile >> dummy;
+      if (dummy == "Solvation")
+      {
+        ifile >> Esolv;
+      }
+    }
   }
   if (!Efound)
   {
@@ -519,6 +539,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
     Epol = 0; //Prevents errors when polarization is off
+    Esolv = 0; //Prevents errors when implicit solvation is off
     cerr.flush(); //Print warning immediately
   }
   ifile.close();
@@ -529,8 +550,8 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << " LICHM_" << Bead << ".log";
   call << " LICHM_" << Bead << ".key";
   GlobalSys = system(call.str().c_str());
-  //Return polarization energy in kcal/mol
-  return Epol;
+  //Return polarization and solvation energy in kcal/mol
+  return Epol+Esolv;
 };
 
 double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
@@ -563,7 +584,26 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     ofile << "#LICHEM MM keywords"; //Marks the changes
   }
   ofile << '\n';
-  if (QMMMOpts.UseLREC)
+  if (QMMMOpts.UseMMCut)
+  {
+    //Apply cutoff
+    if (QMMMOpts.UseEwald and PBCon)
+    {
+      //Use Ewald and truncate vdW forces
+      ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.MMOptCut,12);
+      ofile << '\n';
+      ofile << "ewald" << '\n';
+    }
+    else
+    {
+      //Use smoothing functions
+      ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.MMOptCut,12);
+      ofile << '\n';
+      ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.MMOptCut,12);
+      ofile << '\n';
+    }
+  }
+  else if (QMMMOpts.UseLREC)
   {
     //Apply cutoff
     if (QMMMOpts.UseEwald and PBCon)
@@ -830,7 +870,26 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     ofile << "#LICHEM MM keywords"; //Marks the changes
   }
   ofile << '\n';
-  if (QMMMOpts.UseLREC)
+  if (QMMMOpts.UseMMCut)
+  {
+    //Apply cutoff
+    if (QMMMOpts.UseEwald and PBCon)
+    {
+      //Use Ewald and truncate vdW forces
+      ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.MMOptCut,12);
+      ofile << '\n';
+      ofile << "ewald" << '\n';
+    }
+    else
+    {
+      //Use smoothing functions
+      ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.MMOptCut,12);
+      ofile << '\n';
+      ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.MMOptCut,12);
+      ofile << '\n';
+    }
+  }
+  else if (QMMMOpts.UseLREC)
   {
     //Apply cutoff
     if (QMMMOpts.UseEwald and PBCon)
@@ -838,7 +897,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
       //Use Ewald or PME
       ofile << "ewald" << '\n';
     }
-    else
+    else if (!QMMMOpts.UseImpSolv)
     {
       //Use smoothing functions
       ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
@@ -859,7 +918,18 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     ofile << "beta 90.0" << '\n';
     ofile << "gamma 90.0" << '\n';
   }
-  ofile << "polarizeterm only" << '\n'; //Get rid of other interactions
+  if (AMOEBA)
+  {
+    //Get rid of non-polarization interactions
+    ofile << "polarizeterm only" << '\n';
+  }
+  if (QMMMOpts.UseImpSolv)
+  {
+    //Add the implicit solvation model
+    ofile << "solvateterm" << '\n';
+    ofile << "solvate " << QMMMOpts.SolvModel;
+    ofile << '\n';
+  }
   ct = 0; //Generic counter
   for (int i=0;i<Natoms;i++)
   {
@@ -1078,7 +1148,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       //Use Ewald or PME
       ofile << "ewald" << '\n';
     }
-    else
+    else if (!QMMMOpts.UseImpSolv)
     {
       //Use smoothing functions
       ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
@@ -1102,6 +1172,12 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (QMMM)
   {
     ofile << "polarizeterm none" << '\n'; //Remove polarization energy
+  }
+  else if (QMMMOpts.UseImpSolv)
+  {
+    //Add the implicit solvation model
+    ofile << "solvate " << QMMMOpts.SolvModel;
+    ofile << '\n';
   }
   ct = 0; //Generic counter
   if (QMMM)
@@ -1254,7 +1330,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << " LICHM_" << Bead << ".key";
   GlobalSys = system(call.str().c_str());
   //Calculate polarization energy
-  if ((AMOEBA or GEM) and QMMM)
+  if ((AMOEBA or GEM or QMMMOpts.UseImpSolv) and QMMM)
   {
     //Correct polarization energy for QMMM simulations
     E += TINKERPolEnergy(Struct,QMMMOpts,Bead);
@@ -1302,7 +1378,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Use Ewald or PME
       ofile << "ewald" << '\n';
     }
-    else
+    else if (!QMMMOpts.UseImpSolv)
     {
       //Use smoothing functions
       ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
@@ -1570,7 +1646,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       //Use Ewald or PME
       ofile << "ewald" << '\n';
     }
-    else
+    else if (!QMMMOpts.UseImpSolv)
     {
       //Use smoothing functions
       ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
@@ -1578,6 +1654,12 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
       ofile << '\n';
     }
+  }
+  if (QMMMOpts.UseImpSolv)
+  {
+    //Add the implicit solvation model
+    ofile << "solvate " << QMMMOpts.SolvModel;
+    ofile << '\n';
   }
   ofile << "openmp-threads " << Ncpus << '\n';
   ofile << "digits 12" << '\n'; //Increase precision

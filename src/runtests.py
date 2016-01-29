@@ -832,6 +832,77 @@ for qmtest in QMTests:
         cmd += " *.movecs"
       subprocess.call(cmd,shell=True)
 
+      #Check MM energy
+      line = ""
+      PassEnergy = 0
+      cmd = "cp pol.key tinker.key"
+      subprocess.call(cmd,shell=True) #Copy key file
+      cmd = "lichem -n "
+      cmd += `Ncpus`
+      cmd += " "
+      cmd += "-x waterdimer.xyz "
+      cmd += "-r solvreg.inp "
+      cmd += "-c watercon.inp "
+      cmd += "-o trash.xyz "
+      cmd += "> tests.out " #Capture stdout
+      cmd += "2>&1" #Capture stderr
+      subprocess.call(cmd,shell=True) #Run calculations
+      cmd = ""
+      cmd += "grep -e"
+      cmd += ' "MM energy: " ' #Find final energy
+      cmd += "tests.out"
+      SavedEnergy = "Crashed..."
+      try:
+        #Safely check energy
+        QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
+        QMMMEnergy = QMMMEnergy.split()
+        QMMMEnergy = float(QMMMEnergy[2])
+        SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
+        QMMMEnergy = round(QMMMEnergy,5)
+      except:
+        #Calculation failed
+        QMMMEnergy = 0.0
+      #Check against saved energy
+      if (QMMMEnergy == round(-1.2549403662026,5)):
+        PassEnergy = 1
+      line += " AMOEBA/GK energy:    "
+      if (PassEnergy == 1):
+        line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
+        passct += 1
+      else:
+        line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+        failct += 1
+      cmd = ""
+      cmd += "grep -e"
+      cmd += ' "Total wall time: " ' #Find run time
+      cmd += "tests.out"
+      try:
+        RunTime = subprocess.check_output(cmd,shell=True) #Get run time
+        RunTime = RunTime.split()
+        RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
+      except:
+         RunTime = " N/A"
+      line += RunTime
+      if (UpdateResults == 1):
+        line += ", "
+        line += SavedEnergy
+      print(line)
+
+      #Clean up files
+      cmd = ""
+      cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
+      cmd += " BeadStartStruct.xyz BurstStruct.xyz"
+      if (QMPack == "Gaussian"):
+        #Remove checkpoint files
+        cmd += " *.chk"
+      if (QMPack == "PSI4"):
+        #Remove checkpoint files
+        cmd += " timer.* psi.* *.32 *.180"
+      if (QMPack == "NWChem"):
+        #Remove checkpoint files
+        cmd += " *.movecs"
+      subprocess.call(cmd,shell=True)
+
       #Check QMMM point-charge energy results
       line = ""
       PassEnergy = 0
