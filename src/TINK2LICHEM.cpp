@@ -248,20 +248,14 @@ void TINK2LICHEM(int& argc, char**& argv)
   }
   //Write region file
   regfile << fixed;
-  regfile << "PBC: ";
   if (PBCon)
   {
     //Print PBC settings
-    regfile << "Yes" << '\n';
+    regfile << "PBC: Yes" << '\n';
     regfile << "Box_size: ";
     regfile << Lx << " ";
     regfile << Ly << " ";
     regfile << Lz << '\n';
-  }
-  else
-  {
-    //Not periodic
-    regfile << "No" << '\n';
   }
   regfile << "QM_atoms: ";
   regfile << Nqm << '\n';
