@@ -484,7 +484,7 @@ Beads: Number of replica beads for reaction pathways and path-integral
 Monte Carlo simulations.
 Default: 1 \\
 
-Spring\_constant: Nudged elastic band spring constant (eV/\AA$^2$)
+Spring\_constant: Nudged elastic band spring constant (eV/\AA$^2$).
 Default: 1.0 \\
 
 Frozen\_ends: Freeze the end points of the reaction path optimizations
@@ -547,12 +547,25 @@ Box\_size: Three lattice constants (\AA) for the periodic simulation box.
 Default: 10000.0 10000.0 10000.0 \\
 
 Use\_LREC: Use a long-range smoothing function (Yes/No) for QM periodic
-boundary conditions.
+boundary conditions (Yes/No).
 Default: No \\
 
 LREC\_cut: LREC cutoff (\AA) for the smoothing function.
 This keyword also sets the MM cutoff for energy calculations.
 Default: 1000.0 \\
+
+Use\_Ewald: Use Ewald summation for the MM calculations (Yes/No).
+This keyword turns off MM cutoffs for energy calculations.
+Default: No \\
+
+Use\_solvent: Use an implicit solvent for MM calculations (Yes/No).
+Implicit solvents can only be used for non-periodic simulations.
+Using an implicit solvent disables MM cutoffs in energy calculations.
+Default: No \\
+
+Solv\_model: Type of implicit solvation model.
+As a general note, solvation models should be chosen carefully.
+Default: N/A
 
 \subsection{QMMM regions}
 

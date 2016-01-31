@@ -1028,7 +1028,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
         MinLen = Lz;
       }
       //Check cutoff
-      if (QMMMOpts.LRECCut > (0.5*MinLen))
+      if (QMMMOpts.UseLREC and (QMMMOpts.LRECCut > (0.5*MinLen)))
       {
         //Needed to make the minimum image convention safe
         QMMMOpts.LRECCut = 0.5*MinLen;
@@ -1401,11 +1401,11 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
       cout << "Simulation box settings:" << '\n';
       if (PBCon)
       {
+        cout << " Boundaries: Periodic" << '\n';
         cout << " Box size: ";
         cout << LICHEMFormFloat(Lx,10) << " ";
         cout << LICHEMFormFloat(Ly,10) << " ";
         cout << LICHEMFormFloat(Lz,10) << '\n';
-        cout << " Boundaries: Periodic" << '\n';
       }
       if (QMMMOpts.UseLREC)
       {
@@ -1459,6 +1459,10 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
       cout << "GB";
     }
     cout << '\n';
+  }
+  if (MMonly or QMMM)
+  {
+    cout << " MM threads: " << Ncpus << '\n';
   }
   //Print convergence criteria for optimizations
   if (OptSim or SteepSim or QuickSim or DFPSim or

@@ -584,26 +584,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     ofile << "#LICHEM MM keywords"; //Marks the changes
   }
   ofile << '\n';
-  if (QMMMOpts.UseMMCut)
-  {
-    //Apply cutoff
-    if (QMMMOpts.UseEwald and PBCon)
-    {
-      //Use Ewald and truncate vdW forces
-      ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.MMOptCut,12);
-      ofile << '\n';
-      ofile << "ewald" << '\n';
-    }
-    else
-    {
-      //Use smoothing functions
-      ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.MMOptCut,12);
-      ofile << '\n';
-      ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.MMOptCut,12);
-      ofile << '\n';
-    }
-  }
-  else if (QMMMOpts.UseLREC)
+  if (QMMMOpts.UseLREC)
   {
     //Apply cutoff
     if (QMMMOpts.UseEwald and PBCon)
@@ -870,26 +851,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     ofile << "#LICHEM MM keywords"; //Marks the changes
   }
   ofile << '\n';
-  if (QMMMOpts.UseMMCut)
-  {
-    //Apply cutoff
-    if (QMMMOpts.UseEwald and PBCon)
-    {
-      //Use Ewald and truncate vdW forces
-      ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.MMOptCut,12);
-      ofile << '\n';
-      ofile << "ewald" << '\n';
-    }
-    else
-    {
-      //Use smoothing functions
-      ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.MMOptCut,12);
-      ofile << '\n';
-      ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.MMOptCut,12);
-      ofile << '\n';
-    }
-  }
-  else if (QMMMOpts.UseLREC)
+  if (QMMMOpts.UseLREC)
   {
     //Apply cutoff
     if (QMMMOpts.UseEwald and PBCon)
@@ -1175,7 +1137,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   }
   else if (QMMMOpts.UseImpSolv)
   {
-    //Add the implicit solvation model
+    //Add the implicit solvation model for pure MM calculations
     ofile << "solvate " << QMMMOpts.SolvModel;
     ofile << '\n';
   }
