@@ -69,10 +69,10 @@ int main(int argc, char* argv[])
   LICHEMPrintSettings(QMMMOpts);
   //End of section
 
-  //Center the system
-  if (PBCon)
+  //Fix PBC
+  if (PBCon and (!TINKER))
   {
-    //PBC corrections that are compatible with all packages
+    //Relatively safe PBC correction
     PBCCenter(Struct,QMMMOpts); //Center the atoms in the box
   }
   //End of section
