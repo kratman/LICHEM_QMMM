@@ -28,6 +28,11 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
   call << "MMCharges_" << Bead << ".txt";
   chrgfilename = call.str();
   UseChargeFile = CheckFile(call.str());
+  if (Nmm == 0)
+  {
+    //Skip blank charge files
+    UseChargeFile = 0;
+  }
   //Initialize multipoles and center of mass
   bool FirstCharge = 1; //Always write the first charge
   Coord QMCOM;
@@ -337,6 +342,11 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   call << "MMCharges_" << Bead << ".txt";
   chrgfilename = call.str();
   UseChargeFile = CheckFile(call.str());
+  if (Nmm == 0)
+  {
+    //Skip blank charge files
+    UseChargeFile = 0;
+  }
   //Initialize multipoles and center of mass
   bool FirstCharge = 1; //Always write the first charge
   Coord QMCOM;
@@ -690,6 +700,11 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   call << "MMCharges_" << Bead << ".txt";
   chrgfilename = call.str();
   UseChargeFile = CheckFile(call.str());
+  if (Nmm == 0)
+  {
+    //Skip blank charge files
+    UseChargeFile = 0;
+  }
   //Initialize multipoles and center of mass
   Coord QMCOM;
   if (!UseChargeFile)

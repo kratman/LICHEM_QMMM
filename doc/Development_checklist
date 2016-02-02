@@ -5,10 +5,6 @@ Force-field wrapper timeline and checklist:
  Polarizable force fields: Future (AMBER,LAMMPS)
  Diffuse charges: In progress (TINKER,AMBER,LAMMPS)
 
-QMMM boundry timeline and checklist:
- Non-bonded: Done
- Pseudo-bond: Done
-
 Simulation mode timeline and checklist:
  Single-point energy: Done
  NVT/NPT Monte Carlo: Done

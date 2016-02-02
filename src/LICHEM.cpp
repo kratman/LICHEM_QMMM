@@ -836,13 +836,15 @@ int main(int argc, char* argv[])
     cout << " K ";
     if (QMMMOpts.Ensemble == "NPT")
     {
+      //Print simulation box information
       cout << " | Density: ";
       cout << LICHEMFormFloat(DenAvg,8);
       cout << " g/cm^3" << '\n';
       cout << " | Average box size (\u212B): " << '\n';
-      cout << " Lx = " << LICHEMFormFloat(LxAvg,10);
-      cout << " Ly = " << LICHEMFormFloat(LyAvg,10);
-      cout << " Lz = " << LICHEMFormFloat(LzAvg,10);
+      cout << "  "; //Indent
+      cout << " Lx = " << LICHEMFormFloat(LxAvg,12);
+      cout << " Ly = " << LICHEMFormFloat(LyAvg,12);
+      cout << " Lz = " << LICHEMFormFloat(LzAvg,12);
     }
     cout << '\n';
     cout << " | Average energy: ";

@@ -18,7 +18,7 @@ GPUFLAGS=-fopenacc
 
 ### Libarary settings ###
 
-LDFLAGS=-I/usr/include/eigen3/
+LDFLAGS=-I./Eigen3/
 
 ### Python settings ###
 
