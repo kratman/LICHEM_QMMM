@@ -18,6 +18,7 @@ GPUFLAGS=-fopenacc
 
 ### Libarary settings ###
 
+#The local copy of Eigen is located in ./Eigen3/
 LDFLAGS=-I./Eigen3/
 
 ### Python settings ###

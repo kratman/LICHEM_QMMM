@@ -70,10 +70,13 @@ int main(int argc, char* argv[])
   //End of section
 
   //Fix PBC
-  if (PBCon and (!TINKER))
+  if (PBCon)
   {
     //Relatively safe PBC correction
-    PBCCenter(Struct,QMMMOpts); //Center the atoms in the box
+    if (!TINKER)
+    {
+      PBCCenter(Struct,QMMMOpts); //Center the atoms in the box
+    }
   }
   //End of section
 

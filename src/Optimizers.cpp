@@ -184,7 +184,10 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   double Eold = 0; //Old saved energy
   int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
   //Initialize charges
-  WriteChargeFile(Struct,QMMMOpts,Bead);
+  if (Nmm > 0)
+  {
+    WriteChargeFile(Struct,QMMMOpts,Bead);
+  }
   //Initialize QM trajectory file
   call.str("");
   call << "QMOpt_" << Bead << ".xyz";
@@ -321,7 +324,10 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   fstream qmfile, ifile, ofile; //Generic file names
   int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
   //Initialize charges
-  WriteChargeFile(Struct,QMMMOpts,Bead);
+  if (Nmm > 0)
+  {
+    WriteChargeFile(Struct,QMMMOpts,Bead);
+  }
   //Initialize QM trajectory file
   call.str("");
   call << "QMOpt_" << Bead << ".xyz";
@@ -472,7 +478,10 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   fstream qmfile,ifile,ofile; //Generic file streams
   int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
   //Initialize charges
-  WriteChargeFile(Struct,QMMMOpts,Bead);
+  if (Nmm > 0)
+  {
+    WriteChargeFile(Struct,QMMMOpts,Bead);
+  }
   //Initialize QM trajectory file
   call.str("");
   call << "QMOpt_" << Bead << ".xyz";
