@@ -1472,10 +1472,12 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
     cout << "Optimization settings:" << '\n';
     if (!OptSim)
     {
-      cout << " Step scale factor: " << QMMMOpts.StepScale;
+      cout << " Step scale factor: ";
+      cout << LICHEMFormFloat(QMMMOpts.StepScale,6);
       cout << '\n';
     }
-    cout << " Max. step size: " << QMMMOpts.MaxStep;
+    cout << " Max. step size: ";
+    cout << LICHEMFormFloat(QMMMOpts.MaxStep,6);
     cout << " \u212B" << '\n';
     cout << " Max. steps: " << QMMMOpts.MaxOptSteps;
     if (QMMMOpts.UseMMCut and (Nmm > 0))
