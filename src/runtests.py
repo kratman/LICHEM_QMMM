@@ -17,6 +17,7 @@ import os
 #Development settings
 #NB: These settings should not be modified
 UpdateResults = 0 #Flag to print energies to update tests
+ForceAll = 0 #Flag to force it to do tests even if they will fail
 
 #Start timer and counters immediately
 StartTime = time.time()
@@ -335,13 +336,56 @@ print(line)
 QMTests = []
 MMTests = []
 if (AllTests == 1):
-  QMTests.append("PSI4")
-  QMTests.append("Gaussian")
-  QMTests.append("NWChem")
-  MMTests.append("TINKER")
-  MMTests.append("LAMMPS")
-  MMTests.append("AMBER")
+  #Safely add PSI4
+  cmd = "which psi4"
+  try:
+    PackBin = subprocess.check_output(cmd,shell=True)
+    QMTests.append("PSI4")
+  except:
+    if (ForceAll == 1):
+      QMTests.append("PSI4")
+  #Safely add Gaussian
+  cmd = "which g09"
+  try:
+    PackBin = subprocess.check_output(cmd,shell=True)
+    QMTests.append("Gaussian")
+  except:
+    if (ForceAll == 1):
+      QMTests.append("Gaussian")
+  #Safely add NWChem
+  cmd = "which nwchem"
+  try:
+    PackBin = subprocess.check_output(cmd,shell=True)
+    QMTests.append("NWChem")
+  except:
+    if (ForceAll == 1):
+      QMTests.append("NWChem")
+  #Safely add TINKER
+  cmd = "which analyze"
+  try:
+    PackBin = subprocess.check_output(cmd,shell=True)
+    MMTests.append("TINKER")
+  except:
+    if (ForceAll == 1):
+      MMTests.append("TINKER")
+  #Safely add lammps
+  cmd = "which lammps"
+  try:
+    PackBin = subprocess.check_output(cmd,shell=True)
+    MMTests.append("LAMMPS")
+  except:
+    if (ForceAll == 1):
+      MMTests.append("LAMMPS")
+  #Safely add AMBER
+  cmd = "which pmemd"
+  try:
+    PackBin = subprocess.check_output(cmd,shell=True)
+    MMTests.append("AMBER")
+  except:
+    if (ForceAll == 1):
+      MMTests.append("AMBER")
 else:
+  #Add only the specified packages
   QMTests.append(QMPack)
   MMTests.append(MMPack)
 
