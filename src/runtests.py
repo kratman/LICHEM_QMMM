@@ -14,15 +14,15 @@ import time
 import sys
 import os
 
-#Development settings
-#NB: These settings should not be modified
-UpdateResults = 0 #Flag to print energies to update tests
-ForceAll = 0 #Flag to force it to do tests even if they will fail
-
 #Start timer and counters immediately
 StartTime = time.time()
 passct = 0
 failct = 0
+
+#Development settings
+#NB: Modified by the Makefile
+UpdateResults = 0 #Flag to print energies to update tests
+ForceAll = 0 #Flag to force it to do tests even if they will fail
 
 #Classes
 class ClrSet:
@@ -37,6 +37,27 @@ class ClrSet:
   TFail = Bold+Red #Highlight failed tests
   TPass = Bold+Green #Highlight passed tests
   Reset = Norm #Reset to defaults
+
+#Functions
+def CleanFiles():
+  cleancmd = "rm -f"
+  #Remove LICHEM files
+  cleancmd += " BASIS tests.out trash.xyz"
+  cleancmd += " BeadStartStruct.xyz BurstStruct.xyz"
+  #Remove TINKER files
+  cleancmd += " tinker.key"
+  #Remove LAMMPS files
+  cleancmd += ""
+  #Remove AMBER files
+  cleancmd += ""
+  #Remove Gaussian files
+  cleancmd += " *.chk"
+  #Remove PSI4 files
+  cleancmd += " timer.* psi.* *.32 *.180"
+  #Remove NWChem files
+  cleancmd += " *.movecs"
+  #Delete the files
+  subprocess.call(cleancmd,shell=True)
 
 #Print title
 line = '\n'
@@ -302,7 +323,10 @@ if (AllTests == 0):
   line += MMbin
   line += '\n'
 else:
-  line += " Mode: All tests"
+  if (ForceAll == 1):
+    line += " Mode: Development"
+  else:
+    line += " Mode: All tests"
   line += '\n'
 if (DryRun == 1):
   line += " Mode: Dry run"
@@ -339,49 +363,61 @@ if (AllTests == 1):
   #Safely add PSI4
   cmd = "which psi4"
   try:
+    #Run PSI4 tests
     PackBin = subprocess.check_output(cmd,shell=True)
     QMTests.append("PSI4")
   except:
+    #Skip tests that will fail
     if (ForceAll == 1):
       QMTests.append("PSI4")
   #Safely add Gaussian
   cmd = "which g09"
   try:
+    #Run Gaussian tests
     PackBin = subprocess.check_output(cmd,shell=True)
     QMTests.append("Gaussian")
   except:
+    #Skip tests that will fail
     if (ForceAll == 1):
       QMTests.append("Gaussian")
   #Safely add NWChem
   cmd = "which nwchem"
   try:
+    #Run NWChem tests
     PackBin = subprocess.check_output(cmd,shell=True)
     QMTests.append("NWChem")
   except:
+    #Skip tests that will fail
     if (ForceAll == 1):
       QMTests.append("NWChem")
   #Safely add TINKER
   cmd = "which analyze"
   try:
+    #Run TINKER tests
     PackBin = subprocess.check_output(cmd,shell=True)
     MMTests.append("TINKER")
   except:
+    #Skip tests that will fail
     if (ForceAll == 1):
       MMTests.append("TINKER")
   #Safely add lammps
   cmd = "which lammps"
   try:
+    #Run LAMMPS tests
     PackBin = subprocess.check_output(cmd,shell=True)
     MMTests.append("LAMMPS")
   except:
+    #Skip tests that will fail
     if (ForceAll == 1):
       MMTests.append("LAMMPS")
   #Safely add AMBER
   cmd = "which pmemd"
   try:
+    #Run AMBER tests
     PackBin = subprocess.check_output(cmd,shell=True)
     MMTests.append("AMBER")
   except:
+    #Skip tests that will fail
     if (ForceAll == 1):
       MMTests.append("AMBER")
 else:
@@ -415,11 +451,9 @@ for qmtest in QMTests:
     line += " results:"
     print(line)
 
-    #Delete line to avoid bugs
-    line = ""
-
     #Check HF energy
     if ((QMPack == "PSI4") or (QMPack == "Gaussian")):
+      line = ""
       PassEnergy = 0
       cmd = "lichem -n "
       cmd += `Ncpus`
@@ -476,26 +510,10 @@ for qmtest in QMTests:
         line += ", "
         line += SavedEnergy
       print(line)
-
-      #Clean up files
-      cmd = ""
-      cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
-      cmd += " BeadStartStruct.xyz BurstStruct.xyz"
-      if (QMPack == "Gaussian"):
-        #Remove checkpoint files
-        cmd += " *.chk"
-      if (QMPack == "PSI4"):
-        #Remove checkpoint files
-        cmd += " timer.* psi.* *.32 *.180"
-      if (QMPack == "NWChem"):
-        #Remove checkpoint files
-        cmd += " *.movecs"
-      subprocess.call(cmd,shell=True)
-
-      #Delete line to avoid bugs
-      line = ""
+      CleanFiles() #Clean up files
 
     #Check DFT energy
+    line = ""
     PassEnergy = 0
     cmd = "lichem -n "
     cmd += `Ncpus`
@@ -556,27 +574,11 @@ for qmtest in QMTests:
       line += ", "
       line += SavedEnergy
     print(line)
-
-    #Clean up files
-    cmd = ""
-    cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
-    cmd += " BeadStartStruct.xyz BurstStruct.xyz"
-    if (QMPack == "Gaussian"):
-      #Remove checkpoint files
-      cmd += " *.chk"
-    if (QMPack == "PSI4"):
-      #Remove checkpoint files
-      cmd += " timer.* psi.* *.32 *.180"
-    if (QMPack == "NWChem"):
-      #Remove checkpoint files
-      cmd += " *.movecs"
-    subprocess.call(cmd,shell=True)
-
-    #Delete line to avoid bugs
-    line = ""
+    CleanFiles() #Clean up files
 
     #Check CCSD energy
     if (QMPack == "PSI4"):
+      line = ""
       PassEnergy = 0
       cmd = "lichem -n "
       cmd += `Ncpus`
@@ -629,27 +631,11 @@ for qmtest in QMTests:
         line += ", "
         line += SavedEnergy
       print(line)
-
-      #Clean up files
-      cmd = ""
-      cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
-      cmd += " BeadStartStruct.xyz BurstStruct.xyz"
-      if (QMPack == "Gaussian"):
-        #Remove checkpoint files
-        cmd += " *.chk"
-      if (QMPack == "PSI4"):
-        #Remove checkpoint files
-        cmd += " timer.* psi.* *.32 *.180"
-      if (QMPack == "NWChem"):
-        #Remove checkpoint files
-        cmd += " *.movecs"
-      subprocess.call(cmd,shell=True)
-
-      #Delete line to avoid bugs
-      line = ""
+      CleanFiles() #Clean up files
 
     #Check PM6 energy
     if (QMPack == "Gaussian"):
+      line = ""
       PassEnergy = 0
       cmd = "lichem -n "
       cmd += `Ncpus`
@@ -702,26 +688,10 @@ for qmtest in QMTests:
         line += ", "
         line += SavedEnergy
       print(line)
-
-      #Clean up files
-      cmd = ""
-      cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
-      cmd += " BeadStartStruct.xyz BurstStruct.xyz"
-      if (QMPack == "Gaussian"):
-        #Remove checkpoint files
-        cmd += " *.chk"
-      if (QMPack == "PSI4"):
-        #Remove checkpoint files
-        cmd += " timer.* psi.* *.32 *.180"
-      if (QMPack == "NWChem"):
-        #Remove checkpoint files
-        cmd += " *.movecs"
-      subprocess.call(cmd,shell=True)
-
-      #Delete line to avoid bugs
-      line = ""
+      CleanFiles() #Clean up files
 
     #Check NEB optimization
+    line = ""
     PassEnergy = 0
     cmd = "cp methflbeads.xyz BeadStartStruct.xyz"
     subprocess.call(cmd,shell=True) #Copy restart file
@@ -784,24 +754,7 @@ for qmtest in QMTests:
       line += ", "
       line += SavedEnergy
     print(line)
-
-    #Clean up files
-    cmd = ""
-    cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
-    cmd += " BeadStartStruct.xyz BurstStruct.xyz"
-    if (QMPack == "Gaussian"):
-      #Remove checkpoint files
-      cmd += " *.chk"
-    if (QMPack == "PSI4"):
-      #Remove checkpoint files
-      cmd += " timer.* psi.* *.32 *.180"
-    if (QMPack == "NWChem"):
-      #Remove checkpoint files
-      cmd += " *.movecs"
-    subprocess.call(cmd,shell=True)
-
-    #Delete line to avoid bugs
-    line = ""
+    CleanFiles() #Clean up files
 
     #TINKER tests
     if (MMPack == "TINKER"):
@@ -860,21 +813,7 @@ for qmtest in QMTests:
         line += ", "
         line += SavedEnergy
       print(line)
-
-      #Clean up files
-      cmd = ""
-      cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
-      cmd += " BeadStartStruct.xyz BurstStruct.xyz"
-      if (QMPack == "Gaussian"):
-        #Remove checkpoint files
-        cmd += " *.chk"
-      if (QMPack == "PSI4"):
-        #Remove checkpoint files
-        cmd += " timer.* psi.* *.32 *.180"
-      if (QMPack == "NWChem"):
-        #Remove checkpoint files
-        cmd += " *.movecs"
-      subprocess.call(cmd,shell=True)
+      CleanFiles() #Clean up files
 
       #Check MM energy
       line = ""
@@ -931,21 +870,7 @@ for qmtest in QMTests:
         line += ", "
         line += SavedEnergy
       print(line)
-
-      #Clean up files
-      cmd = ""
-      cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
-      cmd += " BeadStartStruct.xyz BurstStruct.xyz"
-      if (QMPack == "Gaussian"):
-        #Remove checkpoint files
-        cmd += " *.chk"
-      if (QMPack == "PSI4"):
-        #Remove checkpoint files
-        cmd += " timer.* psi.* *.32 *.180"
-      if (QMPack == "NWChem"):
-        #Remove checkpoint files
-        cmd += " *.movecs"
-      subprocess.call(cmd,shell=True)
+      CleanFiles() #Clean up files
 
       #Check QMMM point-charge energy results
       line = ""
@@ -1011,21 +936,7 @@ for qmtest in QMTests:
         line += ", "
         line += SavedEnergy
       print(line)
-
-      #Clean up files
-      cmd = ""
-      cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
-      cmd += " BeadStartStruct.xyz BurstStruct.xyz"
-      if (QMPack == "Gaussian"):
-        #Remove checkpoint files
-        cmd += " *.chk"
-      if (QMPack == "PSI4"):
-        #Remove checkpoint files
-        cmd += " timer.* psi.* *.32 *.180"
-      if (QMPack == "NWChem"):
-        #Remove checkpoint files
-        cmd += " *.movecs"
-      subprocess.call(cmd,shell=True)
+      CleanFiles() #Clean up files
 
       #Check QMMM polarizable energy results
       line = ""
@@ -1091,21 +1002,7 @@ for qmtest in QMTests:
         line += ", "
         line += SavedEnergy
       print(line)
-
-      #Clean up files
-      cmd = ""
-      cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
-      cmd += " BeadStartStruct.xyz BurstStruct.xyz"
-      if (QMPack == "Gaussian"):
-        #Remove checkpoint files
-        cmd += " *.chk"
-      if (QMPack == "PSI4"):
-        #Remove checkpoint files
-        cmd += " timer.* psi.* *.32 *.180"
-      if (QMPack == "NWChem"):
-        #Remove checkpoint files
-        cmd += " *.movecs"
-      subprocess.call(cmd,shell=True)
+      CleanFiles() #Clean up files
 
       #Check pseudobond optimizations
       if ((QMPack == "Gaussian") or (QMPack == "NWChem")):
@@ -1170,21 +1067,7 @@ for qmtest in QMTests:
           line += ", "
           line += SavedEnergy
         print(line)
-
-        #Clean up files
-        cmd = ""
-        cmd += "rm -f BASIS tinker.key tests.out trash.xyz"
-        cmd += " BeadStartStruct.xyz BurstStruct.xyz"
-        if (QMPack == "Gaussian"):
-          #Remove checkpoint files
-          cmd += " *.chk"
-        if (QMPack == "PSI4"):
-          #Remove checkpoint files
-          cmd += " timer.* psi.* *.32 *.180"
-        if (QMPack == "NWChem"):
-          #Remove checkpoint files
-          cmd += " *.movecs"
-        subprocess.call(cmd,shell=True)
+        CleanFiles() #Clean up files
 
     #Print blank line and change directory
     line = ""

@@ -36,9 +36,9 @@ BIB=bibtex
 
 install:	title binary testexe manual compdone
 
-Dev:	title devbin testexe manual stats compdone
+Dev:	title devbin devtest manual stats compdone
 
-GPUDev:	title gpubin testexe manual stats compdone
+GPUDev:	title gpubin devtest manual stats compdone
 
 clean:	title delbin compdone
 
@@ -81,6 +81,20 @@ testexe:
 	sed -i 's/\s*$$//g' ./tests/runtests; \
 	sed -i '/^$$/d' ./tests/runtests; \
 	sed -i 's/\!\!/\#\!/g' ./tests/runtests; \
+	chmod a+x ./tests/runtests
+
+devtest:	
+	@echo ""; \
+	echo "### Creating test suite executable ###"
+	@echo 'echo "#!$(PYPATH)" > ./tests/runtests'; \
+	echo "!!$(PYPATH)" > ./tests/runtests
+	cat ./src/runtests.py >> ./tests/runtests
+	@sed -i 's/\#.*//g' ./tests/runtests; \
+	sed -i 's/\s*$$//g' ./tests/runtests; \
+	sed -i '/^$$/d' ./tests/runtests; \
+	sed -i 's/\!\!/\#\!/g' ./tests/runtests; \
+	sed -i 's/UpdateResults = 0/UpdateResults = 1/g' ./tests/runtests; \
+	sed -i 's/ForceAll = 0/ForceAll = 1/g' ./tests/runtests; \
 	chmod a+x ./tests/runtests
 
 checksyntax:	title
