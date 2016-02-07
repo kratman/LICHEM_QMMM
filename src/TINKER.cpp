@@ -1523,21 +1523,36 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "LICHM_" << Bead << ".001";
   ifile.open(call.str().c_str(),ios_base::in);
-  getline(ifile,dummy); //Discard number of atoms
-  if (PBCon)
+  if (ifile.good())
   {
-    //Discard PBC information
-    getline(ifile,dummy);
+    getline(ifile,dummy); //Discard number of atoms
+    if (PBCon)
+    {
+      //Discard PBC information
+      getline(ifile,dummy);
+    }
+    for (int i=0;i<Natoms;i++)
+    {
+      getline(ifile,dummy);
+      stringstream line(dummy);
+      //Read new positions
+      line >> dummy >> dummy; //Discard atom ID and type
+      line >> Struct[i].P[Bead].x;
+      line >> Struct[i].P[Bead].y;
+      line >> Struct[i].P[Bead].z;
+    }
   }
-  for (int i=0;i<Natoms;i++)
+  else
   {
-    getline(ifile,dummy);
-    stringstream line(dummy);
-    //Read new positions
-    line >> dummy >> dummy; //Discard atom ID and type
-    line >> Struct[i].P[Bead].x;
-    line >> Struct[i].P[Bead].y;
-    line >> Struct[i].P[Bead].z;
+    //Print error message
+    cerr << "Error: No structure found after the dynamics!!!";
+    cerr << '\n';
+    //Remove restart and error files
+    call.str("");
+    call << "rm -f";
+    call << " LICHM_" << Bead << ".dyn";
+    call << " LICHM_" << Bead << ".err";
+    GlobalSys = system(call.str().c_str());
   }
   ifile.close();
   //Clean up all files except the .dyn files
