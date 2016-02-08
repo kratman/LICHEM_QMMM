@@ -39,7 +39,28 @@ class ClrSet:
   Reset = Norm #Reset to defaults
 
 #Functions
+def RunLICHEM(xname,rname,cname):
+  #Submit LICHEM jobs
+  cmd = "lichem -n "
+  cmd += `Ncpus`
+  cmd += " "
+  cmd += "-x "
+  cmd += xname
+  cmd += " "
+  cmd += "-r "
+  cmd += rname
+  cmd += " "
+  cmd += "-c "
+  cmd += cname
+  cmd += " "
+  cmd += "-o trash.xyz "
+  cmd += "> tests.out " #Capture stdout
+  cmd += "2>&1" #Capture stderr
+  subprocess.call(cmd,shell=True) #Run calculations
+  return
+
 def CleanFiles():
+  #Delete junk files
   cleancmd = "rm -f"
   #Remove LICHEM files
   cleancmd += " BASIS tests.out trash.xyz"
@@ -58,6 +79,17 @@ def CleanFiles():
   cleancmd += " *.movecs"
   #Delete the files
   subprocess.call(cleancmd,shell=True)
+  return
+
+def AddPass(TestPass,txtln,pct,fct):
+  #Add a colored pass or fail message
+  if (TestPass == 1):
+    txtln += ClrSet.TPass+"Pass"+ClrSet.Reset+","
+    pct += 1
+  else:
+    txtln += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+    fct += 1
+  return txtln,pct,fct
 
 #Print title
 line = '\n'
@@ -455,16 +487,7 @@ for qmtest in QMTests:
     if ((QMPack == "PSI4") or (QMPack == "Gaussian")):
       line = ""
       PassEnergy = 0
-      cmd = "lichem -n "
-      cmd += `Ncpus`
-      cmd += " "
-      cmd += "-x waterdimer.xyz "
-      cmd += "-r hfreg.inp "
-      cmd += "-c watercon.inp "
-      cmd += "-o trash.xyz "
-      cmd += "> tests.out " #Capture stdout
-      cmd += "2>&1" #Capture stderr
-      subprocess.call(cmd,shell=True) #Run calculations
+      RunLICHEM("waterdimer.xyz","hfreg.inp","watercon.inp")
       cmd = ""
       cmd += "grep -e"
       cmd += ' "QM energy: " ' #Find final energy
@@ -489,12 +512,7 @@ for qmtest in QMTests:
         if (QMMMEnergy == round(-4136.9317704519,5)):
           PassEnergy = 1
       line += " HF energy:           "
-      if (PassEnergy == 1):
-        line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
-        passct += 1
-      else:
-        line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
-        failct += 1
+      line,passct,failct = AddPass(PassEnergy,line,passct,failct)
       cmd = ""
       cmd += "grep -e"
       cmd += ' "Total wall time: " ' #Find run time
@@ -515,16 +533,7 @@ for qmtest in QMTests:
     #Check DFT energy
     line = ""
     PassEnergy = 0
-    cmd = "lichem -n "
-    cmd += `Ncpus`
-    cmd += " "
-    cmd += "-x waterdimer.xyz "
-    cmd += "-r pbereg.inp "
-    cmd += "-c watercon.inp "
-    cmd += "-o trash.xyz "
-    cmd += "> tests.out " #Capture stdout
-    cmd += "2>&1" #Capture stderr
-    subprocess.call(cmd,shell=True) #Run calculations
+    RunLICHEM("waterdimer.xyz","pbereg.inp","watercon.inp")
     cmd = ""
     cmd += "grep -e"
     cmd += ' "QM energy: " ' #Find final energy
@@ -553,12 +562,7 @@ for qmtest in QMTests:
       if (QMMMEnergy == round(-4154.1683939169,5)):
         PassEnergy = 1
     line += " PBE0 energy:         "
-    if (PassEnergy == 1):
-      line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
-      passct += 1
-    else:
-      line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
-      failct += 1
+    line,passct,failct = AddPass(PassEnergy,line,passct,failct)
     cmd = ""
     cmd += "grep -e"
     cmd += ' "Total wall time: " ' #Find run time
@@ -580,16 +584,7 @@ for qmtest in QMTests:
     if (QMPack == "PSI4"):
       line = ""
       PassEnergy = 0
-      cmd = "lichem -n "
-      cmd += `Ncpus`
-      cmd += " "
-      cmd += "-x waterdimer.xyz "
-      cmd += "-r ccsdreg.inp "
-      cmd += "-c watercon.inp "
-      cmd += "-o trash.xyz "
-      cmd += "> tests.out " #Capture stdout
-      cmd += "2>&1" #Capture stderr
-      subprocess.call(cmd,shell=True) #Run calculations
+      RunLICHEM("waterdimer.xyz","ccsdreg.inp","watercon.inp")
       cmd = ""
       cmd += "grep -e"
       cmd += ' "QM energy: " ' #Find final energy
@@ -610,12 +605,7 @@ for qmtest in QMTests:
         if (QMMMEnergy == round(-4147.730483706,5)):
           PassEnergy = 1
       line += " CCSD energy:         "
-      if (PassEnergy == 1):
-        line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
-        passct += 1
-      else:
-        line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
-        failct += 1
+      line,passct,failct = AddPass(PassEnergy,line,passct,failct)
       cmd = ""
       cmd += "grep -e"
       cmd += ' "Total wall time: " ' #Find run time
@@ -637,16 +627,7 @@ for qmtest in QMTests:
     if (QMPack == "Gaussian"):
       line = ""
       PassEnergy = 0
-      cmd = "lichem -n "
-      cmd += `Ncpus`
-      cmd += " "
-      cmd += "-x waterdimer.xyz "
-      cmd += "-r pm6reg.inp "
-      cmd += "-c watercon.inp "
-      cmd += "-o trash.xyz "
-      cmd += "> tests.out " #Capture stdout
-      cmd += "2>&1" #Capture stderr
-      subprocess.call(cmd,shell=True) #Run calculations
+      RunLICHEM("waterdimer.xyz","pm6reg.inp","watercon.inp")
       cmd = ""
       cmd += "grep -e"
       cmd += ' "QM energy: " ' #Find final energy
@@ -667,12 +648,7 @@ for qmtest in QMTests:
         if (QMMMEnergy == round(-4.8623027634995,5)):
           PassEnergy = 1
       line += " PM6 energy:          "
-      if (PassEnergy == 1):
-        line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
-        passct += 1
-      else:
-        line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
-        failct += 1
+      line,passct,failct = AddPass(PassEnergy,line,passct,failct)
       cmd = ""
       cmd += "grep -e"
       cmd += ' "Total wall time: " ' #Find run time
@@ -695,16 +671,7 @@ for qmtest in QMTests:
     PassEnergy = 0
     cmd = "cp methflbeads.xyz BeadStartStruct.xyz"
     subprocess.call(cmd,shell=True) #Copy restart file
-    cmd = "lichem -n "
-    cmd += `Ncpus`
-    cmd += " "
-    cmd += "-x methfluor.xyz "
-    cmd += "-r nebreg.inp "
-    cmd += "-c methflcon.inp "
-    cmd += "-o trash.xyz "
-    cmd += "> tests.out " #Capture stdout
-    cmd += "2>&1" #Capture stderr
-    subprocess.call(cmd,shell=True) #Run calculations
+    RunLICHEM("methfluor.xyz","nebreg.inp","methflcon.inp")
     cmd = ""
     cmd += "grep -e"
     cmd += ' "Opt. step: 2 " ' #Find final energy
@@ -733,12 +700,7 @@ for qmtest in QMTests:
       if (QMMMEnergy == round(-6511.0579547077,5)):
         PassEnergy = 1
     line += " NEB TS energy:       "
-    if (PassEnergy == 1):
-      line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
-      passct += 1
-    else:
-      line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
-      failct += 1
+    line,passct,failct = AddPass(PassEnergy,line,passct,failct)
     cmd = ""
     cmd += "grep -e"
     cmd += ' "Total wall time: " ' #Find run time
@@ -763,16 +725,7 @@ for qmtest in QMTests:
       PassEnergy = 0
       cmd = "cp pchrg.key tinker.key"
       subprocess.call(cmd,shell=True) #Copy key file
-      cmd = "lichem -n "
-      cmd += `Ncpus`
-      cmd += " "
-      cmd += "-x waterdimer.xyz "
-      cmd += "-r mmreg.inp "
-      cmd += "-c watercon.inp "
-      cmd += "-o trash.xyz "
-      cmd += "> tests.out " #Capture stdout
-      cmd += "2>&1" #Capture stderr
-      subprocess.call(cmd,shell=True) #Run calculations
+      RunLICHEM("waterdimer.xyz","mmreg.inp","watercon.inp")
       cmd = ""
       cmd += "grep -e"
       cmd += ' "MM energy: " ' #Find final energy
@@ -792,12 +745,7 @@ for qmtest in QMTests:
       if (QMMMEnergy == round(-0.2596903536223,5)):
         PassEnergy = 1
       line += " TIP3P energy:        "
-      if (PassEnergy == 1):
-        line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
-        passct += 1
-      else:
-        line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
-        failct += 1
+      line,passct,failct = AddPass(PassEnergy,line,passct,failct)
       cmd = ""
       cmd += "grep -e"
       cmd += ' "Total wall time: " ' #Find run time
@@ -820,16 +768,7 @@ for qmtest in QMTests:
       PassEnergy = 0
       cmd = "cp pol.key tinker.key"
       subprocess.call(cmd,shell=True) #Copy key file
-      cmd = "lichem -n "
-      cmd += `Ncpus`
-      cmd += " "
-      cmd += "-x waterdimer.xyz "
-      cmd += "-r solvreg.inp "
-      cmd += "-c watercon.inp "
-      cmd += "-o trash.xyz "
-      cmd += "> tests.out " #Capture stdout
-      cmd += "2>&1" #Capture stderr
-      subprocess.call(cmd,shell=True) #Run calculations
+      RunLICHEM("waterdimer.xyz","solvreg.inp","watercon.inp")
       cmd = ""
       cmd += "grep -e"
       cmd += ' "MM energy: " ' #Find final energy
@@ -849,12 +788,7 @@ for qmtest in QMTests:
       if (QMMMEnergy == round(-1.2549403662026,5)):
         PassEnergy = 1
       line += " AMOEBA/GK energy:    "
-      if (PassEnergy == 1):
-        line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
-        passct += 1
-      else:
-        line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
-        failct += 1
+      line,passct,failct = AddPass(PassEnergy,line,passct,failct)
       cmd = ""
       cmd += "grep -e"
       cmd += ' "Total wall time: " ' #Find run time
@@ -877,16 +811,7 @@ for qmtest in QMTests:
       PassEnergy = 0
       cmd = "cp pchrg.key tinker.key"
       subprocess.call(cmd,shell=True) #Copy key file
-      cmd = "lichem -n "
-      cmd += `Ncpus`
-      cmd += " "
-      cmd += "-x waterdimer.xyz "
-      cmd += "-r pchrgreg.inp "
-      cmd += "-c watercon.inp "
-      cmd += "-o trash.xyz "
-      cmd += "> tests.out " #Capture stdout
-      cmd += "2>&1" #Capture stderr
-      subprocess.call(cmd,shell=True) #Run calculations
+      RunLICHEM("waterdimer.xyz","pchrgreg.inp","watercon.inp")
       cmd = ""
       cmd += "grep -e"
       cmd += ' "QMMM energy: " ' #Find final energy
@@ -915,12 +840,7 @@ for qmtest in QMTests:
         if (QMMMEnergy == round(-2077.2022117306,5)):
           PassEnergy = 1
       line += " PBE0/TIP3P energy:   "
-      if (PassEnergy == 1):
-        line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
-        passct += 1
-      else:
-        line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
-        failct += 1
+      line,passct,failct = AddPass(PassEnergy,line,passct,failct)
       cmd = ""
       cmd += "grep -e"
       cmd += ' "Total wall time: " ' #Find run time
@@ -943,16 +863,7 @@ for qmtest in QMTests:
       PassEnergy = 0
       cmd = "cp pol.key tinker.key"
       subprocess.call(cmd,shell=True) #Copy key file
-      cmd = "lichem -n "
-      cmd += `Ncpus`
-      cmd += " "
-      cmd += "-x waterdimer.xyz "
-      cmd += "-r polreg.inp "
-      cmd += "-c watercon.inp "
-      cmd += "-o trash.xyz "
-      cmd += "> tests.out " #Capture stdout
-      cmd += "2>&1" #Capture stderr
-      subprocess.call(cmd,shell=True) #Run calculations
+      RunLICHEM("waterdimer.xyz","polreg.inp","watercon.inp")
       cmd = ""
       cmd += "grep -e"
       cmd += ' "QMMM energy: " ' #Find final energy
@@ -981,12 +892,7 @@ for qmtest in QMTests:
         if (QMMMEnergy == round(-2077.1094168459,5)):
           PassEnergy = 1
       line += " PBE0/AMOEBA energy:  "
-      if (PassEnergy == 1):
-        line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
-        passct += 1
-      else:
-        line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
-        failct += 1
+      line,passct,failct = AddPass(PassEnergy,line,passct,failct)
       cmd = ""
       cmd += "grep -e"
       cmd += ' "Total wall time: " ' #Find run time
@@ -1012,16 +918,7 @@ for qmtest in QMTests:
         subprocess.call(cmd,shell=True) #Copy key file
         cmd = "cp pbbasis.txt BASIS"
         subprocess.call(cmd,shell=True) #Copy BASIS set file
-        cmd = "lichem -n "
-        cmd += `Ncpus`
-        cmd += " "
-        cmd += "-x alkyl.xyz "
-        cmd += "-r pboptreg.inp "
-        cmd += "-c alkcon.inp "
-        cmd += "-o trash.xyz "
-        cmd += "> tests.out " #Capture stdout
-        cmd += "2>&1" #Capture stderr
-        subprocess.call(cmd,shell=True) #Run calculations
+        RunLICHEM("alkyl.xyz","pboptreg.inp","alkcon.inp")
         cmd = ""
         cmd += "grep -e"
         cmd += ' "Opt. step: 2 " ' #Find final energy
@@ -1046,12 +943,7 @@ for qmtest in QMTests:
           if (QMMMEnergy == round(-3015.2278310975,5)):
             PassEnergy = 1
         line += " DFP/Pseudobonds:     "
-        if (PassEnergy == 1):
-          line += ClrSet.TPass+"Pass"+ClrSet.Reset+","
-          passct += 1
-        else:
-          line += ClrSet.TFail+"Fail"+ClrSet.Reset+","
-          failct += 1
+        line,passct,failct = AddPass(PassEnergy,line,passct,failct)
         cmd = ""
         cmd += "grep -e"
         cmd += ' "Total wall time: " ' #Find run time
