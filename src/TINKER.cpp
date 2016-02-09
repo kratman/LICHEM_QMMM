@@ -1547,6 +1547,9 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Print error message
     cerr << "Error: No structure found after the dynamics!!!";
     cerr << '\n';
+    cerr << " LICHEM will attempt to continue...";
+    cerr << '\n';
+    cerr.flush();
     //Remove restart and error files
     call.str("");
     call << "rm -f";

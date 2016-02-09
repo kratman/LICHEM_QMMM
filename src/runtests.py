@@ -81,6 +81,27 @@ def CleanFiles():
   subprocess.call(cleancmd,shell=True)
   return
 
+def RecoverEnergy(txtlabel,itemnum):
+  #Recover the energy from LICHEM output
+  cmd = ""
+  cmd += "grep -e "
+  cmd += '"'
+  cmd += txtlabel
+  cmd += ' "'
+  cmd += " tests.out"
+  savedresult = "Crashed..."
+  try:
+    #Safely check energy
+    finalenergy = subprocess.check_output(cmd,shell=True) #Get results
+    finalenergy = finalenergy.split()
+    finalenergy = float(finalenergy[itemnum])
+    savedresult = "Energy: "+`finalenergy` #Save it for later
+    finalenergy = round(finalenergy,5)
+  except:
+    #Calculation failed
+    finalenergy = 0.0
+  return finalenergy,savedresult
+
 def AddPass(TestPass,txtln,pct,fct):
   #Add a colored pass or fail message
   if (TestPass == 1):
@@ -90,6 +111,27 @@ def AddPass(TestPass,txtln,pct,fct):
     txtln += ClrSet.TFail+"Fail"+ClrSet.Reset+","
     fct += 1
   return txtln,pct,fct
+
+def AddRunTime(txtln):
+  #Collect the LICHEM run time and add it to a string
+  cmd = ""
+  cmd += "grep -e"
+  cmd += ' "Total wall time: " ' #Find run time
+  cmd += "tests.out"
+  try:
+    RunTime = subprocess.check_output(cmd,shell=True) #Get run time
+    RunTime = RunTime.split()
+    RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
+  except:
+    RunTime = " N/A"
+  txtln += RunTime
+  return txtln
+
+def AddEnergy(devopt,txtln,enval):
+  if (devopt == 1):
+    txtln += ", "
+    txtln += enval
+  return txtln
 
 #Print title
 line = '\n'
@@ -113,7 +155,7 @@ print(line)
 DryRun = 0 #Only check packages
 AllTests = 0 #Run all tests at once
 if (len(sys.argv) == 3):
-  if ((sys.argv[2] == "All") or (sys.argv[2] == "all")):
+  if ((sys.argv[2]).lower() == "all"):
     #Automatically run all tests
     AllTests = 1
 if (len(sys.argv) < 4):
@@ -224,7 +266,7 @@ if (AllTests == 0):
   MMPack = sys.argv[3] #MM wrapper for calculations
   MMPack = MMPack.lower()
   if (len(sys.argv) > 4):
-    if ((sys.argv[4] == "Dry") or (sys.argv[4] == "dry")):
+    if ((sys.argv[4]).lower() == "dry"):
       #Quit early
       DryRun = 1
 
@@ -488,21 +530,8 @@ for qmtest in QMTests:
       line = ""
       PassEnergy = 0
       RunLICHEM("waterdimer.xyz","hfreg.inp","watercon.inp")
-      cmd = ""
-      cmd += "grep -e"
-      cmd += ' "QM energy: " ' #Find final energy
-      cmd += "tests.out"
-      SavedEnergy = "Crashed..."
-      try:
-        #Safely check energy
-        QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
-        QMMMEnergy = QMMMEnergy.split()
-        QMMMEnergy = float(QMMMEnergy[2])
-        SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
-        QMMMEnergy = round(QMMMEnergy,5)
-      except:
-        #Calculation failed
-        QMMMEnergy = 0.0
+      QMMMEnergy,SavedEnergy = RecoverEnergy("QM energy:",2)
+      #Check result
       if (QMPack == "PSI4"):
         #Check against saved energy
         if (QMMMEnergy == round(-4136.9303981392,5)):
@@ -513,20 +542,8 @@ for qmtest in QMTests:
           PassEnergy = 1
       line += " HF energy:           "
       line,passct,failct = AddPass(PassEnergy,line,passct,failct)
-      cmd = ""
-      cmd += "grep -e"
-      cmd += ' "Total wall time: " ' #Find run time
-      cmd += "tests.out"
-      try:
-        RunTime = subprocess.check_output(cmd,shell=True) #Get run time
-        RunTime = RunTime.split()
-        RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
-      except:
-        RunTime = " N/A"
-      line += RunTime
-      if (UpdateResults == 1):
-        line += ", "
-        line += SavedEnergy
+      line = AddRunTime(line)
+      line = AddEnergy(UpdateResults,line,SavedEnergy)
       print(line)
       CleanFiles() #Clean up files
 
@@ -534,21 +551,8 @@ for qmtest in QMTests:
     line = ""
     PassEnergy = 0
     RunLICHEM("waterdimer.xyz","pbereg.inp","watercon.inp")
-    cmd = ""
-    cmd += "grep -e"
-    cmd += ' "QM energy: " ' #Find final energy
-    cmd += "tests.out"
-    SavedEnergy = "Crashed..."
-    try:
-      #Safely check energy
-      QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
-      QMMMEnergy = QMMMEnergy.split()
-      QMMMEnergy = float(QMMMEnergy[2])
-      SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
-      QMMMEnergy = round(QMMMEnergy,5)
-    except:
-      #Calculation failed
-      QMMMEnergy = 0.0
+    QMMMEnergy,SavedEnergy = RecoverEnergy("QM energy:",2)
+    #Check result
     if (QMPack == "PSI4"):
       #Check against saved energy
       if (QMMMEnergy == round(-4154.1683659877,5)):
@@ -563,20 +567,8 @@ for qmtest in QMTests:
         PassEnergy = 1
     line += " PBE0 energy:         "
     line,passct,failct = AddPass(PassEnergy,line,passct,failct)
-    cmd = ""
-    cmd += "grep -e"
-    cmd += ' "Total wall time: " ' #Find run time
-    cmd += "tests.out"
-    try:
-      RunTime = subprocess.check_output(cmd,shell=True) #Get run time
-      RunTime = RunTime.split()
-      RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
-    except:
-      RunTime = " N/A"
-    line += RunTime
-    if (UpdateResults == 1):
-      line += ", "
-      line += SavedEnergy
+    line = AddRunTime(line)
+    line = AddEnergy(UpdateResults,line,SavedEnergy)
     print(line)
     CleanFiles() #Clean up files
 
@@ -585,41 +577,16 @@ for qmtest in QMTests:
       line = ""
       PassEnergy = 0
       RunLICHEM("waterdimer.xyz","ccsdreg.inp","watercon.inp")
-      cmd = ""
-      cmd += "grep -e"
-      cmd += ' "QM energy: " ' #Find final energy
-      cmd += "tests.out"
-      SavedEnergy = "Crashed..."
-      try:
-        #Safely check energy
-        QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
-        QMMMEnergy = QMMMEnergy.split()
-        QMMMEnergy = float(QMMMEnergy[2])
-        SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
-        QMMMEnergy = round(QMMMEnergy,5)
-      except:
-        #Calculation failed
-        QMMMEnergy = 0.0
+      QMMMEnergy,SavedEnergy = RecoverEnergy("QM energy:",2)
+      #Check result
       if (QMPack == "PSI4"):
         #Check against saved energy
         if (QMMMEnergy == round(-4147.730483706,5)):
           PassEnergy = 1
       line += " CCSD energy:         "
       line,passct,failct = AddPass(PassEnergy,line,passct,failct)
-      cmd = ""
-      cmd += "grep -e"
-      cmd += ' "Total wall time: " ' #Find run time
-      cmd += "tests.out"
-      try:
-        RunTime = subprocess.check_output(cmd,shell=True) #Get run time
-        RunTime = RunTime.split()
-        RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
-      except:
-        RunTime = " N/A"
-      line += RunTime
-      if (UpdateResults == 1):
-        line += ", "
-        line += SavedEnergy
+      line = AddRunTime(line)
+      line = AddEnergy(UpdateResults,line,SavedEnergy)
       print(line)
       CleanFiles() #Clean up files
 
@@ -628,41 +595,16 @@ for qmtest in QMTests:
       line = ""
       PassEnergy = 0
       RunLICHEM("waterdimer.xyz","pm6reg.inp","watercon.inp")
-      cmd = ""
-      cmd += "grep -e"
-      cmd += ' "QM energy: " ' #Find final energy
-      cmd += "tests.out"
-      SavedEnergy = "Crashed..."
-      try:
-        #Safely check energy
-        QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
-        QMMMEnergy = QMMMEnergy.split()
-        QMMMEnergy = float(QMMMEnergy[2])
-        SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
-        QMMMEnergy = round(QMMMEnergy,5)
-      except:
-        #Calculation failed
-        QMMMEnergy = 0.0
+      QMMMEnergy,SavedEnergy = RecoverEnergy("QM energy:",2)
+      #Check result
       if (QMPack == "Gaussian"):
         #Check against saved energy
         if (QMMMEnergy == round(-4.8623027634995,5)):
           PassEnergy = 1
       line += " PM6 energy:          "
       line,passct,failct = AddPass(PassEnergy,line,passct,failct)
-      cmd = ""
-      cmd += "grep -e"
-      cmd += ' "Total wall time: " ' #Find run time
-      cmd += "tests.out"
-      try:
-        RunTime = subprocess.check_output(cmd,shell=True) #Get run time
-        RunTime = RunTime.split()
-        RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
-      except:
-        RunTime = " N/A"
-      line += RunTime
-      if (UpdateResults == 1):
-        line += ", "
-        line += SavedEnergy
+      line = AddRunTime(line)
+      line = AddEnergy(UpdateResults,line,SavedEnergy)
       print(line)
       CleanFiles() #Clean up files
 
@@ -672,21 +614,8 @@ for qmtest in QMTests:
     cmd = "cp methflbeads.xyz BeadStartStruct.xyz"
     subprocess.call(cmd,shell=True) #Copy restart file
     RunLICHEM("methfluor.xyz","nebreg.inp","methflcon.inp")
-    cmd = ""
-    cmd += "grep -e"
-    cmd += ' "Opt. step: 2 " ' #Find final energy
-    cmd += "tests.out"
-    SavedEnergy = "Crashed..."
-    try:
-      #Safely check energy
-      QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
-      QMMMEnergy = QMMMEnergy.split()
-      QMMMEnergy = float(QMMMEnergy[11])
-      SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
-      QMMMEnergy = round(QMMMEnergy,5)
-    except:
-      #Calculation failed
-      QMMMEnergy = 0.0
+    QMMMEnergy,SavedEnergy = RecoverEnergy("Opt. step: 2",11)
+    #Check result
     if (QMPack == "PSI4"):
       #Check against saved energy
       if (QMMMEnergy == round(-6511.0580192214,5)):
@@ -701,20 +630,8 @@ for qmtest in QMTests:
         PassEnergy = 1
     line += " NEB TS energy:       "
     line,passct,failct = AddPass(PassEnergy,line,passct,failct)
-    cmd = ""
-    cmd += "grep -e"
-    cmd += ' "Total wall time: " ' #Find run time
-    cmd += "tests.out"
-    try:
-      RunTime = subprocess.check_output(cmd,shell=True) #Get run time
-      RunTime = RunTime.split()
-      RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
-    except:
-      RunTime = " N/A"
-    line += RunTime
-    if (UpdateResults == 1):
-      line += ", "
-      line += SavedEnergy
+    line = AddRunTime(line)
+    line = AddEnergy(UpdateResults,line,SavedEnergy)
     print(line)
     CleanFiles() #Clean up files
 
@@ -726,40 +643,15 @@ for qmtest in QMTests:
       cmd = "cp pchrg.key tinker.key"
       subprocess.call(cmd,shell=True) #Copy key file
       RunLICHEM("waterdimer.xyz","mmreg.inp","watercon.inp")
-      cmd = ""
-      cmd += "grep -e"
-      cmd += ' "MM energy: " ' #Find final energy
-      cmd += "tests.out"
-      SavedEnergy = "Crashed..."
-      try:
-        #Safely check energy
-        QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
-        QMMMEnergy = QMMMEnergy.split()
-        QMMMEnergy = float(QMMMEnergy[2])
-        SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
-        QMMMEnergy = round(QMMMEnergy,5)
-      except:
-        #Calculation failed
-        QMMMEnergy = 0.0
-      #Check against saved energy
+      QMMMEnergy,SavedEnergy = RecoverEnergy("MM energy:",2)
+      #Check result
       if (QMMMEnergy == round(-0.2596903536223,5)):
+        #Check against saved energy
         PassEnergy = 1
       line += " TIP3P energy:        "
       line,passct,failct = AddPass(PassEnergy,line,passct,failct)
-      cmd = ""
-      cmd += "grep -e"
-      cmd += ' "Total wall time: " ' #Find run time
-      cmd += "tests.out"
-      try:
-        RunTime = subprocess.check_output(cmd,shell=True) #Get run time
-        RunTime = RunTime.split()
-        RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
-      except:
-         RunTime = " N/A"
-      line += RunTime
-      if (UpdateResults == 1):
-        line += ", "
-        line += SavedEnergy
+      line = AddRunTime(line)
+      line = AddEnergy(UpdateResults,line,SavedEnergy)
       print(line)
       CleanFiles() #Clean up files
 
@@ -769,40 +661,15 @@ for qmtest in QMTests:
       cmd = "cp pol.key tinker.key"
       subprocess.call(cmd,shell=True) #Copy key file
       RunLICHEM("waterdimer.xyz","solvreg.inp","watercon.inp")
-      cmd = ""
-      cmd += "grep -e"
-      cmd += ' "MM energy: " ' #Find final energy
-      cmd += "tests.out"
-      SavedEnergy = "Crashed..."
-      try:
-        #Safely check energy
-        QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
-        QMMMEnergy = QMMMEnergy.split()
-        QMMMEnergy = float(QMMMEnergy[2])
-        SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
-        QMMMEnergy = round(QMMMEnergy,5)
-      except:
-        #Calculation failed
-        QMMMEnergy = 0.0
-      #Check against saved energy
+      QMMMEnergy,SavedEnergy = RecoverEnergy("MM energy:",2)
+      #Check result
       if (QMMMEnergy == round(-1.2549403662026,5)):
+        #Check against saved energy
         PassEnergy = 1
       line += " AMOEBA/GK energy:    "
       line,passct,failct = AddPass(PassEnergy,line,passct,failct)
-      cmd = ""
-      cmd += "grep -e"
-      cmd += ' "Total wall time: " ' #Find run time
-      cmd += "tests.out"
-      try:
-        RunTime = subprocess.check_output(cmd,shell=True) #Get run time
-        RunTime = RunTime.split()
-        RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
-      except:
-         RunTime = " N/A"
-      line += RunTime
-      if (UpdateResults == 1):
-        line += ", "
-        line += SavedEnergy
+      line = AddRunTime(line)
+      line = AddEnergy(UpdateResults,line,SavedEnergy)
       print(line)
       CleanFiles() #Clean up files
 
@@ -812,21 +679,8 @@ for qmtest in QMTests:
       cmd = "cp pchrg.key tinker.key"
       subprocess.call(cmd,shell=True) #Copy key file
       RunLICHEM("waterdimer.xyz","pchrgreg.inp","watercon.inp")
-      cmd = ""
-      cmd += "grep -e"
-      cmd += ' "QMMM energy: " ' #Find final energy
-      cmd += "tests.out"
-      SavedEnergy = "Crashed..."
-      try:
-        #Safely check energy
-        QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
-        QMMMEnergy = QMMMEnergy.split()
-        QMMMEnergy = float(QMMMEnergy[2])
-        SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
-        QMMMEnergy = round(QMMMEnergy,5)
-      except:
-        #Calculation failed
-        QMMMEnergy = 0.0
+      QMMMEnergy,SavedEnergy = RecoverEnergy("QMMM energy:",2)
+      #Check result
       if (QMPack == "PSI4"):
         #Check against saved energy
         if (QMMMEnergy == round(-2077.2021947277,5)):
@@ -841,20 +695,8 @@ for qmtest in QMTests:
           PassEnergy = 1
       line += " PBE0/TIP3P energy:   "
       line,passct,failct = AddPass(PassEnergy,line,passct,failct)
-      cmd = ""
-      cmd += "grep -e"
-      cmd += ' "Total wall time: " ' #Find run time
-      cmd += "tests.out"
-      try:
-        RunTime = subprocess.check_output(cmd,shell=True) #Get run time
-        RunTime = RunTime.split()
-        RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
-      except:
-        RunTime = " N/A"
-      line += RunTime
-      if (UpdateResults == 1):
-        line += ", "
-        line += SavedEnergy
+      line = AddRunTime(line)
+      line = AddEnergy(UpdateResults,line,SavedEnergy)
       print(line)
       CleanFiles() #Clean up files
 
@@ -864,21 +706,8 @@ for qmtest in QMTests:
       cmd = "cp pol.key tinker.key"
       subprocess.call(cmd,shell=True) #Copy key file
       RunLICHEM("waterdimer.xyz","polreg.inp","watercon.inp")
-      cmd = ""
-      cmd += "grep -e"
-      cmd += ' "QMMM energy: " ' #Find final energy
-      cmd += "tests.out"
-      SavedEnergy = "Crashed..."
-      try:
-        #Safely check energy
-        QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
-        QMMMEnergy = QMMMEnergy.split()
-        QMMMEnergy = float(QMMMEnergy[2])
-        SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
-        QMMMEnergy = round(QMMMEnergy,5)
-      except:
-        #Calculation failed
-        QMMMEnergy = 0.0
+      QMMMEnergy,SavedEnergy = RecoverEnergy("QMMM energy:",2)
+      #Check result
       if (QMPack == "PSI4"):
         #Check against saved energy
         if (QMMMEnergy == round(-2077.1114201829,5)):
@@ -893,20 +722,8 @@ for qmtest in QMTests:
           PassEnergy = 1
       line += " PBE0/AMOEBA energy:  "
       line,passct,failct = AddPass(PassEnergy,line,passct,failct)
-      cmd = ""
-      cmd += "grep -e"
-      cmd += ' "Total wall time: " ' #Find run time
-      cmd += "tests.out"
-      try:
-        RunTime = subprocess.check_output(cmd,shell=True) #Get run time
-        RunTime = RunTime.split()
-        RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
-      except:
-        RunTime = " N/A"
-      line += RunTime
-      if (UpdateResults == 1):
-        line += ", "
-        line += SavedEnergy
+      line = AddRunTime(line)
+      line = AddEnergy(UpdateResults,line,SavedEnergy)
       print(line)
       CleanFiles() #Clean up files
 
@@ -919,21 +736,8 @@ for qmtest in QMTests:
         cmd = "cp pbbasis.txt BASIS"
         subprocess.call(cmd,shell=True) #Copy BASIS set file
         RunLICHEM("alkyl.xyz","pboptreg.inp","alkcon.inp")
-        cmd = ""
-        cmd += "grep -e"
-        cmd += ' "Opt. step: 2 " ' #Find final energy
-        cmd += "tests.out"
-        SavedEnergy = "Crashed..."
-        try:
-          #Safely check energy
-          QMMMEnergy = subprocess.check_output(cmd,shell=True) #Get results
-          QMMMEnergy = QMMMEnergy.split()
-          QMMMEnergy = float(QMMMEnergy[6])
-          SavedEnergy = "Energy: "+`QMMMEnergy` #Save it for later
-          QMMMEnergy = round(QMMMEnergy,5)
-        except:
-          #calculation failed
-          QMMMEnergy = 0.0
+        QMMMEnergy,SavedEnergy = RecoverEnergy("Opt. step: 2",6)
+        #Check result
         if (QMPack == "Gaussian"):
           #Check against saved energy
           if (QMMMEnergy == round(-3015.0548490566,5)):
@@ -944,20 +748,8 @@ for qmtest in QMTests:
             PassEnergy = 1
         line += " DFP/Pseudobonds:     "
         line,passct,failct = AddPass(PassEnergy,line,passct,failct)
-        cmd = ""
-        cmd += "grep -e"
-        cmd += ' "Total wall time: " ' #Find run time
-        cmd += "tests.out"
-        try:
-          RunTime = subprocess.check_output(cmd,shell=True) #Get run time
-          RunTime = RunTime.split()
-          RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
-        except:
-          RunTime = " N/A"
-        line += RunTime
-        if (UpdateResults == 1):
-          line += ", "
-          line += SavedEnergy
+        line = AddRunTime(line)
+        line = AddEnergy(UpdateResults,line,SavedEnergy)
         print(line)
         CleanFiles() #Clean up files
 
