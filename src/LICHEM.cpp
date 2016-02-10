@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
   //Read input and check for errors
   ReadLICHEMInput(xyzfile,connectfile,regionfile,Struct,QMMMOpts);
   LICHEMErrorChecker(QMMMOpts);
-  LICHEMPrintSettings(QMMMOpts);
+  LICHEMPrintSettings(Struct,QMMMOpts);
   //End of section
 
   //Fix PBC
@@ -768,7 +768,7 @@ int main(int argc, char* argv[])
       rho = LICHEMDensity(Struct,QMMMOpts);
       cout << " | Density: ";
       cout << LICHEMFormFloat(rho,8);
-      cout << " g/cm^3";
+      cout << " g/cm\u00B3";
     }
     cout << '\n';
     cout.flush(); //Print results
@@ -805,7 +805,7 @@ int main(int argc, char* argv[])
             rho = LICHEMDensity(Struct,QMMMOpts);
             cout << " | Density: ";
             cout << LICHEMFormFloat(rho,8);
-            cout << " g/cm^3";
+            cout << " g/cm\u00B3";
           }
           cout << '\n';
           cout.flush(); //Print results
@@ -842,7 +842,7 @@ int main(int argc, char* argv[])
       //Print simulation box information
       cout << " | Density: ";
       cout << LICHEMFormFloat(DenAvg,8);
-      cout << " g/cm^3" << '\n';
+      cout << " g/cm\u00B3" << '\n';
       cout << " | Average box size (\u212B): " << '\n';
       cout << "  "; //Indent
       cout << " Lx = " << LICHEMFormFloat(LxAvg,12);
@@ -854,7 +854,7 @@ int main(int argc, char* argv[])
     cout << LICHEMFormFloat(SumE,16);
     cout << " eV | Variance: ";
     cout << LICHEMFormFloat((SumE2-(SumE*SumE)),12);
-    cout << " eV^2";
+    cout << " eV\u00B2";
     cout << '\n';
     cout << " | Acceptance ratio: ";
     cout << LICHEMFormFloat((Nacc/(Nrej+Nacc)),6);

@@ -1188,7 +1188,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
   return;
 };
 
-void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
+void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
 {
   //Prints out the simulation details
   cout << "Setting up simulation..." << '\n';
@@ -1401,14 +1401,21 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
       cout << "Simulation box settings:" << '\n';
       if (PBCon)
       {
+        //Print box size and density
+        double initden = 0; //Initial density
         cout << " Boundaries: Periodic" << '\n';
-        cout << " Box size: ";
+        cout << " Box size (\u212B): ";
         cout << LICHEMFormFloat(Lx,10) << " ";
         cout << LICHEMFormFloat(Ly,10) << " ";
         cout << LICHEMFormFloat(Lz,10) << '\n';
+        cout << " Density: ";
+        initden = LICHEMDensity(Struct,QMMMOpts);
+        cout << LICHEMFormFloat(initden,10);
+        cout << " g/cm\u00B3" << '\n';
       }
       if (QMMMOpts.UseLREC)
       {
+        //Print LREC cutoff options
         cout << " QM LREC: Yes" << '\n';
         cout << " LREC cutoff: ";
         cout << LICHEMFormFloat(QMMMOpts.LRECCut,8);
@@ -1416,10 +1423,12 @@ void LICHEMPrintSettings(QMMMSettings& QMMMOpts)
       }
       if (QMMMOpts.UseEwald)
       {
+        //Print Ewald summation options
         cout << " MM Ewald: Yes" << '\n';
       }
       if (QMMMOpts.UseImpSolv)
       {
+        //Print continuum solvation options
         cout << " Implicit solvent: " << QMMMOpts.SolvModel;
         cout << '\n';
       }

@@ -305,12 +305,13 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ifile.close();
   //Delete junk files
   call.str("");
-  call << "rm -f ";
-  call << "LICHM_" << Bead << ".xyz ";
-  call << "LICHM_" << Bead << ".key ";
-  call << "LICHM_" << Bead << ".0* ";
-  call << "LICHM_" << Bead << ".dyn ";
-  call << "LICHM_" << Bead << ".log";
+  call << "rm -f";
+  call << " LICHM_" << Bead << ".xyz";
+  call << " LICHM_" << Bead << ".key";
+  call << " LICHM_" << Bead << ".0*";
+  call << " LICHM_" << Bead << ".dyn";
+  call << " LICHM_" << Bead << ".log";
+  call << " LICHM_" << Bead << ".err";
   GlobalSys = system(call.str().c_str());
   return;
 };
@@ -538,9 +539,9 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cerr << '\n';
     cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
+    cerr.flush(); //Print warning immediately
     Epol = 0; //Prevents errors when polarization is off
     Esolv = 0; //Prevents errors when implicit solvation is off
-    cerr.flush(); //Print warning immediately
   }
   ifile.close();
   //Clean up files
@@ -549,6 +550,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << " LICHM_" << Bead << ".xyz";
   call << " LICHM_" << Bead << ".log";
   call << " LICHM_" << Bead << ".key";
+  call << " LICHM_" << Bead << ".err";
   GlobalSys = system(call.str().c_str());
   //Return polarization and solvation energy in kcal/mol
   return Epol+Esolv;
@@ -815,6 +817,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << " LICHM_" << Bead << ".xyz";
   call << " LICHM_" << Bead << ".key";
   call << " LICHM_" << Bead << ".grad";
+  call << " LICHM_" << Bead << ".err";
   GlobalSys = system(call.str().c_str());
   //Return
   Emm *= kcal2eV;
@@ -1066,6 +1069,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << " LICHM_" << Bead << ".xyz";
   call << " LICHM_" << Bead << ".key";
   call << " LICHM_" << Bead << ".grad";
+  call << " LICHM_" << Bead << ".err";
   GlobalSys = system(call.str().c_str());
   //Return
   Emm *= kcal2eV;
@@ -1280,8 +1284,8 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     cerr << '\n';
     cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
-    E = HugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
+    E = HugeNum; //Large number to reject step
   }
   ifile.close();
   //Clean up files
@@ -1290,6 +1294,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << " LICHM_" << Bead << ".xyz";
   call << " LICHM_" << Bead << ".log";
   call << " LICHM_" << Bead << ".key";
+  call << " LICHM_" << Bead << ".err";
   GlobalSys = system(call.str().c_str());
   //Calculate polarization energy
   if ((AMOEBA or GEM or QMMMOpts.UseImpSolv) and QMMM)
@@ -1545,16 +1550,15 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   else
   {
     //Print error message
-    cerr << "Error: No structure found after the dynamics!!!";
+    cerr << "Warning: No structure found after the dynamics!!!";
     cerr << '\n';
     cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
     cerr.flush();
-    //Remove restart and error files
+    //Remove restart file
     call.str("");
     call << "rm -f";
     call << " LICHM_" << Bead << ".dyn";
-    call << " LICHM_" << Bead << ".err";
     GlobalSys = system(call.str().c_str());
   }
   ifile.close();
@@ -1565,6 +1569,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << " LICHM_" << Bead << ".log";
   call << " LICHM_" << Bead << ".0*";
   call << " LICHM_" << Bead << ".key";
+  call << " LICHM_" << Bead << ".err";
   GlobalSys = system(call.str().c_str());
   return;
 };
@@ -1831,6 +1836,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << " LICHM_" << Bead << ".log";
   call << " LICHM_" << Bead << ".xyz_*";
   call << " LICHM_" << Bead << ".key";
+  call << " LICHM_" << Bead << ".err";
   GlobalSys = system(call.str().c_str());
   //Change units
   E *= kcal2eV;

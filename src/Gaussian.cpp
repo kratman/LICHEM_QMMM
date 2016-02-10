@@ -236,7 +236,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << '\n';
   if (QMMM)
   {
-    if (Npseudo > 0)
+    if ((Npseudo > 0) and (QMMMOpts.Func != "SemiEmp"))
     {
       //Read pseudo potential
       call << "Pseudo=Read ";
@@ -424,7 +424,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "Int=UltraFine SCF=(YQC,Big,Direct)" << '\n';
   if (QMMM)
   {
-    if (Npseudo > 0)
+    if ((Npseudo > 0) and (QMMMOpts.Func != "SemiEmp"))
     {
       //Read pseudo potential
       call << "Pseudo=Read ";
@@ -560,7 +560,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << '\n';
   if (QMMM)
   {
-    if (Npseudo > 0)
+    if ((Npseudo > 0) and (QMMMOpts.Func != "SemiEmp"))
     {
       //Read pseudo potential
       call << "Pseudo=Read ";

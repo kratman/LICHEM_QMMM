@@ -154,7 +154,7 @@ void LICHEMLowerText(string&);
 
 void LICHEMNEB(vector<QMMMAtom>&,QMMMSettings&,int);
 
-void LICHEMPrintSettings(QMMMSettings&);
+void LICHEMPrintSettings(vector<QMMMAtom>&,QMMMSettings&);
 
 void LICHEMQuickMin(vector<QMMMAtom>&,QMMMSettings&,int);
 

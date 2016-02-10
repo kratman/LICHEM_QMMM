@@ -14,10 +14,13 @@ import time
 import sys
 import os
 
-#Start timer and counters immediately
+#Start timer immediately
 StartTime = time.time()
-passct = 0
-failct = 0
+
+#Initialize globals
+TTxtLen = 25 #Number of characters for the test name
+passct = 0 #Number of tests passed
+failct = 0 #Number of tests failed
 
 #Development settings
 #NB: Modified by the Makefile
@@ -102,15 +105,34 @@ def RecoverEnergy(txtlabel,itemnum):
     finalenergy = 0.0
   return finalenergy,savedresult
 
-def AddPass(TestPass,txtln,pct,fct):
+def AddPass(tname,TestPass,txtln):
   #Add a colored pass or fail message
+  global passct
+  global failct
+  global TTxtLen
+  #Add the name of the test
+  tname = " "+tname
+  deltatxt = TTxtLen-len(tname)
+  if (deltatxt > 0):
+    #Make the test name consistent with TTxtLen
+    for i in range(deltatxt):
+      tname += " "
+  else:
+    #Update bad length
+    TTxtLen -= deltatxt
+    TTxtLen += 1
+    deltatxt = TTxtLen-len(tname)
+    for i in range(deltatxt):
+      tname += " "
+  #Label as pass or fail
+  txtln += tname
   if (TestPass == 1):
     txtln += ClrSet.TPass+"Pass"+ClrSet.Reset+","
-    pct += 1
+    passct += 1
   else:
     txtln += ClrSet.TFail+"Fail"+ClrSet.Reset+","
-    fct += 1
-  return txtln,pct,fct
+    failct += 1
+  return txtln
 
 def AddRunTime(txtln):
   #Collect the LICHEM run time and add it to a string
@@ -540,8 +562,7 @@ for qmtest in QMTests:
         #Check against saved energy
         if (QMMMEnergy == round(-4136.9317704519,5)):
           PassEnergy = 1
-      line += " HF energy:           "
-      line,passct,failct = AddPass(PassEnergy,line,passct,failct)
+      line = AddPass("HF energy:",PassEnergy,line)
       line = AddRunTime(line)
       line = AddEnergy(UpdateResults,line,SavedEnergy)
       print(line)
@@ -565,8 +586,7 @@ for qmtest in QMTests:
       #Check against saved energy
       if (QMMMEnergy == round(-4154.1683939169,5)):
         PassEnergy = 1
-    line += " PBE0 energy:         "
-    line,passct,failct = AddPass(PassEnergy,line,passct,failct)
+    line = AddPass("PBE0 energy:",PassEnergy,line)
     line = AddRunTime(line)
     line = AddEnergy(UpdateResults,line,SavedEnergy)
     print(line)
@@ -583,8 +603,7 @@ for qmtest in QMTests:
         #Check against saved energy
         if (QMMMEnergy == round(-4147.730483706,5)):
           PassEnergy = 1
-      line += " CCSD energy:         "
-      line,passct,failct = AddPass(PassEnergy,line,passct,failct)
+      line = AddPass("CCSD energy:",PassEnergy,line)
       line = AddRunTime(line)
       line = AddEnergy(UpdateResults,line,SavedEnergy)
       print(line)
@@ -601,8 +620,7 @@ for qmtest in QMTests:
         #Check against saved energy
         if (QMMMEnergy == round(-4.8623027634995,5)):
           PassEnergy = 1
-      line += " PM6 energy:          "
-      line,passct,failct = AddPass(PassEnergy,line,passct,failct)
+      line = AddPass("PM6 energy:",PassEnergy,line)
       line = AddRunTime(line)
       line = AddEnergy(UpdateResults,line,SavedEnergy)
       print(line)
@@ -628,8 +646,7 @@ for qmtest in QMTests:
       #Check against saved energy
       if (QMMMEnergy == round(-6511.0579547077,5)):
         PassEnergy = 1
-    line += " NEB TS energy:       "
-    line,passct,failct = AddPass(PassEnergy,line,passct,failct)
+    line = AddPass("NEB TS energy:",PassEnergy,line)
     line = AddRunTime(line)
     line = AddEnergy(UpdateResults,line,SavedEnergy)
     print(line)
@@ -648,8 +665,7 @@ for qmtest in QMTests:
       if (QMMMEnergy == round(-0.2596903536223,5)):
         #Check against saved energy
         PassEnergy = 1
-      line += " TIP3P energy:        "
-      line,passct,failct = AddPass(PassEnergy,line,passct,failct)
+      line = AddPass("TIP3P energy:",PassEnergy,line)
       line = AddRunTime(line)
       line = AddEnergy(UpdateResults,line,SavedEnergy)
       print(line)
@@ -666,8 +682,7 @@ for qmtest in QMTests:
       if (QMMMEnergy == round(-1.2549403662026,5)):
         #Check against saved energy
         PassEnergy = 1
-      line += " AMOEBA/GK energy:    "
-      line,passct,failct = AddPass(PassEnergy,line,passct,failct)
+      line = AddPass("AMOEBA/GK energy:",PassEnergy,line)
       line = AddRunTime(line)
       line = AddEnergy(UpdateResults,line,SavedEnergy)
       print(line)
@@ -693,8 +708,7 @@ for qmtest in QMTests:
         #Check against saved energy
         if (QMMMEnergy == round(-2077.2022117306,5)):
           PassEnergy = 1
-      line += " PBE0/TIP3P energy:   "
-      line,passct,failct = AddPass(PassEnergy,line,passct,failct)
+      line = AddPass("PBE0/TIP3P energy:",PassEnergy,line)
       line = AddRunTime(line)
       line = AddEnergy(UpdateResults,line,SavedEnergy)
       print(line)
@@ -720,8 +734,7 @@ for qmtest in QMTests:
         #Check against saved energy
         if (QMMMEnergy == round(-2077.1094168459,5)):
           PassEnergy = 1
-      line += " PBE0/AMOEBA energy:  "
-      line,passct,failct = AddPass(PassEnergy,line,passct,failct)
+      line = AddPass("PBE0/AMOEBA energy:",PassEnergy,line)
       line = AddRunTime(line)
       line = AddEnergy(UpdateResults,line,SavedEnergy)
       print(line)
@@ -746,8 +759,7 @@ for qmtest in QMTests:
           #Check against saved energy
           if (QMMMEnergy == round(-3015.2278310975,5)):
             PassEnergy = 1
-        line += " DFP/Pseudobonds:     "
-        line,passct,failct = AddPass(PassEnergy,line,passct,failct)
+        line = AddPass("DFP/Pseudobonds:",PassEnergy,line)
         line = AddRunTime(line)
         line = AddEnergy(UpdateResults,line,SavedEnergy)
         print(line)
