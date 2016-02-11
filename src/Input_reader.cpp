@@ -1193,6 +1193,11 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   //Prints out the simulation details
   cout << "Setting up simulation..." << '\n';
   cout << '\n';
+  cout << "Input files:" << '\n';
+  cout << " Coordinate file: " << xyzfilename << '\n';
+  cout << " Connectivity file: " << confilename << '\n';
+  cout << " Region file: " << regfilename << '\n';
+  cout << '\n';
   cout << "Atoms: " << Natoms << '\n';
   if (QMonly or QMMM)
   {
