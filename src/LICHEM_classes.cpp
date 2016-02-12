@@ -257,7 +257,7 @@ QMMMSettings::QMMMSettings()
   MemMB = 1;
   Charge = "0";
   Spin = "1";
-  BackDir = "N/A";
+  BackDir = "Old_files";
   UseLREC = 0;
   LRECCut = 1000.0; //Effectively infinite
   //MM wrapper settings

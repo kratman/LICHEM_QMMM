@@ -725,16 +725,8 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   //Check if there is a checkpoint file
   bool UseCheckPoint;
   call.str("");
-  call << "LICHM_" << Bead << ".32";
+  call << "LICHM_" << Bead << ".180";
   UseCheckPoint = CheckFile(call.str());
-  if (UseCheckPoint)
-  {
-    //Check second file
-    UseCheckPoint = 0;
-    call.str("");
-    call << "LICHM_" << Bead << ".180";
-    UseCheckPoint = CheckFile(call.str());
-  }
   //Set up memory
   call.str("");
   call << "set_num_threads(" << Ncpus << ")" << '\n';
@@ -774,9 +766,7 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   call << "set scf_type df" << '\n';
   call << '\n';
   //Keep the checkpoint files
-  //NB: checkpoint->32, MOs->180
-  call << "psi4_io.set_specific_path(32,'./')" << '\n';
-  call << "psi4_io.set_specific_retention(32,True)" << '\n';
+  //NB: MOs->180
   call << "psi4_io.set_specific_path(180,'./')" << '\n';
   call << "psi4_io.set_specific_retention(180,True)" << '\n';
   call << '\n';

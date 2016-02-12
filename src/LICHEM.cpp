@@ -1008,23 +1008,19 @@ int main(int argc, char* argv[])
         if (Gaussian and (QMMMOpts.Func != "SemiEmp"))
         {
           call.str("");
-          call << "cp LICHM_" << (p);
-          call << ".chk";
-          call << " LICHM_" << (p+1);
-          call << ".chk";
+          call << "cp LICHM_" << p << ".chk ";
+          call << "LICHM_" << (p+1) << ".chk";
+          call << " 2> LICHM_" << (p+1) << ".trash; ";
+          call << "rm -f LICHM_" << (p+1) << ".trash";
           GlobalSys = system(call.str().c_str());
         }
         if (PSI4)
         {
           call.str("");
-          call << "cp LICHM_" << (p);
-          call << ".32";
-          call << " LICHM_" << (p+1);
-          call << ".32; ";
-          call << "cp LICHM_" << (p);
-          call << ".180";
-          call << " LICHM_" << (p+1);
-          call << ".180";
+          call << "cp LICHM_" << p << ".180 ";
+          call << "LICHM_" << (p+1) << ".180";
+          call << " 2> LICHM_" << (p+1) << ".trash; ";
+          call << "rm -f LICHM_" << (p+1) << ".trash";
           GlobalSys = system(call.str().c_str());
         }
       }
