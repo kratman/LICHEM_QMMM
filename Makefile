@@ -85,7 +85,7 @@ testexe:
 
 devtest:	
 	@echo ""; \
-	echo "### Creating test suite executable ###"
+	echo "### Creating development test suite executable ###"
 	@echo 'echo "#!$(PYPATH)" > ./tests/runtests'; \
 	echo "!!$(PYPATH)" > ./tests/runtests
 	cat ./src/runtests.py >> ./tests/runtests
