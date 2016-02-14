@@ -44,11 +44,8 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   }
   call << ",return_wfn=True)" << '\n';
   call << "gradient('" << QMMMOpts.Func << "'";
-  if (UseCheckPoint)
-  {
-    //Skip a second SCF cycle
-    call << ",bypass_scf=True";
-  }
+  //Skip a second SCF cycle
+  call << ",bypass_scf=True";
   call << ")" << '\n';
   call << "print('Energy: '+`Eqm`)" << '\n';
   if (QMMM)
