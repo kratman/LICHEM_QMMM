@@ -8,14 +8,10 @@ compiler:
   - gcc
 os:
   - linux
-  - osx
 sudo: required
 before_install:
-  - if [ ${TRAVIS_OS_NAME} == linux ]; then sudo apt-get update -qq; fi
-  - if [ ${TRAVIS_OS_NAME} == linux ]; then sudo apt-get install -qq texlive; fi
-  - if [ ${TRAVIS_OS_NAME} == osx ]; then brew install g++; fi
-  - if [ ${TRAVIS_OS_NAME} == osx ]; then sed -i "" -e 's/-static//g' Makefile; fi
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq texlive
 script:
-  - if [ ${TRAVIS_OS_NAME} == linux ]; then sudo apt-get moo; fi
-  - make install && make clean
+  - sudo apt-get moo; make install && make clean
 
