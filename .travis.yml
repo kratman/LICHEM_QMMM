@@ -12,16 +12,16 @@ os:
 sudo: required
 before_install:
   - if [ $TRAVIS_OS_NAME == linux ]; then
-      sudo apt-get update -qq
-      sudo apt-get install -qq texlive
+      sudo apt-get update -qq;
+      sudo apt-get install -qq texlive;
     fi
 before_script:
   - if [ $TRAVIS_OS_NAME == osx ]; then
-      sed -i 's/-static//g' Makefile
+      sed -i 's/-static//g' Makefile;
     fi
 script:
   - if [ $TRAVIS_OS_NAME == linux ]; then
-      sudo apt-get moo
+      sudo apt-get moo;
     fi
   - make install && make clean
 
