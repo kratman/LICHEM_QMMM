@@ -7,23 +7,17 @@ language: cpp
 compiler:
   - clang
   - gcc
-os: linux
-dist: trusty
+os:
+  - linux
+  - osx
+if [ $TRAVIS_OS_NAME == linux ]; then dist: trusty; fi
 sudo: required
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq texlive
-script: sudo apt-get moo; make install && make clean
+  if [ $TRAVIS_OS_NAME == linux ]; then
+    - sudo apt-get update -qq
+    - sudo apt-get install -qq texlive
+  fi
+script:
+  - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get moo; fi 
+  - make install && make clean
 
-#Mac build
-notifications:
-  email:
-    on_success: never
-    on_failure: change
-language: cpp
-compiler:
-  - clang
-  - gcc
-os: osx
-sudo: required
-script: make install && make clean
