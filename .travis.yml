@@ -12,10 +12,10 @@ compiler:
 
 #OS settings
 sudo: required
+dist: trusty
 os:
-  - os: linux
-    dist: trusty
-  - os: osx
+  - linux
+  - osx
 
 #Install required packages
 before_install:
