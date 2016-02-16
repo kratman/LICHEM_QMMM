@@ -6,17 +6,17 @@ language: cpp
 compiler:
   - clang
   - gcc
-addons:
-  apt:
-    packages:
-      - texlive
 matrix:
   include:
     - os: linux
       dist: trusty
     - os: osx
+sudo: required
 before_install:
+  - if [ ${TRAVIS_OS_NAME} == linux ]; then sudo apt-get update -qq; fi
+  - if [ ${TRAVIS_OS_NAME} == linux ]; then sudo apt-get install -qq texlive; fi
   - if [ ${TRAVIS_OS_NAME} == osx ]; then sed -i "" -e 's/-static//g' Makefile; fi
+  - if [ ${TRAVIS_OS_NAME} == osx ]; then sed -i "" -e 's/-fopenmp//g' Makefile; fi
   - if [ ${TRAVIS_OS_NAME} == osx ]; then brew update; fi
   - if [ ${TRAVIS_OS_NAME} == osx ]; then brew outdated gcc48 || brew upgrade gcc48; fi
   - if [ ${TRAVIS_OS_NAME} == osx ]; then alias g++='g++-4.8'; fi
@@ -24,4 +24,3 @@ script:
   - make install
   - make clean
   - if [ ${TRAVIS_OS_NAME} == linux ]; then apt-get moo; fi
-  - if [ ${TRAVIS_OS_NAME} == osx ]; then brew beer; fi
