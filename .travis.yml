@@ -9,9 +9,6 @@ compiler:
 os:
   - linux
   - osx
-if [ $TRAVIS_OS_NAME == linux ]; then
-  dist: trusty
-fi
 sudo: required
 before_install:
   - if [ $TRAVIS_OS_NAME == linux ]; then
