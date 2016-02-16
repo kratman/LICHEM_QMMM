@@ -13,9 +13,6 @@ sudo: required
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq texlive
-script:
-  - sudo apt-get moo
-  - make install
-  - make clean
+script: sudo apt-get moo; make install && make clean
 
 #Mac build
