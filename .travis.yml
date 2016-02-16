@@ -1,0 +1,9 @@
+language: cpp
+sudo: false
+compiler:
+- clang
+- gcc
+os:
+- linux
+- osx
+install: make devbin
