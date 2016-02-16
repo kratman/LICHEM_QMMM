@@ -13,6 +13,10 @@ LICHEM: Layered Interacting CHEmical Models
 
 ### LICHEM: A QMMM interface for polarizable force fields
 
+### Automated tests
+
+**Travis CI build:** [![Build Status](https://travis-ci.org/kratman/LICHEM_QMMM.svg?branch=master)](https://travis-ci.org/kratman/LICHEM_QMMM)
+
 ### Introduction
 
 This package is designed to be an open source (GPLv3) interface between QM
