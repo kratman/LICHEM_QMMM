@@ -46,3 +46,19 @@ different packages.
 
 The test suite is not compatable with python 3.0 or higher.
 
+###Tests
+
+[//]: # (Table entries cannot have newlines)
+
+| Test | Description | QM | MM |
+| :--- | :--- | :---: | :---: |
+| HF energy | Hartree-Fock energy calculated using only the QM wrapper. | PSI4,Gaussian | N/A |
+| PBE0 energy | Density functional theory energy calculated using only the QM wrapper. | PSI4,Gaussian,NWChem | N/A |
+| CCSD energy | Coupled-cluster energy calculated using only the QM wrapper. | PSI4 | N/A |
+| PM6 energy | Semi-empirical energy calculated using only the QM wrapper. | Gaussian | N/A |
+| NEB TS energy | Nudged elastic band optimization using only the QM wrapper. | PSI4,Gaussian,NWChem | N/A |
+| TIP3P energy | MM energy of the water dimer with the TIP3P model. | N/A | TINKER |
+| AMOEBA/GK energy | MM energy of the water dimer in the generalized Kirkwood implicit solvent. | N/A | TINKER |
+| PBE0/TIP3P energy | QMMM energy of a water dimer calculated with PBE0 and TIP3P. | PSI4,Gaussian,NWChem | TINKER |
+| PBE0/AMOEBA energy | Polarizable QMMM energy of a water dimer calculated with PBE0 and AMOEBA. | PSI4,Gaussian,NWChem | TINKER |
+| DFP/Pseudobonds | QMMM Davidon-Fletcher-Powell optimization of 2-Butyne with the two methyl groups replaced by pseudobond/boundary atoms. | Gaussian,NWChem | TINKER |
