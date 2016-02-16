@@ -9,7 +9,7 @@ compiler:
 os: 
   - linux
     dist: trusty
-#  - osx
+  - osx
 sudo: required
 before_install:
   - if [ ${TRAVIS_OS_NAME} == linux ]; then sudo apt-get update -qq; fi
@@ -22,3 +22,4 @@ script:
   - make install
   - make clean
   - if [ ${TRAVIS_OS_NAME} == linux ]; then sudo apt-get moo; fi
+  - if [ ${TRAVIS_OS_NAME} == osx ]; then brew beer; fi
