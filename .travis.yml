@@ -6,10 +6,11 @@ language: cpp
 compiler:
   - clang
   - gcc
-os: 
-  - linux
-    dist: trusty
-  - osx
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+    - os: osx
 sudo: required
 before_install:
   - if [ ${TRAVIS_OS_NAME} == linux ]; then sudo apt-get update -qq; fi
