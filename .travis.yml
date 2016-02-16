@@ -1,17 +1,25 @@
+#Email settings
 notifications:
   email:
     on_success: never
     on_failure: change
+
+#Compiler settings
 language: cpp
 compiler:
   - clang
   - gcc
+
+#OS settings
 matrix:
   include:
     - os: linux
+      sudo: required
       dist: trusty
     - os: osx
-sudo: required
+      sudo: required
+
+#Install required packages
 before_install:
   - if [ ${TRAVIS_OS_NAME} == linux ]; then sudo apt-get update -qq; fi
   - if [ ${TRAVIS_OS_NAME} == linux ]; then sudo apt-get install -qq texlive; fi
@@ -20,6 +28,8 @@ before_install:
   - if [ ${TRAVIS_OS_NAME} == osx ]; then brew update; fi
   - if [ ${TRAVIS_OS_NAME} == osx ]; then brew outdated gcc48 || brew upgrade gcc48; fi
   - if [ ${TRAVIS_OS_NAME} == osx ]; then alias g++='g++-4.8'; fi
+
+#Run tests
 script:
   - make install
   - make clean
