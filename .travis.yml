@@ -6,4 +6,4 @@ compiler:
 os:
 - linux
 - osx
-install: make devbin
+install: make binary
