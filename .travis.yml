@@ -9,7 +9,7 @@ compiler:
 os: 
   - linux
     dist: trusty
-  - osx
+#  - osx
 sudo: required
 before_install:
   - if [ ${TRAVIS_OS_NAME} == linux ]; then sudo apt-get update -qq; fi
