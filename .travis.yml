@@ -16,3 +16,17 @@ before_install:
 script: sudo apt-get moo; make install && make clean
 
 #Mac build
+notifications:
+  email:
+    on_success: never
+    on_failure: change
+language: cpp
+compiler:
+  - clang
+  - gcc
+os: osx
+sudo: required
+before_install:
+  - brew update
+  - brew outdated MacTex || brew upgrade MacTex
+script: make install && make clean
