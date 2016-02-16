@@ -12,7 +12,8 @@ os:
 sudo: required
 before_install:
   - if [ ${TRAVIS_OS_NAME} == linux ]; then sudo apt-get update -qq; fi
-  - if [ ${TRAVIS_OS_NAME} == linux ]; then sudo apt-get install -qq textlive; fi
+  - if [ ${TRAVIS_OS_NAME} == linux ]; then sudo apt-get install -qq texlive; fi
+  - if [ ${TRAVIS_OS_NAME} == osx ]; then brew install g++; fi
   - if [ ${TRAVIS_OS_NAME} == osx ]; then sed -i "" -e 's/-static//g' Makefile; fi
 script:
   - if [ ${TRAVIS_OS_NAME} == linux ]; then sudo apt-get moo; fi
