@@ -26,7 +26,4 @@ compiler:
   - gcc
 os: osx
 sudo: required
-before_install:
-  - brew update
-  - brew outdated MacTex || brew upgrade MacTex
 script: make install && make clean
