@@ -6,8 +6,8 @@ language: cpp
 compiler:
   - clang
   - gcc
-os:
-  - linux
+os: linux
+dist: trusty
 sudo: required
 before_install:
   - sudo apt-get update -qq
