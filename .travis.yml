@@ -11,13 +11,11 @@ compiler:
   - gcc
 
 #OS settings
-matrix:
-  include:
-    - os: linux
-      sudo: required
-      dist: trusty
-    - os: osx
-      sudo: required
+sudo: required
+os:
+  - os: linux
+    dist: trusty
+  - os: osx
 
 #Install required packages
 before_install:
