@@ -5,5 +5,5 @@ compiler:
 - gcc
 os:
 - linux
-- osx
-install: make binary
+#- osx
+script: make binary && make clean
