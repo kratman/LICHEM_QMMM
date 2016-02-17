@@ -25,6 +25,11 @@ LDFLAGS=-I./Eigen3/
 
 PYPATH=/usr/bin/python
 
+### Sed commands ###
+
+#In-place flag (GNU: -i, OSX: -i "" -e)
+SEDI=-i
+
 ### LaTeX settings ###
 
 TEX=pdflatex
@@ -77,10 +82,10 @@ testexe:
 	@echo 'echo "#!$(PYPATH)" > ./tests/runtests'; \
 	echo "!!$(PYPATH)" > ./tests/runtests
 	cat ./src/runtests.py >> ./tests/runtests
-	@sed -i 's/\#.*//g' ./tests/runtests; \
-	sed -i 's/\s*$$//g' ./tests/runtests; \
-	sed -i '/^$$/d' ./tests/runtests; \
-	sed -i 's/\!\!/\#\!/g' ./tests/runtests; \
+	@sed $(SEDI) 's/\#.*//g' ./tests/runtests; \
+	sed $(SEDI) 's/\s*$$//g' ./tests/runtests; \
+	sed $(SEDI) '/^$$/d' ./tests/runtests; \
+	sed $(SEDI) 's/\!\!/\#\!/g' ./tests/runtests; \
 	chmod a+x ./tests/runtests
 
 devtest:	
@@ -89,12 +94,12 @@ devtest:
 	@echo 'echo "#!$(PYPATH)" > ./tests/runtests'; \
 	echo "!!$(PYPATH)" > ./tests/runtests
 	cat ./src/runtests.py >> ./tests/runtests
-	@sed -i 's/\#.*//g' ./tests/runtests; \
-	sed -i 's/\s*$$//g' ./tests/runtests; \
-	sed -i '/^$$/d' ./tests/runtests; \
-	sed -i 's/\!\!/\#\!/g' ./tests/runtests; \
-	sed -i 's/UpdateResults = 0/UpdateResults = 1/g' ./tests/runtests; \
-	sed -i 's/ForceAll = 0/ForceAll = 1/g' ./tests/runtests; \
+	@sed $(SEDI) 's/\#.*//g' ./tests/runtests; \
+	sed $(SEDI) 's/\s*$$//g' ./tests/runtests; \
+	sed $(SEDI) '/^$$/d' ./tests/runtests; \
+	sed $(SEDI) 's/\!\!/\#\!/g' ./tests/runtests; \
+	sed $(SEDI) 's/UpdateResults = 0/UpdateResults = 1/g' ./tests/runtests; \
+	sed $(SEDI) 's/ForceAll = 0/ForceAll = 1/g' ./tests/runtests; \
 	chmod a+x ./tests/runtests
 
 checksyntax:	title

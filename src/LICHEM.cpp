@@ -91,78 +91,96 @@ int main(int argc, char* argv[])
   //Calculate single-point energy
   if (SinglePoint)
   {
-    double Eqm = 0; //QM energy
-    double Emm = 0; //MM energy
+    double Eqm; //QM energy
+    double Emm; //MM energy
     cout << '\n'; //Print blank line
-    cout << "Single-point energy:" << '\n';
+    if (QMMMOpts.Nbeads == 1)
+    {
+      cout << "Single-point energy:";
+    }
+    if (QMMMOpts.Nbeads > 1)
+    {
+      cout << "Multi-point energies:";
+    }
+    cout << '\n' << '\n';
     cout.flush(); //Print progress
-    //Calculate QM energy
-    if (Gaussian)
+    for (int p=0;p<QMMMOpts.Nbeads;p++)
     {
-      int tstart = (unsigned)time(0);
-      Eqm += GaussianEnergy(Struct,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tstart;
-    }
-    if (PSI4)
-    {
-      int tstart = (unsigned)time(0);
-      Eqm += PSI4Energy(Struct,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tstart;
-      //Delete annoying useless files
-      GlobalSys = system("rm -f psi.* timer.*");
-    }
-    if (NWChem)
-    {
-      int tstart = (unsigned)time(0);
-      Eqm += NWChemEnergy(Struct,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tstart;
-    }
-    if (QMMM or QMonly)
-    {
-      //Print QM partial energy
-      cout << "QM energy: " << LICHEMFormFloat(Eqm,16) << " eV";
+      Eqm = 0; //Reset QM energy
+      Emm = 0; //Reset MM energy
+      //Calculate QM energy
+      if (QMMMOpts.Nbeads > 1)
+      {
+        cout << " Energy for bead: " << p << '\n';
+        cout.flush();
+      }
+      if (Gaussian)
+      {
+        int tstart = (unsigned)time(0);
+        Eqm += GaussianEnergy(Struct,QMMMOpts,p);
+        QMTime += (unsigned)time(0)-tstart;
+      }
+      if (PSI4)
+      {
+        int tstart = (unsigned)time(0);
+        Eqm += PSI4Energy(Struct,QMMMOpts,p);
+        QMTime += (unsigned)time(0)-tstart;
+        //Delete annoying useless files
+        GlobalSys = system("rm -f psi.* timer.*");
+      }
+      if (NWChem)
+      {
+        int tstart = (unsigned)time(0);
+        Eqm += NWChemEnergy(Struct,QMMMOpts,p);
+        QMTime += (unsigned)time(0)-tstart;
+      }
+      if (QMMM or QMonly)
+      {
+        //Print QM partial energy
+        cout << "  QM energy: " << LICHEMFormFloat(Eqm,16) << " eV";
+        cout << '\n';
+        //Print progress
+        cout.flush();
+      }
+      //Calculate MM energy
+      if (TINKER)
+      {
+        int tstart = (unsigned)time(0);
+        Emm += TINKEREnergy(Struct,QMMMOpts,p);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      if (AMBER)
+      {
+        int tstart = (unsigned)time(0);
+        Emm += AMBEREnergy(Struct,QMMMOpts,p);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      if (LAMMPS)
+      {
+        int tstart = (unsigned)time(0);
+        Emm += LAMMPSEnergy(Struct,QMMMOpts,p);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      //Print the rest of the energies
+      if (QMMM or MMonly)
+      {
+        //Print MM partial energy
+        cout << "  MM energy: " << LICHEMFormFloat(Emm,16) << " eV";
+        cout << '\n';
+      }
+      SumE = Eqm+Emm; //Total energy
+      if (QMMM)
+      {
+        //Print total energy
+        cout << "  QMMM energy: ";
+        cout << LICHEMFormFloat(SumE,16) << " eV";
+        cout << " ";
+        cout << LICHEMFormFloat(SumE/Har2eV,16) << " a.u.";
+        cout << '\n';
+      }
       cout << '\n';
-      //Print progress
-      cout.flush();
+      cout.flush(); //Print output
     }
-    //Calculate MM energy
-    if (TINKER)
-    {
-      int tstart = (unsigned)time(0);
-      Emm += TINKEREnergy(Struct,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tstart;
-    }
-    if (AMBER)
-    {
-      int tstart = (unsigned)time(0);
-      Emm += AMBEREnergy(Struct,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tstart;
-    }
-    if (LAMMPS)
-    {
-      int tstart = (unsigned)time(0);
-      Emm += LAMMPSEnergy(Struct,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tstart;
-    }
-    //Print the rest of the energies
-    if (QMMM or MMonly)
-    {
-      //Print MM partial energy
-      cout << "MM energy: " << LICHEMFormFloat(Emm,16) << " eV";
-      cout << '\n';
-    }
-    SumE = Eqm+Emm; //Total energy
-    if (QMMM)
-    {
-      //Print total energy
-      cout << "QMMM energy: ";
-      cout << LICHEMFormFloat(SumE,16) << " eV";
-      cout << " ";
-      cout << LICHEMFormFloat(SumE/Har2eV,16) << " a.u.";
-      cout << '\n';
-    }
-    cout << '\n';
-    cout.flush(); //Print output
   }
   //End of section
 
