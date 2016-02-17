@@ -1,6 +1,6 @@
 #Build testing for LICHEM
 
-#NB: Currently the OSX build is only for a serial binary
+#NB: Currently the OSX build skips the documentation
 
 #Email settings
 notifications:
@@ -25,6 +25,7 @@ os:
 before_install:
   - if [ ${TRAVIS_OS_NAME} == linux ]; then sudo apt-get update -qq; fi
   - if [ ${TRAVIS_OS_NAME} == linux ]; then sudo apt-get install -qq texlive; fi
+  - if [ ${TRAVIS_OS_NAME} == osx ]; then brew update; fi
   - if [ ${TRAVIS_OS_NAME} == osx ]; then sed -i "" -e 's/-static//g' Makefile; fi
   - if [ ${TRAVIS_OS_NAME} == osx ]; then sed -i "" -e 's/-fopenmp//g' Makefile; fi
   - if [ ${TRAVIS_OS_NAME} == osx ]; then sed -i "" -e 's/SEDI=-i/SEDI=-i \"\" -e/g' Makefile; fi
