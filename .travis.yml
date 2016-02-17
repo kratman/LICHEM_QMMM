@@ -30,8 +30,8 @@ before_install:
   - if [ ${TRAVIS_OS_NAME} == linux ]; then if [ ${CC} == clang ]; then sed -i 's/CC=/CC=clan/g' Makefile; fi; fi
   #OSX options
   - if [ ${TRAVIS_OS_NAME} == osx ]; then brew update; fi
-  - if [ ${TRAVIS_OS_NAME} == osx ]; then if [ ${CXX} == clang++ ]; then sed -i 's/CXX=/CXX=clan/g' Makefile; fi; fi
-  - if [ ${TRAVIS_OS_NAME} == osx ]; then if [ ${CC} == clang ]; then sed -i 's/CC=/CC=clan/g' Makefile; fi; fi
+  - if [ ${TRAVIS_OS_NAME} == osx ]; then if [ ${CXX} == clang++ ]; then sed -i "" 's/CXX=/CXX=clan/g' Makefile; fi; fi
+  - if [ ${TRAVIS_OS_NAME} == osx ]; then if [ ${CC} == clang ]; then sed -i "" 's/CC=/CC=clan/g' Makefile; fi; fi
   - if [ ${TRAVIS_OS_NAME} == osx ]; then sed -i "" 's/-static//g' Makefile; fi
   - if [ ${TRAVIS_OS_NAME} == osx ]; then sed -i "" 's/-fopenmp//g' Makefile; fi
   - if [ ${TRAVIS_OS_NAME} == osx ]; then sed -i "" 's/SEDI=-i/SEDI=-i \"\" -e/g' Makefile; fi
