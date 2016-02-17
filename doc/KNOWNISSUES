@@ -1,10 +1,8 @@
 Compiling:
--LICHEM has only been compiled and tested on Linux machines.
 -GCC v5 prints a warning about statically linking 'dlopen' with glibc/libgomp.
 So far I have not seen this cause any errors on Linux machines. If the warning
 causes concern, it can be eliminated by removing "-static" from the list of
 CXXFLAGS in the Makefile.
--OpenMP support might be disabled when compiling with Clang.
 
 General:
 -Currently only DFT and HF energies can be used in most of the QM
@@ -29,8 +27,6 @@ TINKER interface:
 simulations. It is possible that these interactions are incorrect. Note that
 even if the interactions are not treated properly, the errors should be
 insignificant if the chiral atoms are far from the QM region.
--All QM point-charges are added as Z-then-X multipoles. Since only the
-monopole is retained, the frame of reference is not important.
 
 LAMMPS interface:
 -The LAMMPS wrapper is still in the early stages of development.

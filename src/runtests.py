@@ -18,7 +18,7 @@ import os
 StartTime = time.time()
 
 #Initialize globals
-TTxtLen = 25 #Number of characters for the test name
+TTxtLen = 30 #Number of characters for the test name
 passct = 0 #Number of tests passed
 failct = 0 #Number of tests failed
 
