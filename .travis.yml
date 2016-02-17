@@ -31,7 +31,5 @@ before_install:
 
 #Run tests
 script:
-  - if [ ${TRAVIS_OS_NAME} == linux ]; then make install; fi
-  - if [ ${TRAVIS_OS_NAME} == osx ]; then make binary; fi
-  - make clean
+  - make install && make clean
   - if [ ${TRAVIS_OS_NAME} == linux ]; then apt-get moo; fi
