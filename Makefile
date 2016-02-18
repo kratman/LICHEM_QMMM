@@ -27,7 +27,7 @@ PYPATH=/usr/bin/python
 
 ### Sed commands ###
 
-#In-place flag (GNU: -i, OSX: -i "" -e)
+#In-place flag (GNU: -i, OSX: -i "")
 SEDI=-i
 
 ### LaTeX settings ###
