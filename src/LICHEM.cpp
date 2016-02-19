@@ -104,8 +104,10 @@ int main(int argc, char* argv[])
     }
     cout << '\n' << '\n';
     cout.flush(); //Print progress
+    //Loop over all beads
     for (int p=0;p<QMMMOpts.Nbeads;p++)
     {
+      //Calculate QMMM energy
       Eqm = 0; //Reset QM energy
       Emm = 0; //Reset MM energy
       //Calculate QM energy

@@ -11,8 +11,8 @@ notifications:
 #Compiler settings
 language: cpp
 compiler:
-  - clang
   - gcc
+  - clang
 
 #OS settings
 sudo: required

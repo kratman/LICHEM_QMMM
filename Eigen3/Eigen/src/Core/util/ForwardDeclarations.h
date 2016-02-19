@@ -94,12 +94,8 @@ template<typename BinaryOp,  typename Lhs, typename Rhs>  class CwiseBinaryOp;
 template<typename Decomposition, typename Rhstype>        class Solve;
 template<typename XprType>                                class Inverse;
 
-namespace internal {
-  template<typename Lhs, typename Rhs> struct product_tag;
-}
-
 template<typename Lhs, typename Rhs, int Option = DefaultProduct> class Product;
-         
+
 template<typename Derived> class DiagonalBase;
 template<typename _DiagonalVectorType> class DiagonalWrapper;
 template<typename _Scalar, int SizeAtCompileTime, int MaxSizeAtCompileTime=SizeAtCompileTime> class DiagonalMatrix;
@@ -252,6 +248,7 @@ template<typename MatrixType> struct inverse_impl;
 template<typename MatrixType> class HouseholderQR;
 template<typename MatrixType> class ColPivHouseholderQR;
 template<typename MatrixType> class FullPivHouseholderQR;
+template<typename MatrixType> class CompleteOrthogonalDecomposition;
 template<typename MatrixType, int QRPreconditioner = ColPivHouseholderQRPreconditioner> class JacobiSVD;
 template<typename MatrixType> class BDCSVD;
 template<typename MatrixType, int UpLo = Lower> class LLT;

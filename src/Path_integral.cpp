@@ -197,9 +197,9 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
   double Eold = QMMMOpts.Eold;
   double Enew = 0;
   //Save box lengths
-  double Lxtmp = Lx;
-  double Lytmp = Ly;
-  double Lztmp = Lz;
+  double LxSave = Lx;
+  double LySave = Ly;
+  double LzSave = Lz;
   //Attempt a volume move
   randnum = (((double)rand())/((double)RAND_MAX));
   if (randnum < VolProb)
@@ -261,7 +261,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
                 check = 1;
               }
             }
-            shift = ((Lx/Lxtmp)-1)*shift;
+            shift = ((Lx/LxSave)-1)*shift;
             Struct2[i].P[j].x += shift;
           }
         }
@@ -289,7 +289,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
                 check = 1;
               }
             }
-            shift = ((Ly/Lytmp)-1)*shift;
+            shift = ((Ly/LySave)-1)*shift;
             Struct2[i].P[j].y += shift;
           }
         }
@@ -317,7 +317,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
                 check = 1;
               }
             }
-            shift = ((Lz/Lztmp)-1)*shift;
+            shift = ((Lz/LzSave)-1)*shift;
             Struct2[i].P[j].z += shift;
           }
         }
@@ -356,7 +356,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
             }
           }
           //Calculate the change in position
-          shift = ((Lx/Lxtmp)-1)*shift;
+          shift = ((Lx/LxSave)-1)*shift;
           for (int j=0;j<QMMMOpts.Nbeads;j++)
           {
             //Update the position
@@ -391,7 +391,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
             }
           }
           //Calculate the change in position
-          shift = ((Ly/Lytmp)-1)*shift;
+          shift = ((Ly/LySave)-1)*shift;
           for (int j=0;j<QMMMOpts.Nbeads;j++)
           {
             //Update the position
@@ -426,7 +426,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
             }
           }
           //Calculate the change in position
-          shift = ((Lz/Lztmp)-1)*shift;
+          shift = ((Lz/LzSave)-1)*shift;
           for (int j=0;j<QMMMOpts.Nbeads;j++)
           {
             //Update the position
@@ -445,8 +445,13 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
   double dE = QMMMOpts.Beta*(Enew-Eold);
   if (QMMMOpts.Ensemble == "NPT")
   {
-    //Add log term
-    dE -= Natoms*log((Lx*Ly*Lz)/(Lxtmp*Lytmp*Lztmp));
+    //Add Nln(V) term
+    double VolTerm;
+    VolTerm = Lx*Ly*Lz; //New volume
+    VolTerm /= LxSave*LySave*LzSave; //Divide by old volume
+    VolTerm = log(VolTerm); //Take the natural logarithm
+    VolTerm *= Natoms*QMMMOpts.Nbeads; //Scale by number of particles
+    dE -= VolTerm; //Subtract from the energy
   }
   double Prob = exp(-1*dE);
   randnum = (((double)rand())/((double)RAND_MAX));
@@ -463,9 +468,9 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
     //Reject
     Emc = Eold;
     //Revert to old box sizes
-    Lx = Lxtmp;
-    Ly = Lytmp;
-    Lz = Lztmp;
+    Lx = LxSave;
+    Ly = LySave;
+    Lz = LzSave;
   }
   //Return decision
   return acc;
