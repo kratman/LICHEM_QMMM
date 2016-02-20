@@ -437,7 +437,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
       #pragma omp barrier
     }
     //Add PV energy term
-    Enew += QMMMOpts.Press*Lx*Ly*Lz*atm2eV;
+    Enew += QMMMOpts.Press*Lx*Ly*Lz;
   }
   Enew += Get_PI_Epot(Struct2,QMMMOpts);
   Enew += Get_PI_Espring(Struct2,QMMMOpts);

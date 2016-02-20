@@ -1478,6 +1478,28 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   {
     cout << " MM threads: " << Ncpus << '\n';
   }
+  //Print PIMC settings
+  if (PIMCSim)
+  {
+    cout << '\n';
+    cout << "Monte Carlo settings:" << '\n';
+    cout << " Temperature: " << QMMMOpts.Temp;
+    cout << " K" << '\n';
+    if (QMMMOpts.Ensemble == "NPT")
+    {
+      cout << " Pressure: " << QMMMOpts.Press;
+      cout << " atm" << '\n';
+    }
+    cout << " Equilibration steps: " << QMMMOpts.Neq;
+    cout << '\n';
+    cout << "Acceptence ratio: ";
+    cout << LICHEMFormFloat(QMMMOpts.accratio,4);
+    cout << '\n';
+    cout << " Production MC steps: " << QMMMOpts.Nsteps;
+    cout << '\n';
+    cout << " Sample every " << QMMMOpts.Nprint;
+    cout << " steps" << '\n';
+  }
   //Print convergence criteria for optimizations
   if (OptSim or SteepSim or QuickSim or DFPSim or
      ESDSim or ENEBSim or NEBSim)

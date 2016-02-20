@@ -644,6 +644,8 @@ int main(int argc, char* argv[])
   //Run Monte Carlo
   else if (PIMCSim)
   {
+    //Change units
+    QMMMOpts.Press *= atm2eV; //Pressure in eV/Ang^3
     //Adjust probabilities
     if (Natoms == 1)
     {
@@ -656,8 +658,7 @@ int main(int argc, char* argv[])
       //Remove volume changes
       VolProb = 0.0;
     }
-    //Run simulations
-    cout << '\n';
+    //Initialize local variables
     SumE = 0; //Average energy
     SumE2 = 0; //Average squared energy
     DenAvg = 0; //Average density
@@ -670,7 +671,6 @@ int main(int argc, char* argv[])
       //Set kinetic energy
       Ek = 3*Natoms*QMMMOpts.Nbeads/(2*QMMMOpts.Beta);
     }
-    //Initialize local variables
     int Nct = 0; //Step counter
     int ct = 0; //Secondary counter
     double Nacc = 0; //Number of accepted moves
@@ -683,6 +683,7 @@ int main(int argc, char* argv[])
     SimCharLen = QMMMOpts.Neq+QMMMOpts.Nsteps;
     SimCharLen = LICHEMCountInt(SimCharLen);
     //Start equilibration run and calculate initial energy
+    cout << '\n';
     cout << "Monte Carlo equilibration:" << '\n';
     cout.flush();
     QMMMOpts.Eold = 0;
@@ -691,7 +692,7 @@ int main(int argc, char* argv[])
     if (VolProb > 0)
     {
       //Add PV term
-      QMMMOpts.Eold += QMMMOpts.Press*Lx*Ly*Lz*atm2eV;
+      QMMMOpts.Eold += QMMMOpts.Press*Lx*Ly*Lz;
     }
     Emc = QMMMOpts.Eold; //Needed if equilibration is skipped
     Nct = 0;
@@ -854,9 +855,6 @@ int main(int argc, char* argv[])
       cout << "PI";
     }
     cout << "MC statistics:" << '\n';
-    cout << " | Temperature: ";
-    cout << QMMMOpts.Temp;
-    cout << " K ";
     if (QMMMOpts.Ensemble == "NPT")
     {
       //Print simulation box information
@@ -868,8 +866,8 @@ int main(int argc, char* argv[])
       cout << " Lx = " << LICHEMFormFloat(LxAvg,12);
       cout << " Ly = " << LICHEMFormFloat(LyAvg,12);
       cout << " Lz = " << LICHEMFormFloat(LzAvg,12);
+      cout << '\n';
     }
-    cout << '\n';
     cout << " | Average energy: ";
     cout << LICHEMFormFloat(SumE,16);
     cout << " eV | Variance: ";
