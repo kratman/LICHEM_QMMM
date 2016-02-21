@@ -681,14 +681,13 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (CheckFile("BACKUPQM"))
   {
     //Save old files
-    call << "rm -rf ";
-    call << QMMMOpts.BackDir;
-    call << "; mkdir ";
-    call << QMMMOpts.BackDir;
-    call << "; cp LICHM_";
+    call << "cp LICHM_";
     call << Bead << ".* ";
     call << QMMMOpts.BackDir;
-    call << "/.; ";
+    call << "/.";
+    call << " 2> LICHM_" << Bead << ".trash; ";
+    call << "rm -f LICHM_" << Bead << ".trash";
+    call << " "; //Extra blank space before the next command
   }
   call << "rm -f ";
   call << "LICHM_" << Bead;

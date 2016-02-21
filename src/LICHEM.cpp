@@ -80,6 +80,19 @@ int main(int argc, char* argv[])
   }
   //End of section
 
+  //Create backup directories
+  if (CheckFile("BACKUPQM"))
+  {
+    stringstream call;
+    call.str("");
+    //Delete old files
+    call << "rm -rf " << QMMMOpts.BackDir << "; ";
+    //Create new directory
+    call << "mkdir " << QMMMOpts.BackDir;
+    GlobalSys = system(call.str().c_str());
+  }
+  //End of section
+
   /*
     NB: All optional simulation types should be wrapped in comments and
     else-if statements. The first comment should define what calculation is

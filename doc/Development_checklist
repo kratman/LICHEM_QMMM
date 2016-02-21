@@ -7,8 +7,8 @@ Force-field wrapper timeline and checklist:
 
 Simulation mode timeline and checklist:
  Single-point energy: Done
- NVT/NPT Monte Carlo: Done
- NVT/NPT PI Monte Carlo: Done
+ NVT PI Monte Carlo: Done
+ NVT PI Monte Carlo: Testing
  Geometry optimizations: Done
  Reaction pathways: Done
  Ensemble sampling: In progress

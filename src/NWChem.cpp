@@ -357,23 +357,21 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   if (CheckFile("BACKUPQM"))
   {
     //Save old files
-    call << "rm -rf ";
-    call << QMMMOpts.BackDir;
-    call << "; mkdir ";
-    call << QMMMOpts.BackDir;
+    call << "cp LICHM_";
+    call << Bead << ".nw " << QMMMOpts.BackDir << "/.";
+    call << " 2> LICHM_" << Bead << ".trash; ";
+    call << "rm -f LICHM_" << Bead << ".trash";
     call << "; ";
-    call << "cp LICHM_";
-    call << Bead << ".nw ";
-    call << QMMMOpts.BackDir;
-    call << "/.; ";
-    call << "cp LICHM_";
-    call << Bead << ".movecs ";
-    call << QMMMOpts.BackDir;
-    call << "/.; ";
-    call << "cp LICHM_";
-    call << Bead << ".log ";
-    call << QMMMOpts.BackDir;
-    call << "/.; ";
+    call << "cp LICHM_" << Bead << ".movecs ";
+    call << QMMMOpts.BackDir << "/.";
+    call << " 2> LICHM_" << Bead << ".trash; ";
+    call << "rm -f LICHM_" << Bead << ".trash";
+    call << "; ";
+    call << "cp LICHM_" << Bead << ".log ";
+    call << QMMMOpts.BackDir << "/.";
+    call << " 2> LICHM_" << Bead << ".trash; ";
+    call << "rm -f LICHM_" << Bead << ".trash";
+    call << " "; //Extra blank space before the next command
   }
   call << "rm -f ";
   call << "LICHM_" << Bead << ".b*" << " ";

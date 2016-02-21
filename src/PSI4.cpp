@@ -366,14 +366,11 @@ double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   if (CheckFile("BACKUPQM"))
   {
     //Save old files
-    call << "rm -rf ";
-    call << QMMMOpts.BackDir;
-    call << "; mkdir ";
-    call << QMMMOpts.BackDir;
-    call << "; cp LICHM_";
-    call << Bead << ".* ";
-    call << QMMMOpts.BackDir;
-    call << "/.; ";
+    call << "cp LICHM_" << Bead << ".* ";
+    call << QMMMOpts.BackDir << "/.";
+    call << " 2> LICHM_" << Bead << ".trash; ";
+    call << "rm -f LICHM_" << Bead << ".trash";
+    call << " "; //Extra blank space before the next command
   }
   call << "rm -f ";
   call << "LICHM_" << Bead << ".dat ";
