@@ -108,10 +108,10 @@ class QMMMSettings
     //Input needed for QM wrappers
     string Func; //QM method (functional, HF, etc)
     string Basis; //Basis set for QM calculations
-    string RAM; //Ram for QM calculations
+    int RAM; //Ram for QM calculations
     bool MemMB; //Is the RAM in mb or gb
-    string Charge; //QM total charge
-    string Spin; //QM total spin
+    int Charge; //QM total charge
+    int Spin; //QM total spin
     string BackDir; //Directory for log file backups
     bool UseLREC; //Use a long-range correction
     double LRECCut; //Cutoff for the long-range correction

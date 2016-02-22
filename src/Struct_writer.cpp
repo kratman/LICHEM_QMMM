@@ -741,7 +741,7 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   }
   call << '\n';
   //Set options
-  if (QMMMOpts.Spin == "1")
+  if (QMMMOpts.Spin == 1)
   {
     //Closed shell reference
     call << "set reference rhf";
