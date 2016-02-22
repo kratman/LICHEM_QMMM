@@ -53,7 +53,7 @@ clean:	title delbin compdone
 
 # NB: Do not modify this section
 
-FLAGSBIN=$(CXXFLAGS) $(LDFLAGS) -s -I./src/ -I./include/
+FLAGSBIN=$(CXXFLAGS) $(LDFLAGS) -I./src/ -I./include/
 FLAGSDEV=$(CXXFLAGS) $(DEVFLAGS) $(LDFLAGS) -I./src/ -I./include/
 FLAGSGPU=$(CXXFLAGS) $(DEVFLAGS) $(GPUFLAGS) $(LDFLAGS) -I./src/ -I./include/
 
