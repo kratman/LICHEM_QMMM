@@ -65,6 +65,7 @@ binary:
 	@echo ""; \
 	echo "### Compiling the LICHEM binary ###"
 	$(CXX) ./src/LICHEM.cpp -o lichem $(FLAGSBIN)
+	@strip lichem
 
 devbin:	
 	@echo ""; \
