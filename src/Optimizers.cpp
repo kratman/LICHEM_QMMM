@@ -651,7 +651,10 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     double NormForce; //Local norm of the forces
     NormForce = Forces.norm(); //Take the norm of the foces
     NormForce /= sqrt(Ndof); //Make the norm an RMS value
-    if ((VecDotForces < 0) and (NormForce > (10*QMMMOpts.QMOptTol)))
+    double LocalMaxForce; //Maximum value in the force array
+    LocalMaxForce = abs(Forces.maxCoeff());
+    if (((VecDotForces < 0) or (LocalMaxForce > 1.0)) and
+       (NormForce > (10*QMMMOpts.QMOptTol)))
     {
       //Optimizer is going the wrong direction and is not converged
       Eold = -1*HugeNum; //Force the Hessian to be rebuilt
