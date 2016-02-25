@@ -41,11 +41,12 @@ However, the Makefile can be used to generate both files. Since LICHEM is
 designed to be simple, only a small number of packages are required to compile
 the code. An approximate list of packages is given below.
 ```
- LICHEM binary: OpenMP, Eigen3
+ LICHEM binary: OpenMP
  LICHEM manual: LaTeX, BibTeX, TeXLive
 ```
 A copy of the Eigen3 library is included with the LICHEM source code.
-However, other versions of Eigen3 can be used to build LICHEM.
+However, other versions of Eigen3 can be used to build LICHEM by modifying
+the Makefile.
 
 To install LICHEM, clone the git repository
 ```
@@ -64,9 +65,11 @@ user:$ rmdir LICHEM_QMMM-master
 
 The LICHEM binary will eventually be included with the zipped source code,
 however, modified or git source code can be compiled with the Makefile
-provided with LICHEM. On Ubuntu boxes, the Makefile should function
-without modifications. However, it may be necessary to install additional
-LaTeX packages.
+provided with LICHEM.
+
+On Ubuntu boxes, the Makefile should function without modifications. However,
+it may be necessary to install additional LaTeX packages. On OSX machines,
+the SEDI, TEX, BIB, and CXXFLAGS variables will need to be modified.
 
 The Makefile can produce both the documentation and the binary.
 ```
