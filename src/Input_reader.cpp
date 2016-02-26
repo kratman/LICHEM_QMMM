@@ -79,6 +79,11 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     //Print multipole moments in the global frame of reference
     ExtractGlobalPoles(argc,argv);
   }
+  if (dummy == "-reorder")
+  {
+    //Make QM, PB, and BA atoms come before MM atoms
+    ReorderQMPBBA(argc,argv);
+  }
   if ((argc % 2) != 1)
   {
     //Check for help or missing arguments
