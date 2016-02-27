@@ -20,149 +20,6 @@
 
 
 //QM wrapper functions
-double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
-                    QMMMSettings& QMMMOpts, int Bead)
-{
-  //Runs NWChem force calculations
-  fstream ifile; //Generic file stream
-  string dummy; //Genric string
-  stringstream call; //Stream for system calls and reading/writing files
-  call.copyfmt(cout); //Copy print settings
-  double E = 0.0;
-  //Set up force calculations
-  call.str("");
-  call << "task dft gradient" << '\n';
-  call << "task esp" << '\n';
-  WriteNWChemInput(Struct,call.str(),QMMMOpts,Bead);
-  //Calculate energy
-  call.str("");
-  if (Ncpus > 1)
-  {
-    call << "mpirun -n " << Ncpus << " ";
-  }
-  call << "nwchem LICHM_" << Bead << ".nw";
-  call << " > LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
-  //Parse output for forces and energies
-  call.str("");
-  call << "LICHM_" << Bead << ".log";
-  ifile.open(call.str().c_str(),ios_base::in);
-  bool QMfinished = 0;
-  bool GradDone = 0;
-  while (!ifile.eof())
-  {
-    stringstream line;
-    getline(ifile,dummy);
-    line.str(dummy);
-    line >> dummy;
-    //Search for energy
-    if (dummy == "Total")
-    {
-      line >> dummy >> dummy;
-      if (dummy == "energy")
-      {
-        line >> dummy; //Clear junk
-        line >> E; //Read energy
-        QMfinished = 1;
-      }
-    }
-    if (dummy == "atom")
-    {
-      line >> dummy >> dummy;
-      if (dummy == "gradient")
-      {
-        GradDone = 1; //Not grad school, that lasts forever
-        getline(ifile,dummy); //Clear junk
-        for (int i=0;i<(Nqm+Npseudo);i++)
-        {
-          //Initialize temporary force variables
-          double Fx = 0;
-          double Fy = 0;
-          double Fz = 0;
-          //Extract forces; Convoluted, but "easy"
-          getline(ifile,dummy);
-          stringstream line(dummy);
-          line >> dummy >> dummy; //Clear junk
-          line >> dummy >> dummy >> dummy; //Clear coordinates
-          line >> Fx;
-          line >> Fy;
-          line >> Fz;
-          //Change from gradient to force
-          Fx *= -1;
-          Fy *= -1;
-          Fz *= -1;
-          //Switch to eV/A and save forces
-          Forces(3*i) += Fx*Har2eV/BohrRad;
-          Forces(3*i+1) += Fy*Har2eV/BohrRad;
-          Forces(3*i+2) += Fz*Har2eV/BohrRad;
-        }
-      }
-    }
-  }
-  ifile.close();
-  //Parse output for charges
-  call.str("");
-  call << "LICHM_" << Bead << ".q";
-  ifile.open(call.str().c_str(),ios_base::in);
-  if (ifile.good())
-  {
-    getline(ifile,dummy);
-    for (int i=0;i<Natoms;i++)
-    {
-      if (Struct[i].QMregion or Struct[i].PBregion)
-      {
-        stringstream line;
-        getline(ifile,dummy);
-        line.str(dummy);
-        line >> dummy >> dummy;
-        line >> dummy >> dummy;
-        line >> Struct[i].MP[Bead].q;
-      }
-    }
-  }
-  ifile.close();
-  //Check for errors
-  if (!QMfinished)
-  {
-    cerr << "Warning: SCF did not converge!!!";
-    cerr << '\n';
-    cerr << " LICHEM will attempt to continue...";
-    cerr << '\n';
-    E = HugeNum; //Large number to reject step
-    cerr.flush(); //Print warning immediately
-    //Remove checkpoint file
-    call.str("");
-    call << "rm -f LICHM_" << Bead << ".movecs";
-    GlobalSys = system(call.str().c_str());
-  }
-  if (!GradDone)
-  {
-    cerr << "Warning: No forces recovered!!!";
-    cerr << '\n';
-    cerr << " LICHEM will attempt to recover...";
-    cerr << '\n';
-    cerr.flush(); //Print warning immediately
-  }
-  //Clean up files
-  call.str("");
-  call << "rm -f ";
-  call << "LICHM_" << Bead << ".b*" << " ";
-  call << "LICHM_" << Bead << ".c*" << " ";
-  call << "LICHM_" << Bead << ".g*" << " ";
-  //call << "LICHM_" << Bead << ".m*" << " ";
-  call << "LICHM_" << Bead << ".z*" << " ";
-  call << "LICHM_" << Bead << ".p*" << " ";
-  call << "LICHM_" << Bead << ".q*" << " ";
-  call << "LICHM_" << Bead << ".nw" << " ";
-  call << "LICHM_" << Bead << ".db" << " ";
-  call << "LICHM_" << Bead << ".x*" << " ";
-  call << "LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
-  //Change units and return
-  E *= Har2eV;
-  return E;
-};
-
 void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
                    int Bead)
 {
@@ -373,6 +230,149 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     call << "rm -f LICHM_" << Bead << ".trash";
     call << " "; //Extra blank space before the next command
   }
+  call << "rm -f ";
+  call << "LICHM_" << Bead << ".b*" << " ";
+  call << "LICHM_" << Bead << ".c*" << " ";
+  call << "LICHM_" << Bead << ".g*" << " ";
+  //call << "LICHM_" << Bead << ".m*" << " ";
+  call << "LICHM_" << Bead << ".z*" << " ";
+  call << "LICHM_" << Bead << ".p*" << " ";
+  call << "LICHM_" << Bead << ".q*" << " ";
+  call << "LICHM_" << Bead << ".nw" << " ";
+  call << "LICHM_" << Bead << ".db" << " ";
+  call << "LICHM_" << Bead << ".x*" << " ";
+  call << "LICHM_" << Bead << ".log";
+  GlobalSys = system(call.str().c_str());
+  //Change units and return
+  E *= Har2eV;
+  return E;
+};
+
+double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
+                    QMMMSettings& QMMMOpts, int Bead)
+{
+  //Runs NWChem force calculations
+  fstream ifile; //Generic file stream
+  string dummy; //Genric string
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy print settings
+  double E = 0.0;
+  //Set up force calculations
+  call.str("");
+  call << "task dft gradient" << '\n';
+  call << "task esp" << '\n';
+  WriteNWChemInput(Struct,call.str(),QMMMOpts,Bead);
+  //Calculate energy
+  call.str("");
+  if (Ncpus > 1)
+  {
+    call << "mpirun -n " << Ncpus << " ";
+  }
+  call << "nwchem LICHM_" << Bead << ".nw";
+  call << " > LICHM_" << Bead << ".log";
+  GlobalSys = system(call.str().c_str());
+  //Parse output for forces and energies
+  call.str("");
+  call << "LICHM_" << Bead << ".log";
+  ifile.open(call.str().c_str(),ios_base::in);
+  bool QMfinished = 0;
+  bool GradDone = 0;
+  while (!ifile.eof())
+  {
+    stringstream line;
+    getline(ifile,dummy);
+    line.str(dummy);
+    line >> dummy;
+    //Search for energy
+    if (dummy == "Total")
+    {
+      line >> dummy >> dummy;
+      if (dummy == "energy")
+      {
+        line >> dummy; //Clear junk
+        line >> E; //Read energy
+        QMfinished = 1;
+      }
+    }
+    if (dummy == "atom")
+    {
+      line >> dummy >> dummy;
+      if (dummy == "gradient")
+      {
+        GradDone = 1; //Not grad school, that lasts forever
+        getline(ifile,dummy); //Clear junk
+        for (int i=0;i<(Nqm+Npseudo);i++)
+        {
+          //Initialize temporary force variables
+          double Fx = 0;
+          double Fy = 0;
+          double Fz = 0;
+          //Extract forces; Convoluted, but "easy"
+          getline(ifile,dummy);
+          stringstream line(dummy);
+          line >> dummy >> dummy; //Clear junk
+          line >> dummy >> dummy >> dummy; //Clear coordinates
+          line >> Fx;
+          line >> Fy;
+          line >> Fz;
+          //Change from gradient to force
+          Fx *= -1;
+          Fy *= -1;
+          Fz *= -1;
+          //Switch to eV/A and save forces
+          Forces(3*i) += Fx*Har2eV/BohrRad;
+          Forces(3*i+1) += Fy*Har2eV/BohrRad;
+          Forces(3*i+2) += Fz*Har2eV/BohrRad;
+        }
+      }
+    }
+  }
+  ifile.close();
+  //Parse output for charges
+  call.str("");
+  call << "LICHM_" << Bead << ".q";
+  ifile.open(call.str().c_str(),ios_base::in);
+  if (ifile.good())
+  {
+    getline(ifile,dummy);
+    for (int i=0;i<Natoms;i++)
+    {
+      if (Struct[i].QMregion or Struct[i].PBregion)
+      {
+        stringstream line;
+        getline(ifile,dummy);
+        line.str(dummy);
+        line >> dummy >> dummy;
+        line >> dummy >> dummy;
+        line >> Struct[i].MP[Bead].q;
+      }
+    }
+  }
+  ifile.close();
+  //Check for errors
+  if (!QMfinished)
+  {
+    cerr << "Warning: SCF did not converge!!!";
+    cerr << '\n';
+    cerr << " LICHEM will attempt to continue...";
+    cerr << '\n';
+    E = HugeNum; //Large number to reject step
+    cerr.flush(); //Print warning immediately
+    //Remove checkpoint file
+    call.str("");
+    call << "rm -f LICHM_" << Bead << ".movecs";
+    GlobalSys = system(call.str().c_str());
+  }
+  if (!GradDone)
+  {
+    cerr << "Warning: No forces recovered!!!";
+    cerr << '\n';
+    cerr << " LICHEM will attempt to recover...";
+    cerr << '\n';
+    cerr.flush(); //Print warning immediately
+  }
+  //Clean up files
+  call.str("");
   call << "rm -f ";
   call << "LICHM_" << Bead << ".b*" << " ";
   call << "LICHM_" << Bead << ".c*" << " ";

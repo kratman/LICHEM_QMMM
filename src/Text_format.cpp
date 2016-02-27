@@ -52,18 +52,11 @@ string LICHEMFormFloat(T InpVal, int wid)
 };
 
 //String formatting functions
-int LICHEMCountChars(string origtext)
+template<typename T> int LICHEMCount(T origval)
 {
-  //Function to count the number of characters in a string
-  int Nchar = origtext.length();
-  return Nchar;
-};
-
-int LICHEMCountInt(int origint)
-{
-  //Function to count the number of characters in a string
-  stringstream origtext; //Stream to hold a text version of the integer
-  origtext << origint;
+  //Function to count the number of characters in a string or int
+  stringstream origtext; //Stream to convert origval to a string
+  origtext << origval;
   string inttext = origtext.str();
   //Count characters and return
   int Nchar = inttext.length();

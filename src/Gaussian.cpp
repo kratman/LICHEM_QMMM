@@ -195,202 +195,6 @@ void ExternalGaussian(int& argc, char**& argv)
 };
 
 //QM wrapper functions
-double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
-                      QMMMSettings& QMMMOpts, int Bead)
-{
-  //Function for calculating the forces on a set of atoms
-  stringstream call; //Stream for system calls and reading/writing files
-  call.copyfmt(cout); //Copy print settings
-  string dummy; //Generic string
-  fstream ofile,ifile,QMlog; //Generic input files
-  double Eqm = 0; //QM energy
-  double Eself = 0; //External field self-energy
-  //Check if there is a checkpoint file
-  call.str("");
-  call << "LICHM_" << Bead << ".chk";
-  bool UseCheckPoint = CheckFile(call.str());
-  if (QMMMOpts.Func == "SemiEmp")
-  {
-    //Disable checkpoints for the SemiEmp force calculations
-    UseCheckPoint = 0;
-    //Remove SemiEmp checkpoints to avoid errors
-    call.str("");
-    call << "rm -f LICHM_" << Bead << ".chk";
-    GlobalSys = system(call.str().c_str());
-  }
-  //Construct Gaussian input
-  call.str("");
-  call << "#P ";
-  if (QMMMOpts.Func != "SemiEmp")
-  {
-    //Avoids defining both a basis set and method for semi-empirical
-    call << QMMMOpts.Func << "/"; //Print the method
-  }
-  call << QMMMOpts.Basis << " Force=NoStep Symmetry=None" << '\n';
-  call << "Int=UltraFine SCF=(YQC,Big,Direct)"; //Line ended further below
-  if (UseCheckPoint)
-  {
-    //Restart if possible
-    call << " Guess=TCheck";
-  }
-  call << '\n';
-  if (QMMM)
-  {
-    if ((Npseudo > 0) and (QMMMOpts.Func != "SemiEmp"))
-    {
-      //Read pseudo potential
-      call << "Pseudo=Read ";
-    }
-    if (Nmm > 0)
-    {
-      //Read charges
-      call << "Charge=angstroms ";
-    }
-    if (QMMMOpts.Func != "SemiEmp")
-    {
-      //Avoids calculating ESP charges for semi-empirical
-      call << "Population=(MK,ReadRadii)";
-    }
-    call << '\n';
-  }
-  WriteGauInput(Struct,call.str(),QMMMOpts,Bead);
-  //Run Gaussian
-  call.str("");
-  call << "g09 " << "LICHM_" << Bead;
-  GlobalSys = system(call.str().c_str());
-  //Extract forces
-  call.str("");
-  call << "LICHM_" << Bead << ".log";
-  QMlog.open(call.str().c_str(),ios_base::in);
-  bool GradDone = 0;
-  while ((!QMlog.eof()) and (!GradDone))
-  {
-    //Parse file line by line
-    getline(QMlog,dummy);
-    stringstream line(dummy);
-    line >> dummy;
-    //This only works with #P
-    if (dummy == "Center")
-    {
-      line >> dummy >> dummy;
-      if (dummy == "Forces")
-      {
-        GradDone = 1; //Not grad school, that lasts forever
-        getline(QMlog,dummy); //Clear junk
-        getline(QMlog,dummy); //Clear more junk
-        for (int i=0;i<(Nqm+Npseudo);i++)
-        {
-          double Fx = 0;
-          double Fy = 0;
-          double Fz = 0;
-          //Extract forces; Convoluted, but "easy"
-          getline(QMlog,dummy);
-          stringstream line(dummy);
-          line >> dummy >> dummy; //Clear junk
-          line >> Fx;
-          line >> Fy;
-          line >> Fz;
-          //Save forces
-          Forces(3*i) += Fx*Har2eV/BohrRad;
-          Forces(3*i+1) += Fy*Har2eV/BohrRad;
-          Forces(3*i+2) += Fz*Har2eV/BohrRad;
-        }
-      }
-    }
-    if (dummy == "Self")
-    {
-      line >> dummy;
-      if (dummy == "energy")
-      {
-        line >> dummy; //Clear junk
-        line >> dummy; //Ditto
-        line >> dummy; //Ditto
-        line >> dummy; //Ditto
-        line >> Eself; //Actual self-energy of the charges
-      }
-    }
-    //Check for partial QMMM energy
-    if (dummy == "SCF")
-    {
-      line >> dummy;
-      if (dummy == "Done:")
-      {
-        line >> dummy; //Clear junk
-        line >> dummy; //Ditto
-        line >> Eqm; //QM energy
-      }
-    }
-    //Check for charges
-    if (dummy == "Mulliken")
-    {
-      //Mulliken charges (fallback)
-      line >> dummy;
-      if (dummy == "charges:")
-      {
-        getline(ifile,dummy); //Clear junk
-        for (int i=0;i<Natoms;i++)
-        {
-          if (Struct[i].QMregion or Struct[i].PBregion)
-          {
-            //Count through all atoms in the QM calculations
-            getline(ifile,dummy);
-            stringstream line(dummy);
-            line >> dummy >> dummy;
-            line >> Struct[i].MP[Bead].q;
-          }
-        }
-      }
-    }
-    if (dummy == "ESP")
-    {
-      //ESP (MK) charges
-      line >> dummy;
-      if (dummy == "charges:")
-      {
-        getline(ifile,dummy); //Clear junk
-        for (int i=0;i<Natoms;i++)
-        {
-          if (Struct[i].QMregion or Struct[i].PBregion)
-          {
-            //Count through all atoms in the QM calculations
-            getline(ifile,dummy);
-            stringstream line(dummy);
-            line >> dummy >> dummy;
-            line >> Struct[i].MP[Bead].q;
-          }
-        }
-      }
-    }
-  }
-  QMlog.close();
-  //Check for errors
-  if (!GradDone)
-  {
-    cerr << "Warning: No forces recovered!!!";
-    cerr << '\n';
-    cerr << " LICHEM will attempt to recover...";
-    cerr << '\n';
-    cerr.flush(); //Print warning immediately
-    //Delete checkpoint
-    call.str("");
-    call << "rm -f LICHM_" << Bead << ".chk";
-    GlobalSys = system(call.str().c_str());
-  }
-  //Clean up files
-  call.str("");
-  call << "rm -f ";
-  call << "LICHM_" << Bead;
-  call << ".log";
-  call << " ";
-  call << "LICHM_" << Bead;
-  call << ".com";
-  GlobalSys = system(call.str().c_str());
-  //Change units and return
-  Eqm -= Eself;
-  Eqm *= Har2eV;
-  return Eqm;
-};
-
 void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
                      int Bead)
 {
@@ -700,6 +504,280 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   E -= Eself;
   E *= Har2eV;
   return E;
+};
+
+double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
+                      QMMMSettings& QMMMOpts, int Bead)
+{
+  //Function for calculating the forces on a set of atoms
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy print settings
+  string dummy; //Generic string
+  fstream ofile,ifile,QMlog; //Generic input files
+  double Eqm = 0; //QM energy
+  double Eself = 0; //External field self-energy
+  //Check if there is a checkpoint file
+  call.str("");
+  call << "LICHM_" << Bead << ".chk";
+  bool UseCheckPoint = CheckFile(call.str());
+  if (QMMMOpts.Func == "SemiEmp")
+  {
+    //Disable checkpoints for the SemiEmp force calculations
+    UseCheckPoint = 0;
+    //Remove SemiEmp checkpoints to avoid errors
+    call.str("");
+    call << "rm -f LICHM_" << Bead << ".chk";
+    GlobalSys = system(call.str().c_str());
+  }
+  //Construct Gaussian input
+  call.str("");
+  call << "#P ";
+  if (QMMMOpts.Func != "SemiEmp")
+  {
+    //Avoids defining both a basis set and method for semi-empirical
+    call << QMMMOpts.Func << "/"; //Print the method
+  }
+  call << QMMMOpts.Basis << " Force=NoStep Symmetry=None" << '\n';
+  call << "Int=UltraFine SCF=(YQC,Big,Direct)"; //Line ended further below
+  if (UseCheckPoint)
+  {
+    //Restart if possible
+    call << " Guess=TCheck";
+  }
+  call << '\n';
+  if (QMMM)
+  {
+    if ((Npseudo > 0) and (QMMMOpts.Func != "SemiEmp"))
+    {
+      //Read pseudo potential
+      call << "Pseudo=Read ";
+    }
+    if (Nmm > 0)
+    {
+      //Read charges
+      call << "Charge=angstroms ";
+    }
+    if (QMMMOpts.Func != "SemiEmp")
+    {
+      //Avoids calculating ESP charges for semi-empirical
+      call << "Population=(MK,ReadRadii)";
+    }
+    call << '\n';
+  }
+  WriteGauInput(Struct,call.str(),QMMMOpts,Bead);
+  //Run Gaussian
+  call.str("");
+  call << "g09 " << "LICHM_" << Bead;
+  GlobalSys = system(call.str().c_str());
+  //Extract forces
+  call.str("");
+  call << "LICHM_" << Bead << ".log";
+  QMlog.open(call.str().c_str(),ios_base::in);
+  bool GradDone = 0;
+  while ((!QMlog.eof()) and (!GradDone))
+  {
+    //Parse file line by line
+    getline(QMlog,dummy);
+    stringstream line(dummy);
+    line >> dummy;
+    //This only works with #P
+    if (dummy == "Center")
+    {
+      line >> dummy >> dummy;
+      if (dummy == "Forces")
+      {
+        GradDone = 1; //Not grad school, that lasts forever
+        getline(QMlog,dummy); //Clear junk
+        getline(QMlog,dummy); //Clear more junk
+        for (int i=0;i<(Nqm+Npseudo);i++)
+        {
+          double Fx = 0;
+          double Fy = 0;
+          double Fz = 0;
+          //Extract forces; Convoluted, but "easy"
+          getline(QMlog,dummy);
+          stringstream line(dummy);
+          line >> dummy >> dummy; //Clear junk
+          line >> Fx;
+          line >> Fy;
+          line >> Fz;
+          //Save forces
+          Forces(3*i) += Fx*Har2eV/BohrRad;
+          Forces(3*i+1) += Fy*Har2eV/BohrRad;
+          Forces(3*i+2) += Fz*Har2eV/BohrRad;
+        }
+      }
+    }
+    if (dummy == "Self")
+    {
+      line >> dummy;
+      if (dummy == "energy")
+      {
+        line >> dummy; //Clear junk
+        line >> dummy; //Ditto
+        line >> dummy; //Ditto
+        line >> dummy; //Ditto
+        line >> Eself; //Actual self-energy of the charges
+      }
+    }
+    //Check for partial QMMM energy
+    if (dummy == "SCF")
+    {
+      line >> dummy;
+      if (dummy == "Done:")
+      {
+        line >> dummy; //Clear junk
+        line >> dummy; //Ditto
+        line >> Eqm; //QM energy
+      }
+    }
+    //Check for charges
+    if (dummy == "Mulliken")
+    {
+      //Mulliken charges (fallback)
+      line >> dummy;
+      if (dummy == "charges:")
+      {
+        getline(ifile,dummy); //Clear junk
+        for (int i=0;i<Natoms;i++)
+        {
+          if (Struct[i].QMregion or Struct[i].PBregion)
+          {
+            //Count through all atoms in the QM calculations
+            getline(ifile,dummy);
+            stringstream line(dummy);
+            line >> dummy >> dummy;
+            line >> Struct[i].MP[Bead].q;
+          }
+        }
+      }
+    }
+    if (dummy == "ESP")
+    {
+      //ESP (MK) charges
+      line >> dummy;
+      if (dummy == "charges:")
+      {
+        getline(ifile,dummy); //Clear junk
+        for (int i=0;i<Natoms;i++)
+        {
+          if (Struct[i].QMregion or Struct[i].PBregion)
+          {
+            //Count through all atoms in the QM calculations
+            getline(ifile,dummy);
+            stringstream line(dummy);
+            line >> dummy >> dummy;
+            line >> Struct[i].MP[Bead].q;
+          }
+        }
+      }
+    }
+  }
+  QMlog.close();
+  //Check for errors
+  if (!GradDone)
+  {
+    cerr << "Warning: No forces recovered!!!";
+    cerr << '\n';
+    cerr << " LICHEM will attempt to recover...";
+    cerr << '\n';
+    cerr.flush(); //Print warning immediately
+    //Delete checkpoint
+    call.str("");
+    call << "rm -f LICHM_" << Bead << ".chk";
+    GlobalSys = system(call.str().c_str());
+  }
+  //Clean up files
+  call.str("");
+  call << "rm -f ";
+  call << "LICHM_" << Bead;
+  call << ".log";
+  call << " ";
+  call << "LICHM_" << Bead;
+  call << ".com";
+  GlobalSys = system(call.str().c_str());
+  //Change units and return
+  Eqm -= Eself;
+  Eqm *= Har2eV;
+  return Eqm;
+};
+
+MatrixXd GaussianHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
+                         int Bead)
+{
+  //Function for calculating the Hessian for a set of QM atoms
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy print settings
+  string dummy; //Generic string
+  fstream ofile,ifile,QMlog; //Generic input files
+  MatrixXd QMHess((3*(Nqm+Npseudo)),(3*(Nqm+Npseudo)));
+  QMHess.setZero();
+  //Check if there is a checkpoint file
+  call.str("");
+  call << "LICHM_" << Bead << ".chk";
+  bool UseCheckPoint = CheckFile(call.str());
+  if (QMMMOpts.Func == "SemiEmp")
+  {
+    //Disable checkpoints for the SemiEmp force calculations
+    UseCheckPoint = 0;
+    //Remove SemiEmp checkpoints to avoid errors
+    call.str("");
+    call << "rm -f LICHM_" << Bead << ".chk";
+    GlobalSys = system(call.str().c_str());
+  }
+  //Construct Gaussian input
+  call.str("");
+  call << "#P ";
+  if (QMMMOpts.Func != "SemiEmp")
+  {
+    //Avoids defining both a basis set and method for semi-empirical
+    call << QMMMOpts.Func << "/"; //Print the method
+  }
+  call << QMMMOpts.Basis << " Freq Symmetry=None" << '\n';
+  call << "Int=UltraFine SCF=(YQC,Big,Direct)"; //Line ended further below
+  if (UseCheckPoint)
+  {
+    //Restart if possible
+    call << " Guess=TCheck";
+  }
+  call << '\n';
+  if (QMMM)
+  {
+    if ((Npseudo > 0) and (QMMMOpts.Func != "SemiEmp"))
+    {
+      //Read pseudo potential
+      call << "Pseudo=Read ";
+    }
+    if (Nmm > 0)
+    {
+      //Read charges
+      call << "Charge=angstroms ";
+    }
+    if (QMMMOpts.Func != "SemiEmp")
+    {
+      //Avoids calculating ESP charges for semi-empirical
+      call << "Population=(MK,ReadRadii)";
+    }
+    call << '\n';
+  }
+  WriteGauInput(Struct,call.str(),QMMMOpts,Bead);
+  //Run Gaussian
+  call.str("");
+  call << "g09 " << "LICHM_" << Bead;
+  GlobalSys = system(call.str().c_str());
+  //Extract Hessian
+  
+  //Clean up files
+  call.str("");
+  call << "rm -f ";
+  call << "LICHM_" << Bead;
+  call << ".log";
+  call << " ";
+  call << "LICHM_" << Bead;
+  call << ".com";
+  GlobalSys = system(call.str().c_str());
+  //Return
+  return QMHess;
 };
 
 double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,

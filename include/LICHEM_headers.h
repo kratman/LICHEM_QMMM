@@ -48,6 +48,8 @@ double AMBERForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
 
 double AMBEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
+MatrixXd AMBERHessian(vector<QMMMAtom>&,QMMMSettings&,int);
+
 double AMBEROpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 bool Angled(vector<QMMMAtom>&,int,int);
@@ -96,6 +98,8 @@ double GaussianEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double GaussianForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
 
+MatrixXd GaussianHessian(vector<QMMMAtom>&,QMMMSettings&,int);
+
 double GaussianOpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double GEMBuffC7(double,double,Coord&,Coord&,double);
@@ -126,11 +130,11 @@ double LAMMPSEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double LAMMPSForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
 
+MatrixXd LAMMPSHessian(vector<QMMMAtom>&,QMMMSettings&,int);
+
 double LAMMPSOpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void LAMMPSTopology(vector<QMMMAtom>&,stringstream&,int);
-
-void PrintLapin();
 
 void LICHEM2BASIS(int&,char**&);
 
@@ -140,9 +144,7 @@ double LICHEMDensity(vector<QMMMAtom>&,QMMMSettings&);
 
 void LICHEMDFP(vector<QMMMAtom>&,QMMMSettings&,int);
 
-int LICHEMCountChars(string);
-
-int LICHEMCountInt(int);
+template<typename T> int LICHEMCount(T);
 
 void LICHEMErrorChecker(QMMMSettings&);
 
@@ -172,6 +174,8 @@ double NWChemEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double NWChemForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
 
+MatrixXd NWChemHessian(vector<QMMMAtom>&,QMMMSettings&,int);
+
 double NWChemOpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 bool OptConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,vector<Coord>&,
@@ -184,6 +188,8 @@ void PBCCenter(vector<QMMMAtom>&,QMMMSettings&);
 
 void PrintFancyTitle();
 
+void PrintLapin();
+
 void Print_traj(vector<QMMMAtom>&,fstream&,QMMMSettings&);
 
 void PSI4Charges(vector<QMMMAtom>&,QMMMSettings&,int);
@@ -191,6 +197,8 @@ void PSI4Charges(vector<QMMMAtom>&,QMMMSettings&,int);
 double PSI4Energy(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double PSI4Forces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
+
+MatrixXd PSI4Hessian(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double PSI4Opt(vector<QMMMAtom>&,QMMMSettings&,int);
 
@@ -205,21 +213,23 @@ void RotateTINKCharges(vector<QMMMAtom>&,int);
 
 OctCharges SphHarm2Charges(RedMpole);
 
-double TINKEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
+void TINK2LICHEM(int&,char**&);
 
 void TINKERDynamics(vector<QMMMAtom>&,QMMMSettings&,int);
 
-double TINKEROpt(vector<QMMMAtom>&,QMMMSettings&,int);
+double TINKEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double TINKERForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
 
-double TINKERPolForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
+MatrixXd TINKERHessian(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void TINKERInduced(vector<QMMMAtom>&,QMMMSettings&,int);
 
+double TINKEROpt(vector<QMMMAtom>&,QMMMSettings&,int);
+
 double TINKERPolEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
-void TINK2LICHEM(int&,char**&);
+double TINKERPolForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
 
 vector<int> TraceBoundary(vector<QMMMAtom>&,int);
 

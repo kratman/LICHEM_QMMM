@@ -694,7 +694,7 @@ int main(int argc, char* argv[])
     //Find the number of characters to print for the step counter
     int SimCharLen;
     SimCharLen = QMMMOpts.Neq+QMMMOpts.Nsteps;
-    SimCharLen = LICHEMCountInt(SimCharLen);
+    SimCharLen = LICHEMCount(SimCharLen);
     //Start equilibration run and calculate initial energy
     cout << '\n';
     cout << "Monte Carlo equilibration:" << '\n';

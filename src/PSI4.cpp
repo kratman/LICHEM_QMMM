@@ -19,150 +19,6 @@
 //QM utility functions
 
 //QM wrapper functions
-double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
-                  QMMMSettings& QMMMOpts, int Bead)
-{
-  //Function for calculating the forces and charges on a set of atoms
-  fstream ifile; //Generic file name
-  string dummy; //Generic string
-  stringstream call; //Stream for system calls and reading/writing files
-  call.copyfmt(cout); //Copy settings from cout
-  double E = 0;
-  //Check if there is a checkpoint file
-  bool UseCheckPoint;
-  call.str("");
-  call << "LICHM_" << Bead << ".180";
-  UseCheckPoint = CheckFile(call.str());
-  //Set up force calculation
-  call.str("");
-  call << "Eqm,qmwfn = energy('" << QMMMOpts.Func << "'";
-  if (UseCheckPoint)
-  {
-    //Collect old wavefunction from restart file
-    call << ",restart_file=[";
-    call << "'./LICHM_" << Bead << ".180']";
-  }
-  call << ",return_wfn=True)" << '\n';
-  call << "gradient('" << QMMMOpts.Func << "'";
-  call << ",bypass_scf=True)"; //Skip the extra SCF cycle
-  call << '\n';
-  call << "print('Energy: '+`Eqm`)" << '\n';
-  if (QMMM)
-  {
-    call << "oeprop(qmwfn,'MULLIKEN_CHARGES')" << '\n';
-  }
-  WritePSI4Input(Struct,call.str(),QMMMOpts,Bead);
-  //Call PSI4
-  call.str("");
-  call << "psi4 -n " << Ncpus << "-i ";
-  call << "LICHM_" << Bead << ".dat -o ";
-  call << "LICHM_" << Bead << ".out > ";
-  call << "LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
-  //Save checkpoint file for the next calculation
-  call.str("");
-  call << "mv *.LICHM_" << Bead << ".180 ";
-  call << "LICHM_" << Bead << ".180 ";
-  call << "2> LICHM_" << Bead << ".trash; ";
-  call << "rm -f LICHM_" << Bead << ".trash";
-  GlobalSys = system(call.str().c_str());
-  //Extract charges
-  call.str("");
-  call << "LICHM_" << Bead << ".out";
-  ifile.open(call.str().c_str(),ios_base::in);
-  while (!ifile.eof())
-  {
-    getline(ifile,dummy);
-    stringstream line(dummy);
-    line >> dummy;
-    if (dummy == "Mulliken")
-    {
-      line >> dummy;
-      if (dummy == "Charges:")
-      {
-        getline(ifile,dummy);
-        for (int i=0;i<Natoms;i++)
-        {
-          if (Struct[i].QMregion or Struct[i].PBregion)
-          {
-            getline(ifile,dummy);
-            stringstream line(dummy);
-            line >> dummy >> dummy;
-            line >> dummy >> dummy;
-            line >> dummy;
-            line >> Struct[i].MP[Bead].q;
-          }
-        }
-      }
-    }
-    if (dummy == "-Total")
-    {
-      line >> dummy;
-      if (dummy == "Gradient:")
-      {
-        getline(ifile,dummy);
-        getline(ifile,dummy);
-        for (int i=0;i<(Nqm+Npseudo);i++)
-        {
-          double Fx = 0;
-          double Fy = 0;
-          double Fz = 0;
-          //Extract forces; Convoluted, but "easy"
-          getline(ifile,dummy);
-          stringstream line(dummy);
-          line >> dummy; //Clear junk
-          line >> Fx; //Read value
-          line >> Fy; //Read value
-          line >> Fz; //Read value
-          //Change from gradient to force
-          Fx *= -1;
-          Fy *= -1;
-          Fz *= -1;
-          //Switch to eV/A and save forces
-          Forces(3*i) += Fx*Har2eV/BohrRad;
-          Forces(3*i+1) += Fy*Har2eV/BohrRad;
-          Forces(3*i+2) += Fz*Har2eV/BohrRad;
-        }
-      }
-    }
-    line >> dummy; //Get rid of junk
-    if (dummy == "Final")
-    {
-      line >> dummy; //Check property
-      if (dummy == "Energy:")
-      {
-        line >> E; //Read energy
-      }
-    }
-  }
-  ifile.close();
-  //Collect energy (post-SCF)
-  call.str("");
-  call << "LICHM_" << Bead << ".log";
-  ifile.open(call.str().c_str(),ios_base::in);
-  while (!ifile.eof())
-  {
-    getline(ifile,dummy);
-    stringstream line(dummy);
-    line >> dummy; //Check property
-    if (dummy == "Energy:")
-    {
-      line >> E; //Read post-SCF energy
-    }
-  }
-  ifile.close();
-  //Clean up files
-  call.str("");
-  call << "rm -f ";
-  call << "LICHM_" << Bead << ".dat ";
-  call << "LICHM_" << Bead << ".out ";
-  call << "LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
-  //Change units
-  E *= Har2eV;
-  return E;
-};
-
 void PSI4Charges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Function to update QM point-charges
@@ -380,6 +236,210 @@ double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Change units
   E *= Har2eV;
   return E;
+};
+
+double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
+                  QMMMSettings& QMMMOpts, int Bead)
+{
+  //Function for calculating the forces and charges on a set of atoms
+  fstream ifile; //Generic file name
+  string dummy; //Generic string
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy settings from cout
+  double E = 0;
+  //Check if there is a checkpoint file
+  bool UseCheckPoint;
+  call.str("");
+  call << "LICHM_" << Bead << ".180";
+  UseCheckPoint = CheckFile(call.str());
+  //Set up force calculation
+  call.str("");
+  call << "Eqm,qmwfn = energy('" << QMMMOpts.Func << "'";
+  if (UseCheckPoint)
+  {
+    //Collect old wavefunction from restart file
+    call << ",restart_file=[";
+    call << "'./LICHM_" << Bead << ".180']";
+  }
+  call << ",return_wfn=True)" << '\n';
+  call << "gradient('" << QMMMOpts.Func << "'";
+  call << ",bypass_scf=True)"; //Skip the extra SCF cycle
+  call << '\n';
+  call << "print('Energy: '+`Eqm`)" << '\n';
+  if (QMMM)
+  {
+    call << "oeprop(qmwfn,'MULLIKEN_CHARGES')" << '\n';
+  }
+  WritePSI4Input(Struct,call.str(),QMMMOpts,Bead);
+  //Call PSI4
+  call.str("");
+  call << "psi4 -n " << Ncpus << "-i ";
+  call << "LICHM_" << Bead << ".dat -o ";
+  call << "LICHM_" << Bead << ".out > ";
+  call << "LICHM_" << Bead << ".log";
+  GlobalSys = system(call.str().c_str());
+  //Save checkpoint file for the next calculation
+  call.str("");
+  call << "mv *.LICHM_" << Bead << ".180 ";
+  call << "LICHM_" << Bead << ".180 ";
+  call << "2> LICHM_" << Bead << ".trash; ";
+  call << "rm -f LICHM_" << Bead << ".trash";
+  GlobalSys = system(call.str().c_str());
+  //Extract charges
+  call.str("");
+  call << "LICHM_" << Bead << ".out";
+  ifile.open(call.str().c_str(),ios_base::in);
+  while (!ifile.eof())
+  {
+    getline(ifile,dummy);
+    stringstream line(dummy);
+    line >> dummy;
+    if (dummy == "Mulliken")
+    {
+      line >> dummy;
+      if (dummy == "Charges:")
+      {
+        getline(ifile,dummy);
+        for (int i=0;i<Natoms;i++)
+        {
+          if (Struct[i].QMregion or Struct[i].PBregion)
+          {
+            getline(ifile,dummy);
+            stringstream line(dummy);
+            line >> dummy >> dummy;
+            line >> dummy >> dummy;
+            line >> dummy;
+            line >> Struct[i].MP[Bead].q;
+          }
+        }
+      }
+    }
+    if (dummy == "-Total")
+    {
+      line >> dummy;
+      if (dummy == "Gradient:")
+      {
+        getline(ifile,dummy);
+        getline(ifile,dummy);
+        for (int i=0;i<(Nqm+Npseudo);i++)
+        {
+          double Fx = 0;
+          double Fy = 0;
+          double Fz = 0;
+          //Extract forces; Convoluted, but "easy"
+          getline(ifile,dummy);
+          stringstream line(dummy);
+          line >> dummy; //Clear junk
+          line >> Fx; //Read value
+          line >> Fy; //Read value
+          line >> Fz; //Read value
+          //Change from gradient to force
+          Fx *= -1;
+          Fy *= -1;
+          Fz *= -1;
+          //Switch to eV/A and save forces
+          Forces(3*i) += Fx*Har2eV/BohrRad;
+          Forces(3*i+1) += Fy*Har2eV/BohrRad;
+          Forces(3*i+2) += Fz*Har2eV/BohrRad;
+        }
+      }
+    }
+    line >> dummy; //Get rid of junk
+    if (dummy == "Final")
+    {
+      line >> dummy; //Check property
+      if (dummy == "Energy:")
+      {
+        line >> E; //Read energy
+      }
+    }
+  }
+  ifile.close();
+  //Collect energy (post-SCF)
+  call.str("");
+  call << "LICHM_" << Bead << ".log";
+  ifile.open(call.str().c_str(),ios_base::in);
+  while (!ifile.eof())
+  {
+    getline(ifile,dummy);
+    stringstream line(dummy);
+    line >> dummy; //Check property
+    if (dummy == "Energy:")
+    {
+      line >> E; //Read post-SCF energy
+    }
+  }
+  ifile.close();
+  //Clean up files
+  call.str("");
+  call << "rm -f ";
+  call << "LICHM_" << Bead << ".dat ";
+  call << "LICHM_" << Bead << ".out ";
+  call << "LICHM_" << Bead << ".log";
+  GlobalSys = system(call.str().c_str());
+  //Change units
+  E *= Har2eV;
+  return E;
+};
+
+MatrixXd PSI4Hessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
+{
+  //Runs PSI4 to calculate a Hessian
+  fstream ifile; //Generic file stream
+  string dummy; //Generic string
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy settings from cout
+  double E = 0.0;
+  MatrixXd QMHess((3*(Nqm+Npseudo)),(3*(Nqm+Npseudo)));
+  QMHess.setZero();
+  //Check if there is a checkpoint file
+  bool UseCheckPoint;
+  call.str("");
+  call << "LICHM_" << Bead << ".180";
+  UseCheckPoint = CheckFile(call.str());
+  //Calculate Hessian
+  call.str("");
+  call << "Eqm,qmwfn = energy('" << QMMMOpts.Func << "'";
+  if (UseCheckPoint)
+  {
+    //Collect old wavefunction from restart file
+    call << ",restart_file=[";
+    call << "'./LICHM_" << Bead << ".180']";
+  }
+  call << ",return_wfn=True)" << '\n';
+  call << "hessian('" << QMMMOpts.Func << "'";
+  call << ",bypass_scf=True)"; //Skip the extra SCF cycle
+  call << '\n';
+  call << "print('Energy: '+`Eqm`)" << '\n';
+  if (QMMM)
+  {
+    call << "oeprop(qmwfn,'MULLIKEN_CHARGES')" << '\n';
+  }
+  WritePSI4Input(Struct,call.str(),QMMMOpts,Bead);
+  //Call PSI4
+  call.str("");
+  call << "psi4 -n " << Ncpus << "-i ";
+  call << "LICHM_" << Bead << ".dat -o ";
+  call << "LICHM_" << Bead << ".out > ";
+  call << "LICHM_" << Bead << ".log";
+  GlobalSys = system(call.str().c_str());
+  //Save checkpoint file for the next calculation
+  call.str("");
+  call << "mv *.LICHM_" << Bead << ".180 ";
+  call << "LICHM_" << Bead << ".180 ";
+  call << "2> LICHM_" << Bead << ".trash; ";
+  call << "rm -f LICHM_" << Bead << ".trash";
+  GlobalSys = system(call.str().c_str());
+  //Extract Hessian
+
+  //Clean up files
+  call.str("");
+  call << "rm -f ";
+  call << "LICHM_" << Bead << ".dat ";
+  call << "LICHM_" << Bead << ".out ";
+  call << "LICHM_" << Bead << ".log";
+  GlobalSys = system(call.str().c_str());
+  return QMHess;
 };
 
 double PSI4Opt(vector<QMMMAtom>& Struct,
