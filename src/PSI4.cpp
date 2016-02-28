@@ -389,7 +389,6 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   string dummy; //Generic string
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
-  double E = 0.0;
   MatrixXd QMHess((3*(Nqm+Npseudo)),(3*(Nqm+Npseudo)));
   QMHess.setZero();
   //Check if there is a checkpoint file

@@ -20,8 +20,7 @@
 
 
 //MM wrapper functions
-double AMBERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
-                   QMMMSettings& QMMMOpts, int Bead)
+double AMBEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs AMBER energy calculations
   double E = 0.0;
@@ -31,14 +30,25 @@ double AMBERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   return E;
 };
 
-double AMBEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
+double AMBERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
+                   QMMMSettings& QMMMOpts, int Bead)
 {
-  //Runs AMBER energy calculations
+  //Function to calculate MM forces on a set of QM atoms
   double E = 0.0;
   
   //Change units
   E *= kcal2eV;
   return E;
+};
+
+MatrixXd AMBERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
+                      int Bead)
+{
+  //Function to calculate the MM Hessian for the QM atoms
+  MatrixXd QMHess((3*(Nqm+Npseudo)),(3*(Nqm+Npseudo)));
+  QMHess.setZero();
+  
+  return QMHess;
 };
 
 double AMBEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)

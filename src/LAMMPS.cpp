@@ -26,15 +26,6 @@ void LAMMPSTopology(vector<QMMMAtom>& Struct, stringstream& topology,
 };
 
 //MM wrapper functions
-double LAMMPSForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
-                    QMMMSettings& QMMMOpts, int Bead)
-{
-  //Function for calculating the MM forces on a set of QM atoms
-  double E = 0.0;
-  
-  return E;
-};
-
 double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
                     int Bead)
 {
@@ -230,6 +221,25 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << ".log LICHMlog_";
   call << Bead << ".txt";
   return E;
+};
+
+double LAMMPSForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
+                    QMMMSettings& QMMMOpts, int Bead)
+{
+  //Function for calculating the MM forces on a set of QM atoms
+  double E = 0.0;
+  
+  return E;
+};
+
+MatrixXd LAMMPSHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
+                       int Bead)
+{
+  //Function for calculating the MM Hessian for the QM atoms
+  MatrixXd QMHess((3*(Nqm+Npseudo)),(3*(Nqm+Npseudo)));
+  QMHess.setZero();
+
+  return QMHess;
 };
 
 double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,

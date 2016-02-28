@@ -391,6 +391,16 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   return E;
 };
 
+MatrixXd NWChemHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
+                       int Bead)
+{
+  //Function to calculate the QM Hessian
+  MatrixXd QMHess((3*(Nqm+Npseudo)),(3*(Nqm+Npseudo)));
+  QMHess.setZero();
+  
+  return QMHess;
+};
+
 double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs NWChem optimizations
