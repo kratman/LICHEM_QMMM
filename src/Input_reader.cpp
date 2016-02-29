@@ -481,6 +481,11 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
         //Read energy minimization options
         SinglePoint = 1;
       }
+      if ((dummy == "freq") or (dummy == "frequency"))
+      {
+        //Read energy minimization options
+        FreqCalc = 1;
+      }
       if ((dummy == "opt") or (dummy == "optimize"))
       {
         //Optimize with native QM and MM optimizers

@@ -199,6 +199,79 @@ int main(int argc, char* argv[])
   }
   //End of section
 
+  //LICHEM frequency calculation
+  else if (FreqCalc)
+  {
+    MatrixXd QMMMHess((3*(Nqm+Npseudo)),(3*(Nqm+Npseudo)));
+    cout << '\n'; //Print blank line
+    if (QMMMOpts.Nbeads == 1)
+    {
+      cout << "Single-point frequencies:";
+    }
+    if (QMMMOpts.Nbeads > 1)
+    {
+      cout << "Multi-point frequencies:";
+    }
+    cout << '\n' << '\n';
+    cout.flush(); //Print progress
+    //Loop over all beads
+    for (int p=0;p<QMMMOpts.Nbeads;p++)
+    {
+      //Calculate QMMM frequencies
+      QMMMHess.setZero(); //Reset frequencies
+      //Calculate QM energy
+      if (QMMMOpts.Nbeads > 1)
+      {
+        cout << " Frequencies for bead: " << p << '\n';
+        cout.flush();
+      }
+      if (Gaussian)
+      {
+        int tstart = (unsigned)time(0);
+        QMMMHess += GaussianHessian(Struct,QMMMOpts,p);
+        QMTime += (unsigned)time(0)-tstart;
+      }
+      if (PSI4)
+      {
+        int tstart = (unsigned)time(0);
+        QMMMHess += PSI4Hessian(Struct,QMMMOpts,p);
+        QMTime += (unsigned)time(0)-tstart;
+        //Delete annoying useless files
+        GlobalSys = system("rm -f psi.* timer.*");
+      }
+      if (NWChem)
+      {
+        int tstart = (unsigned)time(0);
+        QMMMHess += NWChemHessian(Struct,QMMMOpts,p);
+        QMTime += (unsigned)time(0)-tstart;
+      }
+      //Calculate MM energy
+      if (TINKER)
+      {
+        int tstart = (unsigned)time(0);
+        QMMMHess += TINKERHessian(Struct,QMMMOpts,p);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      if (AMBER)
+      {
+        int tstart = (unsigned)time(0);
+        QMMMHess += AMBERHessian(Struct,QMMMOpts,p);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      if (LAMMPS)
+      {
+        int tstart = (unsigned)time(0);
+        QMMMHess += LAMMPSHessian(Struct,QMMMOpts,p);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      //Print the frequencies
+      
+      cout << '\n';
+      cout.flush(); //Print output
+    }
+  }
+  //End of section
+
   //Optimize structure (native QM and MM package optimizers)
   else if (OptSim)
   {
@@ -1255,7 +1328,7 @@ int main(int argc, char* argv[])
     call << "rm -f psi*";
     GlobalSys = system(call.str().c_str());
   }
-  if (SinglePoint)
+  if (SinglePoint or FreqCalc)
   {
     //Clear worthless output xyz file
     stringstream call; //Stream for system calls and reading/writing files

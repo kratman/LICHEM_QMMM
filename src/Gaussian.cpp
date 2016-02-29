@@ -766,7 +766,7 @@ MatrixXd GaussianHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "g09 " << "LICHM_" << Bead;
   GlobalSys = system(call.str().c_str());
   //Extract Hessian
-  
+  exit(0);
   //Clean up files
   call.str("");
   call << "rm -f ";

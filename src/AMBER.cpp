@@ -45,10 +45,10 @@ MatrixXd AMBERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
                       int Bead)
 {
   //Function to calculate the MM Hessian for the QM atoms
-  MatrixXd QMHess((3*(Nqm+Npseudo)),(3*(Nqm+Npseudo)));
-  QMHess.setZero();
+  MatrixXd MMHess((3*(Nqm+Npseudo)),(3*(Nqm+Npseudo)));
+  MMHess.setZero();
   
-  return QMHess;
+  return MMHess;
 };
 
 double AMBEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)

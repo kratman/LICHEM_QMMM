@@ -60,6 +60,7 @@ namespace LICHEMGlobal
   bool ESDSim = 0; //Flag for ensemble steepest descent
   bool PIMCSim = 0; //Flag for Monte Carlo
   bool ENEBSim = 0; //Flag for ensemble NEB reaction paths
+  bool FreqCalc = 0; //Flag for a frequency calculation
   bool SinglePoint = 0; //Flag for energy calculation
   bool GauExternal = 0; //Runs Gaussian with External
 

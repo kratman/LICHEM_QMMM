@@ -236,10 +236,10 @@ MatrixXd LAMMPSHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
                        int Bead)
 {
   //Function for calculating the MM Hessian for the QM atoms
-  MatrixXd QMHess((3*(Nqm+Npseudo)),(3*(Nqm+Npseudo)));
-  QMHess.setZero();
-
-  return QMHess;
+  MatrixXd MMHess((3*(Nqm+Npseudo)),(3*(Nqm+Npseudo)));
+  MMHess.setZero();
+  
+  return MMHess;
 };
 
 double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
