@@ -203,6 +203,7 @@ int main(int argc, char* argv[])
   else if (FreqCalc)
   {
     MatrixXd QMMMHess((3*(Nqm+Npseudo)),(3*(Nqm+Npseudo)));
+    VectorXd QMMMFreqs(3*(Nqm+Npseudo));
     cout << '\n'; //Print blank line
     if (QMMMOpts.Nbeads == 1)
     {
@@ -219,6 +220,7 @@ int main(int argc, char* argv[])
     {
       //Calculate QMMM frequencies
       QMMMHess.setZero(); //Reset frequencies
+      QMMMFreqs.setZero();
       //Calculate QM energy
       if (QMMMOpts.Nbeads > 1)
       {
@@ -264,9 +266,11 @@ int main(int argc, char* argv[])
         QMMMHess += LAMMPSHessian(Struct,QMMMOpts,p);
         MMTime += (unsigned)time(0)-tstart;
       }
+      //Calculate frequencies
+      QMMMFreqs = LICHEMFreq(QMMMHess,QMMMOpts,p);
       //Print the frequencies
-      
-      cout << '\n';
+      cout << QMMMFreqs;
+      cout << '\n' << '\n';
       cout.flush(); //Print output
     }
   }

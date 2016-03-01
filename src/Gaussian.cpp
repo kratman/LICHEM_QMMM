@@ -710,7 +710,8 @@ MatrixXd GaussianHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.copyfmt(cout); //Copy print settings
   string dummy; //Generic string
   fstream ofile,ifile,QMlog; //Generic input files
-  MatrixXd QMHess((3*(Nqm+Npseudo)),(3*(Nqm+Npseudo)));
+  int Ndof = 3*(Nqm+Npseudo);
+  MatrixXd QMHess(Ndof,Ndof);
   QMHess.setZero();
   //Check if there is a checkpoint file
   call.str("");
@@ -766,7 +767,66 @@ MatrixXd GaussianHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "g09 " << "LICHM_" << Bead;
   GlobalSys = system(call.str().c_str());
   //Extract Hessian
-  exit(0);
+  call.str("");
+  call << "LICHM_" << Bead << ".log";
+  QMlog.open(call.str().c_str(),ios_base::in);
+  bool HessDone = 0;
+  while ((!QMlog.eof()) and (!HessDone))
+  {
+    //Parse file line by line
+    getline(QMlog,dummy);
+    stringstream line(dummy);
+    line >> dummy >> dummy;
+    //This only works with #P
+    if (dummy == "constants")
+    {
+      line >> dummy >> dummy;
+      if (dummy == "Cartesian")
+      {
+        HessDone = 1; //Recovered the Hessian
+        getline(QMlog,dummy); //Clear junk
+        int ct = 0; //Counter
+        int ctcol; //Hessian index
+        ctcol = 0; //Makes the loop start at zero
+        //Read force constants
+        while (ctcol < Ndof)
+        {
+          //Loop through degrees of freedom
+          ct = 1;
+          for (int i=ctcol;i<Ndof;i++)
+          {
+            getline(QMlog,dummy);
+            stringstream hessline(dummy);
+            hessline >> dummy; //Clear junk
+            cout << i << " ";
+            for (int j=0;j<ct;j++)
+            {
+              //Read matrix element
+              cout << (ctcol+j) << " ";
+              hessline >> QMHess(i,ctcol+j);
+              //Apply symmetry
+              QMHess(ctcol+j,i) = QMHess(i,ctcol+j);
+            }
+            cout << '\n';
+            //Update counter
+            if (ct < 5)
+            {
+              ct += 1;
+            }
+            //Check for the end of the Hessian
+            if ((ctcol+ct) >= Ndof)
+            {
+              //Avoid seg. faults
+              ct = Ndof-ctcol;
+            }
+          }
+          cout << '\n';
+          ctcol += 5; //Keep track of Hessian index
+          getline(QMlog,dummy); //Clear junk
+        }
+      }
+    }
+  }
   //Clean up files
   call.str("");
   call << "rm -f ";

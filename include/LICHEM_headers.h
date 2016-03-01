@@ -140,17 +140,19 @@ void LICHEM2BASIS(int&,char**&);
 
 void LICHEM2TINK(int&,char**&);
 
+template<typename T> int LICHEMCount(T);
+
 double LICHEMDensity(vector<QMMMAtom>&,QMMMSettings&);
 
 void LICHEMDFP(vector<QMMMAtom>&,QMMMSettings&,int);
-
-template<typename T> int LICHEMCount(T);
 
 void LICHEMErrorChecker(QMMMSettings&);
 
 double LICHEMFactorial(int);
 
 template<typename T> string LICHEMFormFloat(T,int);
+
+VectorXd LICHEMFreq(MatrixXd&,QMMMSettings&,int);
 
 void LICHEMLowerText(string&);
 

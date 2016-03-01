@@ -253,3 +253,21 @@ double LICHEMDensity(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   return rho;
 };
 
+VectorXd LICHEMFreq(MatrixXd& QMMMHess, QMMMSettings& QMMMOpts, int Bead)
+{
+  //Function to perform a frequency analysis
+  VectorXd QMMMFreqs(3*(Nqm+Npseudo));
+  QMMMFreqs.setZero();
+  //Diagonalize Hessian
+  EigenSolver<MatrixXd> FreqAnalysis;
+  FreqAnalysis.compute(QMMMHess);
+  QMMMFreqs = FreqAnalysis.eigenvalues().real();
+  //Remove translation and rotation
+  
+  //Take the square root and keep the sign
+  
+  //Change units
+  
+  //Return frequencies
+  return QMMMFreqs;
+};
