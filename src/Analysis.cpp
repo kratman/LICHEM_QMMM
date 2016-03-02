@@ -253,21 +253,166 @@ double LICHEMDensity(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   return rho;
 };
 
-VectorXd LICHEMFreq(MatrixXd& QMMMHess, QMMMSettings& QMMMOpts, int Bead)
+VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
+                    QMMMSettings& QMMMOpts, int Bead, int& remct)
 {
-  //Function to perform a frequency analysis
-  VectorXd QMMMFreqs(3*(Nqm+Npseudo));
-  QMMMFreqs.setZero();
-  //Diagonalize Hessian
+  //Function to perform a QMMM frequency analysis
+  double ProjTol = 0.65; //Amount of overlap to remove a mode
+  double ZeroTol = 0.01; //Smallest possible frequency (cm^-1)
+  remct = 0; //Number of deleted translation and rotational modes
+  //Define variables
+  int Ndof = 3*(Nqm+Npseudo); //Degrees of freedom
+  //Define arrays
   EigenSolver<MatrixXd> FreqAnalysis;
+  VectorXd QMMMFreqs(Ndof); //Vibrational frequencies (cm^-1)
+  MatrixXd QMMMNormModes(Ndof,Ndof); //Normal modes
+  MatrixXd FreqMatrix(Ndof,Ndof); //Diagonal frequency matrix
+  VectorXd TransX(Ndof); //X translation
+  VectorXd TransY(Ndof); //Y translation
+  VectorXd TransZ(Ndof); //Z translation
+  VectorXd RotX(Ndof); //X rotation
+  VectorXd RotY(Ndof); //Y rotation
+  VectorXd RotZ(Ndof); //Z rotation
+  //Initialize arrays
+  QMMMFreqs.setZero();
+  QMMMNormModes.setZero();
+  FreqMatrix.setZero();
+  TransX.setZero();
+  TransY.setZero();
+  TransZ.setZero();
+  RotX.setZero();
+  RotY.setZero();
+  RotZ.setZero();
+  //Collect QM and PB masses
+  vector<double> Masses;
+  for (int i=0;i<Natoms;i++)
+  {
+    //Locate QM and PB atoms
+    if (Struct[i].QMregion or Struct[i].PBregion)
+    {
+      //Switch to a.u. and save mass
+      double massval = Struct[i].m/ElecMass;
+      Masses.push_back(massval); //X component
+      Masses.push_back(massval); //Y component
+      Masses.push_back(massval); //Z component
+    }
+  }
+  //Mass scale the Hessian matrix
+  #pragma omp parallel for
+  for (int i=0;i<Ndof;i++)
+  {
+    //Update diagonal matrix elements
+    QMMMHess(i,i) /= Masses[i];
+    //Update off-diagonal matrix elements
+    for (int j=0;j<i;j++)
+    {
+      //Mass scale
+      QMMMHess(i,j) /= sqrt(Masses[i]*Masses[j]);
+      //Apply symmetry
+      QMMMHess(j,i) = QMMMHess(i,j);
+    }
+  }
+  //Diagonalize Hessian matrix
   FreqAnalysis.compute(QMMMHess);
   QMMMFreqs = FreqAnalysis.eigenvalues().real();
+  QMMMNormModes = FreqAnalysis.eigenvectors().real();
+  //Create model translation and rotation modes
+  #pragma omp parallel for
+  for (int i=0;i<(Nqm+Npseudo);i++)
+  {
+    //Translational modes
+    TransX(3*i) = sqrt(Masses[3*i]);
+    TransY(3*i+1) = sqrt(Masses[3*i+1]);
+    TransZ(3*i+2) = sqrt(Masses[3*i+2]);
+    //Rotational modes
+    
+  }
+  TransX.normalize();
+  TransY.normalize();
+  TransZ.normalize();
   //Remove translation and rotation
-  
+  for (int i=0;i<Ndof;i++)
+  {
+    bool IsTransRot = 0;
+    double DotTest; //Saves overlap
+    //Locate translations
+    DotTest = abs(TransX.dot(QMMMNormModes.col(i)));
+    if (DotTest > ProjTol)
+    {
+      IsTransRot = 1;
+    }
+    DotTest = abs(TransY.dot(QMMMNormModes.col(i)));
+    if (DotTest > ProjTol)
+    {
+      IsTransRot = 1;
+    }
+    DotTest = abs(TransZ.dot(QMMMNormModes.col(i)));
+    if (DotTest > ProjTol)
+    {
+      IsTransRot = 1;
+    }
+    //Locate rotations
+    DotTest = abs(RotX.dot(QMMMNormModes.col(i)));
+    if (DotTest > ProjTol)
+    {
+      IsTransRot = 1;
+    }
+    DotTest = abs(RotY.dot(QMMMNormModes.col(i)));
+    if (DotTest > ProjTol)
+    {
+      IsTransRot = 1;
+    }
+    DotTest = abs(RotZ.dot(QMMMNormModes.col(i)));
+    if (DotTest > ProjTol)
+    {
+      IsTransRot = 1;
+    }
+    //Adjust frequencies
+    if (IsTransRot)
+    {
+      //Remove frequency
+      remct += 1;
+      FreqMatrix(i,i) = 0;
+    }
+    else
+    {
+      //Save frequency
+      FreqMatrix(i,i) = QMMMFreqs(i);
+    }
+  }
+  QMMMHess = QMMMNormModes*FreqMatrix*QMMMNormModes.inverse();
+  FreqAnalysis.compute(QMMMHess);
+  QMMMFreqs = FreqAnalysis.eigenvalues().real();
+  QMMMNormModes = FreqAnalysis.eigenvectors().real();
   //Take the square root and keep the sign
-  
+  #pragma omp parallel for
+  for (int i=0;i<Ndof;i++)
+  {
+    //Save sign
+    int freqsign = 1;
+    if (QMMMFreqs(i) < 0)
+    {
+      freqsign = -1;
+    }
+    //Remove sign
+    QMMMFreqs(i) = abs(QMMMFreqs(i));
+    //Take square root
+    QMMMFreqs(i) = sqrt(QMMMFreqs(i));
+    //Replace sign
+    QMMMFreqs(i) *= freqsign;
+  }
   //Change units
-  
+  QMMMFreqs *= Har2wavenum;
+  //Remove negligible frequencies
+  #pragma omp parallel for
+  for (int i=0;i<Ndof;i++)
+  {
+    //Delete frequencies below 0.01 cm^-1
+    if (abs(QMMMFreqs(i)) < ZeroTol)
+    {
+      QMMMFreqs(i) = 0;
+    }
+  }
   //Return frequencies
   return QMMMFreqs;
 };

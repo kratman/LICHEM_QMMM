@@ -40,6 +40,7 @@ namespace LICHEMConst
   const double Har2eV = 27.21138505; //Hartrees to eV
   const double Na = 6.02214129e23; //Avogadro's number
   const double Debye2au = 0.393430307; //Convert from Debye to au
+  const double Har2wavenum = 2.194746313702e5; //Convert a.u. to cm^-1
 
   //Global derived constants
   const double atm2eV = SI2eV*atm2Pa/(m2Ang*m2Ang*m2Ang); //atmA^3 to eV

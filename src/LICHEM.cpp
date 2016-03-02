@@ -202,8 +202,10 @@ int main(int argc, char* argv[])
   //LICHEM frequency calculation
   else if (FreqCalc)
   {
-    MatrixXd QMMMHess((3*(Nqm+Npseudo)),(3*(Nqm+Npseudo)));
-    VectorXd QMMMFreqs(3*(Nqm+Npseudo));
+    int remct = 0; //Number of deleted translation and rotation modes
+    int Ndof = 3*(Nqm+Npseudo); //Number of degrees of freedom
+    MatrixXd QMMMHess(Ndof,Ndof);
+    VectorXd QMMMFreqs(Ndof);
     cout << '\n'; //Print blank line
     if (QMMMOpts.Nbeads == 1)
     {
@@ -267,10 +269,39 @@ int main(int argc, char* argv[])
         MMTime += (unsigned)time(0)-tstart;
       }
       //Calculate frequencies
-      QMMMFreqs = LICHEMFreq(QMMMHess,QMMMOpts,p);
+      QMMMFreqs = LICHEMFreq(Struct,QMMMHess,QMMMOpts,p,remct);
       //Print the frequencies
-      cout << QMMMFreqs;
-      cout << '\n' << '\n';
+      if (remct > 0)
+      {
+        cout << "  | Identified " << remct;
+        cout << " translation/rotation modes";
+        cout << '\n';
+      }
+      cout << "  | Frequencies:" << '\n' << '\n';
+      cout << "   ";
+      remct = 0; //Reuse as a counter
+      for (int i=0;i<Ndof;i++)
+      {
+        if (abs(QMMMFreqs(i)) > 0)
+        {
+          cout << " ";
+          cout << LICHEMFormFloat(QMMMFreqs(i),10);
+          remct += 1;
+          if (remct == 3)
+          {
+            //Start a new line
+            cout << '\n';
+            cout << "   "; //Add extra space
+            remct = 0;
+          }
+        }
+      }
+      if (remct != 0)
+      {
+        //Terminate trailing line
+        cout << '\n';
+      }
+      cout << '\n';
       cout.flush(); //Print output
     }
   }

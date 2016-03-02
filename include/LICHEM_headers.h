@@ -152,7 +152,7 @@ double LICHEMFactorial(int);
 
 template<typename T> string LICHEMFormFloat(T,int);
 
-VectorXd LICHEMFreq(MatrixXd&,QMMMSettings&,int);
+VectorXd LICHEMFreq(vector<QMMMAtom>&,MatrixXd&,QMMMSettings&,int,int&);
 
 void LICHEMLowerText(string&);
 

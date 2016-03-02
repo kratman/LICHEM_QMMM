@@ -766,66 +766,73 @@ MatrixXd GaussianHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "g09 " << "LICHM_" << Bead;
   GlobalSys = system(call.str().c_str());
-  //Extract Hessian
+  //Generate formatted checkpoint file
   call.str("");
-  call << "LICHM_" << Bead << ".log";
-  QMlog.open(call.str().c_str(),ios_base::in);
-  bool HessDone = 0;
-  while ((!QMlog.eof()) and (!HessDone))
+  call << "LICHM_" << Bead << ".chk";
+  if (CheckFile(call.str()))
   {
-    //Parse file line by line
+    //Run formchk
+    call.str("");
+    call << "formchk ";
+    call << "LICHM_" << Bead << ".chk";
+    call << " > LICHM_" << Bead << ".trash; ";
+    call << " rm -f LICHM_" << Bead << ".trash";
+    GlobalSys = system(call.str().c_str());
+  }
+  else
+  {
+    //Calculation did not finish
+    cerr << "Error: No checkpoint file found!!!";
+    cerr << '\n';
+    cerr.flush(); //Print warning immediately
+    //Delete checkpoint
+    call.str("");
+    call << "rm -f LICHM_" << Bead << ".chk";
+    GlobalSys = system(call.str().c_str());
+  }
+  //Open checkpoint file
+  call.str("");
+  call << "LICHM_" << Bead << ".fchk";
+  QMlog.open(call.str().c_str(),ios_base::in);
+  //Extract Hessian
+  bool HessDone = 0;
+  while (QMlog.good() and (!QMlog.eof()) and (!HessDone))
+  {
+    //Parse checkpoint file line by line
     getline(QMlog,dummy);
     stringstream line(dummy);
     line >> dummy >> dummy;
-    //This only works with #P
-    if (dummy == "constants")
+    if (dummy == "Force")
     {
-      line >> dummy >> dummy;
-      if (dummy == "Cartesian")
+      line >> dummy;
+      if (dummy == "Constants")
       {
         HessDone = 1; //Recovered the Hessian
-        getline(QMlog,dummy); //Clear junk
-        int ct = 0; //Counter
-        int ctcol; //Hessian index
-        ctcol = 0; //Makes the loop start at zero
-        //Read force constants
-        while (ctcol < Ndof)
+        //Read force constants (lower triangualr)
+        for (int i=0;i<Ndof;i++)
         {
-          //Loop through degrees of freedom
-          ct = 1;
-          for (int i=ctcol;i<Ndof;i++)
+          for (int j=0;j<(i+1);j++)
           {
-            getline(QMlog,dummy);
-            stringstream hessline(dummy);
-            hessline >> dummy; //Clear junk
-            cout << i << " ";
-            for (int j=0;j<ct;j++)
-            {
-              //Read matrix element
-              cout << (ctcol+j) << " ";
-              hessline >> QMHess(i,ctcol+j);
-              //Apply symmetry
-              QMHess(ctcol+j,i) = QMHess(i,ctcol+j);
-            }
-            cout << '\n';
-            //Update counter
-            if (ct < 5)
-            {
-              ct += 1;
-            }
-            //Check for the end of the Hessian
-            if ((ctcol+ct) >= Ndof)
-            {
-              //Avoid seg. faults
-              ct = Ndof-ctcol;
-            }
+            //Read matrix element
+            QMlog >> QMHess(i,j);
+            //Apply symmetry
+            QMHess(j,i) = QMHess(i,j);
           }
-          cout << '\n';
-          ctcol += 5; //Keep track of Hessian index
-          getline(QMlog,dummy); //Clear junk
         }
       }
     }
+  }
+  //Check for errors
+  if (!HessDone)
+  {
+    //Calculation did not finish
+    cerr << "Error: No force constants recovered!!!";
+    cerr << '\n';
+    cerr.flush(); //Print warning immediately
+    //Delete checkpoint
+    call.str("");
+    call << "rm -f LICHM_" << Bead << ".chk";
+    GlobalSys = system(call.str().c_str());
   }
   //Clean up files
   call.str("");
@@ -835,6 +842,9 @@ MatrixXd GaussianHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << " ";
   call << "LICHM_" << Bead;
   call << ".com";
+  call << " ";
+  call << "LICHM_" << Bead;
+  call << ".fchk";
   GlobalSys = system(call.str().c_str());
   //Return
   return QMHess;
