@@ -1578,11 +1578,12 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
                        int Bead)
 {
   //Function for calculating the MM forces on a set of QM atoms
-  fstream ofile,ifile; //Generic file streams
+  fstream ofile,ifile,MMlog; //Generic file streams
   string dummy; //Generic string
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
-  MatrixXd MMHess((3*(Nqm+Npseudo)),(3*(Nqm+Npseudo)));
+  int Ndof = 3*(Nqm+Npseudo); //Number of degrees of freedom
+  MatrixXd MMHess(Ndof,Ndof);
   MMHess.setZero();
   int ct; //Generic counter
   //Construct MM forces input for TINKER
@@ -1770,13 +1771,68 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ofile.flush();
   ofile.close();
   //Run MM
+  call.str("");
+  call << "testhess ";
+  call << "LICHM_" << Bead << ".xyz";
+  call << " Y N > ";
+  call << "LICHM_" << Bead << ".log";
+  GlobalSys = system(call.str().c_str());
+  //Collect MM forces
+  call.str("");
+  call << "LICHM_" << Bead << ".hes";
+  MMlog.open(call.str().c_str(),ios_base::in);
+  //Read derivatives
+  bool HessDone = 0;
+  if (MMlog.good())
+  {
+    HessDone = 1;
+    //Clear junk
+    getline(MMlog,dummy);
+    getline(MMlog,dummy);
+    //Read diagonal elements
+    ct = 0;
+    for (int i=0;i<(3*Natoms);i++)
+    {
+      if (Struct[i].QMregion or Struct[i].PBregion)
+      {
+        //Read QM and PB diagonal elements
+        MMlog >> MMHess(ct,ct);
+        ct += 1;
+        MMlog >> MMHess(ct,ct);
+        ct += 1;
+        MMlog >> MMHess(ct,ct);
+        ct += 1;
+      }
+    }
+    //Read off-diagonal elements
+    for (int i=0;i<Ndof;i++)
+    {
+      //Clear junk
+      getline(MMlog,dummy);
+      getline(MMlog,dummy);
+      //Read elements
+      for (int j=(i+1);j<Ndof;j++)
+      {
+        //Read value
+        MMlog >> MMHess(i,i+j);
+        //Apply symmetry
+        MMHess(i+j,i) = MMHess(i,i+j);
+      }
+    }
+  }
+  cout << '\n';
+  cout << MMHess;
+  cout << '\n';
+  exit(0);
+  //Check for errors
   
   //Clean up files
   call.str("");
   call << "rm -f";
   call << " LICHM_" << Bead << ".xyz";
   call << " LICHM_" << Bead << ".key";
-  call << " LICHM_" << Bead << ".grad";
+  call << " LICHM_" << Bead << ".hes";
+  call << " LICHM_" << Bead << ".log";
   call << " LICHM_" << Bead << ".err";
   GlobalSys = system(call.str().c_str());
   //Return

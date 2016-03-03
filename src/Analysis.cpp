@@ -371,7 +371,6 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
     if (IsTransRot)
     {
       //Remove frequency
-      remct += 1;
       FreqMatrix(i,i) = 0;
     }
     else
@@ -410,6 +409,7 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
     //Delete frequencies below 0.01 cm^-1
     if (abs(QMMMFreqs(i)) < ZeroTol)
     {
+      remct += 1;
       QMMMFreqs(i) = 0;
     }
   }
