@@ -367,6 +367,11 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
     {
       IsTransRot = 1;
     }
+    //Locate small frequencies
+    if (abs(QMMMFreqs(i)) < ZeroTol)
+    {
+      IsTransRot = 1;
+    }
     //Adjust frequencies
     if (IsTransRot and (!QMMM))
     {
@@ -423,3 +428,4 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
   //Return frequencies
   return QMMMFreqs;
 };
+
