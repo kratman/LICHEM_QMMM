@@ -1783,15 +1783,16 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   MMlog.open(call.str().c_str(),ios_base::in);
   //Read derivatives
   bool HessDone = 0;
-  if (MMlog.good())
+  if (MMlog.good() and CheckFile(call.str()))
   {
     HessDone = 1;
     //Clear junk
     getline(MMlog,dummy);
     getline(MMlog,dummy);
+    getline(MMlog,dummy);
     //Read diagonal elements
     ct = 0;
-    for (int i=0;i<(3*Natoms);i++)
+    for (int i=0;i<Natoms;i++)
     {
       if (Struct[i].QMregion or Struct[i].PBregion)
       {
@@ -1803,6 +1804,13 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         MMlog >> MMHess(ct,ct);
         ct += 1;
       }
+      else
+      {
+        //Read zeros
+        MMlog >> dummy;
+        MMlog >> dummy;
+        MMlog >> dummy;
+      }
     }
     //Read off-diagonal elements
     for (int i=0;i<Ndof;i++)
@@ -1810,22 +1818,27 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Clear junk
       getline(MMlog,dummy);
       getline(MMlog,dummy);
+      getline(MMlog,dummy);
       //Read elements
       for (int j=(i+1);j<Ndof;j++)
       {
         //Read value
-        MMlog >> MMHess(i,i+j);
+        MMlog >> MMHess(i,j);
         //Apply symmetry
-        MMHess(i+j,i) = MMHess(i,i+j);
+        MMHess(j,i) = MMHess(i,j);
       }
     }
   }
-  cout << '\n';
-  cout << MMHess;
-  cout << '\n';
-  exit(0);
+  //Change units
+  MMHess *= (kcal2eV*BohrRad*BohrRad/Har2eV); //Switch to a.u.
   //Check for errors
-  
+  if (!HessDone)
+  {
+    //Calculation did not finish
+    cerr << "Error: No force constants recovered!!!";
+    cerr << '\n';
+    cerr.flush(); //Print warning immediately
+  }
   //Clean up files
   call.str("");
   call << "rm -f";

@@ -258,7 +258,7 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
 {
   //Function to perform a QMMM frequency analysis
   double ProjTol = 0.65; //Amount of overlap to remove a mode
-  double ZeroTol = 0.01; //Smallest possible frequency (cm^-1)
+  double ZeroTol = 0.10; //Smallest possible frequency (cm^-1)
   remct = 0; //Number of deleted translation and rotational modes
   //Define variables
   int Ndof = 3*(Nqm+Npseudo); //Degrees of freedom
@@ -324,13 +324,13 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
     TransX(3*i) = sqrt(Masses[3*i]);
     TransY(3*i+1) = sqrt(Masses[3*i+1]);
     TransZ(3*i+2) = sqrt(Masses[3*i+2]);
-    //Rotational modes
-    
   }
   TransX.normalize();
   TransY.normalize();
   TransZ.normalize();
   //Remove translation and rotation
+  remct = 0; //Use as a counter
+  #pragma omp parallel for reduction(+:remct)
   for (int i=0;i<Ndof;i++)
   {
     bool IsTransRot = 0;
@@ -368,10 +368,12 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
       IsTransRot = 1;
     }
     //Adjust frequencies
-    if (IsTransRot)
+    if (IsTransRot and (!QMMM))
     {
       //Remove frequency
+      QMMMFreqs(i);
       FreqMatrix(i,i) = 0;
+      remct += 1;
     }
     else
     {
@@ -379,10 +381,14 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
       FreqMatrix(i,i) = QMMMFreqs(i);
     }
   }
-  QMMMHess = QMMMNormModes*FreqMatrix*QMMMNormModes.inverse();
-  FreqAnalysis.compute(QMMMHess);
-  QMMMFreqs = FreqAnalysis.eigenvalues().real();
-  QMMMNormModes = FreqAnalysis.eigenvectors().real();
+  if (remct > 0)
+  {
+    //Remove unwanted frequencies
+    QMMMHess = QMMMNormModes*FreqMatrix*QMMMNormModes.inverse();
+    FreqAnalysis.compute(QMMMHess);
+    QMMMFreqs = FreqAnalysis.eigenvalues().real();
+    QMMMNormModes = FreqAnalysis.eigenvectors().real();
+  }
   //Take the square root and keep the sign
   #pragma omp parallel for
   for (int i=0;i<Ndof;i++)
@@ -403,10 +409,11 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
   //Change units
   QMMMFreqs *= Har2wavenum;
   //Remove negligible frequencies
-  #pragma omp parallel for
+  remct = 0; //Reset counter
+  #pragma omp parallel for reduction(+:remct)
   for (int i=0;i<Ndof;i++)
   {
-    //Delete frequencies below 0.01 cm^-1
+    //Delete frequencies below the tolerance
     if (abs(QMMMFreqs(i)) < ZeroTol)
     {
       remct += 1;
