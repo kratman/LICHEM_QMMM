@@ -144,6 +144,7 @@ class QMMMSettings
     int TSBead; //Current guess of the transition state
     bool Climb; //Flag to turn on climbing image NEB
     bool FrznEnds; //Flag to freeze the NEB end points
+    bool NEBFreq; //Flag to calculate TS frequencies after NEB
     bool StartPathChk; //Flag to initially use checkpoints from nearby beads
     //Storage of energies (NEB and PIMC)
     double Eold; //Temporary storage

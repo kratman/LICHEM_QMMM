@@ -1247,6 +1247,96 @@ int main(int argc, char* argv[])
     cout << " , ";
     cout << LICHEMFormFloat(dErev/kcal2eV,16) << " kcal/mol";
     cout << '\n' << '\n';
+    //Check stability
+    if (QMMMOpts.NEBFreq)
+    {
+      //Calculate TS frequencies
+      int remct = 0; //Number of deleted translation and rotation modes
+      int Ndof = 3*(Nqm+Npseudo); //Number of degrees of freedom
+      MatrixXd QMMMHess(Ndof,Ndof);
+      VectorXd QMMMFreqs(Ndof);
+      cout << '\n'; //Print blank line
+      cout << "TS frequencies:";
+      cout << '\n' << '\n';
+      cout.flush(); //Print progress
+      //Calculate QMMM frequencies
+      QMMMHess.setZero(); //Reset Hessian
+      QMMMFreqs.setZero(); //Reset frequencies
+      //Calculate QM Hessian
+      if (Gaussian)
+      {
+        int tstart = (unsigned)time(0);
+        QMMMHess += GaussianHessian(Struct,QMMMOpts,QMMMOpts.TSBead);
+        QMTime += (unsigned)time(0)-tstart;
+      }
+      if (PSI4)
+      {
+        int tstart = (unsigned)time(0);
+        QMMMHess += PSI4Hessian(Struct,QMMMOpts,QMMMOpts.TSBead);
+        QMTime += (unsigned)time(0)-tstart;
+        //Delete annoying useless files
+        GlobalSys = system("rm -f psi.* timer.*");
+      }
+      if (NWChem)
+      {
+        int tstart = (unsigned)time(0);
+        QMMMHess += NWChemHessian(Struct,QMMMOpts,QMMMOpts.TSBead);
+        QMTime += (unsigned)time(0)-tstart;
+      }
+      //Calculate MM Hessian
+      if (TINKER)
+      {
+        int tstart = (unsigned)time(0);
+        QMMMHess += TINKERHessian(Struct,QMMMOpts,QMMMOpts.TSBead);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      if (AMBER)
+      {
+        int tstart = (unsigned)time(0);
+        QMMMHess += AMBERHessian(Struct,QMMMOpts,QMMMOpts.TSBead);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      if (LAMMPS)
+      {
+        int tstart = (unsigned)time(0);
+        QMMMHess += LAMMPSHessian(Struct,QMMMOpts,QMMMOpts.TSBead);
+        MMTime += (unsigned)time(0)-tstart;
+      }
+      //Calculate frequencies
+      QMMMFreqs = LICHEMFreq(Struct,QMMMHess,QMMMOpts,QMMMOpts.TSBead,remct);
+      //Print the frequencies
+      if (remct > 0)
+      {
+        cout << "  | Identified " << remct;
+        cout << " translation/rotation modes";
+        cout << '\n';
+      }
+      cout << "  | Frequencies:" << '\n' << '\n';
+      cout << "   ";
+      remct = 0; //Reuse as a counter
+      for (int i=0;i<Ndof;i++)
+      {
+        if (abs(QMMMFreqs(i)) > 0)
+        {
+          cout << " ";
+          cout << LICHEMFormFloat(QMMMFreqs(i),10);
+          remct += 1;
+          if (remct == 3)
+          {
+            //Start a new line
+            cout << '\n';
+            cout << "   "; //Add extra space
+            remct = 0;
+          }
+        }
+      }
+      if (remct != 0)
+      {
+        //Terminate trailing line
+        cout << '\n';
+      }
+      cout << '\n';
+    }
     cout.flush();
   }
   //End of section

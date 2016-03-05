@@ -625,6 +625,16 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
         QMMMOpts.FrznEnds = 1;
       }
     }
+    else if (keyword == "ts_freq:")
+    {
+      //Check for inactive NEB end-points
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "yes") or (dummy == "true"))
+      {
+        QMMMOpts.NEBFreq = 1;
+      }
+    }
     else if (keyword == "init_path_chk:")
     {
       //Check for inactive NEB end-points
