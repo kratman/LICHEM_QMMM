@@ -259,7 +259,7 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
   //Function to perform a QMMM frequency analysis
   double ProjTol = 0.65; //Amount of overlap to remove a mode
   double ZeroTol = 0.10; //Smallest possible frequency (cm^-1)
-  int ct = 0; //Number of deleted translation and rotational modes
+  int transrotct = 0; //Number of deleted translation and rotational modes
   //Define variables
   int Ndof = 3*(Nqm+Npseudo); //Degrees of freedom
   //Define arrays
@@ -329,8 +329,8 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
   TransY.normalize();
   TransZ.normalize();
   //Remove translation and rotation
-  ct = 0; //Use as a counter
-  #pragma omp parallel for reduction(+:ct)
+  transrotct = 0; //Use as a counter
+  #pragma omp parallel for reduction(+:transrotct)
   for (int i=0;i<Ndof;i++)
   {
     bool IsTransRot = 0;
@@ -378,7 +378,7 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
       //Remove frequency
       QMMMFreqs(i);
       FreqMatrix(i,i) = 0;
-      ct += 1;
+      transrotct += 1;
     }
     else
     {
@@ -386,7 +386,7 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
       FreqMatrix(i,i) = QMMMFreqs(i);
     }
   }
-  if (ct > 0)
+  if (transrotct > 0)
   {
     //Remove unwanted frequencies
     QMMMHess = QMMMNormModes*FreqMatrix*QMMMNormModes.inverse();
@@ -414,19 +414,19 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
   //Change units
   QMMMFreqs *= Har2wavenum;
   //Remove negligible frequencies
-  ct = 0; //Reset counter
-  #pragma omp parallel for reduction(+:ct)
+  transrotct = 0; //Reset counter
+  #pragma omp parallel for reduction(+:transrotct)
   for (int i=0;i<Ndof;i++)
   {
     //Delete frequencies below the tolerance
     if (abs(QMMMFreqs(i)) < ZeroTol)
     {
-      ct += 1;
+      transrotct += 1;
       QMMMFreqs(i) = 0;
     }
   }
   //Return frequencies
-  remct = ct;
+  remct = transrotct;
   return QMMMFreqs;
 };
 

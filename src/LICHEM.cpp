@@ -106,7 +106,6 @@ int main(int argc, char* argv[])
   {
     double Eqm; //QM energy
     double Emm; //MM energy
-    cout << '\n'; //Print blank line
     if (QMMMOpts.Nbeads == 1)
     {
       cout << "Single-point energy:";
@@ -206,7 +205,6 @@ int main(int argc, char* argv[])
     int Ndof = 3*(Nqm+Npseudo); //Number of degrees of freedom
     MatrixXd QMMMHess(Ndof,Ndof);
     VectorXd QMMMFreqs(Ndof);
-    cout << '\n'; //Print blank line
     if (QMMMOpts.Nbeads == 1)
     {
       cout << "Single-point frequencies:";

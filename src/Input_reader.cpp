@@ -1360,7 +1360,40 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     {
       cout << "Pure MM";
     }
-    cout << " single-point energy" << '\n';
+    if (QMMMOpts.Nbeads == 1)
+    {
+      cout << " single-point energy" << '\n';
+    }
+    else
+    {
+      cout << " multi-point energy" << '\n';
+    }
+  }
+  if (FreqCalc)
+  {
+    //Print frequency settings for error checking
+    cout << '\n';
+    cout << "Simulation mode: ";
+    if (QMMM)
+    {
+      cout << "QMMM";
+    }
+    if (QMonly)
+    {
+      cout << "Pure QM";
+    }
+    if (MMonly)
+    {
+      cout << "Pure MM";
+    }
+    if (QMMMOpts.Nbeads == 1)
+    {
+      cout << " single-point frequencies" << '\n';
+    }
+    else
+    {
+      cout << " multi-point frequencies" << '\n';
+    }
   }
   if (QMonly or QMMM)
   {
@@ -1560,9 +1593,10 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
         cout << "Active";
       }
     }
-    cout << '\n' << '\n';
+    cout << '\n';
     if (SteepSim or QuickSim or DFPSim or NEBSim)
     {
+      cout << '\n';
       cout << "QM convergence criteria:" << '\n';
       cout << "  RMS deviation: " << QMMMOpts.QMOptTol;
       cout << " \u212B" << '\n';
@@ -1570,10 +1604,10 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       cout << " eV/\u212B" << '\n';
       cout << "  RMS force: " << (10*QMMMOpts.QMOptTol);
       cout << " eV/\u212B" << '\n';
-      cout << '\n';
     }
     if (ESDSim or ENEBSim)
     {
+      cout << '\n';
       cout << "MD settings:" << '\n';
       cout << " Timestep: " << QMMMOpts.dt;
       cout << " fs" << '\n';
@@ -1582,19 +1616,48 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       cout << " Thermostat constant, \u03C4: " << QMMMOpts.tautemp;
       cout << " ps" << '\n';
       cout << " MD steps: " << QMMMOpts.Nsteps << '\n';
-      cout << '\n';
     }
     else if (Nmm > 0)
     {
+      cout << '\n';
       cout << "MM convergence criteria:" << '\n';
       cout << "  RMS deviation: " << QMMMOpts.MMOptTol;
       cout << " \u212B" << '\n';
       cout << "  RMS force: ";
       cout << LICHEMFormFloat(QMMMOpts.MMOptTol*kcal2eV,12);
       cout << " eV/\u212B" << '\n';
-      cout << '\n';
     }
   }
+  //Print frequency analysis settings
+  if (FreqCalc or QMMMOpts.NEBFreq)
+  {
+    cout << '\n';
+    cout << "Frequency settings:" << '\n';
+    //Always removed
+    cout << "  Remove low frequencies: Yes";
+    cout << '\n';
+    //Removed for QM calculations
+    cout << "  Remove translations: ";
+    if (QMMM)
+    {
+      cout << "No" << '\n';
+    }
+    else
+    {
+      cout << "Yes" << '\n';
+    }
+    //Removed for QM calculations
+    cout << "  Remove rotations: ";
+    if (QMMM)
+    {
+      cout << "No" << '\n';
+    }
+    else
+    {
+      cout << "Yes" << '\n';
+    }
+  }
+  cout << '\n';
   cout.flush(); //Flush for output being redirected to a file
   return;
 };
