@@ -368,7 +368,10 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
       IsTransRot = 1;
     }
     //Locate small frequencies
-    if (abs(QMMMFreqs(i)) < (ZeroTol*Har2wavenum))
+    double SmallFreq; //Temporary storage
+    SmallFreq = ZeroTol/Har2wavenum; //Convert tolerance to a.u.
+    SmallFreq *= SmallFreq; //Square tolerance
+    if (abs(QMMMFreqs(i)) < SmallFreq)
     {
       IsTransRot = 1;
     }
