@@ -258,7 +258,7 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
 {
   //Function to perform a QMMM frequency analysis
   double ProjTol = 0.65; //Amount of overlap to remove a mode
-  double ZeroTol = 0.10; //Smallest possible frequency (cm^-1)
+  double ZeroTol = 1.00; //Smallest possible frequency (cm^-1)
   int transrotct = 0; //Number of deleted translation and rotational modes
   //Define variables
   int Ndof = 3*(Nqm+Npseudo); //Degrees of freedom
