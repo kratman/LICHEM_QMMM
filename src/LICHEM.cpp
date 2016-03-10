@@ -213,7 +213,7 @@ int main(int argc, char* argv[])
     {
       cout << "Multi-point frequencies:";
     }
-    cout << '\n' << '\n';
+    cout << '\n';
     cout.flush(); //Print progress
     //Loop over all beads
     for (int p=0;p<QMMMOpts.Nbeads;p++)
@@ -224,6 +224,7 @@ int main(int argc, char* argv[])
       //Calculate QM energy
       if (QMMMOpts.Nbeads > 1)
       {
+        cout << '\n';
         cout << " Frequencies for bead: " << p << '\n';
         cout.flush();
       }
@@ -1255,7 +1256,7 @@ int main(int argc, char* argv[])
       VectorXd QMMMFreqs(Ndof);
       cout << '\n'; //Print blank line
       cout << "TS frequencies:";
-      cout << '\n' << '\n';
+      cout << '\n';
       cout.flush(); //Print progress
       //Calculate QMMM frequencies
       QMMMHess.setZero(); //Reset Hessian
