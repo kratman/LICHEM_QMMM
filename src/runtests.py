@@ -105,6 +105,25 @@ def RecoverEnergy(txtlabel,itemnum):
     finalenergy = 0.0
   return finalenergy,savedresult
 
+def RecoverFreqs():
+  #Recover a list of frequencies
+  cmd = ""
+  cmd += "sed '/Usage Statistics/,$d' tests.out | "
+  cmd += "sed -n '/Frequencies:/,$p' | "
+  cmd += "sed '/Frequencies:/d'"
+  try:
+    #Safely check energy
+    freqlist = []
+    tmpfreqs = subprocess.check_output(cmd,shell=True) #Get results
+    tmpfreqs = tmpfreqs.strip()
+    tmpfreqs = tmpfreqs.split()
+    for freqval in tmpfreqs:
+      freqlist.append(float(freqval))
+  except:
+    #Calculation failed
+    freqlist = []
+  return freqlist
+
 def AddPass(tname,TestPass,txtln):
   #Add a colored pass or fail message
   global passct
@@ -621,6 +640,33 @@ for qmtest in QMTests:
         if (QMMMEnergy == round(-4.8623027634995,5)):
           PassEnergy = 1
       line = AddPass("PM6 energy:",PassEnergy,line)
+      line = AddRunTime(line)
+      line = AddEnergy(UpdateResults,line,SavedEnergy)
+      print(line)
+      CleanFiles() #Clean up files
+
+    #Check imaginary frequencies
+    if (QMPack == "Gaussian"):
+      line = ""
+      PassEnergy = 0
+      RunLICHEM("methfluor.xyz","freqreg.inp","methflcon.inp")
+      QMMMFreqs = RecoverFreqs()
+      QMMMEnergy = 5e100 #Huge number
+      #Sort frequencies
+      for freqval in QMMMFreqs:
+        #Find lowest frequency
+        if (freqval < QMMMEnergy):
+          QMMMEnergy = freqval
+          SavedEnergy = "Freq:   "+`freqval`
+      #Check for errors
+      if (QMMMEnergy > 1e100):
+        SavedEnergy = "Crashed..."
+      #Check results
+      if (QMPack == "Gaussian"):
+        #Check against saved frequency
+        if (round(QMMMEnergy,0) == round(-471.75386,0)):
+          PassEnergy = 1
+      line = AddPass("Frequencies:",PassEnergy,line)
       line = AddRunTime(line)
       line = AddEnergy(UpdateResults,line,SavedEnergy)
       print(line)
