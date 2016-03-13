@@ -34,7 +34,7 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "task dft energy" << '\n';
   call << "task esp" << '\n';
   WriteNWChemInput(Struct,call.str(),QMMMOpts,Bead);
-  //Calculate energy
+  //Run calculation
   call.str("");
   if (Ncpus > 1)
   {
@@ -112,7 +112,6 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "LICHM_" << Bead << ".b*" << " ";
   call << "LICHM_" << Bead << ".c*" << " ";
   call << "LICHM_" << Bead << ".g*" << " ";
-  //call << "LICHM_" << Bead << ".m*" << " ";
   call << "LICHM_" << Bead << ".z*" << " ";
   call << "LICHM_" << Bead << ".p*" << " ";
   call << "LICHM_" << Bead << ".q*" << " ";
@@ -138,7 +137,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "task dft energy" << '\n';
   call << "task esp" << '\n';
   WriteNWChemInput(Struct,call.str(),QMMMOpts,Bead);
-  //Calculate energy
+  //Run calculation
   call.str("");
   if (Ncpus > 1)
   {
@@ -234,7 +233,6 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "LICHM_" << Bead << ".b*" << " ";
   call << "LICHM_" << Bead << ".c*" << " ";
   call << "LICHM_" << Bead << ".g*" << " ";
-  //call << "LICHM_" << Bead << ".m*" << " ";
   call << "LICHM_" << Bead << ".z*" << " ";
   call << "LICHM_" << Bead << ".p*" << " ";
   call << "LICHM_" << Bead << ".q*" << " ";
@@ -257,12 +255,12 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy print settings
   double E = 0.0;
-  //Set up force calculations
+  //Set up force calculation
   call.str("");
   call << "task dft gradient" << '\n';
   call << "task esp" << '\n';
   WriteNWChemInput(Struct,call.str(),QMMMOpts,Bead);
-  //Calculate energy
+  //Run calculation
   call.str("");
   if (Ncpus > 1)
   {
@@ -377,7 +375,6 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << "LICHM_" << Bead << ".b*" << " ";
   call << "LICHM_" << Bead << ".c*" << " ";
   call << "LICHM_" << Bead << ".g*" << " ";
-  //call << "LICHM_" << Bead << ".m*" << " ";
   call << "LICHM_" << Bead << ".z*" << " ";
   call << "LICHM_" << Bead << ".p*" << " ";
   call << "LICHM_" << Bead << ".q*" << " ";
@@ -395,9 +392,43 @@ MatrixXd NWChemHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
                        int Bead)
 {
   //Function to calculate the QM Hessian
-  MatrixXd QMHess((3*(Nqm+Npseudo)),(3*(Nqm+Npseudo)));
+  fstream ifile; //Generic file stream
+  string dummy; //Genric string
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy print settings
+  int Ndof = 3*(Nqm+Npseudo);
+  MatrixXd QMHess(Ndof,Ndof);
   QMHess.setZero();
-  
+  //Set up Hessian calculation
+  call.str("");
+  call << "task dft Hessian" << '\n';
+  WriteNWChemInput(Struct,call.str(),QMMMOpts,Bead);
+  //Run calculation
+  call.str("");
+  if (Ncpus > 1)
+  {
+    call << "mpirun -n " << Ncpus << " ";
+  }
+  call << "nwchem LICHM_" << Bead << ".nw";
+  call << " > LICHM_" << Bead << ".log";
+  GlobalSys = system(call.str().c_str());
+  //Parse output for Hessian
+
+  //Clean up files
+  call.str("");
+  call << "rm -f ";
+  call << "LICHM_" << Bead << ".b*" << " ";
+  call << "LICHM_" << Bead << ".c*" << " ";
+  call << "LICHM_" << Bead << ".g*" << " ";
+  call << "LICHM_" << Bead << ".z*" << " ";
+  call << "LICHM_" << Bead << ".p*" << " ";
+  call << "LICHM_" << Bead << ".q*" << " ";
+  call << "LICHM_" << Bead << ".nw" << " ";
+  call << "LICHM_" << Bead << ".db" << " ";
+  call << "LICHM_" << Bead << ".x*" << " ";
+  call << "LICHM_" << Bead << ".log";
+  GlobalSys = system(call.str().c_str());
+  //Return Hessian
   return QMHess;
 };
 
@@ -414,7 +445,7 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "task dft optimize" << '\n';
   call << "task esp" << '\n';
   WriteNWChemInput(Struct,call.str(),QMMMOpts,Bead);
-  //Calculate energy
+  //Run calculation
   call.str("");
   if (Ncpus > 1)
   {
@@ -491,7 +522,6 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "LICHM_" << Bead << ".b*" << " ";
   call << "LICHM_" << Bead << ".c*" << " ";
   call << "LICHM_" << Bead << ".g*" << " ";
-  //call << "LICHM_" << Bead << ".m*" << " ";
   call << "LICHM_" << Bead << ".z*" << " ";
   call << "LICHM_" << Bead << ".p*" << " ";
   call << "LICHM_" << Bead << ".q*" << " ";

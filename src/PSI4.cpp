@@ -285,7 +285,7 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << "2> LICHM_" << Bead << ".trash; ";
   call << "rm -f LICHM_" << Bead << ".trash";
   GlobalSys = system(call.str().c_str());
-  //Extract charges
+  //Extract forces
   call.str("");
   call << "LICHM_" << Bead << ".out";
   ifile.open(call.str().c_str(),ios_base::in);
@@ -389,7 +389,8 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   string dummy; //Generic string
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
-  MatrixXd QMHess((3*(Nqm+Npseudo)),(3*(Nqm+Npseudo)));
+  int Ndof = 3*(Nqm+Npseudo);
+  MatrixXd QMHess(Ndof,Ndof);
   QMHess.setZero();
   //Check if there is a checkpoint file
   bool UseCheckPoint;
@@ -406,10 +407,11 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     call << "'./LICHM_" << Bead << ".180']";
   }
   call << ",return_wfn=True)" << '\n';
-  call << "hessian('" << QMMMOpts.Func << "'";
+  call << "QMHess = hessian('" << QMMMOpts.Func << "'";
   call << ",bypass_scf=True)"; //Skip the extra SCF cycle
   call << '\n';
   call << "print('Energy: '+`Eqm`)" << '\n';
+  call << "QMHess.print_out()" << '\n';
   if (QMMM)
   {
     call << "oeprop(qmwfn,'MULLIKEN_CHARGES')" << '\n';
@@ -430,7 +432,64 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "rm -f LICHM_" << Bead << ".trash";
   GlobalSys = system(call.str().c_str());
   //Extract Hessian
-
+  call.str("");
+  call << "LICHM_" << Bead << ".out";
+  ifile.open(call.str().c_str(),ios_base::in);
+  while (!ifile.eof())
+  {
+    getline(ifile,dummy);
+    stringstream line(dummy);
+    line >> dummy;
+    if (dummy == "Mulliken")
+    {
+      line >> dummy;
+      if (dummy == "Charges:")
+      {
+        getline(ifile,dummy);
+        for (int i=0;i<Natoms;i++)
+        {
+          if (Struct[i].QMregion or Struct[i].PBregion)
+          {
+            getline(ifile,dummy);
+            stringstream line(dummy);
+            line >> dummy >> dummy;
+            line >> dummy >> dummy;
+            line >> dummy;
+            line >> Struct[i].MP[Bead].q;
+          }
+        }
+      }
+    }
+    line >> dummy; //Get rid of junk
+    if (dummy == "Hessian")
+    {
+      getline(ifile,dummy); //Clear junk
+      //Read Hessian in groups of Ndofx5
+      int rowct = 0; //Current row ID
+      while (rowct < Ndof)
+      {
+        //Clear junk
+        getline(ifile,dummy); //Clear junk
+        getline(ifile,dummy); //Clear junk
+        getline(ifile,dummy); //Clear junk
+        //Read elements
+        for (int i=0;i<Ndof;i++)
+        {
+          ifile >> dummy; //Clear junk
+          for (int j=0;j<5;j++)
+          {
+            if ((rowct+j) < Ndof)
+            {
+              ifile >> QMHess(i,rowct+j);
+            }
+          }
+        }
+        //Update row location
+        rowct += 5;
+      }
+    }
+  }
+  ifile.close();
   //Clean up files
   call.str("");
   call << "rm -f ";

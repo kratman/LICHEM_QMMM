@@ -1,0 +1,8 @@
+Potential_type: QM
+QM_type: PSI4
+QM_method: PBE0
+QM_basis: 6-31G*
+QM_memory: 256 MB
+QM_charge: -1
+QM_spin: 1
+Calculation_type: Freq

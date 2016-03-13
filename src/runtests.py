@@ -646,7 +646,7 @@ for qmtest in QMTests:
       CleanFiles() #Clean up files
 
     #Check imaginary frequencies
-    if (QMPack == "Gaussian"):
+    if ((QMPack == "PSI4") or (QMPack == "Gaussian")):
       line = ""
       PassEnergy = 0
       RunLICHEM("methfluor.xyz","freqreg.inp","methflcon.inp")
@@ -662,6 +662,10 @@ for qmtest in QMTests:
       if (QMMMEnergy > 1e100):
         SavedEnergy = "Crashed..."
       #Check results
+      if (QMPack == "PSI4"):
+        #Check against saved frequency
+        if (round(QMMMEnergy,0) == round(-471.61306,0)):
+          PassEnergy = 1
       if (QMPack == "Gaussian"):
         #Check against saved frequency
         if (round(QMMMEnergy,0) == round(-471.75386,0)):
