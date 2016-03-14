@@ -435,6 +435,7 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call.str("");
   call << "LICHM_" << Bead << ".out";
   ifile.open(call.str().c_str(),ios_base::in);
+  bool HessDone = 0;
   while (!ifile.eof())
   {
     getline(ifile,dummy);
@@ -463,6 +464,7 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     line >> dummy; //Get rid of junk
     if (dummy == "Hessian")
     {
+      HessDone = 1;
       getline(ifile,dummy); //Clear junk
       //Read Hessian in groups of Ndofx5
       int rowct = 0; //Current row ID
@@ -490,6 +492,18 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     }
   }
   ifile.close();
+  //Check for errors
+  if (!HessDone)
+  {
+    //Calculation did not finish
+    cerr << "Error: No force constants recovered!!!";
+    cerr << '\n';
+    cerr.flush(); //Print warning immediately
+    //Delete checkpoint
+    call.str("");
+    call << "rm -f LICHM_" << Bead << ".180";
+    GlobalSys = system(call.str().c_str());
+  }
   //Clean up files
   call.str("");
   call << "rm -f ";

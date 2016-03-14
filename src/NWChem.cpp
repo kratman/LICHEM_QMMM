@@ -111,14 +111,16 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "rm -f ";
   call << "LICHM_" << Bead << ".b*" << " ";
   call << "LICHM_" << Bead << ".c*" << " ";
+  call << "LICHM_" << Bead << ".d*" << " ";
+  call << "LICHM_" << Bead << ".f*" << " ";
   call << "LICHM_" << Bead << ".g*" << " ";
-  call << "LICHM_" << Bead << ".z*" << " ";
+  call << "LICHM_" << Bead << ".h*" << " ";
+  call << "LICHM_" << Bead << ".l*" << " ";
+  call << "LICHM_" << Bead << ".n*" << " ";
   call << "LICHM_" << Bead << ".p*" << " ";
   call << "LICHM_" << Bead << ".q*" << " ";
-  call << "LICHM_" << Bead << ".nw" << " ";
-  call << "LICHM_" << Bead << ".db" << " ";
   call << "LICHM_" << Bead << ".x*" << " ";
-  call << "LICHM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".z*";
   GlobalSys = system(call.str().c_str());
   return;
 };
@@ -232,14 +234,16 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "rm -f ";
   call << "LICHM_" << Bead << ".b*" << " ";
   call << "LICHM_" << Bead << ".c*" << " ";
+  call << "LICHM_" << Bead << ".d*" << " ";
+  call << "LICHM_" << Bead << ".f*" << " ";
   call << "LICHM_" << Bead << ".g*" << " ";
-  call << "LICHM_" << Bead << ".z*" << " ";
+  call << "LICHM_" << Bead << ".h*" << " ";
+  call << "LICHM_" << Bead << ".l*" << " ";
+  call << "LICHM_" << Bead << ".n*" << " ";
   call << "LICHM_" << Bead << ".p*" << " ";
   call << "LICHM_" << Bead << ".q*" << " ";
-  call << "LICHM_" << Bead << ".nw" << " ";
-  call << "LICHM_" << Bead << ".db" << " ";
   call << "LICHM_" << Bead << ".x*" << " ";
-  call << "LICHM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".z*";
   GlobalSys = system(call.str().c_str());
   //Change units and return
   E *= Har2eV;
@@ -374,14 +378,16 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << "rm -f ";
   call << "LICHM_" << Bead << ".b*" << " ";
   call << "LICHM_" << Bead << ".c*" << " ";
+  call << "LICHM_" << Bead << ".d*" << " ";
+  call << "LICHM_" << Bead << ".f*" << " ";
   call << "LICHM_" << Bead << ".g*" << " ";
-  call << "LICHM_" << Bead << ".z*" << " ";
+  call << "LICHM_" << Bead << ".h*" << " ";
+  call << "LICHM_" << Bead << ".l*" << " ";
+  call << "LICHM_" << Bead << ".n*" << " ";
   call << "LICHM_" << Bead << ".p*" << " ";
   call << "LICHM_" << Bead << ".q*" << " ";
-  call << "LICHM_" << Bead << ".nw" << " ";
-  call << "LICHM_" << Bead << ".db" << " ";
   call << "LICHM_" << Bead << ".x*" << " ";
-  call << "LICHM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".z*";
   GlobalSys = system(call.str().c_str());
   //Change units and return
   E *= Har2eV;
@@ -392,7 +398,7 @@ MatrixXd NWChemHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
                        int Bead)
 {
   //Function to calculate the QM Hessian
-  fstream ifile; //Generic file stream
+  fstream QMlog; //Generic file stream
   string dummy; //Genric string
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy print settings
@@ -401,7 +407,7 @@ MatrixXd NWChemHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   QMHess.setZero();
   //Set up Hessian calculation
   call.str("");
-  call << "task dft Hessian" << '\n';
+  call << "task dft hessian" << '\n';
   WriteNWChemInput(Struct,call.str(),QMMMOpts,Bead);
   //Run calculation
   call.str("");
@@ -413,20 +419,52 @@ MatrixXd NWChemHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << " > LICHM_" << Bead << ".log";
   GlobalSys = system(call.str().c_str());
   //Parse output for Hessian
-
+  call.str("");
+  call << "LICHM_" << Bead << ".hess";
+  QMlog.open(call.str().c_str(),ios_base::in);
+  bool HessDone = 0;
+  if (QMlog.good())
+  {
+    HessDone = 1;
+    for (int i=0;i<Ndof;i++)
+    {
+      for (int j=0;j<(i+1);j++)
+      {
+        //Read matrix element
+        QMlog >> QMHess(i,j);
+        //Apply symmetry
+        QMHess(j,i) = QMHess(i,j);
+      }
+    }
+  }
+  QMlog.close();
+  //Check for errors
+  if (!HessDone)
+  {
+    //Calculation did not finish
+    cerr << "Error: No force constants recovered!!!";
+    cerr << '\n';
+    cerr.flush(); //Print warning immediately
+    //Delete checkpoint
+    call.str("");
+    call << "rm -f LICHM_" << Bead << ".movecs";
+    GlobalSys = system(call.str().c_str());
+  }
   //Clean up files
   call.str("");
   call << "rm -f ";
   call << "LICHM_" << Bead << ".b*" << " ";
   call << "LICHM_" << Bead << ".c*" << " ";
+  call << "LICHM_" << Bead << ".d*" << " ";
+  call << "LICHM_" << Bead << ".f*" << " ";
   call << "LICHM_" << Bead << ".g*" << " ";
-  call << "LICHM_" << Bead << ".z*" << " ";
+  call << "LICHM_" << Bead << ".h*" << " ";
+  call << "LICHM_" << Bead << ".l*" << " ";
+  call << "LICHM_" << Bead << ".n*" << " ";
   call << "LICHM_" << Bead << ".p*" << " ";
   call << "LICHM_" << Bead << ".q*" << " ";
-  call << "LICHM_" << Bead << ".nw" << " ";
-  call << "LICHM_" << Bead << ".db" << " ";
   call << "LICHM_" << Bead << ".x*" << " ";
-  call << "LICHM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".z*";
   GlobalSys = system(call.str().c_str());
   //Return Hessian
   return QMHess;
@@ -521,14 +559,16 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "rm -f ";
   call << "LICHM_" << Bead << ".b*" << " ";
   call << "LICHM_" << Bead << ".c*" << " ";
+  call << "LICHM_" << Bead << ".d*" << " ";
+  call << "LICHM_" << Bead << ".f*" << " ";
   call << "LICHM_" << Bead << ".g*" << " ";
-  call << "LICHM_" << Bead << ".z*" << " ";
+  call << "LICHM_" << Bead << ".h*" << " ";
+  call << "LICHM_" << Bead << ".l*" << " ";
+  call << "LICHM_" << Bead << ".n*" << " ";
   call << "LICHM_" << Bead << ".p*" << " ";
   call << "LICHM_" << Bead << ".q*" << " ";
-  call << "LICHM_" << Bead << ".nw" << " ";
-  call << "LICHM_" << Bead << ".db" << " ";
   call << "LICHM_" << Bead << ".x*" << " ";
-  call << "LICHM_" << Bead << ".log";
+  call << "LICHM_" << Bead << ".z*";
   GlobalSys = system(call.str().c_str());
   //Change units and return
   E *= Har2eV;

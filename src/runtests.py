@@ -646,35 +646,38 @@ for qmtest in QMTests:
       CleanFiles() #Clean up files
 
     #Check imaginary frequencies
-    if ((QMPack == "PSI4") or (QMPack == "Gaussian")):
-      line = ""
-      PassEnergy = 0
-      RunLICHEM("methfluor.xyz","freqreg.inp","methflcon.inp")
-      QMMMFreqs = RecoverFreqs()
-      QMMMEnergy = 5e100 #Huge number
-      #Sort frequencies
-      for freqval in QMMMFreqs:
-        #Find lowest frequency
-        if (freqval < QMMMEnergy):
-          QMMMEnergy = freqval
-          SavedEnergy = "Freq:   "+`freqval`
-      #Check for errors
-      if (QMMMEnergy > 1e100):
-        SavedEnergy = "Crashed..."
-      #Check results
-      if (QMPack == "PSI4"):
-        #Check against saved frequency
-        if (round(QMMMEnergy,0) == round(-471.61306,0)):
-          PassEnergy = 1
-      if (QMPack == "Gaussian"):
-        #Check against saved frequency
-        if (round(QMMMEnergy,0) == round(-471.75386,0)):
-          PassEnergy = 1
-      line = AddPass("Frequencies:",PassEnergy,line)
-      line = AddRunTime(line)
-      line = AddEnergy(UpdateResults,line,SavedEnergy)
-      print(line)
-      CleanFiles() #Clean up files
+    line = ""
+    PassEnergy = 0
+    RunLICHEM("methfluor.xyz","freqreg.inp","methflcon.inp")
+    QMMMFreqs = RecoverFreqs()
+    QMMMEnergy = 5e100 #Huge number
+    #Sort frequencies
+    for freqval in QMMMFreqs:
+      #Find lowest frequency
+      if (freqval < QMMMEnergy):
+        QMMMEnergy = freqval
+        SavedEnergy = "Freq:   "+`freqval`
+    #Check for errors
+    if (QMMMEnergy > 1e100):
+      SavedEnergy = "Crashed..."
+    #Check results
+    if (QMPack == "PSI4"):
+      #Check against saved frequency
+      if (round(QMMMEnergy,0) == round(-496.58664,0)):
+        PassEnergy = 1
+    if (QMPack == "Gaussian"):
+      #Check against saved frequency
+      if (round(QMMMEnergy,0) == round(-496.73922,0)):
+        PassEnergy = 1
+    if (QMPack == "NWChem"):
+      #Check against saved frequency
+      if (round(QMMMEnergy,0) == round(1,0)):
+        PassEnergy = 1
+    line = AddPass("Frequencies:",PassEnergy,line)
+    line = AddRunTime(line)
+    line = AddEnergy(UpdateResults,line,SavedEnergy)
+    print(line)
+    CleanFiles() #Clean up files
 
     #Check NEB optimization
     line = ""
