@@ -54,16 +54,7 @@ user:$ mkdir LICHEM
 user:$ git clone https://github.com/kratman/LICHEM_QMMM.git ./LICHEM/
 ```
 
-or unpack the zipped source code
-```
-user:$ mkdir LICHEM
-user:$ cd LICHEM/
-user:$ unzip LICHEM_QMMM-master.zip
-user:$ mv LICHEM_QMMM-master/* .
-user:$ rmdir LICHEM_QMMM-master
-```
-
-The LICHEM binary will eventually be included with the zipped source code,
+The LICHEM binary will eventually be included with the source code,
 however, modified or git source code can be compiled with the Makefile
 provided with LICHEM.
 
