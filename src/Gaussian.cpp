@@ -813,8 +813,13 @@ MatrixXd GaussianHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         {
           for (int j=0;j<(i+1);j++)
           {
-            //Read matrix element
-            QMlog >> QMHess(i,j);
+            //Read matrix element in scientific notation
+            string matelmt;
+            QMlog >> matelmt; //Save as a string
+            //Change D notation to E notation
+            LICHEMFixSciNot(matelmt);
+            //Convert to a double and save matrix element
+            QMHess(i,j) = atof(matelmt.c_str());
             //Apply symmetry
             QMHess(j,i) = QMHess(i,j);
           }

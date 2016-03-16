@@ -150,6 +150,8 @@ void LICHEMErrorChecker(QMMMSettings&);
 
 double LICHEMFactorial(int);
 
+void LICHEMFixSciNot(string&);
+
 template<typename T> string LICHEMFormFloat(T,int);
 
 VectorXd LICHEMFreq(vector<QMMMAtom>&,MatrixXd&,QMMMSettings&,int,int&);

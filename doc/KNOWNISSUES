@@ -24,9 +24,7 @@ future.
 
 TINKER interface:
 -Chiral atoms with multipoles have not been thoroughly tested in QMMM
-simulations. It is possible that these interactions are incorrect. Note that
-even if the interactions are not treated properly, the errors should be
-insignificant if the chiral atoms are far from the QM region.
+simulations.
 
 LAMMPS interface:
 -The LAMMPS wrapper is still in the early stages of development.

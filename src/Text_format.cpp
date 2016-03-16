@@ -309,3 +309,21 @@ void LICHEMUpperText(string& origtext)
   return;
 };
 
+void LICHEMFixSciNot(string& origtext)
+{
+  //Function change D scientific notation to E notation
+  for (unsigned int i=0;i<origtext.length();i++)
+  {
+    //Check and change case
+    if ((origtext[i] == 'D') or (origtext[i] == 'd'))
+    {
+      origtext[i] = 'e';
+    }
+    if (origtext[i] == 'E')
+    {
+      origtext[i] = 'e';
+    }
+  }
+  return;
+};
+

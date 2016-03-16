@@ -667,11 +667,11 @@ for qmtest in QMTests:
         PassEnergy = 1
     if (QMPack == "Gaussian"):
       #Check against saved frequency
-      if (round(QMMMEnergy,0) == round(-496.73922,0)):
+      if (round(QMMMEnergy,0) == round(-496.73073,0)):
         PassEnergy = 1
     if (QMPack == "NWChem"):
       #Check against saved frequency
-      if (round(QMMMEnergy,0) == round(1,0)):
+      if (round(QMMMEnergy,0) == round(-496.79703,0)):
         PassEnergy = 1
     line = AddPass("Frequencies:",PassEnergy,line)
     line = AddRunTime(line)
