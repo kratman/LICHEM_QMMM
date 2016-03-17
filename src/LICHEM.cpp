@@ -1126,7 +1126,8 @@ int main(int argc, char* argv[])
         QMMMOpts.Eprod = SumE;
       }
       cout << "   Bead: ";
-      cout << setw(3) << p << " | React. coord: ";
+      cout << setw(LICHEMCount(QMMMOpts.Nbeads)) << p;
+      cout << " | React. coord: ";
       cout << LICHEMFormFloat(ReactCoord(p),5);
       cout << " | Energy: ";
       cout << LICHEMFormFloat(SumE,16) << " eV";

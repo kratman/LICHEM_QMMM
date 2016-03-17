@@ -31,6 +31,20 @@ string LICHEMFormFloat(T InpVal, int wid)
   //Save input value to the string
   oldvalue << InpVal;
   newvalue = oldvalue.str();
+  //Check for a decimal place
+  bool HasDot = 0;
+  for (unsigned int i=0;i<newvalue.length();i++)
+  {
+    if (newvalue[i] == '.')
+    {
+      HasDot = 1;
+    }
+  }
+  if (!HasDot)
+  {
+    //Add a decimal point
+    newvalue += ".";
+  }
   int Nchars = newvalue.length();
   //Resize string
   if (Nchars > wid)
@@ -41,7 +55,7 @@ string LICHEMFormFloat(T InpVal, int wid)
   else
   {
     //Pad with zeros
-    int diff = wid-newvalue.length();
+    int diff = wid-Nchars;
     for (int i=0;i<diff;i++)
     {
       //Add a zero
