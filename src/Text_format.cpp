@@ -42,8 +42,17 @@ string LICHEMFormFloat(T InpVal, int wid)
   }
   if (!HasDot)
   {
-    //Add a decimal point
-    newvalue += ".";
+    //Fix integers
+    if (LICHEMCount(newvalue) < (wid-1))
+    {
+      //Add a decimal point
+      newvalue += ".";
+    }
+    else
+    {
+      //Escape if the integer is too long
+      return newvalue;
+    }
   }
   int Nchars = newvalue.length();
   //Resize string
