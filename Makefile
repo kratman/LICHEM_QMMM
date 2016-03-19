@@ -32,6 +32,7 @@ SEDI=-i
 
 ### LaTeX settings ###
 
+#For OSX these can be replaced with cat
 TEX=pdflatex
 BIB=bibtex
 

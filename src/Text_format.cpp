@@ -43,7 +43,7 @@ string LICHEMFormFloat(T InpVal, int wid)
   if (!HasDot)
   {
     //Fix integers
-    if (LICHEMCount(newvalue) < (wid-1))
+    if (LICHEMCount(newvalue) < (wid-2))
     {
       //Add a decimal point
       newvalue += ".";
