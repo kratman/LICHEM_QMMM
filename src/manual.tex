@@ -193,33 +193,44 @@ QMMM calculations.
 \begin{table}[hbt]
  \centering
  \scalebox{0.85}{
- \begin{tabular}{|l|l|}
+ \begin{tabular}{|l|p{0.5\textwidth}|c|c|}
  \hline
- Test suite label & Description \\ \hline
-  & \\
- HF energy & HF/6-31++G(d,p) energy of the water dimer \\
-  & \\
- PBE0 energy & PBE0/6-31++G(d,p) energy of the water dimer \\
-  & \\
- CCSD energy & CCSD/6-31++G(d,p) energy of the water dimer \\
-  & \\
- PM6 energy & PM6 energy of the water dimer \\
-  & \\
- Frequencies & Harmonic frequencies for [F--(CH$_3$)--F]$^-$ \\
-  & \\
- NEB TS energy & Transition state optimization of [F--(CH$_3$)--F]$^-$ \\
-  & \\
- TIP3P energy & TIP3P energy of the water dimer \\
-  & \\
- AMOEBA/GK energy & Energy of the water dimer in an implicit solvent \\
-  & \\
- PBE0/TIP3P energy & PBE0/6-31++G(d,p)/TIP3P energy of the water dimer \\
-  & \\
- PBE0/AMOEBA energy & PBE0/6-31++G(d,p)/AMOEBA energy of the water dimer \\
-  & \\
- DFP/Pseudobonds & Optimization of butyne with pseudobonds on the methyl
- groups \\
-  & \\ \hline
+ Test & Description & QM & MM \\ \hline
+  & & & \\
+ HF energy & HF/6-31++G(d,p) energy of the water dimer calculated using only the
+ QM wrapper & PSI4,Gaussian & N/A \\
+  & & & \\
+ PBE0 energy & PBE0/6-31++G(d,p) energy of the water dimer calculated using only
+ the QM wrapper. & PSI4,Gaussian,NWChem & N/A \\
+  & & & \\
+ CCSD energy & CCSD/6-31++G(d,p) energy of the water dimer calculated using only
+ the QM wrapper. & PSI4 & N/A \\
+  & & & \\
+ PM6 energy & PM6 energy of the water dimer calculated using only the QM
+ wrapper. & Gaussian & N/A \\
+  & & & \\
+ Frequencies & Harmonic frequencies of [F--(CH$_3$)--F]$^-$ calculated using
+ only the QM wrapper. & PSI4,Gaussian,NWChem & N/A \\
+  & & & \\
+ NEB TS energy & Nudged elastic band optimization of [F--(CH$_3$)--F]$^-$
+ using only the QM wrapper. & PSI4,Gaussian,NWChem & N/A \\
+  & & & \\
+ TIP3P energy & MM energy of the water dimer with the TIP3P model. & N/A
+ & TINKER \\
+  & & & \\
+ AMOEBA/GK energy & MM energy of the water dimer in the generalized Kirkwood
+ implicit solvent. & N/A & TINKER \\
+  & & & \\
+ PBE0/TIP3P energy & QMMM energy of a water dimer calculated with PBE0 and
+ TIP3P. & PSI4,Gaussian,NWChem & TINKER \\
+  & & & \\
+ PBE0/AMOEBA energy & Polarizable QMMM energy of a water dimer calculated with
+ PBE0 and AMOEBA. & PSI4,Gaussian,NWChem & TINKER \\
+  & & & \\
+ DFP/Pseudobonds & QMMM Davidon-Fletcher-Powell optimization of 2-Butyne with
+ the two methyl groups replaced by pseudobond/boundary atoms. &
+ Gaussian,NWChem & TINKER \\
+  & & & \\ \hline
  \end{tabular}}
  \caption{
  Approximate descriptions of the tests in the LICHEM test suite.
