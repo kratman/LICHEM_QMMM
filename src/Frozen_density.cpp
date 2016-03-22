@@ -45,6 +45,3 @@ double GEMBuffC7(double C7, double Rmin, Coord& POSi, Coord& POSj,
 
 //Functions to calculate GEM energy
 
-
-//Functions for conversion to point-charges
-
