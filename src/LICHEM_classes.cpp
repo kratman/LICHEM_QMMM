@@ -483,12 +483,12 @@ PeriodicTable::PeriodicTable()
   Typs.push_back("Br");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(79.901); //NIST, 2015
   //Krypton, 36
   Typs.push_back("Kr");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(83.798); //NIST, 2015
   //Rubidium, 37
   Typs.push_back("Rb");
   CovRadii.push_back(1.0); //Default value
