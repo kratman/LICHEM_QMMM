@@ -309,177 +309,176 @@ QMMMSettings::~QMMMSettings()
 PeriodicTable::PeriodicTable()
 {
   //Set atomic properties
-  //NB: The widths were calculated for the all-electron density
   //Hydrogen, 1
   Typs.push_back("H");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(1.00784); //NIST, 2015
   //Helium, 2
   Typs.push_back("He");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(4.002602); //NIST, 2015
   //Lithium, 3
   Typs.push_back("Li");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(6.938); //NIST, 2015
   //Berylium, 4
   Typs.push_back("Be");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(9.0121831); //NIST, 2015
   //Boron, 5
   Typs.push_back("B");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(10.806); //NIST, 2015
   //Carbon, 6
   Typs.push_back("C");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(12.0096); //NIST, 2015
   //Nitrogen, 7
   Typs.push_back("N");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(14.00643); //NIST, 2015
   //Oxygen, 8
   Typs.push_back("O");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(15.99903); //NIST, 2015
   //Fluorine, 9
   Typs.push_back("F");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(18.998403163); //NIST, 2015
   //Neon, 10
   Typs.push_back("Ne");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(20.1797); //NIST, 2015
   //Sodium, 11
   Typs.push_back("Na");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(22.98976928); //NIST, 2015
   //Magnesium, 12
   Typs.push_back("Mg");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(24.304); //NIST, 2015
   //Aluminum, 13
   Typs.push_back("Al");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(26.9815385); //NIST, 2015
   //Silicon, 14
   Typs.push_back("Si");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(28.084); //NIST, 2015
   //Phosphorus, 15
   Typs.push_back("P");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(30.973761998); //NIST, 2015
   //Sulfur, 16
   Typs.push_back("S");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(32.059); //NIST, 2015
   //Chlorine, 17
   Typs.push_back("Cl");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(35.446); //NIST, 2015
   //Argon, 18
   Typs.push_back("Ar");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(39.948); //NIST, 2015
   //Potassium, 19
   Typs.push_back("K");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(39.0983); //NIST, 2015
   //Calcium, 20
   Typs.push_back("Ca");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(40.078); //NIST, 2015
   //Scandium, 21
   Typs.push_back("Sc");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(44.955908); //NIST, 2015
   //Titanium, 22
   Typs.push_back("Ti");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(47.867); //NIST, 2015
   //Vanadium, 23
   Typs.push_back("V");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(50.9415); //NIST, 2015
   //Chromium, 24
   Typs.push_back("Cr");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(51.9961); //NIST, 2015
   //Manganese, 25
   Typs.push_back("Mn");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(54.938044); //NIST, 2015
   //Iron, 26
   Typs.push_back("Fe");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(55.845); //NIST, 2015
   //Cobalt, 27
   Typs.push_back("Co");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(58.933194); //NIST, 2015
   //Nickel, 28
   Typs.push_back("Ni");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(58.6934); //NIST, 2015
   //Copper, 29
   Typs.push_back("Cu");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(63.546); //NIST, 2015
   //Zinc, 30
   Typs.push_back("Zn");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(65.38); //NIST, 2015
   //Gallium, 31
   Typs.push_back("Ga");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(69.723); //NIST, 2015
   //Germanium, 32
   Typs.push_back("Ge");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(72.630); //NIST, 2015
   //Arsenic, 33
   Typs.push_back("As");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(74.921595); //NIST, 2015
   //Selenium, 34
   Typs.push_back("Se");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(78.971); //NIST, 2015
   //Bromine, 35
   Typs.push_back("Br");
   CovRadii.push_back(1.0); //Default value
