@@ -493,292 +493,292 @@ PeriodicTable::PeriodicTable()
   Typs.push_back("Rb");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(85.4678); //NIST, 2015
   //Strontium, 38
   Typs.push_back("Sr");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(87.62); //NIST, 2015
   //Yttrium, 39
   Typs.push_back("Y");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(88.90584); //NIST, 2015
   //Zirconium, 40
   Typs.push_back("Zr");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(91.224); //NIST, 2015
   //Niobium, 41
   Typs.push_back("Nb");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(92.90637); //NIST, 2015
   //Molybdenum, 42
   Typs.push_back("Mo");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(95.95); //NIST, 2015
   //Technetium, 43
   Typs.push_back("Tc");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(98); //NIST, 2015
   //Ruthenium, 44
   Typs.push_back("Ru");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(101.07); //NIST, 2015
   //Rhodium, 45
   Typs.push_back("Rh");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(102.90550); //NIST, 2015
   //Palladium, 46
   Typs.push_back("Pd");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(106.42); //NIST, 2015
   //Silver, 47
   Typs.push_back("Ag");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(107.8682); //NIST, 2015
   //Cadmium, 48
   Typs.push_back("Cd");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(112.414); //NIST, 2015
   //Indium, 49
   Typs.push_back("In");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(114.818); //NIST, 2015
   //Tin, 50
   Typs.push_back("Sn");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(118.710); //NIST, 2015
   //Antimony, 51
   Typs.push_back("Sb");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(121.760); //NIST, 2015
   //Tellurium, 52
   Typs.push_back("Te");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(127.60); //NIST, 2015
   //Iodine, 53
   Typs.push_back("I");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(126.90447); //NIST, 2015
   //Xenon, 54
   Typs.push_back("Xe");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(131.293); //NIST, 2015
   //Caesium, 55
   Typs.push_back("Cs");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(132.90545196); //NIST, 2015
   //Barium, 56
   Typs.push_back("Ba");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(137.327); //NIST, 2015
   //Lanthanum, 57
   Typs.push_back("La");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(138.90547); //NIST, 2015
   //Cerium, 58
   Typs.push_back("Ce");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(140.116); //NIST, 2015
   //Praseodymium, 59
   Typs.push_back("Pr");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(140.90766); //NIST, 2015
   //Neodymium, 60
   Typs.push_back("Nd");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(144.242); //NIST, 2015
   //Promethium, 61
   Typs.push_back("Pm");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(145); //NIST, 2015
   //Samarium, 62
   Typs.push_back("Sm");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(150.36); //NIST, 2015
   //Europium, 63
   Typs.push_back("Eu");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(151.964); //NIST, 2015
   //Gadolinium, 64
   Typs.push_back("Gd");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(157.25); //NIST, 2015
   //Terbium, 65
   Typs.push_back("Tb");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(158.92535); //NIST, 2015
   //Dysprosium, 66
   Typs.push_back("Dy");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(162.500); //NIST, 2015
   //Holmium, 67
   Typs.push_back("Ho");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(164.93033); //NIST, 2015
   //Erbium, 68
   Typs.push_back("Er");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(167.259); //NIST, 2015
   //Thulium, 69
   Typs.push_back("Tm");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(168.93422); //NIST, 2015
   //Ytterbium, 70
   Typs.push_back("Yb");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(173.054); //NIST, 2015
   //Lutetium, 71
   Typs.push_back("Lu");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(174.9668); //NIST, 2015
   //Hafnium, 72
   Typs.push_back("Hf");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(178.49); //NIST, 2015
   //Tantalum, 73
   Typs.push_back("Ta");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(180.94788); //NIST, 2015
   //Tungsten, 74
   Typs.push_back("W");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(183.84); //NIST, 2015
   //Rhenium, 75
   Typs.push_back("Re");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(186.207); //NIST, 2015
   //Osmium, 76
   Typs.push_back("Os");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(190.23); //NIST, 2015
   //Iridium, 77
   Typs.push_back("Ir");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(192.217); //NIST, 2015
   //Platinum, 78
   Typs.push_back("Pt");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(195.084); //NIST, 2015
   //Gold, 79
   Typs.push_back("Au");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(196.966569); //NIST, 2015
   //Mercury, 80
   Typs.push_back("Hg");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(200.592); //NIST, 2015
   //Thallium, 81
   Typs.push_back("Tl");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(204.382); //NIST, 2015
   //Lead, 82
   Typs.push_back("Pb");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(207.2); //NIST, 2015
   //Bismuth, 83
   Typs.push_back("Bi");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(208.98040); //NIST, 2015
   //Polonium, 84
   Typs.push_back("Po");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(209); //NIST, 2015
   //Astatine, 85
   Typs.push_back("At");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(210); //NIST, 2015
   //Radon, 86
   Typs.push_back("Rn");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(222); //NIST, 2015
   //Francium, 87
   Typs.push_back("Fr");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(223); //NIST, 2015
   //Radium, 88
   Typs.push_back("Ra");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(226); //NIST, 2015
   //Actinium, 89
   Typs.push_back("Ac");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(227); //NIST, 2015
   //Thorium, 90
   Typs.push_back("Th");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(232.0377); //NIST, 2015
   //Protactium, 91
   Typs.push_back("Pa");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(231.03588); //NIST, 2015
   //Uranium, 92
   Typs.push_back("U");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(238.02891); //NIST, 2015
   //Neptunium, 93
   Typs.push_back("Np");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(237); //NIST, 2015
   //Plutonium, 94
   Typs.push_back("Pu");
   CovRadii.push_back(1.0); //Default value
   vdWRadii.push_back(1.0); //Default value
-  AtMasses.push_back(1.0); //Default value
+  AtMasses.push_back(244); //NIST, 2015
   //Americium, 95
   Typs.push_back("Am");
   CovRadii.push_back(1.0); //Default value
