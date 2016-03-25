@@ -1,9 +1,3 @@
-Compiling:
--GCC v5 prints a warning about statically linking 'dlopen' with glibc/libgomp.
-So far I have not seen this cause any errors on Linux machines. If the warning
-causes concern, it can be eliminated by removing "-static" from the list of
-CXXFLAGS in the Makefile.
-
 General:
 -Currently only DFT and HF energies can be used in most of the QM
 calculations. Post-HF methods are currently only implemented in PSI4
@@ -13,6 +7,7 @@ Gaussian interface:
 -Using the external interface to Gaussian interferes with timing the MM
 wrapper. This is harmless, but the statistics should not be trusted when
 optimizations are performed with the native Gaussian optimizer.
+-The external interface is currently not working.
 
 NWChem interface:
 -NWChem calculations can only be performed with DFT. Wavefunction based
