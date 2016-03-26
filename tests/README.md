@@ -18,18 +18,17 @@ LICHEM: Layered Interacting CHEmical Models
 This directory contains calculations for testing the LICHEM wrappers,
 efficiency, and accuracy.
 
-Tests are performed for pairs of QM and MM wrappers.
+Tests can be performed for pairs of QM and MM wrappers,
 ```
 user:$ ./runtests Ncpus QMPackage MMPackage
 ```
-
-Additionally, tests can be run for all wrappers at once.
+or all wrappers at once,
 ```
 user:$ ./runtests Ncpus All
 ```
 
-A dry run can be performed to check packages without perfoming the
-calculations.
+Additionally, a dry run can be performed to check packages without perfoming
+the calculations.
 ```
 user:$ ./runtests Ncpus QMPackage MMPackage Dry
 ```
@@ -63,3 +62,4 @@ The test suite is not compatable with python 3.0 or higher.
 | PBE0/TIP3P energy | QMMM energy of a water dimer calculated with PBE0 and TIP3P. | PSI4,Gaussian,NWChem | TINKER |
 | PBE0/AMOEBA energy | Polarizable QMMM energy of a water dimer calculated with PBE0 and AMOEBA. | PSI4,Gaussian,NWChem | TINKER |
 | DFP/Pseudobonds | QMMM Davidon-Fletcher-Powell optimization of 2-Butyne with the two methyl groups replaced by pseudobond/boundary atoms. | Gaussian,NWChem | TINKER |
+

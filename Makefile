@@ -11,11 +11,6 @@
 CXX=g++
 CXXFLAGS=-static -O3 -fopenmp
 
-### Advanced compiler settings ###
-
-DEVFLAGS=-g -Wall -std=c++14
-GPUFLAGS=-fopenacc
-
 ### Libarary settings ###
 
 #The local copy of Eigen is located in ./Eigen3/
@@ -35,6 +30,11 @@ SEDI=-i
 #For OSX these can be replaced with dummy calls to cat
 TEX=pdflatex
 BIB=bibtex
+
+### Advanced compiler settings for developers ###
+
+DEVFLAGS=-g -Wall -std=c++14
+GPUFLAGS=-fopenacc
 
 #####################################################
 
