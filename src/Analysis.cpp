@@ -428,8 +428,19 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
       QMMMFreqs(i) = 0;
     }
   }
+  //Write all normal modes
+  
+  //Write modes for imaginary frequencies
+  WriteModes(Struct,1,QMMMFreqs,QMMMNormModes,QMMMOpts,Bead);
   //Return frequencies
   remct = transrotct;
   return QMMMFreqs;
 };
 
+void WriteModes(vector<QMMMAtom>& Struct, bool ImagOnly, VectorXd& Freqs,
+                MatrixXd& NormModes, QMMMSettings& QMMMOpts, int Bead)
+{
+  //Function to write normal modes
+
+  return;
+};
