@@ -290,6 +290,7 @@ QMMMSettings::QMMMSettings()
   Climb = 0;
   FrznEnds = 0;
   NEBFreq = 0;
+  PrintNormModes = 0;
   StartPathChk = 1; //Speeds up reaction pathways
   //Temporary energy storage
   Eold = 0.0;

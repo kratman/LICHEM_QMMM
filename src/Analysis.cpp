@@ -429,9 +429,15 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
     }
   }
   //Write all normal modes
-  
+  if ((!QMMM) and QMMMOpts.PrintNormModes)
+  {
+    WriteModes(Struct,0,QMMMFreqs,QMMMNormModes,QMMMOpts,Bead);
+  }
   //Write modes for imaginary frequencies
-  WriteModes(Struct,1,QMMMFreqs,QMMMNormModes,QMMMOpts,Bead);
+  else if (QMMM)
+  {
+    WriteModes(Struct,1,QMMMFreqs,QMMMNormModes,QMMMOpts,Bead);
+  }
   //Return frequencies
   remct = transrotct;
   return QMMMFreqs;
@@ -444,3 +450,4 @@ void WriteModes(vector<QMMMAtom>& Struct, bool ImagOnly, VectorXd& Freqs,
 
   return;
 };
+

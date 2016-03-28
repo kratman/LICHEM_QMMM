@@ -145,6 +145,7 @@ class QMMMSettings
     bool Climb; //Flag to turn on climbing image NEB
     bool FrznEnds; //Flag to freeze the NEB end points
     bool NEBFreq; //Flag to calculate TS frequencies after NEB
+    bool PrintNormModes; //Print normal modes for pure QM calculations
     bool StartPathChk; //Flag to initially use checkpoints from nearby beads
     //Storage of energies (NEB and PIMC)
     double Eold; //Temporary storage
