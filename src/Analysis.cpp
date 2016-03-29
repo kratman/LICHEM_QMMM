@@ -447,7 +447,56 @@ void WriteModes(vector<QMMMAtom>& Struct, bool ImagOnly, VectorXd& Freqs,
                 MatrixXd& NormModes, QMMMSettings& QMMMOpts, int Bead)
 {
   //Function to write normal modes
-
+  int Nframes = 5; //Trajectory files have (2N+1) frames
+  double AmpFrac = 0.50; //Fractional amplitude of the mode
+  stringstream call; //Generic stream
+  fstream modefile; //Normal mode output file
+  int Ndof = 3*(Nqm+Npseudo); //Number of vibrational modes
+  int ct; //Generic counter
+  double CurAmp; //Stores the amplitude for each frame
+  for (int i=0;i<Ndof;i++)
+  {
+    //Check print options
+    if (((!ImagOnly) or (Freqs(i) < 0)) and (Freqs(i) != 0))
+    {
+      //Print normal mode
+      call.str("");
+      //Create file
+      call << "NormModes_" << i << ".xyz";
+      modefile.open(call.str().c_str(),ios_base::out);
+      //Write file
+      for (int j=0;j<(2*Nframes+1);j++)
+      {
+        //Loop over frames
+        CurAmp = -1*AmpFrac; //Current amplitude
+        CurAmp += (j*AmpFrac)/Nframes; //Move along the trajectory
+        ct = 0; //Keeps track of the atom IDs
+        modefile << (Nqm+Npseudo) << '\n' << '\n';
+        for (int k=0;k<Natoms;k++)
+        {
+          if (Struct[k].QMregion or Struct[k].PBregion)
+          {
+            //Write element
+            modefile << Struct[k].QMTyp << " ";
+            //Write X component
+            modefile << Struct[k].P[Bead].x+(CurAmp*NormModes(ct,i));
+            modefile << " ";
+            ct += 1;
+            //Write Y component
+            modefile << Struct[k].P[Bead].y+(CurAmp*NormModes(ct,i));
+            modefile << " ";
+            ct += 1;
+            //Write Z component
+            modefile << Struct[k].P[Bead].z+(CurAmp*NormModes(ct,i));
+            modefile << '\n';
+            ct += 1;
+          }
+        }
+      }
+      modefile.flush();
+      modefile.close();
+    }
+  }
   return;
 };
 

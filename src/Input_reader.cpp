@@ -635,6 +635,16 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
         QMMMOpts.NEBFreq = 1;
       }
     }
+    else if (keyword == "print_normal_modes:")
+    {
+      //Check for inactive NEB end-points
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "yes") or (dummy == "true"))
+      {
+        QMMMOpts.PrintNormModes = 1;
+      }
+    }
     else if (keyword == "init_path_chk:")
     {
       //Check for inactive NEB end-points
