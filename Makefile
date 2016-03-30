@@ -178,3 +178,4 @@ delbin:
         echo ""; \
 	echo "Removing binary and manual..."; \
 	rm -f lichem ./doc/LICHEM_manual.pdf ./tests/runtests
+

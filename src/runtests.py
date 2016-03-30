@@ -540,6 +540,19 @@ else:
   QMTests.append(QMPack)
   MMTests.append(MMPack)
 
+#NB: Tests are in the following order:
+#     1) HF energy
+#     2) PBE0 energy
+#     3) CCSD energy
+#     4) PM6 energy
+#     5) Frequencies
+#     6) NEB TS energy
+#     7) TIP3P energy
+#     8) AMOEBA/GK energy
+#     9) PBE0/TIP3P energy
+#    10) PBE0/AMOEBA energy
+#    11) DFP/Pseudobonds
+
 #Loop over tests
 for qmtest in QMTests:
   for mmtest in MMTests:
