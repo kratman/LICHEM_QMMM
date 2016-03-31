@@ -34,6 +34,14 @@ Available MM wrappers: TINKER
 MM wrappers in development: AMBER, LAMMPS, OpenMM
 ```
 
+### Citing LICHEM
+
+If you use LICHEM in your research, please cite the following paper:
+
+Kratz, E.G. Walker, A.R. Lagardere, L, Lipparini, F, Piquemal, J-P, and
+Cisneros, G.A, "LICHEM: A QM/MM Program for Simulations with Multipolar and
+Polarizable Force Fields", J. Comput. Chem., 37, 11, 1019, (2016)
+
 ### Installation
 
 Currently, the binary and user's manual are not included in the repository.
