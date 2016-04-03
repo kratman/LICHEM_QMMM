@@ -85,6 +85,22 @@ void BurstTraj(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
 };
 
 //Trajectory manipulation functions
+void PathLinInterpolate(int& argc, char**& argv)
+{
+  //Linearly interpolate a path from reactant and product geometries
+  //NB: Transition state structures are optional
+  stringstream call; //Stream for system calls and reading/writing files
+  string dummy; //Generic string
+  //Read settings and input
+  
+  //Interpolate between points
+  
+  //Print structure
+  
+  //Exit LICHEM
+  return;
+};
+
 void ReorderQMPBBA(int& argc, char**& argv)
 {
   //Rewrite the xyzfile to put QM, PB, and BA atoms first

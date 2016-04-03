@@ -188,6 +188,8 @@ bool OptConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,vector<Coord>&,
 bool PathConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,MatrixXd&,
                    int,QMMMSettings&,bool);
 
+void PathLinInterpolate(int&,char**&);
+
 void PBCCenter(vector<QMMMAtom>&,QMMMSettings&);
 
 void PrintFancyTitle();
