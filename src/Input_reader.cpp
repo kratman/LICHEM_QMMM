@@ -79,6 +79,11 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     //Print multipole moments in the global frame of reference
     ExtractGlobalPoles(argc,argv);
   }
+  if (dummy == "-path")
+  {
+    //Create an initial reaction path called BeadStartStruct.xyz
+    PathLinInterpolate(argc,argv);
+  }
   if (dummy == "-reorder")
   {
     //Make QM, PB, and BA atoms come before MM atoms

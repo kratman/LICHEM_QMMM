@@ -57,6 +57,7 @@ void LICHEM2BASIS(int& argc,char**& argv)
   //Error check
   if (!CheckFile(regfilename))
   {
+    //Missing flag
     cout << "Error: Missing region file!!!";
     cout << '\n' << '\n';
     DoQuit = 1;

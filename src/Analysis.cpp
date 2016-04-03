@@ -91,13 +91,213 @@ void PathLinInterpolate(int& argc, char**& argv)
   //NB: Transition state structures are optional
   stringstream call; //Stream for system calls and reading/writing files
   string dummy; //Generic string
-  //Read settings and input
-  
+  string reactfilename, tsfilename, prodfilename; //File names
+  fstream reactfile, tsfile, prodfile, pathfile; //File streams
+  int Nbeads = 3; //Default to react, ts, and prod
+  bool IncludeTS = 0; //Flag to use the TS structure
+  bool DoQuit = 0; //Quit with an error
+  //Read settings
+  cout << "Reading LICHEM input: ";
+  for (int i=0;i<argc;i++)
+  {
+    dummy = string(argv[i]);
+    //Check number of beads
+    if (dummy == "-b")
+    {
+      stringstream file;
+      file << argv[i+1]; //Save to the stream
+      file >> Nbeads; //Change to an int
+    }
+    //Check reactant file
+    if (dummy == "-r")
+    {
+      stringstream file;
+      file << argv[i+1];
+      if (!CheckFile(file.str()))
+      {
+        cout << "Error: Could not open reactant file!!!";
+        cout << '\n';
+        DoQuit = 1;
+      }
+      reactfilename = file.str();
+      reactfile.open(argv[i+1],ios_base::in);
+      cout << argv[i+1];
+    }
+    //Check transition state file
+    if (dummy == "-t")
+    {
+      IncludeTS = 1; //Do a 3 point interpolation
+      stringstream file;
+      file << argv[i+1];
+      if (!CheckFile(file.str()))
+      {
+        cout << "Error: Could not open transition state file!!!";
+        cout << '\n';
+        DoQuit = 1;
+      }
+      tsfilename = file.str();
+      tsfile.open(argv[i+1],ios_base::in);
+      cout << argv[i+1];
+    }
+    //Check product file
+    if (dummy == "-p")
+    {
+      stringstream file;
+      file << argv[i+1];
+      if (!CheckFile(file.str()))
+      {
+        cout << "Error: Could not open product file!!!";
+        cout << '\n';
+        DoQuit = 1;
+      }
+      prodfilename = file.str();
+      prodfile.open(argv[i+1],ios_base::in);
+      cout << argv[i+1];
+    }
+  }
+  cout << '\n' << '\n'; //Terminate output
+  //Error check
+  if (!CheckFile(reactfilename))
+  {
+    //Missing flag
+    cout << "Error: Missing reactant file!!!";
+    cout << '\n' << '\n';
+    DoQuit = 1;
+  }
+  if ((!CheckFile(tsfilename)) and (IncludeTS))
+  {
+    //Missing flag
+    cout << "Error: Missing transition state file!!!";
+    cout << '\n' << '\n';
+    DoQuit = 1;
+  }
+  if (!CheckFile(prodfilename))
+  {
+    //Missing flag
+    cout << "Error: Missing product file!!!";
+    cout << '\n' << '\n';
+    DoQuit = 1;
+  }
+  if (DoQuit)
+  {
+    //Exit with errors
+    exit(0);
+  }
+  //Read geometries
+  vector<string> AtTyps; //Element names
+  vector<Coord> ReactPOS; //Reactant coordinates
+  vector<Coord> TransPOS; //Transition state coordinates
+  vector<Coord> ProdPOS; //Product coordinates
+  reactfile >> Natoms; //Read number of atoms
+  for (int i=0;i<Natoms;i++)
+  {
+    string temptyp;
+    Coord temppos;
+    reactfile >> temptyp;
+    reactfile >> temppos.x;
+    reactfile >> temppos.y;
+    reactfile >> temppos.z;
+    AtTyps.push_back(temptyp);
+    ReactPOS.push_back(temppos);
+  }
+  reactfile.close();
+  if (IncludeTS)
+  {
+    tsfile >> Natoms; //Read number of atoms
+    for (int i=0;i<Natoms;i++)
+    {
+      string temptyp;
+      Coord temppos;
+      tsfile >> temptyp;
+      tsfile >> temppos.x;
+      tsfile >> temppos.y;
+      tsfile >> temppos.z;
+      AtTyps.push_back(temptyp);
+      TransPOS.push_back(temppos);
+    }
+    tsfile.close();
+  }
+  prodfile >> Natoms; //Read number of atoms
+  for (int i=0;i<Natoms;i++)
+  {
+    string temptyp;
+    Coord temppos;
+    prodfile >> temptyp;
+    prodfile >> temppos.x;
+    prodfile >> temppos.y;
+    prodfile >> temppos.z;
+    AtTyps.push_back(temptyp);
+    ProdPOS.push_back(temppos);
+  }
+  prodfile.close();
+  //Check for more errors
+  if (ReactPOS.size() != ProdPOS.size())
+  {
+    //Incorrect number of atoms in the reactant or product
+    cout << "Error: Different number of atoms for the reactant";
+    cout << " and product!!!";
+    cout << '\n' << '\n';
+    exit(0);
+  }
+  else if (IncludeTS)
+  {
+    if (ReactPOS.size() != TransPOS.size())
+    {
+      //Incorrect number of atoms in the reactant or product
+      cout << "Error: Different number of atoms for the reactant";
+      cout << " and transition state!!!";
+      cout << '\n' << '\n';
+      exit(0);
+    }
+    if (TransPOS.size() != ProdPOS.size())
+    {
+      //Incorrect number of atoms in the reactant or product
+      cout << "Error: Different number of atoms for the transition state";
+      cout << " and product!!!";
+      cout << '\n' << '\n';
+      exit(0);
+    }
+  }
   //Interpolate between points
-  
-  //Print structure
-  
+  pathfile.open("BeadStartStruct.xyz",ios_base::out);
+  pathfile << (Natoms*Nbeads) << '\n' << '\n';
+  if (IncludeTS)
+  {
+    //Linear interpolation between the react, ts, and prod structures
+    
+  }
+  else
+  {
+    //Linear interpolation between the react and prod structures
+    for (int i=0;i<Natoms;i++)
+    {
+      //Loop over beads
+      for (int j=0;j<Nbeads;j++)
+      {
+        //Print element
+        pathfile << AtTyps[i];
+        //Print interpolated coordinates
+        double x,y,z;
+        x = ReactPOS[i].x;
+        x += (j*ProdPOS[i].x)/(Nbeads-1);
+        x -= (j*ReactPOS[i].x)/(Nbeads-1);
+        pathfile << LICHEMFormFloat(x,16) << " ";
+        y = ReactPOS[i].y;
+        y += (j*ProdPOS[i].y)/(Nbeads-1);
+        y -= (j*ReactPOS[i].y)/(Nbeads-1);
+        pathfile << LICHEMFormFloat(y,16) << " ";
+        z = ReactPOS[i].z;
+        z += (j*ProdPOS[i].z)/(Nbeads-1);
+        z -= (j*ReactPOS[i].z)/(Nbeads-1);
+        pathfile << LICHEMFormFloat(z,16) << '\n';
+
+      }
+    }
+  }
+  pathfile.flush();
+  pathfile.close();
   //Exit LICHEM
+  exit(0);
   return;
 };
 
