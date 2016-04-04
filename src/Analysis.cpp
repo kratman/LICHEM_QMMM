@@ -97,7 +97,7 @@ void PathLinInterpolate(int& argc, char**& argv)
   bool IncludeTS = 0; //Flag to use the TS structure
   bool DoQuit = 0; //Quit with an error
   //Read settings
-  cout << "Reading LICHEM input: ";
+  cout << "Reading LICHEM input:";
   for (int i=0;i<argc;i++)
   {
     dummy = string(argv[i]);
@@ -121,7 +121,7 @@ void PathLinInterpolate(int& argc, char**& argv)
       }
       reactfilename = file.str();
       reactfile.open(argv[i+1],ios_base::in);
-      cout << argv[i+1];
+      cout << " " << argv[i+1];
     }
     //Check transition state file
     if (dummy == "-t")
@@ -137,7 +137,7 @@ void PathLinInterpolate(int& argc, char**& argv)
       }
       tsfilename = file.str();
       tsfile.open(argv[i+1],ios_base::in);
-      cout << argv[i+1];
+      cout << " " << argv[i+1];
     }
     //Check product file
     if (dummy == "-p")
@@ -152,7 +152,7 @@ void PathLinInterpolate(int& argc, char**& argv)
       }
       prodfilename = file.str();
       prodfile.open(argv[i+1],ios_base::in);
-      cout << argv[i+1];
+      cout << " " << argv[i+1];
     }
   }
   cout << '\n' << '\n'; //Terminate output
@@ -264,7 +264,57 @@ void PathLinInterpolate(int& argc, char**& argv)
   if (IncludeTS)
   {
     //Linear interpolation between the react, ts, and prod structures
-    
+    if ((Nbeads%2) != 1)
+    {
+      //Adjust number of beads
+      Nbeads += 1;
+      cout << "Warning: A three structure interpolation requires an odd number";
+      cout << " of points." << '\n';
+      cout << " Nbeads increased to " << Nbeads << '\n' << '\n';
+    }
+    for (int i=0;i<Natoms;i++)
+    {
+      //Loop over first half of the beads
+      for (int j=0;j<((Nbeads-1)/2);j++)
+      {
+        //Print element
+        pathfile << AtTyps[i] << " ";
+        //Print interpolated coordinates
+        double x,y,z;
+        x = ReactPOS[i].x;
+        x += (2*j*TransPOS[i].x)/(Nbeads-1);
+        x -= (2*j*ReactPOS[i].x)/(Nbeads-1);
+        pathfile << LICHEMFormFloat(x,16) << " ";
+        y = ReactPOS[i].y;
+        y += (2*j*TransPOS[i].y)/(Nbeads-1);
+        y -= (2*j*ReactPOS[i].y)/(Nbeads-1);
+        pathfile << LICHEMFormFloat(y,16) << " ";
+        z = ReactPOS[i].z;
+        z += (2*j*TransPOS[i].z)/(Nbeads-1);
+        z -= (2*j*ReactPOS[i].z)/(Nbeads-1);
+        pathfile << LICHEMFormFloat(z,16) << '\n';
+      }
+      //Loop over second half of the beads
+      for (int j=0;j<(((Nbeads-1)/2)+1);j++)
+      {
+        //Print element
+        pathfile << AtTyps[i] << " ";
+        //Print interpolated coordinates
+        double x,y,z;
+        x = TransPOS[i].x;
+        x += (2*j*ProdPOS[i].x)/(Nbeads-1);
+        x -= (2*j*TransPOS[i].x)/(Nbeads-1);
+        pathfile << LICHEMFormFloat(x,16) << " ";
+        y = TransPOS[i].y;
+        y += (2*j*ProdPOS[i].y)/(Nbeads-1);
+        y -= (2*j*TransPOS[i].y)/(Nbeads-1);
+        pathfile << LICHEMFormFloat(y,16) << " ";
+        z = TransPOS[i].z;
+        z += (2*j*ProdPOS[i].z)/(Nbeads-1);
+        z -= (2*j*TransPOS[i].z)/(Nbeads-1);
+        pathfile << LICHEMFormFloat(z,16) << '\n';
+      }
+    }
   }
   else
   {
@@ -275,7 +325,7 @@ void PathLinInterpolate(int& argc, char**& argv)
       for (int j=0;j<Nbeads;j++)
       {
         //Print element
-        pathfile << AtTyps[i];
+        pathfile << AtTyps[i] << " ";
         //Print interpolated coordinates
         double x,y,z;
         x = ReactPOS[i].x;
@@ -290,7 +340,6 @@ void PathLinInterpolate(int& argc, char**& argv)
         z += (j*ProdPOS[i].z)/(Nbeads-1);
         z -= (j*ReactPOS[i].z)/(Nbeads-1);
         pathfile << LICHEMFormFloat(z,16) << '\n';
-
       }
     }
   }
