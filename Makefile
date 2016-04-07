@@ -64,19 +64,22 @@ FLAGSGPU=$(CXXFLAGS) $(DEVFLAGS) $(GPUFLAGS) $(LDFLAGS) -I./src/ -I./include/
 
 binary:	
 	@echo ""; \
-	echo "### Compiling the LICHEM binary ###"
-	$(CXX) ./src/LICHEM.cpp -o lichem $(FLAGSBIN)
-	@strip lichem
+	echo "### Compiling the LICHEM binary ###"; \
+	mkdir -p bin
+	$(CXX) ./src/LICHEM.cpp -o ./bin/lichem $(FLAGSBIN)
+	@strip ./bin/lichem
 
 devbin:	
 	@echo ""; \
-	echo "### Compiling the LICHEM development binary ###"
-	$(CXX) ./src/LICHEM.cpp -o lichem $(FLAGSDEV)
+	echo "### Compiling the LICHEM development binary ###"; \
+	mkdir -p bin
+	$(CXX) ./src/LICHEM.cpp -o ./bin/lichem $(FLAGSDEV)
 
 gpubin:	
 	@echo ""; \
-	echo "### Compiling the LICHEM GPU binary ###"
-	$(CXX) ./src/LICHEM.cpp -o lichem $(FLAGSGPU)
+	echo "### Compiling the LICHEM GPU binary ###"; \
+	mkdir -p bin
+	$(CXX) ./src/LICHEM.cpp -o ./bin/lichem $(FLAGSGPU)
 
 testexe:	
 	@echo ""; \
@@ -177,5 +180,5 @@ delbin:
  	fi; \
         echo ""; \
 	echo "Removing binary and manual..."; \
-	rm -f lichem ./doc/LICHEM_manual.pdf ./tests/runtests
+	rm -rf lichem ./doc/LICHEM_manual.pdf ./tests/runtests ./bin
 
