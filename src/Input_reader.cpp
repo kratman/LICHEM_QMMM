@@ -1560,7 +1560,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     }
     cout << " Equilibration steps: " << QMMMOpts.Neq;
     cout << '\n';
-    cout << "Acceptence ratio: ";
+    cout << " Acceptance ratio: ";
     cout << LICHEMFormFloat(QMMMOpts.accratio,4);
     cout << '\n';
     cout << " Production MC steps: " << QMMMOpts.Nsteps;

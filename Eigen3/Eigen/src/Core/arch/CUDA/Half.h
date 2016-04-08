@@ -83,7 +83,7 @@ struct half : public __half {
 
   EIGEN_DEVICE_FUNC EIGEN_EXPLICIT_CAST(bool) const {
     // +0.0 and -0.0 become false, everything else becomes true.
-    return static_cast<bool>(x & 0x7fff);
+    return (x & 0x7fff) != 0;
   }
   EIGEN_DEVICE_FUNC EIGEN_EXPLICIT_CAST(signed char) const {
     return static_cast<signed char>(internal::half_to_float(*this));
@@ -273,6 +273,12 @@ union FP32 {
 static EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC __half float_to_half_rtne(float ff) {
 #if defined(EIGEN_HAS_CUDA_FP16) && defined(__CUDA_ARCH__) && __CUDA_ARCH__ >= 300
   return __float2half(ff);
+
+#elif defined(EIGEN_HAS_FP16_C)
+  __half h;
+  h.x = _cvtss_sh(ff, 0);
+  return h;
+
 #else
   FP32 f; f.f = ff;
 
@@ -321,6 +327,10 @@ static EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC __half float_to_half_rtne(float ff)
 static EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC float half_to_float(__half h) {
 #if defined(EIGEN_HAS_CUDA_FP16) && defined(__CUDA_ARCH__) && __CUDA_ARCH__ >= 300
   return __half2float(h);
+
+#elif defined(EIGEN_HAS_FP16_C)
+  return _cvtsh_ss(h.x);
+
 #else
   const FP32 magic = { 113 << 23 };
   const unsigned int shifted_exp = 0x7c00 << 13; // exponent mask after shift
@@ -379,6 +389,29 @@ static EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC bool (isnan)(const Eigen::half& a) 
   return (a.x & 0x7fff) > 0x7c00;
 #endif
 }
+static EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC bool (isfinite)(const Eigen::half& a) {
+  return !(Eigen::numext::isinf)(a) && !(Eigen::numext::isnan)(a);
+}
+template<> EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC Eigen::half abs(const Eigen::half& a) {
+  Eigen::half result;
+  result.x = a.x & 0x7FFF;
+  return result;
+}
+template<> EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC Eigen::half exp(const Eigen::half& a) {
+  return Eigen::half(::expf(float(a)));
+}
+template<> EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC Eigen::half log(const Eigen::half& a) {
+  return Eigen::half(::logf(float(a)));
+}
+template<> EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC Eigen::half sqrt(const Eigen::half& a) {
+  return Eigen::half(::sqrtf(float(a)));
+}
+template<> EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC Eigen::half floor(const Eigen::half& a) {
+  return Eigen::half(::floorf(float(a)));
+}
+template<> EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC Eigen::half ceil(const Eigen::half& a) {
+  return Eigen::half(::ceilf(float(a)));
+}
 
 } // end namespace numext
 
@@ -417,36 +450,6 @@ static EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC int (isfinite)(const Eigen::half& a
 
 
 namespace std {
-
-// Import the standard mathematical functions and trancendentals into the
-// into the std namespace.
-static EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC Eigen::half abs(const Eigen::half& a) {
-  return ::fabsh(a);
-}
-static EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC Eigen::half exp(const Eigen::half& a) {
-  return ::exph(a);
-}
-static EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC Eigen::half log(const Eigen::half& a) {
-  return ::logh(a);
-}
-static EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC Eigen::half sqrt(const Eigen::half& a) {
-  return ::sqrth(a);
-}
-static EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC Eigen::half floor(const Eigen::half& a) {
-  return ::floorh(a);
-}
-static EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC Eigen::half ceil(const Eigen::half& a) {
-  return ::ceilh(a);
-}
-static EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC int (isnan)(const Eigen::half& a) {
-  return (Eigen::numext::isnan)(a);
-}
-static EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC int (isinf)(const Eigen::half& a) {
-  return (Eigen::numext::isinf)(a);
-}
-static EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC bool (isfinite)(const Eigen::half& a) {
-  return !(Eigen::numext::isinf)(a) && !(Eigen::numext::isnan)(a);
-}
 
 #if __cplusplus > 199711L
 template <>
