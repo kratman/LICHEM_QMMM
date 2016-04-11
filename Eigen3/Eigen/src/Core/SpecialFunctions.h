@@ -881,13 +881,14 @@ struct zeta_impl {
         const Scalar maxnum = NumTraits<Scalar>::infinity();
         const Scalar zero = 0.0, half = 0.5, one = 1.0;
         const Scalar machep = igamma_helper<Scalar>::machep();
+        const Scalar nan = NumTraits<Scalar>::quiet_NaN();
         
         if( x == one )
             return maxnum;
         
         if( x < one )
         {
-            return zero;
+            return nan;
         }
         
         if( q <= zero )
@@ -899,7 +900,7 @@ struct zeta_impl {
             p = x;
             r = numext::floor(p);
             if (p != r)
-                return zero;
+                return nan;
         }
         
         /* Permit negative q but continue sum until n+q > +9 .
@@ -969,9 +970,14 @@ struct polygamma_impl {
     static Scalar run(Scalar n, Scalar x) {
         Scalar zero = 0.0, one = 1.0;
         Scalar nplus = n + one;
+        const Scalar nan = NumTraits<Scalar>::quiet_NaN();
         
+        // Check that n is an integer
+        if (numext::floor(n) != n) {
+            return nan;
+        }
         // Just return the digamma function for n = 1
-        if (n == zero) {
+        else if (n == zero) {
             return digamma_impl<Scalar>::run(x);
         }
         // Use the same implementation as scipy
