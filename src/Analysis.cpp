@@ -510,11 +510,13 @@ double LICHEMDensity(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   {
     rho += Struct[i].m;
   }
-  //Divide by the volume (SI)
+  //Divide by the volume
   rho /= (Lx*Ly*Lz);
-  //Change to g/cm^3 and return
-  rho *= amu2kg; //amu to kg
-  rho *= m2Ang*m2Ang*m2Ang/1000; //A^3 to cm^3
+  //Change units to SI
+  rho *= (amu2kg*m2Ang*m2Ang*m2Ang);
+  //Change to g/cm^3
+  rho /= 1000; //A^3 to cm^3
+  //Return density
   return rho;
 };
 
