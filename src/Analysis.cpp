@@ -515,7 +515,7 @@ double LICHEMDensity(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   //Change units to SI
   rho *= (amu2kg*m2Ang*m2Ang*m2Ang);
   //Change to g/cm^3
-  rho /= 1000; //A^3 to cm^3
+  rho /= 1000; //m^3 to cm^3
   //Return density
   return rho;
 };
