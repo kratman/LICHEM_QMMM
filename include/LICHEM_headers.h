@@ -219,6 +219,8 @@ void RotateTINKCharges(vector<QMMMAtom>&,int);
 
 OctCharges SphHarm2Charges(RedMpole);
 
+void SplitPathTraj(int&,char**&);
+
 void TINK2LICHEM(int&,char**&);
 
 void TINKERDynamics(vector<QMMMAtom>&,QMMMSettings&,int);

@@ -96,6 +96,9 @@ void PathLinInterpolate(int& argc, char**& argv)
   int Nbeads = 3; //Default to react, ts, and prod
   bool IncludeTS = 0; //Flag to use the TS structure
   bool DoQuit = 0; //Quit with an error
+  reactfilename = "N/A";
+  tsfilename = "N/A";
+  prodfilename = "N/A";
   //Read settings
   cout << "Reading LICHEM input:";
   for (int i=0;i<argc;i++)
@@ -346,6 +349,148 @@ void PathLinInterpolate(int& argc, char**& argv)
   pathfile.flush();
   pathfile.close();
   //Exit LICHEM
+  exit(0);
+  return;
+};
+
+void SplitPathTraj(int& argc, char**& argv)
+{
+  //Function to separate a reaction path frame into a trajectory
+  stringstream call; //Stream for system calls and reading/writing files
+  string dummy; //Generic string
+  string pathfilename; //Name of the merged trajectory file
+  fstream pathfile, burstfile; //File streams
+  int ct; //Generic counter
+  int Nbeads = 1; //Default to a single bead
+  int FrameID = 0; //The trajectory frame that will be separated
+  bool DoQuit = 0; //Quit with an error
+  pathfilename = "N/A";
+  //Read settings
+  cout << "Reading LICHEM input:";
+  for (int i=0;i<argc;i++)
+  {
+    dummy = string(argv[i]);
+    //Check number of beads
+    if (dummy == "-b")
+    {
+      stringstream file;
+      file << argv[i+1]; //Save to the stream
+      file >> Nbeads; //Change to an int
+    }
+    //Check frame
+    if (dummy == "-f")
+    {
+      stringstream file;
+      file << argv[i+1]; //Save to the stream
+      file >> FrameID; //Change to an int
+    }
+    //Read reaction path trajectory file name
+    if (dummy == "-p")
+    {
+      stringstream file;
+      file << argv[i+1];
+      if (!CheckFile(file.str()))
+      {
+        cout << "Error: Could not open trajectory file!!!";
+        cout << '\n';
+        DoQuit = 1;
+      }
+      pathfilename = file.str();
+      pathfile.open(argv[i+1],ios_base::in);
+      cout << " " << argv[i+1];
+    }
+  }
+  cout << '\n' << '\n'; //Terminate output
+  //Print other settings
+  cout << "Number of beads: " << Nbeads << '\n';
+  cout << "Frame ID: " << FrameID << '\n';
+  cout << '\n';
+  //Check for errors
+  if (!CheckFile(pathfilename))
+  {
+    //Missing flag
+    cout << "Error: Missing trajectory file!!!";
+    cout << '\n' << '\n';
+    DoQuit = 1;
+  }
+  if (DoQuit)
+  {
+    //Exit with errors
+    exit(0);
+  }
+  //Open new trajectory file
+  call.str("");
+  call << "BurstStruct.xyz";
+  ct = 0; //Start counting at the second file
+  while (CheckFile(call.str()))
+  {
+    //Avoids overwriting files
+    ct += 1; //Increase file counter
+    call.str(""); //Change file name
+    call << "BurstStruct_";
+    call << ct << ".xyz";
+  }
+  burstfile.open(call.str().c_str(),ios_base::out);
+  cout << "Trajectory output: " << call.str();
+  cout << '\n' << '\n';
+  //Read the number of atoms
+  getline(pathfile,dummy); //Read the first line of the file
+  call.str(dummy); //Save to a stream
+  call >> Natoms; //Read number of atoms
+  if ((Natoms%Nbeads) != 0)
+  {
+    //Check the number of particles
+    cout << "Error: Number of beads does not match the number of";
+    cout << " particles!!!";
+    cout << '\n' << '\n';
+    exit(0);
+  }
+  else
+  {
+    Natoms /= Nbeads;
+  }
+  //Clear first comment line
+  getline(pathfile,dummy); //Read and discard junk
+  //Move to the correct frame
+  for (int i=0;i<FrameID;i++)
+  {
+    for (int j=0;j<(Natoms*Nbeads+2);j++)
+    {
+      string line;
+      getline(pathfile,line); //Read and discard junk
+    }
+  }
+  //Create string array for the frames
+  vector<string> AllFrames;
+  for (int i=0;i<Nbeads;i++)
+  {
+    //Each element is a long string holding a single frame
+    stringstream line;
+    line.str("");
+    line << Natoms << '\n' << '\n';
+    AllFrames.push_back(line.str());
+  }
+  //Separate coordinates
+  for (int i=0;i<Natoms;i++)
+  {
+    for (int j=0;j<Nbeads;j++)
+    {
+      string line;
+      getline(pathfile,line); //Read a line
+      AllFrames[j] += line; //Append to the frame
+      AllFrames[j] += '\n'; //Terminate the line
+    }
+  }
+  //Write the output file
+  for (int i=0;i<Nbeads;i++)
+  {
+    burstfile << AllFrames[i];
+  }
+  //Close files
+  pathfile.close();
+  burstfile.flush();
+  burstfile.close();
+  //Exit
   exit(0);
   return;
 };

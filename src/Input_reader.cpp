@@ -84,6 +84,11 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     //Create an initial reaction path called BeadStartStruct.xyz
     PathLinInterpolate(argc,argv);
   }
+  if (dummy == "-splitpath")
+  {
+    //Separate a reaction path frame into a trajectory file
+    SplitPathTraj(argc,argv);
+  }
   if (dummy == "-reorder")
   {
     //Make QM, PB, and BA atoms come before MM atoms
@@ -1613,11 +1618,11 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     {
       cout << '\n';
       cout << "QM convergence criteria:" << '\n';
-      cout << "  RMS deviation: " << QMMMOpts.QMOptTol;
+      cout << " RMS deviation: " << QMMMOpts.QMOptTol;
       cout << " \u212B" << '\n';
-      cout << "  Max. force: " << (20*QMMMOpts.QMOptTol);
+      cout << " Max. force: " << (20*QMMMOpts.QMOptTol);
       cout << " eV/\u212B" << '\n';
-      cout << "  RMS force: " << (10*QMMMOpts.QMOptTol);
+      cout << " RMS force: " << (10*QMMMOpts.QMOptTol);
       cout << " eV/\u212B" << '\n';
     }
     if (ESDSim or ENEBSim)
@@ -1636,9 +1641,9 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     {
       cout << '\n';
       cout << "MM convergence criteria:" << '\n';
-      cout << "  RMS deviation: " << QMMMOpts.MMOptTol;
+      cout << " RMS deviation: " << QMMMOpts.MMOptTol;
       cout << " \u212B" << '\n';
-      cout << "  RMS force: ";
+      cout << " RMS force: ";
       cout << LICHEMFormFloat(QMMMOpts.MMOptTol*kcal2eV,12);
       cout << " eV/\u212B" << '\n';
     }
