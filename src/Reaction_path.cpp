@@ -24,6 +24,17 @@
 */
 
 //Tangent functions
+VectorXd CINEBTangent(VectorXd& Distp1, VectorXd& Distm1,
+         QMMMSettings& QMMMOpts, int Bead)
+{
+  //Calculate NEB tangents with the transition state in the center
+  
+  //Initialize tangent and structures
+  VectorXd QMTangent(3*(Nqm+Npseudo));
+  
+  return QMTangent;
+};
+
 VectorXd NEBTangent(VectorXd& Distp1, VectorXd& Distm1,
          QMMMSettings& QMMMOpts, int Bead)
 {
