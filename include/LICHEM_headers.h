@@ -64,6 +64,8 @@ void BurstTraj(vector<QMMMAtom>&,QMMMSettings&);
 
 RedMpole Cart2SphHarm(Mpole&);
 
+VectorXd CINEBTangent(VectorXd&,VectorXd&,QMMMSettings&,int);
+
 bool CheckFile(const string&);
 
 Coord CoordDist2(Coord&,Coord&);
