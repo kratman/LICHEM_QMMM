@@ -34,7 +34,7 @@ double GEMC6(double C6, Coord& POSi, Coord& POSj, double Rcut)
 };
 
 double GEMBuffC7(double C7, double Rmin, Coord& POSi, Coord& POSj,
-       double Rcut)
+                 double Rcut)
 {
   //Function to calculate buffered 14-7 style dispersion
   double Eij = 0; //Dispersion energy
