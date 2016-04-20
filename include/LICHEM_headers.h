@@ -235,6 +235,8 @@ MatrixXd TINKERHessian(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void TINKERInduced(vector<QMMMAtom>&,QMMMSettings&,int);
 
+double TINKERMMForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
+
 double TINKEROpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double TINKERPolEnergy(vector<QMMMAtom>&,QMMMSettings&,int);

@@ -824,6 +824,225 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   return Emm;
 };
 
+double TINKERMMForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
+                      QMMMSettings& QMMMOpts, int Bead)
+{
+  //Function to calculate the forces on MM atoms
+  //NB: QM atoms are included in the array, but their forces are not updated
+  fstream ofile,ifile; //Generic file streams
+  string dummy; //Generic string
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy settings from cout
+  double Emm = 0.0; //Energy returned by TINKER
+  //Construct MM forces input for TINKER
+  call.str("");
+  call << "cp tinker.key LICHM_";
+  call << Bead << ".key";
+  GlobalSys = system(call.str().c_str());
+  //Update key file
+  call.str("");
+  call << "LICHM_";
+  call << Bead << ".key";
+  ofile.open(call.str().c_str(),ios_base::app|ios_base::out);
+  ofile << '\n';
+  if (QMMM)
+  {
+    ofile << "#LICHEM QMMM keywords"; //Marks the changes
+  }
+  else
+  {
+    ofile << "#LICHEM MM keywords"; //Marks the changes
+  }
+  ofile << '\n';
+  if (QMMMOpts.UseLREC)
+  {
+    //Apply cutoff
+    if (QMMMOpts.UseEwald and PBCon)
+    {
+      //Use Ewald or PME
+      ofile << "ewald" << '\n';
+    }
+    else if (!QMMMOpts.UseImpSolv)
+    {
+      //Use smoothing functions
+      ofile << "cutoff " << LICHEMFormFloat(QMMMOpts.LRECCut,12);
+      ofile << '\n';
+      ofile << "taper " << LICHEMFormFloat(0.90*QMMMOpts.LRECCut,12);
+      ofile << '\n';
+    }
+  }
+  ofile << "openmp-threads " << Ncpus << '\n';
+  ofile << "digits 12" << '\n'; //Increase precision
+  if (PBCon)
+  {
+    //PBC defined twice for safety
+    ofile << "a-axis " << LICHEMFormFloat(Lx,12) << '\n';
+    ofile << "b-axis " << LICHEMFormFloat(Ly,12) << '\n';
+    ofile << "c-axis " << LICHEMFormFloat(Lz,12) << '\n';
+    ofile << "alpha 90.0" << '\n';
+    ofile << "beta 90.0" << '\n';
+    ofile << "gamma 90.0" << '\n';
+  }
+  if (QMMMOpts.UseImpSolv)
+  {
+    //Add the implicit solvation model
+    ofile << "solvateterm" << '\n';
+    ofile << "solvate " << QMMMOpts.SolvModel;
+    ofile << '\n';
+  }
+  if (AMOEBA)
+  {
+    for (int i=0;i<Natoms;i++)
+    {
+      //Add nuclear charges
+      if (Struct[i].QMregion)
+      {
+        WriteTINKMpole(Struct,ofile,i,Bead);
+        ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        ofile << '\n';
+      }
+      if (Struct[i].PBregion)
+      {
+        //Modify the charge to force charge balance with the boundaries
+        double qi = Struct[i].MP[Bead].q; //Save a copy
+        vector<int> Boundaries;
+        Boundaries = TraceBoundary(Struct,i);
+        double qnew = qi;
+        for (unsigned int j=0;j<Boundaries.size();j++)
+        {
+          //Subtract boundary atom charge
+          qnew -= Struct[Boundaries[j]].MP[Bead].q;
+        }
+        Struct[i].MP[Bead].q = qnew; //Save modified charge
+        WriteTINKMpole(Struct,ofile,i,Bead);
+        Struct[i].MP[Bead].q = qi; //Return to unmodified charge
+        ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        ofile << '\n';
+      }
+      if (Struct[i].BAregion)
+      {
+        ofile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        ofile << '\n';
+      }
+    }
+  }
+  ofile.flush();
+  ofile.close();
+  //Create TINKER xyz file from the structure
+  call.str("");
+  call << "LICHM_" << Bead << ".xyz";
+  ofile.open(call.str().c_str(),ios_base::out);
+  //Write atoms to the xyz file
+  ofile << Natoms << '\n';
+  if (PBCon)
+  {
+    //Write box size
+    ofile << LICHEMFormFloat(Lx,12) << " ";
+    ofile << LICHEMFormFloat(Ly,12) << " ";
+    ofile << LICHEMFormFloat(Lz,12) << " ";
+    ofile << "90.0 90.0 90.0";
+    ofile << '\n';
+  }
+  for (int i=0;i<Natoms;i++)
+  {
+    ofile << setw(6) << (Struct[i].id+1);
+    ofile << " ";
+    ofile << setw(3) << Struct[i].MMTyp;
+    ofile << " ";
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].x,16);
+    ofile << " ";
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].y,16);
+    ofile << " ";
+    ofile << LICHEMFormFloat(Struct[i].P[Bead].z,16);
+    ofile << " ";
+    ofile << setw(4) << Struct[i].NumTyp;
+    for (unsigned int j=0;j<Struct[i].Bonds.size();j++)
+    {
+      ofile << " "; //Avoids trailing spaces
+      ofile << setw(6) << (Struct[i].Bonds[j]+1);
+    }
+    ofile << '\n';
+  }
+  ofile.flush();
+  ofile.close();
+  //Run MM
+  call.str("");
+  call << "testgrad ";
+  call << "LICHM_" << Bead << ".xyz";
+  call << " Y N N > ";
+  call << "LICHM_" << Bead << ".grad";
+  GlobalSys = system(call.str().c_str());
+  //Collect MM forces
+  fstream MMgrad; //QMMM output
+  //Open files
+  call.str("");
+  call << "LICHM_" << Bead << ".grad";
+  MMgrad.open(call.str().c_str(),ios_base::in);
+  //Read derivatives
+  bool GradDone = 0;
+  while ((!MMgrad.eof()) and (!GradDone))
+  {
+    getline(MMgrad,dummy);
+    stringstream line(dummy);
+    line >> dummy;
+    if (dummy == "Type")
+    {
+      line >> dummy >> dummy;
+      if (dummy == "dE/dX")
+      {
+        GradDone = 1; //Not grad school, that lasts forever
+        getline(MMgrad,dummy);
+        for (int i=0;i<Natoms;i++)
+        {
+          double Fx = 0;
+          double Fy = 0;
+          double Fz = 0;
+          //Convoluted, but "easy"
+          getline(MMgrad,dummy);
+          stringstream line(dummy);
+          line >> dummy >> dummy; //Clear junk
+          line >> Fx;
+          line >> Fy;
+          line >> Fz;
+          //Change from gradient to force
+          Fx *= -1;
+          Fy *= -1;
+          Fz *= -1;
+          //Switch to eV/A and change sign
+          if ((!Struct[i].QMregion) or (!Struct[i].PBregion) or
+             (!Struct[i].Frozen))
+          {
+            //Only add MM forces to the array
+            Forces(3*i) += Fx*kcal2eV;
+            Forces(3*i+1) += Fy*kcal2eV;
+            Forces(3*i+2) += Fz*kcal2eV;
+          }
+        }
+      }
+    }
+    if (dummy == "Total")
+    {
+      line >> dummy >> dummy;
+      if (dummy == "Energy")
+      {
+        //Collect partial MM energy
+        line >> dummy >> Emm;
+      }
+    }
+  }
+  MMgrad.close();
+  //Clean up files
+  call.str("");
+  call << "rm -f";
+  call << " LICHM_" << Bead << ".xyz";
+  call << " LICHM_" << Bead << ".key";
+  call << " LICHM_" << Bead << ".grad";
+  call << " LICHM_" << Bead << ".err";
+  GlobalSys = system(call.str().c_str());
+  //Return energy for error checking purposes
+  return Emm;
+};
+
 double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
                        QMMMSettings& QMMMOpts, int Bead)
 {
