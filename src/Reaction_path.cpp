@@ -66,12 +66,12 @@ void LICHEMNEB(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int optct)
 };
 
 //Path ensemble samping routines
-void FBNEBMCMove(vector<QMMMAtom>& Struct, vector<VectorXd>& AllForces,
-                 QMMMSettings& QMMMOpts, double& Emc)
+bool FBNEBMCMove(vector<QMMMAtom>& Struct, vector<VectorXd>& AllForces,
+                 QMMMSettings& QMMMOpts, vector<double>& Emc)
 {
   //Function to try a force-bias Monte Carlo move
 
-  return;
+  return 0;
 };
 
 void EnsembleNEB(vector<QMMMAtom>& Struct, fstream& traj,
