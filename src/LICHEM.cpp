@@ -830,11 +830,11 @@ int main(int argc, char* argv[])
           //Use random values to keep from cycling up and down
           if (randval >= 0.5)
           {
-            pimcstep *= 1.10;
+            mcstep *= 1.10;
           }
           else
           {
-            pimcstep *= 1.09;
+            mcstep *= 1.09;
           }
         }
         if ((Nacc/(Nrej+Nacc)) < QMMMOpts.accratio)
@@ -845,27 +845,27 @@ int main(int argc, char* argv[])
           //Use random values to keep from cycling up and down
           if (randval >= 0.5)
           {
-            pimcstep *= 0.90;
+            mcstep *= 0.90;
           }
           else
           {
-            pimcstep *= 0.91;
+            mcstep *= 0.91;
           }
         }
-        if (pimcstep < StepMin)
+        if (mcstep < StepMin)
         {
           //Set to minimum
-          pimcstep = StepMin;
+          mcstep = StepMin;
         }
-        if (pimcstep > StepMax)
+        if (mcstep > StepMax)
         {
           //Set to maximum
-          pimcstep = StepMax;
+          mcstep = StepMax;
         }
         //Statistics
         cout << " | Step: " << setw(SimCharLen) << Nct;
         cout << " | Step size: ";
-        cout << LICHEMFormFloat(pimcstep,6);
+        cout << LICHEMFormFloat(mcstep,6);
         cout << " | Accept ratio: ";
         cout << LICHEMFormFloat((Nacc/(Nrej+Nacc)),6);
         cout << '\n';
@@ -997,11 +997,18 @@ int main(int argc, char* argv[])
     cout << " | Acceptance ratio: ";
     cout << LICHEMFormFloat((Nacc/(Nrej+Nacc)),6);
     cout << " | Optimum step size: ";
-    cout << LICHEMFormFloat(pimcstep,6);
+    cout << LICHEMFormFloat(mcstep,6);
     cout << " \u212B";
     cout << '\n';
     cout << '\n';
     cout.flush();
+  }
+  //End of section
+
+  //Force-bias NEB Monte Carlo
+  else if (FBNEBSim)
+  {
+    
   }
   //End of section
 

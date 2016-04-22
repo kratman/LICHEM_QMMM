@@ -33,7 +33,7 @@ namespace LICHEMGlobal
   int Natoms = 0; //Total number of atoms
   int Nqm = 0; //Number of QM atoms
   int Nmm = 0; //Number of MM atoms
-  double pimcstep = 2*StepMin; //Monte Carlo step size
+  double mcstep = 2*StepMin; //Monte Carlo step size
   double Lx = 10000.0; //Box length
   double Ly = 10000.0; //Box length
   double Lz = 10000.0; //Box length
@@ -60,6 +60,7 @@ namespace LICHEMGlobal
   bool ESDSim = 0; //Flag for ensemble steepest descent
   bool PIMCSim = 0; //Flag for Monte Carlo
   bool ENEBSim = 0; //Flag for ensemble NEB reaction paths
+  bool FBNEBSim = 0; //Flag for force-bias NEB Monte Carlo
   bool FreqCalc = 0; //Flag for a frequency calculation
   bool SinglePoint = 0; //Flag for energy calculation
   bool GauExternal = 0; //Runs Gaussian with External
