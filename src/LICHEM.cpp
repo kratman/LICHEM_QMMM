@@ -1008,7 +1008,171 @@ int main(int argc, char* argv[])
   //Force-bias NEB Monte Carlo
   else if (FBNEBSim)
   {
+    //Initialize local variables
+    int Nct = 0; //Step counter
+    int ct = 0; //Secondary counter
+    double Nacc = 0; //Number of accepted moves
+    double Nrej = 0; //Number of rejected moves
+    bool acc; //Flag for accepting a step
+    vector<VectorXd> AllForces; //Stores forces between MC steps
+    VectorXd SumE(QMMMOpts.Nbeads); //Average energy array
+    VectorXd SumE2(QMMMOpts.Nbeads); //Average squared energy array
+    VectorXd Emc; //Current MC energy
+    SumE.setZero();
+    SumE2.setZero();
+    Emc.setZero();
+    //Initialize force arrays
+    for (int p=0;p<QMMMOpts.Nbeads;p++)
+    {
+      //Zero forces makes the first move an energy calculation
+      VectorXd tmp(3*Natoms);
+      tmp.setZero();
+      AllForces.push_back(tmp);
+    }
+    //Find the number of characters to print for the step counter
+    int SimCharLen;
+    SimCharLen = QMMMOpts.Neq+QMMMOpts.Nsteps;
+    SimCharLen = LICHEMCount(SimCharLen);
+    //Start equilibration run
+    cout << '\n';
+    cout << "Monte Carlo equilibration:" << '\n';
+    cout.flush();
+    QMMMOpts.Eold = HugeNum; //Forces the first step to be accepted
+    Nct = 0;
+    while (Nct < QMMMOpts.Neq)
+    {
+      Emc.setZero();
+      //Check step size
+      if(ct == QMMMOpts.Nprint)
+      {
+        if ((Nacc/(Nrej+Nacc)) > QMMMOpts.accratio)
+        {
+          //Increase step size
+          double randval;
+          randval = (((double)rand())/((double)RAND_MAX));
+          //Use random values to keep from cycling up and down
+          if (randval >= 0.5)
+          {
+            mcstep *= 1.10;
+          }
+          else
+          {
+            mcstep *= 1.09;
+          }
+        }
+        if ((Nacc/(Nrej+Nacc)) < QMMMOpts.accratio)
+        {
+          //Decrease step size
+          double randval;
+          randval = (((double)rand())/((double)RAND_MAX));
+          //Use random values to keep from cycling up and down
+          if (randval >= 0.5)
+          {
+            mcstep *= 0.90;
+          }
+          else
+          {
+            mcstep *= 0.91;
+          }
+        }
+        if (mcstep < StepMin)
+        {
+          //Set to minimum
+          mcstep = StepMin;
+        }
+        if (mcstep > StepMax)
+        {
+          //Set to maximum
+          mcstep = StepMax;
+        }
+        //Statistics
+        cout << " | Step: " << setw(SimCharLen) << Nct;
+        cout << " | Step size: ";
+        cout << LICHEMFormFloat(mcstep,6);
+        cout << " | Accept ratio: ";
+        cout << LICHEMFormFloat((Nacc/(Nrej+Nacc)),6);
+        cout << '\n';
+        cout.flush(); //Print stats
+        //Reset counters
+        ct = 0;
+        Nacc = 0;
+        Nrej = 0;
+      }
+      //Continue simulation
+      ct += 1;
+      acc = FBNEBMCMove(Struct,AllForces,QMMMOpts,Emc);
+      if (acc)
+      {
+        Nct += 1;
+        Nacc += 1;
+      }
+      else
+      {
+        Nrej += 1;
+      }
+    }
+    cout << " Equilibration complete." << '\n';
+    //Start production run
+    Nct = 0;
+    Nacc = 0;
+    Nrej = 0;
+    cout << '\n';
+    cout << "Monte Carlo production:" << '\n';
+    cout.flush();
+    //Print starting conditions
+    Print_traj(Struct,outfile,QMMMOpts);
+    cout << " | Step: " << setw(SimCharLen) << 0;
+    cout << " | Average energy: " << LICHEMFormFloat(Emc.mean(),12);
+    cout << " eV";
+    cout << '\n';
+    cout.flush(); //Print results
+    //Continue simulation
+    while (Nct < QMMMOpts.Nsteps)
+    {
+      Emc.setZero(); //Set energy to zero
+      acc = FBNEBMCMove(Struct,AllForces,QMMMOpts,Emc);
+      if (acc)
+      {
+        //Increase counters
+        Nct += 1;
+        Nacc += 1;
+        //Save energy
+        SumE += Emc;
+        SumE2 += Emc*Emc;
+        if ((Nct%QMMMOpts.Nprint) == 0)
+        {
+          //Print progress
+          Print_traj(Struct,outfile,QMMMOpts);
+          cout << " | Step: " << setw(SimCharLen) << Nct;
+          cout << " | Average energy: " << LICHEMFormFloat(Emc.mean(),12);
+          cout << " eV";
+          cout << '\n';
+          cout.flush(); //Print results
+        }
+      }
+      else
+      {
+        Nrej += 1;
+      }
+    }
+    if ((Nct%QMMMOpts.Nprint) != 0)
+    {
+      //Print final geometry if it was not already written
+      Print_traj(Struct,outfile,QMMMOpts);
+    }
+    //Calculate statistics
     
+    //Print simulation details and statistics
+    cout << '\n';
+    cout << "MC statistics:" << '\n';
+    cout << " | Acceptance ratio: ";
+    cout << LICHEMFormFloat((Nacc/(Nrej+Nacc)),6);
+    cout << " | Optimum step size: ";
+    cout << LICHEMFormFloat(mcstep,6);
+    cout << " \u212B";
+    cout << '\n';
+    cout << '\n';
+    cout.flush();
   }
   //End of section
 

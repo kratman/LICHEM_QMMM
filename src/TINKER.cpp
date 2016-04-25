@@ -834,6 +834,7 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
   double Emm = 0.0; //Energy returned by TINKER
+  int ct; //Generic counter
   //Construct MM forces input for TINKER
   call.str("");
   call << "cp tinker.key LICHM_";
@@ -889,6 +890,40 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     ofile << "solvateterm" << '\n';
     ofile << "solvate " << QMMMOpts.SolvModel;
     ofile << '\n';
+  }
+  ct = 0; //Generic counter
+  if (QMMM)
+  {
+    for (int i=0;i<Natoms;i++)
+    {
+      //Add inactive atoms
+      if (Struct[i].QMregion or Struct[i].PBregion or Struct[i].Frozen)
+      {
+        if (ct == 0)
+        {
+          //Start a new inactive line
+          ofile << "inactive ";
+        }
+        else
+        {
+          //Place a space to separate values
+          ofile << " ";
+        }
+        ofile << (Struct[i].id+1);
+        ct += 1;
+        if (ct == 10)
+        {
+          //terminate an active line
+          ct = 0;
+          ofile << '\n';
+        }
+      }
+    }
+    if (ct != 0)
+    {
+      //Terminate trailing actives line
+      ofile << '\n';
+    }
   }
   if (AMOEBA)
   {

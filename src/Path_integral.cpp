@@ -436,11 +436,15 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
       }
       #pragma omp barrier
     }
+  }
+  //Update energies
+  Enew += Get_PI_Epot(Struct2,QMMMOpts);
+  Enew += Get_PI_Espring(Struct2,QMMMOpts);
+  if (QMMMOpts.Ensemble == "NPT")
+  {
     //Add PV energy term
     Enew += QMMMOpts.Press*Lx*Ly*Lz;
   }
-  Enew += Get_PI_Epot(Struct2,QMMMOpts);
-  Enew += Get_PI_Espring(Struct2,QMMMOpts);
   //Accept or reject
   double dE = QMMMOpts.Beta*(Enew-Eold);
   if (QMMMOpts.Ensemble == "NPT")
