@@ -918,21 +918,23 @@ int main(int argc, char* argv[])
     {
       Emc = 0; //Set energy to zero
       acc = MCMove(Struct,QMMMOpts,Emc);
+      //Update averages
+      Et = 0;
+      Et += Ek+Emc;
+      Et -= 2*Get_PI_Espring(Struct,QMMMOpts);
+      DenAvg += LICHEMDensity(Struct,QMMMOpts);
+      LxAvg += Lx;
+      LyAvg += Ly;
+      LzAvg += Lz;
+      SumE += Et;
+      SumE2 += Et*Et;
+      //Update counters and print output
       if (acc)
       {
         //Increase counters
         Nct += 1;
         Nacc += 1;
-        //Calculate energy
-        Et = 0;
-        Et += Ek+Emc;
-        Et -= 2*Get_PI_Espring(Struct,QMMMOpts);
-        DenAvg += LICHEMDensity(Struct,QMMMOpts);
-        LxAvg += Lx;
-        LyAvg += Ly;
-        LzAvg += Lz;
-        SumE += Et;
-        SumE2 += Et*Et;
+        //Print trajectory and instantaneous energies
         if ((Nct%QMMMOpts.Nprint) == 0)
         {
           //Print progress
@@ -962,12 +964,12 @@ int main(int argc, char* argv[])
       //Print final geometry if it was not already written
       Print_traj(Struct,outfile,QMMMOpts);
     }
-    SumE /= QMMMOpts.Nsteps; //Average energy
-    SumE2 /= QMMMOpts.Nsteps; //Variance of the energy
-    DenAvg /= QMMMOpts.Nsteps; //Average density
-    LxAvg /= QMMMOpts.Nsteps; //Average box size
-    LyAvg /= QMMMOpts.Nsteps; //Average box size
-    LzAvg /= QMMMOpts.Nsteps; //Average box size
+    SumE /= Nrej+Nacc; //Average energy
+    SumE2 /= Nrej+Nacc; //Variance of the energy
+    DenAvg /= Nrej+Nacc; //Average density
+    LxAvg /= Nrej+Nacc; //Average box size
+    LyAvg /= Nrej+Nacc; //Average box size
+    LzAvg /= Nrej+Nacc; //Average box size
     //Print simulation details and statistics
     cout << '\n';
     if (QMMMOpts.Nbeads > 1)
@@ -1131,14 +1133,16 @@ int main(int argc, char* argv[])
     {
       Emc.setZero(); //Set energy to zero
       acc = FBNEBMCMove(Struct,AllForces,QMMMOpts,Emc);
+      //Update statistics
+      SumE += Emc;
+      SumE2 += Emc*Emc;
+      //Update counters and print output
       if (acc)
       {
         //Increase counters
         Nct += 1;
         Nacc += 1;
-        //Save energy
-        SumE += Emc;
-        SumE2 += Emc*Emc;
+        //Print trajectory and instantaneous energies
         if ((Nct%QMMMOpts.Nprint) == 0)
         {
           //Print progress
@@ -1161,7 +1165,8 @@ int main(int argc, char* argv[])
       Print_traj(Struct,outfile,QMMMOpts);
     }
     //Calculate statistics
-    
+    SumE /= Nrej+Nacc;
+    SumE2 /= Nrej+Nacc;
     //Print simulation details and statistics
     cout << '\n';
     cout << "MC statistics:" << '\n';
