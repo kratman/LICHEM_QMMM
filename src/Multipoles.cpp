@@ -598,7 +598,7 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
             //Combine temp. variables
             scrqA += scrqB+1;
             //Set the scale factor
-            scrq -= scrqA*scrqA;
+            scrq -= scrqA*scrqA*scrqA;
           }
           else
           {
@@ -737,7 +737,7 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
             //Combine temp. variables
             scrqA += scrqB+1;
             //Set the scale factor
-            scrq -= scrqA*scrqA;
+            scrq -= scrqA*scrqA*scrqA;
           }
           else
           {
