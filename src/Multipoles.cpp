@@ -598,7 +598,14 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
             //Combine temp. variables
             scrqA += scrqB+1;
             //Set the scale factor
-            scrq -= scrqA*scrqA*scrqA;
+            if (AMOEBA)
+            {
+              scrq -= scrqA*scrqA*scrqA;
+            }
+            else
+            {
+              scrq -= scrqA*scrqA;
+            }
           }
           else
           {
@@ -737,7 +744,14 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
             //Combine temp. variables
             scrqA += scrqB+1;
             //Set the scale factor
-            scrq -= scrqA*scrqA*scrqA;
+            if (AMOEBA)
+            {
+              scrq -= scrqA*scrqA*scrqA;
+            }
+            else
+            {
+              scrq -= scrqA*scrqA;
+            }
           }
           else
           {

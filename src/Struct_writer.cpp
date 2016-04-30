@@ -160,7 +160,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
               //Combine temp. variables
               scrqA += scrqB+1;
               //Set the scale factor
-              scrq -= scrqA*scrqA*scrqA;
+              scrq -= scrqA*scrqA;
             }
             else
             {
@@ -511,7 +511,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
               //Combine temp. variables
               scrqA += scrqB+1;
               //Set the scale factor
-              scrq -= scrqA*scrqA*scrqA;
+              scrq -= scrqA*scrqA;
             }
             else
             {
@@ -859,7 +859,7 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
               //Combine temp. variables
               scrqA += scrqB+1;
               //Set the scale factor
-              scrq -= scrqA*scrqA*scrqA;
+              scrq -= scrqA*scrqA;
             }
             else
             {
