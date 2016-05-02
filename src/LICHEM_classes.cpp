@@ -258,8 +258,10 @@ QMMMSettings::QMMMSettings()
   Charge = 0;
   Spin = 1;
   BackDir = "Old_files";
+  //QMMM long-range electrostatics settings
   UseLREC = 0;
   LRECCut = 1000.0; //Effectively infinite
+  LRECPow = 3;
   //MM wrapper settings
   UseMMCut = 0;
   MMOptCut = 1000.0; //Effectively infinite

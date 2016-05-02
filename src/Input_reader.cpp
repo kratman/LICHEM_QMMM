@@ -449,6 +449,11 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       //Read the QMMM electrostatic cutoff for LREC
       regionfile >> QMMMOpts.LRECCut;
     }
+    else if (keyword == "lrec_exponent:")
+    {
+      //Read the exponent for the LREC smoothing function
+      regionfile >> QMMMOpts.LRECPow;
+    }
     else if (keyword == "electrostatics:")
     {
       //Check the type of force field

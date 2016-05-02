@@ -113,8 +113,10 @@ class QMMMSettings
     int Charge; //QM total charge
     int Spin; //QM total spin
     string BackDir; //Directory for log file backups
+    //Input needed for QMMM long-range electrostatics
     bool UseLREC; //Use a long-range correction
     double LRECCut; //Cutoff for the long-range correction
+    int LRECPow; //Exponent for the LREC smoothing function
     //Input needed for MM wrappers
     bool UseMMCut; //Flag to turn the cutoff on or off
     double MMOptCut; //Electrostatic cutoff for MM optimzations (Ang)
