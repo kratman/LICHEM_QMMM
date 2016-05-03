@@ -1056,7 +1056,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       DoQuit = 1;
     }
   }
-  //Simulation box errors
+  //Check LREC settings
   if (QMMMOpts.UseLREC or PBCon)
   {
     //Check LREC cutoff
@@ -1088,6 +1088,15 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       //Adjust cutoff to avoid divide by zero errors
       QMMMOpts.LRECCut = 0.10; //Minimum value, effectively zero
       cout << "Warning: LREC cutoffs less than 0.1 are not allowed.";
+      cout << '\n' << '\n';
+    }
+    //Check LREC exponent
+    if (QMMMOpts.LRECPow < 1)
+    {
+      //Needed to make the minimum image convention safe
+      QMMMOpts.LRECPow = 3;
+      cout << "Warning: Invalid LREC exponent.";
+      cout << " LREC exponent set to 3.";
       cout << '\n' << '\n';
     }
   }
@@ -1503,6 +1512,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
         cout << " LREC cutoff: ";
         cout << LICHEMFormFloat(QMMMOpts.LRECCut,8);
         cout << " \u212B" << '\n';
+        cout << " LREC exponent: " << QMMMOpts.LRECPow << '\n';
       }
       if (QMMMOpts.UseEwald)
       {
