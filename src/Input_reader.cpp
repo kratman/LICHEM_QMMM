@@ -325,165 +325,35 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       //Skip comment
     }
-    //Check for input keywords
-    else if (keyword == "potential_type:")
+    //Check for input keywords (alphabetical)
+    else if (keyword == "acceptance_ratio:")
     {
-      //Set QM, MM, and QMMM options
-      regionfile >> dummy; //Potential type
-      LICHEMLowerText(dummy);
-      if (dummy == "qm")
+      //Read the Monte Carlo acceptance ratio
+      regionfile >> QMMMOpts.accratio;
+    }
+    else if (keyword == "beads:")
+    {
+      //Read the number of replica beads
+      regionfile >> QMMMOpts.Nbeads;
+    }
+    else if (keyword == "boundary_atoms:")
+    {
+      //Read the list of boundary atoms
+      regionfile >> Nbound;
+      for (int i=0;i<Nbound;i++)
       {
-        //Pure QM simulation
-        QMonly = 1;
-        Nqm = Natoms; //Save number of QM atoms
-      }
-      if (dummy == "mm")
-      {
-        //Pure MM simulation
-        MMonly = 1;
-        Nmm = Natoms; //Save number of QM atoms
-      }
-      if (dummy == "qmmm")
-      {
-        //QMMM simulation
-        QMMM = 1;
+        int AtomID;
+        regionfile >> AtomID;
+        Struct[AtomID].QMregion = 0;
+        Struct[AtomID].PBregion = 0;
+        Struct[AtomID].BAregion = 1;
+        Struct[AtomID].MMregion = 0;
       }
     }
-    else if (keyword == "qm_type:")
+    else if (keyword == "box_size:")
     {
-      //Set QM wrapper
-      regionfile >> dummy;
-      LICHEMLowerText(dummy);
-      if (dummy == "psi4")
-      {
-        PSI4 = 1;
-      }
-      if (dummy == "nwchem")
-      {
-        NWChem = 1;
-      }
-      if ((dummy == "gaussian") or (dummy == "g09"))
-      {
-        Gaussian = 1;
-      }
-    }
-    else if (keyword == "mm_type:")
-    {
-      //Set MM wrapper
-      regionfile >> dummy;
-      LICHEMLowerText(dummy);
-      if (dummy == "tinker")
-      {
-        TINKER = 1;
-      }
-      if (dummy == "amber")
-      {
-        AMBER = 1;
-      }
-      if (dummy == "lammps")
-      {
-        LAMMPS = 1;
-      }
-    }
-    else if (keyword == "qm_method:")
-    {
-      //Set QM functional or method
-      regionfile >> dummy;
-      QMMMOpts.Func = dummy; //Save name with correct case
-      //Check for special methods
-      LICHEMLowerText(dummy);
-      if ((dummy == "semiempirical") or (dummy == "se-scf") or
-         (dummy == "semi-empirical") or (dummy == "sescf") or
-         (dummy == "semiemp"))
-      {
-        //Flag the method as a semi-empirical Hamiltonian
-        QMMMOpts.Func = "SemiEmp";
-      }
-    }
-    else if (keyword == "qm_basis:")
-    {
-      //Set the basis set or semi-empirical Hamiltonian
-      regionfile >> QMMMOpts.Basis;
-    }
-    else if (keyword == "qm_memory:")
-    {
-      //Set the amount of memory for the QM calculations
-      regionfile >> QMMMOpts.RAM;
-      //Check units
-      regionfile >> dummy;
-      LICHEMLowerText(dummy);
-      if (dummy == "mb")
-      {
-        //RAM is in MB
-        QMMMOpts.MemMB = 1;
-      }
-      else
-      {
-        //RAM is in GB
-        QMMMOpts.MemMB = 0;
-      }
-    }
-    else if (keyword == "qm_charge:")
-    {
-      //Set the total charge on the QM region
-      regionfile >> QMMMOpts.Charge;
-    }
-    else if (keyword == "qm_spin:")
-    {
-      //Set the multiplicity
-      regionfile >> QMMMOpts.Spin;
-    }
-    else if (keyword == "use_lrec:")
-    {
-      //Turn on long-range corrections
-      regionfile >> dummy;
-      LICHEMLowerText(dummy);
-      if ((dummy == "yes") or (dummy == "true"))
-      {
-        //Turn on long-range corrections
-        QMMMOpts.UseLREC = 1;
-      }
-    }
-    else if (keyword == "lrec_cut:")
-    {
-      //Read the QMMM electrostatic cutoff for LREC
-      regionfile >> QMMMOpts.LRECCut;
-    }
-    else if (keyword == "lrec_exponent:")
-    {
-      //Read the exponent for the LREC smoothing function
-      regionfile >> QMMMOpts.LRECPow;
-    }
-    else if (keyword == "electrostatics:")
-    {
-      //Check the type of force field
-      regionfile >> dummy;
-      LICHEMLowerText(dummy);
-      if ((dummy == "charges") or (dummy == "charge") or
-         (dummy == "point-charge"))
-      {
-        //Point-charge force fields
-        CHRG = 1;
-      }
-      if (dummy == "amoeba")
-      {
-        //AMOEBA polarizable force field
-        AMOEBA = 1;
-        if (TINKER)
-        {
-          ExtractTINKpoles(Struct,0);
-        }
-      }
-      if (dummy == "gem")
-      {
-        //Frozen density
-        GEM = 1;
-        if (TINKER)
-        {
-          //Collect TINKER multipoles or GEM-DM
-          ExtractTINKpoles(Struct,0);
-        }
-      }
+      //Read the box size
+      regionfile >> Lx >> Ly >> Lz;
     }
     else if (keyword == "calculation_type:")
     {
@@ -552,128 +422,36 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
         PIMCSim = 1;
       }
     }
-    else if (keyword == "opt_stepsize:")
+    else if (keyword == "electrostatics:")
     {
-      //Read the optimization stepsize
-      regionfile >> QMMMOpts.StepScale;
-    }
-    else if (keyword == "max_stepsize:")
-    {
-      //Read the maximum displacement during optimizations
-      regionfile >> QMMMOpts.MaxStep;
-    }
-    else if (keyword == "qm_opt_tolerance:")
-    {
-      //Read QM optimization tolerance (RMSD value)
-      regionfile >> QMMMOpts.QMOptTol;
-    }
-    else if (keyword == "mm_opt_tolerance:")
-    {
-      //Read MM optimization tolerance (RMSD value)
-      regionfile >> QMMMOpts.MMOptTol;
-    }
-    else if (keyword == "max_opt_steps:")
-    {
-      //Read maximum number of optimization steps
-      regionfile >> QMMMOpts.MaxOptSteps;
-    }
-    else if (keyword == "use_mm_cutoff:")
-    {
-      //Check for the MM optimization cutoff
+      //Check the type of force field
       regionfile >> dummy;
       LICHEMLowerText(dummy);
-      if ((dummy == "yes") or (dummy == "true"))
+      if ((dummy == "charges") or (dummy == "charge") or
+         (dummy == "point-charge"))
       {
-        //Turn on the optimization cutoff
-        QMMMOpts.UseMMCut = 1;
+        //Point-charge force fields
+        CHRG = 1;
       }
-    }
-    else if (keyword == "mm_opt_cut:")
-    {
-      //Read MM optimization cutoff
-      regionfile >> QMMMOpts.MMOptCut;
-    }
-    else if (keyword == "use_ewald:")
-    {
-      //Check for MM Ewald summation
-      regionfile >> dummy;
-      LICHEMLowerText(dummy);
-      if ((dummy == "yes") or (dummy == "true"))
+      if (dummy == "amoeba")
       {
-        //Turn on Ewald or PME
-        QMMMOpts.UseEwald = 1;
+        //AMOEBA polarizable force field
+        AMOEBA = 1;
+        if (TINKER)
+        {
+          ExtractTINKpoles(Struct,0);
+        }
       }
-    }
-    else if (keyword == "use_solvent:")
-    {
-      //Check for MM implicit solvation
-      regionfile >> dummy;
-      LICHEMLowerText(dummy);
-      if ((dummy == "yes") or (dummy == "true"))
+      if (dummy == "gem")
       {
-        //Turn on the implicit solvent
-        QMMMOpts.UseImpSolv = 1;
+        //Frozen density
+        GEM = 1;
+        if (TINKER)
+        {
+          //Collect TINKER multipoles or GEM-DM
+          ExtractTINKpoles(Struct,0);
+        }
       }
-    }
-    else if (keyword == "solv_model:")
-    {
-      //Read MM implicit solvent model
-      regionfile >> QMMMOpts.SolvModel;
-    }
-    else if (keyword == "beads:")
-    {
-      //Read the number of replica beads
-      regionfile >> QMMMOpts.Nbeads;
-    }
-    else if (keyword == "spring_constant:")
-    {
-      //Read the NEB spring constant
-      regionfile >> QMMMOpts.Kspring;
-    }
-    else if (keyword == "frozen_ends:")
-    {
-      //Check for inactive NEB end-points
-      regionfile >> dummy;
-      LICHEMLowerText(dummy);
-      if ((dummy == "yes") or (dummy == "true"))
-      {
-        QMMMOpts.FrznEnds = 1;
-      }
-    }
-    else if (keyword == "ts_freq:")
-    {
-      //Check for inactive NEB end-points
-      regionfile >> dummy;
-      LICHEMLowerText(dummy);
-      if ((dummy == "yes") or (dummy == "true"))
-      {
-        QMMMOpts.NEBFreq = 1;
-      }
-    }
-    else if (keyword == "print_normal_modes:")
-    {
-      //Check for inactive NEB end-points
-      regionfile >> dummy;
-      LICHEMLowerText(dummy);
-      if ((dummy == "yes") or (dummy == "true"))
-      {
-        QMMMOpts.PrintNormModes = 1;
-      }
-    }
-    else if (keyword == "init_path_chk:")
-    {
-      //Check for inactive NEB end-points
-      regionfile >> dummy;
-      LICHEMLowerText(dummy);
-      if ((dummy == "no") or (dummy == "false"))
-      {
-        QMMMOpts.StartPathChk = 0;
-      }
-    }
-    else if (keyword == "timestep:")
-    {
-      //Read the molecular dynamics timestep
-      regionfile >> QMMMOpts.dt;
     }
     else if (keyword == "ensemble:")
     {
@@ -691,42 +469,94 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
         QMMMOpts.Ensemble = "NPT";
       }
     }
-    else if (keyword == "temperature:")
-    {
-      //Read the temperature
-      regionfile >> QMMMOpts.Temp;
-      //Save the inverse temperature
-      QMMMOpts.Beta = 1/(k*QMMMOpts.Temp);
-    }
-    else if (keyword == "pressure:")
-    {
-      //Read the pressure
-      regionfile >> QMMMOpts.Press;
-    }
-    else if (keyword == "tau_temp:")
-    {
-      //Read the thermostat relaxation constant
-      regionfile >> QMMMOpts.tautemp;
-    }
     else if (keyword == "eq_steps:")
     {
       //Read the number of equilibration steps
       regionfile >> QMMMOpts.Neq;
     }
-    else if (keyword == "prod_steps:")
+    else if (keyword == "frozen_atoms:")
     {
-      //Read the number of production (MD or MC) steps
-      regionfile >> QMMMOpts.Nsteps;
+      //Read the list of frozen atoms
+      regionfile >> Nfreeze;
+      for (int i=0;i<Nfreeze;i++)
+      {
+        int AtomID;
+        regionfile >> AtomID;
+        Struct[AtomID].Frozen = 1;
+      }
     }
-    else if (keyword == "print_steps:")
+    else if (keyword == "frozen_ends:")
     {
-      //Read the number of steps between MD and MC output
-      regionfile >> QMMMOpts.Nprint;
+      //Check for inactive NEB end-points
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "yes") or (dummy == "true"))
+      {
+        QMMMOpts.FrznEnds = 1;
+      }
     }
-    else if (keyword == "acceptance_ratio:")
+    else if (keyword == "init_path_chk:")
     {
-      //Read the Monte Carlo acceptance ratio
-      regionfile >> QMMMOpts.accratio;
+      //Check for inactive NEB end-points
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "no") or (dummy == "false"))
+      {
+        QMMMOpts.StartPathChk = 0;
+      }
+    }
+    else if (keyword == "lrec_cut:")
+    {
+      //Read the QMMM electrostatic cutoff for LREC
+      regionfile >> QMMMOpts.LRECCut;
+    }
+    else if (keyword == "lrec_exponent:")
+    {
+      //Read the exponent for the LREC smoothing function
+      regionfile >> QMMMOpts.LRECPow;
+    }
+    else if (keyword == "max_opt_steps:")
+    {
+      //Read maximum number of optimization steps
+      regionfile >> QMMMOpts.MaxOptSteps;
+    }
+    else if (keyword == "max_stepsize:")
+    {
+      //Read the maximum displacement during optimizations
+      regionfile >> QMMMOpts.MaxStep;
+    }
+    else if (keyword == "mm_opt_cut:")
+    {
+      //Read MM optimization cutoff
+      regionfile >> QMMMOpts.MMOptCut;
+    }
+    else if (keyword == "mm_opt_tolerance:")
+    {
+      //Read MM optimization tolerance (RMSD value)
+      regionfile >> QMMMOpts.MMOptTol;
+    }
+    else if (keyword == "mm_type:")
+    {
+      //Set MM wrapper
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if (dummy == "tinker")
+      {
+        TINKER = 1;
+      }
+      if (dummy == "amber")
+      {
+        AMBER = 1;
+      }
+      if (dummy == "lammps")
+      {
+        LAMMPS = 1;
+      }
+    }
+    else if (keyword == "opt_stepsize:")
+    {
+      //Read the optimization stepsize
+      regionfile >> QMMMOpts.StepScale;
     }
     else if (keyword == "pbc:")
     {
@@ -738,24 +568,53 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
         PBCon = 1;
       }
     }
-    else if (keyword == "box_size:")
+    else if (keyword == "potential_type:")
     {
-      //Read the box size
-      regionfile >> Lx >> Ly >> Lz;
-    }
-    else if (keyword == "qm_atoms:")
-    {
-      //Read the list of QM atoms
-      regionfile >> Nqm;
-      for (int i=0;i<Nqm;i++)
+      //Set QM, MM, and QMMM options
+      regionfile >> dummy; //Potential type
+      LICHEMLowerText(dummy);
+      if (dummy == "qm")
       {
-        int AtomID;
-        regionfile >> AtomID;
-        Struct[AtomID].QMregion = 1;
-        Struct[AtomID].PBregion = 0;
-        Struct[AtomID].BAregion = 0;
-        Struct[AtomID].MMregion = 0;
+        //Pure QM simulation
+        QMonly = 1;
+        Nqm = Natoms; //Save number of QM atoms
       }
+      if (dummy == "mm")
+      {
+        //Pure MM simulation
+        MMonly = 1;
+        Nmm = Natoms; //Save number of QM atoms
+      }
+      if (dummy == "qmmm")
+      {
+        //QMMM simulation
+        QMMM = 1;
+      }
+    }
+    else if (keyword == "pressure:")
+    {
+      //Read the pressure
+      regionfile >> QMMMOpts.Press;
+    }
+    else if (keyword == "print_normal_modes:")
+    {
+      //Check for inactive NEB end-points
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "yes") or (dummy == "true"))
+      {
+        QMMMOpts.PrintNormModes = 1;
+      }
+    }
+    else if (keyword == "print_steps:")
+    {
+      //Read the number of steps between MD and MC output
+      regionfile >> QMMMOpts.Nprint;
+    }
+    else if (keyword == "prod_steps:")
+    {
+      //Read the number of production (MD or MC) steps
+      regionfile >> QMMMOpts.Nsteps;
     }
     else if (keyword == "pseudobond_atoms:")
     {
@@ -771,29 +630,170 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
         Struct[AtomID].MMregion = 0;
       }
     }
-    else if (keyword == "boundary_atoms:")
+    else if (keyword == "qm_atoms:")
     {
-      //Read the list of boundary atoms
-      regionfile >> Nbound;
-      for (int i=0;i<Nbound;i++)
+      //Read the list of QM atoms
+      regionfile >> Nqm;
+      for (int i=0;i<Nqm;i++)
       {
         int AtomID;
         regionfile >> AtomID;
-        Struct[AtomID].QMregion = 0;
+        Struct[AtomID].QMregion = 1;
         Struct[AtomID].PBregion = 0;
-        Struct[AtomID].BAregion = 1;
+        Struct[AtomID].BAregion = 0;
         Struct[AtomID].MMregion = 0;
       }
     }
-    else if (keyword == "frozen_atoms:")
+    else if (keyword == "qm_basis:")
     {
-      //Read the list of frozen atoms
-      regionfile >> Nfreeze;
-      for (int i=0;i<Nfreeze;i++)
+      //Set the basis set or semi-empirical Hamiltonian
+      regionfile >> QMMMOpts.Basis;
+    }
+    else if (keyword == "qm_charge:")
+    {
+      //Set the total charge on the QM region
+      regionfile >> QMMMOpts.Charge;
+    }
+    else if (keyword == "qm_memory:")
+    {
+      //Set the amount of memory for the QM calculations
+      regionfile >> QMMMOpts.RAM;
+      //Check units
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if (dummy == "mb")
       {
-        int AtomID;
-        regionfile >> AtomID;
-        Struct[AtomID].Frozen = 1;
+        //RAM is in MB
+        QMMMOpts.MemMB = 1;
+      }
+      else
+      {
+        //RAM is in GB
+        QMMMOpts.MemMB = 0;
+      }
+    }
+    else if (keyword == "qm_method:")
+    {
+      //Set QM functional or method
+      regionfile >> dummy;
+      QMMMOpts.Func = dummy; //Save name with correct case
+      //Check for special methods
+      LICHEMLowerText(dummy);
+      if ((dummy == "semiempirical") or (dummy == "se-scf") or
+         (dummy == "semi-empirical") or (dummy == "sescf") or
+         (dummy == "semiemp"))
+      {
+        //Flag the method as a semi-empirical Hamiltonian
+        QMMMOpts.Func = "SemiEmp";
+      }
+    }
+    else if (keyword == "qm_opt_tolerance:")
+    {
+      //Read QM optimization tolerance (RMSD value)
+      regionfile >> QMMMOpts.QMOptTol;
+    }
+    else if (keyword == "qm_spin:")
+    {
+      //Set the multiplicity
+      regionfile >> QMMMOpts.Spin;
+    }
+    else if (keyword == "qm_type:")
+    {
+      //Set QM wrapper
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if (dummy == "psi4")
+      {
+        PSI4 = 1;
+      }
+      if (dummy == "nwchem")
+      {
+        NWChem = 1;
+      }
+      if ((dummy == "gaussian") or (dummy == "g09"))
+      {
+        Gaussian = 1;
+      }
+    }
+    else if (keyword == "solv_model:")
+    {
+      //Read MM implicit solvent model
+      regionfile >> QMMMOpts.SolvModel;
+    }
+    else if (keyword == "spring_constant:")
+    {
+      //Read the NEB spring constant
+      regionfile >> QMMMOpts.Kspring;
+    }
+    else if (keyword == "tau_temp:")
+    {
+      //Read the thermostat relaxation constant
+      regionfile >> QMMMOpts.tautemp;
+    }
+    else if (keyword == "temperature:")
+    {
+      //Read the temperature
+      regionfile >> QMMMOpts.Temp;
+      //Save the inverse temperature
+      QMMMOpts.Beta = 1/(k*QMMMOpts.Temp);
+    }
+    else if (keyword == "timestep:")
+    {
+      //Read the molecular dynamics timestep
+      regionfile >> QMMMOpts.dt;
+    }
+    else if (keyword == "ts_freq:")
+    {
+      //Check for inactive NEB end-points
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "yes") or (dummy == "true"))
+      {
+        QMMMOpts.NEBFreq = 1;
+      }
+    }
+    else if (keyword == "use_ewald:")
+    {
+      //Check for MM Ewald summation
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "yes") or (dummy == "true"))
+      {
+        //Turn on Ewald or PME
+        QMMMOpts.UseEwald = 1;
+      }
+    }
+    else if (keyword == "use_lrec:")
+    {
+      //Turn on long-range corrections
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "yes") or (dummy == "true"))
+      {
+        //Turn on long-range corrections
+        QMMMOpts.UseLREC = 1;
+      }
+    }
+    else if (keyword == "use_mm_cutoff:")
+    {
+      //Check for the MM optimization cutoff
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "yes") or (dummy == "true"))
+      {
+        //Turn on the optimization cutoff
+        QMMMOpts.UseMMCut = 1;
+      }
+    }
+    else if (keyword == "use_solvent:")
+    {
+      //Check for MM implicit solvation
+      regionfile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "yes") or (dummy == "true"))
+      {
+        //Turn on the implicit solvent
+        QMMMOpts.UseImpSolv = 1;
       }
     }
     //Check for bad keywords
