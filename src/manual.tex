@@ -426,41 +426,17 @@ directory. \\
 
 \subsection{Keywords}
 
-Potential\_type: Type of interaction potential (QM or MM or QMMM).
-This keyword is required and has no default.
-Default: N/A \\
+Acceptance\_ratio: Fraction of Monte Carlo moves that will be accepted.
+LICHEM will adjust the Monte Carlo stepsize during the equilibration run to
+maintain the specified acceptance ratio.
+Default: 0.50 \\
 
-QM\_type: Name of the QM wrapper.
-Current wrappers: Gaussian or PSI4 or NWChem.
-Default: N/A \\
-
-QM\_method: QM level of theory (HF or functional name or SemiEmp).
-If the QM method is set to SemiEmp, then the QM basis should be set to the
-semi-empirical model Hamiltonian.
-Default: N/A \\
-
-QM\_basis: Basis set for the QM calculations.
-If the QM method is SemiEmp, then this keyword should be a model Hamiltonian.
-Default: N/A \\
-
-QM\_memory: Amount of RAM for the QM calculations.
-This keyword requires two peices of input.
-An integer input for the RAM and a string for the units (MB or GB).
-Default: 256 MB \\
-
-QM\_charge: Charge on the QM region.
-Default: 0 \\
-
-QM\_spin: Multiplicity of the QM region.
+Beads: Number of replica beads for reaction pathways and path-integral
+Monte Carlo simulations.
 Default: 1 \\
 
-MM\_type: Name of the MM wrapper.
-Current wrappers: TINKER or AMBER or LAMMPS.
-Default: N/A \\
-
-Electrostatics: Type of MM electrostatic potential.
-Current options: Charges or AMOEBA.
-Default: N/A \\
+Box\_size: Three lattice constants (\AA) for the periodic simulation box.
+Default: 10000.0 10000.0 10000.0 \\
 
 Calculation\_type: Type of calculation that will be performed.
 Calculation types are documented in the Section \ref{sec:CalcTyp} and
@@ -471,35 +447,15 @@ Some additional synonyms are accepted for each type of calculation, but not
 all synonyms are well documented.
 Default: N/A \\
 
-Opt\_stepsize: Initial scale factor for the geometry optimizers.
-A value of zero does nothing and a value of 1.0 takes uses a stepsize based
-on the forces and/or Hessian. The LICHEM optimizers will attempt to adjust
-the stepsize to improve performance.
-Default: 1.0 \\
+Electrostatics: Type of MM electrostatic potential.
+Current options: Charges or AMOEBA.
+Default: N/A \\
 
-Max\_stepsize: Maximum displacement during an optimization step (\AA).
-Default: 0.10 \\
+Ensemble: Thermodynamic ensemble (NVT or NPT).
+Default: N/A \\
 
-QM\_opt\_tolerance: RMS deviation criteria for stoping the QM optimizations
-(\AA).
-Force tolerances are generated automatically based on this value.
-Default: 5e-4 \\
-
-MM\_opt\_tolerance: RMS deviation criteria for stoping the MM and QMMM
-optimizations (\AA).
-Force tolerances are generated automatically based on this value.
-Default: 1e-2 \\
-
-Max\_opt\_steps: Maximum number of QM optimization steps during a single
-QMMM iteration.
-Default: 200 \\
-
-Beads: Number of replica beads for reaction pathways and path-integral
-Monte Carlo simulations.
-Default: 1 \\
-
-Spring\_constant: Nudged elastic band spring constant (eV/\AA$^2$).
-Default: 1.0 \\
+Eq\_steps: Number of Monte Carlo and molecular dynamics equilibration steps.
+Default: 0 \\
 
 Frozen\_ends: Freeze the end points of the reaction path optimizations
 (Yes/No).
@@ -512,35 +468,117 @@ calculations by starting some of the points with a checkpoint guess.
 This keyword only has an effect on the initial calculation of the energies.
 Default: Yes \\
 
-Timestep: Molecular dynamics timestep (fs).
+LREC\_cut: LREC cutoff (\AA) for the smoothing function.
+This keyword also sets the MM cutoff for energy calculations.
+Default: 1000.0 \\
+
+LREC\_exponent: Integer exponent for the LREC smoothing function.
+Default: 3 \\
+
+Max\_opt\_steps: Maximum number of QM optimization steps during a single
+QMMM iteration.
+Default: 200 \\
+
+Max\_stepsize: Maximum displacement during an optimization step (\AA).
+Default: 0.10 \\
+
+MM\_opt\_cut: Value of the MM optimization cutoff (\AA).
+This keyword overrides the LREC\_Cut keyword during the MM optimizations.
+Default: 1000.0 \\
+
+MM\_opt\_tolerance: RMS deviation criteria for stoping the MM and QMMM
+optimizations (\AA).
+Force tolerances are generated automatically based on this value.
+Default: 1e-2 \\
+
+MM\_type: Name of the MM wrapper.
+Current wrappers: TINKER or AMBER or LAMMPS.
+Default: N/A \\
+
+Opt\_stepsize: Initial scale factor for the geometry optimizers.
+A value of zero does nothing and a value of 1.0 takes uses a stepsize based
+on the forces and/or Hessian. The LICHEM optimizers will attempt to adjust
+the stepsize to improve performance.
 Default: 1.0 \\
 
-Ensemble: Thermodynamic ensemble (NVT or NPT).
-Default: NVT \\
+PBC: Use periodic boundary conditions (Yes/No).
+Default: No \\
 
-Temperature: Temperature of the simulation (Kelvin).
-Default: 300.0 \\
-
-Tau\_temp: Thermostat time constant (fs) for molecular dynamics simulations.
-Default: 1000.0 \\
+Potential\_type: Type of interaction potential (QM or MM or QMMM).
+This keyword is required and has no default.
+Default: N/A \\
 
 Pressure: Pressure of the simulation (atm).
 Default: 0.0 \\
 
-Eq\_steps: Number of Monte Carlo and molecular dynamics equilibration steps.
-Default: 0 \\
+Print\_normal\_modes: Causes LICHEM to print normal modes for pure QM
+frequency calculations and imaginary frequencies for QM/MM frequency 
+calculations (Yes/No).
+Default: No \\
+
+Print\_steps: Print Monte Carlo and molecular dynamics data every N steps.
+Default: 5000 \\
 
 Prod\_steps: Number of Monte Carlo and molecular dynamics steps for
 production runs.
 Default: 0 \\
 
-Acceptance\_ratio: Fraction of Monte Carlo moves that will be accepted.
-LICHEM will adjust the Monte Carlo stepsize during the equilibration run to
-maintain the specified acceptance ratio.
-Default: 0.50 \\
+QM\_basis: Basis set for the QM calculations.
+If the QM method is SemiEmp, then this keyword should be a model Hamiltonian.
+Default: N/A \\
 
-Print\_steps: Print Monte Carlo and molecular dynamics data every N steps.
-Default: 5000 \\
+QM\_charge: Charge on the QM region.
+Default: 0 \\
+
+QM\_memory: Amount of RAM for the QM calculations.
+This keyword requires two peices of input.
+An integer input for the RAM and a string for the units (MB or GB).
+Default: 256 MB \\
+
+QM\_method: QM level of theory (HF or functional name or SemiEmp).
+If the QM method is set to SemiEmp, then the QM basis should be set to the
+semi-empirical model Hamiltonian.
+Default: N/A \\
+
+QM\_opt\_tolerance: RMS deviation criteria for stoping the QM optimizations
+(\AA).
+Force tolerances are generated automatically based on this value.
+Default: 5e-4 \\
+
+QM\_spin: Multiplicity of the QM region.
+Default: 1 \\
+
+QM\_type: Name of the QM wrapper.
+Current wrappers: Gaussian or PSI4 or NWChem.
+Default: N/A \\
+
+Solv\_model: Type of implicit solvation model.
+As a general note, solvation models should be chosen carefully.
+Default: N/A \\
+
+Spring\_constant: Nudged elastic band spring constant (eV/\AA$^2$).
+Default: 1.0 \\
+
+Tau\_temp: Thermostat time constant (fs) for molecular dynamics simulations.
+Default: 1000.0 \\
+
+Temperature: Temperature of the simulation (Kelvin).
+Default: 300.0 \\
+
+Timestep: Molecular dynamics timestep (fs).
+Default: 1.0 \\
+
+TS\_freqs: Automatically calculate frequencies for the optimized climbing
+image nudged elastic band transition states.
+Default: No \\
+
+Use\_Ewald: Use Ewald summation for the MM calculations (Yes/No).
+This keyword turns off MM cutoffs for energy calculations.
+Default: No \
+
+Use\_LREC: Use a long-range smoothing function (Yes/No) for QM periodic
+boundary conditions (Yes/No).
+Default: No \\
 
 Use\_MM\_cutoff: Use a MM cutoff in optimizations (Yes/No).
 This can greatly speed up the optimizations, but may prevent the optimization
@@ -550,36 +588,10 @@ Using PBC and LREC is preferred since QM and QMMM energies are not calculated
 using an electrostatic cutoff.
 Default: No \\
 
-MM\_opt\_cut: Value of the MM optimization cutoff (\AA).
-This keyword overrides the LREC\_Cut keyword during the MM optimizations.
-Default: 1000.0 \\
-
-PBC: Use periodic boundary conditions (Yes/No).
-Default: No \\
-
-Box\_size: Three lattice constants (\AA) for the periodic simulation box.
-Default: 10000.0 10000.0 10000.0 \\
-
-Use\_LREC: Use a long-range smoothing function (Yes/No) for QM periodic
-boundary conditions (Yes/No).
-Default: No \\
-
-LREC\_cut: LREC cutoff (\AA) for the smoothing function.
-This keyword also sets the MM cutoff for energy calculations.
-Default: 1000.0 \\
-
-Use\_Ewald: Use Ewald summation for the MM calculations (Yes/No).
-This keyword turns off MM cutoffs for energy calculations.
-Default: No \\
-
 Use\_solvent: Use an implicit solvent for MM calculations (Yes/No).
 Implicit solvents can only be used for non-periodic simulations.
 Using an implicit solvent disables MM cutoffs in energy calculations.
-Default: No \\
-
-Solv\_model: Type of implicit solvation model.
-As a general note, solvation models should be chosen carefully.
-Default: N/A
+Default: No
 
 \subsection{QMMM regions}
 
