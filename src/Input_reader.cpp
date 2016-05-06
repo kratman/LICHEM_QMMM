@@ -325,7 +325,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       //Skip comment
     }
-    //Check for input keywords (alphabetical)
+    //Check for simulation keywords (alphabetical)
     else if (keyword == "acceptance_ratio:")
     {
       //Read the Monte Carlo acceptance ratio
@@ -335,20 +335,6 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       //Read the number of replica beads
       regionfile >> QMMMOpts.Nbeads;
-    }
-    else if (keyword == "boundary_atoms:")
-    {
-      //Read the list of boundary atoms
-      regionfile >> Nbound;
-      for (int i=0;i<Nbound;i++)
-      {
-        int AtomID;
-        regionfile >> AtomID;
-        Struct[AtomID].QMregion = 0;
-        Struct[AtomID].PBregion = 0;
-        Struct[AtomID].BAregion = 1;
-        Struct[AtomID].MMregion = 0;
-      }
     }
     else if (keyword == "box_size:")
     {
@@ -473,17 +459,6 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       //Read the number of equilibration steps
       regionfile >> QMMMOpts.Neq;
-    }
-    else if (keyword == "frozen_atoms:")
-    {
-      //Read the list of frozen atoms
-      regionfile >> Nfreeze;
-      for (int i=0;i<Nfreeze;i++)
-      {
-        int AtomID;
-        regionfile >> AtomID;
-        Struct[AtomID].Frozen = 1;
-      }
     }
     else if (keyword == "frozen_ends:")
     {
@@ -615,34 +590,6 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     {
       //Read the number of production (MD or MC) steps
       regionfile >> QMMMOpts.Nsteps;
-    }
-    else if (keyword == "pseudobond_atoms:")
-    {
-      //Read the list of pseudobond atoms
-      regionfile >> Npseudo;
-      for (int i=0;i<Npseudo;i++)
-      {
-        int AtomID;
-        regionfile >> AtomID;
-        Struct[AtomID].QMregion = 0;
-        Struct[AtomID].PBregion = 1;
-        Struct[AtomID].BAregion = 0;
-        Struct[AtomID].MMregion = 0;
-      }
-    }
-    else if (keyword == "qm_atoms:")
-    {
-      //Read the list of QM atoms
-      regionfile >> Nqm;
-      for (int i=0;i<Nqm;i++)
-      {
-        int AtomID;
-        regionfile >> AtomID;
-        Struct[AtomID].QMregion = 1;
-        Struct[AtomID].PBregion = 0;
-        Struct[AtomID].BAregion = 0;
-        Struct[AtomID].MMregion = 0;
-      }
     }
     else if (keyword == "qm_basis:")
     {
@@ -794,6 +741,60 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       {
         //Turn on the implicit solvent
         QMMMOpts.UseImpSolv = 1;
+      }
+    }
+    //Check for region keywords
+    else if (keyword == "qm_atoms:")
+    {
+      //Read the list of QM atoms
+      regionfile >> Nqm;
+      for (int i=0;i<Nqm;i++)
+      {
+        int AtomID;
+        regionfile >> AtomID;
+        Struct[AtomID].QMregion = 1;
+        Struct[AtomID].PBregion = 0;
+        Struct[AtomID].BAregion = 0;
+        Struct[AtomID].MMregion = 0;
+      }
+    }
+    else if (keyword == "pseudobond_atoms:")
+    {
+      //Read the list of pseudobond atoms
+      regionfile >> Npseudo;
+      for (int i=0;i<Npseudo;i++)
+      {
+        int AtomID;
+        regionfile >> AtomID;
+        Struct[AtomID].QMregion = 0;
+        Struct[AtomID].PBregion = 1;
+        Struct[AtomID].BAregion = 0;
+        Struct[AtomID].MMregion = 0;
+      }
+    }
+    else if (keyword == "boundary_atoms:")
+    {
+      //Read the list of boundary atoms
+      regionfile >> Nbound;
+      for (int i=0;i<Nbound;i++)
+      {
+        int AtomID;
+        regionfile >> AtomID;
+        Struct[AtomID].QMregion = 0;
+        Struct[AtomID].PBregion = 0;
+        Struct[AtomID].BAregion = 1;
+        Struct[AtomID].MMregion = 0;
+      }
+    }
+    else if (keyword == "frozen_atoms:")
+    {
+      //Read the list of frozen atoms
+      regionfile >> Nfreeze;
+      for (int i=0;i<Nfreeze;i++)
+      {
+        int AtomID;
+        regionfile >> AtomID;
+        Struct[AtomID].Frozen = 1;
       }
     }
     //Check for bad keywords
