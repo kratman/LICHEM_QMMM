@@ -726,7 +726,7 @@ in the QMMM calculations. \\
 
 user:\$ lichem -convert -b regions.inp \\
 
-The convert flag checks for specific keywords in the region file to construct
+The -convert flag checks for specific keywords in the region file to construct
 a BASIS file in the correct order. \\
 
 Required keywords: \\
@@ -737,6 +737,25 @@ Required keywords: \\
 
 Currently, these keywords must be spelled and formatted exactly as given
 above. \\
+
+{\textbf{Multi-replica trajectories:}} \\
+
+LICHEM can create or split merged trajectory files for reaction path
+simulations. \\
+
+user:\$ lichem -path -b Nbeads -r Reactant.xyz -t TS.xyz -p Product.xyz \\
+
+The -path flag will linearly interpolate between reactant and product structures
+to create an initial reaction pathway (BeadStartStruct.xyz) for LICHEM.
+Adding a guess of the transition state structure using the -t flag is optional,
+but can greatly improve the initial path. \\
+
+user:\$ lichem -splitpath -b Nbeads -f FrameID -p Path.xyz \\
+
+The -splitpath flag will parse a LICHEM multi-replica output or restart file to
+create a new trajectory file with one replica per frame.
+Here FrameID is the frame of the merged trajectory (Path.xyz) printed by the
+multi-replica simulation. \\
 
 {\textbf{TINKER:}} \\
 
@@ -755,7 +774,7 @@ user:\$ lichem -tinker -x xyzfile.xyz -c connectfile.inp \\
 
 A file called "tinkxyz.xyz" will be produced from this conversion. \\
 
-The GlobalPoles flag reads the force field and initial structure, then prints
+The -GlobalPoles flag reads the force field and initial structure, then prints
 the multipoles in the global reference frame. \\
 
 user:\$ lichem -GlobalPoles -n Ncpus -x xyzfile.xyz -r regions.inp
