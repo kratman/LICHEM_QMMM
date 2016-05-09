@@ -187,7 +187,7 @@ MatrixXd NWChemHessian(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double NWChemOpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
-bool OptConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,vector<Coord>&,
+bool OptConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,VectorXd&,
                   int,QMMMSettings& QMMMOpts,int,bool);
 
 bool PathConverged(vector<QMMMAtom>&,vector<QMMMAtom>&,MatrixXd&,
