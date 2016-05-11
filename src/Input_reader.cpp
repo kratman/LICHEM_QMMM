@@ -1473,7 +1473,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     if (QMMM)
     {
       //Print QMMM wrapper input for error checking
-      cout << " QMMM potential: ";
+      cout << " MM potential: ";
       if (CHRG)
       {
         cout << "Point-charge force field" << '\n';
@@ -1484,7 +1484,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       }
       if (GEM)
       {
-        cout << "Frozen density force field" << '\n';
+        cout << "Diffuse-charge force field" << '\n';
       }
     }
     //Print PBC information
