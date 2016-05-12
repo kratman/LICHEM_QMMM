@@ -45,7 +45,7 @@ class ClrSet:
 def RunLICHEM(xname,rname,cname):
   #Submit LICHEM jobs
   cmd = "lichem -n "
-  cmd += `Ncpus`
+  cmd += str(Ncpus)
   cmd += " "
   cmd += "-x "
   cmd += xname
@@ -96,9 +96,9 @@ def RecoverEnergy(txtlabel,itemnum):
   try:
     #Safely check energy
     finalenergy = subprocess.check_output(cmd,shell=True) #Get results
-    finalenergy = finalenergy.split()
+    finalenergy = finalenergy.decode('utf-8').split()
     finalenergy = float(finalenergy[itemnum])
-    savedresult = "Energy: "+`finalenergy` #Save it for later
+    savedresult = "Energy: "+str(finalenergy) #Save it for later
     finalenergy = round(finalenergy,5)
   except:
     #Calculation failed
@@ -115,7 +115,7 @@ def RecoverFreqs():
     #Safely check energy
     freqlist = []
     tmpfreqs = subprocess.check_output(cmd,shell=True) #Get results
-    tmpfreqs = tmpfreqs.strip()
+    tmpfreqs = tmpfreqs.decode('utf-8').strip()
     tmpfreqs = tmpfreqs.split()
     for freqval in tmpfreqs:
       freqlist.append(float(freqval))
@@ -161,7 +161,7 @@ def AddRunTime(txtln):
   cmd += "tests.out"
   try:
     RunTime = subprocess.check_output(cmd,shell=True) #Get run time
-    RunTime = RunTime.split()
+    RunTime = RunTime.decode('utf-8').split()
     RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
   except:
     RunTime = " N/A"
@@ -222,7 +222,7 @@ if (len(sys.argv) < 4):
   try:
     #Find path
     LICHEMbin = subprocess.check_output(cmd,shell=True)
-    LICHEMbin = ClrSet.TPass+LICHEMbin.strip()+ClrSet.Reset
+    LICHEMbin = ClrSet.TPass+LICHEMbin.decode('utf-8').strip()+ClrSet.Reset
   except:
     LICHEMbin = ClrSet.TFail+"N/A"+ClrSet.Reset
   line += LICHEMbin
@@ -236,7 +236,7 @@ if (len(sys.argv) < 4):
   try:
     #Find path
     QMbin = subprocess.check_output(cmd,shell=True)
-    QMbin = ClrSet.TPass+QMbin.strip()+ClrSet.Reset
+    QMbin = ClrSet.TPass+QMbin.decode('utf-8').strip()+ClrSet.Reset
   except:
     QMbin = ClrSet.TFail+"N/A"+ClrSet.Reset
   line += QMbin
@@ -246,7 +246,7 @@ if (len(sys.argv) < 4):
   try:
     #Find path
     QMbin = subprocess.check_output(cmd,shell=True)
-    QMbin = ClrSet.TPass+QMbin.strip()+ClrSet.Reset
+    QMbin = ClrSet.TPass+QMbin.decode('utf-8').strip()+ClrSet.Reset
   except:
     QMbin = ClrSet.TFail+"N/A"+ClrSet.Reset
   line += QMbin
@@ -256,7 +256,7 @@ if (len(sys.argv) < 4):
   try:
     #Find path
     QMbin = subprocess.check_output(cmd,shell=True)
-    QMbin = ClrSet.TPass+QMbin.strip()+ClrSet.Reset
+    QMbin = ClrSet.TPass+QMbin.decode('utf-8').strip()+ClrSet.Reset
   except:
     QMbin = ClrSet.TFail+"N/A"+ClrSet.Reset
   line += QMbin
@@ -270,7 +270,7 @@ if (len(sys.argv) < 4):
   try:
     #Find path
     MMbin = subprocess.check_output(cmd,shell=True)
-    MMbin = ClrSet.TPass+MMbin.strip()+ClrSet.Reset
+    MMbin = ClrSet.TPass+MMbin.decode('utf-8').strip()+ClrSet.Reset
   except:
     MMbin = ClrSet.TFail+"N/A"+ClrSet.Reset
   line += MMbin
@@ -280,7 +280,7 @@ if (len(sys.argv) < 4):
   try:
     #Find path
     MMbin = subprocess.check_output(cmd,shell=True)
-    MMbin = ClrSet.TPass+MMbin.strip()+ClrSet.Reset
+    MMbin = ClrSet.TPass+MMbin.decode('utf-8').strip()+ClrSet.Reset
   except:
     MMbin = ClrSet.TFail+"N/A"+ClrSet.Reset
   line += MMbin
@@ -290,7 +290,7 @@ if (len(sys.argv) < 4):
   try:
     #Find path
     MMbin = subprocess.check_output(cmd,shell=True)
-    MMbin = ClrSet.TPass+MMbin.strip()+ClrSet.Reset
+    MMbin = ClrSet.TPass+MMbin.decode('utf-8').strip()+ClrSet.Reset
   except:
     MMbin = ClrSet.TFail+"N/A"+ClrSet.Reset
   line += MMbin
@@ -322,7 +322,7 @@ cmd = "which lichem"
 try:
   #Find path
   LICHEMbin = subprocess.check_output(cmd,shell=True)
-  LICHEMbin = LICHEMbin.strip()
+  LICHEMbin = LICHEMbin.decode('utf-8').strip()
 except:
   LICHEMbin = "N/A"
   BadLICHEM = 1
@@ -341,7 +341,7 @@ if (AllTests == 0):
     try:
       #Find path
       QMbin = subprocess.check_output(cmd,shell=True)
-      QMbin = QMbin.strip()
+      QMbin = QMbin.decode('utf-8').strip()
     except:
       QMbin = "N/A"
     BadQM = 0
@@ -351,7 +351,7 @@ if (AllTests == 0):
     try:
       #Find path
       QMbin = subprocess.check_output(cmd,shell=True)
-      QMbin = QMbin.strip()
+      QMbin = QMbin.decode('utf-8').strip()
     except:
       QMbin = "N/A"
     BadQM = 0
@@ -361,7 +361,7 @@ if (AllTests == 0):
     try:
       #Find path
       QMbin = subprocess.check_output(cmd,shell=True)
-      QMbin = QMbin.strip()
+      QMbin = QMbin.decode('utf-8').strip()
     except:
       QMbin = "N/A"
     BadQM = 0
@@ -381,7 +381,7 @@ if (AllTests == 0):
     try:
       #Find path
       MMbin = subprocess.check_output(cmd,shell=True)
-      MMbin = MMbin.strip()
+      MMbin = MMbin.decode('utf-8').strip()
     except:
       MMbin = "N/A"
     BadMM = 0
@@ -391,7 +391,7 @@ if (AllTests == 0):
     try:
       #Find path
       MMbin = subprocess.check_output(cmd,shell=True)
-      MMbin = MMbin.strip()
+      MMbin = MMbin.decode('utf-8').strip()
     except:
       MMbin = "N/A"
     BadMM = 0
@@ -401,7 +401,7 @@ if (AllTests == 0):
     try:
       #Find path
       MMbin = subprocess.check_output(cmd,shell=True)
-      MMbin = MMbin.strip()
+      MMbin = MMbin.decode('utf-8').strip()
     except:
       MMbin = "N/A"
     BadMM = 0
@@ -419,7 +419,7 @@ if (AllTests == 0):
 line = "Settings:"
 line += '\n'
 line += " Threads: "
-line += `Ncpus`
+line += str(Ncpus)
 line += '\n'
 if (AllTests == 0):
   line += " LICHEM binary: "
@@ -669,7 +669,7 @@ for qmtest in QMTests:
       #Find lowest frequency
       if (freqval < QMMMEnergy):
         QMMMEnergy = freqval
-        SavedEnergy = "Freq:   "+`freqval`
+        SavedEnergy = "Freq:   "+str(freqval)
     #Check for errors
     if (QMMMEnergy > 1e100):
       SavedEnergy = "Crashed..."
@@ -843,8 +843,8 @@ line += '\n'
 line += '\n'
 line += "Statistics:"
 line += '\n'
-line += " Tests passed: "+`passct`+'\n'
-line += " Tests failed: "+`failct`+'\n'
+line += " Tests passed: "+str(passct)+'\n'
+line += " Tests failed: "+str(failct)+'\n'
 
 #Stop timer
 EndTime = time.time()
