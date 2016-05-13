@@ -46,8 +46,8 @@
 
 // Make our own __half definition that is similar to CUDA's.
 struct __half {
-  __half() {}
-  explicit __half(unsigned short raw) : x(raw) {}
+  EIGEN_DEVICE_FUNC __half() {}
+  explicit EIGEN_DEVICE_FUNC __half(unsigned short raw) : x(raw) {}
   unsigned short x;
 };
 
@@ -551,14 +551,14 @@ struct hash<Eigen::half> {
 
 
 // Add the missing shfl_xor intrinsic
-#if defined(EIGEN_HAS_CUDA_FP16) && defined(__CUDA_ARCH__) && __CUDA_ARCH__ >= 300
+#if defined(__CUDA_ARCH__) && __CUDA_ARCH__ >= 300
 __device__ EIGEN_STRONG_INLINE Eigen::half __shfl_xor(Eigen::half var, int laneMask, int width=warpSize) {
   return static_cast<Eigen::half>(__shfl_xor(static_cast<float>(var), laneMask, width));
 }
 #endif
 
 // ldg() has an overload for __half, but we also need one for Eigen::half.
-#if defined(__CUDA_ARCH__) && __CUDA_ARCH__ >= 320
+#if defined(__CUDA_ARCH__) && __CUDA_ARCH__ >= 350
 static EIGEN_STRONG_INLINE EIGEN_DEVICE_FUNC Eigen::half __ldg(const Eigen::half* ptr) {
   return Eigen::internal::raw_uint16_to_half(
       __ldg(reinterpret_cast<const unsigned short*>(ptr)));

@@ -72,7 +72,7 @@ template<> EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE void pstoreu<half>(half* to, co
 
 template<>
  EIGEN_DEVICE_FUNC EIGEN_ALWAYS_INLINE half2 ploadt_ro<half2, Aligned>(const half* from) {
-#if __CUDA_ARCH__ >= 320
+#if __CUDA_ARCH__ >= 350
    return __ldg((const half2*)from);
 #else
   return __halves2half2(*(from+0), *(from+1));
@@ -81,7 +81,7 @@ template<>
 
 template<>
 EIGEN_DEVICE_FUNC EIGEN_ALWAYS_INLINE half2 ploadt_ro<half2, Unaligned>(const half* from) {
-#if __CUDA_ARCH__ >= 320
+#if __CUDA_ARCH__ >= 350
    return __halves2half2(__ldg(from+0), __ldg(from+1));
 #else
   return __halves2half2(*(from+0), *(from+1));
@@ -191,7 +191,7 @@ template<> EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE half2 pmadd<half2>(const half2&
   float b2 = __high2float(b);
   float c1 = __low2float(c);
   float c2 = __high2float(c);
-  float r1 = a1 * b1 + c2;
+  float r1 = a1 * b1 + c1;
   float r2 = a2 * b2 + c2;
   return __floats2half2_rn(r1, r2);
 #endif
@@ -245,7 +245,7 @@ template<> EIGEN_DEVICE_FUNC inline half predux_max<half2>(const half2& a) {
 #else
   float a1 = __low2float(a);
   float a2 = __high2float(a);
-  return half(__float2half_rn(numext::maxi(a1, a2)));
+  return a1 > a2 ? __low2half(a) : __high2half(a);
 #endif
 }
 
@@ -257,7 +257,7 @@ template<> EIGEN_DEVICE_FUNC inline half predux_min<half2>(const half2& a) {
 #else
   float a1 = __low2float(a);
   float a2 = __high2float(a);
-  return half(__float2half_rn(numext::mini(a1, a2)));
+  return a1 < a2 ? __low2half(a) : __high2half(a);
 #endif
 }
 
