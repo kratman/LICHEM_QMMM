@@ -52,13 +52,14 @@ designed to be simple, only a small number of packages are required to compile
 the code. An approximate list of packages is given below.
 ```
  LICHEM binary: OpenMP
+ LICHEM test suite: Python
  LICHEM manual: LaTeX, BibTeX, TeXLive
 ```
 A copy of the Eigen3 library is included with the LICHEM source code.
 However, other versions of Eigen3 can be used to build LICHEM by modifying
 the Makefile.
 
-To install LICHEM, clone the git repository
+To install LICHEM, clone the git repository:
 ```
 user:$ mkdir LICHEM
 user:$ git clone https://github.com/kratman/LICHEM_QMMM.git ./LICHEM/

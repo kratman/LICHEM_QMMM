@@ -8,6 +8,16 @@
 
 #LICHEM semi-automated test suite
 
+###
+#  Usage:
+#
+#    user:$ ./runtests Ncpus All
+#      or
+#    user:$ ./runtests Ncpus QMPackage MMPackage
+#     or
+#    user:$ ./runtests Ncpus QMPackage MMPackage dry
+####
+
 #Modules
 import subprocess
 import time
