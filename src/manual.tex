@@ -1011,146 +1011,44 @@ enthalpy of freezing, or other experimentally determined properties.
 
 \subsection{Polarizable/multipolar force fields}
 
-Point--charges are often inadequate for representing the electrostatic field
-around a molecule \cite{Kramer2014}.
-The external MM field can be improved by assigning point--multipoles, generally
-up to the quadrupole moments, and polarizable sites to the MM atoms.
-These force fields are more computationally expensive than point--charge models
-since multipole--multipole interactions involve a larger number of operations
-per site; however, the results can be significantly more accurate
-\cite{Chaudret2014,Cisneros2006a,Kramer2014}.
-The point--multipoles provide a better description of the charge distribution
-of the molecular fragment, which results in a more accurate representation of
-the charge anisotropy \cite{Stone2013}.
-Many force fields currently in use do not take into account how the charge
-distribution changes due to an external field.
-This effect may be included in several ways such as fluctuating charges 
-\cite{Lipparini2012,Lipparini2012a,Lipparini2013,Zhao2010}, electronegativity 
-equalization \cite{Duin2001,Verstraelen2011,York1996}, or inducible 
-point--dipoles \cite{Boulanger2014,Boulanger2012,Caprasecca2012,Caprasecca2015,
-Curutchet2009,Nielsen2007,Schwabe2011,Shi2013,Steindal2011}.
-In this initial implementation of LICHEM, MM polarization is included
-\textit{via} inducible dipoles from polarizable force fields, such as the
-AMOEBA model \cite{Laury2015,Shi2013}. \\
+The electron density and nuclei in a molecule create a continuous, and often, 
+anisotropic electrostatic potential.
+In classical simulations, interactions due to the diffuse electron density are
+generally approximated by a set of pair-wise electrostatic potentials.
+One of the simplest methods for modeling the molecular electrostatic field is
+to place point--charges (monopoles) on the atomic centers.
+Atomic monopoles are often inadequate \cite{Cisneros2014,Kramer2014}, and
+some models augment the field by adding massless charged dummy atoms to the
+molecule \cite{Jorgensen1983,Mahoney2000}. 
+However, the dummy atoms can complicate the potential/dynamics during molecular 
+simulations. \\
 
-Multipolar models add an additional complication to the calculations in that the 
-multipole potentials are aspherical.
-To address this, a local frame of reference is defined for each atom using 1--3
-neighboring atoms \cite{Stone2013} and the local frame multipoles are rotated
-to the global frame on--the--fly during the evaluation of the potential.
-Unfortunately, few QM packages can perform calculations with atomic multipoles.
-In order to include point--multipoles in the external potential, either QM
-packages must be modified or the multipoles must be approximated.
-In our implementation, we have chosen to approximate the multipoles as an
-octahedral set of point--charges \cite{Devereux2014,Gao2014}. \\
+An alternative approach is to add higher--order moments (multipoles) of the 
+electrostatic potential to the model
+\cite{Cisneros2014,Laury2015,Shi2013,Stone2013}.
+A multipole expansion is a Taylor series representation of the continuous
+electrostatic potential ($V_{elst}$) \cite{Stone2013},
+\begin{equation}
+ V_{elst}(r) \approx \sum_n^\infty \frac{d}{n!dr^n} V_{elst}(r)r^n \; ,
+\end{equation}
+where $r$ is the distance from the point of interest (e.g. nucleus, center of 
+mass, etc) and $n$ is the order of the moment.
+Typically, MM force fields truncate the Taylor series at the second order 
+\cite{Cisneros2014,Laury2015,Shi2013}, and the moments can be determined 
+from an analysis of the electron density or electrostatic potential. \\
 
-A set of Cartesian multipoles in the global frame of reference can be 
-simplified by converting to a spherical harmonic (SH) representation 
-\cite{Stone2013}.
-The SH representation removes a redundant degree of freedom from the traceless
-quadrupole tensor.
-The first step in the conversion is to diagonalize the quadrupole tensor,
-\begin{equation}
- {\bf R}^{-1}\Theta {\bf R} = \Theta' \; ,
-\end{equation}
-where $\bf R$ is the set of eigenvectors which define a quadrupole frame of 
-reference and $\Theta'$ is the set of eigenvalues.
-The Cartesian multipoles through the quadrupole moments can then be converted
-to SH multipoles, $Q$, in the quadrupole frame \cite{Stone2013},
-\begin{equation}
- Q_{00} = q \; ,
-\end{equation}
-\begin{equation}
- Q_{11c} = \vec \mu \cdot \vec R_x \; ,
-\end{equation}
-\begin{equation}
- Q_{11s} = \vec \mu \cdot \vec R_y \; ,
-\end{equation}
-\begin{equation}
- Q_{10} = \vec \mu \cdot \vec R_z \; ,
-\end{equation}
-\begin{equation}
- Q_{22c} = (\Theta'_{xx}-\Theta'_{yy})/\sqrt{3} \; ,
-\end{equation}
-and
-\begin{equation}
- Q_{20} = \Theta'_{zz} \; ,
-\end{equation}
-were $\vec R_i$ is the eigenvector in the $i$ direction.
-The SH multipole moments can then be further simplified to a set of six
-point--charges \cite{Devereux2014,Gao2014} in an octahedral arrangement,
-\begin{equation}
- \label{eq:ChargeX}
- q_{\pm x} = \frac{Q_{00}}{6} \pm \frac{Q_{11c}}{2d} -
-          \frac{Q_{20}}{6d^2} + \frac{Q_{22c}}{2\sqrt{3}d^2} \; ,
-\end{equation}
-\begin{equation}
- \label{eq:ChargeY}
- q_{\pm y} = \frac{Q_{00}}{6} \pm \frac{Q_{11s}}{2d} -
-          \frac{Q_{20}}{6d^2} - \frac{Q_{22c}}{2\sqrt{3}d^2} \; ,
-\end{equation}
-and
-\begin{equation}
- \label{eq:ChargeZ}
- q_{\pm z} = \frac{Q_{00}}{6} \pm \frac{Q_{10}}{2d} +
-          \frac{Q_{20}}{3d^2} \; ,
-\end{equation}
-where $q_{\pm i}$ are the charges in the $\pm \vec R_i$ direction, and $d$ 
-is the displacement from the atomic center in atomic units.
-We chose to follow the recommendations of Devereux et al.\ \cite{Devereux2014}
-and Gao et al.\ \cite{Gao2014} and set $d=0.25$ a.u.
-Before the electrostatic interactions can be calculated, the point--charges
-must be rotated from the quadrupole frame of reference back to the global frame,
-although in practice this amounts to a vector projection of the coordinates
-onto the global axes \cite{Devereux2014}. \\
-
-Representing the multipoles as a set of point--charges reduces the accuracy of 
-the electrostatic field.
-However, the approximation of point--multipoles by point--charges for the
-calculation of intermolecular Coulomb interactions at hydrogen bonding and
-longer distances is sufficiently accurate (see supporting information).
-Moreover, most QM packages can easily add additional point--charges to the
-potential.
-Thus, employing a multipole to point--charge conversion avoids the need to
-modify existing software packages. \\
-
-While treating the static field in QM/MM is straightforward, the polarization
-energy needs to be calculated self--consistently.
-To avoid modifying the SCF routines in the QM packages, the polarization
-energy can be approximated using the MM force field and the QM electrostatic
-field.
-In LICHEM, the QM calculations are performed within the static field from the
-MM multipoles, which allows the QM region (Eq.\ \ref{eq:Eqmprime}) to capture
-a large portion of the polarization energy \cite{Wang2013}.
-Two MM calculations are required to accurately calculate the polarization
-energy for the MM region.
-The first calculation is performed with only the static MM field and without
-charges on the QM atoms (Eq.\ \ref{eq:Vmmprime}), which captures the
-non--polarizable portions of the potential.
-The second MM calculation evaluates the polarization energy, $E_{MM,pol}$, of
-the QM/MM system when point--charges are placed on the QM atoms.
-The energies from the three calculations can then be added together to
-determine the total QM/MM energy. For polarizable models, Eq.\
-\ref{eq:Etotprime} becomes
-\begin{equation}
- \label{eq:Etotpol}
- E_{Tot} = E'_{QM} + E'_{MM} + E_{MM,pol} \; ,
-\end{equation}
-where $E_{MM,pol}$ includes the interactions of the MM induced dipoles with the 
-MM field and the static (polarized) QM charges. \\
-
-Eq.\ \ref{eq:Etotpol} captures most of the polarization energy, and it is 
-instructive to examine which electrostatic interactions are included in 
-the QM and MM calculations.
-The QM regions interact with only the static MM field, and the QM calculation
-produces a set of point--charges on the QM atoms, which effectively include
-the induced dipole moments of the QM field.
-The MM polarization is calculated self--consistently in the QM/MM field.
-Thus, the (induced dipole)--(induced dipole) QM--MM interactions are present
-in $E_{MM,pol}$.
-While the QM region only responds to the static MM field, it has been shown
-that approximately 80\% of the polarization energy is recovered in the first
-iteration of the self--consistent polarization calculation \cite{Wang2013}.
+The zeroth moment of the electrostatic potential is the monopole, which is 
+equivalent to a point--charge.
+The first and second moments are referred to as the dipole and quadrupole,
+respectively. Multipole moments can produce an anisotropic electrostatic
+potential around individual atoms, as opposed to the spherical potential
+wells produced by monopoles.
+Thus, a set of atomic multipole moments, through the quadrupole moment, can
+reproduce the molecular electrostatic potential with a higher degree of
+accuracy than monopole moments alone \cite{Cisneros2014,Stone2013}.
+Atom centered multipolar models provide a reasonable compromise between
+computational cost and accuracy in the reproduction of the electrostatic
+potential at medium and long--range.
 
 \subsection{Polarizable density force fields}
 
