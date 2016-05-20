@@ -23,8 +23,6 @@ typedef CwiseUnaryOp<internal::scalar_sinh_op<Scalar>, const Derived> SinhReturn
 typedef CwiseUnaryOp<internal::scalar_cosh_op<Scalar>, const Derived> CoshReturnType;
 typedef CwiseUnaryOp<internal::scalar_lgamma_op<Scalar>, const Derived> LgammaReturnType;
 typedef CwiseUnaryOp<internal::scalar_digamma_op<Scalar>, const Derived> DigammaReturnType;
-typedef CwiseUnaryOp<internal::scalar_zeta_op<Scalar>, const Derived> ZetaReturnType;
-typedef CwiseUnaryOp<internal::scalar_polygamma_op<Scalar>, const Derived> PolygammaReturnType;
 typedef CwiseUnaryOp<internal::scalar_erf_op<Scalar>, const Derived> ErfReturnType;
 typedef CwiseUnaryOp<internal::scalar_erfc_op<Scalar>, const Derived> ErfcReturnType;
 typedef CwiseUnaryOp<internal::scalar_pow_op<Scalar>, const Derived> PowReturnType;
@@ -308,13 +306,13 @@ cosh() const
   return CoshReturnType(derived());
 }
 
-/** \returns an expression of the coefficient-wise ln(|gamma(*this)|).
- *
- * Example: \include Cwise_lgamma.cpp
- * Output: \verbinclude Cwise_lgamma.out
- *
- * \sa cos(), sin(), tan()
- */
+/** \cpp11 \returns an expression of the coefficient-wise ln(|gamma(*this)|).
+  *
+  * Example: \include Cwise_lgamma.cpp
+  * Output: \verbinclude Cwise_lgamma.out
+  *
+  * \sa cos(), sin(), tan()
+  */
 inline const LgammaReturnType
 lgamma() const
 {
@@ -322,53 +320,37 @@ lgamma() const
 }
 
 /** \returns an expression of the coefficient-wise digamma (psi, derivative of lgamma).
- *
- * \sa cos(), sin(), tan()
- */
+  *
+  * \sa cos(), sin(), tan()
+  */
 inline const DigammaReturnType
 digamma() const
 {
   return DigammaReturnType(derived());
 }
 
-/** \returns an expression of the coefficient-wise zeta function.
- */
-inline const ZetaReturnType
-zeta() const
-{
-    return ZetaReturnType(derived());
-}
-
-/** \returns an expression of the coefficient-wise polygamma function.
- */
-inline const PolygammaReturnType
-polygamma() const
-{
-    return PolygammaReturnType(derived());
-}
-
-/** \returns an expression of the coefficient-wise Gauss error
- * function of *this.
- *
- * Example: \include Cwise_erf.cpp
- * Output: \verbinclude Cwise_erf.out
- *
- * \sa cos(), sin(), tan()
- */
+/** \cpp11 \returns an expression of the coefficient-wise Gauss error
+  * function of *this.
+  *
+  * Example: \include Cwise_erf.cpp
+  * Output: \verbinclude Cwise_erf.out
+  *
+  * \sa cos(), sin(), tan()
+  */
 inline const ErfReturnType
 erf() const
 {
   return ErfReturnType(derived());
 }
 
-/** \returns an expression of the coefficient-wise Complementary error
- * function of *this.
- *
- * Example: \include Cwise_erfc.cpp
- * Output: \verbinclude Cwise_erfc.out
- *
- * \sa cos(), sin(), tan()
- */
+/** \cpp11 \returns an expression of the coefficient-wise Complementary error
+  * function of *this.
+  *
+  * Example: \include Cwise_erfc.cpp
+  * Output: \verbinclude Cwise_erfc.out
+  *
+  * \sa cos(), sin(), tan()
+  */
 inline const ErfcReturnType
 erfc() const
 {
