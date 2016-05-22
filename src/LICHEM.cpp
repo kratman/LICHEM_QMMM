@@ -1040,7 +1040,7 @@ int main(int argc, char* argv[])
     cout << "Monte Carlo equilibration:" << '\n';
     cout.flush();
     QMMMOpts.Eold = HugeNum; //Forces the first step to be accepted
-    Nct = 0;
+    Nct = 0; //Reset counter to zero
     while (Nct < QMMMOpts.Neq)
     {
       Emc.setZero();
@@ -1115,9 +1115,9 @@ int main(int argc, char* argv[])
     }
     cout << " Equilibration complete." << '\n';
     //Start production run
-    Nct = 0;
-    Nacc = 0;
-    Nrej = 0;
+    Nct = 0; //Reset counter to zero
+    Nacc = 0; //Reset counter to zero
+    Nrej = 0; //Reset counter to zero
     cout << '\n';
     cout << "Monte Carlo production:" << '\n';
     cout.flush();
@@ -1136,27 +1136,26 @@ int main(int argc, char* argv[])
       //Update statistics
       SumE += Emc;
       SumE2 += Emc*Emc;
-      //Update counters and print output
+      //Update counters
       if (acc)
       {
-        //Increase counters
         Nct += 1;
         Nacc += 1;
-        //Print trajectory and instantaneous energies
-        if ((Nct%QMMMOpts.Nprint) == 0)
-        {
-          //Print progress
-          Print_traj(Struct,outfile,QMMMOpts);
-          cout << " | Step: " << setw(SimCharLen) << Nct;
-          cout << " | Average energy: " << LICHEMFormFloat(Emc.mean(),12);
-          cout << " eV";
-          cout << '\n';
-          cout.flush(); //Print results
-        }
       }
       else
       {
         Nrej += 1;
+      }
+      //Print output
+      if ((Nct%QMMMOpts.Nprint) == 0)
+      {
+        //Print progress
+        Print_traj(Struct,outfile,QMMMOpts);
+        cout << " | Step: " << setw(SimCharLen) << Nct;
+        cout << " | Average energy: " << LICHEMFormFloat(Emc.mean(),12);
+        cout << " eV";
+        cout << '\n';
+        cout.flush(); //Print results
       }
     }
     if ((Nct%QMMMOpts.Nprint) != 0)
