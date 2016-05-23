@@ -1,7 +1,6 @@
 General:
--Currently only DFT and HF energies can be used in most of the QM
-calculations. Post-HF methods are currently only implemented in PSI4
-and semiempirical methods are currently only implemented in Gaussian.
+-Post-HF methods are currently only implemented in PSI4 and semiempirical
+methods are currently only implemented in Gaussian.
 
 Gaussian interface:
 -Using the external interface to Gaussian interferes with timing the MM
