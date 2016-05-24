@@ -3,7 +3,7 @@ Force-field wrapper timeline and checklist:
  Point-charge force fields: In progress (LAMMPS/AMBER)
  Polarizable force fields: Done (TINKER)
  Polarizable force fields: Future (AMBER,LAMMPS)
- Diffuse charges: In progress (TINKER,AMBER,LAMMPS)
+ Diffuse charges: In progress (TINKER,AMBER)
 
 Simulation mode timeline and checklist:
  Single-point energy: Done
