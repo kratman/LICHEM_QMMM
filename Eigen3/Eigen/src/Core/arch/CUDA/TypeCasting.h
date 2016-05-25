@@ -97,9 +97,85 @@ struct type_casting_traits<float, half> {
   };
 };
 
-template<> EIGEN_STRONG_INLINE half2 pcast<float4, half2>(const float4& a) {
+template<> EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE half2 pcast<float4, half2>(const float4& a) {
   // Simply discard the second half of the input
   return __float22half2_rn(make_float2(a.x, a.y));
+}
+
+#endif
+
+#else
+
+#ifdef EIGEN_VECTORIZE_AVX
+template <>
+struct type_casting_traits<half, float> {
+  enum {
+    VectorizedCast = 1,
+    SrcCoeffRatio = 1,
+    TgtCoeffRatio = 1
+  };
+};
+
+template<> EIGEN_STRONG_INLINE Packet8f pcast<Packet8h, Packet8f>(const Packet8h& a) {
+  return half2float(a);
+}
+
+template <>
+struct type_casting_traits<float, half> {
+  enum {
+    VectorizedCast = 1,
+    SrcCoeffRatio = 1,
+    TgtCoeffRatio = 1
+  };
+};
+
+template<> EIGEN_STRONG_INLINE Packet8h pcast<Packet8f, Packet8h>(const Packet8f& a) {
+  return float2half(a);
+}
+
+#elif defined EIGEN_VECTORIZE_SSE && !EIGEN_COMP_MSVC
+template <>
+struct type_casting_traits<half, float> {
+  enum {
+    VectorizedCast = 1,
+    SrcCoeffRatio = 1,
+    TgtCoeffRatio = 1
+  };
+};
+
+template<> EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE Packet4f pcast<Packet4h, Packet4f>(const Packet4h& a) {
+  __int64_t a64 = _mm_cvtm64_si64(a.x);
+  half h = raw_uint16_to_half(static_cast<unsigned short>(a64));
+  float f1 = static_cast<float>(h);
+  h = raw_uint16_to_half(static_cast<unsigned short>(a64 >> 16));
+  float f2 = static_cast<float>(h);
+  h = raw_uint16_to_half(static_cast<unsigned short>(a64 >> 32));
+  float f3 = static_cast<float>(h);
+  h = raw_uint16_to_half(static_cast<unsigned short>(a64 >> 48));
+  float f4 = static_cast<float>(h);
+  return _mm_set_ps(f4, f3, f2, f1);
+}
+
+template <>
+struct type_casting_traits<float, half> {
+  enum {
+    VectorizedCast = 1,
+    SrcCoeffRatio = 1,
+    TgtCoeffRatio = 1
+  };
+};
+
+template<> EIGEN_STRONG_INLINE Packet4h pcast<Packet4f, Packet4h>(const Packet4f& a) {
+  EIGEN_ALIGN16 float aux[4];
+  pstore(aux, a);
+  half h0(aux[0]);
+  half h1(aux[1]);
+  half h2(aux[2]);
+  half h3(aux[3]);
+
+  Packet4h result;
+  result.x = _mm_set_pi16(h3.x, h2.x, h1.x, h0.x);
+  return result;
 }
 
 #endif

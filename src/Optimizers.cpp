@@ -30,6 +30,9 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
   double MAXforce = 0; //Maximum force
   double SumE = 0; //Storage for energies
   int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
+  //Convergence criteria
+  double MaxFTol = 20*QMMMOpts.QMOptTol; //Opt. tolerance for max. force
+  double RMSFTol = 10*QMMMOpts.QMOptTol; //Opt. tolerance for RMS force
   //Check progress
   if (QMregion)
   {
@@ -76,9 +79,8 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
     cout << " eV/\u212B | RMS force: " << LICHEMFormFloat(RMSforce,12);
     cout << " eV/\u212B" << '\n';
     //Check convergence criteria
-    if ((RMSdiff <= QMMMOpts.QMOptTol) and
-       (RMSforce <= (10*QMMMOpts.QMOptTol)) and
-       (MAXforce <= (20*QMMMOpts.QMOptTol)))
+    if ((RMSdiff <= QMMMOpts.QMOptTol) and (RMSforce <= RMSFTol) and
+       (MAXforce <= MaxFTol))
     {
       OptDone = 1;
       cout << "    QM optimization complete." << '\n';
