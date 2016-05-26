@@ -803,7 +803,6 @@ int main(int argc, char* argv[])
     SimCharLen = QMMMOpts.Neq+QMMMOpts.Nsteps;
     SimCharLen = LICHEMCount(SimCharLen);
     //Start equilibration run and calculate initial energy
-    cout << '\n';
     cout << "Monte Carlo equilibration:" << '\n';
     cout.flush();
     QMMMOpts.Eold = 0;
@@ -1019,7 +1018,7 @@ int main(int argc, char* argv[])
     vector<VectorXd> AllForces; //Stores forces between MC steps
     VectorXd SumE(QMMMOpts.Nbeads); //Average energy array
     VectorXd SumE2(QMMMOpts.Nbeads); //Average squared energy array
-    VectorXd Emc; //Current MC energy
+    VectorXd Emc(QMMMOpts.Nbeads); //Current MC energy
     SumE.setZero();
     SumE2.setZero();
     Emc.setZero();
@@ -1036,7 +1035,6 @@ int main(int argc, char* argv[])
     SimCharLen = QMMMOpts.Neq+QMMMOpts.Nsteps;
     SimCharLen = LICHEMCount(SimCharLen);
     //Start equilibration run
-    cout << '\n';
     cout << "Monte Carlo equilibration:" << '\n';
     cout.flush();
     QMMMOpts.Eold = HugeNum; //Forces the first step to be accepted

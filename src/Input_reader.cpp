@@ -346,6 +346,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       //Set the type of calculation
       regionfile >> dummy;
       LICHEMLowerText(dummy);
+      //Single-point calculations
       if ((dummy == "single-point") or (dummy == "sp") or
          (dummy == "energy"))
       {
@@ -357,6 +358,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
         //Read energy minimization options
         FreqCalc = 1;
       }
+      //Optimizations
       if ((dummy == "opt") or (dummy == "optimize"))
       {
         //Optimize with native QM and MM optimizers
@@ -387,11 +389,13 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
           cerr.flush(); //Print error immediately
         }
       }
+      //Reaction pathways
       if ((dummy == "neb") or (dummy == "ci-neb") or (dummy == "cineb"))
       {
         //Optimize a path with climbing image NEB
         NEBSim = 1;
       }
+      //Ensemble sampling
       if (dummy == "esd")
       {
         //Optimize the QM region with SD and run dynamics on the MM region
@@ -406,6 +410,11 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       {
         //Path-integral Monte Carlo
         PIMCSim = 1;
+      }
+      if (dummy == "fbneb")
+      {
+        //Force-bias Monte Carlo
+        FBNEBSim = 1;
       }
     }
     else if (keyword == "electrostatics:")
@@ -1018,7 +1027,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
         #endif
       }
       //Modify threads for certain multi-replica simulations
-      if ((QMMMOpts.Nbeads > 1) and PIMCSim)
+      if ((QMMMOpts.Nbeads > 1) and (PIMCSim or FBNEBSim))
       {
         //Divide threads between the beads
         Nthreads = int(floor(Procs/Ncpus));
@@ -1330,6 +1339,36 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     cout << " Equilibration MC steps: " << QMMMOpts.Neq << '\n';
     cout << " Production MC steps: " << QMMMOpts.Nsteps << '\n';
   }
+  if (FBNEBSim)
+  {
+    //Print FBNEB input for error checking
+    if (QMMMOpts.Nbeads > 1)
+    {
+      cout << " RP beads: " << QMMMOpts.Nbeads << '\n';
+    }
+    cout << '\n';
+    cout << "Simulation mode: ";
+    if (QMMM)
+    {
+      cout << "QMMM";
+    }
+    if (QMonly)
+    {
+      cout << "Pure QM";
+    }
+    if (MMonly)
+    {
+      cout << "Pure MM";
+    }
+    cout << " NVT";
+    if (QMMMOpts.Nbeads > 1)
+    {
+      cout << " force-bias";
+    }
+    cout << " Monte Carlo" << '\n';
+    cout << " Equilibration MC steps: " << QMMMOpts.Neq << '\n';
+    cout << " Production MC steps: " << QMMMOpts.Nsteps << '\n';
+  }
   if (OptSim or SteepSim or QuickSim or DFPSim or ESDSim)
   {
     //Print optimization input for error checking
@@ -1579,10 +1618,32 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       cout << " Pressure: " << QMMMOpts.Press;
       cout << " atm" << '\n';
     }
-    cout << " Equilibration steps: " << QMMMOpts.Neq;
-    cout << '\n';
     cout << " Acceptance ratio: ";
     cout << LICHEMFormFloat(QMMMOpts.accratio,4);
+    cout << '\n';
+    cout << " Equilibration steps: " << QMMMOpts.Neq;
+    cout << '\n';
+    cout << " Production MC steps: " << QMMMOpts.Nsteps;
+    cout << '\n';
+    cout << " Sample every " << QMMMOpts.Nprint;
+    cout << " steps" << '\n';
+  }
+  //Print FBNEB settings
+  if (FBNEBSim)
+  {
+    cout << '\n';
+    cout << "Monte Carlo settings:" << '\n';
+    cout << " Temperature: " << QMMMOpts.Temp;
+    cout << " K" << '\n';
+    if (QMMMOpts.Nbeads > 1)
+    {
+      cout << " Spring constant: " << QMMMOpts.Kspring;
+      cout << " eV/\u212B\u00B2" << '\n';
+    }
+    cout << " Acceptance ratio: ";
+    cout << LICHEMFormFloat(QMMMOpts.accratio,4);
+    cout << '\n';
+    cout << " Equilibration steps: " << QMMMOpts.Neq;
     cout << '\n';
     cout << " Production MC steps: " << QMMMOpts.Nsteps;
     cout << '\n';
