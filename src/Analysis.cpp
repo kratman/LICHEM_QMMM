@@ -495,20 +495,6 @@ void SplitPathTraj(int& argc, char**& argv)
   return;
 };
 
-void ReorderQMPBBA(int& argc, char**& argv)
-{
-  //Rewrite the xyzfile to put QM, PB, and BA atoms first
-  stringstream call; //Stream for system calls and reading/writing files
-  string dummy; //Generic string
-  //Analyze structure
-  
-  //Print structure
-  
-  //Exit LICHEM
-  exit(0);
-  return;
-};
-
 void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
 {
   //Function to translate/rotate two structures for maximum overlap

@@ -89,11 +89,6 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     //Separate a reaction path frame into a trajectory file
     SplitPathTraj(argc,argv);
   }
-  if (dummy == "-reorder")
-  {
-    //Make QM, PB, and BA atoms come before MM atoms
-    ReorderQMPBBA(argc,argv);
-  }
   if ((argc % 2) != 1)
   {
     //Check for help or missing arguments
