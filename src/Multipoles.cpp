@@ -310,11 +310,16 @@ void RotateTINKCharges(vector<QMMMAtom>& Struct, int Bead)
         Vecz(1) = -1*y; //Correct the direction
         Vecz(2) = -1*z; //Correct the direction
         Vecz.normalize();
-        //Random vector
-        Vecx(0) = 2*((((double)rand())/((double)RAND_MAX))-0.5);
-        Vecx(1) = 2*((((double)rand())/((double)RAND_MAX))-0.5);
-        Vecx(2) = 2*((((double)rand())/((double)RAND_MAX))-0.5);
-        Vecx.normalize();
+        //Use a global axis for the second vector
+        Vecx(0) = 1.0;
+        Vecx(1) = 0.0;
+        Vecx(2) = 0.0;
+        if (Vecz.dot(Vecx) > 0.85)
+        {
+          //Switch to y axis if overlap is large
+          Vecx(0) = 0.0;
+          Vecx(1) = 1.0;
+        }
         //Subtract overlap and normalize
         Vecx -= Vecz*(Vecx.dot(Vecz));
         Vecx.normalize();
