@@ -507,7 +507,7 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
   double Bx = 0; //Average x position of matrix B
   double By = 0; //Average y position of matrix B
   double Bz = 0; //Average z position of matrix B
-  #pragma omp parallel num_threads(Ncpus)
+  #pragma omp parallel
   {
     //Update sum of the atomic positions
     #pragma omp for nowait schedule(dynamic) reduction(+:Ax)
@@ -550,7 +550,7 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int MatSize)
   By /= MatSize;
   Bz /= MatSize;
   //Translate centroids
-  #pragma omp parallel num_threads(Ncpus)
+  #pragma omp parallel
   {
     //Move A and B to (0,0,0)
     #pragma omp for nowait schedule(dynamic)
@@ -617,7 +617,7 @@ VectorXd KabschDisplacement(MatrixXd& A, MatrixXd& B, int MatSize)
   //Rotate structures
   KabschRotation(A,B,MatSize);
   //Calculate displacement
-  #pragma omp parallel for num_threads(Ncpus) schedule(dynamic)
+  #pragma omp parallel for schedule(dynamic)
   for (int i=0;i<(3*MatSize);i++)
   {
     //Find the correct location in the arrays

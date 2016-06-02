@@ -1016,7 +1016,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
         Ncpus = Nthreads;
       }
       //Modify threads for certain multi-replica simulations
-      if ((QMMMOpts.Nbeads > 1) and (PIMCSim or FBNEBSim))
+      if ((QMMMOpts.Nbeads > 1) and PIMCSim)
       {
         //Divide threads between the beads
         Nthreads = int(floor(Procs/Ncpus));

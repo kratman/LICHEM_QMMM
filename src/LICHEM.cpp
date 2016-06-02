@@ -1037,13 +1037,18 @@ int main(int argc, char* argv[])
     //Start equilibration run
     cout << "Monte Carlo equilibration:" << '\n';
     cout.flush();
+    int SavedNPrint = QMMMOpts.Nprint;
+    if (QMMMOpts.Nprint < 100)
+    {
+      //Prevent the print rate from breaking the tuning
+      QMMMOpts.Nprint = 100; //Minimum value
+    }
     QMMMOpts.Eold = HugeNum; //Forces the first step to be accepted
     Nct = 0; //Reset counter to zero
     while (Nct < QMMMOpts.Neq)
     {
-      Emc.setZero();
       //Check step size
-      if(ct == QMMMOpts.Nprint)
+      if (ct == QMMMOpts.Nprint)
       {
         if ((Nacc/(Nrej+Nacc)) > QMMMOpts.accratio)
         {
@@ -1086,14 +1091,14 @@ int main(int argc, char* argv[])
           mcstep = StepMax;
         }
         //Statistics
-        cout << " | Step: " << setw(SimCharLen) << Nct;
+        cout << " | Accepted: " << setw(SimCharLen) << Nct;
         cout << " | Step size: ";
         cout << LICHEMFormFloat(mcstep,6);
         cout << " | Accept ratio: ";
         cout << LICHEMFormFloat((Nacc/(Nrej+Nacc)),6);
         cout << '\n';
         cout.flush(); //Print stats
-        //Reset counters
+        //Reset counters for the next round of tuning
         ct = 0;
         Nacc = 0;
         Nrej = 0;
@@ -1111,6 +1116,7 @@ int main(int argc, char* argv[])
         Nrej += 1;
       }
     }
+    QMMMOpts.Nprint = SavedNPrint; //Restore user defined sample rate
     cout << " Equilibration complete." << '\n';
     //Start production run
     Nct = 0; //Reset counter to zero
@@ -1133,11 +1139,14 @@ int main(int argc, char* argv[])
     //Continue simulation
     while (Nacc < QMMMOpts.Nsteps)
     {
-      Emc.setZero(); //Set energy to zero
       acc = FBNEBMCMove(Struct,AllForces,QMMMOpts,Emc);
       //Update statistics
-      SumE += Emc;
-      SumE2 += Emc*Emc;
+      #pragma omp parallel for schedule(dynamic)
+      for (int p=0;p<QMMMOpts.Nbeads;p++)
+      {
+        SumE(p) += Emc(p);
+        SumE2(p) += Emc(p)*Emc(p);
+      }
       //Update counters
       Nct += 1;
       if (acc)
@@ -1154,10 +1163,12 @@ int main(int argc, char* argv[])
         //Print progress
         Print_traj(Struct,outfile,QMMMOpts);
         cout << " | Step: " << setw(SimCharLen) << Nct;
+        cout << " | Accepted: " << setw(SimCharLen) << Nacc;
+        cout << '\n';
         cout << " | Energies:" << '\n';
         for (int p=0;p<QMMMOpts.Nbeads;p++)
         {
-          cout << "   Bead: ";
+          cout << "    Bead: ";
           cout << setw(3) << p << " | Energy: ";
           cout << LICHEMFormFloat(Emc(p),16) << " eV" << '\n';
         }
@@ -1178,7 +1189,7 @@ int main(int argc, char* argv[])
     }
     //Print simulation details and statistics
     cout << '\n';
-    cout << "MC statistics:" << '\n';
+    cout << "Monte Carlo statistics:" << '\n';
     cout << " | Acceptance ratio: ";
     cout << LICHEMFormFloat((Nacc/Nct),6);
     cout << " | Optimum step size: ";
@@ -1188,10 +1199,10 @@ int main(int argc, char* argv[])
     cout << " | Average energies:" << '\n';
     for (int p=0;p<QMMMOpts.Nbeads;p++)
     {
-      cout << "   Bead: ";
+      cout << "    Bead: ";
       cout << setw(3) << p << " | Energy: ";
       cout << LICHEMFormFloat(SumE(p),16);
-      cout << "+/- " << LICHEMFormFloat(SumE2(p),16);
+      cout << " +/- " << LICHEMFormFloat(SumE2(p),16);
       cout << " eV" << '\n';
     }
     cout << '\n';
