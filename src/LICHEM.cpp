@@ -824,32 +824,18 @@ int main(int argc, char* argv[])
         if ((Nacc/(Nrej+Nacc)) > QMMMOpts.accratio)
         {
           //Increase step size
-          double randval;
+          double randval; //Use random values to keep from cycling up and down
           randval = (((double)rand())/((double)RAND_MAX));
-          //Use random values to keep from cycling up and down
-          if (randval >= 0.5)
-          {
-            mcstep *= 1.10;
-          }
-          else
-          {
-            mcstep *= 1.09;
-          }
+          randval /= 10.0;
+          mcstep *= 1.001+randval;
         }
         if ((Nacc/(Nrej+Nacc)) < QMMMOpts.accratio)
         {
           //Decrease step size
-          double randval;
+          double randval; //Use random values to keep from cycling up and down
           randval = (((double)rand())/((double)RAND_MAX));
-          //Use random values to keep from cycling up and down
-          if (randval >= 0.5)
-          {
-            mcstep *= 0.90;
-          }
-          else
-          {
-            mcstep *= 0.91;
-          }
+          randval /= 10.0;
+          mcstep *= 0.999-randval;
         }
         if (mcstep < StepMin)
         {
@@ -1035,6 +1021,7 @@ int main(int argc, char* argv[])
     SimCharLen = QMMMOpts.Neq+QMMMOpts.Nsteps;
     SimCharLen = LICHEMCount(SimCharLen);
     //Start equilibration run
+    mcstep *= 2.0; //Update initial step size
     cout << "Monte Carlo equilibration:" << '\n';
     cout.flush();
     int SavedNPrint = QMMMOpts.Nprint;
@@ -1053,32 +1040,18 @@ int main(int argc, char* argv[])
         if ((Nacc/(Nrej+Nacc)) > QMMMOpts.accratio)
         {
           //Increase step size
-          double randval;
+          double randval; //Use random values to keep from cycling up and down
           randval = (((double)rand())/((double)RAND_MAX));
-          //Use random values to keep from cycling up and down
-          if (randval >= 0.5)
-          {
-            mcstep *= 1.10;
-          }
-          else
-          {
-            mcstep *= 1.09;
-          }
+          randval /= 10.0;
+          mcstep *= 1.001+randval;
         }
         if ((Nacc/(Nrej+Nacc)) < QMMMOpts.accratio)
         {
           //Decrease step size
-          double randval;
+          double randval; //Use random values to keep from cycling up and down
           randval = (((double)rand())/((double)RAND_MAX));
-          //Use random values to keep from cycling up and down
-          if (randval >= 0.5)
-          {
-            mcstep *= 0.90;
-          }
-          else
-          {
-            mcstep *= 0.91;
-          }
+          randval /= 10.0;
+          mcstep *= 0.999-randval;
         }
         if (mcstep < StepMin)
         {
@@ -1158,7 +1131,7 @@ int main(int argc, char* argv[])
         Nrej += 1;
       }
       //Print output
-      if ((Nct%QMMMOpts.Nprint) == 0)
+      if (((Nct%QMMMOpts.Nprint) == 0) or (Nacc == QMMMOpts.Nsteps))
       {
         //Print progress
         Print_traj(Struct,outfile,QMMMOpts);

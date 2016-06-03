@@ -1248,6 +1248,10 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   cout << " Coordinate file: " << xyzfilename << '\n';
   cout << " Connectivity file: " << confilename << '\n';
   cout << " Region file: " << regfilename << '\n';
+  if (CheckFile("BeadStartStruct.xyz"))
+  {
+    cout << " Restart file: BeadStartStruct.xyz" << '\n';
+  }
   cout << '\n';
   cout << "Atoms: " << Natoms << '\n';
   if (QMonly or QMMM)
