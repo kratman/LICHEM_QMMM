@@ -1021,7 +1021,6 @@ int main(int argc, char* argv[])
     SimCharLen = QMMMOpts.Neq+QMMMOpts.Nsteps;
     SimCharLen = LICHEMCount(SimCharLen);
     //Start equilibration run
-    mcstep *= 2.0; //Update initial step size
     cout << "Monte Carlo equilibration:" << '\n';
     cout.flush();
     int SavedNPrint = QMMMOpts.Nprint;

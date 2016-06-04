@@ -48,7 +48,7 @@ double LICHEMFactorial(int n)
 {
   //Calculate a factorial
   double val = 1;
-  while (n > 0)
+  while (n > 1)
   {
     val *= n;
     n -= 1;

@@ -450,52 +450,6 @@ struct generic_xpr_base<Derived, XprKind, Dense>
   typedef typename dense_xpr_base<Derived,XprKind>::type type;
 };
 
-/** \internal Helper base class to add a scalar multiple operator
-  * overloads for complex types */
-template<typename Derived, typename Scalar, typename OtherScalar, typename BaseType,
-         bool EnableIt = !is_same<Scalar,OtherScalar>::value >
-struct special_scalar_op_base : public BaseType
-{
-  // dummy operator* so that the
-  // "using special_scalar_op_base::operator*" compiles
-  struct dummy {};
-  void operator*(dummy) const;
-  void operator/(dummy) const;
-};
-
-template<typename Derived,typename Scalar,typename OtherScalar, typename BaseType>
-struct special_scalar_op_base<Derived,Scalar,OtherScalar,BaseType,true>  : public BaseType
-{
-  const CwiseUnaryOp<scalar_multiple2_op<Scalar,OtherScalar>, const Derived>
-  operator*(const OtherScalar& scalar) const
-  {
-#ifdef EIGEN_SPECIAL_SCALAR_MULTIPLE_PLUGIN
-    EIGEN_SPECIAL_SCALAR_MULTIPLE_PLUGIN
-#endif
-    return CwiseUnaryOp<scalar_multiple2_op<Scalar,OtherScalar>, const Derived>
-      (*static_cast<const Derived*>(this), scalar_multiple2_op<Scalar,OtherScalar>(scalar));
-  }
-
-  inline friend const CwiseUnaryOp<scalar_multiple2_op<Scalar,OtherScalar>, const Derived>
-  operator*(const OtherScalar& scalar, const Derived& matrix)
-  {
-#ifdef EIGEN_SPECIAL_SCALAR_MULTIPLE_PLUGIN
-    EIGEN_SPECIAL_SCALAR_MULTIPLE_PLUGIN
-#endif
-    return static_cast<const special_scalar_op_base&>(matrix).operator*(scalar);
-  }
-  
-  const CwiseUnaryOp<scalar_quotient2_op<Scalar,OtherScalar>, const Derived>
-  operator/(const OtherScalar& scalar) const
-  {
-#ifdef EIGEN_SPECIAL_SCALAR_MULTIPLE_PLUGIN
-    EIGEN_SPECIAL_SCALAR_MULTIPLE_PLUGIN
-#endif
-    return CwiseUnaryOp<scalar_quotient2_op<Scalar,OtherScalar>, const Derived>
-      (*static_cast<const Derived*>(this), scalar_quotient2_op<Scalar,OtherScalar>(scalar));
-  }
-};
-
 template<typename XprType, typename CastType> struct cast_return_type
 {
   typedef typename XprType::Scalar CurrentScalarType;
