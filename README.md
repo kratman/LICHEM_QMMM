@@ -19,7 +19,7 @@ LICHEM: Layered Interacting CHEmical Models
 
 ### Introduction
 
-This package is designed to be an open source (GPLv3) interface between QM
+This package is designed to be an open-source (GPLv3) interface between QM
 and MM software so that QMMM calculations can be performed with polarizable
 and frozen electron density force fields. Functionality is also present for
 standard point-charge based force fields, pure MM, and pure QM calculations.
