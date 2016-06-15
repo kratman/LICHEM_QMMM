@@ -11,7 +11,7 @@ LICHEM: Layered Interacting CHEmical Models
 <div align=center> <h3> Symbiotic Computational Chemistry </h3> </div>
 ***
 
-### LICHEM: A QMMM interface for polarizable force fields
+### LICHEM: A QM/MM interface for polarizable force fields
 
 ### Automated tests
 
@@ -19,10 +19,10 @@ LICHEM: Layered Interacting CHEmical Models
 
 ### Introduction
 
-This package is designed to be an open-source (GPLv3) interface between QM
-and MM software so that QMMM calculations can be performed with polarizable
-and frozen electron density force fields. Functionality is also present for
-standard point-charge based force fields, pure MM, and pure QM calculations.
+This package is an open-source (GPLv3) interface between QM and MM software
+so that QM/MM calculations can be performed with polarizable and frozen
+electron density force fields. Functionality is also present for standard
+point-charge based force fields, pure MM, and pure QM calculations.
 
 Available calculations: single-point energies, geometry optimizations,
 classical Monte Carlo, path-integral Monte Carlo, and reaction pathways.

@@ -30,7 +30,7 @@
 \begin{center}
 \centering\includegraphics[scale=0.1]{../doc/images/trimer.png}
 \end{center}}
-\author{A QMMM Interface for Polarizable Force Fields}
+\author{A QM/MM Interface for Polarizable Force Fields}
 \date{Eric G.\ Kratz, 2016}
 
 %Main document
@@ -113,7 +113,7 @@ for most QM calculations, however, these options assure that difficult cases
 will converge.
 Additionally, the "Direct", YQC, and "Big" options are helpful for
 larger systems, but they are not disabled for small systems.
-Most of the wrappers should be developed with the assumption that the QMMM
+Most of the wrappers should be developed with the assumption that the QM/MM
 calculations will be large and quite difficult to simulate.
 These sorts of options ensure that LICHEM will work on all systems without
 requiring the user to be an expert with the QM and MM software. \\
@@ -124,7 +124,7 @@ distorted structures were employed to make sure that crashing the software
 was rare. \\
 
 A simple way to avoid modifying the QM and MM packages is to search for
-iterative or perturbative approximations for the QMMM equations.
+iterative or perturbative approximations for the QM/MM equations.
 This is extremely useful for multipolar/polarizable force fields.
 
 \subsection{Parallelization}
@@ -186,7 +186,7 @@ Additional make rules can be found in the Makefile. \\
 
 QM and MM packages are installed separately from LICHEM.
 Users only need to install the packages that they wish to use in the
-QMMM calculations.
+QM/MM calculations.
 
 \section{LICHEM test suite}
 
@@ -221,13 +221,13 @@ QMMM calculations.
  AMOEBA/GK energy & MM energy of the water dimer in the generalized Kirkwood
  implicit solvent. & N/A & TINKER \\
   & & & \\
- PBE0/TIP3P energy & QMMM energy of a water dimer calculated with PBE0 and
+ PBE0/TIP3P energy & QM/MM energy of a water dimer calculated with PBE0 and
  TIP3P. & PSI4,Gaussian,NWChem & TINKER \\
   & & & \\
- PBE0/AMOEBA energy & Polarizable QMMM energy of a water dimer calculated with
+ PBE0/AMOEBA energy & Polarizable QM/MM energy of a water dimer calculated with
  PBE0 and AMOEBA. & PSI4,Gaussian,NWChem & TINKER \\
   & & & \\
- DFP/Pseudobonds & QMMM Davidon-Fletcher-Powell optimization of 2-Butyne with
+ DFP/Pseudobonds & QM/MM Davidon-Fletcher-Powell optimization of 2-Butyne with
  the two methyl groups replaced by pseudobond/boundary atoms. &
  Gaussian,NWChem & TINKER \\
   & & & \\ \hline
@@ -272,17 +272,17 @@ section.
  \hline
   & Gaussian & PSI4 & NWChem \\ \hline
  QM energy & Yes & Yes & Yes \\
- QMMM energy & Yes & Yes & Yes \\ \hline
+ QM/MM energy & Yes & Yes & Yes \\ \hline
  QM opt. & Yes & Yes & No \\
- QMMM opt. & Yes & No & No \\ \hline
+ QM/MM opt. & Yes & No & No \\ \hline
  QM SD/DFP & Yes & Yes & Yes \\
- QMMM SD/DFP & Yes & Yes & Yes \\ \hline
+ QM/MM SD/DFP & Yes & Yes & Yes \\ \hline
  QM MC & Yes & Yes & Yes \\
- QMMM MC & Yes & Yes & Yes \\ \hline
+ QM/MM MC & Yes & Yes & Yes \\ \hline
  QM PIMC & Yes & Yes & Yes \\
- QMMM PIMC & Yes & Yes & Yes \\ \hline
+ QM/MM PIMC & Yes & Yes & Yes \\ \hline
  QM RP & Yes & Yes & Yes \\
- QMMM RP & Yes & Yes & Yes \\ \hline
+ QM/MM RP & Yes & Yes & Yes \\ \hline
  \end{tabular}
  \caption{
  QM wrapper capabilities for single-point energy, geometry optimization,
@@ -297,17 +297,17 @@ section.
  \hline
   & TINKER & AMBER & LAMMPS \\ \hline
  MM energy &  Yes & No & No \\
- QMMM energy & Yes & No & No \\ \hline
+ QM/MM energy & Yes & No & No \\ \hline
  MM opt. & Yes & No & No \\
- QMMM opt. & Yes & No & No \\ \hline
+ QM/MM opt. & Yes & No & No \\ \hline
  MM SD/DFP & No & No & No \\
- QMMM SD/DFP & Yes & No & No \\ \hline
+ QM/MM SD/DFP & Yes & No & No \\ \hline
  MM MC & Yes & No & No \\
- QMMM MC & Yes & No & No \\ \hline
+ QM/MM MC & Yes & No & No \\ \hline
  MM PIMC & Yes & No & No \\
- QMMM PIMC & Yes & No & No \\ \hline
+ QM/MM PIMC & Yes & No & No \\ \hline
  MM RP & No & No & No \\
- QMMM RP & Yes & No & No \\ \hline
+ QM/MM RP & Yes & No & No \\ \hline
  \end{tabular}
  \caption{
  MM wrapper capabilities for single-point energy, geometry optimization,
@@ -318,7 +318,7 @@ section.
 
 \subsection{QM and MM wrappers}
 
-LICHEM can perform QM, MM, or QMMM calculations via an interface to packages
+LICHEM can perform QM, MM, or QM/MM calculations via an interface to packages
 in the user's path.
 Temporary input files are created for each package and the results are
 collected from the temporary output files.
@@ -372,7 +372,7 @@ line. \\
 
 -c: File name for connectivity and force field information. \\
 
--r: File name for definitions of QMMM regions, QM wrapper, MM wrapper,
+-r: File name for definitions of QM/MM regions, QM wrapper, MM wrapper,
 and general simulation options. \\
 
 -o: File name for trajectories and optimized structures.
@@ -418,7 +418,7 @@ provided.
 
 \section{Region input files}
 
-The region file contains QMMM regions (QM atoms, pseudo-bond atoms, boundary
+The region file contains QM/MM regions (QM atoms, pseudo-bond atoms, boundary
 atoms, and frozen atoms) as well as input keywords needed to define the
 type of calculations that will be performed.
 Blank templates of region files are provided in the documentation
@@ -476,7 +476,7 @@ LREC\_exponent: Integer exponent for the LREC smoothing function.
 Default: 3 \\
 
 Max\_opt\_steps: Maximum number of QM optimization steps during a single
-QMMM iteration.
+QM/MM iteration.
 Default: 200 \\
 
 Max\_stepsize: Maximum displacement during an optimization step (\AA).
@@ -486,7 +486,7 @@ MM\_opt\_cut: Value of the MM optimization cutoff (\AA).
 This keyword overrides the LREC\_Cut keyword during the MM optimizations.
 Default: 1000.0 \\
 
-MM\_opt\_tolerance: RMS deviation criteria for stoping the MM and QMMM
+MM\_opt\_tolerance: RMS deviation criteria for stoping the MM and QM/MM
 optimizations (\AA).
 Force tolerances are generated automatically based on this value.
 Default: 1e-2 \\
@@ -504,7 +504,7 @@ Default: 1.0 \\
 PBC: Use periodic boundary conditions (Yes/No).
 Default: No \\
 
-Potential\_type: Type of interaction potential (QM or MM or QMMM).
+Potential\_type: Type of interaction potential (QM or MM or QM/MM).
 This keyword is required and has no default.
 Default: N/A \\
 
@@ -584,7 +584,7 @@ Use\_MM\_cutoff: Use a MM cutoff in optimizations (Yes/No).
 This can greatly speed up the optimizations, but may prevent the optimization
 from locating a true minimum.
 This cutoff only effects the energies and forces in the MM optimizations.
-Using PBC and LREC is preferred since QM and QMMM energies are not calculated
+Using PBC and LREC is preferred since QM and QM/MM energies are not calculated
 using an electrostatic cutoff.
 Default: No \\
 
@@ -593,9 +593,9 @@ Implicit solvents can only be used for non-periodic simulations.
 Using an implicit solvent disables MM cutoffs in energy calculations.
 Default: No
 
-\subsection{QMMM regions}
+\subsection{QM/MM regions}
 
-Four different regions of the structure can be defined for the QMMM
+Four different regions of the structure can be defined for the QM/MM
 simulations.
 
 QM\_atoms: Nqm [list of ids] \\
@@ -616,7 +616,7 @@ systems. \\
 Note that in pure QM and pure MM simulations, \{Nqm,Npseudo,Nbound\} can all
 be set to zero.
 This is because these regions are not relevant unless LICHEM is performing a
-QMMM calculation.
+QM/MM calculation.
 For all of the regions, the lists of atoms can be separated by either spaces
 or newlines.
 
@@ -625,7 +625,7 @@ or newlines.
 
 \subsection{Single-point energies}
 
-Single-point energies can be calculated for QM, MM, and QMMM potentials.
+Single-point energies can be calculated for QM, MM, and QM/MM potentials.
 Synonyms: Single-point, Energy, SP
 
 \subsection{Optimizations}
@@ -635,8 +635,8 @@ Geometry optimizations can be performed with a couple different algorithms.
 
 Native wrapper optimizers: Perform a geometry optimization with the QM or
 MM optimizers.
-This option is available for QM, MM, and QMMM optimizations.
-QMMM optimizations with the native optimizers are only possible with the
+This option is available for QM, MM, and QM/MM optimizations.
+QM/MM optimizations with the native optimizers are only possible with the
 Gaussian external interface.
 Synonyms: Optimize, opt \\
 
@@ -722,7 +722,7 @@ user:\$ lichem -convert -q xyzfile.xyz \\
 LICHEM can also use a region file to create a BASIS set file for the Gaussian
 and NWChem basis set input.
 A BASIS file is required when mixed basis sets or pseudobonds are included
-in the QMMM calculations. \\
+in the QM/MM calculations. \\
 
 user:\$ lichem -convert -b regions.inp \\
 
@@ -760,7 +760,7 @@ multi-replica simulation. \\
 {\textbf{TINKER:}} \\
 
 The file converter for TINKER can be used on standard TINKER XYZ files,
-TINKER QMMM XYZ files (g09MM2,Q-CHEM), and TINKER XYZ files with periodic
+TINKER QM/MM XYZ files (g09MM2,Q-CHEM), and TINKER XYZ files with periodic
 boundary conditions. \\
 
 user:\$ lichem -convert -t TINKER.xyz -k tinker.key ( -p Yes) \\
@@ -829,7 +829,7 @@ files defined in the tinker.key file.
 
 The Gaussian wrapper will look for checkpoint files and a file called BASIS in
 the working directory.
-The BASIS file contains basis set and pseudopotential information for QMMM
+The BASIS file contains basis set and pseudopotential information for QM/MM
 calculations with bonds between the QM and MM regions (see below).
 While the file is read in automatically if it is found, the user still needs
 to tell Gaussian to use this information: \\
@@ -848,7 +848,7 @@ format.
 
 The NWChem wrapper will look for checkpoint files and a file called BASIS in
 the working directory.
-The BASIS file contains basis set and pseudopotential information for QMMM
+The BASIS file contains basis set and pseudopotential information for QM/MM
 calculations with bonds between the QM and MM regions (see below).
 If the BASIS file is found, then the basis set given in the regions file is
 ignored.
@@ -1080,7 +1080,7 @@ The SD algorithm in LICHEM does not use a line search to optimize $\alpha$ at
 each step.
 Instead, a maximum value of $\alpha$ is given in the input and the
 optimization starts with $\alpha=0.7\alpha_{max}$.
-If the QMMM energy is decreasing, then the step size increases by 5\% until it
+If the QM/MM energy is decreasing, then the step size increases by 5\% until it
 reaches $\alpha_{max}$.
 If the energy increases, the step size is reduced by 40\% and the optimization
 continues.
@@ -1137,7 +1137,7 @@ not violate the conditions for long before a new Hessian is constructed.
 
 \subsection{Ensemble steepest descent}
 
-In QMMM simulations (see section \ref{sec:QMMMSim}) the QM and MM atoms are
+In QM/MM simulations (see section \ref{sec:QMMMSim}) the QM and MM atoms are
 optimized independently.
 The separation of the optimizations can also allow the thermodynamic ensemble
 to be partially sampled.
@@ -1151,9 +1151,9 @@ velocities of the QM atoms set to zero each time step.
 Effectively, the MM atoms are moving in the NVT ensemble at a finite
 temperature, while the QM atoms are at zero Kelvin. \\
 
-The goal of an ESD simulation is to find a thermodynamic average of the QMMM
+The goal of an ESD simulation is to find a thermodynamic average of the QM/MM
 energy by taking snapshots of the MM environment around the QM region.
-If the initial structure is near the minimum of the QMMM potential, then the
+If the initial structure is near the minimum of the QM/MM potential, then the
 QM atoms should stay near the minimum while the MM atoms sample phase space.
 
 \subsection{Nudged elastic band}
@@ -1494,7 +1494,7 @@ to include relativistic effects. \\
 Real pseudopotentials do not really change the nuclear charge, but rather add
 an electrostatic potential with the same spatial distribution as the electrons
 which are replaced.
-A further advantage of pseudopotentials, which is employed in QMMM
+A further advantage of pseudopotentials, which is employed in QM/MM
 calculations, is that the potentials can replace entire atoms.
 For instance, a methyl group can be modeled as a fluorine atom combined with a
 pseudopotential.
@@ -1641,19 +1641,19 @@ For the most part, the dispersion energy, $E_d$, takes the form
 where $C_6$ is an emprical parameter, $f(R_{ij})$ is a damping function, and
 $R_{ij}$ is the distance between atoms $i$ and $j$.
 
-\section{QMMM}
+\section{QM/MM}
  \label{sec:QMMMSim}
 
 \begin{figure}[hbt]
  \centering
  \includegraphics[scale=0.50]{../doc/images/QMMM_1.png}
  \caption{
- Schematic of a QMMM simulation box with bonds between the QM and MM
+ Schematic of a QM/MM simulation box with bonds between the QM and MM
  regions.}
  \label{fig:QMMM1}
 \end{figure}
 
-QMMM calculations divide the system into regions which require accurate
+QM/MM calculations divide the system into regions which require accurate
 quantum treatment and regions that can safely be approximated by classical
 models (see Figure \ref{fig:QMMM1}).
 The full effective Hamiltonian,
@@ -1665,7 +1665,7 @@ where $\hat H_{qm}$ is the Hamiltonian for the QM region, $\hat V_{mm}$
 is the classical potential for the MM region, and $\hat V_{qmmm}$ is the
 potential for the interaction of the QM and MM regions. \\
 
-Since the MM and QMMM interface are included only through the potential,
+Since the MM and QM/MM interface are included only through the potential,
 solving the Schr\"odinger equation is essentially trivial.
 \begin{equation}
  E \approx \langle \psi |\hat H_{eff}|\psi \rangle
@@ -1696,7 +1696,7 @@ This approach splits $\hat V_{qmmm}$ between the MM calculation
  \centering
  \includegraphics[scale=0.50]{../doc/images/QMMM_2.png}
  \caption{
- Schematic of a QMMM simulation box with the boundary region shown in
+ Schematic of a QM/MM simulation box with the boundary region shown in
  green between the QM and MM regions.}
  \label{fig:QMMM2}
 \end{figure}
@@ -1735,14 +1735,14 @@ This approach splits $\hat V_{qmmm}$ between the MM calculation
  \centering
  \includegraphics[scale=0.50]{../doc/images/QMMM_3.png}
  \caption{
- Schematic of a QMMM simulation box with a large boundary region
+ Schematic of a QM/MM simulation box with a large boundary region
  between the QM and MM regions.}
  \label{fig:QMMM3}
 \end{figure}
 
 The calculations are more complicated when there are bonds between the QM and
 MM regions.
-Covalent bonds require two additional regions of the QMMM system,
+Covalent bonds require two additional regions of the QM/MM system,
 a pseudo-bond (PB) region and a boundary atom (BA) region.
 Pseudo-atoms are shared by the QM and MM regions, and handle the bulk of the
 covalent interactions.
@@ -1765,7 +1765,7 @@ pseudo-atoms.
 The treatment of different interaction types are given in Table
 \ref{tab:IntTable} for single-point energy calculations.
 In the pseudo-bond approach, only some of the bonded interactions are
-calculated for the QMMM interface.
+calculated for the QM/MM interface.
 Further details on which bonded interactions are included can be found in the
 literature. \\
 
