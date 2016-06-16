@@ -18,6 +18,7 @@
 
 //QM utility functions
 
+
 //QM wrapper functions
 void PSI4Charges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
