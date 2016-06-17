@@ -281,6 +281,7 @@ void WriteQMConnect(int&,char**&);
 
 //Wrapper definitions (alphabetical)
 #include "AMBER.cpp"
+#include "GauExternal.cpp"
 #include "Gaussian.cpp"
 #include "LAMMPS.cpp"
 #include "Lepton_eng.cpp"
