@@ -17,23 +17,23 @@
 */
 
 //Basis set definitions
-vector<HermGau> HermBasis(string Typ, string BasName)
+vector<HermGau> HermBasis(string Typ, string basName)
 {
   //Function to set specific Hermite basis sets
-  bool BadBasis = 0; //Flag to exit if no basis set is found
-  vector<HermGau> NewBasis;
+  bool badBasis = 0; //Flag to exit if no basis set is found
+  vector<HermGau> newBasis;
   //NB: Organized by basis name, then element
   
   //Check for errors
-  if (BadBasis)
+  if (badBasis)
   {
-    cerr << "Error: Basis set " << BasName;
+    cerr << "Error: Basis set " << basName;
     cerr << " is not defined for atom " << Typ;
     cerr << "!!!" << '\n' << '\n';
     cerr.flush();
     exit(0);
   }
   //Return basis set if it was found in the database
-  return NewBasis;
+  return newBasis;
 };
 

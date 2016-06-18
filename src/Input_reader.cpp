@@ -139,19 +139,19 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     if (dummy == "-x")
     {
       //Read the XYZ filename
-      xyzfilename = string(argv[i+1]);
+      xyzFilename = string(argv[i+1]);
       xyzfile.open(argv[i+1],ios_base::in);
     }
     if (dummy == "-c")
     {
       //Read the connectivity filename
-      confilename = string(argv[i+1]);
+      conFilename = string(argv[i+1]);
       connectfile.open(argv[i+1],ios_base::in);
     }
     if (dummy == "-r")
     {
       //Read the regions filename
-      regfilename = string(argv[i+1]);
+      regFilename = string(argv[i+1]);
       regionfile.open(argv[i+1],ios_base::in);
     }
     if (dummy == "-o")
@@ -1245,9 +1245,9 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   cout << "Setting up simulation..." << '\n';
   cout << '\n';
   cout << "Input files:" << '\n';
-  cout << " Coordinate file: " << xyzfilename << '\n';
-  cout << " Connectivity file: " << confilename << '\n';
-  cout << " Region file: " << regfilename << '\n';
+  cout << " Coordinate file: " << xyzFilename << '\n';
+  cout << " Connectivity file: " << conFilename << '\n';
+  cout << " Region file: " << regFilename << '\n';
   if (CheckFile("BeadStartStruct.xyz"))
   {
     cout << " Restart file: BeadStartStruct.xyz" << '\n';

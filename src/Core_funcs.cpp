@@ -144,65 +144,65 @@ Coord CoordDist2(Coord& a, Coord& b)
     }
   }
   //Save displacements
-  Coord DispAB; //Distance between A and B
-  DispAB.x = dx;
-  DispAB.y = dy;
-  DispAB.z = dz;
-  return DispAB;
+  Coord dispAB; //Distance between A and B
+  dispAB.x = dx;
+  dispAB.y = dy;
+  dispAB.z = dz;
+  return dispAB;
 };
 
 //Functions to check connectivity
-vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int AtID)
+vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int atID)
 {
   //Function to find all boundary atoms connected to a pseudobond atom
-  bool BondError = 0; //Checks if the molecular structure "breaks" the math
-  vector<int> BoundAtoms; //Final list of atoms
+  bool bondError = 0; //Checks if the molecular structure "breaks" the math
+  vector<int> boundAtoms; //Final list of atoms
   //Add atoms bonded to atom "AtID"
-  for (unsigned int i=0;i<Struct[AtID].Bonds.size();i++)
+  for (unsigned int i=0;i<Struct[atID].Bonds.size();i++)
   {
-    int BondID = Struct[AtID].Bonds[i];
-    if (Struct[BondID].BAregion)
+    int bondID = Struct[atID].Bonds[i];
+    if (Struct[bondID].BAregion)
     {
-      BoundAtoms.push_back(BondID);
+      boundAtoms.push_back(bondID);
     }
-    if (Struct[BondID].PBregion and (BondID != AtID))
+    if (Struct[bondID].PBregion and (bondID != atID))
     {
       //Two PBs are connected and this system will fail
-      BondError = 1;
+      bondError = 1;
     }
   }
   //Check find other boundary atoms bonded to the initial set
-  bool MoreFound = 1; //More boundary atoms were found
-  while (MoreFound and (!BondError))
+  bool moreFound = 1; //More boundary atoms were found
+  while (moreFound and (!bondError))
   {
-    MoreFound = 0; //Break the loop
+    moreFound = 0; //Break the loop
     vector<int> tmp;
-    for (unsigned int i=0;i<BoundAtoms.size();i++)
+    for (unsigned int i=0;i<boundAtoms.size();i++)
     {
-      int BAID = BoundAtoms[i];
+      int BAID = boundAtoms[i];
       for (unsigned int j=0;j<Struct[BAID].Bonds.size();j++)
       {
-        int BondID = Struct[BAID].Bonds[j];
+        int bondID = Struct[BAID].Bonds[j];
         //Check if it is on the list
-        bool IsThere = 0;
-        for (unsigned int k=0;k<BoundAtoms.size();k++)
+        bool isThere = 0;
+        for (unsigned int k=0;k<boundAtoms.size();k++)
         {
-          if (BondID == BoundAtoms[k])
+          if (bondID == boundAtoms[k])
           {
-            IsThere = 1;
+            isThere = 1;
           }
         }
-        if (!IsThere)
+        if (!isThere)
         {
-          if (Struct[BondID].BAregion)
+          if (Struct[bondID].BAregion)
           {
-            MoreFound = 1; //Keep going
-            tmp.push_back(BondID);
+            moreFound = 1; //Keep going
+            tmp.push_back(bondID);
           }
-          if (Struct[BondID].PBregion and (BondID != AtID))
+          if (Struct[bondID].PBregion and (bondID != atID))
           {
             //Two PBs are connected and this system will fail
-            BondError = 1;
+            bondError = 1;
           }
         }
       }
@@ -210,23 +210,23 @@ vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int AtID)
     //Add them to the list
     for (unsigned int i=0;i<tmp.size();i++)
     {
-      bool IsThere = 0;
-      for (unsigned int j=0;j<BoundAtoms.size();j++)
+      bool isThere = 0;
+      for (unsigned int j=0;j<boundAtoms.size();j++)
       {
         //Avoid adding the atom twice
-        if (tmp[i] == BoundAtoms[j])
+        if (tmp[i] == boundAtoms[j])
         {
-          IsThere = 1;
+          isThere = 1;
         }
       }
-      if (!IsThere)
+      if (!isThere)
       {
-        BoundAtoms.push_back(tmp[i]);
+        boundAtoms.push_back(tmp[i]);
       }
     }
   }
   //Check for errors
-  if (BondError)
+  if (bondError)
   {
     cerr << "Error: Two pseudo-bonds are connected through boudary atoms!!!";
     cerr << '\n';
@@ -237,117 +237,117 @@ vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int AtID)
     exit(0);
   }
   //Return list if there are no errors
-  return BoundAtoms;
+  return boundAtoms;
 };
 
-bool Bonded(vector<QMMMAtom>& Struct, int Atom1, int Atom2)
+bool Bonded(vector<QMMMAtom>& Struct, int atom1, int atom2)
 {
   //Function to check if two atoms are 1-2 connected
-  bool IsBound = 0;
-  for (unsigned int i=0;i<Struct[Atom2].Bonds.size();i++)
+  bool isBound = 0;
+  for (unsigned int i=0;i<Struct[atom2].Bonds.size();i++)
   {
-    if (Atom1 == Struct[Atom2].Bonds[i])
+    if (atom1 == Struct[atom2].Bonds[i])
     {
-      IsBound = 1;
+      isBound = 1;
     }
   }
-  return IsBound;
+  return isBound;
 };
 
-bool Angled(vector<QMMMAtom>& Struct, int Atom1, int Atom3)
+bool Angled(vector<QMMMAtom>& Struct, int atom1, int atom3)
 {
   //Function to check if two atoms are 1-3 connected
-  bool IsBound = 0;
-  for (unsigned int i=0;i<Struct[Atom1].Bonds.size();i++)
+  bool isBound = 0;
+  for (unsigned int i=0;i<Struct[atom1].Bonds.size();i++)
   {
-    int Atom2 = Struct[Atom1].Bonds[i];
-    for (unsigned int j=0;j<Struct[Atom2].Bonds.size();j++)
+    int atom2 = Struct[atom1].Bonds[i];
+    for (unsigned int j=0;j<Struct[atom2].Bonds.size();j++)
     {
-      if (Atom3 == Struct[Atom2].Bonds[j])
+      if (atom3 == Struct[atom2].Bonds[j])
       {
-        IsBound = 1;
+        isBound = 1;
       }
     }
   }
-  return IsBound;
+  return isBound;
 };
 
-bool Dihedraled(vector<QMMMAtom>& Struct, int Atom1, int Atom4)
+bool Dihedraled(vector<QMMMAtom>& Struct, int atom1, int atom4)
 {
   //Function to check if two atoms are 1-4 connected
-  bool IsBound = 0;
-  for (unsigned int i=0;i<Struct[Atom1].Bonds.size();i++)
+  bool isBound = 0;
+  for (unsigned int i=0;i<Struct[atom1].Bonds.size();i++)
   {
-    int Atom2 = Struct[Atom1].Bonds[i];
-    for (unsigned int j=0;j<Struct[Atom2].Bonds.size();j++)
+    int atom2 = Struct[atom1].Bonds[i];
+    for (unsigned int j=0;j<Struct[atom2].Bonds.size();j++)
     {
-      int Atom3 = Struct[Atom2].Bonds[j];
-      for (unsigned int k=0;k<Struct[Atom3].Bonds.size();k++)
+      int atom3 = Struct[atom2].Bonds[j];
+      for (unsigned int k=0;k<Struct[atom3].Bonds.size();k++)
       {
-        if (Atom4 == Struct[Atom3].Bonds[k])
+        if (atom4 == Struct[atom3].Bonds[k])
         {
-          IsBound = 1;
+          isBound = 1;
         }
       }
     }
   }
-  return IsBound;
+  return isBound;
 };
 
 //Structure correction functions
 void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
 {
   //Move the system to the center of the simulation box
-  double avgx = 0;
-  double avgy = 0;
-  double avgz = 0;
+  double avgX = 0;
+  double avgY = 0;
+  double avgZ = 0;
   #pragma omp parallel
   {
-    #pragma omp for nowait schedule(dynamic) reduction(+:avgx)
+    #pragma omp for nowait schedule(dynamic) reduction(+:avgX)
     for (int i=0;i<Natoms;i++)
     {
       //Loop over all beads
-      double centx = 0;
+      double centX = 0;
       for (int j=0;j<QMMMOpts.Nbeads;j++)
       {
         //Update local average postion
-        centx += Struct[i].P[j].x;
+        centX += Struct[i].P[j].x;
       }
       //Upate full average
-      avgx += centx;
+      avgX += centX;
     }
-    #pragma omp for nowait schedule(dynamic) reduction(+:avgy)
+    #pragma omp for nowait schedule(dynamic) reduction(+:avgY)
     for (int i=0;i<Natoms;i++)
     {
       //Loop over all beads
-      double centy = 0;
+      double centY = 0;
       for (int j=0;j<QMMMOpts.Nbeads;j++)
       {
         //Update local average postion
-        centy += Struct[i].P[j].y;
+        centY += Struct[i].P[j].y;
       }
       //Upate full average
-      avgy += centy;
+      avgY += centY;
     }
-    #pragma omp for nowait schedule(dynamic) reduction(+:avgz)
+    #pragma omp for nowait schedule(dynamic) reduction(+:avgZ)
     for (int i=0;i<Natoms;i++)
     {
       //Loop over all beads
-      double centz = 0;
+      double centZ = 0;
       for (int j=0;j<QMMMOpts.Nbeads;j++)
       {
         //Update local average postion
-        centz += Struct[i].P[j].z;
+        centZ += Struct[i].P[j].z;
       }
       //Upate full average
-      avgz += centz;
+      avgZ += centZ;
     }
   }
   #pragma omp barrier
   //Convert sums to averages
-  avgx /= Natoms*QMMMOpts.Nbeads;
-  avgy /= Natoms*QMMMOpts.Nbeads;
-  avgz /= Natoms*QMMMOpts.Nbeads;
+  avgX /= Natoms*QMMMOpts.Nbeads;
+  avgY /= Natoms*QMMMOpts.Nbeads;
+  avgZ /= Natoms*QMMMOpts.Nbeads;
   //Move atoms to the center of the box
   #pragma omp parallel
   {
@@ -358,7 +358,7 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       for (int j=0;j<QMMMOpts.Nbeads;j++)
       {
         //Move bead to the center
-        Struct[i].P[j].x -= avgx;
+        Struct[i].P[j].x -= avgX;
         Struct[i].P[j].x += 0.5*Lx;
       }
     }
@@ -369,7 +369,7 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       for (int j=0;j<QMMMOpts.Nbeads;j++)
       {
         //Move bead to the center
-        Struct[i].P[j].y -= avgy;
+        Struct[i].P[j].y -= avgY;
         Struct[i].P[j].y += 0.5*Ly;
       }
     }
@@ -380,7 +380,7 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       for (int j=0;j<QMMMOpts.Nbeads;j++)
       {
         //Move bead to the center
-        Struct[i].P[j].z -= avgz;
+        Struct[i].P[j].z -= avgZ;
         Struct[i].P[j].z += 0.5*Lz;
       }
     }
@@ -394,50 +394,50 @@ Coord FindQMCOM(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Find the center of mass for the QM region
   Coord QMCOM; //Center of mass position
-  double avgx = 0; //Average x position
-  double avgy = 0; //Average y position
-  double avgz = 0; //Average z position
-  double totm = 0; //Total mass
+  double avgX = 0; //Average x position
+  double avgY = 0; //Average y position
+  double avgZ = 0; //Average z position
+  double totM = 0; //Total mass
   #pragma omp parallel
   {
-    #pragma omp for nowait schedule(dynamic) reduction(+:totm)
+    #pragma omp for nowait schedule(dynamic) reduction(+:totM)
     for (int i=0;i<Natoms;i++)
     {
       if (Struct[i].QMregion or Struct[i].PBregion)
       {
-        totm += Struct[i].m;
+        totM += Struct[i].m;
       }
     }
-    #pragma omp for nowait schedule(dynamic) reduction(+:avgx)
+    #pragma omp for nowait schedule(dynamic) reduction(+:avgX)
     for (int i=0;i<Natoms;i++)
     {
       if (Struct[i].QMregion or Struct[i].PBregion)
       {
-        avgx += Struct[i].m*Struct[i].P[Bead].x;
+        avgX += Struct[i].m*Struct[i].P[Bead].x;
       }
     }
-    #pragma omp for nowait schedule(dynamic) reduction(+:avgy)
+    #pragma omp for nowait schedule(dynamic) reduction(+:avgY)
     for (int i=0;i<Natoms;i++)
     {
       if (Struct[i].QMregion or Struct[i].PBregion)
       {
-        avgy += Struct[i].m*Struct[i].P[Bead].y;
+        avgY += Struct[i].m*Struct[i].P[Bead].y;
       }
     }
-    #pragma omp for nowait schedule(dynamic) reduction(+:avgz)
+    #pragma omp for nowait schedule(dynamic) reduction(+:avgZ)
     for (int i=0;i<Natoms;i++)
     {
       if (Struct[i].QMregion or Struct[i].PBregion)
       {
-        avgz += Struct[i].m*Struct[i].P[Bead].z;
+        avgZ += Struct[i].m*Struct[i].P[Bead].z;
       }
     }
   }
   #pragma omp barrier
   //Save center of mass
-  QMCOM.x = avgx/totm;
-  QMCOM.y = avgy/totm;
-  QMCOM.z = avgz/totm;
+  QMCOM.x = avgX/totM;
+  QMCOM.y = avgY/totM;
+  QMCOM.z = avgZ/totM;
   return QMCOM;
 };
 

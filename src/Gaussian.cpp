@@ -742,8 +742,8 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "#P " << "external=\"lichem -GauExtern ";
   call << "LICHMExt_" << Bead;  //Just the stub
   call << " -n " << ExtCPUs;
-  call << " -c " << confilename;
-  call << " -r " << regfilename;
+  call << " -c " << conFilename;
+  call << " -r " << regFilename;
   call << " -b " << Bead;
   call << "\"" << '\n';
   call << "Symmetry=None Opt=(";

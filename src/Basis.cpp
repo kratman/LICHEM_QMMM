@@ -26,13 +26,13 @@
 void LICHEM2BASIS(int& argc,char**& argv)
 {
   //Writes a BASIS file based on a LICHEM regions file
-  fstream regfile,ofile; //File streams
+  fstream regFile,outFile; //File streams
   string dummy; //Generic string
-  regfilename = "NOFILE"; //Global regions filename
+  regFilename = "NOFILE"; //Global regions filename
   //Read arguments
   Nqm = 0; //For safety
   Npseudo = 0; //For safety
-  bool DoQuit = 0; //Exit with an error
+  bool doQuit = 0; //Exit with an error
   cout << "Reading LICHEM input: ";
   for (int i=0;i<argc;i++)
   {
@@ -46,57 +46,57 @@ void LICHEM2BASIS(int& argc,char**& argv)
       {
         cout << "Error: Could not open regions file!!!";
         cout << '\n';
-        DoQuit = 1;
+        doQuit = 1;
       }
-      regfilename = file.str();
-      regfile.open(argv[i+1],ios_base::in);
+      regFilename = file.str();
+      regFile.open(argv[i+1],ios_base::in);
       cout << argv[i+1];
     }
   }
   cout << '\n' << '\n'; //Terminate output
   //Error check
-  if (!CheckFile(regfilename))
+  if (!CheckFile(regFilename))
   {
     //Missing flag
     cout << "Error: Missing region file!!!";
     cout << '\n' << '\n';
-    DoQuit = 1;
+    doQuit = 1;
   }
   //Parse input
-  if (!DoQuit)
+  if (!doQuit)
   {
     //Parse region file
-    bool FoundWrapper = 0;
-    bool FoundBasis = 0;
-    bool FoundQM = 0;
+    bool foundWrapper = 0;
+    bool foundBasis = 0;
+    bool foundQM = 0;
     vector<int> QMatoms;
     vector<int> PBatoms;
-    string BasisSetName = "???";
-    string WrapperName = "N/A";
-    ofile.open("BASIS",ios_base::out);
-    if (regfile.good())
+    string basisSetName = "???";
+    string wrapperName = "N/A";
+    outFile.open("BASIS",ios_base::out);
+    if (regFile.good())
     {
       //Loop over the lines
-      while (!regfile.eof())
+      while (!regFile.eof())
       {
         //Look for key words
         stringstream line; //Generic stream
-        getline(regfile,dummy); //Read the line
+        getline(regFile,dummy); //Read the line
         line << dummy; //Copy to a better container
         line >> dummy; //Read first item in the string
         LICHEMLowerText(dummy);
         if (dummy == "qm_type:")
         {
           //Read basis set information
-          line >> WrapperName;
-          LICHEMLowerText(WrapperName);
-          FoundWrapper = 1;
+          line >> wrapperName;
+          LICHEMLowerText(wrapperName);
+          foundWrapper = 1;
         }
         if (dummy == "qm_basis:")
         {
           //Read basis set information
-          line >> BasisSetName;
-          FoundBasis = 1;
+          line >> basisSetName;
+          foundBasis = 1;
         }
         if (dummy == "qm_atoms:")
         {
@@ -105,11 +105,11 @@ void LICHEM2BASIS(int& argc,char**& argv)
           for (int i=0;i<Nqm;i++)
           {
             //Save ID to the array
-            int AtNum = 0;
-            regfile >> AtNum;
-            QMatoms.push_back(AtNum);
+            int atNum = 0;
+            regFile >> atNum;
+            QMatoms.push_back(atNum);
           }
-          FoundQM = 1;
+          foundQM = 1;
         }
         if (dummy == "pseudobond_atoms:")
         {
@@ -118,15 +118,15 @@ void LICHEM2BASIS(int& argc,char**& argv)
           for (int i=0;i<Npseudo;i++)
           {
             //Save ID to the array
-            int AtNum = 0;
-            regfile >> AtNum;
-            PBatoms.push_back(AtNum);
+            int atNum = 0;
+            regFile >> atNum;
+            PBatoms.push_back(atNum);
           }
         }
       }
     }
     //Check for read errors
-    if ((!FoundWrapper) or (!FoundBasis) or (!FoundQM))
+    if ((!foundWrapper) or (!foundBasis) or (!foundQM))
     {
       cout << "Error: Missing data in region file!!!";
       cout << '\n';
@@ -136,7 +136,7 @@ void LICHEM2BASIS(int& argc,char**& argv)
     }
     //Modify atom order
     int Ntotal = Nqm+Npseudo; //Total number of QM and PB atoms
-    vector<bool> AtomList; //Region flags for all QM and PB atoms
+    vector<bool> atomList; //Region flags for all QM and PB atoms
     vector<int> QMPBatoms; //List of all QM and PB atoms
     for (int i=0;i<Nqm;i++)
     {
@@ -152,19 +152,19 @@ void LICHEM2BASIS(int& argc,char**& argv)
     for (int i=0;i<Ntotal;i++)
     {
       //Check regions
-      bool InQMregion = 1;
+      bool inQMregion = 1;
       for (int j=0;j<Npseudo;j++)
       {
         if (PBatoms[j] == QMPBatoms[i])
         {
           //Atom is in the PB region
-          InQMregion = 0;
+          inQMregion = 0;
         }
       }
-      AtomList.push_back(InQMregion);
+      atomList.push_back(inQMregion);
     }
     //Write BASIS file
-    if ((WrapperName == "gaussian") or (WrapperName == "g09"))
+    if ((wrapperName == "gaussian") or (wrapperName == "g09"))
     {
       //Write Gaussian BASIS file for GEN input
       int ct; //Generic counter
@@ -172,16 +172,16 @@ void LICHEM2BASIS(int& argc,char**& argv)
       ct = 0; //Reset counter
       for (int i=0;i<Ntotal;i++)
       {
-        if (AtomList[i])
+        if (atomList[i])
         {
           ct += 1; //Increase counter
-          ofile << (i+1) << " ";
+          outFile << (i+1) << " ";
           if (ct == 8)
           {
             //Print basis info
-            ofile << " 0" << '\n';
-            ofile << BasisSetName << '\n';
-            ofile << "****" << '\n';
+            outFile << " 0" << '\n';
+            outFile << basisSetName << '\n';
+            outFile << "****" << '\n';
             //Start a new line
             ct = 0;
           }
@@ -191,9 +191,9 @@ void LICHEM2BASIS(int& argc,char**& argv)
       if (ct != 0)
       {
         //Print basis info
-        ofile << " 0" << '\n';
-        ofile << BasisSetName << '\n';
-        ofile << "****" << '\n';
+        outFile << " 0" << '\n';
+        outFile << basisSetName << '\n';
+        outFile << "****" << '\n';
       }
       //Write PB atoms
       ct = 0; //Reset counter
@@ -201,16 +201,16 @@ void LICHEM2BASIS(int& argc,char**& argv)
       {
         for (int i=0;i<Ntotal;i++)
         {
-          if (!AtomList[i])
+          if (!atomList[i])
           {
             ct += 1; //Increase counter
-            ofile << (i+1) << " ";
+            outFile << (i+1) << " ";
             if (ct == 8)
             {
               //Print basis info
-              ofile << " 0" << '\n';
-              ofile << "[PB basis set]" << '\n';
-              ofile << "****" << '\n';
+              outFile << " 0" << '\n';
+              outFile << "[PB basis set]" << '\n';
+              outFile << "****" << '\n';
               //Start a new line
               ct = 0;
             }
@@ -220,27 +220,27 @@ void LICHEM2BASIS(int& argc,char**& argv)
         if (ct != 0)
         {
           //Print basis info
-          ofile << " 0" << '\n';
-          ofile << "[PB basis set]" << '\n';
-          ofile << "****" << '\n';
+          outFile << " 0" << '\n';
+          outFile << "[PB basis set]" << '\n';
+          outFile << "****" << '\n';
         }
       }
       //Write pseudopotential information
-      ofile << '\n';
+      outFile << '\n';
       if (Npseudo > 0)
       {
         ct = 0; //Reset counter
         for (int i=0;i<Ntotal;i++)
         {
-          if (!AtomList[i])
+          if (!atomList[i])
           {
             ct += 1; //Increase counter
-            ofile << (i+1) << " ";
+            outFile << (i+1) << " ";
             if (ct == 8)
             {
               //Print basis info
-              ofile << " 0" << '\n';
-              ofile << "[PB pseudopotentials]" << '\n';
+              outFile << " 0" << '\n';
+              outFile << "[PB pseudopotentials]" << '\n';
               //Start a new line
               ct = 0;
             }
@@ -250,34 +250,34 @@ void LICHEM2BASIS(int& argc,char**& argv)
         if (ct != 0)
         {
           //Print basis info
-          ofile << " 0" << '\n';
-          ofile << "[PB pseudopotentials]" << '\n';
+          outFile << " 0" << '\n';
+          outFile << "[PB pseudopotentials]" << '\n';
         }
-        ofile << '\n';
+        outFile << '\n';
       }
     }
-    else if (WrapperName == "nwchem")
+    else if (wrapperName == "nwchem")
     {
       //Write NWChem BASIS file
-      ofile << "basis" << '\n';
-      ofile << " * library ";
-      ofile << BasisSetName;
-      ofile << " except F2pb" << '\n';
+      outFile << "basis" << '\n';
+      outFile << " * library ";
+      outFile << basisSetName;
+      outFile << " except F2pb" << '\n';
       if (Npseudo > 0)
       {
-        ofile << " F2pb [PB basis set]" << '\n';
+        outFile << " F2pb [PB basis set]" << '\n';
       }
-      ofile << "end" << '\n';
+      outFile << "end" << '\n';
       if (Npseudo > 0)
       {
-        ofile << "ecp" << '\n';
-        ofile << " F2pb nelec 2" << '\n';
-        ofile << " F2pb [Pseudopotential type]" << '\n';
-        ofile << "  [PB pseudopotential]" << '\n';
-        ofile << "end" << '\n';
+        outFile << "ecp" << '\n';
+        outFile << " F2pb nelec 2" << '\n';
+        outFile << " F2pb [Pseudopotential type]" << '\n';
+        outFile << "  [PB pseudopotential]" << '\n';
+        outFile << "end" << '\n';
       }
     }
-    else if (WrapperName == "psi4")
+    else if (wrapperName == "psi4")
     {
       cout << "Error: Pseudopotentials are not yet implemented in PSI4.";
       cout << '\n' << '\n';
@@ -293,11 +293,11 @@ void LICHEM2BASIS(int& argc,char**& argv)
     cout << "Basis set data written to BASIS";
     cout << '\n' << '\n';
     cout.flush();
-    ofile.flush();
-    ofile.close();
+    outFile.flush();
+    outFile.close();
   }
   //Quit
-  regfile.close();
+  regFile.close();
   exit(0);
   return;
 };

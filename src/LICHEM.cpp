@@ -1603,7 +1603,7 @@ int main(int argc, char* argv[])
   else
   {
     cout << "Nothing was done..." << '\n';
-    cout << "Check the simulation type in " << regfilename;
+    cout << "Check the simulation type in " << regFilename;
     cout << '\n' << '\n';
     cout.flush();
   }

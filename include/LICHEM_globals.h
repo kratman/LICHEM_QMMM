@@ -22,9 +22,9 @@ namespace LICHEMGlobal
 {
   //Global variables
   int GlobalSys = 0; //Global dummy return for all system calls
-  string xyzfilename; //Saves a filename given in the arguments
-  string confilename; //Saves a filename given in the arguments
-  string regfilename; //Saves a filename given in the arguments
+  string xyzFilename; //Saves a filename given in the arguments
+  string conFilename; //Saves a filename given in the arguments
+  string regFilename; //Saves a filename given in the arguments
   int Nthreads = 1; //Total number of threads available
   int Ncpus = 1; //Number of processors for QM calculations
   int Nfreeze = 0; //Number of frozen atoms

@@ -833,17 +833,17 @@ void ExtractGlobalPoles(int& argc, char**& argv)
     }
     if (dummy == "-x")
     {
-      xyzfilename = string(argv[i+1]);
+      xyzFilename = string(argv[i+1]);
       xyzfile.open(argv[i+1],ios_base::in);
     }
     if (dummy == "-c")
     {
-      confilename = string(argv[i+1]);
+      conFilename = string(argv[i+1]);
       connectfile.open(argv[i+1],ios_base::in);
     }
     if (dummy == "-r")
     {
-      regfilename = string(argv[i+1]);
+      regFilename = string(argv[i+1]);
       regionfile.open(argv[i+1],ios_base::in);
     }
   }

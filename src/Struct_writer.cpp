@@ -1023,7 +1023,7 @@ void WriteQMConnect(int& argc,char**& argv)
   //Write the connectivity input for pure QM calculations
   fstream posfile,ofile; //File streams
   string dummy; //Generic string
-  xyzfilename = "NOFILE"; //Global XYZ filename
+  xyzFilename = "NOFILE"; //Global XYZ filename
   //Read arguments
   Natoms = 0; //For safety
   bool DoQuit = 0; //Exit with an error
@@ -1042,14 +1042,14 @@ void WriteQMConnect(int& argc,char**& argv)
         cout << '\n';
         DoQuit = 1;
       }
-      xyzfilename = file.str();
+      xyzFilename = file.str();
       posfile.open(argv[i+1],ios_base::in);
       cout << argv[i+1];
     }
   }
   cout << '\n' << '\n'; //Terminate output
   //Error check
-  if (!CheckFile(xyzfilename))
+  if (!CheckFile(xyzFilename))
   {
     cout << "Error: Missing XYZ file!!!";
     cout << '\n' << '\n';
