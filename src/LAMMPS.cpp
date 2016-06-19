@@ -30,7 +30,7 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
                     int Bead)
 {
   //Function for calculating the MM forces on a set of QM atoms
-  fstream ofile,ifile; //Generic file streams
+  fstream outFile,inFile; //Generic file streams
   string dummy; //Generic string
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
@@ -39,8 +39,8 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Construct LAMMPS data file
   call.str("");
   call << "LICHM_" << Bead << ".data";
-  ofile.open(call.str().c_str(),ios_base::out);
-  ifile.open("DATA",ios_base::in);
+  outFile.open(call.str().c_str(),ios_base::out);
+  inFile.open("DATA",ios_base::in);
   call.str("");
   call << '\n';
   if (PBCon)
@@ -55,13 +55,13 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     call << (-1*Ly) << " " << Ly << " ylo yhi" << '\n';
     call << (-1*Lz) << " " << Lz << " zlo zhi" << '\n';
   }
-  while (!ifile.eof())
+  while (!inFile.eof())
   {
      //Copy the potential line by line
-     getline(ifile,dummy);
+     getline(inFile,dummy);
      call << dummy << '\n';
   }
-  ifile.close();
+  inFile.close();
   //Add PBC info
   call << "Atoms";
   call << '\n' << '\n';
@@ -88,21 +88,21 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     call << '\n';
   }
   call << '\n';
-  ifile.open("TOPO",ios_base::in);
-  while (!ifile.eof())
+  inFile.open("TOPO",ios_base::in);
+  while (!inFile.eof())
   {
      //Copy the potential line by line
-     getline(ifile,dummy);
+     getline(inFile,dummy);
      call << dummy << '\n';
   }
-  ifile.close();
-  ofile << call.str();
-  ofile.flush();
-  ofile.close();
+  inFile.close();
+  outFile << call.str();
+  outFile.flush();
+  outFile.close();
   //Construct input file
   call.str("");
   call << "LICHM_" << Bead << ".in";
-  ofile.open(call.str().c_str(),ios_base::out);
+  outFile.open(call.str().c_str(),ios_base::out);
   call.str("");
   call << "atom_style full" << '\n';
   call << "units metal"; //eV,Ang,ps,bar,K
@@ -119,14 +119,14 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "read_data LICHM_";
   call << Bead << ".data";
   call << '\n';
-  ifile.open("POTENTIAL",ios_base::in);
-  while (!ifile.eof())
+  inFile.open("POTENTIAL",ios_base::in);
+  while (!inFile.eof())
   {
      //Copy the potential line by line
-     getline(ifile,dummy);
+     getline(inFile,dummy);
      call << dummy << '\n';
   }
-  ifile.close();
+  inFile.close();
   if (Nqm > 0)
   {
     //Partition atoms into groups
@@ -194,9 +194,9 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     call << "thermo_style custom step c_mme c_qmmme" << '\n';
   }
   call << "run 0" << '\n'; //Only uses the initial energy
-  ofile << call.str();
-  ofile.flush();
-  ofile.close();
+  outFile << call.str();
+  outFile.flush();
+  outFile.close();
   //Run calculation
   call.str("");
   call << "lammps -suffix omp -log LICHM_";
@@ -206,7 +206,7 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << ".in > LICHMlog_";
   call << Bead;
   call << ".txt";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Extract energy
   exit(0);
   
@@ -246,7 +246,7 @@ double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
                  int Bead)
 {
   //Function for optimizing with LAMMPS
-  fstream ofile,ifile; //Generic file streams
+  fstream outFile,inFile; //Generic file streams
   string dummy; //Generic string
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
@@ -255,14 +255,14 @@ double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Construct LAMMPS data file
   call.str("");
   call << "LICHM_" << Bead << ".data";
-  ifile.open("DATA",ios_base::in);
-  while (!ifile.eof())
+  inFile.open("DATA",ios_base::in);
+  while (!inFile.eof())
   {
      //Copy the potential line by line
-     getline(ifile,dummy);
+     getline(inFile,dummy);
      call << dummy << '\n';
   }
-  ifile.close();
+  inFile.close();
   call << '\n';
   call << "Atoms";
   call << '\n' << '\n';
@@ -279,13 +279,13 @@ double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     call << Struct[i].P[Bead].z;
     call << '\n';
   }
-  ofile << call.str();
-  ofile.flush();
-  ofile.close();
+  outFile << call.str();
+  outFile.flush();
+  outFile.close();
   //Construct input file
   call.str("");
   call << "LICHM_" << Bead << ".in";
-  ofile.open(call.str().c_str(),ios_base::out);
+  outFile.open(call.str().c_str(),ios_base::out);
   call.str("");
   call << "atom_style full" << '\n';
   call << "units metal"; //eV,Ang,ps,bar,K
@@ -293,14 +293,14 @@ double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "read_data ";
   call << "LICHM_" << Bead << ".data";
   call << '\n' << '\n';
-  ifile.open("POTENTIAL",ios_base::in);
-  while (!ifile.eof())
+  inFile.open("POTENTIAL",ios_base::in);
+  while (!inFile.eof())
   {
      //Copy the potential line by line
-     getline(ifile,dummy);
+     getline(inFile,dummy);
      call << dummy << '\n';
   }
-  ifile.close();
+  inFile.close();
   call << '\n';
   if (Nqm > 0)
   {
@@ -373,9 +373,9 @@ double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Max force iterations
   call << (3*Natoms*QMMMOpts.MaxOptSteps);
   call << '\n';
-  ofile << call.str();
-  ofile.flush();
-  ofile.close();
+  outFile << call.str();
+  outFile.flush();
+  outFile.close();
   //Run calculation
   call.str("");
   call << "lammps -suffix omp -log ";
@@ -383,7 +383,7 @@ double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "< LICHM_" << Bead;
   call << ".in > LICHMlog_" << Bead;
   call << ".txt";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Extract new geometry
   
   //Clean up files

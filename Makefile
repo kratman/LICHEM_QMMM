@@ -103,8 +103,8 @@ devtest:
 	sed $(SEDI) 's/\s*$$//g' ./tests/runtests; \
 	sed $(SEDI) '/^$$/d' ./tests/runtests; \
 	sed $(SEDI) 's/\!\!/\#\!/g' ./tests/runtests; \
-	sed $(SEDI) 's/UpdateResults = 0/UpdateResults = 1/g' ./tests/runtests; \
-	sed $(SEDI) 's/ForceAll = 0/ForceAll = 1/g' ./tests/runtests; \
+	sed $(SEDI) 's/updateResults = 0/updateResults = 1/g' ./tests/runtests; \
+	sed $(SEDI) 's/forceAll = 0/forceAll = 1/g' ./tests/runtests; \
 	chmod a+x ./tests/runtests
 
 checksyntax:	title

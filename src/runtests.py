@@ -25,17 +25,17 @@ import sys
 import os
 
 #Start timer immediately
-StartTime = time.time()
+startTime = time.time()
 
 #Initialize globals
 TTxtLen = 30 #Number of characters for the test name
-passct = 0 #Number of tests passed
-failct = 0 #Number of tests failed
+passCt = 0 #Number of tests passed
+failCt = 0 #Number of tests failed
 
 #Development settings
 #NB: Modified by the Makefile
-UpdateResults = 0 #Flag to print energies to update tests
-ForceAll = 0 #Flag to force it to do tests even if they will fail
+updateResults = 0 #Flag to print energies to update tests
+forceAll = 0 #Flag to force it to do tests even if they will fail
 
 #Classes
 class ClrSet:
@@ -52,19 +52,19 @@ class ClrSet:
   Reset = Norm #Reset to defaults
 
 #Functions
-def RunLICHEM(xname,rname,cname):
+def RunLICHEM(xName,rName,cName):
   #Submit LICHEM jobs
   cmd = "lichem -n "
   cmd += str(Ncpus)
   cmd += " "
   cmd += "-x "
-  cmd += xname
+  cmd += xName
   cmd += " "
   cmd += "-r "
-  cmd += rname
+  cmd += rName
   cmd += " "
   cmd += "-c "
-  cmd += cname
+  cmd += cName
   cmd += " "
   cmd += "-o trash.xyz "
   cmd += "> tests.out " #Capture stdout
@@ -74,46 +74,46 @@ def RunLICHEM(xname,rname,cname):
 
 def CleanFiles():
   #Delete junk files
-  cleancmd = "rm -f"
+  cleanCmd = "rm -f"
   #Remove LICHEM files
-  cleancmd += " BASIS tests.out trash.xyz"
-  cleancmd += " BeadStartStruct.xyz BurstStruct.xyz"
+  cleanCmd += " BASIS tests.out trash.xyz"
+  cleanCmd += " BeadStartStruct.xyz BurstStruct.xyz"
   #Remove TINKER files
-  cleancmd += " tinker.key"
+  cleanCmd += " tinker.key"
   #Remove LAMMPS files
-  cleancmd += ""
+  cleanCmd += ""
   #Remove AMBER files
-  cleancmd += ""
+  cleanCmd += ""
   #Remove Gaussian files
-  cleancmd += " *.chk"
+  cleanCmd += " *.chk"
   #Remove PSI4 files
-  cleancmd += " timer.* psi.* *.32 *.180"
+  cleanCmd += " timer.* psi.* *.32 *.180"
   #Remove NWChem files
-  cleancmd += " *.movecs"
+  cleanCmd += " *.movecs"
   #Delete the files
-  subprocess.call(cleancmd,shell=True)
+  subprocess.call(cleanCmd,shell=True)
   return
 
-def RecoverEnergy(txtlabel,itemnum):
+def RecoverEnergy(txtLabel,itemNum):
   #Recover the energy from LICHEM output
   cmd = ""
   cmd += "grep -e "
   cmd += '"'
-  cmd += txtlabel
+  cmd += txtLabel
   cmd += ' "'
   cmd += " tests.out"
-  savedresult = "Crashed..."
+  savedResult = "Crashed..."
   try:
     #Safely check energy
-    finalenergy = subprocess.check_output(cmd,shell=True) #Get results
-    finalenergy = finalenergy.decode('utf-8').split()
-    finalenergy = float(finalenergy[itemnum])
-    savedresult = "Energy: "+str(finalenergy) #Save it for later
-    finalenergy = round(finalenergy,5)
+    finalEnergy = subprocess.check_output(cmd,shell=True) #Get results
+    finalEnergy = finalEnergy.decode('utf-8').split()
+    finalEnergy = float(finalEnergy[itemNum])
+    savedResult = "Energy: "+str(finalEnergy) #Save it for later
+    finalEnergy = round(finalEnergy,5)
   except:
     #Calculation failed
-    finalenergy = 0.0
-  return finalenergy,savedresult
+    finalEnergy = 0.0
+  return finalEnergy,savedResult
 
 def RecoverFreqs():
   #Recover a list of frequencies
@@ -123,66 +123,66 @@ def RecoverFreqs():
   cmd += "sed '/Frequencies:/d'"
   try:
     #Safely check energy
-    freqlist = []
-    tmpfreqs = subprocess.check_output(cmd,shell=True) #Get results
-    tmpfreqs = tmpfreqs.decode('utf-8').strip()
-    tmpfreqs = tmpfreqs.split()
-    for freqval in tmpfreqs:
-      freqlist.append(float(freqval))
+    freqList = []
+    tmpFreqs = subprocess.check_output(cmd,shell=True) #Get results
+    tmpFreqs = tmpFreqs.decode('utf-8').strip()
+    tmpFreqs = tmpFreqs.split()
+    for freqVal in tmpFreqs:
+      freqList.append(float(freqVal))
   except:
     #Calculation failed
-    freqlist = []
-  return freqlist
+    freqList = []
+  return freqList
 
-def AddPass(tname,TestPass,txtln):
+def AddPass(tName,testPass,txtLn):
   #Add a colored pass or fail message
-  global passct
-  global failct
+  global passCt
+  global failCt
   global TTxtLen
   #Add the name of the test
-  tname = " "+tname
-  deltatxt = TTxtLen-len(tname)
-  if (deltatxt > 0):
+  tName = " "+tName
+  deltaTxt = TTxtLen-len(tName)
+  if (deltaTxt > 0):
     #Make the test name consistent with TTxtLen
-    for i in range(deltatxt):
-      tname += " "
+    for i in range(deltaTxt):
+      tName += " "
   else:
     #Update bad length
-    TTxtLen -= deltatxt
+    TTxtLen -= deltaTxt
     TTxtLen += 1
-    deltatxt = TTxtLen-len(tname)
-    for i in range(deltatxt):
-      tname += " "
+    deltaTxt = TTxtLen-len(tname)
+    for i in range(deltaTxt):
+      tName += " "
   #Label as pass or fail
-  txtln += tname
-  if (TestPass == 1):
-    txtln += ClrSet.TPass+"Pass"+ClrSet.Reset+","
-    passct += 1
+  txtLn += tName
+  if (testPass == 1):
+    txtLn += ClrSet.TPass+"Pass"+ClrSet.Reset+","
+    passCt += 1
   else:
-    txtln += ClrSet.TFail+"Fail"+ClrSet.Reset+","
-    failct += 1
-  return txtln
+    txtLn += ClrSet.TFail+"Fail"+ClrSet.Reset+","
+    failCt += 1
+  return txtLn
 
-def AddRunTime(txtln):
+def AddRunTime(txtLn):
   #Collect the LICHEM run time and add it to a string
   cmd = ""
   cmd += "grep -e"
   cmd += ' "Total wall time: " ' #Find run time
   cmd += "tests.out"
   try:
-    RunTime = subprocess.check_output(cmd,shell=True) #Get run time
-    RunTime = RunTime.decode('utf-8').split()
-    RunTime = " "+('%.4f'%round(float(RunTime[3]),4))+" "+RunTime[4]
+    runTime = subprocess.check_output(cmd,shell=True) #Get run time
+    runTime = runTime.decode('utf-8').split()
+    runTime = " "+('%.4f'%round(float(runTime[3]),4))+" "+runTime[4]
   except:
-    RunTime = " N/A"
-  txtln += RunTime
-  return txtln
+    runTime = " N/A"
+  txtLn += runTime
+  return txtLn
 
-def AddEnergy(devopt,txtln,enval):
-  if (devopt == 1):
-    txtln += ", "
-    txtln += enval
-  return txtln
+def AddEnergy(devOpt,txtLn,enVal):
+  if (devOpt == 1):
+    txtLn += ", "
+    txtLn += enVal
+  return txtLn
 
 #Print title
 line = '\n'
@@ -203,15 +203,15 @@ line += '\n'
 print(line)
 
 #Read arguments
-DryRun = 0 #Only check packages
-AllTests = 0 #Run all tests at once
+dryRun = 0 #Only check packages
+allTests = 0 #Run all tests at once
 if (len(sys.argv) == 3):
   if ((sys.argv[2]).lower() == "all"):
     #Automatically run all tests
-    AllTests = 1
+    allTests = 1
 if (len(sys.argv) < 4):
   line = ""
-  if (AllTests == 0):
+  if (allTests == 0):
     #Print help if arguments are missing
     line += "Usage:"
     line += '\n'
@@ -306,12 +306,12 @@ if (len(sys.argv) < 4):
   line += MMbin
   line += '\n'
   print(line)
-  if (AllTests == 0):
+  if (allTests == 0):
     #Quit
     exit(0)
 
 Ncpus = int(sys.argv[1]) #Threads
-if (AllTests == 0):
+if (allTests == 0):
   QMPack = sys.argv[2] #QM wrapper for calculations
   QMPack = QMPack.lower()
   MMPack = sys.argv[3] #MM wrapper for calculations
@@ -319,7 +319,7 @@ if (AllTests == 0):
   if (len(sys.argv) > 4):
     if ((sys.argv[4]).lower() == "dry"):
       #Quit early
-      DryRun = 1
+      dryRun = 1
 
 #Initialize variables
 LICHEMbin = ""
@@ -327,7 +327,7 @@ QMbin = ""
 MMbin = ""
 
 #Check packages and identify missing binaries
-BadLICHEM = 0
+badLICHEM = 0
 cmd = "which lichem"
 try:
   #Find path
@@ -335,16 +335,16 @@ try:
   LICHEMbin = LICHEMbin.decode('utf-8').strip()
 except:
   LICHEMbin = "N/A"
-  BadLICHEM = 1
-if (BadLICHEM == 1):
+  badLICHEM = 1
+if (badLICHEM == 1):
   #Quit with an error
   line = ""
   line += "Error: LICHEM binary not found!"
   line += '\n'
   print(line)
   exit(0)
-if (AllTests == 0):
-  BadQM = 1
+if (allTests == 0):
+  badQM = 1
   if ((QMPack == "psi4") or (QMPack == "psi")):
     QMPack = "PSI4"
     cmd = "which psi4"
@@ -354,7 +354,7 @@ if (AllTests == 0):
       QMbin = QMbin.decode('utf-8').strip()
     except:
       QMbin = "N/A"
-    BadQM = 0
+    badQM = 0
   if ((QMPack == "gaussian") or (QMPack == "g09")):
     QMPack = "Gaussian"
     cmd = "which g09"
@@ -364,7 +364,7 @@ if (AllTests == 0):
       QMbin = QMbin.decode('utf-8').strip()
     except:
       QMbin = "N/A"
-    BadQM = 0
+    badQM = 0
   if (QMPack == "nwchem"):
     QMPack = "NWChem"
     cmd = "which nwchem"
@@ -374,8 +374,8 @@ if (AllTests == 0):
       QMbin = QMbin.decode('utf-8').strip()
     except:
       QMbin = "N/A"
-    BadQM = 0
-  if (BadQM == 1):
+    badQM = 0
+  if (badQM == 1):
     #Quit with an error
     line = '\n'
     line += "Error: QM package name '"
@@ -384,7 +384,7 @@ if (AllTests == 0):
     line += '\n'
     print(line)
     exit(0)
-  BadMM = 1
+  badMM = 1
   if (MMPack == "tinker"):
     MMPack = "TINKER"
     cmd = "which analyze"
@@ -394,7 +394,7 @@ if (AllTests == 0):
       MMbin = MMbin.decode('utf-8').strip()
     except:
       MMbin = "N/A"
-    BadMM = 0
+    badMM = 0
   if (MMPack == "lammps"):
     MMPack = "LAMMPS"
     cmd = "which lammps"
@@ -404,7 +404,7 @@ if (AllTests == 0):
       MMbin = MMbin.decode('utf-8').strip()
     except:
       MMbin = "N/A"
-    BadMM = 0
+    badMM = 0
   if (MMPack == "amber"):
     MMPack = "AMBER"
     cmd = "which pmemd" #Check
@@ -414,8 +414,8 @@ if (AllTests == 0):
       MMbin = MMbin.decode('utf-8').strip()
     except:
       MMbin = "N/A"
-    BadMM = 0
-  if (BadMM == 1):
+    badMM = 0
+  if (badMM == 1):
     #Quit with error
     line = '\n'
     line += "Error: MM package name '"
@@ -431,7 +431,7 @@ line += '\n'
 line += " Threads: "
 line += str(Ncpus)
 line += '\n'
-if (AllTests == 0):
+if (allTests == 0):
   line += " LICHEM binary: "
   line += LICHEMbin
   line += '\n'
@@ -448,18 +448,18 @@ if (AllTests == 0):
   line += MMbin
   line += '\n'
 else:
-  if (ForceAll == 1):
+  if (forceAll == 1):
     line += " Mode: Development"
   else:
     line += " Mode: All tests"
   line += '\n'
-if (DryRun == 1):
+if (dryRun == 1):
   line += " Mode: Dry run"
   line += '\n'
 print(line)
 
 #Escape for dry runs
-if (DryRun == 1):
+if (dryRun == 1):
   #Quit without an error
   line = "Dry run completed."
   line += '\n'
@@ -467,7 +467,7 @@ if (DryRun == 1):
   exit(0)
 
 #Escape if binaries not found
-if (((QMbin == "N/A") or (MMbin == "N/A")) and (AllTests == 0)):
+if (((QMbin == "N/A") or (MMbin == "N/A")) and (allTests == 0)):
   #Quit with an error
   line = "Error: Missing binaries."
   line += '\n'
@@ -484,66 +484,66 @@ print(line)
 #Make a list of tests
 QMTests = []
 MMTests = []
-if (AllTests == 1):
+if (allTests == 1):
   #Safely add PSI4
   cmd = "which psi4"
   try:
     #Run PSI4 tests
-    PackBin = subprocess.check_output(cmd,shell=True)
+    packBin = subprocess.check_output(cmd,shell=True)
     QMTests.append("PSI4")
   except:
     #Skip tests that will fail
-    if (ForceAll == 1):
+    if (forceAll == 1):
       QMTests.append("PSI4")
   #Safely add Gaussian
   cmd = "which g09"
   try:
     #Run Gaussian tests
-    PackBin = subprocess.check_output(cmd,shell=True)
+    packBin = subprocess.check_output(cmd,shell=True)
     QMTests.append("Gaussian")
   except:
     #Skip tests that will fail
-    if (ForceAll == 1):
+    if (forceAll == 1):
       QMTests.append("Gaussian")
   #Safely add NWChem
   cmd = "which nwchem"
   try:
     #Run NWChem tests
-    PackBin = subprocess.check_output(cmd,shell=True)
+    packBin = subprocess.check_output(cmd,shell=True)
     QMTests.append("NWChem")
   except:
     #Skip tests that will fail
-    if (ForceAll == 1):
+    if (forceAll == 1):
       QMTests.append("NWChem")
   #Safely add TINKER
   cmd = "which analyze"
   try:
     #Run TINKER tests
-    PackBin = subprocess.check_output(cmd,shell=True)
+    packBin = subprocess.check_output(cmd,shell=True)
     MMTests.append("TINKER")
   except:
     #Skip tests that will fail
-    if (ForceAll == 1):
+    if (forceAll == 1):
       MMTests.append("TINKER")
   #Safely add lammps
   cmd = "which lammps"
   try:
     #Run LAMMPS tests
-    PackBin = subprocess.check_output(cmd,shell=True)
+    packBin = subprocess.check_output(cmd,shell=True)
     MMTests.append("LAMMPS")
   except:
     #Skip tests that will fail
-    if (ForceAll == 1):
+    if (forceAll == 1):
       MMTests.append("LAMMPS")
   #Safely add AMBER
   cmd = "which pmemd"
   try:
     #Run AMBER tests
-    PackBin = subprocess.check_output(cmd,shell=True)
+    packBin = subprocess.check_output(cmd,shell=True)
     MMTests.append("AMBER")
   except:
     #Skip tests that will fail
-    if (ForceAll == 1):
+    if (forceAll == 1):
       MMTests.append("AMBER")
 else:
   #Add only the specified packages
@@ -564,25 +564,25 @@ else:
 #    11) DFP/Pseudobonds
 
 #Loop over tests
-for qmtest in QMTests:
-  for mmtest in MMTests:
+for qmTest in QMTests:
+  for mmTest in MMTests:
     #Set packages
-    QMPack = qmtest
-    MMPack = mmtest
+    QMPack = qmTest
+    MMPack = mmTest
 
     #Set path based on packages
-    DirPath = ""
+    dirPath = ""
     if (QMPack == "PSI4"):
-      DirPath += "PSI4_"
+      dirPath += "PSI4_"
     if (QMPack == "Gaussian"):
-      DirPath += "Gau_"
+      dirPath += "Gau_"
     if (QMPack == "NWChem"):
-      DirPath += "NWChem_"
-    DirPath += MMPack
-    DirPath += "/"
+      dirPath += "NWChem_"
+    dirPath += MMPack
+    dirPath += "/"
 
     #Change directory
-    os.chdir(DirPath)
+    os.chdir(dirPath)
 
     #Start printing results
     line = QMPack+"/"+MMPack
@@ -592,113 +592,113 @@ for qmtest in QMTests:
     #Check HF energy
     if ((QMPack == "PSI4") or (QMPack == "Gaussian")):
       line = ""
-      PassEnergy = 0
+      passEnergy = 0
       RunLICHEM("waterdimer.xyz","hfreg.inp","watercon.inp")
-      QMMMEnergy,SavedEnergy = RecoverEnergy("QM energy:",2)
+      QMMMEnergy,savedEnergy = RecoverEnergy("QM energy:",2)
       #Check result
       if (QMPack == "PSI4"):
         #Check against saved energy
         if (QMMMEnergy == round(-4136.9303981392,5)):
-          PassEnergy = 1
+          passEnergy = 1
       if (QMPack == "Gaussian"):
         #Check against saved energy
         if (QMMMEnergy == round(-4136.9317704519,5)):
-          PassEnergy = 1
-      line = AddPass("HF energy:",PassEnergy,line)
+          passEnergy = 1
+      line = AddPass("HF energy:",passEnergy,line)
       line = AddRunTime(line)
-      line = AddEnergy(UpdateResults,line,SavedEnergy)
+      line = AddEnergy(updateResults,line,savedEnergy)
       print(line)
       CleanFiles() #Clean up files
 
     #Check DFT energy
     line = ""
-    PassEnergy = 0
+    passEnergy = 0
     RunLICHEM("waterdimer.xyz","pbereg.inp","watercon.inp")
-    QMMMEnergy,SavedEnergy = RecoverEnergy("QM energy:",2)
+    QMMMEnergy,savedEnergy = RecoverEnergy("QM energy:",2)
     #Check result
     if (QMPack == "PSI4"):
       #Check against saved energy
       if (QMMMEnergy == round(-4154.1683659877,5)):
-        PassEnergy = 1
+        passEnergy = 1
     if (QMPack == "Gaussian"):
       #Check against saved energy
       if (QMMMEnergy == round(-4154.1676114324,5)):
-        PassEnergy = 1
+        passEnergy = 1
     if (QMPack == "NWChem"):
       #Check against saved energy
       if (QMMMEnergy == round(-4154.1683939169,5)):
-        PassEnergy = 1
-    line = AddPass("PBE0 energy:",PassEnergy,line)
+        passEnergy = 1
+    line = AddPass("PBE0 energy:",passEnergy,line)
     line = AddRunTime(line)
-    line = AddEnergy(UpdateResults,line,SavedEnergy)
+    line = AddEnergy(updateResults,line,savedEnergy)
     print(line)
     CleanFiles() #Clean up files
 
     #Check CCSD energy
     if (QMPack == "PSI4"):
       line = ""
-      PassEnergy = 0
+      passEnergy = 0
       RunLICHEM("waterdimer.xyz","ccsdreg.inp","watercon.inp")
-      QMMMEnergy,SavedEnergy = RecoverEnergy("QM energy:",2)
+      QMMMEnergy,savedEnergy = RecoverEnergy("QM energy:",2)
       #Check result
       if (QMPack == "PSI4"):
         #Check against saved energy
         if (QMMMEnergy == round(-4147.730483706,5)):
-          PassEnergy = 1
-      line = AddPass("CCSD energy:",PassEnergy,line)
+          passEnergy = 1
+      line = AddPass("CCSD energy:",passEnergy,line)
       line = AddRunTime(line)
-      line = AddEnergy(UpdateResults,line,SavedEnergy)
+      line = AddEnergy(updateResults,line,savedEnergy)
       print(line)
       CleanFiles() #Clean up files
 
     #Check PM6 energy
     if (QMPack == "Gaussian"):
       line = ""
-      PassEnergy = 0
+      passEnergy = 0
       RunLICHEM("waterdimer.xyz","pm6reg.inp","watercon.inp")
-      QMMMEnergy,SavedEnergy = RecoverEnergy("QM energy:",2)
+      QMMMEnergy,savedEnergy = RecoverEnergy("QM energy:",2)
       #Check result
       if (QMPack == "Gaussian"):
         #Check against saved energy
         if (QMMMEnergy == round(-4.8623027634995,5)):
-          PassEnergy = 1
-      line = AddPass("PM6 energy:",PassEnergy,line)
+          passEnergy = 1
+      line = AddPass("PM6 energy:",passEnergy,line)
       line = AddRunTime(line)
-      line = AddEnergy(UpdateResults,line,SavedEnergy)
+      line = AddEnergy(updateResults,line,savedEnergy)
       print(line)
       CleanFiles() #Clean up files
 
     #Check imaginary frequencies
     line = ""
-    PassEnergy = 0
+    passEnergy = 0
     RunLICHEM("methfluor.xyz","freqreg.inp","methflcon.inp")
     QMMMFreqs = RecoverFreqs()
     QMMMEnergy = 5e100 #Huge number
     #Sort frequencies
-    for freqval in QMMMFreqs:
+    for freqVal in QMMMFreqs:
       #Find lowest frequency
-      if (freqval < QMMMEnergy):
-        QMMMEnergy = freqval
-        SavedEnergy = "Freq:   "+str(freqval)
+      if (freqVal < QMMMEnergy):
+        QMMMEnergy = freqVal
+        savedEnergy = "Freq:   "+str(freqVal)
     #Check for errors
     if (QMMMEnergy > 1e100):
-      SavedEnergy = "Crashed..."
+      savedEnergy = "Crashed..."
     #Check results
     if (QMPack == "PSI4"):
       #Check against saved frequency
       if (round(QMMMEnergy,0) == round(-496.58664,0)):
-        PassEnergy = 1
+        passEnergy = 1
     if (QMPack == "Gaussian"):
       #Check against saved frequency
       if (round(QMMMEnergy,0) == round(-496.73073,0)):
-        PassEnergy = 1
+        passEnergy = 1
     if (QMPack == "NWChem"):
       #Check against saved frequency
       if (round(QMMMEnergy,0) == round(-496.79703,0)):
-        PassEnergy = 1
-    line = AddPass("Frequencies:",PassEnergy,line)
+        passEnergy = 1
+    line = AddPass("Frequencies:",passEnergy,line)
     line = AddRunTime(line)
-    line = AddEnergy(UpdateResults,line,SavedEnergy)
+    line = AddEnergy(updateResults,line,savedEnergy)
     print(line)
     CleanFiles() #Clean up files
 
@@ -708,23 +708,23 @@ for qmtest in QMTests:
     cmd = "cp methflbeads.xyz BeadStartStruct.xyz"
     subprocess.call(cmd,shell=True) #Copy restart file
     RunLICHEM("methfluor.xyz","nebreg.inp","methflcon.inp")
-    QMMMEnergy,SavedEnergy = RecoverEnergy("Opt. step: 2",11)
+    QMMMEnergy,savedEnergy = RecoverEnergy("Opt. step: 2",11)
     #Check result
     if (QMPack == "PSI4"):
       #Check against saved energy
       if (QMMMEnergy == round(-6511.0580192214,5)):
-        PassEnergy = 1
+        passEnergy = 1
     if (QMPack == "Gaussian"):
       #Check against saved energy
       if (QMMMEnergy == round(-6511.0567955964,5)):
-        PassEnergy = 1
+        passEnergy = 1
     if (QMPack == "NWChem"):
       #Check against saved energy
       if (QMMMEnergy == round(-6511.0579547077,5)):
-        PassEnergy = 1
-    line = AddPass("NEB TS energy:",PassEnergy,line)
+        passEnergy = 1
+    line = AddPass("NEB TS energy:",passEnergy,line)
     line = AddRunTime(line)
-    line = AddEnergy(UpdateResults,line,SavedEnergy)
+    line = AddEnergy(updateResults,line,savedEnergy)
     print(line)
     CleanFiles() #Clean up files
 
@@ -732,112 +732,112 @@ for qmtest in QMTests:
     if (MMPack == "TINKER"):
       #Check MM energy
       line = ""
-      PassEnergy = 0
+      passEnergy = 0
       cmd = "cp pchrg.key tinker.key"
       subprocess.call(cmd,shell=True) #Copy key file
       RunLICHEM("waterdimer.xyz","mmreg.inp","watercon.inp")
-      QMMMEnergy,SavedEnergy = RecoverEnergy("MM energy:",2)
+      QMMMEnergy,savedEnergy = RecoverEnergy("MM energy:",2)
       #Check result
       if (QMMMEnergy == round(-0.2596903536223,5)):
         #Check against saved energy
-        PassEnergy = 1
-      line = AddPass("TIP3P energy:",PassEnergy,line)
+        passEnergy = 1
+      line = AddPass("TIP3P energy:",passEnergy,line)
       line = AddRunTime(line)
-      line = AddEnergy(UpdateResults,line,SavedEnergy)
+      line = AddEnergy(updateResults,line,savedEnergy)
       print(line)
       CleanFiles() #Clean up files
 
       #Check MM energy
       line = ""
-      PassEnergy = 0
+      passEnergy = 0
       cmd = "cp pol.key tinker.key"
       subprocess.call(cmd,shell=True) #Copy key file
       RunLICHEM("waterdimer.xyz","solvreg.inp","watercon.inp")
-      QMMMEnergy,SavedEnergy = RecoverEnergy("MM energy:",2)
+      QMMMEnergy,savedEnergy = RecoverEnergy("MM energy:",2)
       #Check result
       if (QMMMEnergy == round(-1.2549403662026,5)):
         #Check against saved energy
-        PassEnergy = 1
-      line = AddPass("AMOEBA/GK energy:",PassEnergy,line)
+        passEnergy = 1
+      line = AddPass("AMOEBA/GK energy:",passEnergy,line)
       line = AddRunTime(line)
-      line = AddEnergy(UpdateResults,line,SavedEnergy)
+      line = AddEnergy(updateResults,line,savedEnergy)
       print(line)
       CleanFiles() #Clean up files
 
       #Check QMMM point-charge energy results
       line = ""
-      PassEnergy = 0
+      passEnergy = 0
       cmd = "cp pchrg.key tinker.key"
       subprocess.call(cmd,shell=True) #Copy key file
       RunLICHEM("waterdimer.xyz","pchrgreg.inp","watercon.inp")
-      QMMMEnergy,SavedEnergy = RecoverEnergy("QMMM energy:",2)
+      QMMMEnergy,savedEnergy = RecoverEnergy("QMMM energy:",2)
       #Check result
       if (QMPack == "PSI4"):
         #Check against saved energy
         if (QMMMEnergy == round(-2077.2021947277,5)):
-          PassEnergy = 1
+          passEnergy = 1
       if (QMPack == "Gaussian"):
         #Check against saved energy
         if (QMMMEnergy == round(-2077.2018207808,5)):
-          PassEnergy = 1
+          passEnergy = 1
       if (QMPack == "NWChem"):
         #Check against saved energy
         if (QMMMEnergy == round(-2077.2022117306,5)):
-          PassEnergy = 1
-      line = AddPass("PBE0/TIP3P energy:",PassEnergy,line)
+          passEnergy = 1
+      line = AddPass("PBE0/TIP3P energy:",passEnergy,line)
       line = AddRunTime(line)
-      line = AddEnergy(UpdateResults,line,SavedEnergy)
+      line = AddEnergy(updateResults,line,savedEnergy)
       print(line)
       CleanFiles() #Clean up files
 
       #Check QMMM polarizable energy results
       line = ""
-      PassEnergy = 0
+      passEnergy = 0
       cmd = "cp pol.key tinker.key"
       subprocess.call(cmd,shell=True) #Copy key file
       RunLICHEM("waterdimer.xyz","polreg.inp","watercon.inp")
-      QMMMEnergy,SavedEnergy = RecoverEnergy("QMMM energy:",2)
+      QMMMEnergy,savedEnergy = RecoverEnergy("QMMM energy:",2)
       #Check result
       if (QMPack == "PSI4"):
         #Check against saved energy
         if (QMMMEnergy == round(-2077.1114201829,5)):
-          PassEnergy = 1
+          passEnergy = 1
       if (QMPack == "Gaussian"):
         #Check against saved energy
         if (QMMMEnergy == round(-2077.1090319595,5)):
-          PassEnergy = 1
+          passEnergy = 1
       if (QMPack == "NWChem"):
         #Check against saved energy
         if (QMMMEnergy == round(-2077.1094168459,5)):
-          PassEnergy = 1
-      line = AddPass("PBE0/AMOEBA energy:",PassEnergy,line)
+          passEnergy = 1
+      line = AddPass("PBE0/AMOEBA energy:",passEnergy,line)
       line = AddRunTime(line)
-      line = AddEnergy(UpdateResults,line,SavedEnergy)
+      line = AddEnergy(updateResults,line,savedEnergy)
       print(line)
       CleanFiles() #Clean up files
 
       #Check pseudobond optimizations
       if ((QMPack == "Gaussian") or (QMPack == "NWChem")):
         line = ""
-        PassEnergy = 0
+        passEnergy = 0
         cmd = "cp pbopt.key tinker.key"
         subprocess.call(cmd,shell=True) #Copy key file
         cmd = "cp pbbasis.txt BASIS"
         subprocess.call(cmd,shell=True) #Copy BASIS set file
         RunLICHEM("alkyl.xyz","pboptreg.inp","alkcon.inp")
-        QMMMEnergy,SavedEnergy = RecoverEnergy("Opt. step: 2",6)
+        QMMMEnergy,savedEnergy = RecoverEnergy("Opt. step: 2",6)
         #Check result
         if (QMPack == "Gaussian"):
           #Check against saved energy
           if (QMMMEnergy == round(-3015.0548490566,5)):
-            PassEnergy = 1
+            passEnergy = 1
         if (QMPack == "NWChem"):
           #Check against saved energy
           if (QMMMEnergy == round(-3015.2278310975,5)):
-            PassEnergy = 1
-        line = AddPass("DFP/Pseudobonds:",PassEnergy,line)
+            passEnergy = 1
+        line = AddPass("DFP/Pseudobonds:",passEnergy,line)
         line = AddRunTime(line)
-        line = AddEnergy(UpdateResults,line,SavedEnergy)
+        line = AddEnergy(updateResults,line,savedEnergy)
         print(line)
         CleanFiles() #Clean up files
 
@@ -853,27 +853,27 @@ line += '\n'
 line += '\n'
 line += "Statistics:"
 line += '\n'
-line += " Tests passed: "+str(passct)+'\n'
-line += " Tests failed: "+str(failct)+'\n'
+line += " Tests passed: "+str(passCt)+'\n'
+line += " Tests failed: "+str(failCt)+'\n'
 
 #Stop timer
-EndTime = time.time()
-TotalTime = (EndTime-StartTime)
+endTime = time.time()
+totalTime = (endTime-startTime)
 
 #Find the correct units
-TimeUnits = " seconds"
-if (TotalTime > 60):
-  TotalTime /= 60.0
-  TimeUnits = " minutes"
-  if (TotalTime > 60):
-    TotalTime /= 60.0
-    TimeUnits = " hours"
-    if (TotalTime > 24):
-      TotalTime /= 24
-      TimeUnits = " days"
+timeUnits = " seconds"
+if (totalTime > 60):
+  totalTime /= 60.0
+  timeUnits = " minutes"
+  if (totalTime > 60):
+    totalTime /= 60.0
+    timeUnits = " hours"
+    if (totalTime > 24):
+      totalTime /= 24.0
+      timeUnits = " days"
 
 #Finish printing the statistics
-line += " Total run time: "+('%.2f'%round(TotalTime,2))+TimeUnits+'\n'
+line += " Total run time: "+('%.2f'%round(totalTime,2))+timeUnits+'\n'
 line += '\n'
 line += "***************************************************"
 line += '\n'

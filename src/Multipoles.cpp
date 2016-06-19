@@ -68,7 +68,7 @@ void ExtractTINKpoles(vector<QMMMAtom>& Struct, int Bead)
   //Run poledit
   call.str("");
   call << "poledit < LICHM_" << Bead << ".txt > LICHM_" << Bead << ".out";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Extract multipole frames
   call.str("");
   call << "LICHM_" << Bead << ".out";
@@ -161,7 +161,7 @@ void ExtractTINKpoles(vector<QMMMAtom>& Struct, int Bead)
   call << "rm -f LICHM_" << Bead << ".txt LICHM_";
   call << Bead << ".key LICHM_" << Bead << ".xyz LICHM_";
   call << Bead << ".out";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   return;
 };
 
@@ -848,29 +848,29 @@ void ExtractGlobalPoles(int& argc, char**& argv)
     }
   }
   //Make sure input files can be read
-  bool DoQuit = 0;
+  bool doQuit = 0;
   if (!xyzfile.good())
   {
     cout << "Error: Could not open xyz file.";
     cout << '\n';
     cout.flush();
-    DoQuit = 1;
+    doQuit = 1;
   }
   if (!connectfile.good())
   {
     cout << "Error: Could not open connectivity file.";
     cout << '\n';
     cout.flush();
-    DoQuit = 1;
+    doQuit = 1;
   }
   if (!regionfile.good())
   {
     cout << "Error: Could not open region file.";
     cout << '\n';
     cout.flush();
-    DoQuit = 1;
+    doQuit = 1;
   }
-  if (DoQuit)
+  if (doQuit)
   {
     //Quit with an error
     exit(0);

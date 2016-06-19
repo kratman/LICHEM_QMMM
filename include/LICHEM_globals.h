@@ -21,7 +21,7 @@
 namespace LICHEMGlobal
 {
   //Global variables
-  int GlobalSys = 0; //Global dummy return for all system calls
+  int globalSys = 0; //Global dummy return for all system calls
   string xyzFilename; //Saves a filename given in the arguments
   string conFilename; //Saves a filename given in the arguments
   string regFilename; //Saves a filename given in the arguments
@@ -33,7 +33,7 @@ namespace LICHEMGlobal
   int Natoms = 0; //Total number of atoms
   int Nqm = 0; //Number of QM atoms
   int Nmm = 0; //Number of MM atoms
-  double mcstep = 2*StepMin; //Monte Carlo step size
+  double mcStep = 2*StepMin; //Monte Carlo step size
   double Lx = 10000.0; //Box length
   double Ly = 10000.0; //Box length
   double Lz = 10000.0; //Box length
@@ -66,8 +66,8 @@ namespace LICHEMGlobal
   bool GauExternal = 0; //Runs Gaussian with External
 
   //Timers
-  int StartTime = 0; //Time the calculation starts
-  int EndTime = 0; //Time the calculation ends
+  int startTime = 0; //Time the calculation starts
+  int endTime = 0; //Time the calculation ends
   int QMTime = 0; //Sum of QM wrapper times
   int MMTime = 0; //Sum of MM wrapper times
 };

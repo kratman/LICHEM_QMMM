@@ -84,10 +84,10 @@ GEMDen::GEMDen()
   return;
 };
 
-GEMDen::GEMDen(string Typ, string BasName)
+GEMDen::GEMDen(string Typ, string basName)
 {
   //Fancy constructor
-  SetBasis(Typ,BasName);
+  SetBasis(Typ,basName);
   return;
 };
 
@@ -97,10 +97,10 @@ GEMDen::~GEMDen()
   return;
 };
 
-void GEMDen::SetBasis(string Typ, string BasName)
+void GEMDen::SetBasis(string Typ, string basName)
 {
   //Set the basis set
-  Dens = HermBasis(Typ,BasName);
+  Dens = HermBasis(Typ,basName);
   return;
 };
 
@@ -213,10 +213,10 @@ Mpole GEMDen::GEMDM()
     }
   }
   //Convert to a traceless quadrupole
-  double QTrace = dmpole.Qxx+dmpole.Qyy+dmpole.Qzz;
-  dmpole.Qxx -= QTrace;
-  dmpole.Qyy -= QTrace;
-  dmpole.Qzz -= QTrace;
+  double qTrace = dmpole.Qxx+dmpole.Qyy+dmpole.Qzz;
+  dmpole.Qxx -= qTrace;
+  dmpole.Qyy -= qTrace;
+  dmpole.Qzz -= qTrace;
   //Return GEM multipole
   return dmpole;
 };
@@ -917,14 +917,14 @@ string PeriodicTable::Typing(int Z)
   return Typs[Z-1];
 };
 
-int PeriodicTable::RevTyping(string AtName)
+int PeriodicTable::RevTyping(string atName)
 {
   //Function to convert atom types to nuclear charges
   int Z = 0;
   #pragma omp parallel for schedule(dynamic) num_threads(Ncpus)
   for (unsigned int i=0;i<Typs.size();i++)
   {
-    if (AtName == Typs[i])
+    if (atName == Typs[i])
     {
       Z = i+1;
     }
@@ -932,14 +932,14 @@ int PeriodicTable::RevTyping(string AtName)
   return Z;
 };
 
-double PeriodicTable::GetCovRadius(string AtName)
+double PeriodicTable::GetCovRadius(string atName)
 {
   //Function to find the covalent radius of an atom
   double radius = 0;
   #pragma omp parallel for schedule(dynamic) num_threads(Ncpus)
   for (unsigned int i=0;i<Typs.size();i++)
   {
-    if (AtName == Typs[i])
+    if (atName == Typs[i])
     {
       //Save value
       radius = CovRadii[i];
@@ -948,14 +948,14 @@ double PeriodicTable::GetCovRadius(string AtName)
   return radius;
 };
 
-double PeriodicTable::GetRadius(string AtName)
+double PeriodicTable::GetRadius(string atName)
 {
   //Function to find the vdW radius of an atom
   double radius = 0;
   #pragma omp parallel for schedule(dynamic) num_threads(Ncpus)
   for (unsigned int i=0;i<Typs.size();i++)
   {
-    if (AtName == Typs[i])
+    if (atName == Typs[i])
     {
       //Save value
       radius = vdWRadii[i];
@@ -964,14 +964,14 @@ double PeriodicTable::GetRadius(string AtName)
   return radius;
 };
 
-double PeriodicTable::GetAtMass(string AtName)
+double PeriodicTable::GetAtMass(string atName)
 {
   //Function to find the atomic mass of an atom
   double mass = 0;
   #pragma omp parallel for schedule(dynamic) num_threads(Ncpus)
   for (unsigned int i=0;i<Typs.size();i++)
   {
-    if (AtName == Typs[i])
+    if (atName == Typs[i])
     {
       //Save value
       mass = AtMasses[i];

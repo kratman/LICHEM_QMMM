@@ -22,7 +22,7 @@
 int main(int argc, char* argv[])
 {
   //Misc. initialization
-  StartTime = (unsigned)time(0); //Time the program starts
+  startTime = (unsigned)time(0); //Time the program starts
   srand((unsigned)time(0)); //Serial only random numbers
   //End of section
 
@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
     call << "rm -rf " << QMMMOpts.BackDir << "; ";
     //Create new directory
     call << "mkdir " << QMMMOpts.BackDir;
-    GlobalSys = system(call.str().c_str());
+    globalSys = system(call.str().c_str());
   }
   //End of section
 
@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
         Eqm += PSI4Energy(Struct,QMMMOpts,p);
         QMTime += (unsigned)time(0)-tstart;
         //Delete annoying useless files
-        GlobalSys = system("rm -f psi.* timer.*");
+        globalSys = system("rm -f psi.* timer.*");
       }
       if (NWChem)
       {
@@ -240,7 +240,7 @@ int main(int argc, char* argv[])
         QMMMHess += PSI4Hessian(Struct,QMMMOpts,p);
         QMTime += (unsigned)time(0)-tstart;
         //Delete annoying useless files
-        GlobalSys = system("rm -f psi.* timer.*");
+        globalSys = system("rm -f psi.* timer.*");
       }
       if (NWChem)
       {
@@ -331,7 +331,7 @@ int main(int argc, char* argv[])
       SumE += PSI4Energy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
-      GlobalSys = system("rm -f psi.* timer.*");
+      globalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem)
     {
@@ -412,7 +412,7 @@ int main(int argc, char* argv[])
         SumE = PSI4Opt(Struct,QMMMOpts,0);
         QMTime += (unsigned)time(0)-tstart;
         //Delete annoying useless files
-        GlobalSys = system("rm -f psi.* timer.*");
+        globalSys = system("rm -f psi.* timer.*");
       }
       if (NWChem)
       {
@@ -457,7 +457,7 @@ int main(int argc, char* argv[])
       SumE += PSI4Energy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
-      GlobalSys = system("rm -f psi.* timer.* ");
+      globalSys = system("rm -f psi.* timer.* ");
     }
     if (NWChem)
     {
@@ -560,7 +560,7 @@ int main(int argc, char* argv[])
       SumE += PSI4Energy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
-      GlobalSys = system("rm -f psi.* timer.* ");
+      globalSys = system("rm -f psi.* timer.* ");
     }
     if (NWChem)
     {
@@ -674,7 +674,7 @@ int main(int argc, char* argv[])
       SumE += PSI4Energy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
-      GlobalSys = system("rm -f psi.* timer.*");
+      globalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem)
     {
@@ -827,7 +827,7 @@ int main(int argc, char* argv[])
           double randval; //Use random values to keep from cycling up and down
           randval = (((double)rand())/((double)RAND_MAX));
           randval /= 10.0;
-          mcstep *= 1.001+randval;
+          mcStep *= 1.001+randval;
         }
         if ((Nacc/(Nrej+Nacc)) < QMMMOpts.accratio)
         {
@@ -835,22 +835,22 @@ int main(int argc, char* argv[])
           double randval; //Use random values to keep from cycling up and down
           randval = (((double)rand())/((double)RAND_MAX));
           randval /= 10.0;
-          mcstep *= 0.999-randval;
+          mcStep *= 0.999-randval;
         }
-        if (mcstep < StepMin)
+        if (mcStep < StepMin)
         {
           //Set to minimum
-          mcstep = StepMin;
+          mcStep = StepMin;
         }
-        if (mcstep > StepMax)
+        if (mcStep > StepMax)
         {
           //Set to maximum
-          mcstep = StepMax;
+          mcStep = StepMax;
         }
         //Statistics
         cout << " | Step: " << setw(SimCharLen) << Nct;
         cout << " | Step size: ";
-        cout << LICHEMFormFloat(mcstep,6);
+        cout << LICHEMFormFloat(mcStep,6);
         cout << " | Accept ratio: ";
         cout << LICHEMFormFloat((Nacc/(Nrej+Nacc)),6);
         cout << '\n';
@@ -984,7 +984,7 @@ int main(int argc, char* argv[])
     cout << " | Acceptance ratio: ";
     cout << LICHEMFormFloat((Nacc/(Nrej+Nacc)),6);
     cout << " | Optimum step size: ";
-    cout << LICHEMFormFloat(mcstep,6);
+    cout << LICHEMFormFloat(mcStep,6);
     cout << " \u212B";
     cout << '\n';
     cout << '\n';
@@ -1042,7 +1042,7 @@ int main(int argc, char* argv[])
           double randval; //Use random values to keep from cycling up and down
           randval = (((double)rand())/((double)RAND_MAX));
           randval /= 10.0;
-          mcstep *= 1.001+randval;
+          mcStep *= 1.001+randval;
         }
         if ((Nacc/(Nrej+Nacc)) < QMMMOpts.accratio)
         {
@@ -1050,22 +1050,22 @@ int main(int argc, char* argv[])
           double randval; //Use random values to keep from cycling up and down
           randval = (((double)rand())/((double)RAND_MAX));
           randval /= 10.0;
-          mcstep *= 0.999-randval;
+          mcStep *= 0.999-randval;
         }
-        if (mcstep < StepMin)
+        if (mcStep < StepMin)
         {
           //Set to minimum
-          mcstep = StepMin;
+          mcStep = StepMin;
         }
-        if (mcstep > StepMax)
+        if (mcStep > StepMax)
         {
           //Set to maximum
-          mcstep = StepMax;
+          mcStep = StepMax;
         }
         //Statistics
         cout << " | Accepted: " << setw(SimCharLen) << Nct;
         cout << " | Step size: ";
-        cout << LICHEMFormFloat(mcstep,6);
+        cout << LICHEMFormFloat(mcStep,6);
         cout << " | Accept ratio: ";
         cout << LICHEMFormFloat((Nacc/(Nrej+Nacc)),6);
         cout << '\n';
@@ -1165,7 +1165,7 @@ int main(int argc, char* argv[])
     cout << " | Acceptance ratio: ";
     cout << LICHEMFormFloat((Nacc/Nct),6);
     cout << " | Optimum step size: ";
-    cout << LICHEMFormFloat(mcstep,6);
+    cout << LICHEMFormFloat(mcStep,6);
     cout << " \u212B";
     cout << '\n';
     cout << " | Average energies:" << '\n';
@@ -1265,7 +1265,7 @@ int main(int argc, char* argv[])
         SumE += PSI4Energy(Struct,QMMMOpts,p);
         QMTime += (unsigned)time(0)-tstart;
         //Delete annoying useless files
-        GlobalSys = system("rm -f psi.* timer.*");
+        globalSys = system("rm -f psi.* timer.*");
       }
       if (NWChem)
       {
@@ -1328,7 +1328,7 @@ int main(int argc, char* argv[])
           call << "LICHM_" << (p+1) << ".chk";
           call << " 2> LICHM_" << (p+1) << ".trash; ";
           call << "rm -f LICHM_" << (p+1) << ".trash";
-          GlobalSys = system(call.str().c_str());
+          globalSys = system(call.str().c_str());
         }
         if (PSI4)
         {
@@ -1337,7 +1337,7 @@ int main(int argc, char* argv[])
           call << "LICHM_" << (p+1) << ".180";
           call << " 2> LICHM_" << (p+1) << ".trash; ";
           call << "rm -f LICHM_" << (p+1) << ".trash";
-          GlobalSys = system(call.str().c_str());
+          globalSys = system(call.str().c_str());
         }
       }
     }
@@ -1452,7 +1452,7 @@ int main(int argc, char* argv[])
         QMMMHess += PSI4Hessian(Struct,QMMMOpts,QMMMOpts.TSBead);
         QMTime += (unsigned)time(0)-tstart;
         //Delete annoying useless files
-        GlobalSys = system("rm -f psi.* timer.*");
+        globalSys = system("rm -f psi.* timer.*");
       }
       if (NWChem)
       {
@@ -1540,7 +1540,7 @@ int main(int argc, char* argv[])
       SumE += PSI4Energy(Struct,QMMMOpts,0);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
-      GlobalSys = system("rm -f psi.* timer.*");
+      globalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem)
     {
@@ -1620,7 +1620,7 @@ int main(int argc, char* argv[])
     stringstream call; //Stream for system calls and reading/writing files
     call.str("");
     call << "rm -f Gau-*"; //Produced if there is a crash
-    GlobalSys = system(call.str().c_str());
+    globalSys = system(call.str().c_str());
   }
   if (PSI4)
   {
@@ -1628,7 +1628,7 @@ int main(int argc, char* argv[])
     stringstream call; //Stream for system calls and reading/writing files
     call.str("");
     call << "rm -f psi*";
-    GlobalSys = system(call.str().c_str());
+    globalSys = system(call.str().c_str());
   }
   if (SinglePoint or FreqCalc)
   {
@@ -1645,43 +1645,43 @@ int main(int argc, char* argv[])
         call << argv[i+1];
       }
     }
-    GlobalSys = system(call.str().c_str());
+    globalSys = system(call.str().c_str());
   }
   //End of section
 
   //Print usage statistics
-  EndTime = (unsigned)time(0); //Time the program completes
-  double TotalHours = (double(EndTime)-double(StartTime));
-  double TotalQM = double(QMTime);
+  endTime = (unsigned)time(0); //Time the program completes
+  double totalHours = (double(endTime)-double(startTime));
+  double totalQM = double(QMTime);
   if (PIMCSim and (QMMMOpts.Nbeads > 1))
   {
     //Average over the number of running simulations
-    TotalQM /= Nthreads;
+    totalQM /= Nthreads;
   }
-  double TotalMM = double(MMTime);
+  double totalMM = double(MMTime);
   if (PIMCSim and (QMMMOpts.Nbeads > 1))
   {
     //Average over the number of running simulations
-    TotalMM /= Nthreads;
+    totalMM /= Nthreads;
   }
-  double OtherTime = TotalHours-TotalQM-TotalMM;
-  TotalHours /= 3600.0; //Convert from seconds to hours
-  TotalQM /= 3600.0; //Convert from seconds to hours
-  TotalMM /= 3600.0; //Convert from seconds to hours
-  OtherTime /= 3600.0; //Convert from seconds to hours
+  double otherTime = totalHours-totalQM-totalMM;
+  totalHours /= 3600.0; //Convert from seconds to hours
+  totalQM /= 3600.0; //Convert from seconds to hours
+  totalMM /= 3600.0; //Convert from seconds to hours
+  otherTime /= 3600.0; //Convert from seconds to hours
   cout << "################# Usage Statistics #################";
   cout << '\n';
   cout << "  Total wall time:                     ";
-  cout << LICHEMFormFloat(TotalHours,6) << " hours";
+  cout << LICHEMFormFloat(totalHours,6) << " hours";
   cout << '\n';
   cout << "  Wall time for QM Wrappers:           ";
-  cout << LICHEMFormFloat(TotalQM,6) << " hours";
+  cout << LICHEMFormFloat(totalQM,6) << " hours";
   cout << '\n';
   cout << "  Wall time for MM Wrappers:           ";
-  cout << LICHEMFormFloat(TotalMM,6) << " hours";
+  cout << LICHEMFormFloat(totalMM,6) << " hours";
   cout << '\n';
   cout << "  Wall time for LICHEM:                ";
-  cout << LICHEMFormFloat(OtherTime,6) << " hours";
+  cout << LICHEMFormFloat(otherTime,6) << " hours";
   cout << '\n';
   cout << "####################################################";
   cout << '\n';
@@ -1712,7 +1712,7 @@ int main(int argc, char* argv[])
   //End of section
 
   //Useless but supresses unused return errors for system calls
-  int RetValue = GlobalSys;
+  int RetValue = globalSys;
   RetValue = 0; //This can be changed to error messages later
   //End of section
 

@@ -43,7 +43,7 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   call << "nwchem LICHM_" << Bead << ".nw";
   call << " > LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Parse output for energy
   call.str("");
   call << "LICHM_" << Bead << ".log";
@@ -104,7 +104,7 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Remove checkpoint file
     call.str("");
     call << "rm -f LICHM_" << Bead << ".movecs";
-    GlobalSys = system(call.str().c_str());
+    globalSys = system(call.str().c_str());
   }
   //Clean up files and return
   call.str("");
@@ -121,7 +121,7 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "LICHM_" << Bead << ".q*" << " ";
   call << "LICHM_" << Bead << ".x*" << " ";
   call << "LICHM_" << Bead << ".z*";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   return;
 };
 
@@ -147,7 +147,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   call << "nwchem LICHM_" << Bead << ".nw";
   call << " > LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Parse output for energy
   call.str("");
   call << "LICHM_" << Bead << ".log";
@@ -208,7 +208,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Remove checkpoint file
     call.str("");
     call << "rm -f LICHM_" << Bead << ".movecs";
-    GlobalSys = system(call.str().c_str());
+    globalSys = system(call.str().c_str());
   }
   //Clean up files
   call.str("");
@@ -244,7 +244,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "LICHM_" << Bead << ".q*" << " ";
   call << "LICHM_" << Bead << ".x*" << " ";
   call << "LICHM_" << Bead << ".z*";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Change units and return
   E *= Har2eV;
   return E;
@@ -272,7 +272,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   }
   call << "nwchem LICHM_" << Bead << ".nw";
   call << " > LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Parse output for forces and energies
   call.str("");
   call << "LICHM_" << Bead << ".log";
@@ -363,7 +363,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     //Remove checkpoint file
     call.str("");
     call << "rm -f LICHM_" << Bead << ".movecs";
-    GlobalSys = system(call.str().c_str());
+    globalSys = system(call.str().c_str());
   }
   if (!GradDone)
   {
@@ -388,7 +388,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << "LICHM_" << Bead << ".q*" << " ";
   call << "LICHM_" << Bead << ".x*" << " ";
   call << "LICHM_" << Bead << ".z*";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Change units and return
   E *= Har2eV;
   return E;
@@ -417,7 +417,7 @@ MatrixXd NWChemHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   }
   call << "nwchem LICHM_" << Bead << ".nw";
   call << " > LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Parse output for Hessian
   call.str("");
   call << "LICHM_" << Bead << ".hess";
@@ -453,7 +453,7 @@ MatrixXd NWChemHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Delete checkpoint
     call.str("");
     call << "rm -f LICHM_" << Bead << ".movecs";
-    GlobalSys = system(call.str().c_str());
+    globalSys = system(call.str().c_str());
   }
   //Clean up files
   call.str("");
@@ -470,7 +470,7 @@ MatrixXd NWChemHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "LICHM_" << Bead << ".q*" << " ";
   call << "LICHM_" << Bead << ".x*" << " ";
   call << "LICHM_" << Bead << ".z*";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Return Hessian
   return QMHess;
 };
@@ -496,7 +496,7 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   }
   call << "nwchem LICHM_" << Bead << ".nw";
   call << " > LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Parse output
   call.str("");
   call << "LICHM_" << Bead << ".log";
@@ -557,7 +557,7 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     //Remove checkpoint file
     call.str("");
     call << "rm -f LICHM_" << Bead << ".movecs";
-    GlobalSys = system(call.str().c_str());
+    globalSys = system(call.str().c_str());
   }
   //Clean up files
   call.str("");
@@ -574,7 +574,7 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "LICHM_" << Bead << ".q*" << " ";
   call << "LICHM_" << Bead << ".x*" << " ";
   call << "LICHM_" << Bead << ".z*";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Change units and return
   E *= Har2eV;
   return E;

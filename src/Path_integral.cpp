@@ -79,7 +79,7 @@ double Get_PI_Epot(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       Es += PSI4Energy(Struct,QMMMOpts,i);
       Times_qm += (unsigned)time(0)-t_qm_start;
       //Delete annoying useless files
-      GlobalSys = system("rm -f psi.* timer.*");
+      globalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem)
     {
@@ -141,9 +141,9 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
     double randx = (((double)rand())/((double)RAND_MAX));
     double randy = (((double)rand())/((double)RAND_MAX));
     double randz = (((double)rand())/((double)RAND_MAX));
-    double dx = 2*(randx-0.5)*mcstep*CentRatio;
-    double dy = 2*(randy-0.5)*mcstep*CentRatio;
-    double dz = 2*(randz-0.5)*mcstep*CentRatio;
+    double dx = 2*(randx-0.5)*mcStep*CentRatio;
+    double dy = 2*(randy-0.5)*mcStep*CentRatio;
+    double dz = 2*(randz-0.5)*mcStep*CentRatio;
     //Update positions
     #pragma omp parallel
     {
@@ -185,9 +185,9 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
       double randx = (((double)rand())/((double)RAND_MAX));
       double randy = (((double)rand())/((double)RAND_MAX));
       double randz = (((double)rand())/((double)RAND_MAX));
-      double dx = 2*(randx-0.5)*mcstep;
-      double dy = 2*(randy-0.5)*mcstep;
-      double dz = 2*(randz-0.5)*mcstep;
+      double dx = 2*(randx-0.5)*mcStep;
+      double dy = 2*(randy-0.5)*mcStep;
+      double dz = 2*(randz-0.5)*mcStep;
       Struct2[p].P[i].x += dx;
       Struct2[p].P[i].y += dy;
       Struct2[p].P[i].z += dz;
@@ -209,20 +209,20 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
     {
       //Assumes that MM cutoffs are safe
       randnum = (((double)rand())/((double)RAND_MAX));
-      Lx += 2*(randnum-0.5)*mcstep;
+      Lx += 2*(randnum-0.5)*mcStep;
       randnum = (((double)rand())/((double)RAND_MAX));
-      Ly += 2*(randnum-0.5)*mcstep;
+      Ly += 2*(randnum-0.5)*mcStep;
       randnum = (((double)rand())/((double)RAND_MAX));
-      Lz += 2*(randnum-0.5)*mcstep;
+      Lz += 2*(randnum-0.5)*mcStep;
     }
     //Isotropic volume change
     if (Isotrop == 1)
     {
       //Assumes that MM cutoffs are safe
       randnum = (((double)rand())/((double)RAND_MAX));
-      Lx += 2*(randnum-0.5)*mcstep;
-      Ly += 2*(randnum-0.5)*mcstep;
-      Lz += 2*(randnum-0.5)*mcstep;
+      Lx += 2*(randnum-0.5)*mcStep;
+      Ly += 2*(randnum-0.5)*mcStep;
+      Lz += 2*(randnum-0.5)*mcStep;
     }
     //Decide how to scale the centroids
     bool ScaleRing = 0; //Shift the ring

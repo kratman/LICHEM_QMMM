@@ -53,14 +53,14 @@ void PSI4Charges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "LICHM_" << Bead << ".dat -o ";
   call << "LICHM_" << Bead << ".out > ";
   call << "LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Save checkpoint file for the next calculation
   call.str("");
   call << "mv *.LICHM_" << Bead << ".180 ";
   call << "LICHM_" << Bead << ".180 ";
   call << "2> LICHM_" << Bead << ".trash; ";
   call << "rm -f LICHM_" << Bead << ".trash";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Extract charges
   call.str("");
   call << "LICHM_" << Bead << ".out";
@@ -98,7 +98,7 @@ void PSI4Charges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "LICHM_" << Bead << ".dat ";
   call << "LICHM_" << Bead << ".out ";
   call << "LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   return;
 };
 
@@ -137,14 +137,14 @@ double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "LICHM_" << Bead << ".dat -o ";
   call << "LICHM_" << Bead << ".out > ";
   call << "LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Save checkpoint file for the next calculation
   call.str("");
   call << "mv *.LICHM_" << Bead << ".180 ";
   call << "LICHM_" << Bead << ".180 ";
   call << "2> LICHM_" << Bead << ".trash; ";
   call << "rm -f LICHM_" << Bead << ".trash";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Read energy
   call.str("");
   call << "LICHM_" << Bead << ".out";
@@ -216,7 +216,7 @@ double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     //Delete checkpoint
     call.str("");
     call << "rm -f *LICHM_" << Bead << ".180";
-    GlobalSys = system(call.str().c_str());
+    globalSys = system(call.str().c_str());
   }
   //Clean up files
   call.str("");
@@ -233,7 +233,7 @@ double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "LICHM_" << Bead << ".dat ";
   call << "LICHM_" << Bead << ".out ";
   call << "LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Change units
   E *= Har2eV;
   return E;
@@ -278,14 +278,14 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << "LICHM_" << Bead << ".dat -o ";
   call << "LICHM_" << Bead << ".out > ";
   call << "LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Save checkpoint file for the next calculation
   call.str("");
   call << "mv *.LICHM_" << Bead << ".180 ";
   call << "LICHM_" << Bead << ".180 ";
   call << "2> LICHM_" << Bead << ".trash; ";
   call << "rm -f LICHM_" << Bead << ".trash";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Extract forces
   call.str("");
   call << "LICHM_" << Bead << ".out";
@@ -377,7 +377,7 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << "LICHM_" << Bead << ".dat ";
   call << "LICHM_" << Bead << ".out ";
   call << "LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Change units
   E *= Har2eV;
   return E;
@@ -424,14 +424,14 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "LICHM_" << Bead << ".dat -o ";
   call << "LICHM_" << Bead << ".out > ";
   call << "LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Save checkpoint file for the next calculation
   call.str("");
   call << "mv *.LICHM_" << Bead << ".180 ";
   call << "LICHM_" << Bead << ".180 ";
   call << "2> LICHM_" << Bead << ".trash; ";
   call << "rm -f LICHM_" << Bead << ".trash";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Extract Hessian
   call.str("");
   call << "LICHM_" << Bead << ".out";
@@ -503,7 +503,7 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     //Delete checkpoint
     call.str("");
     call << "rm -f LICHM_" << Bead << ".180";
-    GlobalSys = system(call.str().c_str());
+    globalSys = system(call.str().c_str());
   }
   //Clean up files
   call.str("");
@@ -511,7 +511,7 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "LICHM_" << Bead << ".dat ";
   call << "LICHM_" << Bead << ".out ";
   call << "LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   return QMHess;
 };
 
@@ -542,14 +542,14 @@ double PSI4Opt(vector<QMMMAtom>& Struct,
   call << "LICHM_" << Bead << ".dat -o ";
   call << "LICHM_" << Bead << ".out > ";
   call << "LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Save checkpoint file for the next calculation
   call.str("");
   call << "mv *.LICHM_" << Bead << ".180 ";
   call << "LICHM_" << Bead << ".180 ";
   call << "2> LICHM_" << Bead << ".trash; ";
   call << "rm -f LICHM_" << Bead << ".trash";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Read energy and structure
   call.str("");
   call << "LICHM_" << Bead << ".out";
@@ -647,7 +647,7 @@ double PSI4Opt(vector<QMMMAtom>& Struct,
     //Delete checkpoint
     call.str("");
     call << "rm -f *LICHM_" << Bead << ".180";
-    GlobalSys = system(call.str().c_str());
+    globalSys = system(call.str().c_str());
   }
   if (!Optfinished)
   {
@@ -661,7 +661,7 @@ double PSI4Opt(vector<QMMMAtom>& Struct,
     //Delete checkpoint
     call.str("");
     call << "rm -f *LICHM_" << Bead << ".180";
-    GlobalSys = system(call.str().c_str());
+    globalSys = system(call.str().c_str());
   }
   //Clean up files
   call.str("");
@@ -669,7 +669,7 @@ double PSI4Opt(vector<QMMMAtom>& Struct,
   call << "LICHM_" << Bead << ".dat ";
   call << "LICHM_" << Bead << ".out ";
   call << "LICHM_" << Bead << ".log";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Change units
   E *= Har2eV;
   return E;

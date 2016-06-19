@@ -14,8 +14,8 @@
 */
 
 //Various input and error checking functions
-void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
-              fstream& connectfile, fstream& regionfile, fstream& outfile)
+void ReadArgs(int& argc, char**& argv, fstream& xyzFile,
+              fstream& connectFile, fstream& regionFile, fstream& outFile)
 {
   //Function to read arguments
   string dummy; //Generic string
@@ -140,24 +140,24 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     {
       //Read the XYZ filename
       xyzFilename = string(argv[i+1]);
-      xyzfile.open(argv[i+1],ios_base::in);
+      xyzFile.open(argv[i+1],ios_base::in);
     }
     if (dummy == "-c")
     {
       //Read the connectivity filename
       conFilename = string(argv[i+1]);
-      connectfile.open(argv[i+1],ios_base::in);
+      connectFile.open(argv[i+1],ios_base::in);
     }
     if (dummy == "-r")
     {
       //Read the regions filename
       regFilename = string(argv[i+1]);
-      regionfile.open(argv[i+1],ios_base::in);
+      regionFile.open(argv[i+1],ios_base::in);
     }
     if (dummy == "-o")
     {
       //Read the output XYZ filename
-      outfile.open(argv[i+1],ios_base::out);
+      outFile.open(argv[i+1],ios_base::out);
     }
   }
   for (int i=0;i<argc;i++)
@@ -166,14 +166,14 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     dummy = string(argv[i]);
     if (dummy[0] == '-')
     {
-      bool BadArgs = 0; //Bad argument found
+      bool badArgs = 0; //Bad argument found
       if ((dummy != "-n") and (dummy != "-x") and
       (dummy != "-c") and (dummy != "-r") and
       (dummy != "-o"))
       {
-        BadArgs = 1;
+        badArgs = 1;
       }
-      if (BadArgs)
+      if (badArgs)
       {
         cout << '\n';
         cout << "Unrecognized flag..." << '\n' << '\n';
@@ -201,36 +201,36 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
     exit(0);
   }
   //Make sure input files can be read
-  bool DoQuit = 0;
-  if (!xyzfile.good())
+  bool doQuit = 0;
+  if (!xyzFile.good())
   {
     //Coordinate file does not exist
     cout << "Error: Could not open xyz file.";
     cout << '\n';
-    DoQuit = 1;
+    doQuit = 1;
   }
-  if (!connectfile.good())
+  if (!connectFile.good())
   {
     //Connectivity file does not exist
     cout << "Error: Could not open connectivity file.";
     cout << '\n';
-    DoQuit = 1;
+    doQuit = 1;
   }
-  if (!regionfile.good())
+  if (!regionFile.good())
   {
     //Regions file does not exist
     cout << "Error: Could not open region file.";
     cout << '\n';
-    DoQuit = 1;
+    doQuit = 1;
   }
-  if (!outfile.good())
+  if (!outFile.good())
   {
     //No write permissions
     cout << "Error: Could not create output file.";
     cout << '\n';
-    DoQuit = 1;
+    doQuit = 1;
   }
-  if (DoQuit)
+  if (doQuit)
   {
     //Quit with an error
     cout.flush(); //Print errors
@@ -239,23 +239,23 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzfile,
   return;
 };
 
-void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
-                     fstream& regionfile, vector<QMMMAtom>& Struct,
+void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
+                     fstream& regionFile, vector<QMMMAtom>& Struct,
                      QMMMSettings& QMMMOpts)
 {
   //Read input
   string dummy; //Generic string
   if (!GauExternal)
   {
-    xyzfile >> Natoms;
+    xyzFile >> Natoms;
     for (int i=0;i<Natoms;i++)
     {
       //Save atom information
       QMMMAtom tmp;
       //Set coordinates
-      xyzfile >> tmp.QMTyp;
+      xyzFile >> tmp.QMTyp;
       Coord tmp2;
-      xyzfile >> tmp2.x >> tmp2.y >> tmp2.z;
+      xyzFile >> tmp2.x >> tmp2.y >> tmp2.z;
       tmp.P.push_back(tmp2); //Set up zeroth replica
       //Set ID and regions
       tmp.id = i;
@@ -279,7 +279,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     //Save connectivity information
     int tmp;
     //id MMTyp NumTyp q Nbonds [connectivity]
-    connectfile >> tmp; //Atom ID
+    connectFile >> tmp; //Atom ID
     if (tmp != Struct[i].id)
     {
       //Escape if connectivity errors are found
@@ -288,32 +288,32 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       cout.flush();
       exit(0); //Escape
     }
-    connectfile >> Struct[i].MMTyp >> Struct[i].NumTyp;
-    connectfile >> Struct[i].m >> Struct[i].MP[0].q;
-    connectfile >> tmp; //Number of bonds
+    connectFile >> Struct[i].MMTyp >> Struct[i].NumTyp;
+    connectFile >> Struct[i].m >> Struct[i].MP[0].q;
+    connectFile >> tmp; //Number of bonds
     for (int j=0;j<tmp;j++)
     {
       //Save each bond to the atom's connectivity list
-      int AtomID;
-      connectfile >> AtomID;
-      if (AtomID >= Natoms)
+      int atomID;
+      connectFile >> atomID;
+      if (atomID >= Natoms)
       {
         //Search for more connectivity errors
         cout << "Error: Atom index out of range in connectivity.";
         cout << '\n';
         cout << "Atom " << i << " bonded to non-existant atom ";
-        cout << AtomID << '\n';
+        cout << atomID << '\n';
         cout.flush();
         exit(0); //Escape
       }
-      Struct[i].Bonds.push_back(AtomID); //Add bond
+      Struct[i].Bonds.push_back(atomID); //Add bond
     }
   }
   //Read simulation keywords
-  while (regionfile.good() and (!regionfile.eof()))
+  while (regionFile.good() and (!regionFile.eof()))
   {
     string keyword;
-    regionfile >> keyword;
+    regionFile >> keyword;
     LICHEMLowerText(keyword);
     //Check for comments
     if ((keyword[0] == '#') or (keyword[0] == '!'))
@@ -324,22 +324,22 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (keyword == "acceptance_ratio:")
     {
       //Read the Monte Carlo acceptance ratio
-      regionfile >> QMMMOpts.accratio;
+      regionFile >> QMMMOpts.accratio;
     }
     else if (keyword == "beads:")
     {
       //Read the number of replica beads
-      regionfile >> QMMMOpts.Nbeads;
+      regionFile >> QMMMOpts.Nbeads;
     }
     else if (keyword == "box_size:")
     {
       //Read the box size
-      regionfile >> Lx >> Ly >> Lz;
+      regionFile >> Lx >> Ly >> Lz;
     }
     else if (keyword == "calculation_type:")
     {
       //Set the type of calculation
-      regionfile >> dummy;
+      regionFile >> dummy;
       LICHEMLowerText(dummy);
       //Single-point calculations
       if ((dummy == "single-point") or (dummy == "sp") or
@@ -415,7 +415,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (keyword == "electrostatics:")
     {
       //Check the type of force field
-      regionfile >> dummy;
+      regionFile >> dummy;
       LICHEMLowerText(dummy);
       if ((dummy == "charges") or (dummy == "charge") or
          (dummy == "point-charge"))
@@ -446,7 +446,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (keyword == "ensemble:")
     {
       //Set the thermodynamic ensemble
-      regionfile >> dummy;
+      regionFile >> dummy;
       LICHEMLowerText(dummy);
       if (dummy == "nvt")
       {
@@ -462,12 +462,12 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (keyword == "eq_steps:")
     {
       //Read the number of equilibration steps
-      regionfile >> QMMMOpts.Neq;
+      regionFile >> QMMMOpts.Neq;
     }
     else if (keyword == "frozen_ends:")
     {
       //Check for inactive NEB end-points
-      regionfile >> dummy;
+      regionFile >> dummy;
       LICHEMLowerText(dummy);
       if ((dummy == "yes") or (dummy == "true"))
       {
@@ -477,7 +477,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (keyword == "init_path_chk:")
     {
       //Check for inactive NEB end-points
-      regionfile >> dummy;
+      regionFile >> dummy;
       LICHEMLowerText(dummy);
       if ((dummy == "no") or (dummy == "false"))
       {
@@ -487,37 +487,37 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (keyword == "lrec_cut:")
     {
       //Read the QMMM electrostatic cutoff for LREC
-      regionfile >> QMMMOpts.LRECCut;
+      regionFile >> QMMMOpts.LRECCut;
     }
     else if (keyword == "lrec_exponent:")
     {
       //Read the exponent for the LREC smoothing function
-      regionfile >> QMMMOpts.LRECPow;
+      regionFile >> QMMMOpts.LRECPow;
     }
     else if (keyword == "max_opt_steps:")
     {
       //Read maximum number of optimization steps
-      regionfile >> QMMMOpts.MaxOptSteps;
+      regionFile >> QMMMOpts.MaxOptSteps;
     }
     else if (keyword == "max_stepsize:")
     {
       //Read the maximum displacement during optimizations
-      regionfile >> QMMMOpts.MaxStep;
+      regionFile >> QMMMOpts.MaxStep;
     }
     else if (keyword == "mm_opt_cut:")
     {
       //Read MM optimization cutoff
-      regionfile >> QMMMOpts.MMOptCut;
+      regionFile >> QMMMOpts.MMOptCut;
     }
     else if (keyword == "mm_opt_tolerance:")
     {
       //Read MM optimization tolerance (RMSD value)
-      regionfile >> QMMMOpts.MMOptTol;
+      regionFile >> QMMMOpts.MMOptTol;
     }
     else if (keyword == "mm_type:")
     {
       //Set MM wrapper
-      regionfile >> dummy;
+      regionFile >> dummy;
       LICHEMLowerText(dummy);
       if (dummy == "tinker")
       {
@@ -535,12 +535,12 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (keyword == "opt_stepsize:")
     {
       //Read the optimization stepsize
-      regionfile >> QMMMOpts.StepScale;
+      regionFile >> QMMMOpts.StepScale;
     }
     else if (keyword == "pbc:")
     {
       //Check for periodic boundaries
-      regionfile >> dummy;
+      regionFile >> dummy;
       LICHEMLowerText(dummy);
       if ((dummy == "yes") or (dummy == "true"))
       {
@@ -550,7 +550,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (keyword == "potential_type:")
     {
       //Set QM, MM, and QMMM options
-      regionfile >> dummy; //Potential type
+      regionFile >> dummy; //Potential type
       LICHEMLowerText(dummy);
       if (dummy == "qm")
       {
@@ -573,12 +573,12 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (keyword == "pressure:")
     {
       //Read the pressure
-      regionfile >> QMMMOpts.Press;
+      regionFile >> QMMMOpts.Press;
     }
     else if (keyword == "print_normal_modes:")
     {
       //Check for inactive NEB end-points
-      regionfile >> dummy;
+      regionFile >> dummy;
       LICHEMLowerText(dummy);
       if ((dummy == "yes") or (dummy == "true"))
       {
@@ -588,29 +588,29 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (keyword == "print_steps:")
     {
       //Read the number of steps between MD and MC output
-      regionfile >> QMMMOpts.Nprint;
+      regionFile >> QMMMOpts.Nprint;
     }
     else if (keyword == "prod_steps:")
     {
       //Read the number of production (MD or MC) steps
-      regionfile >> QMMMOpts.Nsteps;
+      regionFile >> QMMMOpts.Nsteps;
     }
     else if (keyword == "qm_basis:")
     {
       //Set the basis set or semi-empirical Hamiltonian
-      regionfile >> QMMMOpts.Basis;
+      regionFile >> QMMMOpts.Basis;
     }
     else if (keyword == "qm_charge:")
     {
       //Set the total charge on the QM region
-      regionfile >> QMMMOpts.Charge;
+      regionFile >> QMMMOpts.Charge;
     }
     else if (keyword == "qm_memory:")
     {
       //Set the amount of memory for the QM calculations
-      regionfile >> QMMMOpts.RAM;
+      regionFile >> QMMMOpts.RAM;
       //Check units
-      regionfile >> dummy;
+      regionFile >> dummy;
       LICHEMLowerText(dummy);
       if (dummy == "mb")
       {
@@ -626,7 +626,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (keyword == "qm_method:")
     {
       //Set QM functional or method
-      regionfile >> dummy;
+      regionFile >> dummy;
       QMMMOpts.Func = dummy; //Save name with correct case
       //Check for special methods
       LICHEMLowerText(dummy);
@@ -641,17 +641,17 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (keyword == "qm_opt_tolerance:")
     {
       //Read QM optimization tolerance (RMSD value)
-      regionfile >> QMMMOpts.QMOptTol;
+      regionFile >> QMMMOpts.QMOptTol;
     }
     else if (keyword == "qm_spin:")
     {
       //Set the multiplicity
-      regionfile >> QMMMOpts.Spin;
+      regionFile >> QMMMOpts.Spin;
     }
     else if (keyword == "qm_type:")
     {
       //Set QM wrapper
-      regionfile >> dummy;
+      regionFile >> dummy;
       LICHEMLowerText(dummy);
       if (dummy == "psi4")
       {
@@ -669,34 +669,34 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (keyword == "solv_model:")
     {
       //Read MM implicit solvent model
-      regionfile >> QMMMOpts.SolvModel;
+      regionFile >> QMMMOpts.SolvModel;
     }
     else if (keyword == "spring_constant:")
     {
       //Read the NEB spring constant
-      regionfile >> QMMMOpts.Kspring;
+      regionFile >> QMMMOpts.Kspring;
     }
     else if (keyword == "tau_temp:")
     {
       //Read the thermostat relaxation constant
-      regionfile >> QMMMOpts.tautemp;
+      regionFile >> QMMMOpts.tautemp;
     }
     else if (keyword == "temperature:")
     {
       //Read the temperature
-      regionfile >> QMMMOpts.Temp;
+      regionFile >> QMMMOpts.Temp;
       //Save the inverse temperature
       QMMMOpts.Beta = 1/(k*QMMMOpts.Temp);
     }
     else if (keyword == "timestep:")
     {
       //Read the molecular dynamics timestep
-      regionfile >> QMMMOpts.dt;
+      regionFile >> QMMMOpts.dt;
     }
     else if (keyword == "ts_freq:")
     {
       //Check for inactive NEB end-points
-      regionfile >> dummy;
+      regionFile >> dummy;
       LICHEMLowerText(dummy);
       if ((dummy == "yes") or (dummy == "true"))
       {
@@ -706,7 +706,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (keyword == "use_ewald:")
     {
       //Check for MM Ewald summation
-      regionfile >> dummy;
+      regionFile >> dummy;
       LICHEMLowerText(dummy);
       if ((dummy == "yes") or (dummy == "true"))
       {
@@ -717,7 +717,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (keyword == "use_lrec:")
     {
       //Turn on long-range corrections
-      regionfile >> dummy;
+      regionFile >> dummy;
       LICHEMLowerText(dummy);
       if ((dummy == "yes") or (dummy == "true"))
       {
@@ -728,7 +728,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (keyword == "use_mm_cutoff:")
     {
       //Check for the MM optimization cutoff
-      regionfile >> dummy;
+      regionFile >> dummy;
       LICHEMLowerText(dummy);
       if ((dummy == "yes") or (dummy == "true"))
       {
@@ -739,7 +739,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (keyword == "use_solvent:")
     {
       //Check for MM implicit solvation
-      regionfile >> dummy;
+      regionFile >> dummy;
       LICHEMLowerText(dummy);
       if ((dummy == "yes") or (dummy == "true"))
       {
@@ -751,58 +751,58 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     else if (keyword == "qm_atoms:")
     {
       //Read the list of QM atoms
-      regionfile >> Nqm;
+      regionFile >> Nqm;
       for (int i=0;i<Nqm;i++)
       {
-        int AtomID;
-        regionfile >> AtomID;
-        Struct[AtomID].QMregion = 1;
-        Struct[AtomID].PBregion = 0;
-        Struct[AtomID].BAregion = 0;
-        Struct[AtomID].MMregion = 0;
+        int atomID;
+        regionFile >> atomID;
+        Struct[atomID].QMregion = 1;
+        Struct[atomID].PBregion = 0;
+        Struct[atomID].BAregion = 0;
+        Struct[atomID].MMregion = 0;
       }
     }
     else if (keyword == "pseudobond_atoms:")
     {
       //Read the list of pseudobond atoms
-      regionfile >> Npseudo;
+      regionFile >> Npseudo;
       for (int i=0;i<Npseudo;i++)
       {
-        int AtomID;
-        regionfile >> AtomID;
-        Struct[AtomID].QMregion = 0;
-        Struct[AtomID].PBregion = 1;
-        Struct[AtomID].BAregion = 0;
-        Struct[AtomID].MMregion = 0;
+        int atomID;
+        regionFile >> atomID;
+        Struct[atomID].QMregion = 0;
+        Struct[atomID].PBregion = 1;
+        Struct[atomID].BAregion = 0;
+        Struct[atomID].MMregion = 0;
       }
     }
     else if (keyword == "boundary_atoms:")
     {
       //Read the list of boundary atoms
-      regionfile >> Nbound;
+      regionFile >> Nbound;
       for (int i=0;i<Nbound;i++)
       {
-        int AtomID;
-        regionfile >> AtomID;
-        Struct[AtomID].QMregion = 0;
-        Struct[AtomID].PBregion = 0;
-        Struct[AtomID].BAregion = 1;
-        Struct[AtomID].MMregion = 0;
+        int atomID;
+        regionFile >> atomID;
+        Struct[atomID].QMregion = 0;
+        Struct[atomID].PBregion = 0;
+        Struct[atomID].BAregion = 1;
+        Struct[atomID].MMregion = 0;
       }
     }
     else if (keyword == "frozen_atoms:")
     {
       //Read the list of frozen atoms
-      regionfile >> Nfreeze;
+      regionFile >> Nfreeze;
       for (int i=0;i<Nfreeze;i++)
       {
-        int AtomID;
-        regionfile >> AtomID;
-        Struct[AtomID].Frozen = 1;
+        int atomID;
+        regionFile >> atomID;
+        Struct[atomID].Frozen = 1;
       }
     }
     //Check for bad keywords
-    else if (regionfile.good() and (!regionfile.eof()))
+    else if (regionFile.good() and (!regionFile.eof()))
     {
       //Inform the user about the bad keyword
       cout << "Error: Unrecognized keyword: ";
@@ -901,28 +901,28 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       for (int i=0;i<Natoms;i++)
       {
         //Shift path-integral beads
-        double MassScale = sqrt(12.0/Struct[i].m); //Relative to carbon
-        MassScale *= 2*StepMin*CentRatio; //Scale based on settings
+        double massScale = sqrt(12.0/Struct[i].m); //Relative to carbon
+        massScale *= 2*StepMin*CentRatio; //Scale based on settings
         //Update all beads
         for (int j=0;j<(QMMMOpts.Nbeads-1);j++)
         {
           //Pick random displacements
-          double randx = (((double)rand())/((double)RAND_MAX));
-          double randy = (((double)rand())/((double)RAND_MAX));
-          double randz = (((double)rand())/((double)RAND_MAX));
+          double randX = (((double)rand())/((double)RAND_MAX));
+          double randY = (((double)rand())/((double)RAND_MAX));
+          double randZ = (((double)rand())/((double)RAND_MAX));
           //Place the first bead at the initial position
           if (j == 0)
           {
-            randx = 0.5;
-            randy = 0.5;
-            randz = 0.5;
+            randX = 0.5;
+            randY = 0.5;
+            randZ = 0.5;
           }
           //Update positions of active atoms
           if (!Struct[i].Frozen)
           {
-            Struct[i].P[j].x += (2*(randx-0.5)*MassScale);
-            Struct[i].P[j].y += (2*(randy-0.5)*MassScale);
-            Struct[i].P[j].z += (2*(randz-0.5)*MassScale);
+            Struct[i].P[j].x += (2*(randX-0.5)*massScale);
+            Struct[i].P[j].y += (2*(randY-0.5)*massScale);
+            Struct[i].P[j].z += (2*(randZ-0.5)*massScale);
           }
         }
       }
@@ -935,12 +935,12 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
     cout << "Reading restart information...";
     cout << '\n' << '\n';;
     //Open file
-    fstream beadfile;
-    beadfile.open("BeadStartStruct.xyz",ios_base::in);
+    fstream beadFile;
+    beadFile.open("BeadStartStruct.xyz",ios_base::in);
     //Read and discard number of atoms
-    int AtTest = 0;
-    beadfile >> AtTest;
-    if (AtTest != (Natoms*QMMMOpts.Nbeads))
+    int atTest = 0;
+    beadFile >> atTest;
+    if (atTest != (Natoms*QMMMOpts.Nbeads))
     {
       //Print warning if the XYZ file has incorrect dimensions
       cout << "Error: Restart file does not have the correct format!";
@@ -955,11 +955,11 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
       for (int j=0;j<QMMMOpts.Nbeads;j++)
       {
         //Read atom type and discard
-        beadfile >> dummy;
+        beadFile >> dummy;
         //Read XYZ coordinates
-        beadfile >> Struct[i].P[j].x;
-        beadfile >> Struct[i].P[j].y;
-        beadfile >> Struct[i].P[j].z;
+        beadFile >> Struct[i].P[j].x;
+        beadFile >> Struct[i].P[j].y;
+        beadFile >> Struct[i].P[j].z;
       }
     }
   }
@@ -982,18 +982,18 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
   if (CheckFile("BACKUPQM"))
   {
     //Read backup directory
-    fstream backfile;
+    fstream backFile;
     //Set to default value
     QMMMOpts.BackDir = "Old_files";
     //Check directory
-    backfile.open("BACKUPQM",ios_base::in);
-    if (backfile.good())
+    backFile.open("BACKUPQM",ios_base::in);
+    if (backFile.good())
     {
-      string newname;
-      backfile >> newname;
-      if (!backfile.eof())
+      string newName;
+      backFile >> newName;
+      if (!backFile.eof())
       {
-        QMMMOpts.BackDir = newname;
+        QMMMOpts.BackDir = newName;
       }
     }
   }
@@ -1033,7 +1033,7 @@ void ReadLICHEMInput(fstream& xyzfile, fstream& connectfile,
 void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
 {
   //Checks for basic errors and conflicts
-  bool DoQuit = 0; //Bool, quit with error
+  bool doQuit = 0; //Bool, quit with error
   //General errors
   if (QMMM)
   {
@@ -1043,14 +1043,14 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       //Make sure there are some atoms in the QM calculation
       cout << " Error: No QM or PB atoms defined for the QMMM calculations.";
       cout << '\n';
-      DoQuit = 1;
+      doQuit = 1;
     }
     if ((Nmm+Nbound) < 1)
     {
       //Make sure there are some atoms in the MM calculations
       cout << " Error: No MM or BA atoms defined for the QMMM calculations.";
       cout << '\n';
-      DoQuit = 1;
+      doQuit = 1;
     }
   }
   //Check LREC settings
@@ -1060,20 +1060,20 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     if (PBCon)
     {
       //Find maximum box length
-      double MinLen = Lx;
-      if (Ly < MinLen)
+      double minLen = Lx;
+      if (Ly < minLen)
       {
-        MinLen = Ly;
+        minLen = Ly;
       }
-      if (Lz < MinLen)
+      if (Lz < minLen)
       {
-        MinLen = Lz;
+        minLen = Lz;
       }
       //Check cutoff
-      if (QMMMOpts.UseLREC and (QMMMOpts.LRECCut > (0.5*MinLen)))
+      if (QMMMOpts.UseLREC and (QMMMOpts.LRECCut > (0.5*minLen)))
       {
         //Needed to make the minimum image convention safe
-        QMMMOpts.LRECCut = 0.5*MinLen;
+        QMMMOpts.LRECCut = 0.5*minLen;
         cout << "Warning: Reducing LREC cutoff (";
         cout << LICHEMFormFloat(QMMMOpts.LRECCut,6);
         cout << ") due to the minimum image convention.";
@@ -1103,14 +1103,14 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     //Check Ewald settings
     cout << " Error: Ewald summation cannot be used without PBC.";
     cout << '\n';
-    DoQuit = 1;
+    doQuit = 1;
   }
   if (QMMMOpts.UseImpSolv and PBCon)
   {
     //Check Ewald settings
     cout << " Error: Implicit solvation models cannot be used with PBC.";
     cout << '\n';
-    DoQuit = 1;
+    doQuit = 1;
   }
   //Check threading
   if (Ncpus < 1)
@@ -1137,7 +1137,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout << "  Select a wrapper if you want to run this type ";
     cout << "of calculation.";
     cout << '\n';
-    DoQuit = 1;
+    doQuit = 1;
   }
   if ((!Gaussian) and (!PSI4) and (!NWChem) and (!MMonly))
   {
@@ -1147,7 +1147,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout << "  Select a wrapper if you want to run this type ";
     cout << "of calculation.";
     cout << '\n';
-    DoQuit = 1;
+    doQuit = 1;
   }
   if (PSI4 and QMMM)
   {
@@ -1159,7 +1159,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       cout << '\n';
       cout << " the steepest descent, damped Verlet, or DFP.";
       cout << '\n';
-      DoQuit = 1;
+      doQuit = 1;
     }
     if ((Npseudo != 0) or (Nbound != 0))
     {
@@ -1168,7 +1168,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       cout << '\n';
       cout << " Remove the pseudo-bonds and boundary-atoms.";
       cout << '\n';
-      DoQuit = 1;
+      doQuit = 1;
     }
   }
   if (NWChem and QMMM)
@@ -1181,7 +1181,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       cout << '\n';
       cout << " the steepest descent, damped Verlet, or DFP.";
       cout << '\n';
-      DoQuit = 1;
+      doQuit = 1;
     }
   }
   if (LAMMPS and AMOEBA)
@@ -1191,7 +1191,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout << '\n';
     cout << " polarizable force fields.";
     cout << '\n';
-    DoQuit = 1;
+    doQuit = 1;
   }
   //Simulation errors
   if ((QMMMOpts.Ensemble == "NPT") and (!PBCon))
@@ -1202,7 +1202,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout << "  Turn PBC on if you want to run this type ";
     cout << "of calculation.";
     cout << '\n';
-    DoQuit = 1;
+    doQuit = 1;
   }
   if (QMMMOpts.StepScale > 1)
   {
@@ -1215,7 +1215,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     QMMMOpts.StepScale = 1; //Reset step size
     cout.flush(); //Print warning
   }
-  if (DoQuit)
+  if (doQuit)
   {
     //Quits
     cout << '\n';
@@ -1525,15 +1525,15 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       if (PBCon)
       {
         //Print box size and density
-        double initden = 0; //Initial density
+        double initDen = 0; //Initial density
         cout << " Boundaries: Periodic" << '\n';
         cout << " Box size (\u212B): ";
         cout << LICHEMFormFloat(Lx,10) << " ";
         cout << LICHEMFormFloat(Ly,10) << " ";
         cout << LICHEMFormFloat(Lz,10) << '\n';
         cout << " Density: ";
-        initden = LICHEMDensity(Struct,QMMMOpts);
-        cout << LICHEMFormFloat(initden,10);
+        initDen = LICHEMDensity(Struct,QMMMOpts);
+        cout << LICHEMFormFloat(initDen,10);
         cout << " g/cm\u00B3" << '\n';
       }
       if (QMMMOpts.UseLREC)

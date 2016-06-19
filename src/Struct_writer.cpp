@@ -1026,7 +1026,7 @@ void WriteQMConnect(int& argc,char**& argv)
   xyzFilename = "NOFILE"; //Global XYZ filename
   //Read arguments
   Natoms = 0; //For safety
-  bool DoQuit = 0; //Exit with an error
+  bool doQuit = 0; //Exit with an error
   cout << "Reading LICHEM input: ";
   for (int i=0;i<argc;i++)
   {
@@ -1040,7 +1040,7 @@ void WriteQMConnect(int& argc,char**& argv)
       {
         cout << "Error: Could not open XYZ file!!!";
         cout << '\n';
-        DoQuit = 1;
+        doQuit = 1;
       }
       xyzFilename = file.str();
       posfile.open(argv[i+1],ios_base::in);
@@ -1053,9 +1053,9 @@ void WriteQMConnect(int& argc,char**& argv)
   {
     cout << "Error: Missing XYZ file!!!";
     cout << '\n' << '\n';
-    DoQuit = 1;
+    doQuit = 1;
   }
-  if (!DoQuit)
+  if (!doQuit)
   {
     //Write connectivity information
     ofile.open("connect.inp",ios_base::out);

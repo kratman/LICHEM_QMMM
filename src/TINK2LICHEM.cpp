@@ -495,7 +495,7 @@ void LICHEM2TINK(int& argc, char**& argv)
   string POSfilename = "NOFILE"; //Position filename
   string CONfilename = "NOFILE"; //Connectivity filename
   //Read arguments
-  bool DoQuit = 0; //Exit with an error
+  bool doQuit = 0; //Exit with an error
   cout << "Reading LICHEM input: ";
   for (int i=0;i<argc;i++)
   {
@@ -509,7 +509,7 @@ void LICHEM2TINK(int& argc, char**& argv)
       {
         cout << "Error: Could not open XYZ file!!!";
         cout << '\n';
-        DoQuit = 1;
+        doQuit = 1;
       }
       POSfilename = file.str();
       posfile.open(argv[i+1],ios_base::in);
@@ -525,7 +525,7 @@ void LICHEM2TINK(int& argc, char**& argv)
       {
         cout << "Error: Could not open connectivity file!!!";
         cout << '\n';
-        DoQuit = 1;
+        doQuit = 1;
       }
       CONfilename = file.str();
       confile.open(argv[i+1],ios_base::in);
@@ -539,10 +539,10 @@ void LICHEM2TINK(int& argc, char**& argv)
   {
     cout << "Error: Missing files!!!";
     cout << '\n' << '\n';
-    DoQuit = 1;
+    doQuit = 1;
   }
   //Parse input if files exist
-  if (!DoQuit)
+  if (!doQuit)
   {
     //Parse XYZ file and connect file
     ofile.open("tinkxyz.xyz",ios_base::out);

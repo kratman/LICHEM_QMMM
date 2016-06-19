@@ -105,7 +105,7 @@ bool OptConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
       SumE += PSI4Energy(Struct,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
-      GlobalSys = system("rm -f psi.* timer.*");
+      globalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem)
     {
@@ -221,7 +221,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       E += PSI4Forces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
-      GlobalSys = system("rm -f psi.* timer.*");
+      globalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem)
     {
@@ -312,7 +312,7 @@ void LICHEMSteepest(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "rm -f QMOpt_" << Bead << ".xyz";
   call << " MMCharges_" << Bead << ".txt";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Finish and return
   return;
 };
@@ -364,7 +364,7 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       E += PSI4Forces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
-      GlobalSys = system("rm -f psi.* timer.*");
+      globalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem)
     {
@@ -465,7 +465,7 @@ void LICHEMQuickMin(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "rm -f QMOpt_" << Bead << ".xyz";
   call << " MMCharges_" << Bead << ".txt";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Finish and return
   return;
 };
@@ -519,7 +519,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     E += PSI4Forces(Struct,Forces,QMMMOpts,Bead);
     QMTime += (unsigned)time(0)-tstart;
     //Delete annoying useless files
-    GlobalSys = system("rm -f psi.* timer.*");
+    globalSys = system("rm -f psi.* timer.*");
   }
   if (NWChem)
   {
@@ -615,7 +615,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       E += PSI4Forces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
-      GlobalSys = system("rm -f psi.* timer.*");
+      globalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem)
     {
@@ -762,7 +762,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call.str("");
   call << "rm -f QMOpt_" << Bead << ".xyz";
   call << " MMCharges_" << Bead << ".txt";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   //Finish and return
   return;
 };
@@ -813,7 +813,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
       SumE += PSI4Forces(Struct,Forces,QMMMOpts,Bead);
       QMTime += (unsigned)time(0)-tstart;
       //Delete annoying useless files
-      GlobalSys = system("rm -f psi.* timer.*");
+      globalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem)
     {
@@ -895,7 +895,7 @@ void EnsembleSD(vector<QMMMAtom>& Struct, fstream& traj,
   //Clean up files and return
   call.str("");
   call << "rm -f LICHM_" << Bead << ".dyn";
-  GlobalSys = system(call.str().c_str());
+  globalSys = system(call.str().c_str());
   return;
 };
 
