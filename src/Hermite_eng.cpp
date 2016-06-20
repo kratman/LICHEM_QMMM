@@ -49,7 +49,7 @@ double GauDen1s::ChrgNuc(double qpc, Coord pos, double Rcut)
   tmppos.x = x;
   tmppos.y = y;
   tmppos.z = z;
-  rij = CoordDist2(tmppos,pos).VecMag(); //Squared distance in Angstroms
+  rij = CoordDist2(tmppos,pos).vecMag(); //Squared distance in Angstroms
   //Check cutoff
   if (rij <= (Rcut*Rcut))
   {
@@ -76,7 +76,7 @@ double GauDen1s::NucNuc(GauDen1s gau2, double Rcut)
   tmppos2.x = gau2.x;
   tmppos2.y = gau2.y;
   tmppos2.z = gau2.z;
-  rij = CoordDist2(tmppos1,tmppos2).VecMag(); //Squared distance in Angstroms
+  rij = CoordDist2(tmppos1,tmppos2).vecMag(); //Squared distance in Angstroms
   //Check cutoff
   if (rij <= (Rcut*Rcut))
   {
@@ -106,7 +106,7 @@ double GauDen1s::TwoOver(GauDen1s gau2)
   tmppos2.x = gau2.x;
   tmppos2.y = gau2.y;
   tmppos2.z = gau2.z;
-  rij = CoordDist2(tmppos1,tmppos2).VecMag(); //Squared distance in Angstroms
+  rij = CoordDist2(tmppos1,tmppos2).vecMag(); //Squared distance in Angstroms
   rij = sqrt(rij)/BohrRad; //Change to a.u.
   //Calculate overlap
   rij *= -1*wid*gau2.wid*rij;
@@ -128,7 +128,7 @@ double GauDen1s::OneCoulPC(double qpc, Coord pos, double Rcut)
   tmppos.x = x;
   tmppos.y = y;
   tmppos.z = z;
-  rij = CoordDist2(tmppos,pos).VecMag(); //Squared distance in Angstroms
+  rij = CoordDist2(tmppos,pos).vecMag(); //Squared distance in Angstroms
   //Check cutoff
   if (rij <= (Rcut*Rcut))
   {
@@ -155,7 +155,7 @@ double GauDen1s::OneCoulNuc(GauDen1s gau2, double Rcut)
   tmppos2.x = gau2.x;
   tmppos2.y = gau2.y;
   tmppos2.z = gau2.z;
-  rij = CoordDist2(tmppos1,tmppos2).VecMag(); //Squared distance in Angstroms
+  rij = CoordDist2(tmppos1,tmppos2).vecMag(); //Squared distance in Angstroms
   //Check cutoff
   if (rij <= (Rcut*Rcut))
   {
@@ -182,7 +182,7 @@ double GauDen1s::TwoCoul(GauDen1s gau2, double Rcut)
   tmppos2.x = gau2.x;
   tmppos2.y = gau2.y;
   tmppos2.z = gau2.z;
-  rij = CoordDist2(tmppos1,tmppos2).VecMag(); //Squared distance in Angstroms
+  rij = CoordDist2(tmppos1,tmppos2).vecMag(); //Squared distance in Angstroms
   //Check cutoff
   if (rij <= (Rcut*Rcut))
   {

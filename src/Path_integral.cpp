@@ -20,23 +20,23 @@ double Get_PI_Espring(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
 {
   //Calculate total harmonic PI ring energy
   double E = 0.0;
-  double w0 = 1/(QMMMOpts.Beta*hbar);
-  w0 *= w0*ToeV*QMMMOpts.Nbeads;
+  double w0 = 1/(QMMMOpts.beta*hbar);
+  w0 *= w0*ToeV*QMMMOpts.NBeads;
   #pragma omp parallel for schedule(dynamic) reduction(+:E)
   for (int i=0;i<Natoms;i++)
   {
     Struct[i].Ep = 0.0;
     double w = w0*Struct[i].m;
-    for (int j=0;j<QMMMOpts.Nbeads;j++)
+    for (int j=0;j<QMMMOpts.NBeads;j++)
     {
       //Bead energy, one bond to avoid double counting
       int j2 = j-1;
       if (j2 == -1)
       {
-        j2 = QMMMOpts.Nbeads-1; //Ring PBC
+        j2 = QMMMOpts.NBeads-1; //Ring PBC
       }
       //Calculate displacement with PBC
-      double dr2 = CoordDist2(Struct[i].P[j],Struct[i].P[j2]).VecMag();
+      double dr2 = CoordDist2(Struct[i].P[j],Struct[i].P[j2]).vecMag();
       Struct[i].Ep += 0.5*w*dr2; //Harmonic energy
     }
     E += Struct[i].Ep; //Save energy
@@ -50,14 +50,14 @@ double Get_PI_Epot(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   double E = 0.0;
   //Fix parallel for classical MC
   int MCThreads = Nthreads;
-  if (QMMMOpts.Nbeads == 1)
+  if (QMMMOpts.NBeads == 1)
   {
     MCThreads = 1;
   }
   //Calculate energy
   #pragma omp parallel for schedule(dynamic) num_threads(MCThreads) \
           reduction(+:E,QMTime,MMTime)
-  for (int i=0;i<QMMMOpts.Nbeads;i++)
+  for (int i=0;i<QMMMOpts.NBeads;i++)
   {
     //Run the wrappers for all beads
     double Es = 0.0;
@@ -111,7 +111,7 @@ double Get_PI_Epot(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     QMTime += Times_qm;
     MMTime += Times_mm;
   }
-  E /= QMMMOpts.Nbeads;
+  E /= QMMMOpts.NBeads;
   return E;
 };
 
@@ -128,14 +128,14 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
   {
     //Move a centroid
     int p;
-    bool FrozenAt = 1;
-    while (FrozenAt)
+    bool frozenAt = 1;
+    while (frozenAt)
     {
       //Make sure the atom is not frozen
       p = (rand()%Natoms);
-      if (Struct2[p].Frozen == 0)
+      if (Struct2[p].frozen == 0)
       {
-        FrozenAt = 0;
+        frozenAt = 0;
       }
     }
     double randx = (((double)rand())/((double)RAND_MAX));
@@ -148,17 +148,17 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
     #pragma omp parallel
     {
       #pragma omp for nowait schedule(dynamic)
-      for (int i=0;i<QMMMOpts.Nbeads;i++)
+      for (int i=0;i<QMMMOpts.NBeads;i++)
       {
         Struct2[p].P[i].x += dx;
       }
       #pragma omp for nowait schedule(dynamic)
-      for (int i=0;i<QMMMOpts.Nbeads;i++)
+      for (int i=0;i<QMMMOpts.NBeads;i++)
       {
         Struct2[p].P[i].y += dy;
       }
       #pragma omp for nowait schedule(dynamic)
-      for (int i=0;i<QMMMOpts.Nbeads;i++)
+      for (int i=0;i<QMMMOpts.NBeads;i++)
       {
         Struct2[p].P[i].z += dz;
       }
@@ -169,17 +169,17 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
   {
     //Move all beads in a centroid
     int p;
-    bool FrozenAt = 1;
-    while (FrozenAt)
+    bool frozenAt = 1;
+    while (frozenAt)
     {
       //Make sure the atom is not frozen
       p = (rand()%Natoms);
-      if (Struct2[p].Frozen == 0)
+      if (Struct2[p].frozen == 0)
       {
-        FrozenAt = 0;
+        frozenAt = 0;
       }
     }
-    for (int i=0;i<QMMMOpts.Nbeads;i++)
+    for (int i=0;i<QMMMOpts.NBeads;i++)
     {
       //Randomly displace each bead
       double randx = (((double)rand())/((double)RAND_MAX));
@@ -194,7 +194,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
     }
   }
   //Initialize energies
-  double Eold = QMMMOpts.Eold;
+  double Eold = QMMMOpts.EOld;
   double Enew = 0;
   //Save box lengths
   double LxSave = Lx;
@@ -240,7 +240,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
         #pragma omp for nowait schedule(dynamic)
         for (int i=0;i<Natoms;i++)
         {
-          for (int j=0;j<QMMMOpts.Nbeads;j++)
+          for (int j=0;j<QMMMOpts.NBeads;j++)
           {
             double shift;
             shift = Struct2[i].P[j].x;
@@ -268,7 +268,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
         #pragma omp for nowait schedule(dynamic)
         for (int i=0;i<Natoms;i++)
         {
-          for (int j=0;j<QMMMOpts.Nbeads;j++)
+          for (int j=0;j<QMMMOpts.NBeads;j++)
           {
             double shift;
             shift = Struct2[i].P[j].y;
@@ -296,7 +296,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
         #pragma omp for nowait schedule(dynamic)
         for (int i=0;i<Natoms;i++)
         {
-          for (int j=0;j<QMMMOpts.Nbeads;j++)
+          for (int j=0;j<QMMMOpts.NBeads;j++)
           {
             double shift;
             shift = Struct2[i].P[j].z;
@@ -333,11 +333,11 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
         {
           //Find centroids
           double shift = 0; //Change of position for the centroid
-          for (int j=0;j<QMMMOpts.Nbeads;j++)
+          for (int j=0;j<QMMMOpts.NBeads;j++)
           {
             shift += Struct2[i].P[j].x; //Add to the position sum
           }
-          shift /= QMMMOpts.Nbeads; //Average position
+          shift /= QMMMOpts.NBeads; //Average position
           //Check PBC without wrapping the molecules
           bool check = 1; //Continue the PBC checks
           while (check)
@@ -357,7 +357,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
           }
           //Calculate the change in position
           shift = ((Lx/LxSave)-1)*shift;
-          for (int j=0;j<QMMMOpts.Nbeads;j++)
+          for (int j=0;j<QMMMOpts.NBeads;j++)
           {
             //Update the position
             Struct2[i].P[j].x += shift;
@@ -368,11 +368,11 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
         {
           //Find centroids
           double shift = 0; //Change of position for the centroid
-          for (int j=0;j<QMMMOpts.Nbeads;j++)
+          for (int j=0;j<QMMMOpts.NBeads;j++)
           {
             shift += Struct2[i].P[j].y; //Add to the position sum
           }
-          shift /= QMMMOpts.Nbeads; //Average position
+          shift /= QMMMOpts.NBeads; //Average position
           //Check PBC without wrapping the molecules
           bool check = 1; //Continue the PBC checks
           while (check)
@@ -392,7 +392,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
           }
           //Calculate the change in position
           shift = ((Ly/LySave)-1)*shift;
-          for (int j=0;j<QMMMOpts.Nbeads;j++)
+          for (int j=0;j<QMMMOpts.NBeads;j++)
           {
             //Update the position
             Struct2[i].P[j].y += shift;
@@ -403,11 +403,11 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
         {
           //Find centroids
           double shift = 0; //Change of position for the centroid
-          for (int j=0;j<QMMMOpts.Nbeads;j++)
+          for (int j=0;j<QMMMOpts.NBeads;j++)
           {
             shift += Struct2[i].P[j].z; //Add to the position sum
           }
-          shift /= QMMMOpts.Nbeads; //Average position
+          shift /= QMMMOpts.NBeads; //Average position
           //Check PBC without wrapping the molecules
           bool check = 1; //Continue the PBC checks
           while (check)
@@ -427,7 +427,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
           }
           //Calculate the change in position
           shift = ((Lz/LzSave)-1)*shift;
-          for (int j=0;j<QMMMOpts.Nbeads;j++)
+          for (int j=0;j<QMMMOpts.NBeads;j++)
           {
             //Update the position
             Struct2[i].P[j].z += shift;
@@ -440,21 +440,21 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
   //Update energies
   Enew += Get_PI_Epot(Struct2,QMMMOpts);
   Enew += Get_PI_Espring(Struct2,QMMMOpts);
-  if (QMMMOpts.Ensemble == "NPT")
+  if (QMMMOpts.ensemble == "NPT")
   {
     //Add PV energy term
-    Enew += QMMMOpts.Press*Lx*Ly*Lz;
+    Enew += QMMMOpts.press*Lx*Ly*Lz;
   }
   //Accept or reject
-  double dE = QMMMOpts.Beta*(Enew-Eold);
-  if (QMMMOpts.Ensemble == "NPT")
+  double dE = QMMMOpts.beta*(Enew-Eold);
+  if (QMMMOpts.ensemble == "NPT")
   {
     //Add Nln(V) term
     double VolTerm;
     VolTerm = Lx*Ly*Lz; //New volume
     VolTerm /= LxSave*LySave*LzSave; //Divide by old volume
     VolTerm = log(VolTerm); //Take the natural logarithm
-    VolTerm *= Natoms*QMMMOpts.Nbeads; //Scale by number of particles
+    VolTerm *= Natoms*QMMMOpts.NBeads; //Scale by number of particles
     dE -= VolTerm; //Subtract from the energy
   }
   double Prob = exp(-1*dE);
@@ -464,7 +464,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
     //Accept
     Struct = Struct2;
     Emc = Enew;
-    QMMMOpts.Eold = Enew;
+    QMMMOpts.EOld = Enew;
     acc = 1;
   }
   else

@@ -389,7 +389,7 @@ void TINK2LICHEM(int& argc, char**& argv)
         stringstream line(Ncharges[j][1]);
         int NuChg;
         line >> NuChg;
-        posfile << PTable.Typing(NuChg);
+        posfile << PTable.typing(NuChg);
         posfile << " ";
         Zfound = 1;
       }
@@ -490,7 +490,7 @@ void TINK2LICHEM(int& argc, char**& argv)
 void LICHEM2TINK(int& argc, char**& argv)
 {
   //Creates TINKER input from LICHEM input
-  fstream posfile,confile,ofile; //File streams
+  fstream posfile,confile,outFile; //File streams
   string dummy; //Generic string
   string POSfilename = "NOFILE"; //Position filename
   string CONfilename = "NOFILE"; //Connectivity filename
@@ -545,9 +545,9 @@ void LICHEM2TINK(int& argc, char**& argv)
   if (!doQuit)
   {
     //Parse XYZ file and connect file
-    ofile.open("tinkxyz.xyz",ios_base::out);
+    outFile.open("tinkxyz.xyz",ios_base::out);
     posfile >> Natoms; //Collect the number of atoms
-    ofile << Natoms << '\n'; //Write the number of atoms
+    outFile << Natoms << '\n'; //Write the number of atoms
     for (int i=0;i<Natoms;i++)
     {
       //Collect positions
@@ -569,24 +569,24 @@ void LICHEM2TINK(int& argc, char**& argv)
         Bonds.push_back(BondID);
       }
       //Write line of TINKER XYZ
-      ofile << (i+1) << " ";
-      ofile << AtType << " ";
-      ofile << LICHEMFormFloat(x,12) << " ";
-      ofile << LICHEMFormFloat(y,12) << " ";
-      ofile << LICHEMFormFloat(z,12) << " ";
-      ofile << AtNum;
+      outFile << (i+1) << " ";
+      outFile << AtType << " ";
+      outFile << LICHEMFormFloat(x,12) << " ";
+      outFile << LICHEMFormFloat(y,12) << " ";
+      outFile << LICHEMFormFloat(z,12) << " ";
+      outFile << AtNum;
       for (unsigned int j=0;j<Bonds.size();j++)
       {
-        ofile << " "; //Prevents trailing spaces
-        ofile << Bonds[j];
+        outFile << " "; //Prevents trailing spaces
+        outFile << Bonds[j];
       }
-      ofile << '\n'; //End the line
+      outFile << '\n'; //End the line
     }
     //Finish up and exit
     cout << "TINKER XYZ data written to tinkxyz.xyz";
     cout << '\n' << '\n';
     cout.flush();
-    ofile.close();
+    outFile.close();
     posfile.close();
     confile.close();
   }

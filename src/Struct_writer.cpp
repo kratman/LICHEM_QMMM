@@ -21,7 +21,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
   string dummy,chrgfilename; //Generic strings
-  fstream ifile,ofile; //Generic file names
+  fstream inFile,outFile; //Generic file names
   //Check for a charge file
   bool UseChargeFile = 0;
   call.str("");
@@ -38,7 +38,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
   Coord QMCOM;
   if (!UseChargeFile)
   {
-    if (PBCon or QMMMOpts.UseLREC)
+    if (PBCon or QMMMOpts.useLREC)
     {
       QMCOM = FindQMCOM(Struct,QMMMOpts,Bead);
     }
@@ -54,12 +54,12 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
   //Construct g09 input
   call.str("");
   call << "LICHM_" << Bead << ".com";
-  ofile.open(call.str().c_str(),ios_base::out);
+  outFile.open(call.str().c_str(),ios_base::out);
   call.str("");
   call << "%chk=LICHM_" << Bead << ".chk";
   call << '\n';
   call << "%Mem=" << QMMMOpts.RAM;
-  if (QMMMOpts.MemMB)
+  if (QMMMOpts.memMB)
   {
     call << "MB";
   }
@@ -74,7 +74,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
   //Add structure
   call << '\n'; //Blank line
   call << "QMMM" << '\n' << '\n'; //Dummy title
-  call << QMMMOpts.Charge << " " << QMMMOpts.Spin << '\n';
+  call << QMMMOpts.charge << " " << QMMMOpts.spin << '\n';
   for (int i=0;i<Natoms;i++)
   {
     if (Struct[i].QMregion)
@@ -98,16 +98,16 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
   //Add the MM field
   if (QMMM and UseChargeFile)
   {
-    ifile.open(chrgfilename.c_str(),ios_base::in);
-    if (ifile.good())
+    inFile.open(chrgfilename.c_str(),ios_base::in);
+    if (inFile.good())
     {
-      while (!ifile.eof())
+      while (!inFile.eof())
       {
         //Copy charge file line by line
-        getline(ifile,dummy);
+        getline(inFile,dummy);
         call << dummy << '\n';
       }
-      ifile.close();
+      inFile.close();
     }
   }
   else if (QMMM)
@@ -123,7 +123,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
           double xshft = 0;
           double yshft = 0;
           double zshft = 0;
-          if (PBCon or QMMMOpts.UseLREC)
+          if (PBCon or QMMMOpts.useLREC)
           {
             //Initialize displacements
             double dx,dy,dz; //Starting displacements
@@ -142,12 +142,12 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
           }
           //Check for long-range corrections
           double scrq = 1;
-          if (QMMMOpts.UseLREC)
+          if (QMMMOpts.useLREC)
           {
             //Use the long-range correction
             double rcom = 0; //Distance from center of mass
             //Calculate the distance from the center of mass
-            rcom = DistCent.VecMag();
+            rcom = DistCent.vecMag();
             if (rcom <= (QMMMOpts.LRECCut*QMMMOpts.LRECCut))
             {
               //Scale the charge
@@ -199,7 +199,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
           double xshft = 0;
           double yshft = 0;
           double zshft = 0;
-          if (PBCon or QMMMOpts.UseLREC)
+          if (PBCon or QMMMOpts.useLREC)
           {
             //Initialize displacements
             double dx,dy,dz; //Starting displacements
@@ -218,12 +218,12 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
           }
           //Check for long-range corrections
           double scrq = 1;
-          if (QMMMOpts.UseLREC)
+          if (QMMMOpts.useLREC)
           {
             //Use the long-range correction
             double rcom = 0; //Distance from center of mass
             //Calculate the distance from the center of mass
-            rcom = DistCent.VecMag();
+            rcom = DistCent.vecMag();
             if (rcom <= (QMMMOpts.LRECCut*QMMMOpts.LRECCut))
             {
               //Scale the charge
@@ -311,20 +311,20 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
     }
   }
   //Add basis set information from the BASIS file
-  ifile.open("BASIS",ios_base::in);
-  if (ifile.good())
+  inFile.open("BASIS",ios_base::in);
+  if (inFile.good())
   {
-    while (!ifile.eof())
+    while (!inFile.eof())
     {
       //Copy BASIS line by line, if BASIS exists
-      getline(ifile,dummy);
+      getline(inFile,dummy);
       call << dummy << '\n';
     }
-    ifile.close();
+    inFile.close();
   }
-  ofile << call.str();
-  ofile.flush();
-  ofile.close();
+  outFile << call.str();
+  outFile.flush();
+  outFile.close();
   return;
 };
 
@@ -332,7 +332,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
                       QMMMSettings& QMMMOpts, int Bead)
 {
   //Write NWChem input files
-  fstream ofile,ifile; //Generic file streams
+  fstream outFile,inFile; //Generic file streams
   string dummy,chrgfilename; //Generic strings
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
@@ -352,7 +352,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   Coord QMCOM;
   if (!UseChargeFile)
   {
-    if (PBCon or QMMMOpts.UseLREC)
+    if (PBCon or QMMMOpts.useLREC)
     {
       QMCOM = FindQMCOM(Struct,QMMMOpts,Bead);
     }
@@ -368,103 +368,103 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   //Create NWChem input
   call.str("");
   call << "LICHM_" << Bead << ".nw";
-  ofile.open(call.str().c_str(),ios_base::out);
+  outFile.open(call.str().c_str(),ios_base::out);
   call.str("");
   call << "LICHM_" << Bead << ".db";
   if (CheckFile(call.str()))
   {
-    ofile << "restart";
+    outFile << "restart";
   }
   else
   {
-    ofile << "start";
+    outFile << "start";
   }
-  ofile << " LICHM_" << Bead << '\n';
-  ofile << "memory " << QMMMOpts.RAM;
-  if (QMMMOpts.MemMB)
+  outFile << " LICHM_" << Bead << '\n';
+  outFile << "memory " << QMMMOpts.RAM;
+  if (QMMMOpts.memMB)
   {
-    ofile << " mb";
+    outFile << " mb";
   }
   else
   {
-    ofile << " gb";
+    outFile << " gb";
   }
-  ofile << '\n';
-  ofile << "charge " << QMMMOpts.Charge << '\n';
-  ofile << "geometry nocenter ";
-  ofile << "noautoz noautosym" << '\n';
+  outFile << '\n';
+  outFile << "charge " << QMMMOpts.charge << '\n';
+  outFile << "geometry nocenter ";
+  outFile << "noautoz noautosym" << '\n';
   for (int i=0;i<Natoms;i++)
   {
     if (Struct[i].QMregion)
     {
-      ofile << " " << Struct[i].QMTyp;
-      ofile << " " << (Struct[i].P[Bead].x);
-      ofile << " " << (Struct[i].P[Bead].y);
-      ofile << " " << (Struct[i].P[Bead].z);
-      ofile << '\n';
+      outFile << " " << Struct[i].QMTyp;
+      outFile << " " << (Struct[i].P[Bead].x);
+      outFile << " " << (Struct[i].P[Bead].y);
+      outFile << " " << (Struct[i].P[Bead].z);
+      outFile << '\n';
     }
     if (Struct[i].PBregion)
     {
-      ofile << " " << "F2pb";
-      ofile << " " << (Struct[i].P[Bead].x);
-      ofile << " " << (Struct[i].P[Bead].y);
-      ofile << " " << (Struct[i].P[Bead].z);
-      ofile << '\n';
+      outFile << " " << "F2pb";
+      outFile << " " << (Struct[i].P[Bead].x);
+      outFile << " " << (Struct[i].P[Bead].y);
+      outFile << " " << (Struct[i].P[Bead].z);
+      outFile << '\n';
     }
   }
-  ofile << "end" << '\n';
+  outFile << "end" << '\n';
   if (CheckFile("BASIS"))
   {
     //Add basis set and ecp info
-    ifile.open("BASIS",ios_base::in);
-    if (ifile.good())
+    inFile.open("BASIS",ios_base::in);
+    if (inFile.good())
     {
-      while (!ifile.eof())
+      while (!inFile.eof())
       {
         //Copy BASIS line by line, if BASIS exists
-        getline(ifile,dummy);
+        getline(inFile,dummy);
         stringstream line(dummy);
         if (line.str() != "")
         {
           //Avoid copying extra blank lines
-          ofile << dummy << '\n';
+          outFile << dummy << '\n';
         }
       }
     }
-    ifile.close();
+    inFile.close();
   }
   else
   {
-    ofile << "basis" << '\n';
-    ofile << " * library " << QMMMOpts.Basis;
-    ofile << '\n';
-    ofile << "end" << '\n';
+    outFile << "basis" << '\n';
+    outFile << " * library " << QMMMOpts.basis;
+    outFile << '\n';
+    outFile << "end" << '\n';
   }
   if (QMMM and UseChargeFile and (Nmm > 0))
   {
-    ifile.open(chrgfilename.c_str(),ios_base::in);
-    if (ifile.good())
+    inFile.open(chrgfilename.c_str(),ios_base::in);
+    if (inFile.good())
     {
-      ofile << "set bq:max_nbq " << (6*(Nmm+Nbound)) << '\n';
-      ofile << "bq mmchrg";
-      while (!ifile.eof())
+      outFile << "set bq:max_nbq " << (6*(Nmm+Nbound)) << '\n';
+      outFile << "bq mmchrg";
+      while (!inFile.eof())
       {
         //Copy charge file line by line
-        ofile << '\n'; //Avoid adding an extra blank line
-        getline(ifile,dummy);
-        ofile << dummy; //Print the line
+        outFile << '\n'; //Avoid adding an extra blank line
+        getline(inFile,dummy);
+        outFile << dummy; //Print the line
       }
-      ifile.close();
-      ofile << "end" << '\n';
-      ofile << "set bq mmchrg" << '\n';
+      inFile.close();
+      outFile << "end" << '\n';
+      outFile << "set bq mmchrg" << '\n';
     }
   }
   else if (QMMM and (Nmm > 0))
   {
     if (CHRG)
     {
-      ofile << "set bq:max_nbq " << (Nmm+Nbound) << '\n';
-      ofile << "bq mmchrg" << '\n';
+      outFile << "set bq:max_nbq " << (Nmm+Nbound) << '\n';
+      outFile << "bq mmchrg" << '\n';
       for (int i=0;i<Natoms;i++)
       {
         if (Struct[i].MMregion)
@@ -474,7 +474,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
           double xshft = 0;
           double yshft = 0;
           double zshft = 0;
-          if (PBCon or QMMMOpts.UseLREC)
+          if (PBCon or QMMMOpts.useLREC)
           {
             //Initialize displacements
             double dx,dy,dz; //Starting displacements
@@ -493,12 +493,12 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
           }
           //Check for long-range corrections
           double scrq = 1;
-          if (QMMMOpts.UseLREC)
+          if (QMMMOpts.useLREC)
           {
             //Use the long-range correction
             double rcom = 0; //Distance from center of mass
             //Calculate the distance from the center of mass
-            rcom = DistCent.VecMag();
+            rcom = DistCent.vecMag();
             if (rcom <= (QMMMOpts.LRECCut*QMMMOpts.LRECCut))
             {
               //Scale the charge
@@ -522,25 +522,25 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
           if ((scrq > 0) or FirstCharge)
           {
             FirstCharge = 0; //Skips writing the remaining zeros
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].P[Bead].x+xshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].P[Bead].y+yshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].P[Bead].z+zshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].MP[Bead].q*scrq,16);
-            ofile << '\n';
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].P[Bead].x+xshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].P[Bead].y+yshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].P[Bead].z+zshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].MP[Bead].q*scrq,16);
+            outFile << '\n';
           }
         }
       }
-      ofile << "end" << '\n';
-      ofile << "set bq mmchrg" << '\n';
+      outFile << "end" << '\n';
+      outFile << "set bq mmchrg" << '\n';
     }
     if (AMOEBA)
     {
-      ofile << "set bq:max_nbq " << (6*(Nmm+Nbound)) << '\n';
-      ofile << "bq mmchrg" << '\n';
+      outFile << "set bq:max_nbq " << (6*(Nmm+Nbound)) << '\n';
+      outFile << "bq mmchrg" << '\n';
       for (int i=0;i<Natoms;i++)
       {
         if (Struct[i].MMregion)
@@ -550,7 +550,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
           double xshft = 0;
           double yshft = 0;
           double zshft = 0;
-          if (PBCon or QMMMOpts.UseLREC)
+          if (PBCon or QMMMOpts.useLREC)
           {
             //Initialize displacements
             double dx,dy,dz; //Starting displacements
@@ -569,12 +569,12 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
           }
           //Check for long-range corrections
           double scrq = 1;
-          if (QMMMOpts.UseLREC)
+          if (QMMMOpts.useLREC)
           {
             //Use the long-range correction
             double rcom = 0; //Distance from center of mass
             //Calculate the distance from the center of mass
-            rcom = DistCent.VecMag();
+            rcom = DistCent.vecMag();
             if (rcom <= (QMMMOpts.LRECCut*QMMMOpts.LRECCut))
             {
               //Scale the charge
@@ -598,91 +598,91 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
           if ((scrq > 0) or FirstCharge)
           {
             FirstCharge = 0; //Skips writing the remaining zeros
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].x1+xshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].y1+yshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].z1+zshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].q1*scrq,16);
-            ofile << '\n';
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].x2+xshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].y2+yshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].z2+zshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].q2*scrq,16);
-            ofile << '\n';
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].x3+xshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].y3+yshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].z3+zshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].q3*scrq,16);
-            ofile << '\n';
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].x4+xshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].y4+yshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].z4+zshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].q4*scrq,16);
-            ofile << '\n';
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].x5+xshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].y5+yshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].z5+zshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].q5*scrq,16);
-            ofile << '\n';
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].x6+xshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].y6+yshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].z6+zshft,16);
-            ofile << " ";
-            ofile << LICHEMFormFloat(Struct[i].PC[Bead].q6*scrq,16);
-            ofile << '\n';
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x1+xshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y1+yshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z1+zshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q1*scrq,16);
+            outFile << '\n';
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x2+xshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y2+yshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z2+zshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q2*scrq,16);
+            outFile << '\n';
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x3+xshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y3+yshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z3+zshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q3*scrq,16);
+            outFile << '\n';
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x4+xshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y4+yshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z4+zshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q4*scrq,16);
+            outFile << '\n';
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x5+xshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y5+yshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z5+zshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q5*scrq,16);
+            outFile << '\n';
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x6+xshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y6+yshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z6+zshft,16);
+            outFile << " ";
+            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q6*scrq,16);
+            outFile << '\n';
           }
         }
       }
-      ofile << "end" << '\n';
-      ofile << "set bq mmchrg" << '\n';
+      outFile << "end" << '\n';
+      outFile << "set bq mmchrg" << '\n';
     }
   }
   //Add DFT settings
-  ofile << "dft" << '\n';
-  ofile << " mult " << QMMMOpts.Spin << '\n';
-  ofile << " direct" << '\n';
-  ofile << " grid xfine nodisk" << '\n';
-  ofile << " noio" << '\n';
-  ofile << " tolerances tight" << '\n';
-  ofile << " xc " << QMMMOpts.Func << '\n';
+  outFile << "dft" << '\n';
+  outFile << " mult " << QMMMOpts.spin << '\n';
+  outFile << " direct" << '\n';
+  outFile << " grid xfine nodisk" << '\n';
+  outFile << " noio" << '\n';
+  outFile << " tolerances tight" << '\n';
+  outFile << " xc " << QMMMOpts.func << '\n';
   //Use the checkpoint file
   call.str("");
   call << "LICHM_" << Bead << ".movecs";
   if (CheckFile(call.str()))
   {
     //Tell the DFT module to read the initial vectors
-    ofile << " vectors input ";
-    ofile << call.str(); //Defined above
-    ofile << '\n';
+    outFile << " vectors input ";
+    outFile << call.str(); //Defined above
+    outFile << '\n';
   }
-  ofile << "end" << '\n';
+  outFile << "end" << '\n';
   //Set calculation type
-  ofile << CalcTyp;
+  outFile << CalcTyp;
   //Print file
-  ofile.flush();
-  ofile.close();
+  outFile.flush();
+  outFile.close();
   return;
 };
 
@@ -693,7 +693,7 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
   string dummy,chrgfilename; //Generic string
-  fstream ifile,ofile; //Generic file names
+  fstream inFile,outFile; //Generic file names
   //Check for a charge file
   bool UseChargeFile = 0;
   call.str("");
@@ -709,7 +709,7 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   Coord QMCOM;
   if (!UseChargeFile)
   {
-    if (PBCon or QMMMOpts.UseLREC)
+    if (PBCon or QMMMOpts.useLREC)
     {
       QMCOM = FindQMCOM(Struct,QMMMOpts,Bead);
     }
@@ -731,7 +731,7 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   call.str("");
   call << "set_num_threads(" << Ncpus << ")" << '\n';
   call << "memory " << QMMMOpts.RAM;
-  if (QMMMOpts.MemMB)
+  if (QMMMOpts.memMB)
   {
     call << " mb";
   }
@@ -741,7 +741,7 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   }
   call << '\n';
   //Set options
-  if (QMMMOpts.Spin == 1)
+  if (QMMMOpts.spin == 1)
   {
     //Closed shell reference
     call << "set reference rhf";
@@ -753,7 +753,7 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   }
   call << '\n';
   call << "set basis ";
-  call << QMMMOpts.Basis << '\n';
+  call << QMMMOpts.basis << '\n';
   if (UseCheckPoint)
   {
     call << "set guess read";
@@ -773,8 +773,8 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   //Set up molecules
   call << "molecule LICHM_";
   call << Bead << " {" << '\n';
-  call << " " << QMMMOpts.Charge;
-  call << " " << QMMMOpts.Spin << '\n';
+  call << " " << QMMMOpts.charge;
+  call << " " << QMMMOpts.spin << '\n';
   for (int i=0;i<Natoms;i++)
   {
     if (Struct[i].QMregion)
@@ -793,17 +793,17 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   //Set up MM field
   if (QMMM and UseChargeFile and (Nmm > 0))
   {
-    ifile.open(chrgfilename.c_str(),ios_base::in);
-    if (ifile.good())
+    inFile.open(chrgfilename.c_str(),ios_base::in);
+    if (inFile.good())
     {
       call << "Chrgfield = QMMM()" << '\n';
-      while (!ifile.eof())
+      while (!inFile.eof())
       {
         //Copy charge file line by line
-        getline(ifile,dummy);
+        getline(inFile,dummy);
         call << dummy << '\n';
       }
-      ifile.close();
+      inFile.close();
       call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
       call << '\n' << '\n';
     }
@@ -822,7 +822,7 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
           double xshft = 0;
           double yshft = 0;
           double zshft = 0;
-          if (PBCon or QMMMOpts.UseLREC)
+          if (PBCon or QMMMOpts.useLREC)
           {
             //Initialize displacements
             double dx,dy,dz; //Starting displacements
@@ -841,12 +841,12 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
           }
           //Check for long-range corrections
           double scrq = 1;
-          if (QMMMOpts.UseLREC)
+          if (QMMMOpts.useLREC)
           {
             //Use the long-range correction
             double rcom = 0; //Distance from center of mass
             //Calculate the distance from the center of mass
-            rcom = DistCent.VecMag();
+            rcom = DistCent.vecMag();
             if (rcom <= (QMMMOpts.LRECCut*QMMMOpts.LRECCut))
             {
               //Scale the charge
@@ -893,7 +893,7 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
           double xshft = 0;
           double yshft = 0;
           double zshft = 0;
-          if (PBCon or QMMMOpts.UseLREC)
+          if (PBCon or QMMMOpts.useLREC)
           {
             //Initialize displacements
             double dx,dy,dz; //Starting displacements
@@ -912,12 +912,12 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
           }
           //Check for long-range corrections
           double scrq = 1;
-          if (QMMMOpts.UseLREC)
+          if (QMMMOpts.useLREC)
           {
             //Use the long-range correction
             double rcom = 0; //Distance from center of mass
             //Calculate the distance from the center of mass
-            rcom = DistCent.VecMag();
+            rcom = DistCent.vecMag();
             if (rcom <= (QMMMOpts.LRECCut*QMMMOpts.LRECCut))
             {
               //Scale the charge
@@ -989,10 +989,10 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
       if (CheckFile("FIELD"))
       {
         //Read a block of psithon code
-        ifile.open("FIELD",ios_base::in);
-        while ((!ifile.eof()) and ifile.good())
+        inFile.open("FIELD",ios_base::in);
+        while ((!inFile.eof()) and inFile.good())
         {
-          getline(ifile,dummy);
+          getline(inFile,dummy);
           call << dummy << '\n';
         }
         //If the file was opened, save the field
@@ -1000,7 +1000,7 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
         call << "psi4.set_global_option_python('EXTERN',Chrgfield.extern)";
         call << '\n';
         call << '\n';
-        ifile.close();
+        inFile.close();
       }
     }
   }
@@ -1010,10 +1010,10 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   dummy = call.str(); //Store file as a temporary variable
   call.str("");
   call << "LICHM_" << Bead << ".dat";
-  ofile.open(call.str().c_str(),ios_base::out);
-  ofile << dummy << '\n';
-  ofile.flush();
-  ofile.close();
+  outFile.open(call.str().c_str(),ios_base::out);
+  outFile << dummy << '\n';
+  outFile.flush();
+  outFile.close();
   return;
 };
 
@@ -1021,7 +1021,7 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
 void WriteQMConnect(int& argc,char**& argv)
 {
   //Write the connectivity input for pure QM calculations
-  fstream posfile,ofile; //File streams
+  fstream posfile,outFile; //File streams
   string dummy; //Generic string
   xyzFilename = "NOFILE"; //Global XYZ filename
   //Read arguments
@@ -1058,7 +1058,7 @@ void WriteQMConnect(int& argc,char**& argv)
   if (!doQuit)
   {
     //Write connectivity information
-    ofile.open("connect.inp",ios_base::out);
+    outFile.open("connect.inp",ios_base::out);
     posfile >> Natoms; //Number of atoms
     for (int i=0;i<Natoms;i++)
     {
@@ -1068,17 +1068,17 @@ void WriteQMConnect(int& argc,char**& argv)
       //Clear junk position data
       posfile >> dummy >> dummy >> dummy;
       //Write connectivity line
-      ofile << i << " "; //Index
-      ofile << AtTyp << " "; //Element
-      ofile << PTable.RevTyping(AtTyp) << " "; //Atomic number
-      ofile << PTable.GetAtMass(AtTyp) << " "; //Mass
-      ofile << "0.00 0" << '\n'; //Charge and bonds
+      outFile << i << " "; //Index
+      outFile << AtTyp << " "; //Element
+      outFile << PTable.revTyping(AtTyp) << " "; //Atomic number
+      outFile << PTable.getAtMass(AtTyp) << " "; //Mass
+      outFile << "0.00 0" << '\n'; //Charge and bonds
     }
     cout << "Connectivity data written to connect.inp";
     cout << '\n' << '\n';
     cout.flush();
-    ofile.flush();
-    ofile.close();
+    outFile.flush();
+    outFile.close();
   }
   //Quit
   posfile.close();

@@ -23,24 +23,24 @@ class PeriodicTable
   //Class for storing periodic table data
   private:
     //Atom types
-    vector<string> Typs; //Atomic symbols
+    vector<string> typs_; //Atomic symbols
     //Bond distances
-    vector<double> CovRadii; //Covalent radii
+    vector<double> covRadii_; //Covalent radii
     //Radii
-    vector<double> vdWRadii; //Van der Waals radii
+    vector<double> vdWRadii_; //Van der Waals radii
     //Masses
-    vector<double> AtMasses; //Atomic masses (amu)
+    vector<double> atMasses_; //Atomic masses (amu)
   public:
     //Set data (hard coded constructor)
     PeriodicTable();
     //Destructor
     ~PeriodicTable();
     //Retrieve data
-    string Typing(int); //Atom type
-    int RevTyping(string); //Atomic number
-    double GetCovRadius(string); //Covalent radius
-    double GetRadius(string); //Van der Waals radius
-    double GetAtMass(string); //Atomic mass
+    string typing(int); //Atom type
+    int revTyping(string); //Atomic number
+    double getCovRadius(string); //Covalent radius
+    double getRadius(string); //Van der Waals radius
+    double getAtMass(string); //Atomic mass
 };
 
 class Coord
@@ -55,7 +55,7 @@ class Coord
     double y; //y position
     double z; //z position
     //Functions
-    double VecMag(); //Return the squared vector magnitude
+    double vecMag(); //Return the squared vector magnitude
 };
 
 class Mpole
@@ -67,11 +67,11 @@ class Mpole
     //Destructor
     ~Mpole();
     //Definition of the local frame of reference
-    bool ChiralFlip; //Flip y axis
-    string Type; //Bisector, Z-then-X, Z-Only, 3-Fold, or Z-Bisect
-    int Atom1; //Atom which defines the z axis
-    int Atom2; //Atom which defines the x axis
-    int Atom3; //Atom which defines the y axis (chiral only)
+    bool chiralFlip; //Flip y axis
+    string type; //Bisector, Z-then-X, Z-Only, 3-Fold, or Z-Bisect
+    int atom1; //Atom which defines the z axis
+    int atom2; //Atom which defines the x axis
+    int atom3; //Atom which defines the y axis (chiral only)
     //Monopole moment
     double q;
     //Cartesian dipole moments
@@ -109,9 +109,9 @@ class RedMpole
     double Q20; //Z^2 component
     double Q22c; //X^2-Y^2 component
     //Spherical harmonic vectors
-    Vector3d Vecx; //X direction in quadrupole frame
-    Vector3d Vecy; //Y direction in quadrupole frame
-    Vector3d Vecz; //Z direction in quadrupole frame
+    Vector3d vecX; //X direction in quadrupole frame
+    Vector3d vecY; //Y direction in quadrupole frame
+    Vector3d vecZ; //Z direction in quadrupole frame
 };
 
 class OctCharges

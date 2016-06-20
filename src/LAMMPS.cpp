@@ -69,7 +69,7 @@ double LAMMPSEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     call << (Struct[i].id+1);
     call << " 1 "; //Dummy molecule ID
-    call << Struct[i].NumTyp << " ";
+    call << Struct[i].numTyp << " ";
     if (Struct[i].QMregion or Struct[i].PBregion or Struct[i].BAregion)
     {
       //Add zero charge
@@ -270,7 +270,7 @@ double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     call << (Struct[i].id+1);
     call << " 1 "; //Dummy molecule ID
-    call << Struct[i].NumTyp << " ";
+    call << Struct[i].numTyp << " ";
     call << Struct[i].MP[Bead].q << " ";
     call << Struct[i].P[Bead].x;
     call << " ";
@@ -369,9 +369,9 @@ double LAMMPSOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Force tolerance
   call << QMMMOpts.MMOptTol << " ";
   //Max steps
-  call << QMMMOpts.MaxOptSteps << " ";
+  call << QMMMOpts.maxOptSteps << " ";
   //Max force iterations
-  call << (3*Natoms*QMMMOpts.MaxOptSteps);
+  call << (3*Natoms*QMMMOpts.maxOptSteps);
   call << '\n';
   outFile << call.str();
   outFile.flush();

@@ -123,7 +123,7 @@ void ExternalGaussian(int& argc, char**& argv)
   if (TINKER)
   {
     Emm = TINKERForces(Struct,Forces,QMMMOpts,Bead);
-    if (AMOEBA or QMMMOpts.UseImpSolv)
+    if (AMOEBA or QMMMOpts.useImpSolv)
     {
       //Calculate polarization forces for AMOEBA
       Emm += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);

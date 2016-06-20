@@ -24,13 +24,13 @@ void Print_traj(vector<QMMMAtom>& Struct, fstream& traj,
   //Function to print the trajectory or restart files for all beads
   stringstream call; //Only used to save traj stream settings
   //Print XYZ file
-  int Ntot = QMMMOpts.Nbeads*Natoms; //Total number of particles
+  int Ntot = QMMMOpts.NBeads*Natoms; //Total number of particles
   traj << Ntot << '\n' << '\n'; //Print number of particles and a blank line
   //Loop over the atoms in the structure
   for (int i=0;i<Natoms;i++)
   {
     //Print all replicas of atom i
-    for (int j=0;j<QMMMOpts.Nbeads;j++)
+    for (int j=0;j<QMMMOpts.NBeads;j++)
     {
       traj << setw(3) << left << Struct[i].QMTyp << " ";
       traj << LICHEMFormFloat(Struct[i].P[j].x,16) << " ";
@@ -64,7 +64,7 @@ void BurstTraj(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   }
   burstFile.open(call.str().c_str(),ios_base::out);
   //Print trajectory
-  for (int j=0;j<QMMMOpts.Nbeads;j++)
+  for (int j=0;j<QMMMOpts.NBeads;j++)
   {
     //Print all atoms in replica j
     burstFile << Natoms; //Number of atoms
@@ -827,7 +827,7 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
     }
   }
   //Write all normal modes
-  if ((!QMMM) and QMMMOpts.PrintNormModes)
+  if ((!QMMM) and QMMMOpts.printNormModes)
   {
     WriteModes(Struct,0,QMMMFreqs,QMMMNormModes,QMMMOpts,Bead);
   }

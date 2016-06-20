@@ -23,7 +23,7 @@
 void PSI4Charges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Function to update QM point-charges
-  fstream ifile; //Generic file stream
+  fstream inFile; //Generic file stream
   string dummy; //Generic string
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
@@ -34,7 +34,7 @@ void PSI4Charges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   UseCheckPoint = CheckFile(call.str());
   //Set up charge calculation
   call.str("");
-  call << "Eqm,qmwfn = energy('" << QMMMOpts.Func << "'";
+  call << "Eqm,qmwfn = energy('" << QMMMOpts.func << "'";
   if (UseCheckPoint)
   {
     //Collect old wavefunction from restart file
@@ -64,10 +64,10 @@ void PSI4Charges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Extract charges
   call.str("");
   call << "LICHM_" << Bead << ".out";
-  ifile.open(call.str().c_str(),ios_base::in);
-  while (!ifile.eof())
+  inFile.open(call.str().c_str(),ios_base::in);
+  while (!inFile.eof())
   {
-    getline(ifile,dummy);
+    getline(inFile,dummy);
     stringstream line(dummy);
     line >> dummy;
     if (dummy == "Mulliken")
@@ -75,12 +75,12 @@ void PSI4Charges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       line >> dummy;
       if (dummy == "Charges:")
       {
-        getline(ifile,dummy);
+        getline(inFile,dummy);
         for (int i=0;i<Natoms;i++)
         {
           if (Struct[i].QMregion or Struct[i].PBregion)
           {
-            getline(ifile,dummy);
+            getline(inFile,dummy);
             stringstream line(dummy);
             line >> dummy >> dummy;
             line >> dummy >> dummy;
@@ -91,7 +91,7 @@ void PSI4Charges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       }
     }
   }
-  ifile.close();
+  inFile.close();
   //Clean up files
   call.str("");
   call << "rm -f ";
@@ -105,7 +105,7 @@ void PSI4Charges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs PSI4 for energy calculations
-  fstream ifile; //Generic file stream
+  fstream inFile; //Generic file stream
   string dummy; //Generic string
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
@@ -117,7 +117,7 @@ double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   UseCheckPoint = CheckFile(call.str());
   //Set up energy calculation
   call.str("");
-  call << "Eqm,qmwfn = energy('" << QMMMOpts.Func << "'";
+  call << "Eqm,qmwfn = energy('" << QMMMOpts.func << "'";
   if (UseCheckPoint)
   {
     //Collect old wavefunction from restart file
@@ -148,11 +148,11 @@ double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Read energy
   call.str("");
   call << "LICHM_" << Bead << ".out";
-  ifile.open(call.str().c_str(),ios_base::in);
-  bool QMfinished = 0;
-  while (!ifile.eof())
+  inFile.open(call.str().c_str(),ios_base::in);
+  bool QMFinished = 0;
+  while (!inFile.eof())
   {
-    getline(ifile,dummy);
+    getline(inFile,dummy);
     stringstream line(dummy);
     line >> dummy;
     if (dummy == "Mulliken")
@@ -160,12 +160,12 @@ double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       line >> dummy;
       if (dummy == "Charges:")
       {
-        getline(ifile,dummy);
+        getline(inFile,dummy);
         for (int i=0;i<Natoms;i++)
         {
           if (Struct[i].QMregion or Struct[i].PBregion)
           {
-            getline(ifile,dummy);
+            getline(inFile,dummy);
             stringstream line(dummy);
             line >> dummy >> dummy;
             line >> dummy >> dummy;
@@ -183,29 +183,29 @@ double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       {
         //Read energy
         line >> E; //Read energy
-        QMfinished = 1;
+        QMFinished = 1;
       }
     }
   }
-  ifile.close();
+  inFile.close();
   //Collect energy (post-SCF)
   call.str("");
   call << "LICHM_" << Bead << ".log";
-  ifile.open(call.str().c_str(),ios_base::in);
-  while (!ifile.eof())
+  inFile.open(call.str().c_str(),ios_base::in);
+  while (!inFile.eof())
   {
-    getline(ifile,dummy);
+    getline(inFile,dummy);
     stringstream line(dummy);
     line >> dummy;
     if (dummy == "Energy:")
     {
       line >> E; //Read post-SCF energy
-      QMfinished = 1;
+      QMFinished = 1;
     }
   }
-  ifile.close();
+  inFile.close();
   //Check for errors
-  if (!QMfinished)
+  if (!QMFinished)
   {
     cerr << "Warning: SCF did not converge!!!";
     cerr << '\n';
@@ -224,7 +224,7 @@ double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   {
     //Save old files
     call << "cp LICHM_" << Bead << ".* ";
-    call << QMMMOpts.BackDir << "/.";
+    call << QMMMOpts.backDir << "/.";
     call << " 2> LICHM_" << Bead << ".trash; ";
     call << "rm -f LICHM_" << Bead << ".trash";
     call << " "; //Extra blank space before the next command
@@ -243,7 +243,7 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
                   QMMMSettings& QMMMOpts, int Bead)
 {
   //Function for calculating the forces and charges on a set of atoms
-  fstream ifile; //Generic file name
+  fstream inFile; //Generic file name
   string dummy; //Generic string
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
@@ -255,7 +255,7 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   UseCheckPoint = CheckFile(call.str());
   //Set up force calculation
   call.str("");
-  call << "Eqm,qmwfn = energy('" << QMMMOpts.Func << "'";
+  call << "Eqm,qmwfn = energy('" << QMMMOpts.func << "'";
   if (UseCheckPoint)
   {
     //Collect old wavefunction from restart file
@@ -263,7 +263,7 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     call << "'./LICHM_" << Bead << ".180']";
   }
   call << ",return_wfn=True)" << '\n';
-  call << "gradient('" << QMMMOpts.Func << "'";
+  call << "gradient('" << QMMMOpts.func << "'";
   call << ",bypass_scf=True)"; //Skip the extra SCF cycle
   call << '\n';
   call << "print('Energy: '+`Eqm`)" << '\n';
@@ -289,10 +289,10 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   //Extract forces
   call.str("");
   call << "LICHM_" << Bead << ".out";
-  ifile.open(call.str().c_str(),ios_base::in);
-  while (!ifile.eof())
+  inFile.open(call.str().c_str(),ios_base::in);
+  while (!inFile.eof())
   {
-    getline(ifile,dummy);
+    getline(inFile,dummy);
     stringstream line(dummy);
     line >> dummy;
     if (dummy == "Mulliken")
@@ -300,12 +300,12 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
       line >> dummy;
       if (dummy == "Charges:")
       {
-        getline(ifile,dummy);
+        getline(inFile,dummy);
         for (int i=0;i<Natoms;i++)
         {
           if (Struct[i].QMregion or Struct[i].PBregion)
           {
-            getline(ifile,dummy);
+            getline(inFile,dummy);
             stringstream line(dummy);
             line >> dummy >> dummy;
             line >> dummy >> dummy;
@@ -320,15 +320,15 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
       line >> dummy;
       if (dummy == "Gradient:")
       {
-        getline(ifile,dummy);
-        getline(ifile,dummy);
+        getline(inFile,dummy);
+        getline(inFile,dummy);
         for (int i=0;i<(Nqm+Npseudo);i++)
         {
           double Fx = 0;
           double Fy = 0;
           double Fz = 0;
           //Extract forces; Convoluted, but "easy"
-          getline(ifile,dummy);
+          getline(inFile,dummy);
           stringstream line(dummy);
           line >> dummy; //Clear junk
           line >> Fx; //Read value
@@ -355,14 +355,14 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
       }
     }
   }
-  ifile.close();
+  inFile.close();
   //Collect energy (post-SCF)
   call.str("");
   call << "LICHM_" << Bead << ".log";
-  ifile.open(call.str().c_str(),ios_base::in);
-  while (!ifile.eof())
+  inFile.open(call.str().c_str(),ios_base::in);
+  while (!inFile.eof())
   {
-    getline(ifile,dummy);
+    getline(inFile,dummy);
     stringstream line(dummy);
     line >> dummy; //Check property
     if (dummy == "Energy:")
@@ -370,7 +370,7 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
       line >> E; //Read post-SCF energy
     }
   }
-  ifile.close();
+  inFile.close();
   //Clean up files
   call.str("");
   call << "rm -f ";
@@ -386,7 +386,7 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
 MatrixXd PSI4Hessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs PSI4 to calculate a Hessian
-  fstream ifile; //Generic file stream
+  fstream inFile; //Generic file stream
   string dummy; //Generic string
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
@@ -400,7 +400,7 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   UseCheckPoint = CheckFile(call.str());
   //Calculate Hessian
   call.str("");
-  call << "Eqm,qmwfn = energy('" << QMMMOpts.Func << "'";
+  call << "Eqm,qmwfn = energy('" << QMMMOpts.func << "'";
   if (UseCheckPoint)
   {
     //Collect old wavefunction from restart file
@@ -408,7 +408,7 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     call << "'./LICHM_" << Bead << ".180']";
   }
   call << ",return_wfn=True)" << '\n';
-  call << "QMHess = hessian('" << QMMMOpts.Func << "'";
+  call << "QMHess = hessian('" << QMMMOpts.func << "'";
   call << ",bypass_scf=True)"; //Skip the extra SCF cycle
   call << '\n';
   call << "print('Energy: '+`Eqm`)" << '\n';
@@ -435,11 +435,11 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Extract Hessian
   call.str("");
   call << "LICHM_" << Bead << ".out";
-  ifile.open(call.str().c_str(),ios_base::in);
+  inFile.open(call.str().c_str(),ios_base::in);
   bool HessDone = 0;
-  while (!ifile.eof())
+  while (!inFile.eof())
   {
-    getline(ifile,dummy);
+    getline(inFile,dummy);
     stringstream line(dummy);
     line >> dummy;
     if (dummy == "Mulliken")
@@ -447,12 +447,12 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       line >> dummy;
       if (dummy == "Charges:")
       {
-        getline(ifile,dummy);
+        getline(inFile,dummy);
         for (int i=0;i<Natoms;i++)
         {
           if (Struct[i].QMregion or Struct[i].PBregion)
           {
-            getline(ifile,dummy);
+            getline(inFile,dummy);
             stringstream line(dummy);
             line >> dummy >> dummy;
             line >> dummy >> dummy;
@@ -466,24 +466,24 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     if (dummy == "Hessian")
     {
       HessDone = 1;
-      getline(ifile,dummy); //Clear junk
+      getline(inFile,dummy); //Clear junk
       //Read Hessian in groups of Ndofx5
       int rowct = 0; //Current row ID
       while (rowct < Ndof)
       {
         //Clear junk
-        getline(ifile,dummy); //Clear junk
-        getline(ifile,dummy); //Clear junk
-        getline(ifile,dummy); //Clear junk
+        getline(inFile,dummy); //Clear junk
+        getline(inFile,dummy); //Clear junk
+        getline(inFile,dummy); //Clear junk
         //Read elements
         for (int i=0;i<Ndof;i++)
         {
-          ifile >> dummy; //Clear junk
+          inFile >> dummy; //Clear junk
           for (int j=0;j<5;j++)
           {
             if ((rowct+j) < Ndof)
             {
-              ifile >> QMHess(i,rowct+j);
+              inFile >> QMHess(i,rowct+j);
             }
           }
         }
@@ -492,7 +492,7 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
       }
     }
   }
-  ifile.close();
+  inFile.close();
   //Check for errors
   if (!HessDone)
   {
@@ -519,16 +519,16 @@ double PSI4Opt(vector<QMMMAtom>& Struct,
                QMMMSettings& QMMMOpts, int Bead)
 {
   //Runs PSI4 for energy calculations
-  fstream ifile; //Generic file stream
+  fstream inFile; //Generic file stream
   string dummy; //Generic string
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
   double E = 0.0;
   //Set up QM only optimization
   call.str("");
-  call << "optimize('" << QMMMOpts.Func << "'";
+  call << "optimize('" << QMMMOpts.func << "'";
   call << ")" << '\n';
-  call << "Eqm,qmwfn = energy('" << QMMMOpts.Func << "'";
+  call << "Eqm,qmwfn = energy('" << QMMMOpts.func << "'";
   call << ",return_wfn=True)" << '\n';
   call << "print('Energy: '+`Eqm`)" << '\n';
   if (QMMM)
@@ -553,12 +553,12 @@ double PSI4Opt(vector<QMMMAtom>& Struct,
   //Read energy and structure
   call.str("");
   call << "LICHM_" << Bead << ".out";
-  ifile.open(call.str().c_str(),ios_base::in);
-  bool QMfinished = 0;
-  bool Optfinished = 0;
-  while (!ifile.eof())
+  inFile.open(call.str().c_str(),ios_base::in);
+  bool QMFinished = 0;
+  bool OptFinished = 0;
+  while (!inFile.eof())
   {
-    getline(ifile,dummy);
+    getline(inFile,dummy);
     stringstream line(dummy);
     line >> dummy;
     if (dummy == "Final")
@@ -567,15 +567,15 @@ double PSI4Opt(vector<QMMMAtom>& Struct,
       if (dummy == "optimized")
       {
         //Read new geometry
-        Optfinished = 1;
+        OptFinished = 1;
         for (int i=0;i<5;i++)
         {
           //Clear junk
-          getline(ifile,dummy);
+          getline(inFile,dummy);
         }
         for (int i=0;i<Natoms;i++)
         {
-          getline(ifile,dummy);
+          getline(inFile,dummy);
           stringstream line(dummy);
           line >> dummy; //Clear atom type
           double x,y,z;
@@ -591,12 +591,12 @@ double PSI4Opt(vector<QMMMAtom>& Struct,
       line >> dummy;
       if (dummy == "Charges:")
       {
-        getline(ifile,dummy);
+        getline(inFile,dummy);
         for (int i=0;i<Natoms;i++)
         {
           if (Struct[i].QMregion or Struct[i].PBregion)
           {
-            getline(ifile,dummy);
+            getline(inFile,dummy);
             stringstream line(dummy);
             line >> dummy >> dummy;
             line >> dummy >> dummy;
@@ -614,29 +614,29 @@ double PSI4Opt(vector<QMMMAtom>& Struct,
       {
         //Read energy
         line >> E; //Read energy
-        QMfinished = 1;
+        QMFinished = 1;
       }
     }
   }
-  ifile.close();
+  inFile.close();
   //Collect energy (post-SCF)
   call.str("");
   call << "LICHM_" << Bead << ".log";
-  ifile.open(call.str().c_str(),ios_base::in);
-  while (!ifile.eof())
+  inFile.open(call.str().c_str(),ios_base::in);
+  while (!inFile.eof())
   {
-    getline(ifile,dummy);
+    getline(inFile,dummy);
     stringstream line(dummy);
     line >> dummy; //Check value
     if (dummy == "Energy:")
     {
       line >> E; //Read post-SCF energy
-      QMfinished = 1;
+      QMFinished = 1;
     }
   }
-  ifile.close();
+  inFile.close();
   //Check for errors
-  if (!QMfinished)
+  if (!QMFinished)
   {
     cerr << "Warning: SCF did not converge!!!";
     cerr << '\n';
@@ -649,7 +649,7 @@ double PSI4Opt(vector<QMMMAtom>& Struct,
     call << "rm -f *LICHM_" << Bead << ".180";
     globalSys = system(call.str().c_str());
   }
-  if (!Optfinished)
+  if (!OptFinished)
   {
     cerr << "Warning: Optimization did not converge!!!";
     cerr << '\n';

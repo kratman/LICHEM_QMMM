@@ -34,13 +34,13 @@ int main(int argc, char* argv[])
 
   //Initialize local variables
   string dummy; //Generic string
-  double SumE,SumE2,DenAvg,LxAvg,LyAvg,LzAvg,Ek; //Energies and properties
-  fstream xyzfile,connectfile,regionfile,outfile; //Input and output files
+  double sumE,sumE2,denAvg,LxAvg,LyAvg,LzAvg,Ek; //Energies and properties
+  fstream xyzFile,connectFile,regionFile,outFile; //Input and output files
   vector<QMMMAtom> Struct; //Atom list
   vector<QMMMAtom> OldStruct; //A copy of the atoms list
   vector<QMMMElec> Elecs; //Semi-classical electrons (eFF model)
   QMMMSettings QMMMOpts; //QM and MM wrapper settings
-  int randnum; //Random integer
+  int randNum; //Random integer
   //End of section
 
   //Print title and compile date
@@ -60,11 +60,11 @@ int main(int argc, char* argv[])
   //End of section
 
   //Read arguments and look for errors
-  ReadArgs(argc,argv,xyzfile,connectfile,regionfile,outfile);
+  ReadArgs(argc,argv,xyzFile,connectFile,regionFile,outFile);
   //End of section
 
   //Read input and check for errors
-  ReadLICHEMInput(xyzfile,connectfile,regionfile,Struct,QMMMOpts);
+  ReadLICHEMInput(xyzFile,connectFile,regionFile,Struct,QMMMOpts);
   LICHEMErrorChecker(QMMMOpts);
   LICHEMPrintSettings(Struct,QMMMOpts);
   //End of section
@@ -86,9 +86,9 @@ int main(int argc, char* argv[])
     stringstream call;
     call.str("");
     //Delete old files
-    call << "rm -rf " << QMMMOpts.BackDir << "; ";
+    call << "rm -rf " << QMMMOpts.backDir << "; ";
     //Create new directory
-    call << "mkdir " << QMMMOpts.BackDir;
+    call << "mkdir " << QMMMOpts.backDir;
     globalSys = system(call.str().c_str());
   }
   //End of section
@@ -106,47 +106,47 @@ int main(int argc, char* argv[])
   {
     double Eqm; //QM energy
     double Emm; //MM energy
-    if (QMMMOpts.Nbeads == 1)
+    if (QMMMOpts.NBeads == 1)
     {
       cout << "Single-point energy:";
     }
-    if (QMMMOpts.Nbeads > 1)
+    if (QMMMOpts.NBeads > 1)
     {
       cout << "Multi-point energies:";
     }
     cout << '\n' << '\n';
     cout.flush(); //Print progress
     //Loop over all beads
-    for (int p=0;p<QMMMOpts.Nbeads;p++)
+    for (int p=0;p<QMMMOpts.NBeads;p++)
     {
       //Calculate QMMM energy
       Eqm = 0; //Reset QM energy
       Emm = 0; //Reset MM energy
       //Calculate QM energy
-      if (QMMMOpts.Nbeads > 1)
+      if (QMMMOpts.NBeads > 1)
       {
         cout << " Energy for bead: " << p << '\n';
         cout.flush();
       }
       if (Gaussian)
       {
-        int tstart = (unsigned)time(0);
+        int tStart = (unsigned)time(0);
         Eqm += GaussianEnergy(Struct,QMMMOpts,p);
-        QMTime += (unsigned)time(0)-tstart;
+        QMTime += (unsigned)time(0)-tStart;
       }
       if (PSI4)
       {
-        int tstart = (unsigned)time(0);
+        int tStart = (unsigned)time(0);
         Eqm += PSI4Energy(Struct,QMMMOpts,p);
-        QMTime += (unsigned)time(0)-tstart;
+        QMTime += (unsigned)time(0)-tStart;
         //Delete annoying useless files
         globalSys = system("rm -f psi.* timer.*");
       }
       if (NWChem)
       {
-        int tstart = (unsigned)time(0);
+        int tStart = (unsigned)time(0);
         Eqm += NWChemEnergy(Struct,QMMMOpts,p);
-        QMTime += (unsigned)time(0)-tstart;
+        QMTime += (unsigned)time(0)-tStart;
       }
       if (QMMM or QMonly)
       {
@@ -159,21 +159,21 @@ int main(int argc, char* argv[])
       //Calculate MM energy
       if (TINKER)
       {
-        int tstart = (unsigned)time(0);
+        int tStart = (unsigned)time(0);
         Emm += TINKEREnergy(Struct,QMMMOpts,p);
-        MMTime += (unsigned)time(0)-tstart;
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (AMBER)
       {
-        int tstart = (unsigned)time(0);
+        int tStart = (unsigned)time(0);
         Emm += AMBEREnergy(Struct,QMMMOpts,p);
-        MMTime += (unsigned)time(0)-tstart;
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (LAMMPS)
       {
-        int tstart = (unsigned)time(0);
+        int tStart = (unsigned)time(0);
         Emm += LAMMPSEnergy(Struct,QMMMOpts,p);
-        MMTime += (unsigned)time(0)-tstart;
+        MMTime += (unsigned)time(0)-tStart;
       }
       //Print the rest of the energies
       if (QMMM or MMonly)
@@ -182,14 +182,14 @@ int main(int argc, char* argv[])
         cout << "  MM energy: " << LICHEMFormFloat(Emm,16) << " eV";
         cout << '\n';
       }
-      SumE = Eqm+Emm; //Total energy
+      sumE = Eqm+Emm; //Total energy
       if (QMMM)
       {
         //Print total energy
         cout << "  QMMM energy: ";
-        cout << LICHEMFormFloat(SumE,16) << " eV";
+        cout << LICHEMFormFloat(sumE,16) << " eV";
         cout << " ";
-        cout << LICHEMFormFloat(SumE/Har2eV,16) << " a.u.";
+        cout << LICHEMFormFloat(sumE/Har2eV,16) << " a.u.";
         cout << '\n';
       }
       cout << '\n';
@@ -201,28 +201,28 @@ int main(int argc, char* argv[])
   //LICHEM frequency calculation
   else if (FreqCalc)
   {
-    int remct = 0; //Number of deleted translation and rotation modes
+    int remCt = 0; //Number of deleted translation and rotation modes
     int Ndof = 3*(Nqm+Npseudo); //Number of degrees of freedom
     MatrixXd QMMMHess(Ndof,Ndof);
     VectorXd QMMMFreqs(Ndof);
-    if (QMMMOpts.Nbeads == 1)
+    if (QMMMOpts.NBeads == 1)
     {
       cout << "Single-point frequencies:";
     }
-    if (QMMMOpts.Nbeads > 1)
+    if (QMMMOpts.NBeads > 1)
     {
       cout << "Multi-point frequencies:";
     }
     cout << '\n';
     cout.flush(); //Print progress
     //Loop over all beads
-    for (int p=0;p<QMMMOpts.Nbeads;p++)
+    for (int p=0;p<QMMMOpts.NBeads;p++)
     {
       //Calculate QMMM frequencies
       QMMMHess.setZero(); //Reset frequencies
       QMMMFreqs.setZero();
       //Calculate QM energy
-      if (QMMMOpts.Nbeads > 1)
+      if (QMMMOpts.NBeads > 1)
       {
         cout << '\n';
         cout << " Frequencies for bead: " << p << '\n';
@@ -230,72 +230,72 @@ int main(int argc, char* argv[])
       }
       if (Gaussian)
       {
-        int tstart = (unsigned)time(0);
+        int tStart = (unsigned)time(0);
         QMMMHess += GaussianHessian(Struct,QMMMOpts,p);
-        QMTime += (unsigned)time(0)-tstart;
+        QMTime += (unsigned)time(0)-tStart;
       }
       if (PSI4)
       {
-        int tstart = (unsigned)time(0);
+        int tStart = (unsigned)time(0);
         QMMMHess += PSI4Hessian(Struct,QMMMOpts,p);
-        QMTime += (unsigned)time(0)-tstart;
+        QMTime += (unsigned)time(0)-tStart;
         //Delete annoying useless files
         globalSys = system("rm -f psi.* timer.*");
       }
       if (NWChem)
       {
-        int tstart = (unsigned)time(0);
+        int tStart = (unsigned)time(0);
         QMMMHess += NWChemHessian(Struct,QMMMOpts,p);
-        QMTime += (unsigned)time(0)-tstart;
+        QMTime += (unsigned)time(0)-tStart;
       }
       //Calculate MM energy
       if (TINKER)
       {
-        int tstart = (unsigned)time(0);
+        int tStart = (unsigned)time(0);
         QMMMHess += TINKERHessian(Struct,QMMMOpts,p);
-        MMTime += (unsigned)time(0)-tstart;
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (AMBER)
       {
-        int tstart = (unsigned)time(0);
+        int tStart = (unsigned)time(0);
         QMMMHess += AMBERHessian(Struct,QMMMOpts,p);
-        MMTime += (unsigned)time(0)-tstart;
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (LAMMPS)
       {
-        int tstart = (unsigned)time(0);
+        int tStart = (unsigned)time(0);
         QMMMHess += LAMMPSHessian(Struct,QMMMOpts,p);
-        MMTime += (unsigned)time(0)-tstart;
+        MMTime += (unsigned)time(0)-tStart;
       }
       //Calculate frequencies
-      QMMMFreqs = LICHEMFreq(Struct,QMMMHess,QMMMOpts,p,remct);
+      QMMMFreqs = LICHEMFreq(Struct,QMMMHess,QMMMOpts,p,remCt);
       //Print the frequencies
-      if (remct > 0)
+      if (remCt > 0)
       {
-        cout << "  | Identified " << remct;
+        cout << "  | Identified " << remCt;
         cout << " translation/rotation modes";
         cout << '\n';
       }
       cout << "  | Frequencies:" << '\n' << '\n';
       cout << "   ";
-      remct = 0; //Reuse as a counter
+      remCt = 0; //Reuse as a counter
       for (int i=0;i<Ndof;i++)
       {
         if (abs(QMMMFreqs(i)) > 0)
         {
           cout << " ";
           cout << LICHEMFormFloat(QMMMFreqs(i),10);
-          remct += 1;
-          if (remct == 3)
+          remCt += 1;
+          if (remCt == 3)
           {
             //Start a new line
             cout << '\n';
             cout << "   "; //Add extra space
-            remct = 0;
+            remCt = 0;
           }
         }
       }
-      if (remct != 0)
+      if (remCt != 0)
       {
         //Terminate trailing line
         cout << '\n';
@@ -311,86 +311,86 @@ int main(int argc, char* argv[])
   {
     //NB: Currently only Gaussian works with this option
     VectorXd Forces; //Dummy array needed for convergence tests
-    int optct = 0; //Counter for optimization steps
+    int optCt = 0; //Counter for optimization steps
     //Print initial structure
-    Print_traj(Struct,outfile,QMMMOpts);
+    Print_traj(Struct,outFile,QMMMOpts);
     cout << "Optimization:" << '\n';
     cout.flush(); //Print progress
     //Calculate initial energy
-    SumE = 0; //Clear old energies
+    sumE = 0; //Clear old energies
     //Calculate QM energy
     if (Gaussian)
     {
-      int tstart = (unsigned)time(0);
-      SumE += GaussianEnergy(Struct,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += GaussianEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tStart;
     }
     if (PSI4)
     {
-      int tstart = (unsigned)time(0);
-      SumE += PSI4Energy(Struct,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += PSI4Energy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tStart;
       //Delete annoying useless files
       globalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem)
     {
-      int tstart = (unsigned)time(0);
-      SumE += NWChemEnergy(Struct,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += NWChemEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tStart;
     }
     //Calculate MM energy
     if (TINKER)
     {
-      int tstart = (unsigned)time(0);
-      SumE += TINKEREnergy(Struct,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += TINKEREnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tStart;
     }
     if (AMBER)
     {
-      int tstart = (unsigned)time(0);
-      SumE += AMBEREnergy(Struct,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += AMBEREnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tStart;
     }
     if (LAMMPS)
     {
-      int tstart = (unsigned)time(0);
-      SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += LAMMPSEnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tStart;
     }
     cout << " | Opt. step: ";
-    cout << optct << " | Energy: ";
-    cout << LICHEMFormFloat(SumE,16) << " eV";
+    cout << optCt << " | Energy: ";
+    cout << LICHEMFormFloat(sumE,16) << " eV";
     cout << '\n';
     cout.flush(); //Print progress
     //Run optimization
-    bool OptDone = 0;
-    if (QMMMOpts.MaxOptSteps == 0)
+    bool optDone = 0;
+    if (QMMMOpts.maxOptSteps == 0)
     {
-      OptDone = 1;
+      optDone = 1;
     }
-    while (!OptDone)
+    while (!optDone)
     {
       //Copy structure
       OldStruct = Struct;
       //Run MM optimization
       if (TINKER)
       {
-        int tstart = (unsigned)time(0);
-        SumE = TINKEROpt(Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE = TINKEROpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (AMBER)
       {
-        int tstart = (unsigned)time(0);
-        SumE = AMBEROpt(Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE = AMBEROpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (LAMMPS)
       {
-        int tstart = (unsigned)time(0);
-        SumE = LAMMPSOpt(Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE = LAMMPSOpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (QMMM)
       {
@@ -402,29 +402,29 @@ int main(int argc, char* argv[])
       //Run QM optimization
       if (Gaussian)
       {
-        int tstart = (unsigned)time(0);
-        SumE = GaussianOpt(Struct,QMMMOpts,0);
-        QMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE = GaussianOpt(Struct,QMMMOpts,0);
+        QMTime += (unsigned)time(0)-tStart;
       }
       if (PSI4)
       {
-        int tstart = (unsigned)time(0);
-        SumE = PSI4Opt(Struct,QMMMOpts,0);
-        QMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE = PSI4Opt(Struct,QMMMOpts,0);
+        QMTime += (unsigned)time(0)-tStart;
         //Delete annoying useless files
         globalSys = system("rm -f psi.* timer.*");
       }
       if (NWChem)
       {
-        int tstart = (unsigned)time(0);
-        SumE = NWChemOpt(Struct,QMMMOpts,0);
-        QMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE = NWChemOpt(Struct,QMMMOpts,0);
+        QMTime += (unsigned)time(0)-tStart;
       }
       //Print Optimized geometry
-      Print_traj(Struct,outfile,QMMMOpts);
+      Print_traj(Struct,outFile,QMMMOpts);
       //Check convergence
-      optct += 1;
-      OptDone = OptConverged(Struct,OldStruct,Forces,optct,QMMMOpts,0,0);
+      optCt += 1;
+      optDone = OptConverged(Struct,OldStruct,Forces,optCt,QMMMOpts,0,0);
     }
     cout << '\n';
     cout << "Optimization complete.";
@@ -437,82 +437,82 @@ int main(int argc, char* argv[])
   else if (SteepSim)
   {
     VectorXd Forces; //Dummy array needed for convergence tests
-    int optct = 0; //Counter for optimization steps
+    int optCt = 0; //Counter for optimization steps
     //Print initial structure
-    Print_traj(Struct,outfile,QMMMOpts);
+    Print_traj(Struct,outFile,QMMMOpts);
     cout << "Steepest descent optimization:" << '\n';
     cout.flush(); //Print progress
     //Calculate initial energy
-    SumE = 0; //Clear old energies
+    sumE = 0; //Clear old energies
     //Calculate QM energy
     if (Gaussian)
     {
-      int tstart = (unsigned)time(0);
-      SumE += GaussianEnergy(Struct,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += GaussianEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tStart;
     }
     if (PSI4)
     {
-      int tstart = (unsigned)time(0);
-      SumE += PSI4Energy(Struct,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += PSI4Energy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tStart;
       //Delete annoying useless files
       globalSys = system("rm -f psi.* timer.* ");
     }
     if (NWChem)
     {
-      int tstart = (unsigned)time(0);
-      SumE += NWChemEnergy(Struct,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += NWChemEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tStart;
     }
     //Calculate MM energy
     if (TINKER)
     {
-      int tstart = (unsigned)time(0);
-      SumE += TINKEREnergy(Struct,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += TINKEREnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tStart;
     }
     if (AMBER)
     {
-      int tstart = (unsigned)time(0);
-      SumE += AMBEREnergy(Struct,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += AMBEREnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tStart;
     }
     if (LAMMPS)
     {
-      int tstart = (unsigned)time(0);
-      SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += LAMMPSEnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tStart;
     }
     cout << " | Opt. step: ";
-    cout << optct << " | Energy: ";
-    cout << LICHEMFormFloat(SumE,16) << " eV";
+    cout << optCt << " | Energy: ";
+    cout << LICHEMFormFloat(sumE,16) << " eV";
     cout << '\n';
     cout.flush(); //Print progress
     //Run optimization
-    bool OptDone = 0;
-    while (!OptDone)
+    bool optDone = 0;
+    while (!optDone)
     {
       //Copy structure
       OldStruct = Struct;
       //Run MM optimization
       if (TINKER)
       {
-        int tstart = (unsigned)time(0);
-        SumE = TINKEROpt(Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE = TINKEROpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (AMBER)
       {
-        int tstart = (unsigned)time(0);
-        SumE = AMBEROpt(Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE = AMBEROpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (LAMMPS)
       {
-        int tstart = (unsigned)time(0);
-        SumE = LAMMPSOpt(Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE = LAMMPSOpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (QMMM)
       {
@@ -524,10 +524,10 @@ int main(int argc, char* argv[])
       //Run QM optimization
       LICHEMSteepest(Struct,QMMMOpts,0);
       //Print Optimized geometry
-      Print_traj(Struct,outfile,QMMMOpts);
+      Print_traj(Struct,outFile,QMMMOpts);
       //Check convergence
-      optct += 1;
-      OptDone = OptConverged(Struct,OldStruct,Forces,optct,QMMMOpts,0,0);
+      optCt += 1;
+      optDone = OptConverged(Struct,OldStruct,Forces,optCt,QMMMOpts,0,0);
     }
     cout << '\n';
     cout << "Optimization complete.";
@@ -540,82 +540,82 @@ int main(int argc, char* argv[])
   else if (QuickSim)
   {
     VectorXd Forces; //Dummy array needed for convergence tests
-    int optct = 0; //Counter for optimization steps
+    int optCt = 0; //Counter for optimization steps
     //Print initial structure
-    Print_traj(Struct,outfile,QMMMOpts);
+    Print_traj(Struct,outFile,QMMMOpts);
     cout << "Damped Verlet optimization:" << '\n';
     cout.flush(); //Print progress
     //Calculate initial energy
-    SumE = 0; //Clear old energies
+    sumE = 0; //Clear old energies
     //Calculate QM energy
     if (Gaussian)
     {
-      int tstart = (unsigned)time(0);
-      SumE += GaussianEnergy(Struct,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += GaussianEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tStart;
     }
     if (PSI4)
     {
-      int tstart = (unsigned)time(0);
-      SumE += PSI4Energy(Struct,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += PSI4Energy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tStart;
       //Delete annoying useless files
       globalSys = system("rm -f psi.* timer.* ");
     }
     if (NWChem)
     {
-      int tstart = (unsigned)time(0);
-      SumE += NWChemEnergy(Struct,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += NWChemEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tStart;
     }
     //Calculate MM energy
     if (TINKER)
     {
-      int tstart = (unsigned)time(0);
-      SumE += TINKEREnergy(Struct,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += TINKEREnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tStart;
     }
     if (AMBER)
     {
-      int tstart = (unsigned)time(0);
-      SumE += AMBEREnergy(Struct,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += AMBEREnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tStart;
     }
     if (LAMMPS)
     {
-      int tstart = (unsigned)time(0);
-      SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += LAMMPSEnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tStart;
     }
     cout << " | Opt. step: ";
-    cout << optct << " | Energy: ";
-    cout << LICHEMFormFloat(SumE,16) << " eV";
+    cout << optCt << " | Energy: ";
+    cout << LICHEMFormFloat(sumE,16) << " eV";
     cout << '\n';
     cout.flush(); //Print progress
     //Run optimization
-    bool OptDone = 0;
-    while (!OptDone)
+    bool optDone = 0;
+    while (!optDone)
     {
       //Copy structure
       OldStruct = Struct;
       //Run MM optimization
       if (TINKER)
       {
-        int tstart = (unsigned)time(0);
-        SumE = TINKEROpt(Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE = TINKEROpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (AMBER)
       {
-        int tstart = (unsigned)time(0);
-        SumE = AMBEROpt(Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE = AMBEROpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (LAMMPS)
       {
-        int tstart = (unsigned)time(0);
-        SumE = LAMMPSOpt(Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE = LAMMPSOpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (QMMM)
       {
@@ -627,10 +627,10 @@ int main(int argc, char* argv[])
       //Run QM optimization
       LICHEMQuickMin(Struct,QMMMOpts,0);
       //Print Optimized geometry
-      Print_traj(Struct,outfile,QMMMOpts);
+      Print_traj(Struct,outFile,QMMMOpts);
       //Check convergence
-      optct += 1;
-      OptDone = OptConverged(Struct,OldStruct,Forces,optct,QMMMOpts,0,0);
+      optCt += 1;
+      optDone = OptConverged(Struct,OldStruct,Forces,optCt,QMMMOpts,0,0);
     }
     cout << '\n';
     cout << "Optimization complete.";
@@ -643,10 +643,10 @@ int main(int argc, char* argv[])
   else if (DFPSim)
   {
     VectorXd Forces; //Dummy array needed for convergence tests
-    int optct = 0; //Counter for optimization steps
+    int optCt = 0; //Counter for optimization steps
     //Change optimization tolerance for the first step
-    double SavedQMOptTol = QMMMOpts.QMOptTol; //Save value from input
-    double SavedMMOptTol = QMMMOpts.MMOptTol; //Save value from input
+    double savedQMOptTol = QMMMOpts.QMOptTol; //Save value from input
+    double savedMMOptTol = QMMMOpts.MMOptTol; //Save value from input
     if (QMMMOpts.QMOptTol < 0.005)
     {
       QMMMOpts.QMOptTol = 0.005; //Speedy convergance on the first step
@@ -656,80 +656,80 @@ int main(int argc, char* argv[])
       QMMMOpts.MMOptTol = 0.25; //Speedy convergance on the first step
     }
     //Print initial structure
-    Print_traj(Struct,outfile,QMMMOpts);
+    Print_traj(Struct,outFile,QMMMOpts);
     cout << "DFP optimization:" << '\n';
     cout.flush(); //Print progress
     //Calculate initial energy
-    SumE = 0; //Clear old energies
+    sumE = 0; //Clear old energies
     //Calculate QM energy
     if (Gaussian)
     {
-      int tstart = (unsigned)time(0);
-      SumE += GaussianEnergy(Struct,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += GaussianEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tStart;
     }
     if (PSI4)
     {
-      int tstart = (unsigned)time(0);
-      SumE += PSI4Energy(Struct,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += PSI4Energy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tStart;
       //Delete annoying useless files
       globalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem)
     {
-      int tstart = (unsigned)time(0);
-      SumE += NWChemEnergy(Struct,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += NWChemEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tStart;
     }
     //Calculate MM energy
     if (TINKER)
     {
-      int tstart = (unsigned)time(0);
-      SumE += TINKEREnergy(Struct,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += TINKEREnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tStart;
     }
     if (AMBER)
     {
-      int tstart = (unsigned)time(0);
-      SumE += AMBEREnergy(Struct,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += AMBEREnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tStart;
     }
     if (LAMMPS)
     {
-      int tstart = (unsigned)time(0);
-      SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += LAMMPSEnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tStart;
     }
     cout << " | Opt. step: ";
-    cout << optct << " | Energy: ";
-    cout << LICHEMFormFloat(SumE,16) << " eV";
+    cout << optCt << " | Energy: ";
+    cout << LICHEMFormFloat(sumE,16) << " eV";
     cout << '\n';
     cout.flush(); //Print progress
     //Run optimization
-    bool OptDone = 0;
-    while (!OptDone)
+    bool optDone = 0;
+    while (!optDone)
     {
       //Copy structure
       OldStruct = Struct;
       //Run MM optimization
       if (TINKER)
       {
-        int tstart = (unsigned)time(0);
-        SumE = TINKEROpt(Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE = TINKEROpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (AMBER)
       {
-        int tstart = (unsigned)time(0);
-        SumE = AMBEROpt(Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE = AMBEROpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (LAMMPS)
       {
-        int tstart = (unsigned)time(0);
-        SumE = LAMMPSOpt(Struct,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE = LAMMPSOpt(Struct,QMMMOpts,0);
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (QMMM)
       {
@@ -741,17 +741,17 @@ int main(int argc, char* argv[])
       //Run QM optimization
       LICHEMDFP(Struct,QMMMOpts,0);
       //Reset tolerance before optimization check
-      QMMMOpts.QMOptTol = SavedQMOptTol;
-      QMMMOpts.MMOptTol = SavedMMOptTol;
+      QMMMOpts.QMOptTol = savedQMOptTol;
+      QMMMOpts.MMOptTol = savedMMOptTol;
       //Print Optimized geometry
-      Print_traj(Struct,outfile,QMMMOpts);
+      Print_traj(Struct,outFile,QMMMOpts);
       //Check convergence
-      optct += 1;
-      OptDone = OptConverged(Struct,OldStruct,Forces,optct,QMMMOpts,0,0);
-      if (optct == 1)
+      optCt += 1;
+      optDone = OptConverged(Struct,OldStruct,Forces,optCt,QMMMOpts,0,0);
+      if (optCt == 1)
       {
         //Avoid terminating restarts on the loose tolerance step
-        OptDone = 0; //Not converged
+        optDone = 0; //Not converged
       }
     }
     cout << '\n';
@@ -765,7 +765,7 @@ int main(int argc, char* argv[])
   else if (PIMCSim)
   {
     //Change units
-    QMMMOpts.Press *= atm2eV; //Pressure in eV/Ang^3
+    QMMMOpts.press *= atm2eV; //Pressure in eV/Ang^3
     //Adjust probabilities
     if (Natoms == 1)
     {
@@ -773,23 +773,23 @@ int main(int argc, char* argv[])
       CentProb = 0.0;
       BeadProb = 1.0;
     }
-    if (QMMMOpts.Ensemble == "NVT")
+    if (QMMMOpts.ensemble == "NVT")
     {
       //Remove volume changes
       VolProb = 0.0;
     }
     //Initialize local variables
-    SumE = 0; //Average energy
-    SumE2 = 0; //Average squared energy
-    DenAvg = 0; //Average density
+    sumE = 0; //Average energy
+    sumE2 = 0; //Average squared energy
+    denAvg = 0; //Average density
     LxAvg = 0; //Average box length
     LyAvg = 0; //Average box length
     LzAvg = 0; //Average box length
     Ek = 0; //PIMC kinietic energy
-    if (QMMMOpts.Nbeads > 1)
+    if (QMMMOpts.NBeads > 1)
     {
       //Set kinetic energy
-      Ek = 3*Natoms*QMMMOpts.Nbeads/(2*QMMMOpts.Beta);
+      Ek = 3*Natoms*QMMMOpts.NBeads/(2*QMMMOpts.beta);
     }
     int Nct = 0; //Step counter
     int ct = 0; //Secondary counter
@@ -799,43 +799,43 @@ int main(int argc, char* argv[])
     double Et = 0; //Total energy for printing
     bool acc; //Flag for accepting a step
     //Find the number of characters to print for the step counter
-    int SimCharLen;
-    SimCharLen = QMMMOpts.Neq+QMMMOpts.Nsteps;
-    SimCharLen = LICHEMCount(SimCharLen);
+    int simCharLen;
+    simCharLen = QMMMOpts.NEq+QMMMOpts.NSteps;
+    simCharLen = LICHEMCount(simCharLen);
     //Start equilibration run and calculate initial energy
     cout << "Monte Carlo equilibration:" << '\n';
     cout.flush();
-    QMMMOpts.Eold = 0;
-    QMMMOpts.Eold += Get_PI_Epot(Struct,QMMMOpts);
-    QMMMOpts.Eold += Get_PI_Espring(Struct,QMMMOpts);
+    QMMMOpts.EOld = 0;
+    QMMMOpts.EOld += Get_PI_Epot(Struct,QMMMOpts);
+    QMMMOpts.EOld += Get_PI_Espring(Struct,QMMMOpts);
     if (VolProb > 0)
     {
       //Add PV term
-      QMMMOpts.Eold += QMMMOpts.Press*Lx*Ly*Lz;
+      QMMMOpts.EOld += QMMMOpts.press*Lx*Ly*Lz;
     }
-    Emc = QMMMOpts.Eold; //Needed if equilibration is skipped
+    Emc = QMMMOpts.EOld; //Needed if equilibration is skipped
     Nct = 0; //Reset counter to zero
-    while (Nct < QMMMOpts.Neq)
+    while (Nct < QMMMOpts.NEq)
     {
       Emc = 0;
       //Check step size
       if(ct == Acc_Check)
       {
-        if ((Nacc/(Nrej+Nacc)) > QMMMOpts.accratio)
+        if ((Nacc/(Nrej+Nacc)) > QMMMOpts.accRatio)
         {
           //Increase step size
-          double randval; //Use random values to keep from cycling up and down
-          randval = (((double)rand())/((double)RAND_MAX));
-          randval /= 10.0;
-          mcStep *= 1.001+randval;
+          double randVal; //Use random values to keep from cycling up and down
+          randVal = (((double)rand())/((double)RAND_MAX));
+          randVal /= 10.0;
+          mcStep *= 1.001+randVal;
         }
-        if ((Nacc/(Nrej+Nacc)) < QMMMOpts.accratio)
+        if ((Nacc/(Nrej+Nacc)) < QMMMOpts.accRatio)
         {
           //Decrease step size
-          double randval; //Use random values to keep from cycling up and down
-          randval = (((double)rand())/((double)RAND_MAX));
-          randval /= 10.0;
-          mcStep *= 0.999-randval;
+          double randVal; //Use random values to keep from cycling up and down
+          randVal = (((double)rand())/((double)RAND_MAX));
+          randVal /= 10.0;
+          mcStep *= 0.999-randVal;
         }
         if (mcStep < StepMin)
         {
@@ -848,7 +848,7 @@ int main(int argc, char* argv[])
           mcStep = StepMax;
         }
         //Statistics
-        cout << " | Step: " << setw(SimCharLen) << Nct;
+        cout << " | Step: " << setw(simCharLen) << Nct;
         cout << " | Step size: ";
         cout << LICHEMFormFloat(mcStep,6);
         cout << " | Accept ratio: ";
@@ -882,13 +882,13 @@ int main(int argc, char* argv[])
     cout << "Monte Carlo production:" << '\n';
     cout.flush();
     //Print starting conditions
-    Print_traj(Struct,outfile,QMMMOpts);
+    Print_traj(Struct,outFile,QMMMOpts);
     Et = Ek+Emc; //Calculate total energy using previous saved energy
     Et -= 2*Get_PI_Espring(Struct,QMMMOpts);
-    cout << " | Step: " << setw(SimCharLen) << 0;
+    cout << " | Step: " << setw(simCharLen) << 0;
     cout << " | Energy: " << LICHEMFormFloat(Et,12);
     cout << " eV";
-    if (QMMMOpts.Ensemble == "NPT")
+    if (QMMMOpts.ensemble == "NPT")
     {
       double rho;
       rho = LICHEMDensity(Struct,QMMMOpts);
@@ -899,7 +899,7 @@ int main(int argc, char* argv[])
     cout << '\n';
     cout.flush(); //Print results
     //Continue simulation
-    while (Nct < QMMMOpts.Nsteps)
+    while (Nct < QMMMOpts.NSteps)
     {
       Emc = 0; //Set energy to zero
       acc = MCMove(Struct,QMMMOpts,Emc);
@@ -907,12 +907,12 @@ int main(int argc, char* argv[])
       Et = 0;
       Et += Ek+Emc;
       Et -= 2*Get_PI_Espring(Struct,QMMMOpts);
-      DenAvg += LICHEMDensity(Struct,QMMMOpts);
+      denAvg += LICHEMDensity(Struct,QMMMOpts);
       LxAvg += Lx;
       LyAvg += Ly;
       LzAvg += Lz;
-      SumE += Et;
-      SumE2 += Et*Et;
+      sumE += Et;
+      sumE2 += Et*Et;
       //Update counters and print output
       if (acc)
       {
@@ -920,14 +920,14 @@ int main(int argc, char* argv[])
         Nct += 1;
         Nacc += 1;
         //Print trajectory and instantaneous energies
-        if ((Nct%QMMMOpts.Nprint) == 0)
+        if ((Nct%QMMMOpts.NPrint) == 0)
         {
           //Print progress
-          Print_traj(Struct,outfile,QMMMOpts);
-          cout << " | Step: " << setw(SimCharLen) << Nct;
+          Print_traj(Struct,outFile,QMMMOpts);
+          cout << " | Step: " << setw(simCharLen) << Nct;
           cout << " | Energy: " << LICHEMFormFloat(Et,12);
           cout << " eV";
-          if (QMMMOpts.Ensemble == "NPT")
+          if (QMMMOpts.ensemble == "NPT")
           {
             double rho;
             rho = LICHEMDensity(Struct,QMMMOpts);
@@ -944,29 +944,29 @@ int main(int argc, char* argv[])
         Nrej += 1;
       }
     }
-    if ((Nct%QMMMOpts.Nprint) != 0)
+    if ((Nct%QMMMOpts.NPrint) != 0)
     {
       //Print final geometry if it was not already written
-      Print_traj(Struct,outfile,QMMMOpts);
+      Print_traj(Struct,outFile,QMMMOpts);
     }
-    SumE /= Nrej+Nacc; //Average energy
-    SumE2 /= Nrej+Nacc; //Variance of the energy
-    DenAvg /= Nrej+Nacc; //Average density
+    sumE /= Nrej+Nacc; //Average energy
+    sumE2 /= Nrej+Nacc; //Variance of the energy
+    denAvg /= Nrej+Nacc; //Average density
     LxAvg /= Nrej+Nacc; //Average box size
     LyAvg /= Nrej+Nacc; //Average box size
     LzAvg /= Nrej+Nacc; //Average box size
     //Print simulation details and statistics
     cout << '\n';
-    if (QMMMOpts.Nbeads > 1)
+    if (QMMMOpts.NBeads > 1)
     {
       cout << "PI";
     }
     cout << "MC statistics:" << '\n';
-    if (QMMMOpts.Ensemble == "NPT")
+    if (QMMMOpts.ensemble == "NPT")
     {
       //Print simulation box information
       cout << " | Density: ";
-      cout << LICHEMFormFloat(DenAvg,8);
+      cout << LICHEMFormFloat(denAvg,8);
       cout << " g/cm\u00B3" << '\n';
       cout << " | Average box size (\u212B): " << '\n';
       cout << "  "; //Indent
@@ -976,9 +976,9 @@ int main(int argc, char* argv[])
       cout << '\n';
     }
     cout << " | Average energy: ";
-    cout << LICHEMFormFloat(SumE,16);
+    cout << LICHEMFormFloat(sumE,16);
     cout << " eV | Variance: ";
-    cout << LICHEMFormFloat((SumE2-(SumE*SumE)),12);
+    cout << LICHEMFormFloat((sumE2-(sumE*sumE)),12);
     cout << " eV\u00B2";
     cout << '\n';
     cout << " | Acceptance ratio: ";
@@ -1001,56 +1001,56 @@ int main(int argc, char* argv[])
     double Nacc = 0; //Number of accepted moves
     double Nrej = 0; //Number of rejected moves
     bool acc; //Flag for accepting a step
-    vector<VectorXd> AllForces; //Stores forces between MC steps
-    VectorXd SumE(QMMMOpts.Nbeads); //Average energy array
-    VectorXd SumE2(QMMMOpts.Nbeads); //Average squared energy array
-    VectorXd Emc(QMMMOpts.Nbeads); //Current MC energy
-    SumE.setZero();
-    SumE2.setZero();
+    vector<VectorXd> allForces; //Stores forces between MC steps
+    VectorXd sumE(QMMMOpts.NBeads); //Average energy array
+    VectorXd sumE2(QMMMOpts.NBeads); //Average squared energy array
+    VectorXd Emc(QMMMOpts.NBeads); //Current MC energy
+    sumE.setZero();
+    sumE2.setZero();
     Emc.setZero();
     //Initialize force arrays
-    for (int p=0;p<QMMMOpts.Nbeads;p++)
+    for (int p=0;p<QMMMOpts.NBeads;p++)
     {
       //Zero forces makes the first move an energy calculation
       VectorXd tmp(3*Natoms);
       tmp.setZero();
-      AllForces.push_back(tmp);
+      allForces.push_back(tmp);
     }
     //Find the number of characters to print for the step counter
-    int SimCharLen;
-    SimCharLen = QMMMOpts.Neq+QMMMOpts.Nsteps;
-    SimCharLen = LICHEMCount(SimCharLen);
+    int simCharLen;
+    simCharLen = QMMMOpts.NEq+QMMMOpts.NSteps;
+    simCharLen = LICHEMCount(simCharLen);
     //Start equilibration run
     cout << "Monte Carlo equilibration:" << '\n';
     cout.flush();
-    int SavedNPrint = QMMMOpts.Nprint;
-    if (QMMMOpts.Nprint < 100)
+    int savedNPrint = QMMMOpts.NPrint;
+    if (QMMMOpts.NPrint < 100)
     {
       //Prevent the print rate from breaking the tuning
-      QMMMOpts.Nprint = 100; //Minimum value
+      QMMMOpts.NPrint = 100; //Minimum value
     }
-    QMMMOpts.Eold = HugeNum; //Forces the first step to be accepted
+    QMMMOpts.EOld = HugeNum; //Forces the first step to be accepted
     Nct = 0; //Reset counter to zero
-    while (Nct < QMMMOpts.Neq)
+    while (Nct < QMMMOpts.NEq)
     {
       //Check step size
-      if (ct == QMMMOpts.Nprint)
+      if (ct == QMMMOpts.NPrint)
       {
-        if ((Nacc/(Nrej+Nacc)) > QMMMOpts.accratio)
+        if ((Nacc/(Nrej+Nacc)) > QMMMOpts.accRatio)
         {
           //Increase step size
-          double randval; //Use random values to keep from cycling up and down
-          randval = (((double)rand())/((double)RAND_MAX));
-          randval /= 10.0;
-          mcStep *= 1.001+randval;
+          double randVal; //Use random values to keep from cycling up and down
+          randVal = (((double)rand())/((double)RAND_MAX));
+          randVal /= 10.0;
+          mcStep *= 1.001+randVal;
         }
-        if ((Nacc/(Nrej+Nacc)) < QMMMOpts.accratio)
+        if ((Nacc/(Nrej+Nacc)) < QMMMOpts.accRatio)
         {
           //Decrease step size
-          double randval; //Use random values to keep from cycling up and down
-          randval = (((double)rand())/((double)RAND_MAX));
-          randval /= 10.0;
-          mcStep *= 0.999-randval;
+          double randVal; //Use random values to keep from cycling up and down
+          randVal = (((double)rand())/((double)RAND_MAX));
+          randVal /= 10.0;
+          mcStep *= 0.999-randVal;
         }
         if (mcStep < StepMin)
         {
@@ -1063,7 +1063,7 @@ int main(int argc, char* argv[])
           mcStep = StepMax;
         }
         //Statistics
-        cout << " | Accepted: " << setw(SimCharLen) << Nct;
+        cout << " | Accepted: " << setw(simCharLen) << Nct;
         cout << " | Step size: ";
         cout << LICHEMFormFloat(mcStep,6);
         cout << " | Accept ratio: ";
@@ -1077,7 +1077,7 @@ int main(int argc, char* argv[])
       }
       //Continue simulation
       ct += 1;
-      acc = FBNEBMCMove(Struct,AllForces,QMMMOpts,Emc);
+      acc = FBNEBMCMove(Struct,allForces,QMMMOpts,Emc);
       if (acc)
       {
         Nct += 1;
@@ -1088,7 +1088,7 @@ int main(int argc, char* argv[])
         Nrej += 1;
       }
     }
-    QMMMOpts.Nprint = SavedNPrint; //Restore user defined sample rate
+    QMMMOpts.NPrint = savedNPrint; //Restore user defined sample rate
     cout << " Equilibration complete." << '\n';
     //Start production run
     Nct = 0; //Reset counter to zero
@@ -1098,10 +1098,10 @@ int main(int argc, char* argv[])
     cout << "Monte Carlo production:" << '\n';
     cout.flush();
     //Print starting conditions
-    Print_traj(Struct,outfile,QMMMOpts);
-    cout << " | Step: " << setw(SimCharLen) << 0;
+    Print_traj(Struct,outFile,QMMMOpts);
+    cout << " | Step: " << setw(simCharLen) << 0;
     cout << " | Energies:" << '\n';
-    for (int p=0;p<QMMMOpts.Nbeads;p++)
+    for (int p=0;p<QMMMOpts.NBeads;p++)
     {
       cout << "   Bead: ";
       cout << setw(3) << p << " | Energy: ";
@@ -1109,15 +1109,15 @@ int main(int argc, char* argv[])
     }
     cout.flush(); //Print results
     //Continue simulation
-    while (Nacc < QMMMOpts.Nsteps)
+    while (Nacc < QMMMOpts.NSteps)
     {
-      acc = FBNEBMCMove(Struct,AllForces,QMMMOpts,Emc);
+      acc = FBNEBMCMove(Struct,allForces,QMMMOpts,Emc);
       //Update statistics
       #pragma omp parallel for schedule(dynamic)
-      for (int p=0;p<QMMMOpts.Nbeads;p++)
+      for (int p=0;p<QMMMOpts.NBeads;p++)
       {
-        SumE(p) += Emc(p);
-        SumE2(p) += Emc(p)*Emc(p);
+        sumE(p) += Emc(p);
+        sumE2(p) += Emc(p)*Emc(p);
       }
       //Update counters
       Nct += 1;
@@ -1130,15 +1130,15 @@ int main(int argc, char* argv[])
         Nrej += 1;
       }
       //Print output
-      if (((Nct%QMMMOpts.Nprint) == 0) or (Nacc == QMMMOpts.Nsteps))
+      if (((Nct%QMMMOpts.NPrint) == 0) or (Nacc == QMMMOpts.NSteps))
       {
         //Print progress
-        Print_traj(Struct,outfile,QMMMOpts);
-        cout << " | Step: " << setw(SimCharLen) << Nct;
-        cout << " | Accepted: " << setw(SimCharLen) << Nacc;
+        Print_traj(Struct,outFile,QMMMOpts);
+        cout << " | Step: " << setw(simCharLen) << Nct;
+        cout << " | Accepted: " << setw(simCharLen) << Nacc;
         cout << '\n';
         cout << " | Energies:" << '\n';
-        for (int p=0;p<QMMMOpts.Nbeads;p++)
+        for (int p=0;p<QMMMOpts.NBeads;p++)
         {
           cout << "    Bead: ";
           cout << setw(3) << p << " | Energy: ";
@@ -1147,17 +1147,18 @@ int main(int argc, char* argv[])
         cout.flush(); //Print results
       }
     }
-    if ((Nct%QMMMOpts.Nprint) != 0)
+    if ((Nct%QMMMOpts.NPrint) != 0)
     {
       //Print final geometry if it was not already written
-      Print_traj(Struct,outfile,QMMMOpts);
+      Print_traj(Struct,outFile,QMMMOpts);
     }
     //Calculate statistics
-    SumE /= Nct;
-    SumE2 /= Nct;
-    for (int p=0;p<QMMMOpts.Nbeads;p++)
+    sumE /= Nct;
+    sumE2 /= Nct;
+    for (int p=0;p<QMMMOpts.NBeads;p++)
     {
-      SumE2(p) = SumE2(p)-SumE(p)*SumE(p);
+      //Variance
+      sumE2(p) = sumE2(p)-sumE(p)*sumE(p);
     }
     //Print simulation details and statistics
     cout << '\n';
@@ -1169,12 +1170,12 @@ int main(int argc, char* argv[])
     cout << " \u212B";
     cout << '\n';
     cout << " | Average energies:" << '\n';
-    for (int p=0;p<QMMMOpts.Nbeads;p++)
+    for (int p=0;p<QMMMOpts.NBeads;p++)
     {
       cout << "    Bead: ";
       cout << setw(3) << p << " | Energy: ";
-      cout << LICHEMFormFloat(SumE(p),16);
-      cout << " +/- " << LICHEMFormFloat(SumE2(p),16);
+      cout << LICHEMFormFloat(sumE(p),16);
+      cout << " +/- " << LICHEMFormFloat(sumE2(p),16);
       cout << " eV" << '\n';
     }
     cout << '\n';
@@ -1185,17 +1186,17 @@ int main(int argc, char* argv[])
   //NEB optimization
   else if (NEBSim)
   {
-    MatrixXd ForceStats; //Dummy array needed for convergence tests
-    int optct = 0; //Counter for optimization steps
+    MatrixXd forceStats; //Dummy array needed for convergence tests
+    int optCt = 0; //Counter for optimization steps
     //Check number of beads for Climbing image
-    if (QMMMOpts.Nbeads < 4)
+    if (QMMMOpts.NBeads < 4)
     {
       //If the system is well behaved, then the TS bead is known.
-      QMMMOpts.Climb = 1; //Turn on climbing image NEB
+      QMMMOpts.climb = 1; //Turn on climbing image NEB
     }
     //Change optimization tolerance for the first step
-    double SavedQMOptTol = QMMMOpts.QMOptTol; //Save value from input
-    double SavedMMOptTol = QMMMOpts.MMOptTol; //Save value from input
+    double savedQMOptTol = QMMMOpts.QMOptTol; //Save value from input
+    double savedMMOptTol = QMMMOpts.MMOptTol; //Save value from input
     if (QMMMOpts.QMOptTol < 0.005)
     {
       QMMMOpts.QMOptTol = 0.005; //Speedy convergance on the first step
@@ -1205,9 +1206,9 @@ int main(int argc, char* argv[])
       QMMMOpts.MMOptTol = 0.25; //Speedy convergance on the first step
     }
     //Print initial structure
-    Print_traj(Struct,outfile,QMMMOpts);
+    Print_traj(Struct,outFile,QMMMOpts);
     cout << "Nudged elastic band optimization:" << '\n';
-    if (QMMMOpts.Climb)
+    if (QMMMOpts.climb)
     {
       cout << " | Short path detected. Starting climbing image NEB.";
       cout << '\n' << '\n';
@@ -1216,13 +1217,13 @@ int main(int argc, char* argv[])
     cout << '\n';
     cout.flush(); //Print progress
     //Calculate reaction coordinate positions
-    VectorXd ReactCoord(QMMMOpts.Nbeads); //Reaction coordinate
-    ReactCoord.setZero();
-    for (int p=0;p<(QMMMOpts.Nbeads-1);p++)
+    VectorXd reactCoord(QMMMOpts.NBeads); //Reaction coordinate
+    reactCoord.setZero();
+    for (int p=0;p<(QMMMOpts.NBeads-1);p++)
     {
-      MatrixXd Geom1((Nqm+Npseudo),3); //Current replica
-      MatrixXd Geom2((Nqm+Npseudo),3); //Next replica
-      VectorXd Disp; //Store the displacement
+      MatrixXd geom1((Nqm+Npseudo),3); //Current replica
+      MatrixXd geom2((Nqm+Npseudo),3); //Next replica
+      VectorXd disp; //Store the displacement
       //Save geometries
       int ct = 0; //Reset counter for the number of atoms
       for (int i=0;i<Natoms;i++)
@@ -1231,97 +1232,97 @@ int main(int argc, char* argv[])
         if (Struct[i].QMregion or Struct[i].PBregion)
         {
           //Save current replica
-          Geom1(ct,0) = Struct[i].P[p].x;
-          Geom1(ct,1) = Struct[i].P[p].y;
-          Geom1(ct,2) = Struct[i].P[p].z;
+          geom1(ct,0) = Struct[i].P[p].x;
+          geom1(ct,1) = Struct[i].P[p].y;
+          geom1(ct,2) = Struct[i].P[p].z;
           //Save replica p+1
-          Geom2(ct,0) = Struct[i].P[p+1].x;
-          Geom2(ct,1) = Struct[i].P[p+1].y;
-          Geom2(ct,2) = Struct[i].P[p+1].z;
+          geom2(ct,0) = Struct[i].P[p+1].x;
+          geom2(ct,1) = Struct[i].P[p+1].y;
+          geom2(ct,2) = Struct[i].P[p+1].z;
           ct += 1;
         }
       }
       //Calculate displacement
-      Disp = KabschDisplacement(Geom1,Geom2,(Nqm+Npseudo));
-      ReactCoord(p+1) = ReactCoord(p); //Start from previous bead
-      ReactCoord(p+1) += Disp.norm(); //Add magnitude of the displacement
+      disp = KabschDisplacement(geom1,geom2,(Nqm+Npseudo));
+      reactCoord(p+1) = reactCoord(p); //Start from previous bead
+      reactCoord(p+1) += disp.norm(); //Add magnitude of the displacement
     }
-    ReactCoord /= ReactCoord.maxCoeff(); //Must be between 0 and 1
+    reactCoord /= reactCoord.maxCoeff(); //Must be between 0 and 1
     //Calculate initial energies
-    QMMMOpts.Ets = -1*HugeNum; //Locate the initial transition state
-    for (int p=0;p<QMMMOpts.Nbeads;p++)
+    QMMMOpts.ETrans = -1*HugeNum; //Locate the initial transition state
+    for (int p=0;p<QMMMOpts.NBeads;p++)
     {
-      SumE = 0; //Clear old energies
+      sumE = 0; //Clear old energies
       //Calculate QM energy
       if (Gaussian)
       {
-        int tstart = (unsigned)time(0);
-        SumE += GaussianEnergy(Struct,QMMMOpts,p);
-        QMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE += GaussianEnergy(Struct,QMMMOpts,p);
+        QMTime += (unsigned)time(0)-tStart;
       }
       if (PSI4)
       {
-        int tstart = (unsigned)time(0);
-        SumE += PSI4Energy(Struct,QMMMOpts,p);
-        QMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE += PSI4Energy(Struct,QMMMOpts,p);
+        QMTime += (unsigned)time(0)-tStart;
         //Delete annoying useless files
         globalSys = system("rm -f psi.* timer.*");
       }
       if (NWChem)
       {
-        int tstart = (unsigned)time(0);
-        SumE += NWChemEnergy(Struct,QMMMOpts,p);
-        QMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE += NWChemEnergy(Struct,QMMMOpts,p);
+        QMTime += (unsigned)time(0)-tStart;
       }
       //Calculate MM energy
       if (TINKER)
       {
-        int tstart = (unsigned)time(0);
-        SumE += TINKEREnergy(Struct,QMMMOpts,p);
-        MMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE += TINKEREnergy(Struct,QMMMOpts,p);
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (AMBER)
       {
-        int tstart = (unsigned)time(0);
-        SumE += AMBEREnergy(Struct,QMMMOpts,p);
-        MMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE += AMBEREnergy(Struct,QMMMOpts,p);
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (LAMMPS)
       {
-        int tstart = (unsigned)time(0);
-        SumE += LAMMPSEnergy(Struct,QMMMOpts,p);
-        MMTime += (unsigned)time(0)-tstart;
+        int tStart = (unsigned)time(0);
+        sumE += LAMMPSEnergy(Struct,QMMMOpts,p);
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (p == 0)
       {
         //Save reactant energy
-        QMMMOpts.Ereact = SumE;
+        QMMMOpts.EReact = sumE;
       }
-      else if (p == (QMMMOpts.Nbeads-1))
+      else if (p == (QMMMOpts.NBeads-1))
       {
         //Save product energy
-        QMMMOpts.Eprod = SumE;
+        QMMMOpts.EProd = sumE;
       }
       cout << "   Bead: ";
-      cout << setw(LICHEMCount(QMMMOpts.Nbeads)) << p;
+      cout << setw(LICHEMCount(QMMMOpts.NBeads)) << p;
       cout << " | React. coord: ";
-      cout << LICHEMFormFloat(ReactCoord(p),5);
+      cout << LICHEMFormFloat(reactCoord(p),5);
       cout << " | Energy: ";
-      cout << LICHEMFormFloat(SumE,16) << " eV";
+      cout << LICHEMFormFloat(sumE,16) << " eV";
       cout << '\n';
       cout.flush(); //Print progress
       //Update transition state
-      if (SumE > QMMMOpts.Ets)
+      if (sumE > QMMMOpts.ETrans)
       {
         //Save new properties
         QMMMOpts.TSBead = p;
-        QMMMOpts.Ets = SumE;
+        QMMMOpts.ETrans = sumE;
       }
       //Copy checkpoint data to speed up first step
-      if ((p != (QMMMOpts.Nbeads-1)) and QMMMOpts.StartPathChk)
+      if ((p != (QMMMOpts.NBeads-1)) and QMMMOpts.startPathChk)
       {
         stringstream call;
-        if (Gaussian and (QMMMOpts.Func != "SemiEmp"))
+        if (Gaussian and (QMMMOpts.func != "SemiEmp"))
         {
           call.str("");
           call << "cp LICHM_" << p << ".chk ";
@@ -1342,39 +1343,39 @@ int main(int argc, char* argv[])
       }
     }
     //Run optimization
-    bool PathDone = 0;
-    int PathStart = 0; //First bead to optimize
-    int PathEnd = QMMMOpts.Nbeads; //Last bead to optimize
-    if (QMMMOpts.FrznEnds)
+    bool pathDone = 0;
+    int pathStart = 0; //First bead to optimize
+    int pathEnd = QMMMOpts.NBeads; //Last bead to optimize
+    if (QMMMOpts.frznEnds)
     {
       //Change the start and end points
-      PathStart = 1;
-      PathEnd = QMMMOpts.Nbeads-1;
+      pathStart = 1;
+      pathEnd = QMMMOpts.NBeads-1;
     }
-    while (!PathDone)
+    while (!pathDone)
     {
       //Copy structure
       OldStruct = Struct;
       //Run MM optimization
-      for (int p=PathStart;p<PathEnd;p++)
+      for (int p=pathStart;p<pathEnd;p++)
       {
         if (TINKER)
         {
-          int tstart = (unsigned)time(0);
-          SumE = TINKEROpt(Struct,QMMMOpts,p);
-          MMTime += (unsigned)time(0)-tstart;
+          int tStart = (unsigned)time(0);
+          sumE = TINKEROpt(Struct,QMMMOpts,p);
+          MMTime += (unsigned)time(0)-tStart;
         }
         if (AMBER)
         {
-          int tstart = (unsigned)time(0);
-          SumE = AMBEROpt(Struct,QMMMOpts,p);
-          MMTime += (unsigned)time(0)-tstart;
+          int tStart = (unsigned)time(0);
+          sumE = AMBEROpt(Struct,QMMMOpts,p);
+          MMTime += (unsigned)time(0)-tStart;
         }
         if (LAMMPS)
         {
-          int tstart = (unsigned)time(0);
-          SumE = LAMMPSOpt(Struct,QMMMOpts,p);
-          MMTime += (unsigned)time(0)-tstart;
+          int tStart = (unsigned)time(0);
+          sumE = LAMMPSOpt(Struct,QMMMOpts,p);
+          MMTime += (unsigned)time(0)-tStart;
         }
       }
       if (QMMM)
@@ -1385,19 +1386,19 @@ int main(int argc, char* argv[])
       }
       cout << '\n';
       //Run QM optimization
-      LICHEMNEB(Struct,QMMMOpts,optct);
+      LICHEMNEB(Struct,QMMMOpts,optCt);
       //Reset tolerance before optimization check
-      QMMMOpts.QMOptTol = SavedQMOptTol;
-      QMMMOpts.MMOptTol = SavedMMOptTol;
+      QMMMOpts.QMOptTol = savedQMOptTol;
+      QMMMOpts.MMOptTol = savedMMOptTol;
       //Print optimized geometry
-      Print_traj(Struct,outfile,QMMMOpts);
+      Print_traj(Struct,outFile,QMMMOpts);
       //Check convergence
-      optct += 1;
-      PathDone = PathConverged(Struct,OldStruct,ForceStats,optct,QMMMOpts,0);
-      if (optct == 1)
+      optCt += 1;
+      pathDone = PathConverged(Struct,OldStruct,forceStats,optCt,QMMMOpts,0);
+      if (optCt == 1)
       {
         //Avoid terminating restarts on the loose tolerance step
-        PathDone = 0; //Not converged
+        pathDone = 0; //Not converged
       }
     }
     BurstTraj(Struct,QMMMOpts);
@@ -1405,8 +1406,8 @@ int main(int argc, char* argv[])
     cout << "Optimization complete.";
     cout << '\n' << '\n';
     //Print the reaction barriers
-    double dEfor = QMMMOpts.Ets-QMMMOpts.Ereact; //Forward barrier
-    double dErev = QMMMOpts.Ets-QMMMOpts.Eprod; //Reverse barrier
+    double dEfor = QMMMOpts.ETrans-QMMMOpts.EReact; //Forward barrier
+    double dErev = QMMMOpts.ETrans-QMMMOpts.EProd; //Reverse barrier
     cout << "NEB Results:" << '\n';
     cout << " | Transition state bead: " << QMMMOpts.TSBead;
     cout << '\n' << '\n';
@@ -1428,7 +1429,7 @@ int main(int argc, char* argv[])
     if (QMMMOpts.NEBFreq)
     {
       //Calculate TS frequencies
-      int remct = 0; //Number of deleted translation and rotation modes
+      int remCt = 0; //Number of deleted translation and rotation modes
       int Ndof = 3*(Nqm+Npseudo); //Number of degrees of freedom
       MatrixXd QMMMHess(Ndof,Ndof);
       VectorXd QMMMFreqs(Ndof);
@@ -1442,72 +1443,72 @@ int main(int argc, char* argv[])
       //Calculate QM Hessian
       if (Gaussian)
       {
-        int tstart = (unsigned)time(0);
+        int tStart = (unsigned)time(0);
         QMMMHess += GaussianHessian(Struct,QMMMOpts,QMMMOpts.TSBead);
-        QMTime += (unsigned)time(0)-tstart;
+        QMTime += (unsigned)time(0)-tStart;
       }
       if (PSI4)
       {
-        int tstart = (unsigned)time(0);
+        int tStart = (unsigned)time(0);
         QMMMHess += PSI4Hessian(Struct,QMMMOpts,QMMMOpts.TSBead);
-        QMTime += (unsigned)time(0)-tstart;
+        QMTime += (unsigned)time(0)-tStart;
         //Delete annoying useless files
         globalSys = system("rm -f psi.* timer.*");
       }
       if (NWChem)
       {
-        int tstart = (unsigned)time(0);
+        int tStart = (unsigned)time(0);
         QMMMHess += NWChemHessian(Struct,QMMMOpts,QMMMOpts.TSBead);
-        QMTime += (unsigned)time(0)-tstart;
+        QMTime += (unsigned)time(0)-tStart;
       }
       //Calculate MM Hessian
       if (TINKER)
       {
-        int tstart = (unsigned)time(0);
+        int tStart = (unsigned)time(0);
         QMMMHess += TINKERHessian(Struct,QMMMOpts,QMMMOpts.TSBead);
-        MMTime += (unsigned)time(0)-tstart;
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (AMBER)
       {
-        int tstart = (unsigned)time(0);
+        int tStart = (unsigned)time(0);
         QMMMHess += AMBERHessian(Struct,QMMMOpts,QMMMOpts.TSBead);
-        MMTime += (unsigned)time(0)-tstart;
+        MMTime += (unsigned)time(0)-tStart;
       }
       if (LAMMPS)
       {
-        int tstart = (unsigned)time(0);
+        int tStart = (unsigned)time(0);
         QMMMHess += LAMMPSHessian(Struct,QMMMOpts,QMMMOpts.TSBead);
-        MMTime += (unsigned)time(0)-tstart;
+        MMTime += (unsigned)time(0)-tStart;
       }
       //Calculate frequencies
-      QMMMFreqs = LICHEMFreq(Struct,QMMMHess,QMMMOpts,QMMMOpts.TSBead,remct);
+      QMMMFreqs = LICHEMFreq(Struct,QMMMHess,QMMMOpts,QMMMOpts.TSBead,remCt);
       //Print the frequencies
-      if (remct > 0)
+      if (remCt > 0)
       {
-        cout << "  | Identified " << remct;
+        cout << "  | Identified " << remCt;
         cout << " translation/rotation modes";
         cout << '\n';
       }
       cout << "  | Frequencies:" << '\n' << '\n';
       cout << "   ";
-      remct = 0; //Reuse as a counter
+      remCt = 0; //Reuse as a counter
       for (int i=0;i<Ndof;i++)
       {
         if (abs(QMMMFreqs(i)) > 0)
         {
           cout << " ";
           cout << LICHEMFormFloat(QMMMFreqs(i),10);
-          remct += 1;
-          if (remct == 3)
+          remCt += 1;
+          if (remCt == 3)
           {
             //Start a new line
             cout << '\n';
             cout << "   "; //Add extra space
-            remct = 0;
+            remCt = 0;
           }
         }
       }
-      if (remct != 0)
+      if (remCt != 0)
       {
         //Terminate trailing line
         cout << '\n';
@@ -1522,58 +1523,58 @@ int main(int argc, char* argv[])
   else if (ESDSim)
   {
     //Print initial structure
-    Print_traj(Struct,outfile,QMMMOpts);
+    Print_traj(Struct,outFile,QMMMOpts);
     cout << "Ensemble optimization:" << '\n';
     cout.flush(); //Print progress
     //Calculate initial energy
-    SumE = 0; //Clear old energies
+    sumE = 0; //Clear old energies
     //Calculate QM energy
     if (Gaussian)
     {
-      int tstart = (unsigned)time(0);
-      SumE += GaussianEnergy(Struct,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += GaussianEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tStart;
     }
     if (PSI4)
     {
-      int tstart = (unsigned)time(0);
-      SumE += PSI4Energy(Struct,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += PSI4Energy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tStart;
       //Delete annoying useless files
       globalSys = system("rm -f psi.* timer.*");
     }
     if (NWChem)
     {
-      int tstart = (unsigned)time(0);
-      SumE += NWChemEnergy(Struct,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += NWChemEnergy(Struct,QMMMOpts,0);
+      QMTime += (unsigned)time(0)-tStart;
     }
     //Calculate MM energy
     if (TINKER)
     {
-      int tstart = (unsigned)time(0);
-      SumE += TINKEREnergy(Struct,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += TINKEREnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tStart;
     }
     if (AMBER)
     {
-      int tstart = (unsigned)time(0);
-      SumE += AMBEREnergy(Struct,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += AMBEREnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tStart;
     }
     if (LAMMPS)
     {
-      int tstart = (unsigned)time(0);
-      SumE += LAMMPSEnergy(Struct,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tstart;
+      int tStart = (unsigned)time(0);
+      sumE += LAMMPSEnergy(Struct,QMMMOpts,0);
+      MMTime += (unsigned)time(0)-tStart;
     }
     cout << " | Opt. step: 0";
     cout << " | Energy: ";
-    cout << LICHEMFormFloat(SumE,16);
+    cout << LICHEMFormFloat(sumE,16);
     cout << " eV" << '\n';
     cout.flush(); //Print progress
     //Run optimization
-    EnsembleSD(Struct,outfile,QMMMOpts,0);
+    EnsembleSD(Struct,outFile,QMMMOpts,0);
     //Finish output
     cout << '\n';
     cout << "Optimization complete.";
@@ -1586,11 +1587,11 @@ int main(int argc, char* argv[])
   else if (ENEBSim)
   {
     //Print initial structure
-    Print_traj(Struct,outfile,QMMMOpts);
+    Print_traj(Struct,outFile,QMMMOpts);
     //Optimize path
     cout << "Ensemble NEB path optimization:" << '\n';
     cout.flush(); //Print progress
-    EnsembleNEB(Struct,outfile,QMMMOpts);
+    EnsembleNEB(Struct,outFile,QMMMOpts);
     //Finish output
     cout << '\n';
     cout << "Optimization complete.";
@@ -1610,10 +1611,6 @@ int main(int argc, char* argv[])
   //End of section
 
   //Clean up
-  xyzfile.close();
-  outfile.close();
-  regionfile.close();
-  connectfile.close();
   if (Gaussian)
   {
     //Clear any remaining Gaussian files
@@ -1653,13 +1650,13 @@ int main(int argc, char* argv[])
   endTime = (unsigned)time(0); //Time the program completes
   double totalHours = (double(endTime)-double(startTime));
   double totalQM = double(QMTime);
-  if (PIMCSim and (QMMMOpts.Nbeads > 1))
+  if (PIMCSim and (QMMMOpts.NBeads > 1))
   {
     //Average over the number of running simulations
     totalQM /= Nthreads;
   }
   double totalMM = double(MMTime);
-  if (PIMCSim and (QMMMOpts.Nbeads > 1))
+  if (PIMCSim and (QMMMOpts.NBeads > 1))
   {
     //Average over the number of running simulations
     totalMM /= Nthreads;
@@ -1697,8 +1694,8 @@ int main(int argc, char* argv[])
     string quote; //Random quote
     vector<string> Quotes; //Stores all possible quotes
     FetchQuotes(Quotes); //Fetch list of quotes
-    randnum = rand() % 1000; //Randomly pick 1 of 1000 quotes
-    cout << Quotes[randnum]; //Print quote
+    randNum = rand() % 1000; //Randomly pick 1 of 1000 quotes
+    cout << Quotes[randNum]; //Print quote
     cout << '\n';
   }
   //End of section
@@ -1712,11 +1709,11 @@ int main(int argc, char* argv[])
   //End of section
 
   //Useless but supresses unused return errors for system calls
-  int RetValue = globalSys;
-  RetValue = 0; //This can be changed to error messages later
+  int retValue = globalSys;
+  retValue = 0; //This can be changed to error messages later
   //End of section
 
   //Quit
-  return RetValue;
+  return retValue;
 };
 

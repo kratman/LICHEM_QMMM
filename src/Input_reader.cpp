@@ -263,7 +263,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       tmp.MMregion = 1;
       tmp.PBregion = 0;
       tmp.BAregion = 0;
-      tmp.Frozen = 0;
+      tmp.frozen = 0;
       //Set electrostatic field
       Mpole tmp3; //Initialize charges and multipoles
       OctCharges tmp4; //Initialize charges and multipoles
@@ -278,7 +278,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
   {
     //Save connectivity information
     int tmp;
-    //id MMTyp NumTyp q Nbonds [connectivity]
+    //id MMTyp numTyp q Nbonds [connectivity]
     connectFile >> tmp; //Atom ID
     if (tmp != Struct[i].id)
     {
@@ -288,7 +288,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       cout.flush();
       exit(0); //Escape
     }
-    connectFile >> Struct[i].MMTyp >> Struct[i].NumTyp;
+    connectFile >> Struct[i].MMTyp >> Struct[i].numTyp;
     connectFile >> Struct[i].m >> Struct[i].MP[0].q;
     connectFile >> tmp; //Number of bonds
     for (int j=0;j<tmp;j++)
@@ -306,7 +306,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
         cout.flush();
         exit(0); //Escape
       }
-      Struct[i].Bonds.push_back(atomID); //Add bond
+      Struct[i].bonds.push_back(atomID); //Add bond
     }
   }
   //Read simulation keywords
@@ -324,12 +324,12 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     else if (keyword == "acceptance_ratio:")
     {
       //Read the Monte Carlo acceptance ratio
-      regionFile >> QMMMOpts.accratio;
+      regionFile >> QMMMOpts.accRatio;
     }
     else if (keyword == "beads:")
     {
       //Read the number of replica beads
-      regionFile >> QMMMOpts.Nbeads;
+      regionFile >> QMMMOpts.NBeads;
     }
     else if (keyword == "box_size:")
     {
@@ -451,18 +451,18 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       if (dummy == "nvt")
       {
         //Set a consistent name for the ensemble
-        QMMMOpts.Ensemble = "NVT";
+        QMMMOpts.ensemble = "NVT";
       }
       if (dummy == "npt")
       {
         //Set a consistent name for the ensemble
-        QMMMOpts.Ensemble = "NPT";
+        QMMMOpts.ensemble = "NPT";
       }
     }
     else if (keyword == "eq_steps:")
     {
       //Read the number of equilibration steps
-      regionFile >> QMMMOpts.Neq;
+      regionFile >> QMMMOpts.NEq;
     }
     else if (keyword == "frozen_ends:")
     {
@@ -471,7 +471,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       LICHEMLowerText(dummy);
       if ((dummy == "yes") or (dummy == "true"))
       {
-        QMMMOpts.FrznEnds = 1;
+        QMMMOpts.frznEnds = 1;
       }
     }
     else if (keyword == "init_path_chk:")
@@ -481,7 +481,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       LICHEMLowerText(dummy);
       if ((dummy == "no") or (dummy == "false"))
       {
-        QMMMOpts.StartPathChk = 0;
+        QMMMOpts.startPathChk = 0;
       }
     }
     else if (keyword == "lrec_cut:")
@@ -497,12 +497,12 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     else if (keyword == "max_opt_steps:")
     {
       //Read maximum number of optimization steps
-      regionFile >> QMMMOpts.MaxOptSteps;
+      regionFile >> QMMMOpts.maxOptSteps;
     }
     else if (keyword == "max_stepsize:")
     {
       //Read the maximum displacement during optimizations
-      regionFile >> QMMMOpts.MaxStep;
+      regionFile >> QMMMOpts.maxStep;
     }
     else if (keyword == "mm_opt_cut:")
     {
@@ -535,7 +535,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     else if (keyword == "opt_stepsize:")
     {
       //Read the optimization stepsize
-      regionFile >> QMMMOpts.StepScale;
+      regionFile >> QMMMOpts.stepScale;
     }
     else if (keyword == "pbc:")
     {
@@ -573,7 +573,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     else if (keyword == "pressure:")
     {
       //Read the pressure
-      regionFile >> QMMMOpts.Press;
+      regionFile >> QMMMOpts.press;
     }
     else if (keyword == "print_normal_modes:")
     {
@@ -582,28 +582,28 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       LICHEMLowerText(dummy);
       if ((dummy == "yes") or (dummy == "true"))
       {
-        QMMMOpts.PrintNormModes = 1;
+        QMMMOpts.printNormModes = 1;
       }
     }
     else if (keyword == "print_steps:")
     {
       //Read the number of steps between MD and MC output
-      regionFile >> QMMMOpts.Nprint;
+      regionFile >> QMMMOpts.NPrint;
     }
     else if (keyword == "prod_steps:")
     {
       //Read the number of production (MD or MC) steps
-      regionFile >> QMMMOpts.Nsteps;
+      regionFile >> QMMMOpts.NSteps;
     }
     else if (keyword == "qm_basis:")
     {
       //Set the basis set or semi-empirical Hamiltonian
-      regionFile >> QMMMOpts.Basis;
+      regionFile >> QMMMOpts.basis;
     }
     else if (keyword == "qm_charge:")
     {
       //Set the total charge on the QM region
-      regionFile >> QMMMOpts.Charge;
+      regionFile >> QMMMOpts.charge;
     }
     else if (keyword == "qm_memory:")
     {
@@ -615,19 +615,19 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       if (dummy == "mb")
       {
         //RAM is in MB
-        QMMMOpts.MemMB = 1;
+        QMMMOpts.memMB = 1;
       }
       else
       {
         //RAM is in GB
-        QMMMOpts.MemMB = 0;
+        QMMMOpts.memMB = 0;
       }
     }
     else if (keyword == "qm_method:")
     {
       //Set QM functional or method
       regionFile >> dummy;
-      QMMMOpts.Func = dummy; //Save name with correct case
+      QMMMOpts.func = dummy; //Save name with correct case
       //Check for special methods
       LICHEMLowerText(dummy);
       if ((dummy == "semiempirical") or (dummy == "se-scf") or
@@ -635,7 +635,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
          (dummy == "semiemp"))
       {
         //Flag the method as a semi-empirical Hamiltonian
-        QMMMOpts.Func = "SemiEmp";
+        QMMMOpts.func = "SemiEmp";
       }
     }
     else if (keyword == "qm_opt_tolerance:")
@@ -646,7 +646,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     else if (keyword == "qm_spin:")
     {
       //Set the multiplicity
-      regionFile >> QMMMOpts.Spin;
+      regionFile >> QMMMOpts.spin;
     }
     else if (keyword == "qm_type:")
     {
@@ -669,24 +669,24 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     else if (keyword == "solv_model:")
     {
       //Read MM implicit solvent model
-      regionFile >> QMMMOpts.SolvModel;
+      regionFile >> QMMMOpts.solvModel;
     }
     else if (keyword == "spring_constant:")
     {
       //Read the NEB spring constant
-      regionFile >> QMMMOpts.Kspring;
+      regionFile >> QMMMOpts.kSpring;
     }
     else if (keyword == "tau_temp:")
     {
       //Read the thermostat relaxation constant
-      regionFile >> QMMMOpts.tautemp;
+      regionFile >> QMMMOpts.tauTemp;
     }
     else if (keyword == "temperature:")
     {
       //Read the temperature
-      regionFile >> QMMMOpts.Temp;
+      regionFile >> QMMMOpts.temp;
       //Save the inverse temperature
-      QMMMOpts.Beta = 1/(k*QMMMOpts.Temp);
+      QMMMOpts.beta = 1/(k*QMMMOpts.temp);
     }
     else if (keyword == "timestep:")
     {
@@ -711,7 +711,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       if ((dummy == "yes") or (dummy == "true"))
       {
         //Turn on Ewald or PME
-        QMMMOpts.UseEwald = 1;
+        QMMMOpts.useEwald = 1;
       }
     }
     else if (keyword == "use_lrec:")
@@ -722,7 +722,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       if ((dummy == "yes") or (dummy == "true"))
       {
         //Turn on long-range corrections
-        QMMMOpts.UseLREC = 1;
+        QMMMOpts.useLREC = 1;
       }
     }
     else if (keyword == "use_mm_cutoff:")
@@ -733,7 +733,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       if ((dummy == "yes") or (dummy == "true"))
       {
         //Turn on the optimization cutoff
-        QMMMOpts.UseMMCut = 1;
+        QMMMOpts.useMMCut = 1;
       }
     }
     else if (keyword == "use_solvent:")
@@ -744,7 +744,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       if ((dummy == "yes") or (dummy == "true"))
       {
         //Turn on the implicit solvent
-        QMMMOpts.UseImpSolv = 1;
+        QMMMOpts.useImpSolv = 1;
       }
     }
     //Check for region keywords
@@ -798,7 +798,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       {
         int atomID;
         regionFile >> atomID;
-        Struct[atomID].Frozen = 1;
+        Struct[atomID].frozen = 1;
       }
     }
     //Check for bad keywords
@@ -847,13 +847,13 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
   }
   Nmm = Natoms-Nqm-Npseudo-Nbound; //Set number of MM atoms
   //Replicate atoms
-  if (QMMMOpts.Nbeads > 1)
+  if (QMMMOpts.NBeads > 1)
   {
     //Duplicate data
     for (int i=0;i<Natoms;i++)
     {
       //Create reaction-path beads
-      for (int j=0;j<(QMMMOpts.Nbeads-1);j++)
+      for (int j=0;j<(QMMMOpts.NBeads-1);j++)
       {
         //Create replicas
         Coord temp = Struct[i].P[0];
@@ -867,24 +867,24 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     //Set initial transition state for reaction pathways
     if (NEBSim)
     {
-      if ((QMMMOpts.Nbeads%2) == 0)
+      if ((QMMMOpts.NBeads%2) == 0)
       {
         //Even number of beads
-        QMMMOpts.TSBead = (QMMMOpts.Nbeads/2); //Slightly on the product side
+        QMMMOpts.TSBead = (QMMMOpts.NBeads/2); //Slightly on the product side
       }
       else
       {
         //Odd number of beads
-        QMMMOpts.TSBead = ((QMMMOpts.Nbeads-1)/2); //Middle bead
+        QMMMOpts.TSBead = ((QMMMOpts.NBeads-1)/2); //Middle bead
       }
     }
     if (ENEBSim)
     {
       //Error check
-      if ((QMMMOpts.Nbeads%2) != 1)
+      if ((QMMMOpts.NBeads%2) != 1)
       {
         //The number of beads must be odd
-        QMMMOpts.Nbeads += 1; //Change number of beads
+        QMMMOpts.NBeads += 1; //Change number of beads
         cerr << "Error: The number of replicas must be odd.";
         cerr << '\n' << '\n';
         cerr.flush(); //Print error immediately
@@ -893,7 +893,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
         exit(0);
       }
       //Set transition state
-      QMMMOpts.TSBead = ((QMMMOpts.Nbeads-1)/2); //Middle bead
+      QMMMOpts.TSBead = ((QMMMOpts.NBeads-1)/2); //Middle bead
     }
     //Add random displacements for PIMC simulations
     if (PIMCSim)
@@ -904,7 +904,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
         double massScale = sqrt(12.0/Struct[i].m); //Relative to carbon
         massScale *= 2*StepMin*CentRatio; //Scale based on settings
         //Update all beads
-        for (int j=0;j<(QMMMOpts.Nbeads-1);j++)
+        for (int j=0;j<(QMMMOpts.NBeads-1);j++)
         {
           //Pick random displacements
           double randX = (((double)rand())/((double)RAND_MAX));
@@ -918,7 +918,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
             randZ = 0.5;
           }
           //Update positions of active atoms
-          if (!Struct[i].Frozen)
+          if (!Struct[i].frozen)
           {
             Struct[i].P[j].x += (2*(randX-0.5)*massScale);
             Struct[i].P[j].y += (2*(randY-0.5)*massScale);
@@ -940,7 +940,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     //Read and discard number of atoms
     int atTest = 0;
     beadFile >> atTest;
-    if (atTest != (Natoms*QMMMOpts.Nbeads))
+    if (atTest != (Natoms*QMMMOpts.NBeads))
     {
       //Print warning if the XYZ file has incorrect dimensions
       cout << "Error: Restart file does not have the correct format!";
@@ -952,7 +952,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     //Read atom/bead positions
     for (int i=0;i<Natoms;i++)
     {
-      for (int j=0;j<QMMMOpts.Nbeads;j++)
+      for (int j=0;j<QMMMOpts.NBeads;j++)
       {
         //Read atom type and discard
         beadFile >> dummy;
@@ -984,7 +984,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     //Read backup directory
     fstream backFile;
     //Set to default value
-    QMMMOpts.BackDir = "Old_files";
+    QMMMOpts.backDir = "Old_files";
     //Check directory
     backFile.open("BACKUPQM",ios_base::in);
     if (backFile.good())
@@ -993,7 +993,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       backFile >> newName;
       if (!backFile.eof())
       {
-        QMMMOpts.BackDir = newName;
+        QMMMOpts.backDir = newName;
       }
     }
   }
@@ -1016,7 +1016,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
         Ncpus = Nthreads;
       }
       //Modify threads for certain multi-replica simulations
-      if ((QMMMOpts.Nbeads > 1) and PIMCSim)
+      if ((QMMMOpts.NBeads > 1) and PIMCSim)
       {
         //Divide threads between the beads
         Nthreads = int(floor(Procs/Ncpus));
@@ -1054,7 +1054,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     }
   }
   //Check LREC settings
-  if (QMMMOpts.UseLREC or PBCon)
+  if (QMMMOpts.useLREC or PBCon)
   {
     //Check LREC cutoff
     if (PBCon)
@@ -1070,7 +1070,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
         minLen = Lz;
       }
       //Check cutoff
-      if (QMMMOpts.UseLREC and (QMMMOpts.LRECCut > (0.5*minLen)))
+      if (QMMMOpts.useLREC and (QMMMOpts.LRECCut > (0.5*minLen)))
       {
         //Needed to make the minimum image convention safe
         QMMMOpts.LRECCut = 0.5*minLen;
@@ -1080,7 +1080,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
         cout << '\n' << '\n';
       }
     }
-    if (QMMMOpts.UseLREC and (QMMMOpts.LRECCut <= 0.10))
+    if (QMMMOpts.useLREC and (QMMMOpts.LRECCut <= 0.10))
     {
       //Adjust cutoff to avoid divide by zero errors
       QMMMOpts.LRECCut = 0.10; //Minimum value, effectively zero
@@ -1098,14 +1098,14 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     }
   }
   //Check Ewald and implicit solvation settings
-  if (QMMMOpts.UseEwald and (!PBCon))
+  if (QMMMOpts.useEwald and (!PBCon))
   {
     //Check Ewald settings
     cout << " Error: Ewald summation cannot be used without PBC.";
     cout << '\n';
     doQuit = 1;
   }
-  if (QMMMOpts.UseImpSolv and PBCon)
+  if (QMMMOpts.useImpSolv and PBCon)
   {
     //Check Ewald settings
     cout << " Error: Implicit solvation models cannot be used with PBC.";
@@ -1194,7 +1194,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     doQuit = 1;
   }
   //Simulation errors
-  if ((QMMMOpts.Ensemble == "NPT") and (!PBCon))
+  if ((QMMMOpts.ensemble == "NPT") and (!PBCon))
   {
     //Check the PBC options
     cout << " Error: NPT simulation without PBC.";
@@ -1204,7 +1204,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout << '\n';
     doQuit = 1;
   }
-  if (QMMMOpts.StepScale > 1)
+  if (QMMMOpts.stepScale > 1)
   {
     //Checks the number of threads and continue
     cout << " Warning: The optimization step scale cannot be greater";
@@ -1212,7 +1212,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout << '\n';
     cout << " Step scale set to 1.";
     cout << '\n';
-    QMMMOpts.StepScale = 1; //Reset step size
+    QMMMOpts.stepScale = 1; //Reset step size
     cout.flush(); //Print warning
   }
   if (doQuit)
@@ -1258,8 +1258,8 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   {
     //QM regions
     cout << " QM atoms: " << Nqm << '\n';
-    cout << "  Charge: " << QMMMOpts.Charge << '\n';
-    cout << "  Spin: " << QMMMOpts.Spin << '\n';
+    cout << "  Charge: " << QMMMOpts.charge << '\n';
+    cout << "  Spin: " << QMMMOpts.spin << '\n';
   }
   if (MMonly or QMMM)
   {
@@ -1278,7 +1278,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   if (ENEBSim or NEBSim)
   {
     //Print reaction path input for error checking
-    cout << " RP beads: " << QMMMOpts.Nbeads << '\n';
+    cout << " RP beads: " << QMMMOpts.NBeads << '\n';
     cout << '\n';
     cout << "Simulation mode: ";
     if (QMMM)
@@ -1303,9 +1303,9 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   if (PIMCSim)
   {
     //Print PIMC input for error checking
-    if (QMMMOpts.Nbeads > 1)
+    if (QMMMOpts.NBeads > 1)
     {
-      cout << " PI beads: " << QMMMOpts.Nbeads << '\n';
+      cout << " PI beads: " << QMMMOpts.NBeads << '\n';
     }
     cout << '\n';
     cout << "Simulation mode: ";
@@ -1321,21 +1321,21 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     {
       cout << "Pure MM";
     }
-    cout << " " << QMMMOpts.Ensemble;
-    if (QMMMOpts.Nbeads > 1)
+    cout << " " << QMMMOpts.ensemble;
+    if (QMMMOpts.NBeads > 1)
     {
       cout << " path-integral";
     }
     cout << " Monte Carlo" << '\n';
-    cout << " Equilibration MC steps: " << QMMMOpts.Neq << '\n';
-    cout << " Production MC steps: " << QMMMOpts.Nsteps << '\n';
+    cout << " Equilibration MC steps: " << QMMMOpts.NEq << '\n';
+    cout << " Production MC steps: " << QMMMOpts.NSteps << '\n';
   }
   if (FBNEBSim)
   {
     //Print FBNEB input for error checking
-    if (QMMMOpts.Nbeads > 1)
+    if (QMMMOpts.NBeads > 1)
     {
-      cout << " RP beads: " << QMMMOpts.Nbeads << '\n';
+      cout << " RP beads: " << QMMMOpts.NBeads << '\n';
     }
     cout << '\n';
     cout << "Simulation mode: ";
@@ -1352,13 +1352,13 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       cout << "Pure MM";
     }
     cout << " NVT";
-    if (QMMMOpts.Nbeads > 1)
+    if (QMMMOpts.NBeads > 1)
     {
       cout << " force-bias";
     }
     cout << " Monte Carlo" << '\n';
-    cout << " Equilibration MC steps: " << QMMMOpts.Neq << '\n';
-    cout << " Production MC steps: " << QMMMOpts.Nsteps << '\n';
+    cout << " Equilibration MC steps: " << QMMMOpts.NEq << '\n';
+    cout << " Production MC steps: " << QMMMOpts.NSteps << '\n';
   }
   if (OptSim or SteepSim or QuickSim or DFPSim or ESDSim)
   {
@@ -1425,7 +1425,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     {
       cout << "Pure MM";
     }
-    if (QMMMOpts.Nbeads == 1)
+    if (QMMMOpts.NBeads == 1)
     {
       cout << " single-point energy" << '\n';
     }
@@ -1451,7 +1451,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     {
       cout << "Pure MM";
     }
-    if (QMMMOpts.Nbeads == 1)
+    if (QMMMOpts.NBeads == 1)
     {
       cout << " single-point frequencies" << '\n';
     }
@@ -1477,12 +1477,12 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       cout << "NWChem" << '\n';
     }
     cout << " QM method: ";
-    if (QMMMOpts.Func != "SemiEmp")
+    if (QMMMOpts.func != "SemiEmp")
     {
       //Avoid printing method and basis for semi-empirical
-      cout << QMMMOpts.Func << "/";
+      cout << QMMMOpts.func << "/";
     }
-    cout << QMMMOpts.Basis << '\n';
+    cout << QMMMOpts.basis << '\n';
   }
   if (MMonly or QMMM)
   {
@@ -1518,7 +1518,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       }
     }
     //Print PBC information
-    if (PBCon or QMMMOpts.UseLREC or QMMMOpts.UseImpSolv)
+    if (PBCon or QMMMOpts.useLREC or QMMMOpts.useImpSolv)
     {
       cout << '\n';
       cout << "Simulation box settings:" << '\n';
@@ -1536,7 +1536,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
         cout << LICHEMFormFloat(initDen,10);
         cout << " g/cm\u00B3" << '\n';
       }
-      if (QMMMOpts.UseLREC)
+      if (QMMMOpts.useLREC)
       {
         //Print LREC cutoff options
         cout << " QM LREC: Yes" << '\n';
@@ -1545,15 +1545,15 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
         cout << " \u212B" << '\n';
         cout << " LREC exponent: " << QMMMOpts.LRECPow << '\n';
       }
-      if (QMMMOpts.UseEwald)
+      if (QMMMOpts.useEwald)
       {
         //Print Ewald summation options
         cout << " MM Ewald: Yes" << '\n';
       }
-      if (QMMMOpts.UseImpSolv)
+      if (QMMMOpts.useImpSolv)
       {
         //Print continuum solvation options
-        cout << " Implicit solvent: " << QMMMOpts.SolvModel;
+        cout << " Implicit solvent: " << QMMMOpts.solvModel;
         cout << '\n';
       }
     }
@@ -1583,7 +1583,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       cout << " QM threads: " << Ncpus << '\n';
     }
     cout << " QM memory: " << QMMMOpts.RAM << " ";
-    if (QMMMOpts.MemMB)
+    if (QMMMOpts.memMB)
     {
       cout << "MB";
     }
@@ -1602,21 +1602,21 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   {
     cout << '\n';
     cout << "Monte Carlo settings:" << '\n';
-    cout << " Temperature: " << QMMMOpts.Temp;
+    cout << " Temperature: " << QMMMOpts.temp;
     cout << " K" << '\n';
-    if (QMMMOpts.Ensemble == "NPT")
+    if (QMMMOpts.ensemble == "NPT")
     {
-      cout << " Pressure: " << QMMMOpts.Press;
+      cout << " Pressure: " << QMMMOpts.press;
       cout << " atm" << '\n';
     }
     cout << " Acceptance ratio: ";
-    cout << LICHEMFormFloat(QMMMOpts.accratio,4);
+    cout << LICHEMFormFloat(QMMMOpts.accRatio,4);
     cout << '\n';
-    cout << " Equilibration steps: " << QMMMOpts.Neq;
+    cout << " Equilibration steps: " << QMMMOpts.NEq;
     cout << '\n';
-    cout << " Production MC steps: " << QMMMOpts.Nsteps;
+    cout << " Production MC steps: " << QMMMOpts.NSteps;
     cout << '\n';
-    cout << " Sample every " << QMMMOpts.Nprint;
+    cout << " Sample every " << QMMMOpts.NPrint;
     cout << " steps" << '\n';
   }
   //Print FBNEB settings
@@ -1624,21 +1624,21 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   {
     cout << '\n';
     cout << "Monte Carlo settings:" << '\n';
-    cout << " Temperature: " << QMMMOpts.Temp;
+    cout << " Temperature: " << QMMMOpts.temp;
     cout << " K" << '\n';
-    if (QMMMOpts.Nbeads > 1)
+    if (QMMMOpts.NBeads > 1)
     {
-      cout << " Spring constant: " << QMMMOpts.Kspring;
+      cout << " Spring constant: " << QMMMOpts.kSpring;
       cout << " eV/\u212B\u00B2" << '\n';
     }
     cout << " Acceptance ratio: ";
-    cout << LICHEMFormFloat(QMMMOpts.accratio,4);
+    cout << LICHEMFormFloat(QMMMOpts.accRatio,4);
     cout << '\n';
-    cout << " Equilibration steps: " << QMMMOpts.Neq;
+    cout << " Equilibration steps: " << QMMMOpts.NEq;
     cout << '\n';
-    cout << " Production MC steps: " << QMMMOpts.Nsteps;
+    cout << " Production MC steps: " << QMMMOpts.NSteps;
     cout << '\n';
-    cout << " Sample every " << QMMMOpts.Nprint;
+    cout << " Sample every " << QMMMOpts.NPrint;
     cout << " steps" << '\n';
   }
   //Print convergence criteria for optimizations
@@ -1650,14 +1650,14 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     if (!OptSim)
     {
       cout << " Step scale factor: ";
-      cout << LICHEMFormFloat(QMMMOpts.StepScale,6);
+      cout << LICHEMFormFloat(QMMMOpts.stepScale,6);
       cout << '\n';
     }
     cout << " Max. step size: ";
-    cout << LICHEMFormFloat(QMMMOpts.MaxStep,6);
+    cout << LICHEMFormFloat(QMMMOpts.maxStep,6);
     cout << " \u212B" << '\n';
-    cout << " Max. steps: " << QMMMOpts.MaxOptSteps;
-    if (QMMMOpts.UseMMCut and (Nmm > 0))
+    cout << " Max. steps: " << QMMMOpts.maxOptSteps;
+    if (QMMMOpts.useMMCut and (Nmm > 0))
     {
       //Print MM cutoff settings
       cout << '\n';
@@ -1669,10 +1669,10 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     {
       //Spring constant for the path
       cout << '\n';
-      cout << " Spring constant: " << QMMMOpts.Kspring;
+      cout << " Spring constant: " << QMMMOpts.kSpring;
       cout << " eV/\u212B\u00B2" << '\n';
       cout << " End points: ";
-      if (QMMMOpts.FrznEnds)
+      if (QMMMOpts.frznEnds)
       {
         cout << "Frozen";
       }
@@ -1699,11 +1699,11 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       cout << "MD settings:" << '\n';
       cout << " Timestep: " << QMMMOpts.dt;
       cout << " fs" << '\n';
-      cout << " Temperature: " << QMMMOpts.Temp;
+      cout << " Temperature: " << QMMMOpts.temp;
       cout << " K" << '\n';
-      cout << " Thermostat constant, \u03C4: " << QMMMOpts.tautemp;
+      cout << " Thermostat constant, \u03C4: " << QMMMOpts.tauTemp;
       cout << " ps" << '\n';
-      cout << " MD steps: " << QMMMOpts.Nsteps << '\n';
+      cout << " MD steps: " << QMMMOpts.NSteps << '\n';
     }
     else if (Nmm > 0)
     {

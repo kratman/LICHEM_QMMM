@@ -158,9 +158,9 @@ vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int atID)
   bool bondError = 0; //Checks if the molecular structure "breaks" the math
   vector<int> boundAtoms; //Final list of atoms
   //Add atoms bonded to atom "AtID"
-  for (unsigned int i=0;i<Struct[atID].Bonds.size();i++)
+  for (unsigned int i=0;i<Struct[atID].bonds.size();i++)
   {
-    int bondID = Struct[atID].Bonds[i];
+    int bondID = Struct[atID].bonds[i];
     if (Struct[bondID].BAregion)
     {
       boundAtoms.push_back(bondID);
@@ -180,9 +180,9 @@ vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int atID)
     for (unsigned int i=0;i<boundAtoms.size();i++)
     {
       int BAID = boundAtoms[i];
-      for (unsigned int j=0;j<Struct[BAID].Bonds.size();j++)
+      for (unsigned int j=0;j<Struct[BAID].bonds.size();j++)
       {
-        int bondID = Struct[BAID].Bonds[j];
+        int bondID = Struct[BAID].bonds[j];
         //Check if it is on the list
         bool isThere = 0;
         for (unsigned int k=0;k<boundAtoms.size();k++)
@@ -244,9 +244,9 @@ bool Bonded(vector<QMMMAtom>& Struct, int atom1, int atom2)
 {
   //Function to check if two atoms are 1-2 connected
   bool isBound = 0;
-  for (unsigned int i=0;i<Struct[atom2].Bonds.size();i++)
+  for (unsigned int i=0;i<Struct[atom2].bonds.size();i++)
   {
-    if (atom1 == Struct[atom2].Bonds[i])
+    if (atom1 == Struct[atom2].bonds[i])
     {
       isBound = 1;
     }
@@ -258,12 +258,12 @@ bool Angled(vector<QMMMAtom>& Struct, int atom1, int atom3)
 {
   //Function to check if two atoms are 1-3 connected
   bool isBound = 0;
-  for (unsigned int i=0;i<Struct[atom1].Bonds.size();i++)
+  for (unsigned int i=0;i<Struct[atom1].bonds.size();i++)
   {
-    int atom2 = Struct[atom1].Bonds[i];
-    for (unsigned int j=0;j<Struct[atom2].Bonds.size();j++)
+    int atom2 = Struct[atom1].bonds[i];
+    for (unsigned int j=0;j<Struct[atom2].bonds.size();j++)
     {
-      if (atom3 == Struct[atom2].Bonds[j])
+      if (atom3 == Struct[atom2].bonds[j])
       {
         isBound = 1;
       }
@@ -276,15 +276,15 @@ bool Dihedraled(vector<QMMMAtom>& Struct, int atom1, int atom4)
 {
   //Function to check if two atoms are 1-4 connected
   bool isBound = 0;
-  for (unsigned int i=0;i<Struct[atom1].Bonds.size();i++)
+  for (unsigned int i=0;i<Struct[atom1].bonds.size();i++)
   {
-    int atom2 = Struct[atom1].Bonds[i];
-    for (unsigned int j=0;j<Struct[atom2].Bonds.size();j++)
+    int atom2 = Struct[atom1].bonds[i];
+    for (unsigned int j=0;j<Struct[atom2].bonds.size();j++)
     {
-      int atom3 = Struct[atom2].Bonds[j];
-      for (unsigned int k=0;k<Struct[atom3].Bonds.size();k++)
+      int atom3 = Struct[atom2].bonds[j];
+      for (unsigned int k=0;k<Struct[atom3].bonds.size();k++)
       {
-        if (atom4 == Struct[atom3].Bonds[k])
+        if (atom4 == Struct[atom3].bonds[k])
         {
           isBound = 1;
         }
@@ -308,7 +308,7 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     {
       //Loop over all beads
       double centX = 0;
-      for (int j=0;j<QMMMOpts.Nbeads;j++)
+      for (int j=0;j<QMMMOpts.NBeads;j++)
       {
         //Update local average postion
         centX += Struct[i].P[j].x;
@@ -321,7 +321,7 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     {
       //Loop over all beads
       double centY = 0;
-      for (int j=0;j<QMMMOpts.Nbeads;j++)
+      for (int j=0;j<QMMMOpts.NBeads;j++)
       {
         //Update local average postion
         centY += Struct[i].P[j].y;
@@ -334,7 +334,7 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     {
       //Loop over all beads
       double centZ = 0;
-      for (int j=0;j<QMMMOpts.Nbeads;j++)
+      for (int j=0;j<QMMMOpts.NBeads;j++)
       {
         //Update local average postion
         centZ += Struct[i].P[j].z;
@@ -345,9 +345,9 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   }
   #pragma omp barrier
   //Convert sums to averages
-  avgX /= Natoms*QMMMOpts.Nbeads;
-  avgY /= Natoms*QMMMOpts.Nbeads;
-  avgZ /= Natoms*QMMMOpts.Nbeads;
+  avgX /= Natoms*QMMMOpts.NBeads;
+  avgY /= Natoms*QMMMOpts.NBeads;
+  avgZ /= Natoms*QMMMOpts.NBeads;
   //Move atoms to the center of the box
   #pragma omp parallel
   {
@@ -355,7 +355,7 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     for (int i=0;i<Natoms;i++)
     {
       //Loop over all beads
-      for (int j=0;j<QMMMOpts.Nbeads;j++)
+      for (int j=0;j<QMMMOpts.NBeads;j++)
       {
         //Move bead to the center
         Struct[i].P[j].x -= avgX;
@@ -366,7 +366,7 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     for (int i=0;i<Natoms;i++)
     {
       //Loop over all beads
-      for (int j=0;j<QMMMOpts.Nbeads;j++)
+      for (int j=0;j<QMMMOpts.NBeads;j++)
       {
         //Move bead to the center
         Struct[i].P[j].y -= avgY;
@@ -377,7 +377,7 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     for (int i=0;i<Natoms;i++)
     {
       //Loop over all beads
-      for (int j=0;j<QMMMOpts.Nbeads;j++)
+      for (int j=0;j<QMMMOpts.NBeads;j++)
       {
         //Move bead to the center
         Struct[i].P[j].z -= avgZ;

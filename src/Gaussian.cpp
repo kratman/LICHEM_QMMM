@@ -33,7 +33,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "LICHM_" << Bead << ".chk";
   bool useCheckPoint = CheckFile(call.str());
-  if (QMMMOpts.Func == "SemiEmp")
+  if (QMMMOpts.func == "SemiEmp")
   {
     //Disable checkpoints for the SemiEmp force calculations
     useCheckPoint = 0;
@@ -45,16 +45,16 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Construct Gaussian input
   call.str("");
   call << "#P ";
-  if (QMMMOpts.Func != "SemiEmp")
+  if (QMMMOpts.func != "SemiEmp")
   {
     //Avoids defining both a basis set and method for semi-empirical
-    call << QMMMOpts.Func << "/"; //Print the method
+    call << QMMMOpts.func << "/"; //Print the method
   }
-  call << QMMMOpts.Basis << " SP Symmetry=None" << '\n';
+  call << QMMMOpts.basis << " SP Symmetry=None" << '\n';
   call << "Int=UltraFine SCF=(YQC,Big,Direct)" << '\n';
   if (QMMM)
   {
-    if ((Npseudo > 0) and (QMMMOpts.Func != "SemiEmp"))
+    if ((Npseudo > 0) and (QMMMOpts.func != "SemiEmp"))
     {
       //Read pseudo potential
       call << "Pseudo=Read ";
@@ -69,7 +69,7 @@ void GaussianCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Read charges
       call << "Charge=angstroms ";
     }
-    if (QMMMOpts.Func != "SemiEmp")
+    if (QMMMOpts.func != "SemiEmp")
     {
       //Avoids calculating ESP charges for semi-empirical
       call << "Population=(MK,ReadRadii)";
@@ -164,7 +164,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "LICHM_" << Bead << ".chk";
   bool useCheckPoint = CheckFile(call.str());
-  if (QMMMOpts.Func == "SemiEmp")
+  if (QMMMOpts.func == "SemiEmp")
   {
     //Disable checkpoints for the SemiEmp force calculations
     useCheckPoint = 0;
@@ -176,12 +176,12 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Construct Gaussian input
   call.str("");
   call << "#P ";
-  if (QMMMOpts.Func != "SemiEmp")
+  if (QMMMOpts.func != "SemiEmp")
   {
     //Avoids defining both a basis set and method for semi-empirical
-    call << QMMMOpts.Func << "/"; //Print the method
+    call << QMMMOpts.func << "/"; //Print the method
   }
-  call << QMMMOpts.Basis << " SP Symmetry=None" << '\n';
+  call << QMMMOpts.basis << " SP Symmetry=None" << '\n';
   call << "Int=UltraFine SCF=(YQC,Big,Direct)";
   if (useCheckPoint)
   {
@@ -190,7 +190,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << '\n';
   if (QMMM)
   {
-    if ((Npseudo > 0) and (QMMMOpts.Func != "SemiEmp"))
+    if ((Npseudo > 0) and (QMMMOpts.func != "SemiEmp"))
     {
       //Read pseudo potential
       call << "Pseudo=Read ";
@@ -200,7 +200,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Read charges
       call << "Charge=angstroms ";
     }
-    if (QMMMOpts.Func != "SemiEmp")
+    if (QMMMOpts.func != "SemiEmp")
     {
       //Avoids calculating ESP charges for semi-empirical
       call << "Population=(MK,ReadRadii)";
@@ -217,7 +217,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "LICHM_" << Bead << ".log";
   QMlog.open(call.str().c_str(),ios_base::in);
-  bool QMfinished = 0;
+  bool QMFinished = 0;
   while (!QMlog.eof())
   {
     stringstream line;
@@ -246,7 +246,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         line >> dummy; //Clear junk
         line >> dummy; //Ditto
         line >> E; //QM energy
-        QMfinished = 1;
+        QMFinished = 1;
       }
     }
     //Check for charges
@@ -292,7 +292,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     }
   }
   //Check for errors
-  if (!QMfinished)
+  if (!QMFinished)
   {
     cerr << "Warning: SCF did not converge!!!";
     cerr << '\n';
@@ -313,7 +313,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Save old files
     call << "cp LICHM_";
     call << Bead << ".* ";
-    call << QMMMOpts.BackDir;
+    call << QMMMOpts.backDir;
     call << "/.";
     call << " 2> LICHM_" << Bead << ".trash; ";
     call << "rm -f LICHM_" << Bead << ".trash";
@@ -346,7 +346,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call.str("");
   call << "LICHM_" << Bead << ".chk";
   bool useCheckPoint = CheckFile(call.str());
-  if (QMMMOpts.Func == "SemiEmp")
+  if (QMMMOpts.func == "SemiEmp")
   {
     //Disable checkpoints for the SemiEmp force calculations
     useCheckPoint = 0;
@@ -358,12 +358,12 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   //Construct Gaussian input
   call.str("");
   call << "#P ";
-  if (QMMMOpts.Func != "SemiEmp")
+  if (QMMMOpts.func != "SemiEmp")
   {
     //Avoids defining both a basis set and method for semi-empirical
-    call << QMMMOpts.Func << "/"; //Print the method
+    call << QMMMOpts.func << "/"; //Print the method
   }
-  call << QMMMOpts.Basis << " Force=NoStep Symmetry=None" << '\n';
+  call << QMMMOpts.basis << " Force=NoStep Symmetry=None" << '\n';
   call << "Int=UltraFine SCF=(YQC,Big,Direct)"; //Line ended further below
   if (useCheckPoint)
   {
@@ -373,7 +373,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << '\n';
   if (QMMM)
   {
-    if ((Npseudo > 0) and (QMMMOpts.Func != "SemiEmp"))
+    if ((Npseudo > 0) and (QMMMOpts.func != "SemiEmp"))
     {
       //Read pseudo potential
       call << "Pseudo=Read ";
@@ -383,7 +383,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
       //Read charges
       call << "Charge=angstroms ";
     }
-    if (QMMMOpts.Func != "SemiEmp")
+    if (QMMMOpts.func != "SemiEmp")
     {
       //Avoids calculating ESP charges for semi-empirical
       call << "Population=(MK,ReadRadii)";
@@ -543,7 +543,7 @@ MatrixXd GaussianHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call.str("");
   call << "LICHM_" << Bead << ".chk";
   bool useCheckPoint = CheckFile(call.str());
-  if (QMMMOpts.Func == "SemiEmp")
+  if (QMMMOpts.func == "SemiEmp")
   {
     //Disable checkpoints for the SemiEmp force calculations
     useCheckPoint = 0;
@@ -555,12 +555,12 @@ MatrixXd GaussianHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Construct Gaussian input
   call.str("");
   call << "#P ";
-  if (QMMMOpts.Func != "SemiEmp")
+  if (QMMMOpts.func != "SemiEmp")
   {
     //Avoids defining both a basis set and method for semi-empirical
-    call << QMMMOpts.Func << "/"; //Print the method
+    call << QMMMOpts.func << "/"; //Print the method
   }
-  call << QMMMOpts.Basis << " Freq Symmetry=None" << '\n';
+  call << QMMMOpts.basis << " Freq Symmetry=None" << '\n';
   call << "Int=UltraFine SCF=(YQC,Big,Direct)"; //Line ended further below
   if (useCheckPoint)
   {
@@ -570,7 +570,7 @@ MatrixXd GaussianHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << '\n';
   if (QMMM)
   {
-    if ((Npseudo > 0) and (QMMMOpts.Func != "SemiEmp"))
+    if ((Npseudo > 0) and (QMMMOpts.func != "SemiEmp"))
     {
       //Read pseudo potential
       call << "Pseudo=Read ";
@@ -580,7 +580,7 @@ MatrixXd GaussianHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       //Read charges
       call << "Charge=angstroms ";
     }
-    if (QMMMOpts.Func != "SemiEmp")
+    if (QMMMOpts.func != "SemiEmp")
     {
       //Avoids calculating ESP charges for semi-empirical
       call << "Population=(MK,ReadRadii)";
@@ -719,7 +719,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "%chk=LICHMExt_" << Bead << ".chk";
   call << '\n';
   call << "%Mem=" << QMMMOpts.RAM;
-  if (QMMMOpts.MemMB)
+  if (QMMMOpts.memMB)
   {
     call << "MB";
   }
@@ -747,12 +747,12 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << " -b " << Bead;
   call << "\"" << '\n';
   call << "Symmetry=None Opt=(";
-  call << "MaxCycles=" << QMMMOpts.MaxOptSteps;
-  call << ",MaxStep=" << int(round((QMMMOpts.MaxStep/(0.01*BohrRad))));
+  call << "MaxCycles=" << QMMMOpts.maxOptSteps;
+  call << ",MaxStep=" << int(round((QMMMOpts.maxStep/(0.01*BohrRad))));
   call << ")" << '\n';
   call << '\n'; //Blank line
   call << "QMMM" << '\n' << '\n'; //Dummy title
-  call << QMMMOpts.Charge << " " << QMMMOpts.Spin << '\n';
+  call << QMMMOpts.charge << " " << QMMMOpts.spin << '\n';
   //Add atoms
   for (int i=0;i<Natoms;i++)
   {
@@ -787,7 +787,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "LICHMExt_";
   call << Bead << ".log";
   QMlog.open(call.str().c_str(),ios_base::in);
-  bool optfinished = 0;
+  bool optFinished = 0;
   while (!QMlog.eof())
   {
     //This loop will find the last geometry even if the calculation
@@ -825,7 +825,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       line >> dummy;
       if (dummy == "Stationary")
       {
-        optfinished = 1;
+        optFinished = 1;
       }
     }
   }
@@ -836,7 +836,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << Bead << ".*";
   globalSys = system(call.str().c_str());
   //Print warnings and errors
-  if (!optfinished)
+  if (!optFinished)
   {
     cerr << "Warning: Optimization did not converge!!!";
     cerr << '\n';
