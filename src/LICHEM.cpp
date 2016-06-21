@@ -770,13 +770,13 @@ int main(int argc, char* argv[])
     if (Natoms == 1)
     {
       //Remove atom centroid moves
-      CentProb = 0.0;
-      BeadProb = 1.0;
+      centProb = 0.0;
+      beadProb = 1.0;
     }
     if (QMMMOpts.ensemble == "NVT")
     {
       //Remove volume changes
-      VolProb = 0.0;
+      volProb = 0.0;
     }
     //Initialize local variables
     sumE = 0; //Average energy
@@ -808,7 +808,7 @@ int main(int argc, char* argv[])
     QMMMOpts.EOld = 0;
     QMMMOpts.EOld += Get_PI_Epot(Struct,QMMMOpts);
     QMMMOpts.EOld += Get_PI_Espring(Struct,QMMMOpts);
-    if (VolProb > 0)
+    if (volProb > 0)
     {
       //Add PV term
       QMMMOpts.EOld += QMMMOpts.press*Lx*Ly*Lz;
@@ -819,7 +819,7 @@ int main(int argc, char* argv[])
     {
       Emc = 0;
       //Check step size
-      if(ct == Acc_Check)
+      if(ct == acc_Check)
       {
         if ((Nacc/(Nrej+Nacc)) > QMMMOpts.accRatio)
         {
@@ -837,15 +837,15 @@ int main(int argc, char* argv[])
           randVal /= 10.0;
           mcStep *= 0.999-randVal;
         }
-        if (mcStep < StepMin)
+        if (mcStep < stepMin)
         {
           //Set to minimum
-          mcStep = StepMin;
+          mcStep = stepMin;
         }
-        if (mcStep > StepMax)
+        if (mcStep > stepMax)
         {
           //Set to maximum
-          mcStep = StepMax;
+          mcStep = stepMax;
         }
         //Statistics
         cout << " | Step: " << setw(simCharLen) << Nct;
@@ -1052,15 +1052,15 @@ int main(int argc, char* argv[])
           randVal /= 10.0;
           mcStep *= 0.999-randVal;
         }
-        if (mcStep < StepMin)
+        if (mcStep < stepMin)
         {
           //Set to minimum
-          mcStep = StepMin;
+          mcStep = stepMin;
         }
-        if (mcStep > StepMax)
+        if (mcStep > stepMax)
         {
           //Set to maximum
-          mcStep = StepMax;
+          mcStep = stepMax;
         }
         //Statistics
         cout << " | Accepted: " << setw(simCharLen) << Nct;
@@ -1686,7 +1686,7 @@ int main(int argc, char* argv[])
   //End of section
 
   //Print a quote
-  if (Jokes)
+  if (JOKES)
   {
     cout << '\n';
     cout << "Random quote:";

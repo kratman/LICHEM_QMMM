@@ -902,7 +902,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       {
         //Shift path-integral beads
         double massScale = sqrt(12.0/Struct[i].m); //Relative to carbon
-        massScale *= 2*StepMin*CentRatio; //Scale based on settings
+        massScale *= 2*stepMin*centRatio; //Scale based on settings
         //Update all beads
         for (int j=0;j<(QMMMOpts.NBeads-1);j++)
         {
@@ -1119,7 +1119,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout << " Warning: Calculations cannot run with ";
     cout << Ncpus << " CPUs.";
     cout << '\n';
-    if (Jokes)
+    if (JOKES)
     {
       cout << " Do you know how computers work?";
     }
@@ -1225,7 +1225,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
   //Sarcastically continue
   cout << "No fatal errors detected.";
   cout << '\n';
-  if (Jokes)
+  if (JOKES)
   {
     cout << " And there was much rejoicing. Yay...";
     cout << '\n';

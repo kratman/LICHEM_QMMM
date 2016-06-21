@@ -20,14 +20,14 @@
 namespace LICHEMOpts
 {
   //Compile options
-  const bool Jokes = 0; //Print humorous comments
+  const bool JOKES = 1; //Print humorous comments
 
   //Monte Carlo options
-  const bool Isotrop = 1; //Force isotropic expansion in NPT Monte Carlo
-  const double StepMin = 0.005; //Minimum Monte Carlo step size (Angstroms)
-  const double StepMax = 1.0; //Maximum Monte Carlo step size (Angstroms)
-  const double CentRatio = 5.0; //Scales step size for path-integral centroids
-  const int Acc_Check = 2000; //Eq. Monte Carlo steps before checking accratio
+  const bool isotrop = 1; //Force isotropic expansion in NPT Monte Carlo
+  const double stepMin = 0.005; //Minimum Monte Carlo step size (Angstroms)
+  const double stepMax = 1.0; //Maximum Monte Carlo step size (Angstroms)
+  const double centRatio = 5.0; //Scales step size for path-integral centroids
+  const int acc_Check = 2000; //Eq. Monte Carlo steps before checking accratio
 
   //Move Probabilities for PIMC
   /*
@@ -47,9 +47,9 @@ namespace LICHEMOpts
   changing the box size moves all particles.
 
   */
-  double BeadProb = 0.60; //Probability to move all beads for an atom
-  double CentProb = 0.50; //Probability to move a centroid
-  double VolProb = 0.35; //Volume change probability
+  double beadProb = 0.60; //Probability to move all beads for an atom
+  double centProb = 0.50; //Probability to move a centroid
+  double volProb = 0.35; //Volume change probability
 };
 
 #endif

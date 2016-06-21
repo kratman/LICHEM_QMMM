@@ -33,7 +33,7 @@ namespace LICHEMGlobal
   int Natoms = 0; //Total number of atoms
   int Nqm = 0; //Number of QM atoms
   int Nmm = 0; //Number of MM atoms
-  double mcStep = 2*StepMin; //Monte Carlo step size
+  double mcStep = 2*stepMin; //Monte Carlo step size
   double Lx = 10000.0; //Box length
   double Ly = 10000.0; //Box length
   double Lz = 10000.0; //Box length

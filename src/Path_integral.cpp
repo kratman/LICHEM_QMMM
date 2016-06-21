@@ -124,7 +124,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
   Struct2 = Struct;
   //Pick random move and apply PBC
   double randnum = (((double)rand())/((double)RAND_MAX));
-  if (randnum > (1-CentProb))
+  if (randnum > (1-centProb))
   {
     //Move a centroid
     int p;
@@ -141,9 +141,9 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
     double randx = (((double)rand())/((double)RAND_MAX));
     double randy = (((double)rand())/((double)RAND_MAX));
     double randz = (((double)rand())/((double)RAND_MAX));
-    double dx = 2*(randx-0.5)*mcStep*CentRatio;
-    double dy = 2*(randy-0.5)*mcStep*CentRatio;
-    double dz = 2*(randz-0.5)*mcStep*CentRatio;
+    double dx = 2*(randx-0.5)*mcStep*centRatio;
+    double dy = 2*(randy-0.5)*mcStep*centRatio;
+    double dz = 2*(randz-0.5)*mcStep*centRatio;
     //Update positions
     #pragma omp parallel
     {
@@ -165,7 +165,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
     }
     #pragma omp barrier
   }
-  if (randnum < BeadProb)
+  if (randnum < beadProb)
   {
     //Move all beads in a centroid
     int p;
@@ -202,10 +202,10 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
   double LzSave = Lz;
   //Attempt a volume move
   randnum = (((double)rand())/((double)RAND_MAX));
-  if (randnum < VolProb)
+  if (randnum < volProb)
   {
     //Anisotropic volume change
-    if (Isotrop == 0)
+    if (isotrop == 0)
     {
       //Assumes that MM cutoffs are safe
       randnum = (((double)rand())/((double)RAND_MAX));
@@ -216,7 +216,7 @@ bool MCMove(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, double& Emc)
       Lz += 2*(randnum-0.5)*mcStep;
     }
     //Isotropic volume change
-    if (Isotrop == 1)
+    if (isotrop == 1)
     {
       //Assumes that MM cutoffs are safe
       randnum = (((double)rand())/((double)RAND_MAX));

@@ -145,71 +145,71 @@ Mpole GEMDen::GEMDM()
   for (unsigned int i=0;i<dens_.size();i++)
   {
     //Check for a monopole
-    if ((dens_[i].XPow() == 0) and (dens_[i].YPow() == 0) and
-       (dens_[i].ZPow() == 0))
+    if ((dens_[i].xPow() == 0) and (dens_[i].yPow() == 0) and
+       (dens_[i].zPow() == 0))
     {
       //Update monopole
-      dmpole.q += dens_[i].Coeff();
+      dmpole.q += dens_[i].coeff();
       //Update diagonal quadrupole moments
-      dmpole.Qxx += dens_[i].Coeff()/(2*dens_[i].Alpha());
-      dmpole.Qyy += dens_[i].Coeff()/(2*dens_[i].Alpha());
-      dmpole.Qzz += dens_[i].Coeff()/(2*dens_[i].Alpha());
+      dmpole.Qxx += dens_[i].coeff()/(2*dens_[i].getAlpha());
+      dmpole.Qyy += dens_[i].coeff()/(2*dens_[i].getAlpha());
+      dmpole.Qzz += dens_[i].coeff()/(2*dens_[i].getAlpha());
     }
     //Check for a dipole
-    if ((dens_[i].XPow() == 1) and (dens_[i].YPow() == 0) and
-       (dens_[i].ZPow() == 0))
+    if ((dens_[i].xPow() == 1) and (dens_[i].yPow() == 0) and
+       (dens_[i].zPow() == 0))
     {
       //Update x dipole
-      dmpole.Dx += dens_[i].Coeff();
+      dmpole.Dx += dens_[i].coeff();
     }
-    if ((dens_[i].XPow() == 0) and (dens_[i].YPow() == 1) and
-       (dens_[i].ZPow() == 0))
+    if ((dens_[i].xPow() == 0) and (dens_[i].yPow() == 1) and
+       (dens_[i].zPow() == 0))
     {
       //Update y dipole
-      dmpole.Dy += dens_[i].Coeff();
+      dmpole.Dy += dens_[i].coeff();
     }
-    if ((dens_[i].XPow() == 0) and (dens_[i].YPow() == 0) and
-       (dens_[i].ZPow() == 1))
+    if ((dens_[i].xPow() == 0) and (dens_[i].yPow() == 0) and
+       (dens_[i].zPow() == 1))
     {
       //Update z dipole
-      dmpole.Dz += dens_[i].Coeff();
+      dmpole.Dz += dens_[i].coeff();
     }
     //Check for a quadrupole
-    if ((dens_[i].XPow() == 2) and (dens_[i].YPow() == 0) and
-       (dens_[i].ZPow() == 0))
+    if ((dens_[i].xPow() == 2) and (dens_[i].yPow() == 0) and
+       (dens_[i].zPow() == 0))
     {
       //Update xx quadrupole
-      dmpole.Qxx += 2*dens_[i].Coeff();
+      dmpole.Qxx += 2*dens_[i].coeff();
     }
-    if ((dens_[i].XPow() == 1) and (dens_[i].YPow() == 1) and
-       (dens_[i].ZPow() == 0))
+    if ((dens_[i].xPow() == 1) and (dens_[i].yPow() == 1) and
+       (dens_[i].zPow() == 0))
     {
       //Update xy quadrupole
-      dmpole.Qxy += dens_[i].Coeff();
+      dmpole.Qxy += dens_[i].coeff();
     }
-    if ((dens_[i].XPow() == 1) and (dens_[i].YPow() == 0) and
-       (dens_[i].ZPow() == 1))
+    if ((dens_[i].xPow() == 1) and (dens_[i].yPow() == 0) and
+       (dens_[i].zPow() == 1))
     {
       //Update xz quadrupole
-      dmpole.Qxz += dens_[i].Coeff();
+      dmpole.Qxz += dens_[i].coeff();
     }
-    if ((dens_[i].XPow() == 0) and (dens_[i].YPow() == 2) and
-       (dens_[i].ZPow() == 0))
+    if ((dens_[i].xPow() == 0) and (dens_[i].yPow() == 2) and
+       (dens_[i].zPow() == 0))
     {
       //Update xx quadrupole
-      dmpole.Qyy += 2*dens_[i].Coeff();
+      dmpole.Qyy += 2*dens_[i].coeff();
     }
-    if ((dens_[i].XPow() == 0) and (dens_[i].YPow() == 1) and
-       (dens_[i].ZPow() == 1))
+    if ((dens_[i].xPow() == 0) and (dens_[i].yPow() == 1) and
+       (dens_[i].zPow() == 1))
     {
       //Update yz quadrupole
-      dmpole.Qyz += dens_[i].Coeff();
+      dmpole.Qyz += dens_[i].coeff();
     }
-    if ((dens_[i].XPow() == 0) and (dens_[i].YPow() == 0) and
-       (dens_[i].ZPow() == 2))
+    if ((dens_[i].xPow() == 0) and (dens_[i].yPow() == 0) and
+       (dens_[i].zPow() == 2))
     {
       //Update yz quadrupole
-      dmpole.Qzz += 2*dens_[i].Coeff();
+      dmpole.Qzz += 2*dens_[i].coeff();
     }
   }
   //Convert to a traceless quadrupole
