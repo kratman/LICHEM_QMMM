@@ -99,7 +99,7 @@ void NWChemCharges(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cerr << '\n';
     cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
-    E = HugeNum; //Large number to reject step
+    E = hugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
     //Remove checkpoint file
     call.str("");
@@ -203,7 +203,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cerr << '\n';
     cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
-    E = HugeNum; //Large number to reject step
+    E = hugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
     //Remove checkpoint file
     call.str("");
@@ -246,7 +246,7 @@ double NWChemEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "LICHM_" << Bead << ".z*";
   globalSys = system(call.str().c_str());
   //Change units and return
-  E *= Har2eV;
+  E *= har2eV;
   return E;
 };
 
@@ -322,9 +322,9 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           Fy *= -1;
           Fz *= -1;
           //Switch to eV/A and save forces
-          Forces(3*i) += Fx*Har2eV/BohrRad;
-          Forces(3*i+1) += Fy*Har2eV/BohrRad;
-          Forces(3*i+2) += Fz*Har2eV/BohrRad;
+          Forces(3*i) += Fx*har2eV/bohrRad;
+          Forces(3*i+1) += Fy*har2eV/bohrRad;
+          Forces(3*i+2) += Fz*har2eV/bohrRad;
         }
       }
     }
@@ -358,7 +358,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     cerr << '\n';
     cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
-    E = HugeNum; //Large number to reject step
+    E = hugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
     //Remove checkpoint file
     call.str("");
@@ -390,7 +390,7 @@ double NWChemForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << "LICHM_" << Bead << ".z*";
   globalSys = system(call.str().c_str());
   //Change units and return
-  E *= Har2eV;
+  E *= har2eV;
   return E;
 };
 
@@ -552,7 +552,7 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     cerr << '\n';
     cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
-    E = HugeNum; //Large number to reject step
+    E = hugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
     //Remove checkpoint file
     call.str("");
@@ -576,7 +576,7 @@ double NWChemOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "LICHM_" << Bead << ".z*";
   globalSys = system(call.str().c_str());
   //Change units and return
-  E *= Har2eV;
+  E *= har2eV;
   return E;
 };
 

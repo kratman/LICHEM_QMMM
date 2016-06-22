@@ -107,9 +107,9 @@ void ExternalGaussian(int& argc, char**& argv)
       line >> Struct[i].P[Bead].y;
       line >> Struct[i].P[Bead].z;
       //Change units
-      Struct[i].P[Bead].x *= BohrRad;
-      Struct[i].P[Bead].y *= BohrRad;
-      Struct[i].P[Bead].z *= BohrRad;
+      Struct[i].P[Bead].x *= bohrRad;
+      Struct[i].P[Bead].y *= bohrRad;
+      Struct[i].P[Bead].z *= bohrRad;
     }
   }
   gauInput.close();
@@ -138,7 +138,7 @@ void ExternalGaussian(int& argc, char**& argv)
     Emm = LAMMPSForces(Struct,Forces,QMMMOpts,Bead);
   }
   //Write formatted output for g09
-  double E = (Eqm+Emm)/Har2eV; //Calculate
+  double E = (Eqm+Emm)/har2eV; //Calculate
   gauOutput << left; //More formatting
   gauOutput << LICHEMFormFloat(E,20); //QM+MM partial energy
   gauOutput << LICHEMFormFloat(0.0,20); //Dipole moment
@@ -148,9 +148,9 @@ void ExternalGaussian(int& argc, char**& argv)
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
     //Write forces
-    gauOutput << LICHEMFormFloat(-1*Forces(3*i)*BohrRad/Har2eV,20);
-    gauOutput << LICHEMFormFloat(-1*Forces(3*i+1)*BohrRad/Har2eV,20);
-    gauOutput << LICHEMFormFloat(-1*Forces(3*i+2)*BohrRad/Har2eV,20);
+    gauOutput << LICHEMFormFloat(-1*Forces(3*i)*bohrRad/har2eV,20);
+    gauOutput << LICHEMFormFloat(-1*Forces(3*i+1)*bohrRad/har2eV,20);
+    gauOutput << LICHEMFormFloat(-1*Forces(3*i+2)*bohrRad/har2eV,20);
     gauOutput << '\n';
   }
   gauOutput << LICHEMFormFloat(0.0,20); //Polarizability

@@ -189,7 +189,7 @@ int main(int argc, char* argv[])
         cout << "  QMMM energy: ";
         cout << LICHEMFormFloat(sumE,16) << " eV";
         cout << " ";
-        cout << LICHEMFormFloat(sumE/Har2eV,16) << " a.u.";
+        cout << LICHEMFormFloat(sumE/har2eV,16) << " a.u.";
         cout << '\n';
       }
       cout << '\n';
@@ -1029,7 +1029,7 @@ int main(int argc, char* argv[])
       //Prevent the print rate from breaking the tuning
       QMMMOpts.NPrint = 100; //Minimum value
     }
-    QMMMOpts.EOld = HugeNum; //Forces the first step to be accepted
+    QMMMOpts.EOld = hugeNum; //Forces the first step to be accepted
     Nct = 0; //Reset counter to zero
     while (Nct < QMMMOpts.NEq)
     {
@@ -1249,7 +1249,7 @@ int main(int argc, char* argv[])
     }
     reactCoord /= reactCoord.maxCoeff(); //Must be between 0 and 1
     //Calculate initial energies
-    QMMMOpts.ETrans = -1*HugeNum; //Locate the initial transition state
+    QMMMOpts.ETrans = -1*hugeNum; //Locate the initial transition state
     for (int p=0;p<QMMMOpts.NBeads;p++)
     {
       sumE = 0; //Clear old energies
@@ -1414,14 +1414,14 @@ int main(int argc, char* argv[])
     cout << " | Forward barrier: ";
     cout << LICHEMFormFloat(dEfor,16) << " eV ," << '\n';
     cout << " |   ";
-    cout << LICHEMFormFloat(dEfor/Har2eV,16) << " a.u.";
+    cout << LICHEMFormFloat(dEfor/har2eV,16) << " a.u.";
     cout << " , ";
     cout << LICHEMFormFloat(dEfor/kcal2eV,16) << " kcal/mol";
     cout << '\n' << '\n';
     cout << " | Reverse barrier: ";
     cout << LICHEMFormFloat(dErev,16) << " eV ," << '\n';
     cout << " |   ";
-    cout << LICHEMFormFloat(dErev/Har2eV,16) << " a.u.";
+    cout << LICHEMFormFloat(dErev/har2eV,16) << " a.u.";
     cout << " , ";
     cout << LICHEMFormFloat(dErev/kcal2eV,16) << " kcal/mol";
     cout << '\n' << '\n';

@@ -1070,8 +1070,8 @@ void WriteQMConnect(int& argc,char**& argv)
       //Write connectivity line
       outFile << i << " "; //Index
       outFile << AtTyp << " "; //Element
-      outFile << PTable.revTyping(AtTyp) << " "; //Atomic number
-      outFile << PTable.getAtMass(AtTyp) << " "; //Mass
+      outFile << chemTable.revTyping(AtTyp) << " "; //Atomic number
+      outFile << chemTable.getAtMass(AtTyp) << " "; //Mass
       outFile << "0.00 0" << '\n'; //Charge and bonds
     }
     cout << "Connectivity data written to connect.inp";

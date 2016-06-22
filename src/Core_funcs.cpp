@@ -84,7 +84,7 @@ double Bohring(double ri)
 {
   //Convert ri (Bohr) to Angstroms
   double r = 0;
-  r = ri/BohrRad;
+  r = ri/bohrRad;
   return r;
 };
 

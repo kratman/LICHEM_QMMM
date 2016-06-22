@@ -140,7 +140,7 @@ Mpole GEMDen::GEMDM()
   dmpole.Qxz = 0;
   dmpole.Qzz = 0;
   //Add the nuclear charge from the periodic table
-  dmpole.q += PTable.revTyping(type_);
+  dmpole.q += chemTable.revTyping(type_);
   //Convert Hermite Gaussians to multipoles
   for (unsigned int i=0;i<dens_.size();i++)
   {
@@ -271,7 +271,7 @@ QMMMSettings::QMMMSettings()
   //MC, MD, and RP settings
   ensemble = "N/A";
   temp = 300.0;
-  beta = 1/(300.0*k);
+  beta = 1/(300.0*kBoltz);
   press = 0.0;
   NEq = 0;
   NSteps = 0;

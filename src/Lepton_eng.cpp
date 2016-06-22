@@ -22,16 +22,16 @@ double EFFEnergy(QMMMAtom& atom, QMMMElec& elec, int Bead)
   //Atom-lepton interactions
   double E = 0.0;
   double r = CoordDist2(atom.P[Bead],elec.P[Bead]).vecMag();
-  if (r <= ElecCutoff*ElecCutoff)
+  if (r <= elecCutoff*elecCutoff)
   {
     if (r == 0.0)
     {
-      E = C2eV*atom.MP[Bead].q*elec.q*sqrt(8/pi)/elec.rad[Bead];
+      E = coul2eV*atom.MP[Bead].q*elec.q*sqrt(8/pi)/elec.rad[Bead];
     }
     else
     {
       r = sqrt(r);
-      E = (C2eV*atom.MP[Bead].q*elec.q/r)*erf(sqrt2*r/elec.rad[Bead]);
+      E = (coul2eV*atom.MP[Bead].q*elec.q/r)*erf(sqrt2*r/elec.rad[Bead]);
     }
   }
   return E;
@@ -43,22 +43,22 @@ double EFFCorr(QMMMElec& elec1, QMMMElec& elec2, int Bead)
   double E = 0.0;
   double r = CoordDist2(elec1.P[Bead],elec2.P[Bead]).vecMag();
   //Electrostatic energy
-  if (r <= (ElecCutoff*ElecCutoff))
+  if (r <= (elecCutoff*elecCutoff))
   {
     r = sqrt(r);
     if (r == 0.0)
     {
-      E = C2eV*elec1.q*elec2.q*sqrt(8/pi);
+      E = coul2eV*elec1.q*elec2.q*sqrt(8/pi);
       E /= sqrt(elec1.rad[Bead]*elec1.rad[Bead]
            +elec2.rad[Bead]*elec2.rad[Bead]);
-      return HugeNum; //Escape to avoid singularities later
+      return hugeNum; //Escape to avoid singularities later
     }
     else
     {
       double radij = elec1.rad[Bead]*elec1.rad[Bead];
       radij += elec2.rad[Bead]*elec2.rad[Bead];
       radij = sqrt(radij);
-      E = (C2eV*elec1.q*elec2.q/r);
+      E = (coul2eV*elec1.q*elec2.q/r);
       E *= erf(sqrt2*r/radij);
     }
     //Pauli repulsion
@@ -69,34 +69,34 @@ double EFFCorr(QMMMElec& elec1, QMMMElec& elec2, int Bead)
              +(elec2.rad[Bead]/elec1.rad[Bead]));
       Sij *= Sij*Sij;
       Sij = sqrt(Sij);
-      double tmp = -1*rbar*rbar*r*r;
+      double tmp = -1*eFFrbar*eFFrbar*r*r;
       tmp /= (elec1.rad[Bead]*elec1.rad[Bead]+elec2.rad[Bead]*elec2.rad[Bead]);
-      tmp /= sbar*sbar;
+      tmp /= eFFsbar*eFFsbar;
       Sij *= exp(tmp);
       //Kinetic energy difference
       double Tij = 1/(elec1.rad[Bead]*elec1.rad[Bead]);
       Tij += 1/(elec2.rad[Bead]*elec2.rad[Bead]);
-      Tij *= 3/(2*sbar*sbar);
-      tmp = 6*sbar*sbar*(elec1.rad[Bead]*elec1.rad[Bead]
+      Tij *= 3/(2*eFFsbar*eFFsbar);
+      tmp = 6*eFFsbar*eFFsbar*(elec1.rad[Bead]*elec1.rad[Bead]
             +elec2.rad[Bead]*elec2.rad[Bead]);
-      tmp -= 4*rbar*rbar*r*r;
-      tmp /= sbar*sbar*(elec1.rad[Bead]*elec1.rad[Bead]
+      tmp -= 4*eFFrbar*eFFrbar*r*r;
+      tmp /= eFFsbar*eFFsbar*(elec1.rad[Bead]*elec1.rad[Bead]
              +elec2.rad[Bead]*elec2.rad[Bead]);
-      tmp /= sbar*sbar*(elec1.rad[Bead]*elec1.rad[Bead]
+      tmp /= eFFsbar*eFFsbar*(elec1.rad[Bead]*elec1.rad[Bead]
              +elec2.rad[Bead]*elec2.rad[Bead]);
       Tij -= tmp;
-      Tij *= Har2eV*BohrRad*BohrRad;
+      Tij *= har2eV*bohrRad*bohrRad;
       if (elec1.spin[Bead] == elec2.spin[Bead])
       {
         //Symmetric VB spin-orbital
         double Etmp = Sij*Sij/(1-(Sij*Sij));
-        Etmp += (1-rho)*Sij*Sij/(1+(Sij*Sij));
+        Etmp += (1-eFFRho)*Sij*Sij/(1+(Sij*Sij));
         E += Etmp*Tij;
       }
       else
       {
         //Antisymmetric VB spin orbital
-        E += -1*rho*Sij*Sij*Tij/(1+(Sij*Sij));
+        E += -1*eFFRho*Sij*Sij*Tij/(1+(Sij*Sij));
       }
     }
   }
@@ -115,12 +115,12 @@ double KineticE_eFF(vector<QMMMElec>& elecs, QMMMSettings& QMMMOpts)
     {
       //Lepton kinetic energy
       double Etmp = 3/(2*elecs[i].rad[k]*elecs[i].rad[k]);
-      Etmp *= ElecMass/elecs[i].m; //Scale by mass
-      Etmp *= Har2eV*BohrRad*BohrRad;
-      if (Scale_eFF)
+      Etmp *= elecMass/elecs[i].m; //Scale by mass
+      Etmp *= har2eV*bohrRad*bohrRad;
+      if (scale_eFF)
       {
         //Reduce kinetic energy as the beads increase
-        Etmp /= ElrtNbeads;
+        Etmp /= elRtNBeads;
       }
       elecs[i].Ep += Etmp;
     }

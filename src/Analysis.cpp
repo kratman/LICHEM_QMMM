@@ -682,17 +682,17 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
   rotY.setZero();
   rotZ.setZero();
   //Collect QM and PB masses
-  vector<double> Masses;
+  vector<double> masses;
   for (int i=0;i<Natoms;i++)
   {
     //Locate QM and PB atoms
     if (Struct[i].QMregion or Struct[i].PBregion)
     {
       //Switch to a.u. and save mass
-      double massVal = Struct[i].m/ElecMass;
-      Masses.push_back(massVal); //X component
-      Masses.push_back(massVal); //Y component
-      Masses.push_back(massVal); //Z component
+      double massVal = Struct[i].m/elecMass;
+      masses.push_back(massVal); //X component
+      masses.push_back(massVal); //Y component
+      masses.push_back(massVal); //Z component
     }
   }
   //Mass scale the Hessian matrix
@@ -700,12 +700,12 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
   for (int i=0;i<Ndof;i++)
   {
     //Update diagonal matrix elements
-    QMMMHess(i,i) /= Masses[i];
+    QMMMHess(i,i) /= masses[i];
     //Update off-diagonal matrix elements
     for (int j=0;j<i;j++)
     {
       //Mass scale
-      QMMMHess(i,j) /= sqrt(Masses[i]*Masses[j]);
+      QMMMHess(i,j) /= sqrt(masses[i]*masses[j]);
       //Apply symmetry
       QMMMHess(j,i) = QMMMHess(i,j);
     }
@@ -719,9 +719,9 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
     //Translational modes
-    transX(3*i) = sqrt(Masses[3*i]);
-    transY(3*i+1) = sqrt(Masses[3*i+1]);
-    transZ(3*i+2) = sqrt(Masses[3*i+2]);
+    transX(3*i) = sqrt(masses[3*i]);
+    transY(3*i+1) = sqrt(masses[3*i+1]);
+    transZ(3*i+2) = sqrt(masses[3*i+2]);
   }
   transX.normalize();
   transY.normalize();
@@ -767,7 +767,7 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
     }
     //Locate small frequencies
     double smallFreq; //Temporary storage
-    smallFreq = zeroTol/Har2wavenum; //Convert tolerance to a.u.
+    smallFreq = zeroTol/har2Wavenum; //Convert tolerance to a.u.
     smallFreq *= smallFreq; //Square tolerance
     if (abs(QMMMFreqs(i)) < smallFreq)
     {
@@ -813,7 +813,7 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
     QMMMFreqs(i) *= freqSign;
   }
   //Change units
-  QMMMFreqs *= Har2wavenum;
+  QMMMFreqs *= har2Wavenum;
   //Remove negligible frequencies
   transRotCt = 0; //Reset counter
   #pragma omp parallel for reduction(+:transRotCt)

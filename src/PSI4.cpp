@@ -211,7 +211,7 @@ double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     cerr << '\n';
     cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
-    E = HugeNum; //Large number to reject step
+    E = hugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
     //Delete checkpoint
     call.str("");
@@ -235,7 +235,7 @@ double PSI4Energy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   call << "LICHM_" << Bead << ".log";
   globalSys = system(call.str().c_str());
   //Change units
-  E *= Har2eV;
+  E *= har2eV;
   return E;
 };
 
@@ -339,9 +339,9 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           Fy *= -1;
           Fz *= -1;
           //Switch to eV/A and save forces
-          Forces(3*i) += Fx*Har2eV/BohrRad;
-          Forces(3*i+1) += Fy*Har2eV/BohrRad;
-          Forces(3*i+2) += Fz*Har2eV/BohrRad;
+          Forces(3*i) += Fx*har2eV/bohrRad;
+          Forces(3*i+1) += Fy*har2eV/bohrRad;
+          Forces(3*i+2) += Fz*har2eV/bohrRad;
         }
       }
     }
@@ -379,7 +379,7 @@ double PSI4Forces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   call << "LICHM_" << Bead << ".log";
   globalSys = system(call.str().c_str());
   //Change units
-  E *= Har2eV;
+  E *= har2eV;
   return E;
 };
 
@@ -642,7 +642,7 @@ double PSI4Opt(vector<QMMMAtom>& Struct,
     cerr << '\n';
     cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
-    E = HugeNum; //Large number to reject step
+    E = hugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
     //Delete checkpoint
     call.str("");
@@ -656,7 +656,7 @@ double PSI4Opt(vector<QMMMAtom>& Struct,
     cerr << " LICHEM will attempt to continue using the";
     cerr << " old structure...";
     cerr << '\n';
-    E = HugeNum; //Large number to reject step
+    E = hugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
     //Delete checkpoint
     call.str("");
@@ -671,7 +671,7 @@ double PSI4Opt(vector<QMMMAtom>& Struct,
   call << "LICHM_" << Bead << ".log";
   globalSys = system(call.str().c_str());
   //Change units
-  E *= Har2eV;
+  E *= har2eV;
   return E;
 };
 

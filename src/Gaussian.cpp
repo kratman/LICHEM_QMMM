@@ -298,7 +298,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cerr << '\n';
     cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
-    E = HugeNum; //Large number to reject step
+    E = hugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
     //Delete checkpoint
     call.str("");
@@ -328,7 +328,7 @@ double GaussianEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   globalSys = system(call.str().c_str());
   //Change units and return
   E -= Eself;
-  E *= Har2eV;
+  E *= har2eV;
   return E;
 };
 
@@ -428,9 +428,9 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           line >> Fy;
           line >> Fz;
           //Save forces
-          Forces(3*i) += Fx*Har2eV/BohrRad;
-          Forces(3*i+1) += Fy*Har2eV/BohrRad;
-          Forces(3*i+2) += Fz*Har2eV/BohrRad;
+          Forces(3*i) += Fx*har2eV/bohrRad;
+          Forces(3*i+1) += Fy*har2eV/bohrRad;
+          Forces(3*i+2) += Fz*har2eV/bohrRad;
         }
       }
     }
@@ -524,7 +524,7 @@ double GaussianForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   globalSys = system(call.str().c_str());
   //Change units and return
   Eqm -= Eself;
-  Eqm *= Har2eV;
+  Eqm *= har2eV;
   return Eqm;
 };
 
@@ -748,7 +748,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   call << "\"" << '\n';
   call << "Symmetry=None Opt=(";
   call << "MaxCycles=" << QMMMOpts.maxOptSteps;
-  call << ",MaxStep=" << int(round((QMMMOpts.maxStep/(0.01*BohrRad))));
+  call << ",MaxStep=" << int(round((QMMMOpts.maxStep/(0.01*bohrRad))));
   call << ")" << '\n';
   call << '\n'; //Blank line
   call << "QMMM" << '\n' << '\n'; //Dummy title
@@ -842,7 +842,7 @@ double GaussianOpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     cerr << '\n';
     cerr << "An older geometry will be recovered...";
     cerr << '\n';
-    E = HugeNum; //Large number to reject step
+    E = hugeNum; //Large number to reject step
     cerr.flush(); //Print warning immediately
     //Delete checkpoint
     call.str("");

@@ -686,7 +686,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       //Read the temperature
       regionFile >> QMMMOpts.temp;
       //Save the inverse temperature
-      QMMMOpts.beta = 1/(k*QMMMOpts.temp);
+      QMMMOpts.beta = 1/(kBoltz*QMMMOpts.temp);
     }
     else if (keyword == "timestep:")
     {

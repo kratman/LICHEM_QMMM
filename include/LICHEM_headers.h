@@ -41,7 +41,7 @@ using namespace LICHEMLepton;
 #include "LICHEM_classes.h"
 
 //Set up periodic table
-PeriodicTable PTable;
+PeriodicTable chemTable;
 
 //Function declarations (alphabetical)
 double AMBERForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);

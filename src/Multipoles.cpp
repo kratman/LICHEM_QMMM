@@ -1190,7 +1190,7 @@ RedMpole Cart2SphHarm(Mpole& pole)
   QPole(2,1) = pole.Qyz;
   QPole(2,2) = pole.Qzz;
   //Change out of a.u.
-  QPole *= BohrRad*BohrRad; //NB: TINKER also divides by 3
+  QPole *= bohrRad*bohrRad; //NB: TINKER also divides by 3
   EigenSolver<Matrix3d> QTensor; //There might be a better method
   QTensor.compute(QPole);
   Vector3d SHTensor;
@@ -1216,17 +1216,17 @@ RedMpole Cart2SphHarm(Mpole& pole)
   SHPole.Q11c += pole.Dx*SHPole.vecX(0);
   SHPole.Q11c += pole.Dy*SHPole.vecX(1);
   SHPole.Q11c += pole.Dz*SHPole.vecX(2);
-  SHPole.Q11c *= BohrRad; //Change out of a.u.
+  SHPole.Q11c *= bohrRad; //Change out of a.u.
   SHPole.Q11s = 0; //Y component
   SHPole.Q11s += pole.Dx*SHPole.vecY(0);
   SHPole.Q11s += pole.Dy*SHPole.vecY(1);
   SHPole.Q11s += pole.Dz*SHPole.vecY(2);
-  SHPole.Q11s *= BohrRad; //Change out of a.u.
+  SHPole.Q11s *= bohrRad; //Change out of a.u.
   SHPole.Q10 = 0; //Z component
   SHPole.Q10 += pole.Dx*SHPole.vecZ(0);
   SHPole.Q10 += pole.Dy*SHPole.vecZ(1);
   SHPole.Q10 += pole.Dz*SHPole.vecZ(2);
-  SHPole.Q10 *= BohrRad; //Change out of a.u.
+  SHPole.Q10 *= bohrRad; //Change out of a.u.
   SHPole.Q22c = (SHTensor(0)-SHTensor(1))/sqrt(3); //Diagonal Qxx-Qyy
   SHPole.Q20 = SHTensor(2); //Diagonal Qzz
   return SHPole;
@@ -1236,7 +1236,7 @@ OctCharges SphHarm2Charges(RedMpole pole)
 {
   //Converts spherical harmonic multipoles to point-charges
   OctCharges PCGrid; //New point-charge multipoles
-  double pd = 0.25*BohrRad; //Positive displacement of the charges
+  double pd = 0.25*bohrRad; //Positive displacement of the charges
   double nd = -1*pd; //Negative of the displacement
   //Charge in the +x direction
   PCGrid.q1 = pole.Q00/6;

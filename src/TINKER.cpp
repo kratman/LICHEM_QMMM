@@ -297,9 +297,9 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       line >> Struct[AtNum].MP[Bead].IDy;
       line >> Struct[AtNum].MP[Bead].IDz;
       //Change units from Debye to a.u.
-      Struct[AtNum].MP[Bead].IDx *= Debye2au;
-      Struct[AtNum].MP[Bead].IDy *= Debye2au;
-      Struct[AtNum].MP[Bead].IDz *= Debye2au;
+      Struct[AtNum].MP[Bead].IDx *= debye2au;
+      Struct[AtNum].MP[Bead].IDy *= debye2au;
+      Struct[AtNum].MP[Bead].IDz *= debye2au;
     }
   }
   inFile.close();
@@ -1539,7 +1539,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
     cerr.flush(); //Print warning immediately
-    E = HugeNum; //Large number to reject step
+    E = hugeNum; //Large number to reject step
   }
   inFile.close();
   //Clean up files
@@ -2084,7 +2084,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     }
   }
   //Change units
-  MMHess *= (kcal2eV*BohrRad*BohrRad/Har2eV); //Switch to a.u.
+  MMHess *= (kcal2eV*bohrRad*bohrRad/har2eV); //Switch to a.u.
   //Check for errors
   if (!HessDone)
   {

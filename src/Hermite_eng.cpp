@@ -29,7 +29,7 @@ GauDen1s::GauDen1s(double magi,double widi,double qi,
   y_ = yi;
   z_ = zi;
   //Convert to a.u.
-  wid_ *= (BohrRad*BohrRad);
+  wid_ *= (bohrRad*bohrRad);
   return;
 };
 
@@ -54,11 +54,11 @@ double GauDen1s::chrgNuc(double qpc, Coord pos, double Rcut)
   if (rij <= (Rcut*Rcut))
   {
     //Calculate Coulomb interaction energy
-    rij = sqrt(rij)/BohrRad; //Switch to a.u.
+    rij = sqrt(rij)/bohrRad; //Switch to a.u.
     E = q_*qpc/rij; //Energy in a.u.
   }
   //Change units
-  E *= Har2eV;
+  E *= har2eV;
   return E;
 };
 
@@ -81,11 +81,11 @@ double GauDen1s::nucNuc(GauDen1s gau2, double Rcut)
   if (rij <= (Rcut*Rcut))
   {
     //Calculate Coulomb interaction energy
-    rij = sqrt(rij)/BohrRad; //Switch to a.u.
+    rij = sqrt(rij)/bohrRad; //Switch to a.u.
     E = q_*gau2.q_/rij; //Energy in a.u.
   }
   //Change units
-  E *= Har2eV;
+  E *= har2eV;
   return E;
 };
 
@@ -108,7 +108,7 @@ double GauDen1s::twoOver(GauDen1s gau2)
   tmppos2.y = gau2.y_;
   tmppos2.z = gau2.z_;
   rij = CoordDist2(tmppos1,tmppos2).vecMag(); //Squared distance in Angstroms
-  rij = sqrt(rij)/BohrRad; //Change to a.u.
+  rij = sqrt(rij)/bohrRad; //Change to a.u.
   //Calculate overlap
   rij *= -1*wid_*gau2.wid_*rij;
   rij /= (wid_+gau2.wid_);
@@ -134,12 +134,12 @@ double GauDen1s::oneCoulPC(double qpc, Coord pos, double Rcut)
   if (rij <= (Rcut*Rcut))
   {
     //Calculate Coulomb interaction energy
-    rij = sqrt(rij)/BohrRad; //Switch to a.u.
+    rij = sqrt(rij)/bohrRad; //Switch to a.u.
     E = erf(sqrt(wid_)*rij);
     E *= -1*mag_*qpc/rij; //Negative due to electron charge
   }
   //Change units
-  E *= Har2eV;
+  E *= har2eV;
   return E;
 };
 
@@ -162,12 +162,12 @@ double GauDen1s::oneCoulNuc(GauDen1s gau2, double Rcut)
   if (rij <= (Rcut*Rcut))
   {
     //Calculate Coulomb interaction energy
-    rij = sqrt(rij)/BohrRad; //Switch to a.u.
+    rij = sqrt(rij)/bohrRad; //Switch to a.u.
     E = erf(sqrt(wid_)*rij);
     E *= -1*mag_*gau2.q_/rij; //Negative due to electron charge
   }
   //Change units
-  E *= Har2eV;
+  E *= har2eV;
   return E;
 };
 
@@ -189,7 +189,7 @@ double GauDen1s::twoCoul(GauDen1s gau2, double Rcut)
   if (rij <= (Rcut*Rcut))
   {
     //Calculate Coulomb interaction energy
-    rij = sqrt(rij)/BohrRad; //Switch to a.u.
+    rij = sqrt(rij)/bohrRad; //Switch to a.u.
     //Calculate new gaussian exponent
     double widNew = 0.0;
     widNew = (wid_*gau2.wid_);
@@ -199,7 +199,7 @@ double GauDen1s::twoCoul(GauDen1s gau2, double Rcut)
     E *= mag_*gau2.mag_/rij; //Double negative
   }
   //Change units
-  E *= Har2eV;
+  E *= har2eV;
   return E;
 };
 
@@ -278,9 +278,9 @@ double HermGau::value(double xi, double yi, double zi)
   //Return the value at point (xi,yi,zi)
   double val = 0; //Final value
   //Calculate distance
-  double Xij = (xi-x_)/BohrRad; //X distance (a.u.)
-  double Yij = (yi-y_)/BohrRad; //Y distance (a.u.)
-  double Zij = (zi-z_)/BohrRad; //Z distance (a.u.)
+  double Xij = (xi-x_)/bohrRad; //X distance (a.u.)
+  double Yij = (yi-y_)/bohrRad; //Y distance (a.u.)
+  double Zij = (zi-z_)/bohrRad; //Z distance (a.u.)
   //Scale Xij,Yij,Zij by alpha
   Xij *= alpha_*Xij; //Alpha*Xij^2
   Yij *= alpha_*Yij; //Alpha*Yij^2
@@ -358,12 +358,12 @@ double HermCoul2e(HermGau& Gi, HermGau& Gj)
   //Recursive two electron Coulomb integral
   double Eij = 0; //Energy
   //Combine Gaussians with the Gaussian product rule
-  double anew = Gi.getAlpha()+Gj.getAlpha(); //New Gaussian coefficient
-  int powx = Gi.xPow()+Gj.xPow(); //New X power
-  int powy = Gi.yPow()+Gj.yPow(); //New Y power
-  int powz = Gi.zPow()+Gj.zPow(); //New Z power
+  double aNew = Gi.getAlpha()+Gj.getAlpha(); //New Gaussian coefficient
+  int powX = Gi.xPow()+Gj.xPow(); //New X power
+  int powY = Gi.yPow()+Gj.yPow(); //New Y power
+  int powZ = Gi.zPow()+Gj.zPow(); //New Z power
   //Update magnitude based on the separation
-  double mu = Gi.getAlpha()*Gj.getAlpha()/anew; //Smearing parameter
+  double mu = Gi.getAlpha()*Gj.getAlpha()/aNew; //Smearing parameter
   Coord posi,posj; //Temporary storage for positions
   posi.x = Gi.xPos();
   posi.y = Gi.yPos();
@@ -372,74 +372,74 @@ double HermCoul2e(HermGau& Gi, HermGau& Gj)
   posj.y = Gj.yPos();
   posj.z = Gj.zPos();
   Coord disp = CoordDist2(posi,posj); //Calculate distances
-  double Xij = disp.x/BohrRad; //X distance (a.u.)
-  double Yij = disp.y/BohrRad; //Y distance (a.u.)
-  double Zij = disp.z/BohrRad; //Z distance (a.u.)
+  double Xij = disp.x/bohrRad; //X distance (a.u.)
+  double Yij = disp.y/bohrRad; //Y distance (a.u.)
+  double Zij = disp.z/bohrRad; //Z distance (a.u.)
   double Rij2 = Xij*Xij+Yij*Yij+Zij*Zij; //Distance between Gaussians (a.u.)
   double newMag = Gi.coeff()*Gj.coeff(); //Product of old coefficients
   newMag *= exp(-mu*Rij2); //Scale based on distance
   //Create product Gaussian
-  HermGau Gij(newMag,anew,powx,powy,powz,Xij,Yij,Zij);
+  HermGau Gij(newMag,aNew,powX,powY,powZ,Xij,Yij,Zij);
   //Calculate integrals
   double Ix = 0; //Integral in the x direction
   if (Gij.xPow() > 0)
   {
     //Aspherical Hermite Gaussians
-    vector<double> HermMags; //Magnitude of the Gaussians
-    vector<int> HermOrders; //Order of the Hermite function
-    vector<int> BoysOrders; //Order of the Boys function
-    HermMags.push_back(1.0);
-    HermOrders.push_back(Gij.xPow());
-    BoysOrders.push_back(0);
+    vector<double> hermMags; //Magnitude of the Gaussians
+    vector<int> hermOrders; //Order of the Hermite function
+    vector<int> boysOrders; //Order of the Boys function
+    hermMags.push_back(1.0);
+    hermOrders.push_back(Gij.xPow());
+    boysOrders.push_back(0);
     //Recursion
-    bool ContRecurs = 1; //Keeps the while loop going
-    while (ContRecurs)
+    bool contRecurs = 1; //Keeps the while loop going
+    while (contRecurs)
     {
       //Stop recursion unless orders are greater than zero
-      ContRecurs = 0;
+      contRecurs = 0;
       //Create temporary arrays
-      vector<double> NewMags; //New Gaussian magnitudes
-      vector<int> NewOrders; //New Hermite orders
-      vector<int> NewBoys; //New Boys function orders
+      vector<double> newMags; //New Gaussian magnitudes
+      vector<int> newOrders; //New Hermite orders
+      vector<int> newBoys; //New Boys function orders
       //Loop over Hermite functions
-      for (unsigned int i=0;i<HermOrders.size();i++)
+      for (unsigned int i=0;i<hermOrders.size();i++)
       {
         //Create new Hermites
-        if (HermOrders[i] > 0)
+        if (hermOrders[i] > 0)
         {
-          ContRecurs = 1; //Continue recursion
+          contRecurs = 1; //Continue recursion
           double coeffi; //Temp. coefficient storage
           //First Hermite
-          coeffi = HermOrders[i]-2;
-          coeffi *= HermMags[i];
-          if ((HermOrders[i]-2) >= 0)
+          coeffi = hermOrders[i]-2;
+          coeffi *= hermMags[i];
+          if ((hermOrders[i]-2) >= 0)
           {
-            NewMags.push_back(coeffi);
-            NewOrders.push_back(HermOrders[i]-2);
-            NewBoys.push_back(BoysOrders[i]+1);
+            newMags.push_back(coeffi);
+            newOrders.push_back(hermOrders[i]-2);
+            newBoys.push_back(boysOrders[i]+1);
           }
           //Second Hermite
           coeffi = Gij.xPos();
-          coeffi *= HermMags[i];
-          if ((HermOrders[i]-1) >= 0)
+          coeffi *= hermMags[i];
+          if ((hermOrders[i]-1) >= 0)
           {
-            NewMags.push_back(coeffi);
-            NewOrders.push_back(HermOrders[i]-1);
-            NewBoys.push_back(BoysOrders[i]+1);
+            newMags.push_back(coeffi);
+            newOrders.push_back(hermOrders[i]-1);
+            newBoys.push_back(boysOrders[i]+1);
           }
         }
       }
       //Save new magnitudes and orders
-      HermMags = NewMags;
-      HermOrders = NewOrders;
-      BoysOrders = NewBoys;
+      hermMags = newMags;
+      hermOrders = newOrders;
+      boysOrders = newBoys;
     }
     //Calculate X integral
-    for (unsigned int i=0;i<BoysOrders.size();i++)
+    for (unsigned int i=0;i<boysOrders.size();i++)
     {
       double Itmp; //Temp. storage for integrals
-      Itmp = pow((-1*Gij.getAlpha()),BoysOrders[i]);
-      Itmp *= BoysFunc(BoysOrders[i],(Gij.getAlpha()*Rij2));
+      Itmp = pow((-1*Gij.getAlpha()),boysOrders[i]);
+      Itmp *= BoysFunc(boysOrders[i],(Gij.getAlpha()*Rij2));
       Ix += Itmp; //Update integral
     }
   }
@@ -455,61 +455,61 @@ double HermCoul2e(HermGau& Gi, HermGau& Gj)
   if (Gij.yPow() > 0)
   {
     //Aspherical Hermite Gaussians
-    vector<double> HermMags; //Magnitude of the Gaussians
-    vector<int> HermOrders; //Order of the Hermite function
-    vector<int> BoysOrders; //Order of the Boys function
-    HermMags.push_back(1.0);
-    HermOrders.push_back(Gij.yPow());
-    BoysOrders.push_back(0);
+    vector<double> hermMags; //Magnitude of the Gaussians
+    vector<int> hermOrders; //Order of the Hermite function
+    vector<int> boysOrders; //Order of the Boys function
+    hermMags.push_back(1.0);
+    hermOrders.push_back(Gij.yPow());
+    boysOrders.push_back(0);
     //Recursion
-    bool ContRecurs = 1; //Keeps the while loop going
-    while (ContRecurs)
+    bool contRecurs = 1; //Keeps the while loop going
+    while (contRecurs)
     {
       //Stop recursion unless orders are greater than zero
-      ContRecurs = 0;
+      contRecurs = 0;
       //Create temporary arrays
-      vector<double> NewMags; //New Gaussian magnitudes
-      vector<int> NewOrders; //New Hermite orders
-      vector<int> NewBoys; //New Boys function orders
+      vector<double> newMags; //New Gaussian magnitudes
+      vector<int> newOrders; //New Hermite orders
+      vector<int> newBoys; //New Boys function orders
       //Loop over Hermite functions
-      for (unsigned int i=0;i<HermOrders.size();i++)
+      for (unsigned int i=0;i<hermOrders.size();i++)
       {
         //Create new Hermites
-        if (HermOrders[i] > 0)
+        if (hermOrders[i] > 0)
         {
-          ContRecurs = 1; //Continue recursion
+          contRecurs = 1; //Continue recursion
           double coeffi; //Temp. coefficient storage
           //First Hermite
-          coeffi = HermOrders[i]-2;
-          coeffi *= HermMags[i];
-          if ((HermOrders[i]-2) >= 0)
+          coeffi = hermOrders[i]-2;
+          coeffi *= hermMags[i];
+          if ((hermOrders[i]-2) >= 0)
           {
-            NewMags.push_back(coeffi);
-            NewOrders.push_back(HermOrders[i]-2);
-            NewBoys.push_back(BoysOrders[i]+1);
+            newMags.push_back(coeffi);
+            newOrders.push_back(hermOrders[i]-2);
+            newBoys.push_back(boysOrders[i]+1);
           }
           //Second Hermite
           coeffi = Gij.yPos();
-          coeffi *= HermMags[i];
-          if ((HermOrders[i]-1) >= 0)
+          coeffi *= hermMags[i];
+          if ((hermOrders[i]-1) >= 0)
           {
-            NewMags.push_back(coeffi);
-            NewOrders.push_back(HermOrders[i]-1);
-            NewBoys.push_back(BoysOrders[i]+1);
+            newMags.push_back(coeffi);
+            newOrders.push_back(hermOrders[i]-1);
+            newBoys.push_back(boysOrders[i]+1);
           }
         }
       }
       //Save new magnitudes and orders
-      HermMags = NewMags;
-      HermOrders = NewOrders;
-      BoysOrders = NewBoys;
+      hermMags = newMags;
+      hermOrders = newOrders;
+      boysOrders = newBoys;
     }
     //Calculate Y integral
-    for (unsigned int i=0;i<BoysOrders.size();i++)
+    for (unsigned int i=0;i<boysOrders.size();i++)
     {
       double Itmp; //Temp. storage for integrals
-      Itmp = pow((-1*Gij.getAlpha()),BoysOrders[i]);
-      Itmp *= BoysFunc(BoysOrders[i],(Gij.getAlpha()*Rij2));
+      Itmp = pow((-1*Gij.getAlpha()),boysOrders[i]);
+      Itmp *= BoysFunc(boysOrders[i],(Gij.getAlpha()*Rij2));
       Iy += Itmp; //Update integral
     }
   }
@@ -525,61 +525,61 @@ double HermCoul2e(HermGau& Gi, HermGau& Gj)
   if (Gij.zPow() > 0)
   {
     //Aspherical Hermite Gaussians
-    vector<double> HermMags; //Magnitude of the Gaussians
-    vector<int> HermOrders; //Order of the Hermite function
-    vector<int> BoysOrders; //Order of the Boys function
-    HermMags.push_back(1.0);
-    HermOrders.push_back(Gij.zPow());
-    BoysOrders.push_back(0);
+    vector<double> hermMags; //Magnitude of the Gaussians
+    vector<int> hermOrders; //Order of the Hermite function
+    vector<int> boysOrders; //Order of the Boys function
+    hermMags.push_back(1.0);
+    hermOrders.push_back(Gij.zPow());
+    boysOrders.push_back(0);
     //Recursion
-    bool ContRecurs = 1; //Keeps the while loop going
-    while (ContRecurs)
+    bool contRecurs = 1; //Keeps the while loop going
+    while (contRecurs)
     {
       //Stop recursion unless orders are greater than zero
-      ContRecurs = 0;
+      contRecurs = 0;
       //Create temporary arrays
-      vector<double> NewMags; //New Gaussian magnitudes
-      vector<int> NewOrders; //New Hermite orders
-      vector<int> NewBoys; //New Boys function orders
+      vector<double> newMags; //New Gaussian magnitudes
+      vector<int> newOrders; //New Hermite orders
+      vector<int> newBoys; //New Boys function orders
       //Loop over Hermite functions
-      for (unsigned int i=0;i<HermOrders.size();i++)
+      for (unsigned int i=0;i<hermOrders.size();i++)
       {
         //Create new Hermites
-        if (HermOrders[i] > 0)
+        if (hermOrders[i] > 0)
         {
-          ContRecurs = 1; //Continue recursion
+          contRecurs = 1; //Continue recursion
           double coeffi; //Temp. coefficient storage
           //First Hermite
-          coeffi = HermOrders[i]-2;
-          coeffi *= HermMags[i];
-          if ((HermOrders[i]-2) >= 0)
+          coeffi = hermOrders[i]-2;
+          coeffi *= hermMags[i];
+          if ((hermOrders[i]-2) >= 0)
           {
-            NewMags.push_back(coeffi);
-            NewOrders.push_back(HermOrders[i]-2);
-            NewBoys.push_back(BoysOrders[i]+1);
+            newMags.push_back(coeffi);
+            newOrders.push_back(hermOrders[i]-2);
+            newBoys.push_back(boysOrders[i]+1);
           }
           //Second Hermite
           coeffi = Gij.zPos();
-          coeffi *= HermMags[i];
-          if ((HermOrders[i]-1) >= 0)
+          coeffi *= hermMags[i];
+          if ((hermOrders[i]-1) >= 0)
           {
-            NewMags.push_back(coeffi);
-            NewOrders.push_back(HermOrders[i]-1);
-            NewBoys.push_back(BoysOrders[i]+1);
+            newMags.push_back(coeffi);
+            newOrders.push_back(hermOrders[i]-1);
+            newBoys.push_back(boysOrders[i]+1);
           }
         }
       }
       //Save new magnitudes and orders
-      HermMags = NewMags;
-      HermOrders = NewOrders;
-      BoysOrders = NewBoys;
+      hermMags = newMags;
+      hermOrders = newOrders;
+      boysOrders = newBoys;
     }
     //Calculate Z integral
-    for (unsigned int i=0;i<BoysOrders.size();i++)
+    for (unsigned int i=0;i<boysOrders.size();i++)
     {
       double Itmp; //Temp. storage for integrals
-      Itmp = pow((-1*Gij.getAlpha()),BoysOrders[i]);
-      Itmp *= BoysFunc(BoysOrders[i],(Gij.getAlpha()*Rij2));
+      Itmp = pow((-1*Gij.getAlpha()),boysOrders[i]);
+      Itmp *= BoysFunc(boysOrders[i],(Gij.getAlpha()*Rij2));
       Iz += Itmp; //Update integral
     }
   }
@@ -595,7 +595,7 @@ double HermCoul2e(HermGau& Gi, HermGau& Gj)
   Eij = Ix*Iy*Iz; //Combine the integrals
   Eij *= Gij.coeff(); //Scale by magnitude
   //Change units and return
-  Eij *= Har2eV;
+  Eij *= har2eV;
   return Eij;
 };
 
@@ -605,80 +605,80 @@ double HermCoul1e(HermGau& Gi, double qj, Coord& Posj)
   double Eij = 0; //Energy
   //Create a temporary Gaussian
   double newMag = Gi.coeff(); //Magnitude
-  double anew = Gi.getAlpha(); //Gaussian coefficient
-  int powx = Gi.xPow(); //X power
-  int powy = Gi.yPow(); //Y power
-  int powz = Gi.zPow(); //Z power
+  double aNew = Gi.getAlpha(); //Gaussian coefficient
+  int powX = Gi.xPow(); //X power
+  int powY = Gi.yPow(); //Y power
+  int powZ = Gi.zPow(); //Z power
   Coord posi; //Temporary storage for positions
   posi.x = Gi.xPos();
   posi.y = Gi.yPos();
   posi.z = Gi.zPos();
-  Coord Disp = CoordDist2(posi,Posj); //Calculate distances
-  double Xij = Disp.x/BohrRad; //X distance (a.u.)
-  double Yij = Disp.y/BohrRad; //Y distance (a.u.)
-  double Zij = Disp.z/BohrRad; //Z distance (a.u.)
+  Coord disp = CoordDist2(posi,Posj); //Calculate distances
+  double Xij = disp.x/bohrRad; //X distance (a.u.)
+  double Yij = disp.y/bohrRad; //Y distance (a.u.)
+  double Zij = disp.z/bohrRad; //Z distance (a.u.)
   double Rij2 = Xij*Xij+Yij*Yij+Zij*Zij; //Distance between Gaussians (a.u.)
-  HermGau Gij(newMag,anew,powx,powy,powz,Xij,Yij,Zij);
+  HermGau Gij(newMag,aNew,powX,powY,powZ,Xij,Yij,Zij);
   //Calculate integrals
   double Ix = 0; //Integral in the x direction
   if (Gij.xPow() > 0)
   {
     //Aspherical Hermite Gaussians
-    vector<double> HermMags; //Magnitude of the Gaussians
-    vector<int> HermOrders; //Order of the Hermite function
-    vector<int> BoysOrders; //Order of the Boys function
-    HermMags.push_back(1.0);
-    HermOrders.push_back(Gij.xPow());
-    BoysOrders.push_back(0);
+    vector<double> hermMags; //Magnitude of the Gaussians
+    vector<int> hermOrders; //Order of the Hermite function
+    vector<int> boysOrders; //Order of the Boys function
+    hermMags.push_back(1.0);
+    hermOrders.push_back(Gij.xPow());
+    boysOrders.push_back(0);
     //Recursion
-    bool ContRecurs = 1; //Keeps the while loop going
-    while (ContRecurs)
+    bool contRecurs = 1; //Keeps the while loop going
+    while (contRecurs)
     {
       //Stop recursion unless orders are greater than zero
-      ContRecurs = 0;
+      contRecurs = 0;
       //Create temporary arrays
-      vector<double> NewMags; //New Gaussian magnitudes
-      vector<int> NewOrders; //New Hermite orders
-      vector<int> NewBoys; //New Boys function orders
+      vector<double> newMags; //New Gaussian magnitudes
+      vector<int> newOrders; //New Hermite orders
+      vector<int> newBoys; //New Boys function orders
       //Loop over Hermite functions
-      for (unsigned int i=0;i<HermOrders.size();i++)
+      for (unsigned int i=0;i<hermOrders.size();i++)
       {
         //Create new Hermites
-        if (HermOrders[i] > 0)
+        if (hermOrders[i] > 0)
         {
-          ContRecurs = 1; //Continue recursion
+          contRecurs = 1; //Continue recursion
           double coeffi; //Temp. coefficient storage
           //First Hermite
-          coeffi = HermOrders[i]-2;
-          coeffi *= HermMags[i];
-          if ((HermOrders[i]-2) >= 0)
+          coeffi = hermOrders[i]-2;
+          coeffi *= hermMags[i];
+          if ((hermOrders[i]-2) >= 0)
           {
-            NewMags.push_back(coeffi);
-            NewOrders.push_back(HermOrders[i]-2);
-            NewBoys.push_back(BoysOrders[i]+1);
+            newMags.push_back(coeffi);
+            newOrders.push_back(hermOrders[i]-2);
+            newBoys.push_back(boysOrders[i]+1);
           }
           //Second Hermite
           coeffi = Gij.xPos();
-          coeffi *= HermMags[i];
-          if ((HermOrders[i]-1) >= 0)
+          coeffi *= hermMags[i];
+          if ((hermOrders[i]-1) >= 0)
           {
-            NewMags.push_back(coeffi);
-            NewOrders.push_back(HermOrders[i]-1);
-            NewBoys.push_back(BoysOrders[i]+1);
+            newMags.push_back(coeffi);
+            newOrders.push_back(hermOrders[i]-1);
+            newBoys.push_back(boysOrders[i]+1);
           }
         }
       }
       //Save new magnitudes and orders
-      HermMags = NewMags;
-      HermOrders = NewOrders;
-      BoysOrders = NewBoys;
+      hermMags = newMags;
+      hermOrders = newOrders;
+      boysOrders = newBoys;
     }
     //Calculate X integral
-    for (unsigned int i=0;i<BoysOrders.size();i++)
+    for (unsigned int i=0;i<boysOrders.size();i++)
     {
       double Itmp; //Temp. storage for integrals
-      Itmp = pow((-1*Gij.getAlpha()),BoysOrders[i]);
-      Itmp *= BoysFunc(BoysOrders[i],(Gij.getAlpha()*Rij2));
+      Itmp = pow((-1*Gij.getAlpha()),boysOrders[i]);
+      Itmp *= BoysFunc(boysOrders[i],(Gij.getAlpha()*Rij2));
       Ix += Itmp; //Update integral
     }
   }
@@ -694,61 +694,61 @@ double HermCoul1e(HermGau& Gi, double qj, Coord& Posj)
   if (Gij.yPow() > 0)
   {
     //Aspherical Hermite Gaussians
-    vector<double> HermMags; //Magnitude of the Gaussians
-    vector<int> HermOrders; //Order of the Hermite function
-    vector<int> BoysOrders; //Order of the Boys function
-    HermMags.push_back(1.0);
-    HermOrders.push_back(Gij.yPow());
-    BoysOrders.push_back(0);
+    vector<double> hermMags; //Magnitude of the Gaussians
+    vector<int> hermOrders; //Order of the Hermite function
+    vector<int> boysOrders; //Order of the Boys function
+    hermMags.push_back(1.0);
+    hermOrders.push_back(Gij.yPow());
+    boysOrders.push_back(0);
     //Recursion
-    bool ContRecurs = 1; //Keeps the while loop going
-    while (ContRecurs)
+    bool contRecurs = 1; //Keeps the while loop going
+    while (contRecurs)
     {
       //Stop recursion unless orders are greater than zero
-      ContRecurs = 0;
+      contRecurs = 0;
       //Create temporary arrays
-      vector<double> NewMags; //New Gaussian magnitudes
-      vector<int> NewOrders; //New Hermite orders
-      vector<int> NewBoys; //New Boys function orders
+      vector<double> newMags; //New Gaussian magnitudes
+      vector<int> newOrders; //New Hermite orders
+      vector<int> newBoys; //New Boys function orders
       //Loop over Hermite functions
-      for (unsigned int i=0;i<HermOrders.size();i++)
+      for (unsigned int i=0;i<hermOrders.size();i++)
       {
         //Create new Hermites
-        if (HermOrders[i] > 0)
+        if (hermOrders[i] > 0)
         {
-          ContRecurs = 1; //Continue recursion
+          contRecurs = 1; //Continue recursion
           double coeffi; //Temp. coefficient storage
           //First Hermite
-          coeffi = HermOrders[i]-2;
-          coeffi *= HermMags[i];
-          if ((HermOrders[i]-2) >= 0)
+          coeffi = hermOrders[i]-2;
+          coeffi *= hermMags[i];
+          if ((hermOrders[i]-2) >= 0)
           {
-            NewMags.push_back(coeffi);
-            NewOrders.push_back(HermOrders[i]-2);
-            NewBoys.push_back(BoysOrders[i]+1);
+            newMags.push_back(coeffi);
+            newOrders.push_back(hermOrders[i]-2);
+            newBoys.push_back(boysOrders[i]+1);
           }
           //Second Hermite
           coeffi = Gij.yPos();
-          coeffi *= HermMags[i];
-          if ((HermOrders[i]-1) >= 0)
+          coeffi *= hermMags[i];
+          if ((hermOrders[i]-1) >= 0)
           {
-            NewMags.push_back(coeffi);
-            NewOrders.push_back(HermOrders[i]-1);
-            NewBoys.push_back(BoysOrders[i]+1);
+            newMags.push_back(coeffi);
+            newOrders.push_back(hermOrders[i]-1);
+            newBoys.push_back(boysOrders[i]+1);
           }
         }
       }
       //Save new magnitudes and orders
-      HermMags = NewMags;
-      HermOrders = NewOrders;
-      BoysOrders = NewBoys;
+      hermMags = newMags;
+      hermOrders = newOrders;
+      boysOrders = newBoys;
     }
     //Calculate Y integral
-    for (unsigned int i=0;i<BoysOrders.size();i++)
+    for (unsigned int i=0;i<boysOrders.size();i++)
     {
       double Itmp; //Temp. storage for integrals
-      Itmp = pow((-1*Gij.getAlpha()),BoysOrders[i]);
-      Itmp *= BoysFunc(BoysOrders[i],(Gij.getAlpha()*Rij2));
+      Itmp = pow((-1*Gij.getAlpha()),boysOrders[i]);
+      Itmp *= BoysFunc(boysOrders[i],(Gij.getAlpha()*Rij2));
       Iy += Itmp; //Update integral
     }
   }
@@ -764,61 +764,61 @@ double HermCoul1e(HermGau& Gi, double qj, Coord& Posj)
   if (Gij.zPow() > 0)
   {
     //Aspherical Hermite Gaussians
-    vector<double> HermMags; //Magnitude of the Gaussians
-    vector<int> HermOrders; //Order of the Hermite function
-    vector<int> BoysOrders; //Order of the Boys function
-    HermMags.push_back(1.0);
-    HermOrders.push_back(Gij.zPow());
-    BoysOrders.push_back(0);
+    vector<double> hermMags; //Magnitude of the Gaussians
+    vector<int> hermOrders; //Order of the Hermite function
+    vector<int> boysOrders; //Order of the Boys function
+    hermMags.push_back(1.0);
+    hermOrders.push_back(Gij.zPow());
+    boysOrders.push_back(0);
     //Recursion
-    bool ContRecurs = 1; //Keeps the while loop going
-    while (ContRecurs)
+    bool contRecurs = 1; //Keeps the while loop going
+    while (contRecurs)
     {
       //Stop recursion unless orders are greater than zero
-      ContRecurs = 0;
+      contRecurs = 0;
       //Create temporary arrays
-      vector<double> NewMags; //New Gaussian magnitudes
-      vector<int> NewOrders; //New Hermite orders
-      vector<int> NewBoys; //New Boys function orders
+      vector<double> newMags; //New Gaussian magnitudes
+      vector<int> newOrders; //New Hermite orders
+      vector<int> newBoys; //New Boys function orders
       //Loop over Hermite functions
-      for (unsigned int i=0;i<HermOrders.size();i++)
+      for (unsigned int i=0;i<hermOrders.size();i++)
       {
         //Create new Hermites
-        if (HermOrders[i] > 0)
+        if (hermOrders[i] > 0)
         {
-          ContRecurs = 1; //Continue recursion
+          contRecurs = 1; //Continue recursion
           double coeffi; //Temp. coefficient storage
           //First Hermite
-          coeffi = HermOrders[i]-2;
-          coeffi *= HermMags[i];
-          if ((HermOrders[i]-2) >= 0)
+          coeffi = hermOrders[i]-2;
+          coeffi *= hermMags[i];
+          if ((hermOrders[i]-2) >= 0)
           {
-            NewMags.push_back(coeffi);
-            NewOrders.push_back(HermOrders[i]-2);
-            NewBoys.push_back(BoysOrders[i]+1);
+            newMags.push_back(coeffi);
+            newOrders.push_back(hermOrders[i]-2);
+            newBoys.push_back(boysOrders[i]+1);
           }
           //Second Hermite
           coeffi = Gij.zPos();
-          coeffi *= HermMags[i];
-          if ((HermOrders[i]-1) >= 0)
+          coeffi *= hermMags[i];
+          if ((hermOrders[i]-1) >= 0)
           {
-            NewMags.push_back(coeffi);
-            NewOrders.push_back(HermOrders[i]-1);
-            NewBoys.push_back(BoysOrders[i]+1);
+            newMags.push_back(coeffi);
+            newOrders.push_back(hermOrders[i]-1);
+            newBoys.push_back(boysOrders[i]+1);
           }
         }
       }
       //Save new magnitudes and orders
-      HermMags = NewMags;
-      HermOrders = NewOrders;
-      BoysOrders = NewBoys;
+      hermMags = newMags;
+      hermOrders = newOrders;
+      boysOrders = newBoys;
     }
     //Calculate Z integral
-    for (unsigned int i=0;i<BoysOrders.size();i++)
+    for (unsigned int i=0;i<boysOrders.size();i++)
     {
       double Itmp; //Temp. storage for integrals
-      Itmp = pow((-1*Gij.getAlpha()),BoysOrders[i]);
-      Itmp *= BoysFunc(BoysOrders[i],(Gij.getAlpha()*Rij2));
+      Itmp = pow((-1*Gij.getAlpha()),boysOrders[i]);
+      Itmp *= BoysFunc(boysOrders[i],(Gij.getAlpha()*Rij2));
       Iz += Itmp; //Update integral
     }
   }
@@ -834,7 +834,7 @@ double HermCoul1e(HermGau& Gi, double qj, Coord& Posj)
   Eij = Ix*Iy*Iz; //Combine the integrals
   Eij *= Gij.coeff()*qj; //Scale by magnitude
   //Change units and return
-  Eij *= Har2eV;
+  Eij *= har2eV;
   return Eij;
 };
 
@@ -843,12 +843,12 @@ double HermOverlap(HermGau& Gi, HermGau& Gj)
   //Recursive two electron overlap integral
   double Sij = 0; //Overlap
   //Combine Gaussians with the Gaussian product rule
-  double anew = Gi.getAlpha()+Gj.getAlpha(); //New Gaussian coefficient
-  int powx = Gi.xPow()+Gj.xPow(); //New X power
-  int powy = Gi.yPow()+Gj.yPow(); //New Y power
-  int powz = Gi.zPow()+Gj.zPow(); //New Z power
+  double aNew = Gi.getAlpha()+Gj.getAlpha(); //New Gaussian coefficient
+  int powX = Gi.xPow()+Gj.xPow(); //New X power
+  int powY = Gi.yPow()+Gj.yPow(); //New Y power
+  int powZ = Gi.zPow()+Gj.zPow(); //New Z power
   //Update magnitude based on the separation
-  double mu = Gi.getAlpha()*Gj.getAlpha()/anew; //Smearing parameter
+  double mu = Gi.getAlpha()*Gj.getAlpha()/aNew; //Smearing parameter
   Coord posi,posj; //Temporary storage for positions
   posi.x = Gi.xPos();
   posi.y = Gi.yPos();
@@ -856,15 +856,15 @@ double HermOverlap(HermGau& Gi, HermGau& Gj)
   posj.x = Gj.xPos();
   posj.y = Gj.yPos();
   posj.z = Gj.zPos();
-  Coord Disp = CoordDist2(posi,posj); //Calculate distances
-  double Xij = Disp.x/BohrRad; //X distance (a.u.)
-  double Yij = Disp.y/BohrRad; //Y distance (a.u.)
-  double Zij = Disp.z/BohrRad; //Z distance (a.u.)
+  Coord disp = CoordDist2(posi,posj); //Calculate distances
+  double Xij = disp.x/bohrRad; //X distance (a.u.)
+  double Yij = disp.y/bohrRad; //Y distance (a.u.)
+  double Zij = disp.z/bohrRad; //Z distance (a.u.)
   double Rij2 = Xij*Xij+Yij*Yij+Zij*Zij; //Distance between Gaussians (a.u.)
   double newMag = Gi.coeff()*Gj.coeff(); //Product of old coefficients
   newMag *= exp(-mu*Rij2); //Scale based on distance
   //Create product Gaussian
-  HermGau Gij(newMag,anew,powx,powy,powz,Xij,Yij,Zij);
+  HermGau Gij(newMag,aNew,powX,powY,powZ,Xij,Yij,Zij);
   //Calculate integral
   
   Sij *= Gij.coeff(); //Scale by magnitude

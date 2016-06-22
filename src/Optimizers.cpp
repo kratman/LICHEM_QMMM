@@ -659,7 +659,7 @@ void LICHEMDFP(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
        (NormForce > (10*QMMMOpts.QMOptTol)))
     {
       //Optimizer is going the wrong direction and is not converged
-      Eold = -1*HugeNum; //Force the Hessian to be rebuilt
+      Eold = -1*hugeNum; //Force the Hessian to be rebuilt
     }
     //Update Hessian
     GradDiff -= Forces;

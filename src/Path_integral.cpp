@@ -21,7 +21,7 @@ double Get_PI_Espring(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   //Calculate total harmonic PI ring energy
   double E = 0.0;
   double w0 = 1/(QMMMOpts.beta*hbar);
-  w0 *= w0*ToeV*QMMMOpts.NBeads;
+  w0 *= w0*toeV*QMMMOpts.NBeads;
   #pragma omp parallel for schedule(dynamic) reduction(+:E)
   for (int i=0;i<Natoms;i++)
   {

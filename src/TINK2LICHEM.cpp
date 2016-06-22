@@ -389,7 +389,7 @@ void TINK2LICHEM(int& argc, char**& argv)
         stringstream line(Ncharges[j][1]);
         int NuChg;
         line >> NuChg;
-        posfile << PTable.typing(NuChg);
+        posfile << chemTable.typing(NuChg);
         posfile << " ";
         Zfound = 1;
       }
