@@ -14,8 +14,8 @@
 */
 
 //QM input writers
-void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
-                   QMMMSettings& QMMMOpts, int Bead)
+void WriteGauInput(vector<QMMMAtom>& QMMMData, string CalcTyp,
+                   QMMMSettings& QMMMOpts, int bead)
 {
   //Write Gaussian input files
   stringstream call; //Stream for system calls and reading/writing files
@@ -25,7 +25,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
   //Check for a charge file
   bool UseChargeFile = 0;
   call.str("");
-  call << "MMCharges_" << Bead << ".txt";
+  call << "MMCharges_" << bead << ".txt";
   chrgfilename = call.str();
   UseChargeFile = CheckFile(call.str());
   if (Nmm == 0)
@@ -40,23 +40,23 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
   {
     if (PBCon or QMMMOpts.useLREC)
     {
-      QMCOM = FindQMCOM(Struct,QMMMOpts,Bead);
+      QMCOM = FindQMCOM(QMMMData,QMMMOpts,bead);
     }
     if (AMOEBA)
     {
       if (TINKER)
       {
         //Set up multipoles
-        RotateTINKCharges(Struct,Bead);
+        RotateTINKCharges(QMMMData,bead);
       }
     }
   }
   //Construct g09 input
   call.str("");
-  call << "LICHM_" << Bead << ".com";
+  call << "LICHM_" << bead << ".com";
   outFile.open(call.str().c_str(),ios_base::out);
   call.str("");
-  call << "%chk=LICHM_" << Bead << ".chk";
+  call << "%chk=LICHM_" << bead << ".chk";
   call << '\n';
   call << "%Mem=" << QMMMOpts.RAM;
   if (QMMMOpts.memMB)
@@ -77,20 +77,20 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
   call << QMMMOpts.charge << " " << QMMMOpts.spin << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion)
+    if (QMMMData[i].QMregion)
     {
-      call << Struct[i].QMTyp;
-      call << " " << LICHEMFormFloat(Struct[i].P[Bead].x,16);
-      call << " " << LICHEMFormFloat(Struct[i].P[Bead].y,16);
-      call << " " << LICHEMFormFloat(Struct[i].P[Bead].z,16);
+      call << QMMMData[i].QMTyp;
+      call << " " << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
+      call << " " << LICHEMFormFloat(QMMMData[i].P[bead].y,16);
+      call << " " << LICHEMFormFloat(QMMMData[i].P[bead].z,16);
       call << '\n';
     }
-    if (Struct[i].PBregion)
+    if (QMMMData[i].PBregion)
     {
       call << "F";
-      call << " " << LICHEMFormFloat(Struct[i].P[Bead].x,16);
-      call << " " << LICHEMFormFloat(Struct[i].P[Bead].y,16);
-      call << " " << LICHEMFormFloat(Struct[i].P[Bead].z,16);
+      call << " " << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
+      call << " " << LICHEMFormFloat(QMMMData[i].P[bead].y,16);
+      call << " " << LICHEMFormFloat(QMMMData[i].P[bead].z,16);
       call << '\n';
     }
   }
@@ -116,7 +116,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
     {
       for (int i=0;i<Natoms;i++)
       {
-        if (Struct[i].MMregion)
+        if (QMMMData[i].MMregion)
         {
           //Check PBC (minimum image convention)
           Coord DistCent; //Distance from QM COM
@@ -127,10 +127,10 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
           {
             //Initialize displacements
             double dx,dy,dz; //Starting displacements
-            dx = Struct[i].P[Bead].x-QMCOM.x;
-            dy = Struct[i].P[Bead].y-QMCOM.y;
-            dz = Struct[i].P[Bead].z-QMCOM.z;
-            DistCent = CoordDist2(Struct[i].P[Bead],QMCOM);
+            dx = QMMMData[i].P[bead].x-QMCOM.x;
+            dy = QMMMData[i].P[bead].y-QMCOM.y;
+            dz = QMMMData[i].P[bead].z-QMCOM.z;
+            DistCent = CoordDist2(QMMMData[i].P[bead],QMCOM);
             //Calculate the shift in positions
             //NB: Generally this work out to be +/- {Lx,Ly,Lz}
             if (PBCon)
@@ -172,13 +172,13 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
           {
             FirstCharge = 0; //Skips writing the remaining zeros
             call << " ";
-            call << LICHEMFormFloat(Struct[i].P[Bead].x+xshft,16);
+            call << LICHEMFormFloat(QMMMData[i].P[bead].x+xshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].P[Bead].y+yshft,16);
+            call << LICHEMFormFloat(QMMMData[i].P[bead].y+yshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].P[Bead].z+zshft,16);
+            call << LICHEMFormFloat(QMMMData[i].P[bead].z+zshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].MP[Bead].q*scrq,16);
+            call << LICHEMFormFloat(QMMMData[i].MP[bead].q*scrq,16);
             call << '\n';
           }
         }
@@ -192,7 +192,7 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
     {
       for (int i=0;i<Natoms;i++)
       {
-        if (Struct[i].MMregion)
+        if (QMMMData[i].MMregion)
         {
           //Check PBC (minimum image convention)
           Coord DistCent; //Distance from QM COM
@@ -203,10 +203,10 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
           {
             //Initialize displacements
             double dx,dy,dz; //Starting displacements
-            dx = Struct[i].P[Bead].x-QMCOM.x;
-            dy = Struct[i].P[Bead].y-QMCOM.y;
-            dz = Struct[i].P[Bead].z-QMCOM.z;
-            DistCent = CoordDist2(Struct[i].P[Bead],QMCOM);
+            dx = QMMMData[i].P[bead].x-QMCOM.x;
+            dy = QMMMData[i].P[bead].y-QMCOM.y;
+            dz = QMMMData[i].P[bead].z-QMCOM.z;
+            DistCent = CoordDist2(QMMMData[i].P[bead],QMCOM);
             //Calculate the shift in positions
             //NB: Generally this work out to be +/- {Lx,Ly,Lz}
             if (PBCon)
@@ -248,58 +248,58 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
           {
             FirstCharge = 0; //Skips writing the remaining zeros
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].x1+xshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].x1+xshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].y1+yshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].y1+yshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].z1+zshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].z1+zshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].q1*scrq,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].q1*scrq,16);
             call << '\n';
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].x2+xshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].x2+xshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].y2+yshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].y2+yshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].z2+zshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].z2+zshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].q2*scrq,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].q2*scrq,16);
             call << '\n';
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].x3+xshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].x3+xshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].y3+yshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].y3+yshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].z3+zshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].z3+zshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].q3*scrq,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].q3*scrq,16);
             call << '\n';
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].x4+xshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].x4+xshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].y4+yshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].y4+yshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].z4+zshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].z4+zshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].q4*scrq,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].q4*scrq,16);
             call << '\n';
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].x5+xshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].x5+xshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].y5+yshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].y5+yshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].z5+zshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].z5+zshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].q5*scrq,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].q5*scrq,16);
             call << '\n';
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].x6+xshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].x6+xshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].y6+yshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].y6+yshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].z6+zshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].z6+zshft,16);
             call << " ";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].q6*scrq,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].q6*scrq,16);
             call << '\n';
           }
         }
@@ -328,8 +328,8 @@ void WriteGauInput(vector<QMMMAtom>& Struct, string CalcTyp,
   return;
 };
 
-void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
-                      QMMMSettings& QMMMOpts, int Bead)
+void WriteNWChemInput(vector<QMMMAtom>& QMMMData, string CalcTyp,
+                      QMMMSettings& QMMMOpts, int bead)
 {
   //Write NWChem input files
   fstream outFile,inFile; //Generic file streams
@@ -339,7 +339,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   //Check for a charge file
   bool UseChargeFile = 0;
   call.str("");
-  call << "MMCharges_" << Bead << ".txt";
+  call << "MMCharges_" << bead << ".txt";
   chrgfilename = call.str();
   UseChargeFile = CheckFile(call.str());
   if (Nmm == 0)
@@ -354,23 +354,23 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   {
     if (PBCon or QMMMOpts.useLREC)
     {
-      QMCOM = FindQMCOM(Struct,QMMMOpts,Bead);
+      QMCOM = FindQMCOM(QMMMData,QMMMOpts,bead);
     }
     if (AMOEBA)
     {
       if (TINKER)
       {
         //Set up multipoles
-        RotateTINKCharges(Struct,Bead);
+        RotateTINKCharges(QMMMData,bead);
       }
     }
   }
   //Create NWChem input
   call.str("");
-  call << "LICHM_" << Bead << ".nw";
+  call << "LICHM_" << bead << ".nw";
   outFile.open(call.str().c_str(),ios_base::out);
   call.str("");
-  call << "LICHM_" << Bead << ".db";
+  call << "LICHM_" << bead << ".db";
   if (CheckFile(call.str()))
   {
     outFile << "restart";
@@ -379,7 +379,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   {
     outFile << "start";
   }
-  outFile << " LICHM_" << Bead << '\n';
+  outFile << " LICHM_" << bead << '\n';
   outFile << "memory " << QMMMOpts.RAM;
   if (QMMMOpts.memMB)
   {
@@ -395,20 +395,20 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   outFile << "noautoz noautosym" << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion)
+    if (QMMMData[i].QMregion)
     {
-      outFile << " " << Struct[i].QMTyp;
-      outFile << " " << (Struct[i].P[Bead].x);
-      outFile << " " << (Struct[i].P[Bead].y);
-      outFile << " " << (Struct[i].P[Bead].z);
+      outFile << " " << QMMMData[i].QMTyp;
+      outFile << " " << (QMMMData[i].P[bead].x);
+      outFile << " " << (QMMMData[i].P[bead].y);
+      outFile << " " << (QMMMData[i].P[bead].z);
       outFile << '\n';
     }
-    if (Struct[i].PBregion)
+    if (QMMMData[i].PBregion)
     {
       outFile << " " << "F2pb";
-      outFile << " " << (Struct[i].P[Bead].x);
-      outFile << " " << (Struct[i].P[Bead].y);
-      outFile << " " << (Struct[i].P[Bead].z);
+      outFile << " " << (QMMMData[i].P[bead].x);
+      outFile << " " << (QMMMData[i].P[bead].y);
+      outFile << " " << (QMMMData[i].P[bead].z);
       outFile << '\n';
     }
   }
@@ -467,7 +467,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
       outFile << "bq mmchrg" << '\n';
       for (int i=0;i<Natoms;i++)
       {
-        if (Struct[i].MMregion)
+        if (QMMMData[i].MMregion)
         {
           //Check PBC (minimum image convention)
           Coord DistCent; //Distance from QM COM
@@ -478,10 +478,10 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
           {
             //Initialize displacements
             double dx,dy,dz; //Starting displacements
-            dx = Struct[i].P[Bead].x-QMCOM.x;
-            dy = Struct[i].P[Bead].y-QMCOM.y;
-            dz = Struct[i].P[Bead].z-QMCOM.z;
-            DistCent = CoordDist2(Struct[i].P[Bead],QMCOM);
+            dx = QMMMData[i].P[bead].x-QMCOM.x;
+            dy = QMMMData[i].P[bead].y-QMCOM.y;
+            dz = QMMMData[i].P[bead].z-QMCOM.z;
+            DistCent = CoordDist2(QMMMData[i].P[bead],QMCOM);
             //Calculate the shift in positions
             //NB: Generally this work out to be +/- {Lx,Ly,Lz}
             if (PBCon)
@@ -523,13 +523,13 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
           {
             FirstCharge = 0; //Skips writing the remaining zeros
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].P[Bead].x+xshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].P[bead].x+xshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].P[Bead].y+yshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].P[bead].y+yshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].P[Bead].z+zshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].P[bead].z+zshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].MP[Bead].q*scrq,16);
+            outFile << LICHEMFormFloat(QMMMData[i].MP[bead].q*scrq,16);
             outFile << '\n';
           }
         }
@@ -543,7 +543,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
       outFile << "bq mmchrg" << '\n';
       for (int i=0;i<Natoms;i++)
       {
-        if (Struct[i].MMregion)
+        if (QMMMData[i].MMregion)
         {
           //Check PBC (minimum image convention)
           Coord DistCent; //Distance from QM COM
@@ -554,10 +554,10 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
           {
             //Initialize displacements
             double dx,dy,dz; //Starting displacements
-            dx = Struct[i].P[Bead].x-QMCOM.x;
-            dy = Struct[i].P[Bead].y-QMCOM.y;
-            dz = Struct[i].P[Bead].z-QMCOM.z;
-            DistCent = CoordDist2(Struct[i].P[Bead],QMCOM);
+            dx = QMMMData[i].P[bead].x-QMCOM.x;
+            dy = QMMMData[i].P[bead].y-QMCOM.y;
+            dz = QMMMData[i].P[bead].z-QMCOM.z;
+            DistCent = CoordDist2(QMMMData[i].P[bead],QMCOM);
             //Calculate the shift in positions
             //NB: Generally this work out to be +/- {Lx,Ly,Lz}
             if (PBCon)
@@ -599,58 +599,58 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
           {
             FirstCharge = 0; //Skips writing the remaining zeros
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x1+xshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x1+xshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y1+yshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y1+yshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z1+zshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z1+zshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q1*scrq,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q1*scrq,16);
             outFile << '\n';
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x2+xshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x2+xshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y2+yshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y2+yshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z2+zshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z2+zshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q2*scrq,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q2*scrq,16);
             outFile << '\n';
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x3+xshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x3+xshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y3+yshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y3+yshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z3+zshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z3+zshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q3*scrq,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q3*scrq,16);
             outFile << '\n';
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x4+xshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x4+xshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y4+yshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y4+yshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z4+zshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z4+zshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q4*scrq,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q4*scrq,16);
             outFile << '\n';
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x5+xshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x5+xshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y5+yshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y5+yshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z5+zshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z5+zshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q5*scrq,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q5*scrq,16);
             outFile << '\n';
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x6+xshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x6+xshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y6+yshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y6+yshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z6+zshft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z6+zshft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q6*scrq,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q6*scrq,16);
             outFile << '\n';
           }
         }
@@ -669,7 +669,7 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   outFile << " xc " << QMMMOpts.func << '\n';
   //Use the checkpoint file
   call.str("");
-  call << "LICHM_" << Bead << ".movecs";
+  call << "LICHM_" << bead << ".movecs";
   if (CheckFile(call.str()))
   {
     //Tell the DFT module to read the initial vectors
@@ -686,8 +686,8 @@ void WriteNWChemInput(vector<QMMMAtom>& Struct, string CalcTyp,
   return;
 };
 
-void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
-                    QMMMSettings& QMMMOpts, int Bead)
+void WritePSI4Input(vector<QMMMAtom>& QMMMData, string CalcTyp,
+                    QMMMSettings& QMMMOpts, int bead)
 {
   //Write PSI4 input files
   stringstream call; //Stream for system calls and reading/writing files
@@ -697,7 +697,7 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   //Check for a charge file
   bool UseChargeFile = 0;
   call.str("");
-  call << "MMCharges_" << Bead << ".txt";
+  call << "MMCharges_" << bead << ".txt";
   chrgfilename = call.str();
   UseChargeFile = CheckFile(call.str());
   if (Nmm == 0)
@@ -711,21 +711,21 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   {
     if (PBCon or QMMMOpts.useLREC)
     {
-      QMCOM = FindQMCOM(Struct,QMMMOpts,Bead);
+      QMCOM = FindQMCOM(QMMMData,QMMMOpts,bead);
     }
     if (AMOEBA)
     {
       if (TINKER)
       {
         //Set up multipoles
-        RotateTINKCharges(Struct,Bead);
+        RotateTINKCharges(QMMMData,bead);
       }
     }
   }
   //Check if there is a checkpoint file
   bool UseCheckPoint;
   call.str("");
-  call << "LICHM_" << Bead << ".180";
+  call << "LICHM_" << bead << ".180";
   UseCheckPoint = CheckFile(call.str());
   //Set up memory
   call.str("");
@@ -772,17 +772,17 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   call << '\n';
   //Set up molecules
   call << "molecule LICHM_";
-  call << Bead << " {" << '\n';
+  call << bead << " {" << '\n';
   call << " " << QMMMOpts.charge;
   call << " " << QMMMOpts.spin << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion)
+    if (QMMMData[i].QMregion)
     {
-      call << " " << Struct[i].QMTyp;
-      call << " " << LICHEMFormFloat(Struct[i].P[Bead].x,16);
-      call << " " << LICHEMFormFloat(Struct[i].P[Bead].y,16);
-      call << " " << LICHEMFormFloat(Struct[i].P[Bead].z,16);
+      call << " " << QMMMData[i].QMTyp;
+      call << " " << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
+      call << " " << LICHEMFormFloat(QMMMData[i].P[bead].y,16);
+      call << " " << LICHEMFormFloat(QMMMData[i].P[bead].z,16);
       call << '\n';
     }
   }
@@ -815,7 +815,7 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
       call << "Chrgfield = QMMM()" << '\n';
       for (int i=0;i<Natoms;i++)
       {
-        if (Struct[i].MMregion)
+        if (QMMMData[i].MMregion)
         {
           //Check PBC (minimum image convention)
           Coord DistCent; //Distance from QM COM
@@ -826,10 +826,10 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
           {
             //Initialize displacements
             double dx,dy,dz; //Starting displacements
-            dx = Struct[i].P[Bead].x-QMCOM.x;
-            dy = Struct[i].P[Bead].y-QMCOM.y;
-            dz = Struct[i].P[Bead].z-QMCOM.z;
-            DistCent = CoordDist2(Struct[i].P[Bead],QMCOM);
+            dx = QMMMData[i].P[bead].x-QMCOM.x;
+            dy = QMMMData[i].P[bead].y-QMCOM.y;
+            dz = QMMMData[i].P[bead].z-QMCOM.z;
+            DistCent = CoordDist2(QMMMData[i].P[bead],QMCOM);
             //Calculate the shift in positions
             //NB: Generally this work out to be +/- {Lx,Ly,Lz}
             if (PBCon)
@@ -870,10 +870,10 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
           if (scrq > 0)
           {
             call << "Chrgfield.extern.addCharge(";
-            call << LICHEMFormFloat(Struct[i].MP[Bead].q*scrq,16) << ",";
-            call << LICHEMFormFloat(Struct[i].P[Bead].x+xshft,16) << ",";
-            call << LICHEMFormFloat(Struct[i].P[Bead].y+yshft,16) << ",";
-            call << LICHEMFormFloat(Struct[i].P[Bead].z+zshft,16);
+            call << LICHEMFormFloat(QMMMData[i].MP[bead].q*scrq,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].P[bead].x+xshft,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].P[bead].y+yshft,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].P[bead].z+zshft,16);
             call << ")" << '\n';
           }
         }
@@ -886,7 +886,7 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
       call << "Chrgfield = QMMM()" << '\n';
       for (int i=0;i<Natoms;i++)
       {
-        if (Struct[i].MMregion)
+        if (QMMMData[i].MMregion)
         {
           //Check PBC (minimum image convention)
           Coord DistCent; //Distance from QM COM
@@ -897,10 +897,10 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
           {
             //Initialize displacements
             double dx,dy,dz; //Starting displacements
-            dx = Struct[i].P[Bead].x-QMCOM.x;
-            dy = Struct[i].P[Bead].y-QMCOM.y;
-            dz = Struct[i].P[Bead].z-QMCOM.z;
-            DistCent = CoordDist2(Struct[i].P[Bead],QMCOM);
+            dx = QMMMData[i].P[bead].x-QMCOM.x;
+            dy = QMMMData[i].P[bead].y-QMCOM.y;
+            dz = QMMMData[i].P[bead].z-QMCOM.z;
+            DistCent = CoordDist2(QMMMData[i].P[bead],QMCOM);
             //Calculate the shift in positions
             //NB: Generally this work out to be +/- {Lx,Ly,Lz}
             if (PBCon)
@@ -941,40 +941,40 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
           if (scrq > 0)
           {
             call << "Chrgfield.extern.addCharge(";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].q1*scrq,16) << ",";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].x1+xshft,16) << ",";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].y1+yshft,16) << ",";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].z1+zshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].q1*scrq,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].x1+xshft,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].y1+yshft,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].z1+zshft,16);
             call << ")" << '\n';
             call << "Chrgfield.extern.addCharge(";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].q2*scrq,16) << ",";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].x2+xshft,16) << ",";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].y2+yshft,16) << ",";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].z2+zshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].q2*scrq,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].x2+xshft,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].y2+yshft,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].z2+zshft,16);
             call << ")" << '\n';
             call << "Chrgfield.extern.addCharge(";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].q3*scrq,16) << ",";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].x3+xshft,16) << ",";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].y3+yshft,16) << ",";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].z3+zshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].q3*scrq,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].x3+xshft,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].y3+yshft,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].z3+zshft,16);
             call << ")" << '\n';
             call << "Chrgfield.extern.addCharge(";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].q4*scrq,16) << ",";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].x4+xshft,16) << ",";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].y4+yshft,16) << ",";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].z4+zshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].q4*scrq,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].x4+xshft,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].y4+yshft,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].z4+zshft,16);
             call << ")" << '\n';
             call << "Chrgfield.extern.addCharge(";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].q5*scrq,16) << ",";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].x5+xshft,16) << ",";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].y5+yshft,16) << ",";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].z5+zshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].q5*scrq,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].x5+xshft,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].y5+yshft,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].z5+zshft,16);
             call << ")" << '\n';
             call << "Chrgfield.extern.addCharge(";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].q6*scrq,16) << ",";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].x6+xshft,16) << ",";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].y6+yshft,16) << ",";
-            call << LICHEMFormFloat(Struct[i].PC[Bead].z6+zshft,16);
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].q6*scrq,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].x6+xshft,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].y6+yshft,16) << ",";
+            call << LICHEMFormFloat(QMMMData[i].PC[bead].z6+zshft,16);
             call << ")" << '\n';
           }
         }
@@ -1009,7 +1009,7 @@ void WritePSI4Input(vector<QMMMAtom>& Struct, string CalcTyp,
   //Create file
   dummy = call.str(); //Store file as a temporary variable
   call.str("");
-  call << "LICHM_" << Bead << ".dat";
+  call << "LICHM_" << bead << ".dat";
   outFile.open(call.str().c_str(),ios_base::out);
   outFile << dummy << '\n';
   outFile.flush();

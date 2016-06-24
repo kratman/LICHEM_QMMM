@@ -18,7 +18,7 @@
 */
 
 //Trajectory analysis functions
-void Print_traj(vector<QMMMAtom>& Struct, fstream& traj,
+void Print_traj(vector<QMMMAtom>& QMMMData, fstream& traj,
                 QMMMSettings& QMMMOpts)
 {
   //Function to print the trajectory or restart files for all beads
@@ -32,10 +32,10 @@ void Print_traj(vector<QMMMAtom>& Struct, fstream& traj,
     //Print all replicas of atom i
     for (int j=0;j<QMMMOpts.NBeads;j++)
     {
-      traj << setw(3) << left << Struct[i].QMTyp << " ";
-      traj << LICHEMFormFloat(Struct[i].P[j].x,16) << " ";
-      traj << LICHEMFormFloat(Struct[i].P[j].y,16) << " ";
-      traj << LICHEMFormFloat(Struct[i].P[j].z,16) << '\n';
+      traj << setw(3) << left << QMMMData[i].QMTyp << " ";
+      traj << LICHEMFormFloat(QMMMData[i].P[j].x,16) << " ";
+      traj << LICHEMFormFloat(QMMMData[i].P[j].y,16) << " ";
+      traj << LICHEMFormFloat(QMMMData[i].P[j].z,16) << '\n';
     }
   }
   //Write data and return
@@ -43,7 +43,7 @@ void Print_traj(vector<QMMMAtom>& Struct, fstream& traj,
   return;
 };
 
-void BurstTraj(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
+void BurstTraj(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
 {
   //Function to split reaction path and path-integral trajectory frames
   int ct; //Generic counter
@@ -72,10 +72,10 @@ void BurstTraj(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
     for (int i=0;i<Natoms;i++)
     {
       //Print data for atom i
-      burstFile << setw(3) << left << Struct[i].QMTyp << " ";
-      burstFile << LICHEMFormFloat(Struct[i].P[j].x,16) << " ";
-      burstFile << LICHEMFormFloat(Struct[i].P[j].y,16) << " ";
-      burstFile << LICHEMFormFloat(Struct[i].P[j].z,16) << '\n';
+      burstFile << setw(3) << left << QMMMData[i].QMTyp << " ";
+      burstFile << LICHEMFormFloat(QMMMData[i].P[j].x,16) << " ";
+      burstFile << LICHEMFormFloat(QMMMData[i].P[j].y,16) << " ";
+      burstFile << LICHEMFormFloat(QMMMData[i].P[j].z,16) << '\n';
     }
   }
   //Write data and return
@@ -271,8 +271,8 @@ void PathLinInterpolate(int& argc, char**& argv)
     {
       //Adjust number of beads
       Nbeads += 1;
-      cout << "Warning: A three structure interpolation requires an odd number";
-      cout << " of points." << '\n';
+      cout << "Warning: A three structure interpolation requires an odd";
+      cout << " number of points." << '\n';
       cout << " Nbeads increased to " << Nbeads << '\n' << '\n';
     }
     for (int i=0;i<Natoms;i++)
@@ -631,7 +631,7 @@ VectorXd KabschDisplacement(MatrixXd& A, MatrixXd& B, int matSize)
 };
 
 //Physical property analysis functions
-double LICHEMDensity(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
+double LICHEMDensity(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
 {
   //Function to calculate the density for periodic calculations
   double rho = 0;
@@ -639,7 +639,7 @@ double LICHEMDensity(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   #pragma omp parallel for schedule(dynamic) reduction(+:rho)
   for (int i=0;i<Natoms;i++)
   {
-    rho += Struct[i].m;
+    rho += QMMMData[i].m;
   }
   //Divide by the volume
   rho /= (Lx*Ly*Lz);
@@ -651,8 +651,8 @@ double LICHEMDensity(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   return rho;
 };
 
-VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
-                    QMMMSettings& QMMMOpts, int Bead, int& remCt)
+VectorXd LICHEMFreq(vector<QMMMAtom>& QMMMData, MatrixXd& QMMMHess,
+                    QMMMSettings& QMMMOpts, int bead, int& remCt)
 {
   //Function to perform a QMMM frequency analysis
   double projTol = 0.65; //Amount of overlap to remove a mode
@@ -686,10 +686,10 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
   for (int i=0;i<Natoms;i++)
   {
     //Locate QM and PB atoms
-    if (Struct[i].QMregion or Struct[i].PBregion)
+    if (QMMMData[i].QMregion or QMMMData[i].PBregion)
     {
       //Switch to a.u. and save mass
-      double massVal = Struct[i].m/elecMass;
+      double massVal = QMMMData[i].m/elecMass;
       masses.push_back(massVal); //X component
       masses.push_back(massVal); //Y component
       masses.push_back(massVal); //Z component
@@ -829,20 +829,20 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& Struct, MatrixXd& QMMMHess,
   //Write all normal modes
   if ((!QMMM) and QMMMOpts.printNormModes)
   {
-    WriteModes(Struct,0,QMMMFreqs,QMMMNormModes,QMMMOpts,Bead);
+    WriteModes(QMMMData,0,QMMMFreqs,QMMMNormModes,QMMMOpts,bead);
   }
   //Write modes for imaginary frequencies
   else if (QMMM)
   {
-    WriteModes(Struct,1,QMMMFreqs,QMMMNormModes,QMMMOpts,Bead);
+    WriteModes(QMMMData,1,QMMMFreqs,QMMMNormModes,QMMMOpts,bead);
   }
   //Return frequencies
   remCt = transRotCt;
   return QMMMFreqs;
 };
 
-void WriteModes(vector<QMMMAtom>& Struct, bool imagOnly, VectorXd& Freqs,
-                MatrixXd& normModes, QMMMSettings& QMMMOpts, int Bead)
+void WriteModes(vector<QMMMAtom>& QMMMData, bool imagOnly, VectorXd& Freqs,
+                MatrixXd& normModes, QMMMSettings& QMMMOpts, int bead)
 {
   //Function to write normal modes
   int Nframes = 5; //Trajectory files have (2N+1) frames
@@ -872,20 +872,20 @@ void WriteModes(vector<QMMMAtom>& Struct, bool imagOnly, VectorXd& Freqs,
         modeFile << (Nqm+Npseudo) << '\n' << '\n';
         for (int k=0;k<Natoms;k++)
         {
-          if (Struct[k].QMregion or Struct[k].PBregion)
+          if (QMMMData[k].QMregion or QMMMData[k].PBregion)
           {
             //Write element
-            modeFile << Struct[k].QMTyp << " ";
+            modeFile << QMMMData[k].QMTyp << " ";
             //Write X component
-            modeFile << Struct[k].P[Bead].x+(curAmp*normModes(ct,i));
+            modeFile << QMMMData[k].P[bead].x+(curAmp*normModes(ct,i));
             modeFile << " ";
             ct += 1;
             //Write Y component
-            modeFile << Struct[k].P[Bead].y+(curAmp*normModes(ct,i));
+            modeFile << QMMMData[k].P[bead].y+(curAmp*normModes(ct,i));
             modeFile << " ";
             ct += 1;
             //Write Z component
-            modeFile << Struct[k].P[Bead].z+(curAmp*normModes(ct,i));
+            modeFile << QMMMData[k].P[bead].z+(curAmp*normModes(ct,i));
             modeFile << '\n';
             ct += 1;
           }

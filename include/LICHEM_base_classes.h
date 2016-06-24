@@ -58,14 +58,14 @@ class Coord
     double vecMag(); //Return the squared vector magnitude
 };
 
-class Mpole
+class MPole
 {
   //Cartesian multipoles
   public:
     //Constructor
-    Mpole();
+    MPole();
     //Destructor
-    ~Mpole();
+    ~MPole();
     //Definition of the local frame of reference
     bool chiralFlip; //Flip y axis
     string type; //Bisector, Z-then-X, Z-Only, 3-Fold, or Z-Bisect
@@ -91,14 +91,14 @@ class Mpole
     double Qzz;
 };
 
-class RedMpole
+class RedMPole
 {
   //Reduced multipole from sph. harm. and diagonalization
   public:
     //Constructor
-    RedMpole();
+    RedMPole();
     //Destructor
-    ~RedMpole();
+    ~RedMPole();
     //Monopole
     double Q00;
     //Dipole moments

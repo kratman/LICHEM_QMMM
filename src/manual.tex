@@ -197,14 +197,14 @@ QM/MM calculations.
  \hline
  Test & Description & QM & MM \\ \hline
   & & & \\
- HF energy & HF/6-31++G(d,p) energy of the water dimer calculated using only the
- QM wrapper & PSI4,Gaussian & N/A \\
+ HF energy & HF/6-31++G(d,p) energy of the water dimer calculated using only
+ the QM wrapper & PSI4,Gaussian & N/A \\
   & & & \\
- PBE0 energy & PBE0/6-31++G(d,p) energy of the water dimer calculated using only
- the QM wrapper. & PSI4,Gaussian,NWChem & N/A \\
+ PBE0 energy & PBE0/6-31++G(d,p) energy of the water dimer calculated using
+ only the QM wrapper. & PSI4,Gaussian,NWChem & N/A \\
   & & & \\
- CCSD energy & CCSD/6-31++G(d,p) energy of the water dimer calculated using only
- the QM wrapper. & PSI4 & N/A \\
+ CCSD energy & CCSD/6-31++G(d,p) energy of the water dimer calculated using
+ only the QM wrapper. & PSI4 & N/A \\
   & & & \\
  PM6 energy & PM6 energy of the water dimer calculated using only the QM
  wrapper. & Gaussian & N/A \\
@@ -745,8 +745,9 @@ simulations. \\
 
 user:\$ lichem -path -b Nbeads -r Reactant.xyz -t TS.xyz -p Product.xyz \\
 
-The -path flag will linearly interpolate between reactant and product structures
-to create an initial reaction pathway (BeadStartStruct.xyz) for LICHEM.
+The -path flag will linearly interpolate between reactant and product
+structures to create an initial reaction pathway (BeadStartStruct.xyz) for
+LICHEM.
 Adding a guess of the transition state structure using the -t flag is optional,
 but can greatly improve the initial path. \\
 
@@ -1020,8 +1021,8 @@ to place point--charges (monopoles) on the atomic centers.
 Atomic monopoles are often inadequate \cite{Cisneros2014,Kramer2014}, and
 some models augment the field by adding massless charged dummy atoms to the
 molecule \cite{Jorgensen1983,Mahoney2000}. 
-However, the dummy atoms can complicate the potential/dynamics during molecular 
-simulations. \\
+However, the dummy atoms can complicate the potential/dynamics during
+molecular simulations. \\
 
 An alternative approach is to add higher--order moments (multipoles) of the 
 electrostatic potential to the model

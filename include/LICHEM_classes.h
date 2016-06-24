@@ -39,7 +39,7 @@ class GEMDen
     //Functions to manipulate GEM density
     void setBasis(string,string); //Sets the Hermite basis
     void setFrame(bool,string,int,int,int); //Sets the frame of reference
-    Mpole GEMDM(); //Function to generate multipoles from density
+    MPole GEMDM(); //Function to generate multipoles from density
 };
 
 //LICHEM particle data structures
@@ -70,7 +70,7 @@ class QMMMAtom
     //Coordinates
     vector<Coord> P; //Array of beads
     //Multipoles
-    vector<Mpole> MP; //Multipoles
+    vector<MPole> MP; //Multipoles
     vector<OctCharges> PC; //Point-charge multipoles
     //Electron density
     vector<GEMDen> GEM; //GEM frozen density

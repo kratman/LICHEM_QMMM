@@ -62,7 +62,7 @@ double BoysFunc(int,double);
 
 void BurstTraj(vector<QMMMAtom>&,QMMMSettings&);
 
-RedMpole Cart2SphHarm(Mpole&);
+RedMPole Cart2SphHarm(MPole&);
 
 VectorXd CINEBTangent(VectorXd&,VectorXd&,QMMMSettings&,int);
 
@@ -220,7 +220,7 @@ void ReadLICHEMInput(fstream&,fstream&,fstream&,
 
 void RotateTINKCharges(vector<QMMMAtom>&,int);
 
-OctCharges SphHarm2Charges(RedMpole);
+OctCharges SphHarm2Charges(RedMPole);
 
 void SplitPathTraj(int&,char**&);
 
@@ -256,7 +256,7 @@ void WriteModes(vector<QMMMAtom>&,bool,VectorXd&,MatrixXd&,QMMMSettings&,int);
 
 void WritePSI4Input(vector<QMMMAtom>&,string,QMMMSettings&,int);
 
-void WriteTINKMpole(vector<QMMMAtom>&,fstream&,int,int);
+void WriteTINKMPole(vector<QMMMAtom>&,fstream&,int,int);
 
 void WriteQMConnect(int&,char**&);
 

@@ -38,27 +38,27 @@ double Coord::vecMag()
   return R2;
 };
 
-//Mpole class function definitions
-Mpole::Mpole()
+//MPole class function definitions
+MPole::MPole()
 {
   //Generic constructor
   return;
 };
 
-Mpole::~Mpole()
+MPole::~MPole()
 {
   //Generic destructor
   return;
 };
 
-//RedMpole class function definitions
-RedMpole::RedMpole()
+//RedMPole class function definitions
+RedMPole::RedMPole()
 {
   //Generic constructor
   return;
 };
 
-RedMpole::~RedMpole()
+RedMPole::~RedMPole()
 {
   //Generic destructor
   return;
@@ -115,10 +115,10 @@ void GEMDen::setFrame(bool flip, string frame, int at1, int at2, int at3)
   return;
 };
 
-Mpole GEMDen::GEMDM()
+MPole GEMDen::GEMDM()
 {
   //Function to convert GEM density to distributed multipoles
-  Mpole dmpole; //Blank set of multipoles
+  MPole dmpole; //Blank set of multipoles
   //Save frame of reference
   dmpole.chiralFlip = chiralFlip_;
   dmpole.type = type_;

@@ -152,20 +152,20 @@ Coord CoordDist2(Coord& a, Coord& b)
 };
 
 //Functions to check connectivity
-vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int atID)
+vector<int> TraceBoundary(vector<QMMMAtom>& QMMMData, int atID)
 {
   //Function to find all boundary atoms connected to a pseudobond atom
   bool bondError = 0; //Checks if the molecular structure "breaks" the math
   vector<int> boundAtoms; //Final list of atoms
   //Add atoms bonded to atom "AtID"
-  for (unsigned int i=0;i<Struct[atID].bonds.size();i++)
+  for (unsigned int i=0;i<QMMMData[atID].bonds.size();i++)
   {
-    int bondID = Struct[atID].bonds[i];
-    if (Struct[bondID].BAregion)
+    int bondID = QMMMData[atID].bonds[i];
+    if (QMMMData[bondID].BAregion)
     {
       boundAtoms.push_back(bondID);
     }
-    if (Struct[bondID].PBregion and (bondID != atID))
+    if (QMMMData[bondID].PBregion and (bondID != atID))
     {
       //Two PBs are connected and this system will fail
       bondError = 1;
@@ -180,9 +180,9 @@ vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int atID)
     for (unsigned int i=0;i<boundAtoms.size();i++)
     {
       int BAID = boundAtoms[i];
-      for (unsigned int j=0;j<Struct[BAID].bonds.size();j++)
+      for (unsigned int j=0;j<QMMMData[BAID].bonds.size();j++)
       {
-        int bondID = Struct[BAID].bonds[j];
+        int bondID = QMMMData[BAID].bonds[j];
         //Check if it is on the list
         bool isThere = 0;
         for (unsigned int k=0;k<boundAtoms.size();k++)
@@ -194,12 +194,12 @@ vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int atID)
         }
         if (!isThere)
         {
-          if (Struct[bondID].BAregion)
+          if (QMMMData[bondID].BAregion)
           {
             moreFound = 1; //Keep going
             tmp.push_back(bondID);
           }
-          if (Struct[bondID].PBregion and (bondID != atID))
+          if (QMMMData[bondID].PBregion and (bondID != atID))
           {
             //Two PBs are connected and this system will fail
             bondError = 1;
@@ -240,13 +240,13 @@ vector<int> TraceBoundary(vector<QMMMAtom>& Struct, int atID)
   return boundAtoms;
 };
 
-bool Bonded(vector<QMMMAtom>& Struct, int atom1, int atom2)
+bool Bonded(vector<QMMMAtom>& QMMMData, int atom1, int atom2)
 {
   //Function to check if two atoms are 1-2 connected
   bool isBound = 0;
-  for (unsigned int i=0;i<Struct[atom2].bonds.size();i++)
+  for (unsigned int i=0;i<QMMMData[atom2].bonds.size();i++)
   {
-    if (atom1 == Struct[atom2].bonds[i])
+    if (atom1 == QMMMData[atom2].bonds[i])
     {
       isBound = 1;
     }
@@ -254,16 +254,16 @@ bool Bonded(vector<QMMMAtom>& Struct, int atom1, int atom2)
   return isBound;
 };
 
-bool Angled(vector<QMMMAtom>& Struct, int atom1, int atom3)
+bool Angled(vector<QMMMAtom>& QMMMData, int atom1, int atom3)
 {
   //Function to check if two atoms are 1-3 connected
   bool isBound = 0;
-  for (unsigned int i=0;i<Struct[atom1].bonds.size();i++)
+  for (unsigned int i=0;i<QMMMData[atom1].bonds.size();i++)
   {
-    int atom2 = Struct[atom1].bonds[i];
-    for (unsigned int j=0;j<Struct[atom2].bonds.size();j++)
+    int atom2 = QMMMData[atom1].bonds[i];
+    for (unsigned int j=0;j<QMMMData[atom2].bonds.size();j++)
     {
-      if (atom3 == Struct[atom2].bonds[j])
+      if (atom3 == QMMMData[atom2].bonds[j])
       {
         isBound = 1;
       }
@@ -272,19 +272,19 @@ bool Angled(vector<QMMMAtom>& Struct, int atom1, int atom3)
   return isBound;
 };
 
-bool Dihedraled(vector<QMMMAtom>& Struct, int atom1, int atom4)
+bool Dihedraled(vector<QMMMAtom>& QMMMData, int atom1, int atom4)
 {
   //Function to check if two atoms are 1-4 connected
   bool isBound = 0;
-  for (unsigned int i=0;i<Struct[atom1].bonds.size();i++)
+  for (unsigned int i=0;i<QMMMData[atom1].bonds.size();i++)
   {
-    int atom2 = Struct[atom1].bonds[i];
-    for (unsigned int j=0;j<Struct[atom2].bonds.size();j++)
+    int atom2 = QMMMData[atom1].bonds[i];
+    for (unsigned int j=0;j<QMMMData[atom2].bonds.size();j++)
     {
-      int atom3 = Struct[atom2].bonds[j];
-      for (unsigned int k=0;k<Struct[atom3].bonds.size();k++)
+      int atom3 = QMMMData[atom2].bonds[j];
+      for (unsigned int k=0;k<QMMMData[atom3].bonds.size();k++)
       {
-        if (atom4 == Struct[atom3].bonds[k])
+        if (atom4 == QMMMData[atom3].bonds[k])
         {
           isBound = 1;
         }
@@ -295,7 +295,7 @@ bool Dihedraled(vector<QMMMAtom>& Struct, int atom1, int atom4)
 };
 
 //Structure correction functions
-void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
+void PBCCenter(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
 {
   //Move the system to the center of the simulation box
   double avgX = 0;
@@ -311,7 +311,7 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       for (int j=0;j<QMMMOpts.NBeads;j++)
       {
         //Update local average postion
-        centX += Struct[i].P[j].x;
+        centX += QMMMData[i].P[j].x;
       }
       //Upate full average
       avgX += centX;
@@ -324,7 +324,7 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       for (int j=0;j<QMMMOpts.NBeads;j++)
       {
         //Update local average postion
-        centY += Struct[i].P[j].y;
+        centY += QMMMData[i].P[j].y;
       }
       //Upate full average
       avgY += centY;
@@ -337,7 +337,7 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       for (int j=0;j<QMMMOpts.NBeads;j++)
       {
         //Update local average postion
-        centZ += Struct[i].P[j].z;
+        centZ += QMMMData[i].P[j].z;
       }
       //Upate full average
       avgZ += centZ;
@@ -358,8 +358,8 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       for (int j=0;j<QMMMOpts.NBeads;j++)
       {
         //Move bead to the center
-        Struct[i].P[j].x -= avgX;
-        Struct[i].P[j].x += 0.5*Lx;
+        QMMMData[i].P[j].x -= avgX;
+        QMMMData[i].P[j].x += 0.5*Lx;
       }
     }
     #pragma omp for nowait schedule(dynamic)
@@ -369,8 +369,8 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       for (int j=0;j<QMMMOpts.NBeads;j++)
       {
         //Move bead to the center
-        Struct[i].P[j].y -= avgY;
-        Struct[i].P[j].y += 0.5*Ly;
+        QMMMData[i].P[j].y -= avgY;
+        QMMMData[i].P[j].y += 0.5*Ly;
       }
     }
     #pragma omp for nowait schedule(dynamic)
@@ -380,8 +380,8 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
       for (int j=0;j<QMMMOpts.NBeads;j++)
       {
         //Move bead to the center
-        Struct[i].P[j].z -= avgZ;
-        Struct[i].P[j].z += 0.5*Lz;
+        QMMMData[i].P[j].z -= avgZ;
+        QMMMData[i].P[j].z += 0.5*Lz;
       }
     }
   }
@@ -390,7 +390,7 @@ void PBCCenter(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
   return;
 };
 
-Coord FindQMCOM(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
+Coord FindQMCOM(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
 {
   //Find the center of mass for the QM region
   Coord QMCOM; //Center of mass position
@@ -403,33 +403,33 @@ Coord FindQMCOM(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     #pragma omp for nowait schedule(dynamic) reduction(+:totM)
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].QMregion or Struct[i].PBregion)
+      if (QMMMData[i].QMregion or QMMMData[i].PBregion)
       {
-        totM += Struct[i].m;
+        totM += QMMMData[i].m;
       }
     }
     #pragma omp for nowait schedule(dynamic) reduction(+:avgX)
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].QMregion or Struct[i].PBregion)
+      if (QMMMData[i].QMregion or QMMMData[i].PBregion)
       {
-        avgX += Struct[i].m*Struct[i].P[Bead].x;
+        avgX += QMMMData[i].m*QMMMData[i].P[bead].x;
       }
     }
     #pragma omp for nowait schedule(dynamic) reduction(+:avgY)
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].QMregion or Struct[i].PBregion)
+      if (QMMMData[i].QMregion or QMMMData[i].PBregion)
       {
-        avgY += Struct[i].m*Struct[i].P[Bead].y;
+        avgY += QMMMData[i].m*QMMMData[i].P[bead].y;
       }
     }
     #pragma omp for nowait schedule(dynamic) reduction(+:avgZ)
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].QMregion or Struct[i].PBregion)
+      if (QMMMData[i].QMregion or QMMMData[i].PBregion)
       {
-        avgZ += Struct[i].m*Struct[i].P[Bead].z;
+        avgZ += QMMMData[i].m*QMMMData[i].P[bead].z;
       }
     }
   }

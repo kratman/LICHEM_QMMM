@@ -24,10 +24,10 @@ void ExternalGaussian(int& argc, char**& argv)
   //Gaussian's external interface
   double Eqm = 0; //Stores partial energies
   double Emm = 0; //Stores partial energies
-  vector<QMMMAtom> Struct; //Atomic data
+  vector<QMMMAtom> QMMMData; //Atomic data
   QMMMSettings QMMMOpts; //Simulation settings
   int derType = 0; //Type of derivatives
-  int Bead = 0; //Which replica
+  int bead = 0; //Which replica
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy print settings
   string dummy,Stub; //Generic strings
@@ -69,7 +69,7 @@ void ExternalGaussian(int& argc, char**& argv)
     if (dummy == "-b")
     {
       //Read the current bead
-      Bead = atoi(argv[i+1]);
+      bead = atoi(argv[i+1]);
     }
   }
   //Open files passed by Gaussian
@@ -77,7 +77,7 @@ void ExternalGaussian(int& argc, char**& argv)
   gauOutput.open(argv[13],ios_base::out);
   gauMsg.open(argv[14],ios_base::out);
   //Read LICHEM input
-  ReadLICHEMInput(xyzFile,connectFile,regionFile,Struct,QMMMOpts);
+  ReadLICHEMInput(xyzFile,connectFile,regionFile,QMMMData,QMMMOpts);
   //Set degrees of freedom
   int Ndof = 3*(Nqm+Npseudo); //Number of QM and PB degrees of freedom
   //Read g09 input for new QM atom positions
@@ -97,45 +97,45 @@ void ExternalGaussian(int& argc, char**& argv)
   //Read updated positions from Gaussian files
   for (int i=0;i<Natoms;i++)
   {
-    if (Struct[i].QMregion or Struct[i].PBregion)
+    if (QMMMData[i].QMregion or QMMMData[i].PBregion)
     {
       //Save atom information
       getline(gauInput,dummy);
       stringstream line(dummy);
       line >> dummy;
-      line >> Struct[i].P[Bead].x;
-      line >> Struct[i].P[Bead].y;
-      line >> Struct[i].P[Bead].z;
+      line >> QMMMData[i].P[bead].x;
+      line >> QMMMData[i].P[bead].y;
+      line >> QMMMData[i].P[bead].z;
       //Change units
-      Struct[i].P[Bead].x *= bohrRad;
-      Struct[i].P[Bead].y *= bohrRad;
-      Struct[i].P[Bead].z *= bohrRad;
+      QMMMData[i].P[bead].x *= bohrRad;
+      QMMMData[i].P[bead].y *= bohrRad;
+      QMMMData[i].P[bead].z *= bohrRad;
     }
   }
   gauInput.close();
   //Calculate the QMMM forces
-  VectorXd Forces(Ndof); //Forces for QM and PB
-  Forces.setZero();
+  VectorXd forces(Ndof); //Forces for QM and PB
+  forces.setZero();
   fstream MMgrad,QMlog; //QMMM output
   //QM forces
-  Eqm = GaussianForces(Struct,Forces,QMMMOpts,Bead);
+  Eqm = GaussianForces(QMMMData,forces,QMMMOpts,bead);
   //MM forces
   if (TINKER)
   {
-    Emm = TINKERForces(Struct,Forces,QMMMOpts,Bead);
+    Emm = TINKERForces(QMMMData,forces,QMMMOpts,bead);
     if (AMOEBA or QMMMOpts.useImpSolv)
     {
       //Calculate polarization forces for AMOEBA
-      Emm += TINKERPolForces(Struct,Forces,QMMMOpts,Bead);
+      Emm += TINKERPolForces(QMMMData,forces,QMMMOpts,bead);
     }
   }
   if (AMBER)
   {
-    Emm = AMBERForces(Struct,Forces,QMMMOpts,Bead);
+    Emm = AMBERForces(QMMMData,forces,QMMMOpts,bead);
   }
   if (LAMMPS)
   {
-    Emm = LAMMPSForces(Struct,Forces,QMMMOpts,Bead);
+    Emm = LAMMPSForces(QMMMData,forces,QMMMOpts,bead);
   }
   //Write formatted output for g09
   double E = (Eqm+Emm)/har2eV; //Calculate
@@ -148,9 +148,9 @@ void ExternalGaussian(int& argc, char**& argv)
   for (int i=0;i<(Nqm+Npseudo);i++)
   {
     //Write forces
-    gauOutput << LICHEMFormFloat(-1*Forces(3*i)*bohrRad/har2eV,20);
-    gauOutput << LICHEMFormFloat(-1*Forces(3*i+1)*bohrRad/har2eV,20);
-    gauOutput << LICHEMFormFloat(-1*Forces(3*i+2)*bohrRad/har2eV,20);
+    gauOutput << LICHEMFormFloat(-1*forces(3*i)*bohrRad/har2eV,20);
+    gauOutput << LICHEMFormFloat(-1*forces(3*i+1)*bohrRad/har2eV,20);
+    gauOutput << LICHEMFormFloat(-1*forces(3*i+2)*bohrRad/har2eV,20);
     gauOutput << '\n';
   }
   gauOutput << LICHEMFormFloat(0.0,20); //Polarizability
@@ -180,10 +180,10 @@ void ExternalGaussian(int& argc, char**& argv)
   for (int i=0;i<Natoms;i++)
   {
     //Write XYZ coordinates
-    outFile << Struct[i].QMTyp << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].x,16) << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].y,16) << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].z,16) << '\n';
+    outFile << QMMMData[i].QMTyp << " ";
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].x,16) << " ";
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].y,16) << " ";
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].z,16) << '\n';
   }
   outFile.flush();
   outFile.close();

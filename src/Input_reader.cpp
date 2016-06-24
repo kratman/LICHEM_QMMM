@@ -240,7 +240,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzFile,
 };
 
 void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
-                     fstream& regionFile, vector<QMMMAtom>& Struct,
+                     fstream& regionFile, vector<QMMMAtom>& QMMMData,
                      QMMMSettings& QMMMOpts)
 {
   //Read input
@@ -265,13 +265,13 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       tmp.BAregion = 0;
       tmp.frozen = 0;
       //Set electrostatic field
-      Mpole tmp3; //Initialize charges and multipoles
+      MPole tmp3; //Initialize charges and multipoles
       OctCharges tmp4; //Initialize charges and multipoles
       //Add to arrays
       tmp.MP.push_back(tmp3);
       tmp.PC.push_back(tmp4);
       //Save atomic properties
-      Struct.push_back(tmp);
+      QMMMData.push_back(tmp);
     }
   }
   for (int i=0;i<Natoms;i++)
@@ -280,7 +280,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     int tmp;
     //id MMTyp numTyp q Nbonds [connectivity]
     connectFile >> tmp; //Atom ID
-    if (tmp != Struct[i].id)
+    if (tmp != QMMMData[i].id)
     {
       //Escape if connectivity errors are found
       cout << "Error: Atoms in the connectivity file are out of order.";
@@ -288,8 +288,8 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       cout.flush();
       exit(0); //Escape
     }
-    connectFile >> Struct[i].MMTyp >> Struct[i].numTyp;
-    connectFile >> Struct[i].m >> Struct[i].MP[0].q;
+    connectFile >> QMMMData[i].MMTyp >> QMMMData[i].numTyp;
+    connectFile >> QMMMData[i].m >> QMMMData[i].MP[0].q;
     connectFile >> tmp; //Number of bonds
     for (int j=0;j<tmp;j++)
     {
@@ -306,7 +306,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
         cout.flush();
         exit(0); //Escape
       }
-      Struct[i].bonds.push_back(atomID); //Add bond
+      QMMMData[i].bonds.push_back(atomID); //Add bond
     }
   }
   //Read simulation keywords
@@ -429,7 +429,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
         AMOEBA = 1;
         if (TINKER)
         {
-          ExtractTINKpoles(Struct,0);
+          ExtractTINKpoles(QMMMData,0);
         }
       }
       if (dummy == "gem")
@@ -439,7 +439,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
         if (TINKER)
         {
           //Collect TINKER multipoles or GEM-DM
-          ExtractTINKpoles(Struct,0);
+          ExtractTINKpoles(QMMMData,0);
         }
       }
     }
@@ -756,10 +756,10 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       {
         int atomID;
         regionFile >> atomID;
-        Struct[atomID].QMregion = 1;
-        Struct[atomID].PBregion = 0;
-        Struct[atomID].BAregion = 0;
-        Struct[atomID].MMregion = 0;
+        QMMMData[atomID].QMregion = 1;
+        QMMMData[atomID].PBregion = 0;
+        QMMMData[atomID].BAregion = 0;
+        QMMMData[atomID].MMregion = 0;
       }
     }
     else if (keyword == "pseudobond_atoms:")
@@ -770,10 +770,10 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       {
         int atomID;
         regionFile >> atomID;
-        Struct[atomID].QMregion = 0;
-        Struct[atomID].PBregion = 1;
-        Struct[atomID].BAregion = 0;
-        Struct[atomID].MMregion = 0;
+        QMMMData[atomID].QMregion = 0;
+        QMMMData[atomID].PBregion = 1;
+        QMMMData[atomID].BAregion = 0;
+        QMMMData[atomID].MMregion = 0;
       }
     }
     else if (keyword == "boundary_atoms:")
@@ -784,10 +784,10 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       {
         int atomID;
         regionFile >> atomID;
-        Struct[atomID].QMregion = 0;
-        Struct[atomID].PBregion = 0;
-        Struct[atomID].BAregion = 1;
-        Struct[atomID].MMregion = 0;
+        QMMMData[atomID].QMregion = 0;
+        QMMMData[atomID].PBregion = 0;
+        QMMMData[atomID].BAregion = 1;
+        QMMMData[atomID].MMregion = 0;
       }
     }
     else if (keyword == "frozen_atoms:")
@@ -798,7 +798,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       {
         int atomID;
         regionFile >> atomID;
-        Struct[atomID].frozen = 1;
+        QMMMData[atomID].frozen = 1;
       }
     }
     //Check for bad keywords
@@ -822,10 +822,10 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     //Redundant, but safe
     for (int i=0;i<Natoms;i++)
     {
-      Struct[i].QMregion = 1;
-      Struct[i].MMregion = 0;
-      Struct[i].PBregion = 0;
-      Struct[i].BAregion = 0;
+      QMMMData[i].QMregion = 1;
+      QMMMData[i].MMregion = 0;
+      QMMMData[i].PBregion = 0;
+      QMMMData[i].BAregion = 0;
     }
     //Adjust optimization settings
     QMMMOpts.MMOptTol = QMMMOpts.QMOptTol; //Prevents early termination
@@ -839,10 +839,10 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     //Redundant, but safe
     for (int i=0;i<Natoms;i++)
     {
-      Struct[i].QMregion = 0;
-      Struct[i].MMregion = 1;
-      Struct[i].PBregion = 0;
-      Struct[i].BAregion = 0;
+      QMMMData[i].QMregion = 0;
+      QMMMData[i].MMregion = 1;
+      QMMMData[i].PBregion = 0;
+      QMMMData[i].BAregion = 0;
     }
   }
   Nmm = Natoms-Nqm-Npseudo-Nbound; //Set number of MM atoms
@@ -856,12 +856,12 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       for (int j=0;j<(QMMMOpts.NBeads-1);j++)
       {
         //Create replicas
-        Coord temp = Struct[i].P[0];
-        Struct[i].P.push_back(temp);
-        Mpole temp2 = Struct[i].MP[0];
-        Struct[i].MP.push_back(temp2);
-        OctCharges temp3 = Struct[i].PC[0];
-        Struct[i].PC.push_back(temp3);
+        Coord temp = QMMMData[i].P[0];
+        QMMMData[i].P.push_back(temp);
+        MPole temp2 = QMMMData[i].MP[0];
+        QMMMData[i].MP.push_back(temp2);
+        OctCharges temp3 = QMMMData[i].PC[0];
+        QMMMData[i].PC.push_back(temp3);
       }
     }
     //Set initial transition state for reaction pathways
@@ -901,7 +901,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       for (int i=0;i<Natoms;i++)
       {
         //Shift path-integral beads
-        double massScale = sqrt(12.0/Struct[i].m); //Relative to carbon
+        double massScale = sqrt(12.0/QMMMData[i].m); //Relative to carbon
         massScale *= 2*stepMin*centRatio; //Scale based on settings
         //Update all beads
         for (int j=0;j<(QMMMOpts.NBeads-1);j++)
@@ -918,11 +918,11 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
             randZ = 0.5;
           }
           //Update positions of active atoms
-          if (!Struct[i].frozen)
+          if (!QMMMData[i].frozen)
           {
-            Struct[i].P[j].x += (2*(randX-0.5)*massScale);
-            Struct[i].P[j].y += (2*(randY-0.5)*massScale);
-            Struct[i].P[j].z += (2*(randZ-0.5)*massScale);
+            QMMMData[i].P[j].x += (2*(randX-0.5)*massScale);
+            QMMMData[i].P[j].y += (2*(randY-0.5)*massScale);
+            QMMMData[i].P[j].z += (2*(randZ-0.5)*massScale);
           }
         }
       }
@@ -957,9 +957,9 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
         //Read atom type and discard
         beadFile >> dummy;
         //Read XYZ coordinates
-        beadFile >> Struct[i].P[j].x;
-        beadFile >> Struct[i].P[j].y;
-        beadFile >> Struct[i].P[j].z;
+        beadFile >> QMMMData[i].P[j].x;
+        beadFile >> QMMMData[i].P[j].y;
+        beadFile >> QMMMData[i].P[j].z;
       }
     }
   }
@@ -976,7 +976,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
   if (TINKER and (!GauExternal))
   {
     //NB: Classes are not used in the QMMM
-    FindTINKERClasses(Struct); //Finds errors
+    FindTINKERClasses(QMMMData); //Finds errors
   }
   //Check if QM log files should be saved
   if (CheckFile("BACKUPQM"))
@@ -1239,7 +1239,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
   return;
 };
 
-void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
+void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
 {
   //Prints out the simulation details
   cout << "Setting up simulation..." << '\n';
@@ -1532,7 +1532,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts)
         cout << LICHEMFormFloat(Ly,10) << " ";
         cout << LICHEMFormFloat(Lz,10) << '\n';
         cout << " Density: ";
-        initDen = LICHEMDensity(Struct,QMMMOpts);
+        initDen = LICHEMDensity(QMMMData,QMMMOpts);
         cout << LICHEMFormFloat(initDen,10);
         cout << " g/cm\u00B3" << '\n';
       }

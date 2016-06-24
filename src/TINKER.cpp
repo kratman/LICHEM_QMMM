@@ -17,7 +17,7 @@
 */
 
 //MM utility functions
-void FindTINKERClasses(vector<QMMMAtom>& Struct)
+void FindTINKERClasses(vector<QMMMAtom>& QMMMData)
 {
   //Parses TINKER parameter files to find atom classes
   fstream inFile; //Generic file stream
@@ -82,9 +82,9 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
       FullLine >> AtClass;
       for (int i=0;i<Natoms;i++)
       {
-        if (Struct[i].numTyp == AtType)
+        if (QMMMData[i].numTyp == AtType)
         {
-          Struct[i].numClass = AtClass;
+          QMMMData[i].numClass = AtClass;
           ct += 1;
         }
       }
@@ -104,8 +104,8 @@ void FindTINKERClasses(vector<QMMMAtom>& Struct)
 }
 
 //MM wrapper functions
-void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-                   int Bead)
+void TINKERInduced(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
+                   int bead)
 {
   //Function to extract induced dipoles
   fstream outFile,inFile; //Generic file streams
@@ -115,7 +115,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   int ct; //Generic counter
   //Create TINKER xyz file
   call.str("");
-  call << "LICHM_" << Bead << ".xyz";
+  call << "LICHM_" << bead << ".xyz";
   outFile.open(call.str().c_str(),ios_base::out);
   outFile << Natoms << '\n';
   if (PBCon)
@@ -130,21 +130,21 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    outFile << setw(6) << (Struct[i].id+1);
+    outFile << setw(6) << (QMMMData[i].id+1);
     outFile << " ";
-    outFile << setw(3) << Struct[i].MMTyp;
+    outFile << setw(3) << QMMMData[i].MMTyp;
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].x,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].y,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].y,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].z,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].z,16);
     outFile << " ";
-    outFile << setw(4) << Struct[i].numTyp;
-    for (unsigned int j=0;j<Struct[i].bonds.size();j++)
+    outFile << setw(4) << QMMMData[i].numTyp;
+    for (unsigned int j=0;j<QMMMData[i].bonds.size();j++)
     {
       outFile << " "; //Avoids trailing spaces
-      outFile << setw(6) << (Struct[i].bonds[j]+1);
+      outFile << setw(6) << (QMMMData[i].bonds[j]+1);
     }
     outFile << '\n';
   }
@@ -153,12 +153,12 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Create new TINKER key file
   call.str("");
   call << "cp tinker.key LICHM_";
-  call << Bead << ".key";
+  call << bead << ".key";
   globalSys = system(call.str().c_str());
   //Update key file
   call.str("");
   call << "LICHM_";
-  call << Bead << ".key";
+  call << bead << ".key";
   outFile.open(call.str().c_str(),ios_base::app|ios_base::out);
   outFile << '\n'; //Make sure current line is empty
   if (QMMM)
@@ -208,7 +208,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
-      if (Struct[i].MMregion or Struct[i].BAregion)
+      if (QMMMData[i].MMregion or QMMMData[i].BAregion)
       {
         if (ct == 0)
         {
@@ -220,7 +220,7 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
           //Place a space to separate values
           outFile << " ";
         }
-        outFile << (Struct[i].id+1);
+        outFile << (QMMMData[i].id+1);
         ct += 1;
         if (ct == 10)
         {
@@ -239,34 +239,34 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   for (int i=0;i<Natoms;i++)
   {
     //Add nuclear charges
-    if (Struct[i].QMregion)
+    if (QMMMData[i].QMregion)
     {
       //Write new multipole definition for the atom ID
-      WriteTINKMpole(Struct,outFile,i,Bead);
-      outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+      WriteTINKMPole(QMMMData,outFile,i,bead);
+      outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
       outFile << '\n';
     }
-    if (Struct[i].PBregion)
+    if (QMMMData[i].PBregion)
     {
       //Modify the charge to force charge balance with the boundaries
-      double qi = Struct[i].MP[Bead].q; //Save a copy
+      double qi = QMMMData[i].MP[bead].q; //Save a copy
       vector<int> Boundaries;
-      Boundaries = TraceBoundary(Struct,i);
+      Boundaries = TraceBoundary(QMMMData,i);
       double qnew = qi;
       for (unsigned int j=0;j<Boundaries.size();j++)
       {
         //Subtract boundary atom charge
-        qnew -= Struct[Boundaries[j]].MP[Bead].q;
+        qnew -= QMMMData[Boundaries[j]].MP[bead].q;
       }
-      Struct[i].MP[Bead].q = qnew; //Save modified charge
-      WriteTINKMpole(Struct,outFile,i,Bead);
-      Struct[i].MP[Bead].q = qi; //Return to unmodified charge
-      outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+      QMMMData[i].MP[bead].q = qnew; //Save modified charge
+      WriteTINKMPole(QMMMData,outFile,i,bead);
+      QMMMData[i].MP[bead].q = qi; //Return to unmodified charge
+      outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
       outFile << '\n';
     }
-    if (Struct[i].BAregion)
+    if (QMMMData[i].BAregion)
     {
-      outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+      outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
       outFile << '\n';
     }
   }
@@ -274,12 +274,12 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   outFile.close();
   //Calculate induced dipoles using dynamic
   call.str("");
-  call << "dynamic LICHM_" << Bead << ".xyz ";
-  call << "1 1e-4 1e-7 2 0 > LICHM_" << Bead << ".log";
+  call << "dynamic LICHM_" << bead << ".xyz ";
+  call << "1 1e-4 1e-7 2 0 > LICHM_" << bead << ".log";
   globalSys = system(call.str().c_str());
   //Extract induced dipoles from the MD cycle file
   call.str("");
-  call << "LICHM_" << Bead << ".001u";
+  call << "LICHM_" << bead << ".001u";
   inFile.open(call.str().c_str(),ios_base::in);
   getline(inFile,dummy); //Clear number of atoms
   while (inFile.good())
@@ -293,31 +293,31 @@ void TINKERInduced(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (line.good())
     {
       AtNum -= 1; //Fixes array indexing
-      line >> Struct[AtNum].MP[Bead].IDx;
-      line >> Struct[AtNum].MP[Bead].IDy;
-      line >> Struct[AtNum].MP[Bead].IDz;
+      line >> QMMMData[AtNum].MP[bead].IDx;
+      line >> QMMMData[AtNum].MP[bead].IDy;
+      line >> QMMMData[AtNum].MP[bead].IDz;
       //Change units from Debye to a.u.
-      Struct[AtNum].MP[Bead].IDx *= debye2au;
-      Struct[AtNum].MP[Bead].IDy *= debye2au;
-      Struct[AtNum].MP[Bead].IDz *= debye2au;
+      QMMMData[AtNum].MP[bead].IDx *= debye2au;
+      QMMMData[AtNum].MP[bead].IDy *= debye2au;
+      QMMMData[AtNum].MP[bead].IDz *= debye2au;
     }
   }
   inFile.close();
   //Delete junk files
   call.str("");
   call << "rm -f";
-  call << " LICHM_" << Bead << ".xyz";
-  call << " LICHM_" << Bead << ".key";
-  call << " LICHM_" << Bead << ".0*";
-  call << " LICHM_" << Bead << ".dyn";
-  call << " LICHM_" << Bead << ".log";
-  call << " LICHM_" << Bead << ".err";
+  call << " LICHM_" << bead << ".xyz";
+  call << " LICHM_" << bead << ".key";
+  call << " LICHM_" << bead << ".0*";
+  call << " LICHM_" << bead << ".dyn";
+  call << " LICHM_" << bead << ".log";
+  call << " LICHM_" << bead << ".err";
   globalSys = system(call.str().c_str());
   return;
 };
 
-double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-                       int Bead)
+double TINKERPolEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
+                       int bead)
 {
   //Function to extract the polarization energy
   fstream outFile,inFile; //Generic file streams
@@ -330,7 +330,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   int ct; //Generic counter
   //Create TINKER xyz file
   call.str("");
-  call << "LICHM_" << Bead << ".xyz";
+  call << "LICHM_" << bead << ".xyz";
   outFile.open(call.str().c_str(),ios_base::out);
   outFile << Natoms << '\n';
   if (PBCon)
@@ -345,21 +345,21 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    outFile << setw(6) << (Struct[i].id+1);
+    outFile << setw(6) << (QMMMData[i].id+1);
     outFile << " ";
-    outFile << setw(3) << Struct[i].MMTyp;
+    outFile << setw(3) << QMMMData[i].MMTyp;
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].x,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].y,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].y,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].z,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].z,16);
     outFile << " ";
-    outFile << setw(4) << Struct[i].numTyp;
-    for (unsigned int j=0;j<Struct[i].bonds.size();j++)
+    outFile << setw(4) << QMMMData[i].numTyp;
+    for (unsigned int j=0;j<QMMMData[i].bonds.size();j++)
     {
       outFile << " "; //Avoids trailing spaces
-      outFile << setw(6) << (Struct[i].bonds[j]+1);
+      outFile << setw(6) << (QMMMData[i].bonds[j]+1);
     }
     outFile << '\n';
   }
@@ -368,12 +368,12 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Create new TINKER key file
   call.str("");
   call << "cp tinker.key LICHM_";
-  call << Bead << ".key";
+  call << bead << ".key";
   globalSys = system(call.str().c_str());
   //Update key file
   call.str("");
   call << "LICHM_";
-  call << Bead << ".key";
+  call << bead << ".key";
   outFile.open(call.str().c_str(),ios_base::app|ios_base::out);
   outFile << '\n';
   if (QMMM)
@@ -432,7 +432,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
-      if (Struct[i].MMregion or Struct[i].BAregion)
+      if (QMMMData[i].MMregion or QMMMData[i].BAregion)
       {
         if (ct == 0)
         {
@@ -444,7 +444,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
           //Place a space to separate values
           outFile << " ";
         }
-        outFile << (Struct[i].id+1);
+        outFile << (QMMMData[i].id+1);
         ct += 1;
         if (ct == 10)
         {
@@ -463,34 +463,34 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   for (int i=0;i<Natoms;i++)
   {
     //Add nuclear charges
-    if (Struct[i].QMregion)
+    if (QMMMData[i].QMregion)
     {
       //Write new multipole definition for the atom ID
-      WriteTINKMpole(Struct,outFile,i,Bead);
-      outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+      WriteTINKMPole(QMMMData,outFile,i,bead);
+      outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
       outFile << '\n';
     }
-    if (Struct[i].PBregion)
+    if (QMMMData[i].PBregion)
     {
       //Modify the charge to force charge balance with the boundaries
-      double qi = Struct[i].MP[Bead].q; //Save a copy
+      double qi = QMMMData[i].MP[bead].q; //Save a copy
       vector<int> Boundaries;
-      Boundaries = TraceBoundary(Struct,i);
+      Boundaries = TraceBoundary(QMMMData,i);
       double qnew = qi;
       for (unsigned int j=0;j<Boundaries.size();j++)
       {
         //Subtract boundary atom charge
-        qnew -= Struct[Boundaries[j]].MP[Bead].q;
+        qnew -= QMMMData[Boundaries[j]].MP[bead].q;
       }
-      Struct[i].MP[Bead].q = qnew; //Save modified charge
-      WriteTINKMpole(Struct,outFile,i,Bead);
-      Struct[i].MP[Bead].q = qi; //Return to unmodified charge
-      outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+      QMMMData[i].MP[bead].q = qnew; //Save modified charge
+      WriteTINKMPole(QMMMData,outFile,i,bead);
+      QMMMData[i].MP[bead].q = qi; //Return to unmodified charge
+      outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
       outFile << '\n';
     }
-    if (Struct[i].BAregion)
+    if (QMMMData[i].BAregion)
     {
-      outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+      outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
       outFile << '\n';
     }
   }
@@ -499,12 +499,12 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Calculate QMMM energy
   call.str("");
   call << "analyze LICHM_";
-  call << Bead << ".xyz E > LICHM_";
-  call << Bead << ".log";
+  call << bead << ".xyz E > LICHM_";
+  call << bead << ".log";
   globalSys = system(call.str().c_str());
   //Extract polarization energy
   call.str("");
-  call << "LICHM_" << Bead << ".log";
+  call << "LICHM_" << bead << ".log";
   inFile.open(call.str().c_str(),ios_base::in);
   bool Efound = 0;
   while (!inFile.eof())
@@ -547,17 +547,17 @@ double TINKERPolEnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Clean up files
   call.str("");
   call << "rm -f";
-  call << " LICHM_" << Bead << ".xyz";
-  call << " LICHM_" << Bead << ".log";
-  call << " LICHM_" << Bead << ".key";
-  call << " LICHM_" << Bead << ".err";
+  call << " LICHM_" << bead << ".xyz";
+  call << " LICHM_" << bead << ".log";
+  call << " LICHM_" << bead << ".key";
+  call << " LICHM_" << bead << ".err";
   globalSys = system(call.str().c_str());
   //Return polarization and solvation energy in kcal/mol
   return Epol+Esolv;
 };
 
-double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
-                    QMMMSettings& QMMMOpts, int Bead)
+double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
+                    QMMMSettings& QMMMOpts, int bead)
 {
   //Function for calculating the MM forces on a set of QM atoms
   fstream outFile,inFile; //Generic file streams
@@ -569,12 +569,12 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   //Construct MM forces input for TINKER
   call.str("");
   call << "cp tinker.key LICHM_";
-  call << Bead << ".key";
+  call << bead << ".key";
   globalSys = system(call.str().c_str());
   //Update key file
   call.str("");
   call << "LICHM_";
-  call << Bead << ".key";
+  call << bead << ".key";
   outFile.open(call.str().c_str(),ios_base::app|ios_base::out);
   outFile << '\n';
   if (QMMM)
@@ -619,7 +619,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   for (int i=0;i<Natoms;i++)
   {
     //Add active atoms
-    if (Struct[i].QMregion or Struct[i].PBregion)
+    if (QMMMData[i].QMregion or QMMMData[i].PBregion)
     {
       if (ct == 0)
       {
@@ -631,7 +631,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
         //Place a space to separate values
         outFile << " ";
       }
-      outFile << (Struct[i].id+1);
+      outFile << (QMMMData[i].id+1);
       ct += 1;
       if (ct == 10)
       {
@@ -651,7 +651,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   for (int i=0;i<Natoms;i++)
   {
     //Add group 1 atoms
-    if (Struct[i].QMregion or Struct[i].PBregion)
+    if (QMMMData[i].QMregion or QMMMData[i].PBregion)
     {
       if (ct == 0)
       {
@@ -663,7 +663,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
         //Place a space to separate values
         outFile << " ";
       }
-      outFile << (Struct[i].id+1);
+      outFile << (QMMMData[i].id+1);
       ct += 1;
       if (ct == 10)
       {
@@ -683,10 +683,10 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (Struct[i].QMregion or Struct[i].PBregion or Struct[i].BAregion)
+      if (QMMMData[i].QMregion or QMMMData[i].PBregion or QMMMData[i].BAregion)
       {
         //New charges are needed for QM and PB atoms
-        outFile << "charge " << (-1*(Struct[i].id+1)) << " ";
+        outFile << "charge " << (-1*(QMMMData[i].id+1)) << " ";
         outFile << "0.0"; //Delete charges
         outFile << '\n';
       }
@@ -697,15 +697,15 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (Struct[i].QMregion or Struct[i].PBregion or Struct[i].BAregion)
+      if (QMMMData[i].QMregion or QMMMData[i].PBregion or QMMMData[i].BAregion)
       {
         double qi = 0;
         //remove charge
-        qi = Struct[i].MP[Bead].q;
-        Struct[i].MP[Bead].q = 0;
-        WriteTINKMpole(Struct,outFile,i,Bead);
-        Struct[i].MP[Bead].q += qi; //Restore charge
-        outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        qi = QMMMData[i].MP[bead].q;
+        QMMMData[i].MP[bead].q = 0;
+        WriteTINKMPole(QMMMData,outFile,i,bead);
+        QMMMData[i].MP[bead].q += qi; //Restore charge
+        outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
     }
@@ -714,7 +714,7 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   outFile.close();
   //Create TINKER xyz file from the structure
   call.str("");
-  call << "LICHM_" << Bead << ".xyz";
+  call << "LICHM_" << bead << ".xyz";
   outFile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   outFile << Natoms << '\n';
@@ -730,21 +730,21 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    outFile << setw(6) << (Struct[i].id+1);
+    outFile << setw(6) << (QMMMData[i].id+1);
     outFile << " ";
-    outFile << setw(3) << Struct[i].MMTyp;
+    outFile << setw(3) << QMMMData[i].MMTyp;
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].x,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].y,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].y,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].z,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].z,16);
     outFile << " ";
-    outFile << setw(4) << Struct[i].numTyp;
-    for (unsigned int j=0;j<Struct[i].bonds.size();j++)
+    outFile << setw(4) << QMMMData[i].numTyp;
+    for (unsigned int j=0;j<QMMMData[i].bonds.size();j++)
     {
       outFile << " "; //Avoids trailing spaces
-      outFile << setw(6) << (Struct[i].bonds[j]+1);
+      outFile << setw(6) << (QMMMData[i].bonds[j]+1);
     }
     outFile << '\n';
   }
@@ -753,15 +753,15 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   //Run MM
   call.str("");
   call << "testgrad ";
-  call << "LICHM_" << Bead << ".xyz";
+  call << "LICHM_" << bead << ".xyz";
   call << " Y N N > ";
-  call << "LICHM_" << Bead << ".grad";
+  call << "LICHM_" << bead << ".grad";
   globalSys = system(call.str().c_str());
   //Collect MM forces
   fstream MMgrad; //QMMM output
   //Open files
   call.str("");
-  call << "LICHM_" << Bead << ".grad";
+  call << "LICHM_" << bead << ".grad";
   MMgrad.open(call.str().c_str(),ios_base::in);
   //Read derivatives
   bool GradDone = 0;
@@ -814,18 +814,18 @@ double TINKERForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   //Clean up files
   call.str("");
   call << "rm -f";
-  call << " LICHM_" << Bead << ".xyz";
-  call << " LICHM_" << Bead << ".key";
-  call << " LICHM_" << Bead << ".grad";
-  call << " LICHM_" << Bead << ".err";
+  call << " LICHM_" << bead << ".xyz";
+  call << " LICHM_" << bead << ".key";
+  call << " LICHM_" << bead << ".grad";
+  call << " LICHM_" << bead << ".err";
   globalSys = system(call.str().c_str());
   //Return
   Emm *= kcal2eV;
   return Emm;
 };
 
-double TINKERMMForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
-                      QMMMSettings& QMMMOpts, int Bead)
+double TINKERMMForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
+                      QMMMSettings& QMMMOpts, int bead)
 {
   //Function to calculate the forces on MM atoms
   //NB: QM atoms are included in the array, but their forces are not updated
@@ -838,12 +838,12 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   //Construct MM forces input for TINKER
   call.str("");
   call << "cp tinker.key LICHM_";
-  call << Bead << ".key";
+  call << bead << ".key";
   globalSys = system(call.str().c_str());
   //Update key file
   call.str("");
   call << "LICHM_";
-  call << Bead << ".key";
+  call << bead << ".key";
   outFile.open(call.str().c_str(),ios_base::app|ios_base::out);
   outFile << '\n';
   if (QMMM)
@@ -897,7 +897,7 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add inactive atoms
-      if (Struct[i].QMregion or Struct[i].PBregion or Struct[i].frozen)
+      if (QMMMData[i].QMregion or QMMMData[i].PBregion or QMMMData[i].frozen)
       {
         if (ct == 0)
         {
@@ -909,7 +909,7 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           //Place a space to separate values
           outFile << " ";
         }
-        outFile << (Struct[i].id+1);
+        outFile << (QMMMData[i].id+1);
         ct += 1;
         if (ct == 10)
         {
@@ -930,33 +930,33 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (Struct[i].QMregion)
+      if (QMMMData[i].QMregion)
       {
-        WriteTINKMpole(Struct,outFile,i,Bead);
-        outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        WriteTINKMPole(QMMMData,outFile,i,bead);
+        outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
-      if (Struct[i].PBregion)
+      if (QMMMData[i].PBregion)
       {
         //Modify the charge to force charge balance with the boundaries
-        double qi = Struct[i].MP[Bead].q; //Save a copy
+        double qi = QMMMData[i].MP[bead].q; //Save a copy
         vector<int> Boundaries;
-        Boundaries = TraceBoundary(Struct,i);
+        Boundaries = TraceBoundary(QMMMData,i);
         double qnew = qi;
         for (unsigned int j=0;j<Boundaries.size();j++)
         {
           //Subtract boundary atom charge
-          qnew -= Struct[Boundaries[j]].MP[Bead].q;
+          qnew -= QMMMData[Boundaries[j]].MP[bead].q;
         }
-        Struct[i].MP[Bead].q = qnew; //Save modified charge
-        WriteTINKMpole(Struct,outFile,i,Bead);
-        Struct[i].MP[Bead].q = qi; //Return to unmodified charge
-        outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        QMMMData[i].MP[bead].q = qnew; //Save modified charge
+        WriteTINKMPole(QMMMData,outFile,i,bead);
+        QMMMData[i].MP[bead].q = qi; //Return to unmodified charge
+        outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
-      if (Struct[i].BAregion)
+      if (QMMMData[i].BAregion)
       {
-        outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
     }
@@ -965,7 +965,7 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   outFile.close();
   //Create TINKER xyz file from the structure
   call.str("");
-  call << "LICHM_" << Bead << ".xyz";
+  call << "LICHM_" << bead << ".xyz";
   outFile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   outFile << Natoms << '\n';
@@ -980,21 +980,21 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   }
   for (int i=0;i<Natoms;i++)
   {
-    outFile << setw(6) << (Struct[i].id+1);
+    outFile << setw(6) << (QMMMData[i].id+1);
     outFile << " ";
-    outFile << setw(3) << Struct[i].MMTyp;
+    outFile << setw(3) << QMMMData[i].MMTyp;
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].x,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].y,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].y,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].z,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].z,16);
     outFile << " ";
-    outFile << setw(4) << Struct[i].numTyp;
-    for (unsigned int j=0;j<Struct[i].bonds.size();j++)
+    outFile << setw(4) << QMMMData[i].numTyp;
+    for (unsigned int j=0;j<QMMMData[i].bonds.size();j++)
     {
       outFile << " "; //Avoids trailing spaces
-      outFile << setw(6) << (Struct[i].bonds[j]+1);
+      outFile << setw(6) << (QMMMData[i].bonds[j]+1);
     }
     outFile << '\n';
   }
@@ -1003,15 +1003,15 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   //Run MM
   call.str("");
   call << "testgrad ";
-  call << "LICHM_" << Bead << ".xyz";
+  call << "LICHM_" << bead << ".xyz";
   call << " Y N N > ";
-  call << "LICHM_" << Bead << ".grad";
+  call << "LICHM_" << bead << ".grad";
   globalSys = system(call.str().c_str());
   //Collect MM forces
   fstream MMgrad; //QMMM output
   //Open files
   call.str("");
-  call << "LICHM_" << Bead << ".grad";
+  call << "LICHM_" << bead << ".grad";
   MMgrad.open(call.str().c_str(),ios_base::in);
   //Read derivatives
   bool GradDone = 0;
@@ -1044,8 +1044,8 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
           Fy *= -1;
           Fz *= -1;
           //Switch to eV/A and change sign
-          if ((!Struct[i].QMregion) or (!Struct[i].PBregion) or
-             (!Struct[i].frozen))
+          if ((!QMMMData[i].QMregion) or (!QMMMData[i].PBregion) or
+             (!QMMMData[i].frozen))
           {
             //Only add MM forces to the array
             Forces(3*i) += Fx*kcal2eV;
@@ -1069,17 +1069,17 @@ double TINKERMMForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   //Clean up files
   call.str("");
   call << "rm -f";
-  call << " LICHM_" << Bead << ".xyz";
-  call << " LICHM_" << Bead << ".key";
-  call << " LICHM_" << Bead << ".grad";
-  call << " LICHM_" << Bead << ".err";
+  call << " LICHM_" << bead << ".xyz";
+  call << " LICHM_" << bead << ".key";
+  call << " LICHM_" << bead << ".grad";
+  call << " LICHM_" << bead << ".err";
   globalSys = system(call.str().c_str());
   //Return energy for error checking purposes
   return Emm;
 };
 
-double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
-                       QMMMSettings& QMMMOpts, int Bead)
+double TINKERPolForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
+                       QMMMSettings& QMMMOpts, int bead)
 {
   //Function for calculating the MM forces on a set of QM atoms
   fstream outFile,inFile; //Generic file streams
@@ -1091,12 +1091,12 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   //Construct MM forces input for TINKER
   call.str("");
   call << "cp tinker.key LICHM_";
-  call << Bead << ".key";
+  call << bead << ".key";
   globalSys = system(call.str().c_str());
   //Update key file
   call.str("");
   call << "LICHM_";
-  call << Bead << ".key";
+  call << bead << ".key";
   outFile.open(call.str().c_str(),ios_base::app|ios_base::out);
   outFile << '\n';
   if (QMMM)
@@ -1153,7 +1153,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   for (int i=0;i<Natoms;i++)
   {
     //Add active atoms
-    if (Struct[i].QMregion or Struct[i].PBregion)
+    if (QMMMData[i].QMregion or QMMMData[i].PBregion)
     {
       if (ct == 0)
       {
@@ -1165,7 +1165,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
         //Place a space to separate values
         outFile << " ";
       }
-      outFile << (Struct[i].id+1);
+      outFile << (QMMMData[i].id+1);
       ct += 1;
       if (ct == 10)
       {
@@ -1185,33 +1185,33 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (Struct[i].QMregion)
+      if (QMMMData[i].QMregion)
       {
-        WriteTINKMpole(Struct,outFile,i,Bead);
-        outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        WriteTINKMPole(QMMMData,outFile,i,bead);
+        outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
-      if (Struct[i].PBregion)
+      if (QMMMData[i].PBregion)
       {
         //Modify the charge to force charge balance with the boundaries
-        double qi = Struct[i].MP[Bead].q; //Save a copy
+        double qi = QMMMData[i].MP[bead].q; //Save a copy
         vector<int> Boundaries;
-        Boundaries = TraceBoundary(Struct,i);
+        Boundaries = TraceBoundary(QMMMData,i);
         double qnew = qi;
         for (unsigned int j=0;j<Boundaries.size();j++)
         {
           //Subtract boundary atom charge
-          qnew -= Struct[Boundaries[j]].MP[Bead].q;
+          qnew -= QMMMData[Boundaries[j]].MP[bead].q;
         }
-        Struct[i].MP[Bead].q = qnew; //Save modified charge
-        WriteTINKMpole(Struct,outFile,i,Bead);
-        Struct[i].MP[Bead].q = qi; //Return to unmodified charge
-        outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        QMMMData[i].MP[bead].q = qnew; //Save modified charge
+        WriteTINKMPole(QMMMData,outFile,i,bead);
+        QMMMData[i].MP[bead].q = qi; //Return to unmodified charge
+        outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
-      if (Struct[i].BAregion)
+      if (QMMMData[i].BAregion)
       {
-        outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
     }
@@ -1220,7 +1220,7 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   outFile.close();
   //Create TINKER xyz file from the structure
   call.str("");
-  call << "LICHM_" << Bead << ".xyz";
+  call << "LICHM_" << bead << ".xyz";
   outFile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   outFile << Natoms << '\n';
@@ -1236,21 +1236,21 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    outFile << setw(6) << (Struct[i].id+1);
+    outFile << setw(6) << (QMMMData[i].id+1);
     outFile << " ";
-    outFile << setw(3) << Struct[i].MMTyp;
+    outFile << setw(3) << QMMMData[i].MMTyp;
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].x,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].y,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].y,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].z,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].z,16);
     outFile << " ";
-    outFile << setw(4) << Struct[i].numTyp;
-    for (unsigned int j=0;j<Struct[i].bonds.size();j++)
+    outFile << setw(4) << QMMMData[i].numTyp;
+    for (unsigned int j=0;j<QMMMData[i].bonds.size();j++)
     {
       outFile << " "; //Avoids trailing spaces
-      outFile << setw(6) << (Struct[i].bonds[j]+1);
+      outFile << setw(6) << (QMMMData[i].bonds[j]+1);
     }
     outFile << '\n';
   }
@@ -1259,15 +1259,15 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   //Run MM
   call.str("");
   call << "testgrad ";
-  call << "LICHM_" << Bead << ".xyz";
+  call << "LICHM_" << bead << ".xyz";
   call << " Y N N > ";
-  call << "LICHM_" << Bead << ".grad";
+  call << "LICHM_" << bead << ".grad";
   globalSys = system(call.str().c_str());
   //Collect MM forces
   fstream MMgrad; //QMMM output
   //Open files
   call.str("");
-  call << "LICHM_" << Bead << ".grad";
+  call << "LICHM_" << bead << ".grad";
   MMgrad.open(call.str().c_str(),ios_base::in);
   //Read derivatives
   bool GradDone = 0;
@@ -1320,17 +1320,17 @@ double TINKERPolForces(vector<QMMMAtom>& Struct, VectorXd& Forces,
   //Clean up files
   call.str("");
   call << "rm -f";
-  call << " LICHM_" << Bead << ".xyz";
-  call << " LICHM_" << Bead << ".key";
-  call << " LICHM_" << Bead << ".grad";
-  call << " LICHM_" << Bead << ".err";
+  call << " LICHM_" << bead << ".xyz";
+  call << " LICHM_" << bead << ".key";
+  call << " LICHM_" << bead << ".grad";
+  call << " LICHM_" << bead << ".err";
   globalSys = system(call.str().c_str());
   //Return
   Emm *= kcal2eV;
   return Emm;
 };
 
-double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
+double TINKEREnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
 {
   //Runs TINKER MM energy calculations
   fstream outFile,inFile; //Generic file streams
@@ -1343,12 +1343,12 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Copy the original key file and make changes
   call.str("");
   call << "cp tinker.key LICHM_";
-  call << Bead << ".key";
+  call << bead << ".key";
   globalSys = system(call.str().c_str());
   //Update key file
   call.str("");
   call << "LICHM_";
-  call << Bead << ".key";
+  call << bead << ".key";
   outFile.open(call.str().c_str(),ios_base::app|ios_base::out);
   outFile << '\n';
   if (QMMM)
@@ -1405,7 +1405,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
-      if (Struct[i].MMregion or Struct[i].BAregion)
+      if (QMMMData[i].MMregion or QMMMData[i].BAregion)
       {
         if (ct == 0)
         {
@@ -1417,7 +1417,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
           //Place a space to separate values
           outFile << " ";
         }
-        outFile << (Struct[i].id+1);
+        outFile << (QMMMData[i].id+1);
         ct += 1;
         if (ct == 10)
         {
@@ -1438,10 +1438,10 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (Struct[i].QMregion or Struct[i].PBregion or Struct[i].BAregion)
+      if (QMMMData[i].QMregion or QMMMData[i].PBregion or QMMMData[i].BAregion)
       {
         //New charges are only needed for QM atoms
-        outFile << "charge " << (-1*(Struct[i].id+1)) << " ";
+        outFile << "charge " << (-1*(QMMMData[i].id+1)) << " ";
         outFile << "0.0" << '\n';
       }
     }
@@ -1451,18 +1451,18 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     for (int i=0;i<Natoms;i++)
     {
       //Add multipoles
-      if (Struct[i].QMregion or Struct[i].PBregion or Struct[i].BAregion)
+      if (QMMMData[i].QMregion or QMMMData[i].PBregion or QMMMData[i].BAregion)
       {
         double qi = 0;
         //remove charge
-        qi = Struct[i].MP[Bead].q;
-        Struct[i].MP[Bead].q = 0;
+        qi = QMMMData[i].MP[bead].q;
+        QMMMData[i].MP[bead].q = 0;
         //Write new multipole definition for the atom ID
-        WriteTINKMpole(Struct,outFile,i,Bead);
+        WriteTINKMPole(QMMMData,outFile,i,bead);
         //Restore charge
-        Struct[i].MP[Bead].q = qi;
+        QMMMData[i].MP[bead].q = qi;
         //Remove polarization
-        outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
     }
@@ -1471,7 +1471,7 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   outFile.close();
   //Create TINKER xyz file from the structure
   call.str("");
-  call << "LICHM_" << Bead << ".xyz";
+  call << "LICHM_" << bead << ".xyz";
   outFile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   outFile << Natoms << '\n';
@@ -1487,21 +1487,21 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    outFile << setw(6) << (Struct[i].id+1);
+    outFile << setw(6) << (QMMMData[i].id+1);
     outFile << " ";
-    outFile << setw(3) << Struct[i].MMTyp;
+    outFile << setw(3) << QMMMData[i].MMTyp;
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].x,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].y,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].y,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].z,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].z,16);
     outFile << " ";
-    outFile << setw(4) << Struct[i].numTyp;
-    for (unsigned int j=0;j<Struct[i].bonds.size();j++)
+    outFile << setw(4) << QMMMData[i].numTyp;
+    for (unsigned int j=0;j<QMMMData[i].bonds.size();j++)
     {
       outFile << " "; //Avoids trailing spaces
-      outFile << setw(6) << (Struct[i].bonds[j]+1);
+      outFile << setw(6) << (QMMMData[i].bonds[j]+1);
     }
     outFile << '\n';
   }
@@ -1510,11 +1510,11 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Calculate MM potential energy
   call.str("");
   call << "analyze LICHM_";
-  call << Bead << ".xyz E > LICHM_";
-  call << Bead << ".log";
+  call << bead << ".xyz E > LICHM_";
+  call << bead << ".log";
   globalSys = system(call.str().c_str());
   call.str("");
-  call << "LICHM_" << Bead << ".log";
+  call << "LICHM_" << bead << ".log";
   inFile.open(call.str().c_str(),ios_base::in);
   //Read MM potential energy
   bool Efound = 0;
@@ -1545,24 +1545,24 @@ double TINKEREnergy(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Clean up files
   call.str("");
   call << "rm -f";
-  call << " LICHM_" << Bead << ".xyz";
-  call << " LICHM_" << Bead << ".log";
-  call << " LICHM_" << Bead << ".key";
-  call << " LICHM_" << Bead << ".err";
+  call << " LICHM_" << bead << ".xyz";
+  call << " LICHM_" << bead << ".log";
+  call << " LICHM_" << bead << ".key";
+  call << " LICHM_" << bead << ".err";
   globalSys = system(call.str().c_str());
   //Calculate polarization energy
   if ((AMOEBA or GEM or QMMMOpts.useImpSolv) and QMMM)
   {
     //Correct polarization energy for QMMM simulations
-    E += TINKERPolEnergy(Struct,QMMMOpts,Bead);
+    E += TINKERPolEnergy(QMMMData,QMMMOpts,bead);
   }
   //Change units
   E *= kcal2eV;
   return E;
 };
 
-void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-                    int Bead)
+void TINKERDynamics(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
+                    int bead)
 {
   //Runs TINKER MD (for MM atoms only)
   fstream outFile,inFile; //Generic file streams
@@ -1574,12 +1574,12 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Copy the original key file and make changes
   call.str("");
   call << "cp tinker.key LICHM_";
-  call << Bead << ".key";
+  call << bead << ".key";
   globalSys = system(call.str().c_str());
   //Update key file
   call.str("");
   call << "LICHM_";
-  call << Bead << ".key";
+  call << bead << ".key";
   outFile.open(call.str().c_str(),ios_base::app|ios_base::out);
   outFile << '\n';
   if (QMMM)
@@ -1631,9 +1631,9 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
-      if (Struct[i].MMregion or Struct[i].BAregion)
+      if (QMMMData[i].MMregion or QMMMData[i].BAregion)
       {
-        if (!Struct[i].frozen)
+        if (!QMMMData[i].frozen)
         {
           if (ct == 0)
           {
@@ -1645,7 +1645,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
             //Place a space to separate values
             outFile << " ";
           }
-          outFile << (Struct[i].id+1);
+          outFile << (QMMMData[i].id+1);
           ct += 1;
           if (ct == 10)
           {
@@ -1667,25 +1667,25 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (Struct[i].QMregion)
+      if (QMMMData[i].QMregion)
       {
         //New charges are only needed for QM atoms
-        outFile << "charge " << (-1*(Struct[i].id+1)) << " ";
-        outFile << Struct[i].MP[Bead].q;
+        outFile << "charge " << (-1*(QMMMData[i].id+1)) << " ";
+        outFile << QMMMData[i].MP[bead].q;
         outFile << '\n';
       }
-      if (Struct[i].PBregion)
+      if (QMMMData[i].PBregion)
       {
         //Modify the charge to force charge balance with the boundaries
         vector<int> Boundaries;
-        Boundaries = TraceBoundary(Struct,i);
-        double qnew = Struct[i].MP[Bead].q;
+        Boundaries = TraceBoundary(QMMMData,i);
+        double qnew = QMMMData[i].MP[bead].q;
         for (unsigned int j=0;j<Boundaries.size();j++)
         {
           //Subtract boundary atom charge
-          qnew -= Struct[Boundaries[j]].MP[Bead].q;
+          qnew -= QMMMData[Boundaries[j]].MP[bead].q;
         }
-        outFile << "charge " << (-1*(Struct[i].id+1)) << " ";
+        outFile << "charge " << (-1*(QMMMData[i].id+1)) << " ";
         outFile << qnew;
         outFile << '\n';
       }
@@ -1696,34 +1696,34 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (Struct[i].QMregion)
+      if (QMMMData[i].QMregion)
       {
         //Write new multipole definition for the atom ID
-        WriteTINKMpole(Struct,outFile,i,Bead);
-        outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        WriteTINKMPole(QMMMData,outFile,i,bead);
+        outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
-      if (Struct[i].PBregion)
+      if (QMMMData[i].PBregion)
       {
         //Modify the charge to force charge balance with the boundaries
-        double qi = Struct[i].MP[Bead].q; //Save a copy
+        double qi = QMMMData[i].MP[bead].q; //Save a copy
         vector<int> Boundaries;
-        Boundaries = TraceBoundary(Struct,i);
+        Boundaries = TraceBoundary(QMMMData,i);
         double qnew = qi;
         for (unsigned int j=0;j<Boundaries.size();j++)
         {
           //Subtract boundary atom charge
-          qnew -= Struct[Boundaries[j]].MP[Bead].q;
+          qnew -= QMMMData[Boundaries[j]].MP[bead].q;
         }
-        Struct[i].MP[Bead].q = qnew; //Save modified charge
-        WriteTINKMpole(Struct,outFile,i,Bead);
-        Struct[i].MP[Bead].q = qi; //Return to unmodified charge
-        outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        QMMMData[i].MP[bead].q = qnew; //Save modified charge
+        WriteTINKMPole(QMMMData,outFile,i,bead);
+        QMMMData[i].MP[bead].q = qi; //Return to unmodified charge
+        outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
-      if (Struct[i].BAregion)
+      if (QMMMData[i].BAregion)
       {
-        outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
     }
@@ -1732,7 +1732,7 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   outFile.close();
   //Create TINKER xyz file from the structure
   call.str("");
-  call << "LICHM_" << Bead << ".xyz";
+  call << "LICHM_" << bead << ".xyz";
   outFile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   outFile << Natoms << '\n';
@@ -1748,21 +1748,21 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    outFile << setw(6) << (Struct[i].id+1);
+    outFile << setw(6) << (QMMMData[i].id+1);
     outFile << " ";
-    outFile << setw(3) << Struct[i].MMTyp;
+    outFile << setw(3) << QMMMData[i].MMTyp;
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].x,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].y,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].y,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].z,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].z,16);
     outFile << " ";
-    outFile << setw(4) << Struct[i].numTyp;
-    for (unsigned int j=0;j<Struct[i].bonds.size();j++)
+    outFile << setw(4) << QMMMData[i].numTyp;
+    for (unsigned int j=0;j<QMMMData[i].bonds.size();j++)
     {
       outFile << " "; //Avoids trailing spaces
-      outFile << setw(6) << (Struct[i].bonds[j]+1);
+      outFile << setw(6) << (QMMMData[i].bonds[j]+1);
     }
     outFile << '\n';
   }
@@ -1771,16 +1771,16 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Run optimization
   call.str("");
   call << "dynamic ";
-  call << "LICHM_" << Bead << ".xyz ";
+  call << "LICHM_" << bead << ".xyz ";
   call << QMMMOpts.NSteps << " ";
   call << QMMMOpts.dt << " ";
   call << (QMMMOpts.NSteps*QMMMOpts.dt/1000) << " ";
   call << "2 " << QMMMOpts.temp;
-  call << " > LICHM_" << Bead << ".log";
+  call << " > LICHM_" << bead << ".log";
   globalSys = system(call.str().c_str());
   //Read new structure
   call.str("");
-  call << "LICHM_" << Bead << ".001";
+  call << "LICHM_" << bead << ".001";
   inFile.open(call.str().c_str(),ios_base::in);
   if (inFile.good())
   {
@@ -1796,9 +1796,9 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
       stringstream line(dummy);
       //Read new positions
       line >> dummy >> dummy; //Discard atom ID and type
-      line >> Struct[i].P[Bead].x;
-      line >> Struct[i].P[Bead].y;
-      line >> Struct[i].P[Bead].z;
+      line >> QMMMData[i].P[bead].x;
+      line >> QMMMData[i].P[bead].y;
+      line >> QMMMData[i].P[bead].z;
     }
   }
   else
@@ -1812,24 +1812,24 @@ void TINKERDynamics(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     //Remove restart file
     call.str("");
     call << "rm -f";
-    call << " LICHM_" << Bead << ".dyn";
+    call << " LICHM_" << bead << ".dyn";
     globalSys = system(call.str().c_str());
   }
   inFile.close();
   //Clean up all files except the .dyn files
   call.str("");
   call << "rm -f";
-  call << " LICHM_" << Bead << ".xyz";
-  call << " LICHM_" << Bead << ".log";
-  call << " LICHM_" << Bead << ".0*";
-  call << " LICHM_" << Bead << ".key";
-  call << " LICHM_" << Bead << ".err";
+  call << " LICHM_" << bead << ".xyz";
+  call << " LICHM_" << bead << ".log";
+  call << " LICHM_" << bead << ".0*";
+  call << " LICHM_" << bead << ".key";
+  call << " LICHM_" << bead << ".err";
   globalSys = system(call.str().c_str());
   return;
 };
 
-MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-                       int Bead)
+MatrixXd TINKERHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
+                       int bead)
 {
   //Function for calculating the MM forces on a set of QM atoms
   fstream outFile,inFile,MMlog; //Generic file streams
@@ -1843,12 +1843,12 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Construct MM forces input for TINKER
   call.str("");
   call << "cp tinker.key LICHM_";
-  call << Bead << ".key";
+  call << bead << ".key";
   globalSys = system(call.str().c_str());
   //Update key file
   call.str("");
   call << "LICHM_";
-  call << Bead << ".key";
+  call << bead << ".key";
   outFile.open(call.str().c_str(),ios_base::app|ios_base::out);
   outFile << '\n';
   if (QMMM)
@@ -1893,7 +1893,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   for (int i=0;i<Natoms;i++)
   {
     //Add active atoms
-    if (Struct[i].QMregion or Struct[i].PBregion)
+    if (QMMMData[i].QMregion or QMMMData[i].PBregion)
     {
       if (ct == 0)
       {
@@ -1905,7 +1905,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         //Place a space to separate values
         outFile << " ";
       }
-      outFile << (Struct[i].id+1);
+      outFile << (QMMMData[i].id+1);
       ct += 1;
       if (ct == 10)
       {
@@ -1925,7 +1925,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   for (int i=0;i<Natoms;i++)
   {
     //Add group 1 atoms
-    if (Struct[i].QMregion or Struct[i].PBregion)
+    if (QMMMData[i].QMregion or QMMMData[i].PBregion)
     {
       if (ct == 0)
       {
@@ -1937,7 +1937,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         //Place a space to separate values
         outFile << " ";
       }
-      outFile << (Struct[i].id+1);
+      outFile << (QMMMData[i].id+1);
       ct += 1;
       if (ct == 10)
       {
@@ -1957,10 +1957,10 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (Struct[i].QMregion or Struct[i].PBregion or Struct[i].BAregion)
+      if (QMMMData[i].QMregion or QMMMData[i].PBregion or QMMMData[i].BAregion)
       {
         //New charges are needed for QM and PB atoms
-        outFile << "charge " << (-1*(Struct[i].id+1)) << " ";
+        outFile << "charge " << (-1*(QMMMData[i].id+1)) << " ";
         outFile << "0.0"; //Delete charges
         outFile << '\n';
       }
@@ -1971,15 +1971,15 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (Struct[i].QMregion or Struct[i].PBregion or Struct[i].BAregion)
+      if (QMMMData[i].QMregion or QMMMData[i].PBregion or QMMMData[i].BAregion)
       {
         double qi = 0;
         //remove charge
-        qi = Struct[i].MP[Bead].q;
-        Struct[i].MP[Bead].q = 0;
-        WriteTINKMpole(Struct,outFile,i,Bead);
-        Struct[i].MP[Bead].q += qi; //Restore charge
-        outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        qi = QMMMData[i].MP[bead].q;
+        QMMMData[i].MP[bead].q = 0;
+        WriteTINKMPole(QMMMData,outFile,i,bead);
+        QMMMData[i].MP[bead].q += qi; //Restore charge
+        outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
     }
@@ -1988,7 +1988,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   outFile.close();
   //Create TINKER xyz file from the structure
   call.str("");
-  call << "LICHM_" << Bead << ".xyz";
+  call << "LICHM_" << bead << ".xyz";
   outFile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   outFile << Natoms << '\n';
@@ -2004,21 +2004,21 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    outFile << setw(6) << (Struct[i].id+1);
+    outFile << setw(6) << (QMMMData[i].id+1);
     outFile << " ";
-    outFile << setw(3) << Struct[i].MMTyp;
+    outFile << setw(3) << QMMMData[i].MMTyp;
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].x,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].y,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].y,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].z,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].z,16);
     outFile << " ";
-    outFile << setw(4) << Struct[i].numTyp;
-    for (unsigned int j=0;j<Struct[i].bonds.size();j++)
+    outFile << setw(4) << QMMMData[i].numTyp;
+    for (unsigned int j=0;j<QMMMData[i].bonds.size();j++)
     {
       outFile << " "; //Avoids trailing spaces
-      outFile << setw(6) << (Struct[i].bonds[j]+1);
+      outFile << setw(6) << (QMMMData[i].bonds[j]+1);
     }
     outFile << '\n';
   }
@@ -2027,13 +2027,13 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Run MM
   call.str("");
   call << "testhess ";
-  call << "LICHM_" << Bead << ".xyz";
+  call << "LICHM_" << bead << ".xyz";
   call << " Y N > ";
-  call << "LICHM_" << Bead << ".log";
+  call << "LICHM_" << bead << ".log";
   globalSys = system(call.str().c_str());
   //Collect MM forces
   call.str("");
-  call << "LICHM_" << Bead << ".hes";
+  call << "LICHM_" << bead << ".hes";
   MMlog.open(call.str().c_str(),ios_base::in);
   //Read derivatives
   bool HessDone = 0;
@@ -2048,7 +2048,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     ct = 0;
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].QMregion or Struct[i].PBregion)
+      if (QMMMData[i].QMregion or QMMMData[i].PBregion)
       {
         //Read QM and PB diagonal elements
         MMlog >> MMHess(ct,ct);
@@ -2096,17 +2096,17 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   //Clean up files
   call.str("");
   call << "rm -f";
-  call << " LICHM_" << Bead << ".xyz";
-  call << " LICHM_" << Bead << ".key";
-  call << " LICHM_" << Bead << ".hes";
-  call << " LICHM_" << Bead << ".log";
-  call << " LICHM_" << Bead << ".err";
+  call << " LICHM_" << bead << ".xyz";
+  call << " LICHM_" << bead << ".key";
+  call << " LICHM_" << bead << ".hes";
+  call << " LICHM_" << bead << ".log";
+  call << " LICHM_" << bead << ".err";
   globalSys = system(call.str().c_str());
   //Return
   return MMHess;
 };
 
-double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
+double TINKEROpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
 {
   //Runs TINKER MM optimization
   fstream outFile,inFile; //Generic file streams
@@ -2119,12 +2119,12 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Copy the original key file and make changes
   call.str("");
   call << "cp tinker.key LICHM_";
-  call << Bead << ".key";
+  call << bead << ".key";
   globalSys = system(call.str().c_str());
   //Update key file
   call.str("");
   call << "LICHM_";
-  call << Bead << ".key";
+  call << bead << ".key";
   outFile.open(call.str().c_str(),ios_base::app|ios_base::out);
   outFile << '\n';
   if (QMMM)
@@ -2196,9 +2196,9 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
-      if (Struct[i].MMregion or Struct[i].BAregion)
+      if (QMMMData[i].MMregion or QMMMData[i].BAregion)
       {
-        if (!Struct[i].frozen)
+        if (!QMMMData[i].frozen)
         {
           if (ct == 0)
           {
@@ -2210,7 +2210,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
             //Place a space to separate values
             outFile << " ";
           }
-          outFile << (Struct[i].id+1);
+          outFile << (QMMMData[i].id+1);
           ct += 1;
           if (ct == 10)
           {
@@ -2232,25 +2232,25 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (Struct[i].QMregion)
+      if (QMMMData[i].QMregion)
       {
         //New charges are only needed for QM atoms
-        outFile << "charge " << (-1*(Struct[i].id+1)) << " ";
-        outFile << Struct[i].MP[Bead].q;
+        outFile << "charge " << (-1*(QMMMData[i].id+1)) << " ";
+        outFile << QMMMData[i].MP[bead].q;
         outFile << '\n';
       }
-      if (Struct[i].PBregion)
+      if (QMMMData[i].PBregion)
       {
         //Modify the charge to force charge balance with the boundaries
         vector<int> Boundaries;
-        Boundaries = TraceBoundary(Struct,i);
-        double qnew = Struct[i].MP[Bead].q;
+        Boundaries = TraceBoundary(QMMMData,i);
+        double qnew = QMMMData[i].MP[bead].q;
         for (unsigned int j=0;j<Boundaries.size();j++)
         {
           //Subtract boundary atom charge
-          qnew -= Struct[Boundaries[j]].MP[Bead].q;
+          qnew -= QMMMData[Boundaries[j]].MP[bead].q;
         }
-        outFile << "charge " << (-1*(Struct[i].id+1)) << " ";
+        outFile << "charge " << (-1*(QMMMData[i].id+1)) << " ";
         outFile << qnew;
         outFile << '\n';
       }
@@ -2261,34 +2261,34 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (Struct[i].QMregion)
+      if (QMMMData[i].QMregion)
       {
         //Write new multipole definition for the atom ID
-        WriteTINKMpole(Struct,outFile,i,Bead);
-        outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        WriteTINKMPole(QMMMData,outFile,i,bead);
+        outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
-      if (Struct[i].PBregion)
+      if (QMMMData[i].PBregion)
       {
         //Modify the charge to force charge balance with the boundaries
-        double qi = Struct[i].MP[Bead].q; //Save a copy
+        double qi = QMMMData[i].MP[bead].q; //Save a copy
         vector<int> Boundaries;
-        Boundaries = TraceBoundary(Struct,i);
+        Boundaries = TraceBoundary(QMMMData,i);
         double qnew = qi;
         for (unsigned int j=0;j<Boundaries.size();j++)
         {
           //Subtract boundary atom charge
-          qnew -= Struct[Boundaries[j]].MP[Bead].q;
+          qnew -= QMMMData[Boundaries[j]].MP[bead].q;
         }
-        Struct[i].MP[Bead].q = qnew; //Save modified charge
-        WriteTINKMpole(Struct,outFile,i,Bead);
-        Struct[i].MP[Bead].q = qi; //Return to unmodified charge
-        outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        QMMMData[i].MP[bead].q = qnew; //Save modified charge
+        WriteTINKMPole(QMMMData,outFile,i,bead);
+        QMMMData[i].MP[bead].q = qi; //Return to unmodified charge
+        outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
-      if (Struct[i].BAregion)
+      if (QMMMData[i].BAregion)
       {
-        outFile << "polarize -" << (Struct[i].id+1) << " 0.0 0.0";
+        outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
     }
@@ -2297,7 +2297,7 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   outFile.close();
   //Create TINKER xyz file from the structure
   call.str("");
-  call << "LICHM_" << Bead << ".xyz";
+  call << "LICHM_" << bead << ".xyz";
   outFile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   outFile << Natoms << '\n';
@@ -2313,21 +2313,21 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   ct = 0; //Counter for QM atoms
   for (int i=0;i<Natoms;i++)
   {
-    outFile << setw(6) << (Struct[i].id+1);
+    outFile << setw(6) << (QMMMData[i].id+1);
     outFile << " ";
-    outFile << setw(3) << Struct[i].MMTyp;
+    outFile << setw(3) << QMMMData[i].MMTyp;
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].x,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].y,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].y,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].z,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].z,16);
     outFile << " ";
-    outFile << setw(4) << Struct[i].numTyp;
-    for (unsigned int j=0;j<Struct[i].bonds.size();j++)
+    outFile << setw(4) << QMMMData[i].numTyp;
+    for (unsigned int j=0;j<QMMMData[i].bonds.size();j++)
     {
       outFile << " "; //Avoids trailing spaces
-      outFile << setw(6) << (Struct[i].bonds[j]+1);
+      outFile << setw(6) << (QMMMData[i].bonds[j]+1);
     }
     outFile << '\n';
   }
@@ -2336,13 +2336,13 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
   //Run optimization
   call.str("");
   call << "minimize LICHM_";
-  call << Bead << ".xyz ";
+  call << bead << ".xyz ";
   call << QMMMOpts.MMOptTol << " > LICHM_";
-  call << Bead << ".log";
+  call << bead << ".log";
   globalSys = system(call.str().c_str());
   //Read new structure
   call.str("");
-  call << "LICHM_" << Bead << ".xyz_2";
+  call << "LICHM_" << bead << ".xyz_2";
   inFile.open(call.str().c_str(),ios_base::in);
   getline(inFile,dummy); //Discard number of atoms
   if (PBCon)
@@ -2356,19 +2356,19 @@ double TINKEROpt(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int Bead)
     stringstream line(dummy);
     //Read new positions
     line >> dummy >> dummy; //Discard atom ID and type
-    line >> Struct[i].P[Bead].x;
-    line >> Struct[i].P[Bead].y;
-    line >> Struct[i].P[Bead].z;
+    line >> QMMMData[i].P[bead].x;
+    line >> QMMMData[i].P[bead].y;
+    line >> QMMMData[i].P[bead].z;
   }
   inFile.close();
   //Clean up files
   call.str("");
   call << "rm -f";
-  call << " LICHM_" << Bead << ".xyz";
-  call << " LICHM_" << Bead << ".log";
-  call << " LICHM_" << Bead << ".xyz_*";
-  call << " LICHM_" << Bead << ".key";
-  call << " LICHM_" << Bead << ".err";
+  call << " LICHM_" << bead << ".xyz";
+  call << " LICHM_" << bead << ".log";
+  call << " LICHM_" << bead << ".xyz_*";
+  call << " LICHM_" << bead << ".key";
+  call << " LICHM_" << bead << ".err";
   globalSys = system(call.str().c_str());
   //Change units
   E *= kcal2eV;

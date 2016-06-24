@@ -17,31 +17,31 @@
 */
 
 //Kintetic and potential energy functions for eFF
-double EFFEnergy(QMMMAtom& atom, QMMMElec& elec, int Bead)
+double EFFEnergy(QMMMAtom& atom, QMMMElec& elec, int bead)
 {
   //Atom-lepton interactions
   double E = 0.0;
-  double r = CoordDist2(atom.P[Bead],elec.P[Bead]).vecMag();
+  double r = CoordDist2(atom.P[bead],elec.P[bead]).vecMag();
   if (r <= elecCutoff*elecCutoff)
   {
     if (r == 0.0)
     {
-      E = coul2eV*atom.MP[Bead].q*elec.q*sqrt(8/pi)/elec.rad[Bead];
+      E = coul2eV*atom.MP[bead].q*elec.q*sqrt(8/pi)/elec.rad[bead];
     }
     else
     {
       r = sqrt(r);
-      E = (coul2eV*atom.MP[Bead].q*elec.q/r)*erf(sqrt2*r/elec.rad[Bead]);
+      E = (coul2eV*atom.MP[bead].q*elec.q/r)*erf(sqrt2*r/elec.rad[bead]);
     }
   }
   return E;
 };
 
-double EFFCorr(QMMMElec& elec1, QMMMElec& elec2, int Bead)
+double EFFCorr(QMMMElec& elec1, QMMMElec& elec2, int bead)
 {
   //Lepton-lepton interactions
   double E = 0.0;
-  double r = CoordDist2(elec1.P[Bead],elec2.P[Bead]).vecMag();
+  double r = CoordDist2(elec1.P[bead],elec2.P[bead]).vecMag();
   //Electrostatic energy
   if (r <= (elecCutoff*elecCutoff))
   {
@@ -49,14 +49,14 @@ double EFFCorr(QMMMElec& elec1, QMMMElec& elec2, int Bead)
     if (r == 0.0)
     {
       E = coul2eV*elec1.q*elec2.q*sqrt(8/pi);
-      E /= sqrt(elec1.rad[Bead]*elec1.rad[Bead]
-           +elec2.rad[Bead]*elec2.rad[Bead]);
+      E /= sqrt(elec1.rad[bead]*elec1.rad[bead]
+           +elec2.rad[bead]*elec2.rad[bead]);
       return hugeNum; //Escape to avoid singularities later
     }
     else
     {
-      double radij = elec1.rad[Bead]*elec1.rad[Bead];
-      radij += elec2.rad[Bead]*elec2.rad[Bead];
+      double radij = elec1.rad[bead]*elec1.rad[bead];
+      radij += elec2.rad[bead]*elec2.rad[bead];
       radij = sqrt(radij);
       E = (coul2eV*elec1.q*elec2.q/r);
       E *= erf(sqrt2*r/radij);
@@ -65,28 +65,28 @@ double EFFCorr(QMMMElec& elec1, QMMMElec& elec2, int Bead)
     if (elec1.typ == elec2.typ)
     {
       //Overlap
-      double Sij = 2/((elec1.rad[Bead]/elec2.rad[Bead])
-             +(elec2.rad[Bead]/elec1.rad[Bead]));
+      double Sij = 2/((elec1.rad[bead]/elec2.rad[bead])
+             +(elec2.rad[bead]/elec1.rad[bead]));
       Sij *= Sij*Sij;
       Sij = sqrt(Sij);
       double tmp = -1*eFFrbar*eFFrbar*r*r;
-      tmp /= (elec1.rad[Bead]*elec1.rad[Bead]+elec2.rad[Bead]*elec2.rad[Bead]);
+      tmp /= (elec1.rad[bead]*elec1.rad[bead]+elec2.rad[bead]*elec2.rad[bead]);
       tmp /= eFFsbar*eFFsbar;
       Sij *= exp(tmp);
       //Kinetic energy difference
-      double Tij = 1/(elec1.rad[Bead]*elec1.rad[Bead]);
-      Tij += 1/(elec2.rad[Bead]*elec2.rad[Bead]);
+      double Tij = 1/(elec1.rad[bead]*elec1.rad[bead]);
+      Tij += 1/(elec2.rad[bead]*elec2.rad[bead]);
       Tij *= 3/(2*eFFsbar*eFFsbar);
-      tmp = 6*eFFsbar*eFFsbar*(elec1.rad[Bead]*elec1.rad[Bead]
-            +elec2.rad[Bead]*elec2.rad[Bead]);
+      tmp = 6*eFFsbar*eFFsbar*(elec1.rad[bead]*elec1.rad[bead]
+            +elec2.rad[bead]*elec2.rad[bead]);
       tmp -= 4*eFFrbar*eFFrbar*r*r;
-      tmp /= eFFsbar*eFFsbar*(elec1.rad[Bead]*elec1.rad[Bead]
-             +elec2.rad[Bead]*elec2.rad[Bead]);
-      tmp /= eFFsbar*eFFsbar*(elec1.rad[Bead]*elec1.rad[Bead]
-             +elec2.rad[Bead]*elec2.rad[Bead]);
+      tmp /= eFFsbar*eFFsbar*(elec1.rad[bead]*elec1.rad[bead]
+             +elec2.rad[bead]*elec2.rad[bead]);
+      tmp /= eFFsbar*eFFsbar*(elec1.rad[bead]*elec1.rad[bead]
+             +elec2.rad[bead]*elec2.rad[bead]);
       Tij -= tmp;
       Tij *= har2eV*bohrRad*bohrRad;
-      if (elec1.spin[Bead] == elec2.spin[Bead])
+      if (elec1.spin[bead] == elec2.spin[bead])
       {
         //Symmetric VB spin-orbital
         double Etmp = Sij*Sij/(1-(Sij*Sij));
@@ -132,7 +132,7 @@ double KineticE_eFF(vector<QMMMElec>& elecs, QMMMSettings& QMMMOpts)
   return E;
 };
 
-double Get_EeFF(vector<QMMMAtom>& Struct, vector<QMMMElec>& elecs,
+double Get_EeFF(vector<QMMMAtom>& QMMMData, vector<QMMMElec>& elecs,
        QMMMSettings& QMMMOpts)
 {
   //Total eFF interaction energy
@@ -142,12 +142,12 @@ double Get_EeFF(vector<QMMMAtom>& Struct, vector<QMMMElec>& elecs,
     #pragma omp for nowait schedule(dynamic)
     for (int i=0;i<Natoms;i++)
     {
-      Struct[i].Ep = 0;
+      QMMMData[i].Ep = 0;
       for (unsigned int j=0;j<elecs.size();j++)
       {
         for (int k=0;k<QMMMOpts.NBeads;k++)
         {
-          Struct[i].Ep += EFFEnergy(Struct[i],elecs[j],k);
+          QMMMData[i].Ep += EFFEnergy(QMMMData[i],elecs[j],k);
         }
       }
     }
@@ -169,7 +169,7 @@ double Get_EeFF(vector<QMMMAtom>& Struct, vector<QMMMElec>& elecs,
   #pragma omp barrier
   for (int i=0;i<Natoms;i++)
   {
-    E += Struct[i].Ep;
+    E += QMMMData[i].Ep;
   }
   for (unsigned int i=0;i<elecs.size();i++)
   {

@@ -21,7 +21,7 @@
 */
 
 //TINKER routines
-void ExtractTINKpoles(vector<QMMMAtom>& Struct, int Bead)
+void ExtractTINKpoles(vector<QMMMAtom>& QMMMData, int bead)
 {
   //Parses TINKER parameter files to find multipoles and local frames
   string dummy; //Generic string
@@ -29,28 +29,28 @@ void ExtractTINKpoles(vector<QMMMAtom>& Struct, int Bead)
   stringstream call; //Stream for system calls and reading/writing files
   //Create TINKER xyz file from the structure
   call.str("");
-  call << "LICHM_" << Bead << ".xyz";
+  call << "LICHM_" << bead << ".xyz";
   outFile.open(call.str().c_str(),ios_base::out);
   //Write atoms to the xyz file
   outFile << Natoms << '\n';
   for (int i=0;i<Natoms;i++)
   {
     //Write XYZ data
-    outFile << setw(6) << (Struct[i].id+1);
+    outFile << setw(6) << (QMMMData[i].id+1);
     outFile << " ";
-    outFile << setw(3) << Struct[i].MMTyp;
+    outFile << setw(3) << QMMMData[i].MMTyp;
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].x,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].y,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].y,16);
     outFile << " ";
-    outFile << LICHEMFormFloat(Struct[i].P[Bead].z,16);
+    outFile << LICHEMFormFloat(QMMMData[i].P[bead].z,16);
     outFile << " ";
-    outFile << setw(4) << Struct[i].numTyp;
-    for (unsigned int j=0;j<Struct[i].bonds.size();j++)
+    outFile << setw(4) << QMMMData[i].numTyp;
+    for (unsigned int j=0;j<QMMMData[i].bonds.size();j++)
     {
       outFile << " "; //Avoids trailing spaces
-      outFile << setw(6) << (Struct[i].bonds[j]+1);
+      outFile << setw(6) << (QMMMData[i].bonds[j]+1);
     }
     outFile << '\n';
   }
@@ -58,20 +58,20 @@ void ExtractTINKpoles(vector<QMMMAtom>& Struct, int Bead)
   outFile.close();
   //Write poledit input
   call.str("");
-  call << "LICHM_" << Bead << ".txt";
+  call << "LICHM_" << bead << ".txt";
   outFile.open(call.str().c_str(),ios_base::out);
   outFile << "2" << '\n';
-  outFile << "LICHM_" << Bead << ".xyz" << '\n';
+  outFile << "LICHM_" << bead << ".xyz" << '\n';
   outFile << '\n';
   outFile.flush();
   outFile.close();
   //Run poledit
   call.str("");
-  call << "poledit < LICHM_" << Bead << ".txt > LICHM_" << Bead << ".out";
+  call << "poledit < LICHM_" << bead << ".txt > LICHM_" << bead << ".out";
   globalSys = system(call.str().c_str());
   //Extract multipole frames
   call.str("");
-  call << "LICHM_" << Bead << ".out";
+  call << "LICHM_" << bead << ".out";
   inFile.open(call.str().c_str(),ios_base::in);
   while (!inFile.eof())
   {
@@ -103,50 +103,50 @@ void ExtractTINKpoles(vector<QMMMAtom>& Struct, int Bead)
             if (dummy == "Local")
             {
               //Collect definition
-              line >> dummy >> Struct[i].MP[Bead].type;
-              line >> Struct[i].MP[Bead].atom1;
-              line >> Struct[i].MP[Bead].atom2;
-              line >> Struct[i].MP[Bead].atom3;
+              line >> dummy >> QMMMData[i].MP[bead].type;
+              line >> QMMMData[i].MP[bead].atom1;
+              line >> QMMMData[i].MP[bead].atom2;
+              line >> QMMMData[i].MP[bead].atom3;
               //Correct numbering
-              Struct[i].MP[Bead].atom1 -= 1;
-              Struct[i].MP[Bead].atom2 -= 1;
-              Struct[i].MP[Bead].atom3 -= 1;
+              QMMMData[i].MP[bead].atom1 -= 1;
+              QMMMData[i].MP[bead].atom2 -= 1;
+              QMMMData[i].MP[bead].atom3 -= 1;
               //Collect charge
-              inFile >> dummy >> Struct[i].MP[Bead].q;
+              inFile >> dummy >> QMMMData[i].MP[bead].q;
               //Collect static dipole
               inFile >> dummy;
-              inFile >> Struct[i].MP[Bead].Dx;
-              inFile >> Struct[i].MP[Bead].Dy;
-              inFile >> Struct[i].MP[Bead].Dz;
+              inFile >> QMMMData[i].MP[bead].Dx;
+              inFile >> QMMMData[i].MP[bead].Dy;
+              inFile >> QMMMData[i].MP[bead].Dz;
               //Initialize induced dipole
-              Struct[i].MP[Bead].IDx = 0;
-              Struct[i].MP[Bead].IDy = 0;
-              Struct[i].MP[Bead].IDz = 0;
+              QMMMData[i].MP[bead].IDx = 0;
+              QMMMData[i].MP[bead].IDy = 0;
+              QMMMData[i].MP[bead].IDz = 0;
               //Collect quadrupole
               inFile >> dummy;
-              inFile >> Struct[i].MP[Bead].Qxx;
-              inFile >> Struct[i].MP[Bead].Qxy;
-              inFile >> Struct[i].MP[Bead].Qyy;
-              inFile >> Struct[i].MP[Bead].Qxz;
-              inFile >> Struct[i].MP[Bead].Qyz;
-              inFile >> Struct[i].MP[Bead].Qzz;
+              inFile >> QMMMData[i].MP[bead].Qxx;
+              inFile >> QMMMData[i].MP[bead].Qxy;
+              inFile >> QMMMData[i].MP[bead].Qyy;
+              inFile >> QMMMData[i].MP[bead].Qxz;
+              inFile >> QMMMData[i].MP[bead].Qyz;
+              inFile >> QMMMData[i].MP[bead].Qzz;
             }
             else
             {
               //Initialize the "blank" multipole
-              Struct[i].MP[Bead].type = "None";
-              Struct[i].MP[Bead].Dx = 0;
-              Struct[i].MP[Bead].Dy = 0;
-              Struct[i].MP[Bead].Dz = 0;
-              Struct[i].MP[Bead].IDx = 0;
-              Struct[i].MP[Bead].IDy = 0;
-              Struct[i].MP[Bead].IDz = 0;
-              Struct[i].MP[Bead].Qxx = 0;
-              Struct[i].MP[Bead].Qyy = 0;
-              Struct[i].MP[Bead].Qzz = 0;
-              Struct[i].MP[Bead].Qxy = 0;
-              Struct[i].MP[Bead].Qxz = 0;
-              Struct[i].MP[Bead].Qyz = 0;
+              QMMMData[i].MP[bead].type = "None";
+              QMMMData[i].MP[bead].Dx = 0;
+              QMMMData[i].MP[bead].Dy = 0;
+              QMMMData[i].MP[bead].Dz = 0;
+              QMMMData[i].MP[bead].IDx = 0;
+              QMMMData[i].MP[bead].IDy = 0;
+              QMMMData[i].MP[bead].IDz = 0;
+              QMMMData[i].MP[bead].Qxx = 0;
+              QMMMData[i].MP[bead].Qyy = 0;
+              QMMMData[i].MP[bead].Qzz = 0;
+              QMMMData[i].MP[bead].Qxy = 0;
+              QMMMData[i].MP[bead].Qxz = 0;
+              QMMMData[i].MP[bead].Qyz = 0;
             }
             //Clear more junk
             getline(inFile,dummy);
@@ -158,14 +158,14 @@ void ExtractTINKpoles(vector<QMMMAtom>& Struct, int Bead)
   inFile.close();
   //Clean up files
   call.str("");
-  call << "rm -f LICHM_" << Bead << ".txt LICHM_";
-  call << Bead << ".key LICHM_" << Bead << ".xyz LICHM_";
-  call << Bead << ".out";
+  call << "rm -f LICHM_" << bead << ".txt LICHM_";
+  call << bead << ".key LICHM_" << bead << ".xyz LICHM_";
+  call << bead << ".out";
   globalSys = system(call.str().c_str());
   return;
 };
 
-void RotateTINKCharges(vector<QMMMAtom>& Struct, int Bead)
+void RotateTINKCharges(vector<QMMMAtom>& QMMMData, int bead)
 {
   //Switches from the local frame of reference to the global frame
   //of reference
@@ -184,23 +184,29 @@ void RotateTINKCharges(vector<QMMMAtom>& Struct, int Bead)
     vecZ(1) = 0;
     vecZ(2) = 1;
     //Rotate the charges
-    if (Struct[i].MMregion)
+    if (QMMMData[i].MMregion)
     {
       //Find current orientation
       double x,y,z;
-      if (Struct[i].MP[Bead].type == "Bisector")
+      if (QMMMData[i].MP[bead].type == "Bisector")
       {
         //Find z vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom1].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom1].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom1].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].z;
         vecZ(0) = -1*x; //Correct the direction
         vecZ(1) = -1*y; //Correct the direction
         vecZ(2) = -1*z; //Correct the direction
         vecZ.normalize();
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom2].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom2].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom2].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].z;
         vecX(0) = -1*x; //Correct the direction
         vecX(1) = -1*y; //Correct the direction
         vecX(2) = -1*z; //Correct the direction
@@ -212,20 +218,26 @@ void RotateTINKCharges(vector<QMMMAtom>& Struct, int Bead)
         vecX -= vecZ*(vecX.dot(vecZ));
         vecX.normalize();
       }
-      if (Struct[i].MP[Bead].type == "Z-then-X")
+      if (QMMMData[i].MP[bead].type == "Z-then-X")
       {
         //Find z vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom1].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom1].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom1].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].z;
         vecZ(0) = -1*x; //Correct the direction
         vecZ(1) = -1*y; //Correct the direction
         vecZ(2) = -1*z; //Correct the direction
         vecZ.normalize();
         //Find x vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom2].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom2].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom2].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].z;
         vecX(0) = -1*x; //Correct the direction
         vecX(1) = -1*y; //Correct the direction
         vecX(2) = -1*z; //Correct the direction
@@ -234,28 +246,37 @@ void RotateTINKCharges(vector<QMMMAtom>& Struct, int Bead)
         vecX -= vecZ*(vecX.dot(vecZ));
         vecX.normalize();
       }
-      if (Struct[i].MP[Bead].type == "Z-Bisect")
+      if (QMMMData[i].MP[bead].type == "Z-Bisect")
       {
         //Find first vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom1].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom1].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom1].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].z;
         vecZ(0) = -1*x; //Correct the direction
         vecZ(1) = -1*y; //Correct the direction
         vecZ(2) = -1*z; //Correct the direction
         vecZ.normalize();
         //Find second vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom2].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom2].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom2].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].z;
         vecX(0) = -1*x; //Correct the direction
         vecX(1) = -1*y; //Correct the direction
         vecX(2) = -1*z; //Correct the direction
         vecX.normalize();
         //Find third vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom3].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom3].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom3].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom3].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom3].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom3].P[bead].z;
         vecY(0) = -1*x; //Correct the direction
         vecY(1) = -1*y; //Correct the direction
         vecY(2) = -1*z; //Correct the direction
@@ -267,28 +288,37 @@ void RotateTINKCharges(vector<QMMMAtom>& Struct, int Bead)
         vecX -= vecZ*(vecX.dot(vecZ));
         vecX.normalize();
       }
-      if (Struct[i].MP[Bead].type == "3-Fold")
+      if (QMMMData[i].MP[bead].type == "3-Fold")
       {
         //First vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom1].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom1].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom1].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].z;
         vecZ(0) = -1*x; //Correct the direction
         vecZ(1) = -1*y; //Correct the direction
         vecZ(2) = -1*z; //Correct the direction
         vecZ.normalize();
         //Second vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom2].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom2].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom2].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].z;
         vecX(0) = -1*x; //Correct the direction
         vecX(1) = -1*y; //Correct the direction
         vecX(2) = -1*z; //Correct the direction
         vecX.normalize();
         //Third vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom3].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom3].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom3].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom3].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom3].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom3].P[bead].z;
         vecY(0) = -1*x; //Correct the direction
         vecY(1) = -1*y; //Correct the direction
         vecY(2) = -1*z; //Correct the direction
@@ -300,12 +330,15 @@ void RotateTINKCharges(vector<QMMMAtom>& Struct, int Bead)
         vecX -= vecZ*(vecX.dot(vecZ));
         vecX.normalize();
       }
-      if (Struct[i].MP[Bead].type == "Z-Only")
+      if (QMMMData[i].MP[bead].type == "Z-Only")
       {
         //Primary vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom1].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom1].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom1].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].z;
         vecZ(0) = -1*x; //Correct the direction
         vecZ(1) = -1*y; //Correct the direction
         vecZ(2) = -1*z; //Correct the direction
@@ -324,199 +357,200 @@ void RotateTINKCharges(vector<QMMMAtom>& Struct, int Bead)
         vecX -= vecZ*(vecX.dot(vecZ));
         vecX.normalize();
       }
-      if (Struct[i].MP[Bead].type == "None")
+      if (QMMMData[i].MP[bead].type == "None")
       {
-        Struct[i].PC[Bead].q1 = 0;
-        Struct[i].PC[Bead].q2 = 0;
-        Struct[i].PC[Bead].q3 = 0;
-        Struct[i].PC[Bead].q4 = 0;
-        Struct[i].PC[Bead].q5 = 0;
-        Struct[i].PC[Bead].q6 = 0;
+        QMMMData[i].PC[bead].q1 = 0;
+        QMMMData[i].PC[bead].q2 = 0;
+        QMMMData[i].PC[bead].q3 = 0;
+        QMMMData[i].PC[bead].q4 = 0;
+        QMMMData[i].PC[bead].q5 = 0;
+        QMMMData[i].PC[bead].q6 = 0;
       }
       //Fill in y vector
       vecY = vecX.cross(vecZ);
       vecY.normalize();
       //Rotate to the global frame
-      Mpole newPoles;
+      MPole newPoles;
       //Add monopoles
-      newPoles.q = Struct[i].MP[Bead].q;
+      newPoles.q = QMMMData[i].MP[bead].q;
       //Rotate dipoles
       newPoles.Dx = 0; //X component
-      newPoles.Dx += Struct[i].MP[Bead].Dx*vecX(0);
-      newPoles.Dx += Struct[i].MP[Bead].Dy*vecY(0);
-      newPoles.Dx += Struct[i].MP[Bead].Dz*vecZ(0);
+      newPoles.Dx += QMMMData[i].MP[bead].Dx*vecX(0);
+      newPoles.Dx += QMMMData[i].MP[bead].Dy*vecY(0);
+      newPoles.Dx += QMMMData[i].MP[bead].Dz*vecZ(0);
       newPoles.Dy = 0; //Y component
-      newPoles.Dy += Struct[i].MP[Bead].Dx*vecX(1);
-      newPoles.Dy += Struct[i].MP[Bead].Dy*vecY(1);
-      newPoles.Dy += Struct[i].MP[Bead].Dz*vecZ(1);
+      newPoles.Dy += QMMMData[i].MP[bead].Dx*vecX(1);
+      newPoles.Dy += QMMMData[i].MP[bead].Dy*vecY(1);
+      newPoles.Dy += QMMMData[i].MP[bead].Dz*vecZ(1);
       newPoles.Dz = 0; //Z component
-      newPoles.Dz += Struct[i].MP[Bead].Dx*vecX(2);
-      newPoles.Dz += Struct[i].MP[Bead].Dy*vecY(2);
-      newPoles.Dz += Struct[i].MP[Bead].Dz*vecZ(2);
+      newPoles.Dz += QMMMData[i].MP[bead].Dx*vecX(2);
+      newPoles.Dz += QMMMData[i].MP[bead].Dy*vecY(2);
+      newPoles.Dz += QMMMData[i].MP[bead].Dz*vecZ(2);
       //Add induced dipoles (Already in global frame)
-      newPoles.Dx += Struct[i].MP[Bead].IDx;
-      newPoles.Dy += Struct[i].MP[Bead].IDy;
-      newPoles.Dz += Struct[i].MP[Bead].IDz;
+      newPoles.Dx += QMMMData[i].MP[bead].IDx;
+      newPoles.Dy += QMMMData[i].MP[bead].IDy;
+      newPoles.Dz += QMMMData[i].MP[bead].IDz;
       newPoles.IDx = 0;
       newPoles.IDy = 0;
       newPoles.IDz = 0;
       //Rotate quadrupoles (This looks awful, but it works)
       //NB: This is a hard coded matrix rotation
       newPoles.Qxx = 0; //XX component
-      newPoles.Qxx += vecX(0)*vecX(0)*Struct[i].MP[Bead].Qxx;
-      newPoles.Qxx += vecX(0)*vecY(0)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qxx += vecX(0)*vecZ(0)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qxx += vecY(0)*vecX(0)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qxx += vecY(0)*vecY(0)*Struct[i].MP[Bead].Qyy;
-      newPoles.Qxx += vecY(0)*vecZ(0)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qxx += vecZ(0)*vecX(0)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qxx += vecZ(0)*vecY(0)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qxx += vecZ(0)*vecZ(0)*Struct[i].MP[Bead].Qzz;
+      newPoles.Qxx += vecX(0)*vecX(0)*QMMMData[i].MP[bead].Qxx;
+      newPoles.Qxx += vecX(0)*vecY(0)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qxx += vecX(0)*vecZ(0)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qxx += vecY(0)*vecX(0)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qxx += vecY(0)*vecY(0)*QMMMData[i].MP[bead].Qyy;
+      newPoles.Qxx += vecY(0)*vecZ(0)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qxx += vecZ(0)*vecX(0)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qxx += vecZ(0)*vecY(0)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qxx += vecZ(0)*vecZ(0)*QMMMData[i].MP[bead].Qzz;
       newPoles.Qxy = 0; //XY component
-      newPoles.Qxy += vecX(0)*vecX(1)*Struct[i].MP[Bead].Qxx;
-      newPoles.Qxy += vecX(0)*vecY(1)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qxy += vecX(0)*vecZ(1)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qxy += vecY(0)*vecX(1)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qxy += vecY(0)*vecY(1)*Struct[i].MP[Bead].Qyy;
-      newPoles.Qxy += vecY(0)*vecZ(1)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qxy += vecZ(0)*vecX(1)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qxy += vecZ(0)*vecY(1)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qxy += vecZ(0)*vecZ(1)*Struct[i].MP[Bead].Qzz;
+      newPoles.Qxy += vecX(0)*vecX(1)*QMMMData[i].MP[bead].Qxx;
+      newPoles.Qxy += vecX(0)*vecY(1)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qxy += vecX(0)*vecZ(1)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qxy += vecY(0)*vecX(1)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qxy += vecY(0)*vecY(1)*QMMMData[i].MP[bead].Qyy;
+      newPoles.Qxy += vecY(0)*vecZ(1)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qxy += vecZ(0)*vecX(1)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qxy += vecZ(0)*vecY(1)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qxy += vecZ(0)*vecZ(1)*QMMMData[i].MP[bead].Qzz;
       newPoles.Qxz = 0; //XZ component
-      newPoles.Qxz += vecX(0)*vecX(2)*Struct[i].MP[Bead].Qxx;
-      newPoles.Qxz += vecX(0)*vecY(2)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qxz += vecX(0)*vecZ(2)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qxz += vecY(0)*vecX(2)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qxz += vecY(0)*vecY(2)*Struct[i].MP[Bead].Qyy;
-      newPoles.Qxz += vecY(0)*vecZ(2)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qxz += vecZ(0)*vecX(2)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qxz += vecZ(0)*vecY(2)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qxz += vecZ(0)*vecZ(2)*Struct[i].MP[Bead].Qzz;
+      newPoles.Qxz += vecX(0)*vecX(2)*QMMMData[i].MP[bead].Qxx;
+      newPoles.Qxz += vecX(0)*vecY(2)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qxz += vecX(0)*vecZ(2)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qxz += vecY(0)*vecX(2)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qxz += vecY(0)*vecY(2)*QMMMData[i].MP[bead].Qyy;
+      newPoles.Qxz += vecY(0)*vecZ(2)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qxz += vecZ(0)*vecX(2)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qxz += vecZ(0)*vecY(2)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qxz += vecZ(0)*vecZ(2)*QMMMData[i].MP[bead].Qzz;
       newPoles.Qyy = 0; //YY component
-      newPoles.Qyy += vecX(1)*vecX(1)*Struct[i].MP[Bead].Qxx;
-      newPoles.Qyy += vecX(1)*vecY(1)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qyy += vecX(1)*vecZ(1)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qyy += vecY(1)*vecX(1)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qyy += vecY(1)*vecY(1)*Struct[i].MP[Bead].Qyy;
-      newPoles.Qyy += vecY(1)*vecZ(1)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qyy += vecZ(1)*vecX(1)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qyy += vecZ(1)*vecY(1)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qyy += vecZ(1)*vecZ(1)*Struct[i].MP[Bead].Qzz;
+      newPoles.Qyy += vecX(1)*vecX(1)*QMMMData[i].MP[bead].Qxx;
+      newPoles.Qyy += vecX(1)*vecY(1)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qyy += vecX(1)*vecZ(1)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qyy += vecY(1)*vecX(1)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qyy += vecY(1)*vecY(1)*QMMMData[i].MP[bead].Qyy;
+      newPoles.Qyy += vecY(1)*vecZ(1)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qyy += vecZ(1)*vecX(1)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qyy += vecZ(1)*vecY(1)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qyy += vecZ(1)*vecZ(1)*QMMMData[i].MP[bead].Qzz;
       newPoles.Qyz = 0; //YZ component
-      newPoles.Qyz += vecX(1)*vecX(2)*Struct[i].MP[Bead].Qxx;
-      newPoles.Qyz += vecX(1)*vecY(2)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qyz += vecX(1)*vecZ(2)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qyz += vecY(1)*vecX(2)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qyz += vecY(1)*vecY(2)*Struct[i].MP[Bead].Qyy;
-      newPoles.Qyz += vecY(1)*vecZ(2)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qyz += vecZ(1)*vecX(2)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qyz += vecZ(1)*vecY(2)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qyz += vecZ(1)*vecZ(2)*Struct[i].MP[Bead].Qzz;
+      newPoles.Qyz += vecX(1)*vecX(2)*QMMMData[i].MP[bead].Qxx;
+      newPoles.Qyz += vecX(1)*vecY(2)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qyz += vecX(1)*vecZ(2)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qyz += vecY(1)*vecX(2)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qyz += vecY(1)*vecY(2)*QMMMData[i].MP[bead].Qyy;
+      newPoles.Qyz += vecY(1)*vecZ(2)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qyz += vecZ(1)*vecX(2)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qyz += vecZ(1)*vecY(2)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qyz += vecZ(1)*vecZ(2)*QMMMData[i].MP[bead].Qzz;
       newPoles.Qzz = 0; //ZZ component
-      newPoles.Qzz += vecX(2)*vecX(2)*Struct[i].MP[Bead].Qxx;
-      newPoles.Qzz += vecX(2)*vecY(2)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qzz += vecX(2)*vecZ(2)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qzz += vecY(2)*vecX(2)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qzz += vecY(2)*vecY(2)*Struct[i].MP[Bead].Qyy;
-      newPoles.Qzz += vecY(2)*vecZ(2)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qzz += vecZ(2)*vecX(2)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qzz += vecZ(2)*vecY(2)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qzz += vecZ(2)*vecZ(2)*Struct[i].MP[Bead].Qzz;
+      newPoles.Qzz += vecX(2)*vecX(2)*QMMMData[i].MP[bead].Qxx;
+      newPoles.Qzz += vecX(2)*vecY(2)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qzz += vecX(2)*vecZ(2)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qzz += vecY(2)*vecX(2)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qzz += vecY(2)*vecY(2)*QMMMData[i].MP[bead].Qyy;
+      newPoles.Qzz += vecY(2)*vecZ(2)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qzz += vecZ(2)*vecX(2)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qzz += vecZ(2)*vecY(2)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qzz += vecZ(2)*vecZ(2)*QMMMData[i].MP[bead].Qzz;
       //switch to point-charges
-      Struct[i].PC[Bead] = SphHarm2Charges(Cart2SphHarm(newPoles));
+      QMMMData[i].PC[bead] = SphHarm2Charges(Cart2SphHarm(newPoles));
       //Translate charges to the atom's location in the global frame
-      Struct[i].PC[Bead].x1 += Struct[i].P[Bead].x;
-      Struct[i].PC[Bead].y1 += Struct[i].P[Bead].y;
-      Struct[i].PC[Bead].z1 += Struct[i].P[Bead].z;
-      Struct[i].PC[Bead].x2 += Struct[i].P[Bead].x;
-      Struct[i].PC[Bead].y2 += Struct[i].P[Bead].y;
-      Struct[i].PC[Bead].z2 += Struct[i].P[Bead].z;
-      Struct[i].PC[Bead].x3 += Struct[i].P[Bead].x;
-      Struct[i].PC[Bead].y3 += Struct[i].P[Bead].y;
-      Struct[i].PC[Bead].z3 += Struct[i].P[Bead].z;
-      Struct[i].PC[Bead].x4 += Struct[i].P[Bead].x;
-      Struct[i].PC[Bead].y4 += Struct[i].P[Bead].y;
-      Struct[i].PC[Bead].z4 += Struct[i].P[Bead].z;
-      Struct[i].PC[Bead].x5 += Struct[i].P[Bead].x;
-      Struct[i].PC[Bead].y5 += Struct[i].P[Bead].y;
-      Struct[i].PC[Bead].z5 += Struct[i].P[Bead].z;
-      Struct[i].PC[Bead].x6 += Struct[i].P[Bead].x;
-      Struct[i].PC[Bead].y6 += Struct[i].P[Bead].y;
-      Struct[i].PC[Bead].z6 += Struct[i].P[Bead].z;
+      QMMMData[i].PC[bead].x1 += QMMMData[i].P[bead].x;
+      QMMMData[i].PC[bead].y1 += QMMMData[i].P[bead].y;
+      QMMMData[i].PC[bead].z1 += QMMMData[i].P[bead].z;
+      QMMMData[i].PC[bead].x2 += QMMMData[i].P[bead].x;
+      QMMMData[i].PC[bead].y2 += QMMMData[i].P[bead].y;
+      QMMMData[i].PC[bead].z2 += QMMMData[i].P[bead].z;
+      QMMMData[i].PC[bead].x3 += QMMMData[i].P[bead].x;
+      QMMMData[i].PC[bead].y3 += QMMMData[i].P[bead].y;
+      QMMMData[i].PC[bead].z3 += QMMMData[i].P[bead].z;
+      QMMMData[i].PC[bead].x4 += QMMMData[i].P[bead].x;
+      QMMMData[i].PC[bead].y4 += QMMMData[i].P[bead].y;
+      QMMMData[i].PC[bead].z4 += QMMMData[i].P[bead].z;
+      QMMMData[i].PC[bead].x5 += QMMMData[i].P[bead].x;
+      QMMMData[i].PC[bead].y5 += QMMMData[i].P[bead].y;
+      QMMMData[i].PC[bead].z5 += QMMMData[i].P[bead].z;
+      QMMMData[i].PC[bead].x6 += QMMMData[i].P[bead].x;
+      QMMMData[i].PC[bead].y6 += QMMMData[i].P[bead].y;
+      QMMMData[i].PC[bead].z6 += QMMMData[i].P[bead].z;
     }
     else
     {
       //Set other charges to zero
       //NB: This makes sure that variables are not undefined
-      Struct[i].PC[Bead].q1 = 0;
-      Struct[i].PC[Bead].q2 = 0;
-      Struct[i].PC[Bead].q3 = 0;
-      Struct[i].PC[Bead].q4 = 0;
-      Struct[i].PC[Bead].q5 = 0;
-      Struct[i].PC[Bead].q6 = 0;
-      Struct[i].PC[Bead].x1 = Struct[i].P[Bead].x;
-      Struct[i].PC[Bead].y1 = Struct[i].P[Bead].y;
-      Struct[i].PC[Bead].z1 = Struct[i].P[Bead].z;
-      Struct[i].PC[Bead].x2 = Struct[i].P[Bead].x;
-      Struct[i].PC[Bead].y2 = Struct[i].P[Bead].y;
-      Struct[i].PC[Bead].z2 = Struct[i].P[Bead].z;
-      Struct[i].PC[Bead].x3 = Struct[i].P[Bead].x;
-      Struct[i].PC[Bead].y3 = Struct[i].P[Bead].y;
-      Struct[i].PC[Bead].z3 = Struct[i].P[Bead].z;
-      Struct[i].PC[Bead].x4 = Struct[i].P[Bead].x;
-      Struct[i].PC[Bead].y4 = Struct[i].P[Bead].y;
-      Struct[i].PC[Bead].z4 = Struct[i].P[Bead].z;
-      Struct[i].PC[Bead].x5 = Struct[i].P[Bead].x;
-      Struct[i].PC[Bead].y5 = Struct[i].P[Bead].y;
-      Struct[i].PC[Bead].z5 = Struct[i].P[Bead].z;
-      Struct[i].PC[Bead].x6 = Struct[i].P[Bead].x;
-      Struct[i].PC[Bead].y6 = Struct[i].P[Bead].y;
-      Struct[i].PC[Bead].z6 = Struct[i].P[Bead].z;
+      QMMMData[i].PC[bead].q1 = 0;
+      QMMMData[i].PC[bead].q2 = 0;
+      QMMMData[i].PC[bead].q3 = 0;
+      QMMMData[i].PC[bead].q4 = 0;
+      QMMMData[i].PC[bead].q5 = 0;
+      QMMMData[i].PC[bead].q6 = 0;
+      QMMMData[i].PC[bead].x1 = QMMMData[i].P[bead].x;
+      QMMMData[i].PC[bead].y1 = QMMMData[i].P[bead].y;
+      QMMMData[i].PC[bead].z1 = QMMMData[i].P[bead].z;
+      QMMMData[i].PC[bead].x2 = QMMMData[i].P[bead].x;
+      QMMMData[i].PC[bead].y2 = QMMMData[i].P[bead].y;
+      QMMMData[i].PC[bead].z2 = QMMMData[i].P[bead].z;
+      QMMMData[i].PC[bead].x3 = QMMMData[i].P[bead].x;
+      QMMMData[i].PC[bead].y3 = QMMMData[i].P[bead].y;
+      QMMMData[i].PC[bead].z3 = QMMMData[i].P[bead].z;
+      QMMMData[i].PC[bead].x4 = QMMMData[i].P[bead].x;
+      QMMMData[i].PC[bead].y4 = QMMMData[i].P[bead].y;
+      QMMMData[i].PC[bead].z4 = QMMMData[i].P[bead].z;
+      QMMMData[i].PC[bead].x5 = QMMMData[i].P[bead].x;
+      QMMMData[i].PC[bead].y5 = QMMMData[i].P[bead].y;
+      QMMMData[i].PC[bead].z5 = QMMMData[i].P[bead].z;
+      QMMMData[i].PC[bead].x6 = QMMMData[i].P[bead].x;
+      QMMMData[i].PC[bead].y6 = QMMMData[i].P[bead].y;
+      QMMMData[i].PC[bead].z6 = QMMMData[i].P[bead].z;
     }
   }
   return;
 };
 
-void WriteTINKMpole(vector<QMMMAtom>& Struct, fstream& outFile, int i, int Bead)
+void WriteTINKMPole(vector<QMMMAtom>& QMMMData, fstream& outFile, int i,
+                    int bead)
 {
   //Write a new multipole definition for pseudo-bonds and QM atoms
   outFile << "multipole -"; //Negative sign defines the frame with atom IDs
-  outFile << (Struct[i].id+1) << " ";
+  outFile << (QMMMData[i].id+1) << " ";
   //Print frame
-  if (Struct[i].MP[Bead].type == "Z-then-X")
+  if (QMMMData[i].MP[bead].type == "Z-then-X")
   {
-    outFile << (Struct[i].MP[Bead].atom1+1) << " ";
-    outFile << (Struct[i].MP[Bead].atom2+1) << " ";
-    outFile << (Struct[i].MP[Bead].atom3+1) << " ";
+    outFile << (QMMMData[i].MP[bead].atom1+1) << " ";
+    outFile << (QMMMData[i].MP[bead].atom2+1) << " ";
+    outFile << (QMMMData[i].MP[bead].atom3+1) << " ";
   }
-  if (Struct[i].MP[Bead].type == "Bisector")
+  if (QMMMData[i].MP[bead].type == "Bisector")
   {
     outFile << "-"; //Defines the bisectors
-    outFile << (Struct[i].MP[Bead].atom1+1) << " ";
-    outFile << (Struct[i].MP[Bead].atom2+1) << " ";
-    outFile << (Struct[i].MP[Bead].atom3+1) << " ";
+    outFile << (QMMMData[i].MP[bead].atom1+1) << " ";
+    outFile << (QMMMData[i].MP[bead].atom2+1) << " ";
+    outFile << (QMMMData[i].MP[bead].atom3+1) << " ";
   }
-  if (Struct[i].MP[Bead].type == "Z-Bisector")
+  if (QMMMData[i].MP[bead].type == "Z-Bisector")
   {
-    outFile << (Struct[i].MP[Bead].atom1+1) << " ";
+    outFile << (QMMMData[i].MP[bead].atom1+1) << " ";
     outFile << "-"; //Defines the bisectors
-    outFile << (Struct[i].MP[Bead].atom2+1) << " ";
-    outFile << (Struct[i].MP[Bead].atom3+1) << " ";
+    outFile << (QMMMData[i].MP[bead].atom2+1) << " ";
+    outFile << (QMMMData[i].MP[bead].atom3+1) << " ";
   }
-  if (Struct[i].MP[Bead].type == "Z-Only")
+  if (QMMMData[i].MP[bead].type == "Z-Only")
   {
-    outFile << (Struct[i].MP[Bead].atom1+1) << " ";
+    outFile << (QMMMData[i].MP[bead].atom1+1) << " ";
     outFile << "0" << " ";
     outFile << "0" << " ";
   }
-  if (Struct[i].MP[Bead].type == "None")
+  if (QMMMData[i].MP[bead].type == "None")
   {
     outFile << "0" << " ";
     outFile << "0" << " ";
     outFile << "0" << " ";
   }
   //Print only the point-charge
-  outFile << Struct[i].MP[Bead].q << '\n';
+  outFile << QMMMData[i].MP[bead].q << '\n';
   //Print dummy dipoles
   outFile << "        0.0 0.0 0.0" << '\n';
   //Print dummy quadrupoles
@@ -528,8 +562,8 @@ void WriteTINKMpole(vector<QMMMAtom>& Struct, fstream& outFile, int i, int Bead)
 };
 
 //General routines
-void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
-                     int Bead)
+void WriteChargeFile(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
+                     int bead)
 {
   //Function to write a file for the MM charges
   stringstream call; //Generic stream
@@ -539,7 +573,7 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   Coord QMCOM; //QM region center of mass
   if (PBCon or QMMMOpts.useLREC)
   {
-    QMCOM = FindQMCOM(Struct,QMMMOpts,Bead);
+    QMCOM = FindQMCOM(QMMMData,QMMMOpts,bead);
   }
   //Initialize charges
   if (AMOEBA)
@@ -547,7 +581,7 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
     if (TINKER)
     {
       //Set up current multipoles
-      RotateTINKCharges(Struct,Bead);
+      RotateTINKCharges(QMMMData,bead);
     }
   }
   //Write charge file
@@ -555,11 +589,11 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     //Save file
     call.str("");
-    call << "MMCharges_" << Bead << ".txt";
+    call << "MMCharges_" << bead << ".txt";
     outFile.open(call.str().c_str(),ios_base::out);
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion)
+      if (QMMMData[i].MMregion)
       {
         //Check PBC (minimum image convention)
         Coord distCent; //Distance from QM COM
@@ -570,10 +604,10 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         {
           //Initialize displacements
           double dx,dy,dz; //Starting displacements
-          dx = Struct[i].P[Bead].x-QMCOM.x;
-          dy = Struct[i].P[Bead].y-QMCOM.y;
-          dz = Struct[i].P[Bead].z-QMCOM.z;
-          distCent = CoordDist2(Struct[i].P[Bead],QMCOM);
+          dx = QMMMData[i].P[bead].x-QMCOM.x;
+          dy = QMMMData[i].P[bead].y-QMCOM.y;
+          dz = QMMMData[i].P[bead].z-QMCOM.z;
+          distCent = CoordDist2(QMMMData[i].P[bead],QMCOM);
           //Calculate the shift in positions
           //NB: Generally this work out to be +/- {Lx,Ly,Lz}
           if (PBCon)
@@ -618,13 +652,13 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
             //Add charges
             firstCharge = 0; //Skips writing the remaining zeros
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].P[Bead].x+xShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].P[bead].x+xShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].P[Bead].y+yShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].P[bead].y+yShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].P[Bead].z+zShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].P[bead].z+zShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].MP[Bead].q*scrq,16);
+            outFile << LICHEMFormFloat(QMMMData[i].MP[bead].q*scrq,16);
             outFile << '\n';
           }
           if (AMOEBA)
@@ -632,58 +666,58 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
             //Add multipoles
             firstCharge = 0; //Skips writing the remaining zeros
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x1+xShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x1+xShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y1+yShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y1+yShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z1+zShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z1+zShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q1*scrq,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q1*scrq,16);
             outFile << '\n';
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x2+xShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x2+xShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y2+yShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y2+yShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z2+zShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z2+zShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q2*scrq,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q2*scrq,16);
             outFile << '\n';
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x3+xShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x3+xShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y3+yShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y3+yShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z3+zShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z3+zShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q3*scrq,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q3*scrq,16);
             outFile << '\n';
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x4+xShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x4+xShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y4+yShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y4+yShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z4+zShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z4+zShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q4*scrq,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q4*scrq,16);
             outFile << '\n';
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x5+xShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x5+xShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y5+yShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y5+yShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z5+zShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z5+zShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q5*scrq,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q5*scrq,16);
             outFile << '\n';
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x6+xShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x6+xShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y6+yShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y6+yShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z6+zShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z6+zShft,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q6*scrq,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q6*scrq,16);
             outFile << '\n';
           }
         }
@@ -694,11 +728,11 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
   {
     //Save file
     call.str("");
-    call << "MMCharges_" << Bead << ".txt";
+    call << "MMCharges_" << bead << ".txt";
     outFile.open(call.str().c_str(),ios_base::out);
     for (int i=0;i<Natoms;i++)
     {
-      if (Struct[i].MMregion)
+      if (QMMMData[i].MMregion)
       {
         //Check PBC (minimum image convention)
         Coord distCent; //Distance from QM COM
@@ -709,10 +743,10 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
         {
           //Initialize displacements
           double dx,dy,dz; //Starting displacements
-          dx = Struct[i].P[Bead].x-QMCOM.x;
-          dy = Struct[i].P[Bead].y-QMCOM.y;
-          dz = Struct[i].P[Bead].z-QMCOM.z;
-          distCent = CoordDist2(Struct[i].P[Bead],QMCOM);
+          dx = QMMMData[i].P[bead].x-QMCOM.x;
+          dy = QMMMData[i].P[bead].y-QMCOM.y;
+          dz = QMMMData[i].P[bead].z-QMCOM.z;
+          distCent = CoordDist2(QMMMData[i].P[bead],QMCOM);
           //Calculate the shift in positions
           //NB: Generally this work out to be +/- {Lx,Ly,Lz}
           if (PBCon)
@@ -756,50 +790,71 @@ void WriteChargeFile(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts,
           {
             //Add charges
             outFile << "Chrgfield.extern.addCharge(";
-            outFile << LICHEMFormFloat(Struct[i].MP[Bead].q*scrq,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].P[Bead].x+xShft,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].P[Bead].y+yShft,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].P[Bead].z+zShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].MP[bead].q*scrq,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].P[bead].x+xShft,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].P[bead].y+yShft,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].P[bead].z+zShft,16);
             outFile << ")" << '\n';
           }
           if (AMOEBA)
           {
             //Add multipoles
             outFile << "Chrgfield.extern.addCharge(";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q1*scrq,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x1+xShft,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y1+yShft,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z1+zShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q1*scrq,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x1+xShft,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y1+yShft,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z1+zShft,16);
             outFile << ")" << '\n';
             outFile << "Chrgfield.extern.addCharge(";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q2*scrq,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x2+xShft,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y2+yShft,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z2+zShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q2*scrq,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x2+xShft,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y2+yShft,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z2+zShft,16);
             outFile << ")" << '\n';
             outFile << "Chrgfield.extern.addCharge(";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q3*scrq,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x3+xShft,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y3+yShft,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z3+zShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q3*scrq,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x3+xShft,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y3+yShft,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z3+zShft,16);
             outFile << ")" << '\n';
             outFile << "Chrgfield.extern.addCharge(";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q4*scrq,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x4+xShft,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y4+yShft,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z4+zShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q4*scrq,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x4+xShft,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y4+yShft,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z4+zShft,16);
             outFile << ")" << '\n';
             outFile << "Chrgfield.extern.addCharge(";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q5*scrq,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x5+xShft,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y5+yShft,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z5+zShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q5*scrq,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x5+xShft,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y5+yShft,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z5+zShft,16);
             outFile << ")" << '\n';
             outFile << "Chrgfield.extern.addCharge(";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].q6*scrq,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].x6+xShft,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].y6+yShft,16) << ",";
-            outFile << LICHEMFormFloat(Struct[i].PC[Bead].z6+zShft,16);
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q6*scrq,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x6+xShft,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y6+yShft,16);
+            outFile << ",";
+            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z6+zShft,16);
             outFile << ")" << '\n';
           }
         }
@@ -819,7 +874,7 @@ void ExtractGlobalPoles(int& argc, char**& argv)
   cout << fixed;
   cout.precision(12);
   fstream xyzFile,connectFile,regionFile;
-  vector<QMMMAtom> Struct;
+  vector<QMMMAtom> QMMMData;
   QMMMSettings QMMMOpts;
   stringstream call; //Stream for system calls and reading/writing files
   string dummy;
@@ -875,9 +930,9 @@ void ExtractGlobalPoles(int& argc, char**& argv)
     //Quit with an error
     exit(0);
   }
-  ReadLICHEMInput(xyzFile,connectFile,regionFile,Struct,QMMMOpts);
+  ReadLICHEMInput(xyzFile,connectFile,regionFile,QMMMData,QMMMOpts);
   //Assume there is a single bead
-  int Bead = 0;
+  int bead = 0;
   //Rotate multipoles
   if (TINKER)
   {
@@ -897,19 +952,25 @@ void ExtractGlobalPoles(int& argc, char**& argv)
       vecZ(2) = 1;
       //Find current orientation and rotate multipoles
       double x,y,z;
-      if (Struct[i].MP[Bead].type == "Bisector")
+      if (QMMMData[i].MP[bead].type == "Bisector")
       {
         //Find z vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom1].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom1].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom1].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].z;
         vecZ(0) = -1*x; //Correct the direction
         vecZ(1) = -1*y; //Correct the direction
         vecZ(2) = -1*z; //Correct the direction
         vecZ.normalize();
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom2].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom2].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom2].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].z;
         vecX(0) = -1*x; //Correct the direction
         vecX(1) = -1*y; //Correct the direction
         vecX(2) = -1*z; //Correct the direction
@@ -921,20 +982,26 @@ void ExtractGlobalPoles(int& argc, char**& argv)
         vecX -= vecZ*(vecX.dot(vecZ));
         vecX.normalize();
       }
-      if (Struct[i].MP[Bead].type == "Z-then-X")
+      if (QMMMData[i].MP[bead].type == "Z-then-X")
       {
         //Find z vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom1].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom1].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom1].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].z;
         vecZ(0) = -1*x; //Correct the direction
         vecZ(1) = -1*y; //Correct the direction
         vecZ(2) = -1*z; //Correct the direction
         vecZ.normalize();
         //Find x vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom2].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom2].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom2].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].z;
         vecX(0) = -1*x; //Correct the direction
         vecX(1) = -1*y; //Correct the direction
         vecX(2) = -1*z; //Correct the direction
@@ -943,28 +1010,37 @@ void ExtractGlobalPoles(int& argc, char**& argv)
         vecX -= vecZ*(vecX.dot(vecZ));
         vecX.normalize();
       }
-      if (Struct[i].MP[Bead].type == "Z-Bisect")
+      if (QMMMData[i].MP[bead].type == "Z-Bisect")
       {
         //Find first vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom1].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom1].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom1].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].z;
         vecZ(0) = -1*x; //Correct the direction
         vecZ(1) = -1*y; //Correct the direction
         vecZ(2) = -1*z; //Correct the direction
         vecZ.normalize();
         //Find second vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom2].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom2].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom2].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].z;
         vecX(0) = -1*x; //Correct the direction
         vecX(1) = -1*y; //Correct the direction
         vecX(2) = -1*z; //Correct the direction
         vecX.normalize();
         //Find third vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom3].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom3].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom3].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom3].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom3].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom3].P[bead].z;
         vecY(0) = -1*x; //Correct the direction
         vecY(1) = -1*y; //Correct the direction
         vecY(2) = -1*z; //Correct the direction
@@ -976,28 +1052,37 @@ void ExtractGlobalPoles(int& argc, char**& argv)
         vecX -= vecZ*(vecX.dot(vecZ));
         vecX.normalize();
       }
-      if (Struct[i].MP[Bead].type == "3-Fold")
+      if (QMMMData[i].MP[bead].type == "3-Fold")
       {
         //First vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom1].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom1].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom1].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].z;
         vecZ(0) = -1*x; //Correct the direction
         vecZ(1) = -1*y; //Correct the direction
         vecZ(2) = -1*z; //Correct the direction
         vecZ.normalize();
         //Second vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom2].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom2].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom2].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom2].P[bead].z;
         vecX(0) = -1*x; //Correct the direction
         vecX(1) = -1*y; //Correct the direction
         vecX(2) = -1*z; //Correct the direction
         vecX.normalize();
         //Third vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom3].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom3].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom3].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom3].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom3].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom3].P[bead].z;
         vecY(0) = -1*x; //Correct the direction
         vecY(1) = -1*y; //Correct the direction
         vecY(2) = -1*z; //Correct the direction
@@ -1009,12 +1094,15 @@ void ExtractGlobalPoles(int& argc, char**& argv)
         vecX -= vecZ*(vecX.dot(vecZ));
         vecX.normalize();
       }
-      if (Struct[i].MP[Bead].type == "Z-Only")
+      if (QMMMData[i].MP[bead].type == "Z-Only")
       {
         //Primary vector
-        x = Struct[i].P[Bead].x-Struct[Struct[i].MP[Bead].atom1].P[Bead].x;
-        y = Struct[i].P[Bead].y-Struct[Struct[i].MP[Bead].atom1].P[Bead].y;
-        z = Struct[i].P[Bead].z-Struct[Struct[i].MP[Bead].atom1].P[Bead].z;
+        x = QMMMData[i].P[bead].x;
+        x -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].x;
+        y = QMMMData[i].P[bead].y;
+        y -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].y;
+        z = QMMMData[i].P[bead].z;
+        z -= QMMMData[QMMMData[i].MP[bead].atom1].P[bead].z;
         vecZ(0) = -1*x; //Correct the direction
         vecZ(1) = -1*y; //Correct the direction
         vecZ(2) = -1*z; //Correct the direction
@@ -1037,92 +1125,92 @@ void ExtractGlobalPoles(int& argc, char**& argv)
       vecY = vecX.cross(vecZ);
       vecY.normalize();
       //Rotate to the global frame
-      Mpole newPoles;
+      MPole newPoles;
       //Add monopoles
-      newPoles.q = Struct[i].MP[Bead].q;
+      newPoles.q = QMMMData[i].MP[bead].q;
       //Rotate dipoles
       newPoles.Dx = 0; //X component
-      newPoles.Dx += Struct[i].MP[Bead].Dx*vecX(0);
-      newPoles.Dx += Struct[i].MP[Bead].Dy*vecY(0);
-      newPoles.Dx += Struct[i].MP[Bead].Dz*vecZ(0);
+      newPoles.Dx += QMMMData[i].MP[bead].Dx*vecX(0);
+      newPoles.Dx += QMMMData[i].MP[bead].Dy*vecY(0);
+      newPoles.Dx += QMMMData[i].MP[bead].Dz*vecZ(0);
       newPoles.Dy = 0; //Y component
-      newPoles.Dy += Struct[i].MP[Bead].Dx*vecX(1);
-      newPoles.Dy += Struct[i].MP[Bead].Dy*vecY(1);
-      newPoles.Dy += Struct[i].MP[Bead].Dz*vecZ(1);
+      newPoles.Dy += QMMMData[i].MP[bead].Dx*vecX(1);
+      newPoles.Dy += QMMMData[i].MP[bead].Dy*vecY(1);
+      newPoles.Dy += QMMMData[i].MP[bead].Dz*vecZ(1);
       newPoles.Dz = 0; //Z component
-      newPoles.Dz += Struct[i].MP[Bead].Dx*vecX(2);
-      newPoles.Dz += Struct[i].MP[Bead].Dy*vecY(2);
-      newPoles.Dz += Struct[i].MP[Bead].Dz*vecZ(2);
+      newPoles.Dz += QMMMData[i].MP[bead].Dx*vecX(2);
+      newPoles.Dz += QMMMData[i].MP[bead].Dy*vecY(2);
+      newPoles.Dz += QMMMData[i].MP[bead].Dz*vecZ(2);
       //Add induced dipoles (Already in global frame)
-      newPoles.Dx += Struct[i].MP[Bead].IDx;
-      newPoles.Dy += Struct[i].MP[Bead].IDy;
-      newPoles.Dz += Struct[i].MP[Bead].IDz;
+      newPoles.Dx += QMMMData[i].MP[bead].IDx;
+      newPoles.Dy += QMMMData[i].MP[bead].IDy;
+      newPoles.Dz += QMMMData[i].MP[bead].IDz;
       newPoles.IDx = 0;
       newPoles.IDy = 0;
       newPoles.IDz = 0;
       //Rotate quadrupoles (This looks awful, but it works)
       newPoles.Qxx = 0; //XX component
-      newPoles.Qxx += vecX(0)*vecX(0)*Struct[i].MP[Bead].Qxx;
-      newPoles.Qxx += vecX(0)*vecY(0)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qxx += vecX(0)*vecZ(0)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qxx += vecY(0)*vecX(0)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qxx += vecY(0)*vecY(0)*Struct[i].MP[Bead].Qyy;
-      newPoles.Qxx += vecY(0)*vecZ(0)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qxx += vecZ(0)*vecX(0)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qxx += vecZ(0)*vecY(0)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qxx += vecZ(0)*vecZ(0)*Struct[i].MP[Bead].Qzz;
+      newPoles.Qxx += vecX(0)*vecX(0)*QMMMData[i].MP[bead].Qxx;
+      newPoles.Qxx += vecX(0)*vecY(0)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qxx += vecX(0)*vecZ(0)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qxx += vecY(0)*vecX(0)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qxx += vecY(0)*vecY(0)*QMMMData[i].MP[bead].Qyy;
+      newPoles.Qxx += vecY(0)*vecZ(0)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qxx += vecZ(0)*vecX(0)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qxx += vecZ(0)*vecY(0)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qxx += vecZ(0)*vecZ(0)*QMMMData[i].MP[bead].Qzz;
       newPoles.Qxy = 0; //XY component
-      newPoles.Qxy += vecX(0)*vecX(1)*Struct[i].MP[Bead].Qxx;
-      newPoles.Qxy += vecX(0)*vecY(1)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qxy += vecX(0)*vecZ(1)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qxy += vecY(0)*vecX(1)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qxy += vecY(0)*vecY(1)*Struct[i].MP[Bead].Qyy;
-      newPoles.Qxy += vecY(0)*vecZ(1)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qxy += vecZ(0)*vecX(1)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qxy += vecZ(0)*vecY(1)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qxy += vecZ(0)*vecZ(1)*Struct[i].MP[Bead].Qzz;
+      newPoles.Qxy += vecX(0)*vecX(1)*QMMMData[i].MP[bead].Qxx;
+      newPoles.Qxy += vecX(0)*vecY(1)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qxy += vecX(0)*vecZ(1)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qxy += vecY(0)*vecX(1)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qxy += vecY(0)*vecY(1)*QMMMData[i].MP[bead].Qyy;
+      newPoles.Qxy += vecY(0)*vecZ(1)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qxy += vecZ(0)*vecX(1)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qxy += vecZ(0)*vecY(1)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qxy += vecZ(0)*vecZ(1)*QMMMData[i].MP[bead].Qzz;
       newPoles.Qxz = 0; //XZ component
-      newPoles.Qxz += vecX(0)*vecX(2)*Struct[i].MP[Bead].Qxx;
-      newPoles.Qxz += vecX(0)*vecY(2)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qxz += vecX(0)*vecZ(2)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qxz += vecY(0)*vecX(2)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qxz += vecY(0)*vecY(2)*Struct[i].MP[Bead].Qyy;
-      newPoles.Qxz += vecY(0)*vecZ(2)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qxz += vecZ(0)*vecX(2)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qxz += vecZ(0)*vecY(2)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qxz += vecZ(0)*vecZ(2)*Struct[i].MP[Bead].Qzz;
+      newPoles.Qxz += vecX(0)*vecX(2)*QMMMData[i].MP[bead].Qxx;
+      newPoles.Qxz += vecX(0)*vecY(2)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qxz += vecX(0)*vecZ(2)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qxz += vecY(0)*vecX(2)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qxz += vecY(0)*vecY(2)*QMMMData[i].MP[bead].Qyy;
+      newPoles.Qxz += vecY(0)*vecZ(2)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qxz += vecZ(0)*vecX(2)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qxz += vecZ(0)*vecY(2)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qxz += vecZ(0)*vecZ(2)*QMMMData[i].MP[bead].Qzz;
       newPoles.Qyy = 0; //YY component
-      newPoles.Qyy += vecX(1)*vecX(1)*Struct[i].MP[Bead].Qxx;
-      newPoles.Qyy += vecX(1)*vecY(1)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qyy += vecX(1)*vecZ(1)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qyy += vecY(1)*vecX(1)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qyy += vecY(1)*vecY(1)*Struct[i].MP[Bead].Qyy;
-      newPoles.Qyy += vecY(1)*vecZ(1)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qyy += vecZ(1)*vecX(1)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qyy += vecZ(1)*vecY(1)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qyy += vecZ(1)*vecZ(1)*Struct[i].MP[Bead].Qzz;
+      newPoles.Qyy += vecX(1)*vecX(1)*QMMMData[i].MP[bead].Qxx;
+      newPoles.Qyy += vecX(1)*vecY(1)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qyy += vecX(1)*vecZ(1)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qyy += vecY(1)*vecX(1)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qyy += vecY(1)*vecY(1)*QMMMData[i].MP[bead].Qyy;
+      newPoles.Qyy += vecY(1)*vecZ(1)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qyy += vecZ(1)*vecX(1)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qyy += vecZ(1)*vecY(1)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qyy += vecZ(1)*vecZ(1)*QMMMData[i].MP[bead].Qzz;
       newPoles.Qyz = 0; //YZ component
-      newPoles.Qyz += vecX(1)*vecX(2)*Struct[i].MP[Bead].Qxx;
-      newPoles.Qyz += vecX(1)*vecY(2)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qyz += vecX(1)*vecZ(2)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qyz += vecY(1)*vecX(2)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qyz += vecY(1)*vecY(2)*Struct[i].MP[Bead].Qyy;
-      newPoles.Qyz += vecY(1)*vecZ(2)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qyz += vecZ(1)*vecX(2)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qyz += vecZ(1)*vecY(2)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qyz += vecZ(1)*vecZ(2)*Struct[i].MP[Bead].Qzz;
+      newPoles.Qyz += vecX(1)*vecX(2)*QMMMData[i].MP[bead].Qxx;
+      newPoles.Qyz += vecX(1)*vecY(2)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qyz += vecX(1)*vecZ(2)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qyz += vecY(1)*vecX(2)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qyz += vecY(1)*vecY(2)*QMMMData[i].MP[bead].Qyy;
+      newPoles.Qyz += vecY(1)*vecZ(2)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qyz += vecZ(1)*vecX(2)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qyz += vecZ(1)*vecY(2)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qyz += vecZ(1)*vecZ(2)*QMMMData[i].MP[bead].Qzz;
       newPoles.Qzz = 0; //ZZ component
-      newPoles.Qzz += vecX(2)*vecX(2)*Struct[i].MP[Bead].Qxx;
-      newPoles.Qzz += vecX(2)*vecY(2)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qzz += vecX(2)*vecZ(2)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qzz += vecY(2)*vecX(2)*Struct[i].MP[Bead].Qxy;
-      newPoles.Qzz += vecY(2)*vecY(2)*Struct[i].MP[Bead].Qyy;
-      newPoles.Qzz += vecY(2)*vecZ(2)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qzz += vecZ(2)*vecX(2)*Struct[i].MP[Bead].Qxz;
-      newPoles.Qzz += vecZ(2)*vecY(2)*Struct[i].MP[Bead].Qyz;
-      newPoles.Qzz += vecZ(2)*vecZ(2)*Struct[i].MP[Bead].Qzz;
+      newPoles.Qzz += vecX(2)*vecX(2)*QMMMData[i].MP[bead].Qxx;
+      newPoles.Qzz += vecX(2)*vecY(2)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qzz += vecX(2)*vecZ(2)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qzz += vecY(2)*vecX(2)*QMMMData[i].MP[bead].Qxy;
+      newPoles.Qzz += vecY(2)*vecY(2)*QMMMData[i].MP[bead].Qyy;
+      newPoles.Qzz += vecY(2)*vecZ(2)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qzz += vecZ(2)*vecX(2)*QMMMData[i].MP[bead].Qxz;
+      newPoles.Qzz += vecZ(2)*vecY(2)*QMMMData[i].MP[bead].Qyz;
+      newPoles.Qzz += vecZ(2)*vecZ(2)*QMMMData[i].MP[bead].Qzz;
       //Save the global frame multipoles
-      Struct[i].MP[Bead] = newPoles;
+      QMMMData[i].MP[bead] = newPoles;
     }
   }
   //Calculate the total charge
@@ -1131,7 +1219,7 @@ void ExtractGlobalPoles(int& argc, char**& argv)
           reduction(+:totChg)
   for (int i=0;i<Natoms;i++)
   {
-    totChg += Struct[i].MP[Bead].q;
+    totChg += QMMMData[i].MP[bead].q;
   }
   //Write multipoles to the screen
   cout << '\n';
@@ -1140,31 +1228,31 @@ void ExtractGlobalPoles(int& argc, char**& argv)
   for (int i=0;i<Natoms;i++)
   {
     cout << "Atom " << i << ": ";
-    cout << Struct[i].MMTyp << '\n';
+    cout << QMMMData[i].MMTyp << '\n';
     cout << "Position (x,y,z):" << '\n';
     cout << " "; //Sometimes you just need a little space
-    cout << Struct[i].P[Bead].x << " ";
-    cout << Struct[i].P[Bead].y << " ";
-    cout << Struct[i].P[Bead].z << '\n';
+    cout << QMMMData[i].P[bead].x << " ";
+    cout << QMMMData[i].P[bead].y << " ";
+    cout << QMMMData[i].P[bead].z << '\n';
     cout << "Charge and dipole (x,y,z):" << '\n';
     cout << " "; //Sometimes you just need a little space
-    cout << Struct[i].MP[Bead].q << " ";
-    cout << Struct[i].MP[Bead].Dx << " ";
-    cout << Struct[i].MP[Bead].Dy << " ";
-    cout << Struct[i].MP[Bead].Dz << '\n';
+    cout << QMMMData[i].MP[bead].q << " ";
+    cout << QMMMData[i].MP[bead].Dx << " ";
+    cout << QMMMData[i].MP[bead].Dy << " ";
+    cout << QMMMData[i].MP[bead].Dz << '\n';
     cout << "Quadrupole tensor (x,y,z):" << '\n';
     cout << " "; //Sometimes you just need a little space
-    cout << Struct[i].MP[Bead].Qxx << " ";
-    cout << Struct[i].MP[Bead].Qxy << " ";
-    cout << Struct[i].MP[Bead].Qxz << '\n';
+    cout << QMMMData[i].MP[bead].Qxx << " ";
+    cout << QMMMData[i].MP[bead].Qxy << " ";
+    cout << QMMMData[i].MP[bead].Qxz << '\n';
     cout << " "; //Sometimes you just need a little space
-    cout << Struct[i].MP[Bead].Qxy << " ";
-    cout << Struct[i].MP[Bead].Qyy << " ";
-    cout << Struct[i].MP[Bead].Qyz << '\n';
+    cout << QMMMData[i].MP[bead].Qxy << " ";
+    cout << QMMMData[i].MP[bead].Qyy << " ";
+    cout << QMMMData[i].MP[bead].Qyz << '\n';
     cout << " "; //Sometimes you just need a little space
-    cout << Struct[i].MP[Bead].Qxz << " ";
-    cout << Struct[i].MP[Bead].Qyz << " ";
-    cout << Struct[i].MP[Bead].Qzz << '\n';
+    cout << QMMMData[i].MP[bead].Qxz << " ";
+    cout << QMMMData[i].MP[bead].Qyz << " ";
+    cout << QMMMData[i].MP[bead].Qzz << '\n';
     cout << '\n';
   }
   cout << "Total charge: " << totChg;
@@ -1174,10 +1262,10 @@ void ExtractGlobalPoles(int& argc, char**& argv)
   return;
 };
 
-RedMpole Cart2SphHarm(Mpole& pole)
+RedMPole Cart2SphHarm(MPole& pole)
 {
   //Converts Cartesian multipoles to spherical harmonic multipoles
-  RedMpole SHPole; //Spherical harmonic multipoles
+  RedMPole SHPole; //Spherical harmonic multipoles
   //Diagonalize quadrupole moment tensor
   Matrix3d QPole;
   QPole(0,0) = pole.Qxx;
@@ -1232,7 +1320,7 @@ RedMpole Cart2SphHarm(Mpole& pole)
   return SHPole;
 };
 
-OctCharges SphHarm2Charges(RedMpole pole)
+OctCharges SphHarm2Charges(RedMPole pole)
 {
   //Converts spherical harmonic multipoles to point-charges
   OctCharges PCGrid; //New point-charge multipoles
