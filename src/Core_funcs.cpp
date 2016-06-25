@@ -151,6 +151,30 @@ Coord CoordDist2(Coord& a, Coord& b)
   return dispAB;
 };
 
+double LRECFunction(Coord& dist, QMMMSettings& QMMMOpts)
+{
+  //Calculates the LREC scale factor based on the distance between points
+  double R = dist.vecMag(); //Distance between the points
+  //Check if the charge is within the cutoff
+  if (R <= (QMMMOpts.LRECCut*QMMMOpts.LRECCut))
+  {
+    //Scale the charge
+    double scrq = 1;
+    R = sqrt(R);
+    double scrqA,scrqB; //Temporary variables
+    //Calculate temp. variables
+    scrqA = (QMMMOpts.LRECCut-R)/QMMMOpts.LRECCut;
+    scrqB = -3*scrqA*scrqA;
+    scrqA *= 2*scrqA*scrqA;
+    //Combine temp. variables
+    scrqA += scrqB+1;
+    //Set the scale factor
+    scrq -= pow(scrqA,QMMMOpts.LRECPow);
+  }
+  //Charge is not within the cutoff
+  return 0;
+};
+
 //Functions to check connectivity
 vector<int> TraceBoundary(vector<QMMMAtom>& QMMMData, int atID)
 {

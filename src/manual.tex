@@ -552,6 +552,10 @@ QM\_type: Name of the QM wrapper.
 Current wrappers: Gaussian or PSI4 or NWChem.
 Default: N/A \\
 
+QM\_units: Sets the units used inside the QM wrappers (e.g.\ Bohr).
+LICHEM input still needs to be given in Angstrom units.
+Default: Angstrom \\
+
 Solv\_model: Type of implicit solvation model.
 As a general note, solvation models should be chosen carefully.
 Default: N/A \\
@@ -559,14 +563,8 @@ Default: N/A \\
 Spring\_constant: Nudged elastic band spring constant (eV/\AA$^2$).
 Default: 1.0 \\
 
-Tau\_temp: Thermostat time constant (fs) for molecular dynamics simulations.
-Default: 1000.0 \\
-
 Temperature: Temperature of the simulation (Kelvin).
 Default: 300.0 \\
-
-Timestep: Molecular dynamics timestep (fs).
-Default: 1.0 \\
 
 TS\_freqs: Automatically calculate frequencies for the optimized climbing
 image nudged elastic band transition states.
@@ -675,34 +673,13 @@ When using this optimizer, the MM regions are optimized with the MM wrapper
 using a modified force field.
 Synonyms: NEB, CINEB, CI-NEB \\
 
-Ensemble nudged elastic band: The ENEB method uses a steepest descent
-optimizer \cite{} for the QM reaction path, while running molecular
-dynamics on the MM atoms.
-The goal of an ENEB simulation is to approximately minimize the QM atoms
-in an average MM field.
-The optimizer alternates between QM minimization and a short MD production
-run (recommended 500 steps).
-Synonyms: ENEB
-
 \subsection{Ensemble sampling}
-
-Ensemble steepest descent: The ESD method uses a steepest descent
-optimizer \cite{} for the QM atoms, while running molecular
-dynamics on the MM atoms.
-The goal of an ESD simulation is to approximately minimize the QM atoms
-in an average MM field.
-The optimizer alternates between QM minimization and a short MD production
-run (recommended 500 steps).
-Synonyms: ESD \\
 
 Path-integral Monte Carlo: LICHEM can perform Monte Carlo or path-integral
 Monte Carlo simulations.
 The MC stepsize is adjusted during the equilibration step to maintain the
 specified acceptance ratio.
 Synonyms: PIMC \\
-
-Ensemble nudged elastic band: See above.
-Synonyms: ENEB
 
 \section{File conversion}
 
@@ -1135,27 +1112,6 @@ performed, the Hessian is reset to the identity matrix and
 $\alpha=0.02\alpha_{max}$.
 This algorithm will not always satisfy the Wolfe conditions, however, it will
 not violate the conditions for long before a new Hessian is constructed.
-
-\subsection{Ensemble steepest descent}
-
-In QM/MM simulations (see section \ref{sec:QMMMSim}) the QM and MM atoms are
-optimized independently.
-The separation of the optimizations can also allow the thermodynamic ensemble
-to be partially sampled.
-The ensemble steepest descent (ESD) method performs a SD optimization on the
-QM atoms while running molecular dynamics. \\
-
-The QM SD minimization is performed in essentially the same manner as described
-above, except that after each step $N$ MM MD steps are performed.
-If $N=1$, the ESD method is similar to the Verlet algorithm with the
-velocities of the QM atoms set to zero each time step.
-Effectively, the MM atoms are moving in the NVT ensemble at a finite
-temperature, while the QM atoms are at zero Kelvin. \\
-
-The goal of an ESD simulation is to find a thermodynamic average of the QM/MM
-energy by taking snapshots of the MM environment around the QM region.
-If the initial structure is near the minimum of the QM/MM potential, then the
-QM atoms should stay near the minimum while the MM atoms sample phase space.
 
 \subsection{Nudged elastic band}
 

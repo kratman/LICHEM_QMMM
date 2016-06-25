@@ -57,9 +57,7 @@ namespace LICHEMGlobal
   bool QuickSim = 0; //Flag for QuickMin optimization in LICHEM
   bool DFPSim = 0; //Flag for DFP minimization in LICHEM
   bool NEBSim = 0; //Flag for NEB path optimization in LICHEM
-  bool ESDSim = 0; //Flag for ensemble steepest descent
   bool PIMCSim = 0; //Flag for Monte Carlo
-  bool ENEBSim = 0; //Flag for ensemble NEB reaction paths
   bool FBNEBSim = 0; //Flag for force-bias NEB Monte Carlo
   bool FreqCalc = 0; //Flag for a frequency calculation
   bool SinglePoint = 0; //Flag for energy calculation

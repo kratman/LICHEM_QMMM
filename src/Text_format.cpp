@@ -18,333 +18,333 @@
 
 //Number formatting functions
 template<typename T>
-string LICHEMFormFloat(T InpVal, int wid)
+string LICHEMFormFloat(T inpVal, int wid)
 {
   //Resizes a floating-point number to a set number of characters
   //NB: This was a product of my frustration with stream settings
-  stringstream oldvalue;
-  string newvalue;
+  stringstream oldValue;
+  string newValue;
   //Initialize settings
-  oldvalue.str("");
-  oldvalue << fixed;
-  oldvalue.precision(wid);
+  oldValue.str("");
+  oldValue << fixed;
+  oldValue.precision(wid);
   //Save input value to the string
-  oldvalue << InpVal;
-  newvalue = oldvalue.str();
+  oldValue << inpVal;
+  newValue = oldValue.str();
   //Check for a decimal place
-  bool HasDot = 0;
-  for (unsigned int i=0;i<newvalue.length();i++)
+  bool hasDot = 0;
+  for (unsigned int i=0;i<newValue.length();i++)
   {
-    if (newvalue[i] == '.')
+    if (newValue[i] == '.')
     {
-      HasDot = 1;
+      hasDot = 1;
     }
   }
-  if (!HasDot)
+  if (!hasDot)
   {
     //Fix integers
-    if (LICHEMCount(newvalue) < (wid-2))
+    if (LICHEMCount(newValue) < (wid-2))
     {
       //Add a decimal point
-      newvalue += ".";
+      newValue += ".";
     }
     else
     {
       //Escape if the integer is too long
-      return newvalue;
+      return newValue;
     }
   }
-  int Nchars = newvalue.length();
+  int NChars = newValue.length();
   //Resize string
-  if (Nchars > wid)
+  if (NChars > wid)
   {
     //Delete characters
-    newvalue.erase(newvalue.begin()+wid,newvalue.end());
+    newValue.erase(newValue.begin()+wid,newValue.end());
   }
   else
   {
     //Pad with zeros
-    int diff = wid-Nchars;
+    int diff = wid-NChars;
     for (int i=0;i<diff;i++)
     {
       //Add a zero
-      newvalue += "0";
+      newValue += "0";
     }
   }
-  return newvalue;
+  return newValue;
 };
 
 //String formatting functions
-template<typename T> int LICHEMCount(T origval)
+template<typename T> int LICHEMCount(T origVal)
 {
   //Function to count the number of characters in a string or int
-  stringstream origtext; //Stream to convert origval to a string
-  origtext << origval;
-  string inttext = origtext.str();
+  stringstream origText; //Stream to convert origval to a string
+  origText << origVal;
+  string intText = origText.str();
   //Count characters and return
-  int Nchar = inttext.length();
-  return Nchar;
+  int NChar = intText.length();
+  return NChar;
 };
 
-void LICHEMLowerText(string& origtext)
+void LICHEMLowerText(string& origText)
 {
   //Function to switch a string to lowercase letters
-  stringstream newtext;
-  newtext.str("");
-  for (unsigned int i=0;i<origtext.length();i++)
+  stringstream newText;
+  newText.str("");
+  for (unsigned int i=0;i<origText.length();i++)
   {
     //Check and change case
-    if (origtext[i] == 'A')
+    if (origText[i] == 'A')
     {
-      newtext << "a";
+      newText << "a";
     }
-    else if (origtext[i] == 'B')
+    else if (origText[i] == 'B')
     {
-      newtext << "b";
+      newText << "b";
     }
-    else if (origtext[i] == 'C')
+    else if (origText[i] == 'C')
     {
-      newtext << "c";
+      newText << "c";
     }
-    else if (origtext[i] == 'D')
+    else if (origText[i] == 'D')
     {
-      newtext << "d";
+      newText << "d";
     }
-    else if (origtext[i] == 'E')
+    else if (origText[i] == 'E')
     {
-      newtext << "e";
+      newText << "e";
     }
-    else if (origtext[i] == 'F')
+    else if (origText[i] == 'F')
     {
-      newtext << "f";
+      newText << "f";
     }
-    else if (origtext[i] == 'G')
+    else if (origText[i] == 'G')
     {
-      newtext << "g";
+      newText << "g";
     }
-    else if (origtext[i] == 'H')
+    else if (origText[i] == 'H')
     {
-      newtext << "h";
+      newText << "h";
     }
-    else if (origtext[i] == 'I')
+    else if (origText[i] == 'I')
     {
-      newtext << "i";
+      newText << "i";
     }
-    else if (origtext[i] == 'J')
+    else if (origText[i] == 'J')
     {
-      newtext << "j";
+      newText << "j";
     }
-    else if (origtext[i] == 'K')
+    else if (origText[i] == 'K')
     {
-      newtext << "k";
+      newText << "k";
     }
-    else if (origtext[i] == 'L')
+    else if (origText[i] == 'L')
     {
-      newtext << "l";
+      newText << "l";
     }
-    else if (origtext[i] == 'M')
+    else if (origText[i] == 'M')
     {
-      newtext << "m";
+      newText << "m";
     }
-    else if (origtext[i] == 'N')
+    else if (origText[i] == 'N')
     {
-      newtext << "n";
+      newText << "n";
     }
-    else if (origtext[i] == 'O')
+    else if (origText[i] == 'O')
     {
-      newtext << "o";
+      newText << "o";
     }
-    else if (origtext[i] == 'P')
+    else if (origText[i] == 'P')
     {
-      newtext << "p";
+      newText << "p";
     }
-    else if (origtext[i] == 'Q')
+    else if (origText[i] == 'Q')
     {
-      newtext << "q";
+      newText << "q";
     }
-    else if (origtext[i] == 'R')
+    else if (origText[i] == 'R')
     {
-      newtext << "r";
+      newText << "r";
     }
-    else if (origtext[i] == 'S')
+    else if (origText[i] == 'S')
     {
-      newtext << "s";
+      newText << "s";
     }
-    else if (origtext[i] == 'T')
+    else if (origText[i] == 'T')
     {
-      newtext << "t";
+      newText << "t";
     }
-    else if (origtext[i] == 'U')
+    else if (origText[i] == 'U')
     {
-      newtext << "u";
+      newText << "u";
     }
-    else if (origtext[i] == 'V')
+    else if (origText[i] == 'V')
     {
-      newtext << "v";
+      newText << "v";
     }
-    else if (origtext[i] == 'W')
+    else if (origText[i] == 'W')
     {
-      newtext << "w";
+      newText << "w";
     }
-    else if (origtext[i] == 'X')
+    else if (origText[i] == 'X')
     {
-      newtext << "x";
+      newText << "x";
     }
-    else if (origtext[i] == 'Y')
+    else if (origText[i] == 'Y')
     {
-      newtext << "y";
+      newText << "y";
     }
-    else if (origtext[i] == 'Z')
+    else if (origText[i] == 'Z')
     {
-      newtext << "z";
+      newText << "z";
     }
     else
     {
       //Numbers, spaces, and other characters
-      newtext << origtext[i];
+      newText << origText[i];
     }
   }
   //Overwrite original string
-  origtext = newtext.str();
+  origText = newText.str();
   return;
 };
 
-void LICHEMUpperText(string& origtext)
+void LICHEMUpperText(string& origText)
 {
   //Function to switch a string to uppercase letters
-  stringstream newtext;
-  newtext.str("");
-  for (unsigned int i=0;i<origtext.length();i++)
+  stringstream newText;
+  newText.str("");
+  for (unsigned int i=0;i<origText.length();i++)
   {
     //Check and change case
-    if (origtext[i] == 'a')
+    if (origText[i] == 'a')
     {
-      newtext << "A";
+      newText << "A";
     }
-    else if (origtext[i] == 'b')
+    else if (origText[i] == 'b')
     {
-      newtext << "B";
+      newText << "B";
     }
-    else if (origtext[i] == 'c')
+    else if (origText[i] == 'c')
     {
-      newtext << "C";
+      newText << "C";
     }
-    else if (origtext[i] == 'd')
+    else if (origText[i] == 'd')
     {
-      newtext << "D";
+      newText << "D";
     }
-    else if (origtext[i] == 'e')
+    else if (origText[i] == 'e')
     {
-      newtext << "E";
+      newText << "E";
     }
-    else if (origtext[i] == 'f')
+    else if (origText[i] == 'f')
     {
-      newtext << "F";
+      newText << "F";
     }
-    else if (origtext[i] == 'g')
+    else if (origText[i] == 'g')
     {
-      newtext << "G";
+      newText << "G";
     }
-    else if (origtext[i] == 'h')
+    else if (origText[i] == 'h')
     {
-      newtext << "H";
+      newText << "H";
     }
-    else if (origtext[i] == 'i')
+    else if (origText[i] == 'i')
     {
-      newtext << "I";
+      newText << "I";
     }
-    else if (origtext[i] == 'j')
+    else if (origText[i] == 'j')
     {
-      newtext << "J";
+      newText << "J";
     }
-    else if (origtext[i] == 'k')
+    else if (origText[i] == 'k')
     {
-      newtext << "K";
+      newText << "K";
     }
-    else if (origtext[i] == 'l')
+    else if (origText[i] == 'l')
     {
-      newtext << "L";
+      newText << "L";
     }
-    else if (origtext[i] == 'm')
+    else if (origText[i] == 'm')
     {
-      newtext << "M";
+      newText << "M";
     }
-    else if (origtext[i] == 'n')
+    else if (origText[i] == 'n')
     {
-      newtext << "N";
+      newText << "N";
     }
-    else if (origtext[i] == 'o')
+    else if (origText[i] == 'o')
     {
-      newtext << "O";
+      newText << "O";
     }
-    else if (origtext[i] == 'p')
+    else if (origText[i] == 'p')
     {
-      newtext << "P";
+      newText << "P";
     }
-    else if (origtext[i] == 'q')
+    else if (origText[i] == 'q')
     {
-      newtext << "Q";
+      newText << "Q";
     }
-    else if (origtext[i] == 'r')
+    else if (origText[i] == 'r')
     {
-      newtext << "R";
+      newText << "R";
     }
-    else if (origtext[i] == 's')
+    else if (origText[i] == 's')
     {
-      newtext << "S";
+      newText << "S";
     }
-    else if (origtext[i] == 't')
+    else if (origText[i] == 't')
     {
-      newtext << "T";
+      newText << "T";
     }
-    else if (origtext[i] == 'u')
+    else if (origText[i] == 'u')
     {
-      newtext << "U";
+      newText << "U";
     }
-    else if (origtext[i] == 'v')
+    else if (origText[i] == 'v')
     {
-      newtext << "V";
+      newText << "V";
     }
-    else if (origtext[i] == 'w')
+    else if (origText[i] == 'w')
     {
-      newtext << "W";
+      newText << "W";
     }
-    else if (origtext[i] == 'x')
+    else if (origText[i] == 'x')
     {
-      newtext << "X";
+      newText << "X";
     }
-    else if (origtext[i] == 'y')
+    else if (origText[i] == 'y')
     {
-      newtext << "Y";
+      newText << "Y";
     }
-    else if (origtext[i] == 'z')
+    else if (origText[i] == 'z')
     {
-      newtext << "Z";
+      newText << "Z";
     }
     else
     {
       //Numbers, spaces, and other characters
-      newtext << origtext[i];
+      newText << origText[i];
     }
   }
   //Overwrite original string
-  origtext = newtext.str();
+  origText = newText.str();
   return;
 };
 
-void LICHEMFixSciNot(string& origtext)
+void LICHEMFixSciNot(string& origText)
 {
   //Function change D scientific notation to E notation
-  for (unsigned int i=0;i<origtext.length();i++)
+  for (unsigned int i=0;i<origText.length();i++)
   {
     //Check and change case
-    if ((origtext[i] == 'D') or (origtext[i] == 'd'))
+    if ((origText[i] == 'D') or (origText[i] == 'd'))
     {
-      origtext[i] = 'e';
+      origText[i] = 'e';
     }
-    if (origtext[i] == 'E')
+    if (origText[i] == 'E')
     {
-      origtext[i] = 'e';
+      origText[i] = 'e';
     }
   }
   return;

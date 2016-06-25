@@ -112,6 +112,7 @@ class QMMMSettings
     bool memMB; //Is the RAM in mb or gb
     int charge; //QM total charge
     int spin; //QM total spin
+    string unitsQM; //Specifies the units for the QM calculations
     string backDir; //Directory for log file backups
     //Input needed for QMMM long-range electrostatics
     bool useLREC; //Use a long-range correction
@@ -123,7 +124,7 @@ class QMMMSettings
     bool useEwald; //Use Ewald summation for MM energy and optimizations
     bool useImpSolv; //Use implicit solvents for MM energy and optimizations
     string solvModel; //Type of implicit solvent
-    //Input needed for MC and MD functions
+    //Input needed for MC and reaction path functions
     string ensemble; //NVT or NPT
     double temp; //Temperature
     double beta; //Inverse temperature
@@ -133,8 +134,6 @@ class QMMMSettings
     int NBeads; //Number of time-slices or beads
     double accRatio; //Target acceptance ratio
     int NPrint; //Number of steps before printing
-    double dt; //MD timestep
-    double tauTemp; //Thermostat time constant
     //Input needed for optimizations
     int maxOptSteps; //Maximum iterative optimization steps
     double MMOptTol; //Criteria to end the optimization

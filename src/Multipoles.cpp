@@ -569,6 +569,12 @@ void WriteChargeFile(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   stringstream call; //Generic stream
   fstream outFile; //Stream for the charge file
   bool firstCharge = 1; //Always write the first charge
+  //Check units
+  double uConv = 1; //Units conversion constant
+  if (QMMMOpts.unitsQM == "Bohr")
+  {
+    uConv = 1.0/bohrRad;
+  }
   //Find the center of mass
   Coord QMCOM; //QM region center of mass
   if (PBCon or QMMMOpts.useLREC)
@@ -622,28 +628,7 @@ void WriteChargeFile(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
         if (QMMMOpts.useLREC)
         {
           //Use the long-range correction
-          double rcom = 0; //Distance from center of mass
-          //Calculate the distance from the center of mass
-          rcom = distCent.vecMag();
-          if (rcom <= (QMMMOpts.LRECCut*QMMMOpts.LRECCut))
-          {
-            //Scale the charge
-            rcom = sqrt(rcom);
-            double scrqA,scrqB; //Temporary variables
-            //Calculate temp. variables
-            scrqA = (QMMMOpts.LRECCut-rcom)/QMMMOpts.LRECCut;
-            scrqB = -3*scrqA*scrqA;
-            scrqA *= 2*scrqA*scrqA;
-            //Combine temp. variables
-            scrqA += scrqB+1;
-            //Set the scale factor
-            scrq -= pow(scrqA,QMMMOpts.LRECPow);
-          }
-          else
-          {
-            //Delete the charge
-            scrq = 0;
-          }
+          scrq = LRECFunction(distCent,QMMMOpts);
         }
         if ((scrq > 0) or firstCharge)
         {
@@ -651,73 +636,109 @@ void WriteChargeFile(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
           {
             //Add charges
             firstCharge = 0; //Skips writing the remaining zeros
+            double tmpX,tmpY,tmpZ,tmpQ; //Temporary storage
+            tmpX = (QMMMData[i].P[bead].x+xShft)*uConv;
+            tmpY = (QMMMData[i].P[bead].y+yShft)*uConv;
+            tmpZ = (QMMMData[i].P[bead].z+zShft)*uConv;
+            tmpQ = QMMMData[i].MP[bead].q*scrq;
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].P[bead].x+xShft,16);
+            outFile << LICHEMFormFloat(tmpX,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].P[bead].y+yShft,16);
+            outFile << LICHEMFormFloat(tmpY,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].P[bead].z+zShft,16);
+            outFile << LICHEMFormFloat(tmpZ,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].MP[bead].q*scrq,16);
+            outFile << LICHEMFormFloat(tmpQ,16);
             outFile << '\n';
           }
           if (AMOEBA)
           {
             //Add multipoles
             firstCharge = 0; //Skips writing the remaining zeros
+            double tmpX,tmpY,tmpZ,tmpQ; //Temporary storage
+            //Charge 1
+            tmpX = (QMMMData[i].PC[bead].x1+xShft)*uConv;
+            tmpY = (QMMMData[i].PC[bead].y1+yShft)*uConv;
+            tmpZ = (QMMMData[i].PC[bead].z1+zShft)*uConv;
+            tmpQ = QMMMData[i].PC[bead].q1*scrq;
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x1+xShft,16);
+            outFile << LICHEMFormFloat(tmpX,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y1+yShft,16);
+            outFile << LICHEMFormFloat(tmpY,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z1+zShft,16);
+            outFile << LICHEMFormFloat(tmpZ,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q1*scrq,16);
+            outFile << LICHEMFormFloat(tmpQ,16);
             outFile << '\n';
+            //Charge 2
+            tmpX = (QMMMData[i].PC[bead].x2+xShft)*uConv;
+            tmpY = (QMMMData[i].PC[bead].y2+yShft)*uConv;
+            tmpZ = (QMMMData[i].PC[bead].z2+zShft)*uConv;
+            tmpQ = QMMMData[i].PC[bead].q2*scrq;
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x2+xShft,16);
+            outFile << LICHEMFormFloat(tmpX,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y2+yShft,16);
+            outFile << LICHEMFormFloat(tmpY,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z2+zShft,16);
+            outFile << LICHEMFormFloat(tmpZ,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q2*scrq,16);
+            outFile << LICHEMFormFloat(tmpQ,16);
             outFile << '\n';
+            //Charge 3
+            tmpX = (QMMMData[i].PC[bead].x3+xShft)*uConv;
+            tmpY = (QMMMData[i].PC[bead].y3+yShft)*uConv;
+            tmpZ = (QMMMData[i].PC[bead].z3+zShft)*uConv;
+            tmpQ = QMMMData[i].PC[bead].q3*scrq;
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x3+xShft,16);
+            outFile << LICHEMFormFloat(tmpX,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y3+yShft,16);
+            outFile << LICHEMFormFloat(tmpY,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z3+zShft,16);
+            outFile << LICHEMFormFloat(tmpZ,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q3*scrq,16);
+            outFile << LICHEMFormFloat(tmpQ,16);
             outFile << '\n';
+            //Charge 4
+            tmpX = (QMMMData[i].PC[bead].x4+xShft)*uConv;
+            tmpY = (QMMMData[i].PC[bead].y4+yShft)*uConv;
+            tmpZ = (QMMMData[i].PC[bead].z4+zShft)*uConv;
+            tmpQ = QMMMData[i].PC[bead].q4*scrq;
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x4+xShft,16);
+            outFile << LICHEMFormFloat(tmpX,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y4+yShft,16);
+            outFile << LICHEMFormFloat(tmpY,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z4+zShft,16);
+            outFile << LICHEMFormFloat(tmpZ,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q4*scrq,16);
+            outFile << LICHEMFormFloat(tmpQ,16);
             outFile << '\n';
+            //Charge 5
+            tmpX = (QMMMData[i].PC[bead].x5+xShft)*uConv;
+            tmpY = (QMMMData[i].PC[bead].y5+yShft)*uConv;
+            tmpZ = (QMMMData[i].PC[bead].z5+zShft)*uConv;
+            tmpQ = QMMMData[i].PC[bead].q5*scrq;
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x5+xShft,16);
+            outFile << LICHEMFormFloat(tmpX,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y5+yShft,16);
+            outFile << LICHEMFormFloat(tmpY,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z5+zShft,16);
+            outFile << LICHEMFormFloat(tmpZ,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q5*scrq,16);
+            outFile << LICHEMFormFloat(tmpQ,16);
             outFile << '\n';
+            //Charge 6
+            tmpX = (QMMMData[i].PC[bead].x6+xShft)*uConv;
+            tmpY = (QMMMData[i].PC[bead].y6+yShft)*uConv;
+            tmpZ = (QMMMData[i].PC[bead].z6+zShft)*uConv;
+            tmpQ = QMMMData[i].PC[bead].q6*scrq;
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x6+xShft,16);
+            outFile << LICHEMFormFloat(tmpX,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y6+yShft,16);
+            outFile << LICHEMFormFloat(tmpY,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z6+zShft,16);
+            outFile << LICHEMFormFloat(tmpZ,16);
             outFile << " ";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q6*scrq,16);
+            outFile << LICHEMFormFloat(tmpQ,16);
             outFile << '\n';
           }
         }
@@ -761,101 +782,95 @@ void WriteChargeFile(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
         if (QMMMOpts.useLREC)
         {
           //Use the long-range correction
-          double rcom = 0; //Distance from center of mass
-          //Calculate the distance from the center of mass
-          rcom = distCent.vecMag();
-          if (rcom <= (QMMMOpts.LRECCut*QMMMOpts.LRECCut))
-          {
-            //Scale the charge
-            rcom = sqrt(rcom);
-            double scrqA,scrqB; //Temporary variables
-            //Calculate temp. variables
-            scrqA = (QMMMOpts.LRECCut-rcom)/QMMMOpts.LRECCut;
-            scrqB = -3*scrqA*scrqA;
-            scrqA *= 2*scrqA*scrqA;
-            //Combine temp. variables
-            scrqA += scrqB+1;
-            //Set the scale factor
-            scrq -= pow(scrqA,QMMMOpts.LRECPow);
-          }
-          else
-          {
-            //Delete the charge
-            scrq = 0;
-          }
+          scrq = LRECFunction(distCent,QMMMOpts);
         }
         if (scrq > 0)
         {
           if (CHRG)
           {
-            //Add charges
+            //Add charge
+            double tmpX,tmpY,tmpZ,tmpQ; //Temporary storage
+            tmpX = (QMMMData[i].P[bead].x+xShft)*uConv;
+            tmpY = (QMMMData[i].P[bead].y+yShft)*uConv;
+            tmpZ = (QMMMData[i].P[bead].z+zShft)*uConv;
+            tmpQ = QMMMData[i].MP[bead].q*scrq;
             outFile << "Chrgfield.extern.addCharge(";
-            outFile << LICHEMFormFloat(QMMMData[i].MP[bead].q*scrq,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].P[bead].x+xShft,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].P[bead].y+yShft,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].P[bead].z+zShft,16);
-            outFile << ")" << '\n';
+            outFile << LICHEMFormFloat(tmpQ,16) << ",";
+            outFile << LICHEMFormFloat(tmpX,16) << ",";
+            outFile << LICHEMFormFloat(tmpY,16) << ",";
+            outFile << LICHEMFormFloat(tmpZ,16) << ")";
+            outFile << '\n';
           }
           if (AMOEBA)
           {
             //Add multipoles
+            double tmpX,tmpY,tmpZ,tmpQ; //Temporary storage
+            //Charge 1
+            tmpX = (QMMMData[i].PC[bead].x1+xShft)*uConv;
+            tmpY = (QMMMData[i].PC[bead].y1+yShft)*uConv;
+            tmpZ = (QMMMData[i].PC[bead].z1+zShft)*uConv;
+            tmpQ = QMMMData[i].PC[bead].q1*scrq;
             outFile << "Chrgfield.extern.addCharge(";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q1*scrq,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x1+xShft,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y1+yShft,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z1+zShft,16);
-            outFile << ")" << '\n';
+            outFile << LICHEMFormFloat(tmpQ,16) << ",";
+            outFile << LICHEMFormFloat(tmpX,16) << ",";
+            outFile << LICHEMFormFloat(tmpY,16) << ",";
+            outFile << LICHEMFormFloat(tmpZ,16) << ")";
+            outFile << '\n';
+            //Charge 2
+            tmpX = (QMMMData[i].PC[bead].x2+xShft)*uConv;
+            tmpY = (QMMMData[i].PC[bead].y2+yShft)*uConv;
+            tmpZ = (QMMMData[i].PC[bead].z2+zShft)*uConv;
+            tmpQ = QMMMData[i].PC[bead].q2*scrq;
             outFile << "Chrgfield.extern.addCharge(";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q2*scrq,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x2+xShft,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y2+yShft,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z2+zShft,16);
-            outFile << ")" << '\n';
+            outFile << LICHEMFormFloat(tmpQ,16) << ",";
+            outFile << LICHEMFormFloat(tmpX,16) << ",";
+            outFile << LICHEMFormFloat(tmpY,16) << ",";
+            outFile << LICHEMFormFloat(tmpZ,16) << ")";
+            outFile << '\n';
+            //Charge 3
+            tmpX = (QMMMData[i].PC[bead].x3+xShft)*uConv;
+            tmpY = (QMMMData[i].PC[bead].y3+yShft)*uConv;
+            tmpZ = (QMMMData[i].PC[bead].z3+zShft)*uConv;
+            tmpQ = QMMMData[i].PC[bead].q3*scrq;
             outFile << "Chrgfield.extern.addCharge(";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q3*scrq,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x3+xShft,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y3+yShft,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z3+zShft,16);
-            outFile << ")" << '\n';
+            outFile << LICHEMFormFloat(tmpQ,16) << ",";
+            outFile << LICHEMFormFloat(tmpX,16) << ",";
+            outFile << LICHEMFormFloat(tmpY,16) << ",";
+            outFile << LICHEMFormFloat(tmpZ,16) << ")";
+            outFile << '\n';
+            //Charge 4
+            tmpX = (QMMMData[i].PC[bead].x4+xShft)*uConv;
+            tmpY = (QMMMData[i].PC[bead].y4+yShft)*uConv;
+            tmpZ = (QMMMData[i].PC[bead].z4+zShft)*uConv;
+            tmpQ = QMMMData[i].PC[bead].q4*scrq;
             outFile << "Chrgfield.extern.addCharge(";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q4*scrq,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x4+xShft,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y4+yShft,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z4+zShft,16);
-            outFile << ")" << '\n';
+            outFile << LICHEMFormFloat(tmpQ,16) << ",";
+            outFile << LICHEMFormFloat(tmpX,16) << ",";
+            outFile << LICHEMFormFloat(tmpY,16) << ",";
+            outFile << LICHEMFormFloat(tmpZ,16) << ")";
+            outFile << '\n';
+            //Charge 5
+            tmpX = (QMMMData[i].PC[bead].x5+xShft)*uConv;
+            tmpY = (QMMMData[i].PC[bead].y5+yShft)*uConv;
+            tmpZ = (QMMMData[i].PC[bead].z5+zShft)*uConv;
+            tmpQ = QMMMData[i].PC[bead].q5*scrq;
             outFile << "Chrgfield.extern.addCharge(";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q5*scrq,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x5+xShft,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y5+yShft,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z5+zShft,16);
-            outFile << ")" << '\n';
+            outFile << LICHEMFormFloat(tmpQ,16) << ",";
+            outFile << LICHEMFormFloat(tmpX,16) << ",";
+            outFile << LICHEMFormFloat(tmpY,16) << ",";
+            outFile << LICHEMFormFloat(tmpZ,16) << ")";
+            outFile << '\n';
+            //Charge 6
+            tmpX = (QMMMData[i].PC[bead].x6+xShft)*uConv;
+            tmpY = (QMMMData[i].PC[bead].y6+yShft)*uConv;
+            tmpZ = (QMMMData[i].PC[bead].z6+zShft)*uConv;
+            tmpQ = QMMMData[i].PC[bead].q6*scrq;
             outFile << "Chrgfield.extern.addCharge(";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].q6*scrq,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].x6+xShft,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].y6+yShft,16);
-            outFile << ",";
-            outFile << LICHEMFormFloat(QMMMData[i].PC[bead].z6+zShft,16);
-            outFile << ")" << '\n';
+            outFile << LICHEMFormFloat(tmpQ,16) << ",";
+            outFile << LICHEMFormFloat(tmpX,16) << ",";
+            outFile << LICHEMFormFloat(tmpY,16) << ",";
+            outFile << LICHEMFormFloat(tmpZ,16) << ")";
+            outFile << '\n';
           }
         }
       }

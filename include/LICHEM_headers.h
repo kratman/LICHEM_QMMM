@@ -76,10 +76,6 @@ double EFFCorr(QMMMElec&,QMMMElec&,int);
 
 double EFFEnergy(QMMMAtom&,QMMMElec&,int);
 
-void EnsembleNEB(vector<QMMMAtom>&,fstream&,QMMMSettings&);
-
-void EnsembleSD(vector<QMMMAtom>&,fstream&,QMMMSettings&,int);
-
 void ExternalGaussian(int&,char**&);
 
 void ExtractGlobalPoles(int& argc, char**& argv);
@@ -173,6 +169,8 @@ void LICHEMSteepest(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void LICHEMUpperText(string&);
 
+double LRECFunction(Coord&,QMMMSettings&);
+
 bool MCMove(vector<QMMMAtom>&,QMMMSettings&,double&);
 
 VectorXd NEBTangent(VectorXd&,VectorXd&,QMMMSettings&,int);
@@ -225,8 +223,6 @@ OctCharges SphHarm2Charges(RedMPole);
 void SplitPathTraj(int&,char**&);
 
 void TINK2LICHEM(int&,char**&);
-
-void TINKERDynamics(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double TINKEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 

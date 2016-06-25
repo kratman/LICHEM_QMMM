@@ -257,6 +257,7 @@ QMMMSettings::QMMMSettings()
   memMB = 1;
   charge = 0;
   spin = 1;
+  unitsQM = "Angstrom";
   backDir = "Old_files";
   //QMMM long-range electrostatics settings
   useLREC = 0;
@@ -268,7 +269,7 @@ QMMMSettings::QMMMSettings()
   useEwald = 0;
   useImpSolv = 0;
   solvModel = "N/A";
-  //MC, MD, and RP settings
+  //MC and RP settings
   ensemble = "N/A";
   temp = 300.0;
   beta = 1/(300.0*kBoltz);
@@ -278,8 +279,6 @@ QMMMSettings::QMMMSettings()
   NBeads = 1; //Key for printing
   accRatio = 0.5;
   NPrint = 5000;
-  dt = 1.0;
-  tauTemp = 1000.0;
   //Optimization settings
   maxOptSteps = 200;
   MMOptTol = 1e-2;

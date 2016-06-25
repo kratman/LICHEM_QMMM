@@ -391,16 +391,6 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
         NEBSim = 1;
       }
       //Ensemble sampling
-      if (dummy == "esd")
-      {
-        //Optimize the QM region with SD and run dynamics on the MM region
-        ESDSim = 1;
-      }
-      if (dummy == "eneb")
-      {
-        //Optimize the QM path with SD and run dynamics on the MM regions
-        ENEBSim = 1;
-      }
       if (dummy == "pimc")
       {
         //Path-integral Monte Carlo
@@ -666,6 +656,17 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
         Gaussian = 1;
       }
     }
+    else if (keyword == "qm_units:")
+    {
+      //Read distance units for QM calculations
+      regionFile >> dummy;
+      LICHEMLowerText(dummy);
+      if ((dummy == "bohr") or (dummy == "a.u."))
+      {
+        //Change distance units to a.u.
+        QMMMOpts.unitsQM = "Bohr";
+      }
+    }
     else if (keyword == "solv_model:")
     {
       //Read MM implicit solvent model
@@ -676,22 +677,12 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       //Read the NEB spring constant
       regionFile >> QMMMOpts.kSpring;
     }
-    else if (keyword == "tau_temp:")
-    {
-      //Read the thermostat relaxation constant
-      regionFile >> QMMMOpts.tauTemp;
-    }
     else if (keyword == "temperature:")
     {
       //Read the temperature
       regionFile >> QMMMOpts.temp;
       //Save the inverse temperature
       QMMMOpts.beta = 1/(kBoltz*QMMMOpts.temp);
-    }
-    else if (keyword == "timestep:")
-    {
-      //Read the molecular dynamics timestep
-      regionFile >> QMMMOpts.dt;
     }
     else if (keyword == "ts_freq:")
     {
@@ -878,23 +869,6 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
         QMMMOpts.TSBead = ((QMMMOpts.NBeads-1)/2); //Middle bead
       }
     }
-    if (ENEBSim)
-    {
-      //Error check
-      if ((QMMMOpts.NBeads%2) != 1)
-      {
-        //The number of beads must be odd
-        QMMMOpts.NBeads += 1; //Change number of beads
-        cerr << "Error: The number of replicas must be odd.";
-        cerr << '\n' << '\n';
-        cerr.flush(); //Print error immediately
-        cout.flush();
-        //Quit
-        exit(0);
-      }
-      //Set transition state
-      QMMMOpts.TSBead = ((QMMMOpts.NBeads-1)/2); //Middle bead
-    }
     //Add random displacements for PIMC simulations
     if (PIMCSim)
     {
@@ -963,7 +937,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       }
     }
   }
-  else if (ENEBSim or NEBSim)
+  else if (NEBSim)
   {
     //Exit with an error
     cout << "Error: No initial reaction path found in the restart file!!!";
@@ -1275,7 +1249,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
       cout << " Frozen atoms: " << Nfreeze << '\n';
     }
   }
-  if (ENEBSim or NEBSim)
+  if (NEBSim)
   {
     //Print reaction path input for error checking
     cout << " RP beads: " << QMMMOpts.NBeads << '\n';
@@ -1293,12 +1267,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
     {
       cout << "Pure MM";
     }
-    cout << " ";
-    if (ENEBSim)
-    {
-      cout << "ensemble ";
-    }
-    cout << "NEB" << '\n';
+    cout << " NEB" << '\n';
   }
   if (PIMCSim)
   {
@@ -1360,7 +1329,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
     cout << " Equilibration MC steps: " << QMMMOpts.NEq << '\n';
     cout << " Production MC steps: " << QMMMOpts.NSteps << '\n';
   }
-  if (OptSim or SteepSim or QuickSim or DFPSim or ESDSim)
+  if (OptSim or SteepSim or QuickSim or DFPSim)
   {
     //Print optimization input for error checking
     cout << '\n';
@@ -1401,10 +1370,6 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
       if (DFPSim)
       {
         cout << "LICHEM DFP" << '\n';
-      }
-      if (ESDSim)
-      {
-        cout << "Ensemble steepest descent" << '\n';
       }
     }
   }
@@ -1642,8 +1607,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
     cout << " steps" << '\n';
   }
   //Print convergence criteria for optimizations
-  if (OptSim or SteepSim or QuickSim or DFPSim or
-     ESDSim or ENEBSim or NEBSim)
+  if (OptSim or SteepSim or QuickSim or DFPSim or NEBSim)
   {
     cout << '\n';
     cout << "Optimization settings:" << '\n';
@@ -1665,7 +1629,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
       cout << LICHEMFormFloat(QMMMOpts.MMOptCut,8);
       cout << " \u212B";
     }
-    if (ENEBSim or NEBSim)
+    if (NEBSim)
     {
       //Spring constant for the path
       cout << '\n';
@@ -1692,18 +1656,6 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
       cout << " eV/\u212B" << '\n';
       cout << " RMS force: " << (10*QMMMOpts.QMOptTol);
       cout << " eV/\u212B" << '\n';
-    }
-    if (ESDSim or ENEBSim)
-    {
-      cout << '\n';
-      cout << "MD settings:" << '\n';
-      cout << " Timestep: " << QMMMOpts.dt;
-      cout << " fs" << '\n';
-      cout << " Temperature: " << QMMMOpts.temp;
-      cout << " K" << '\n';
-      cout << " Thermostat constant, \u03C4: " << QMMMOpts.tauTemp;
-      cout << " ps" << '\n';
-      cout << " MD steps: " << QMMMOpts.NSteps << '\n';
     }
     else if (Nmm > 0)
     {
