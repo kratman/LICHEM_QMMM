@@ -97,7 +97,7 @@ void ExternalGaussian(int& argc, char**& argv)
   //Read updated positions from Gaussian files
   for (int i=0;i<Natoms;i++)
   {
-    if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+    if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
     {
       //Save atom information
       getline(gauInput,dummy);

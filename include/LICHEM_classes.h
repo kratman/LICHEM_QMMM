@@ -54,10 +54,10 @@ class QMMMAtom
     //Temporary storage
     double Ep; //Path-integral energies
     //Regions
-    bool QMregion; //QM, MM, pseudo-bond, or boundary-atom
-    bool MMregion; //QM, MM, pseudo-bond, or boundary-atom
-    bool PBregion; //QM, MM, pseudo-bond, or boundary-atom
-    bool BAregion; //QM, MM, pseudo-bond, or boundary-atom
+    bool QMRegion; //QM, MM, pseudo-bond, or boundary-atom
+    bool MMRegion; //QM, MM, pseudo-bond, or boundary-atom
+    bool PBRegion; //QM, MM, pseudo-bond, or boundary-atom
+    bool BARegion; //QM, MM, pseudo-bond, or boundary-atom
     bool frozen; //Part of a frozen shell
     //Force field information
     double m; //Mass of atom

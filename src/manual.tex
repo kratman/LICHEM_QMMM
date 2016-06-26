@@ -441,8 +441,7 @@ Default: 10000.0 10000.0 10000.0 \\
 Calculation\_type: Type of calculation that will be performed.
 Calculation types are documented in the Section \ref{sec:CalcTyp} and
 Chapter \ref{chap:Theory}.
-Current options: Energy or Opt or DFP or SD or QuickMin or ESD or NEB or
-ENEB or PIMC.
+Current options: Energy or Opt or DFP or SD or NEB or FBNEB or PIMC.
 Some additional synonyms are accepted for each type of calculation, but not
 all synonyms are well documented.
 Default: N/A \\
@@ -644,13 +643,6 @@ The stepsize (recommended: 0.0125) is adjusted to improve convergence.
 When using this optimizer, the MM regions are optimized with the MM wrapper
 using a modified force field.
 Synonyms: Steep, SD \\
-
-QuickMin: LICHEM has damped Verlet (QuickMin) optimizer \cite{} for the QM
-atoms.
-The stepsize is adjusted to improve convergence.
-When using this optimizer, the MM regions are optimized with the MM wrapper
-using a modified force field.
-Synonyms: QuickMin, Quick, DV \\
 
 Davidon-Fletcher-Powell: LICHEM has DFP optimizer \cite{} for the QM atoms.
 The DFP algorithm is similar to the BGFS method.

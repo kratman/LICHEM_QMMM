@@ -184,7 +184,7 @@ void RotateTINKCharges(vector<QMMMAtom>& QMMMData, int bead)
     vecZ(1) = 0;
     vecZ(2) = 1;
     //Rotate the charges
-    if (QMMMData[i].MMregion)
+    if (QMMMData[i].MMRegion)
     {
       //Find current orientation
       double x,y,z;
@@ -599,7 +599,7 @@ void WriteChargeFile(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     outFile.open(call.str().c_str(),ios_base::out);
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].MMregion)
+      if (QMMMData[i].MMRegion)
       {
         //Check PBC (minimum image convention)
         Coord distCent; //Distance from QM COM
@@ -753,7 +753,7 @@ void WriteChargeFile(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     outFile.open(call.str().c_str(),ios_base::out);
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].MMregion)
+      if (QMMMData[i].MMRegion)
       {
         //Check PBC (minimum image convention)
         Coord distCent; //Distance from QM COM

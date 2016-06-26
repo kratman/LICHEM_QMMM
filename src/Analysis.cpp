@@ -686,7 +686,7 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& QMMMData, MatrixXd& QMMMHess,
   for (int i=0;i<Natoms;i++)
   {
     //Locate QM and PB atoms
-    if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+    if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
     {
       //Switch to a.u. and save mass
       double massVal = QMMMData[i].m/elecMass;
@@ -872,7 +872,7 @@ void WriteModes(vector<QMMMAtom>& QMMMData, bool imagOnly, VectorXd& Freqs,
         modeFile << (Nqm+Npseudo) << '\n' << '\n';
         for (int k=0;k<Natoms;k++)
         {
-          if (QMMMData[k].QMregion or QMMMData[k].PBregion)
+          if (QMMMData[k].QMRegion or QMMMData[k].PBRegion)
           {
             //Write element
             modeFile << QMMMData[k].QMTyp << " ";

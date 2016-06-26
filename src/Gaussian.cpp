@@ -99,7 +99,7 @@ void GaussianCharges(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
         getline(QMlog,dummy); //Clear junk
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
           {
             //Count through all atoms in the QM calculations
             getline(QMlog,dummy);
@@ -119,7 +119,7 @@ void GaussianCharges(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
         getline(QMlog,dummy); //Clear junk
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
           {
             //Count through all atoms in the QM calculations
             getline(QMlog,dummy);
@@ -259,7 +259,7 @@ double GaussianEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
         getline(QMlog,dummy); //Clear junk
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
           {
             //Count through all atoms in the QM calculations
             getline(QMlog,dummy);
@@ -279,7 +279,7 @@ double GaussianEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
         getline(QMlog,dummy); //Clear junk
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
           {
             //Count through all atoms in the QM calculations
             getline(QMlog,dummy);
@@ -467,7 +467,7 @@ double GaussianForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
         getline(QMlog,dummy); //Clear junk
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
           {
             //Count through all atoms in the QM calculations
             getline(QMlog,dummy);
@@ -487,7 +487,7 @@ double GaussianForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
         getline(QMlog,dummy); //Clear junk
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
           {
             //Count through all atoms in the QM calculations
             getline(QMlog,dummy);
@@ -756,7 +756,7 @@ double GaussianOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   //Add atoms
   for (int i=0;i<Natoms;i++)
   {
-    if (QMMMData[i].QMregion)
+    if (QMMMData[i].QMRegion)
     {
       call << QMMMData[i].QMTyp;
       call << " " << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
@@ -764,7 +764,7 @@ double GaussianOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
       call << " " << LICHEMFormFloat(QMMMData[i].P[bead].z,16);
       call << '\n';
     }
-    if (QMMMData[i].PBregion)
+    if (QMMMData[i].PBRegion)
     {
       call << "F";
       call << " " << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
@@ -806,7 +806,7 @@ double GaussianOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
         getline(QMlog,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
           {
             //Get new coordinates
             getline(QMlog,dummy);

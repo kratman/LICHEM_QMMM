@@ -54,7 +54,6 @@ namespace LICHEMGlobal
   bool QMonly = 0; //Flag for the type of wrapper
   bool OptSim = 0; //Flag for energy minimization with QM packages
   bool SteepSim = 0; //Flag for steepest descent minimization in LICHEM
-  bool QuickSim = 0; //Flag for QuickMin optimization in LICHEM
   bool DFPSim = 0; //Flag for DFP minimization in LICHEM
   bool NEBSim = 0; //Flag for NEB path optimization in LICHEM
   bool PIMCSim = 0; //Flag for Monte Carlo

@@ -77,7 +77,7 @@ void NWChemCharges(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     getline(inFile,dummy);
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
       {
         //Read charges
         stringstream line;
@@ -181,7 +181,7 @@ double NWChemEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     getline(inFile,dummy);
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
       {
         //Read charges
         stringstream line;
@@ -339,7 +339,7 @@ double NWChemForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
     getline(inFile,dummy);
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
       {
         stringstream line;
         getline(inFile,dummy);
@@ -530,7 +530,7 @@ double NWChemOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     getline(inFile,dummy);
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
       {
         //Read charges
         stringstream line;

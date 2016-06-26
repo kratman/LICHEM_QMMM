@@ -83,7 +83,7 @@ void WriteGauInput(vector<QMMMAtom>& QMMMData, string calcTyp,
   call << QMMMOpts.charge << " " << QMMMOpts.spin << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    if (QMMMData[i].QMregion)
+    if (QMMMData[i].QMRegion)
     {
       call << QMMMData[i].QMTyp;
       call << " " << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
@@ -91,7 +91,7 @@ void WriteGauInput(vector<QMMMAtom>& QMMMData, string calcTyp,
       call << " " << LICHEMFormFloat(QMMMData[i].P[bead].z,16);
       call << '\n';
     }
-    if (QMMMData[i].PBregion)
+    if (QMMMData[i].PBRegion)
     {
       call << "F";
       call << " " << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
@@ -122,7 +122,7 @@ void WriteGauInput(vector<QMMMAtom>& QMMMData, string calcTyp,
     {
       for (int i=0;i<Natoms;i++)
       {
-        if (QMMMData[i].MMregion)
+        if (QMMMData[i].MMRegion)
         {
           //Check PBC (minimum image convention)
           Coord distCent; //Distance from QM COM
@@ -183,7 +183,7 @@ void WriteGauInput(vector<QMMMAtom>& QMMMData, string calcTyp,
     {
       for (int i=0;i<Natoms;i++)
       {
-        if (QMMMData[i].MMregion)
+        if (QMMMData[i].MMRegion)
         {
           //Check PBC (minimum image convention)
           Coord distCent; //Distance from QM COM
@@ -371,7 +371,7 @@ void WriteNWChemInput(vector<QMMMAtom>& QMMMData, string calcTyp,
   outFile << "noautoz noautosym" << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    if (QMMMData[i].QMregion)
+    if (QMMMData[i].QMRegion)
     {
       outFile << " " << QMMMData[i].QMTyp;
       outFile << " " << (QMMMData[i].P[bead].x);
@@ -379,7 +379,7 @@ void WriteNWChemInput(vector<QMMMAtom>& QMMMData, string calcTyp,
       outFile << " " << (QMMMData[i].P[bead].z);
       outFile << '\n';
     }
-    if (QMMMData[i].PBregion)
+    if (QMMMData[i].PBRegion)
     {
       outFile << " " << "F2pb";
       outFile << " " << (QMMMData[i].P[bead].x);
@@ -443,7 +443,7 @@ void WriteNWChemInput(vector<QMMMAtom>& QMMMData, string calcTyp,
       outFile << "bq mmchrg" << '\n';
       for (int i=0;i<Natoms;i++)
       {
-        if (QMMMData[i].MMregion)
+        if (QMMMData[i].MMRegion)
         {
           //Check PBC (minimum image convention)
           Coord distCent; //Distance from QM COM
@@ -504,7 +504,7 @@ void WriteNWChemInput(vector<QMMMAtom>& QMMMData, string calcTyp,
       outFile << "bq mmchrg" << '\n';
       for (int i=0;i<Natoms;i++)
       {
-        if (QMMMData[i].MMregion)
+        if (QMMMData[i].MMRegion)
         {
           //Check PBC (minimum image convention)
           Coord distCent; //Distance from QM COM
@@ -760,7 +760,7 @@ void WritePSI4Input(vector<QMMMAtom>& QMMMData, string calcTyp,
   call << " " << QMMMOpts.spin << '\n';
   for (int i=0;i<Natoms;i++)
   {
-    if (QMMMData[i].QMregion)
+    if (QMMMData[i].QMRegion)
     {
       call << " " << QMMMData[i].QMTyp;
       call << " " << LICHEMFormFloat(QMMMData[i].P[bead].x*uConv,16);
@@ -798,7 +798,7 @@ void WritePSI4Input(vector<QMMMAtom>& QMMMData, string calcTyp,
       call << "Chrgfield = QMMM()" << '\n';
       for (int i=0;i<Natoms;i++)
       {
-        if (QMMMData[i].MMregion)
+        if (QMMMData[i].MMRegion)
         {
           //Check PBC (minimum image convention)
           Coord distCent; //Distance from QM COM
@@ -854,7 +854,7 @@ void WritePSI4Input(vector<QMMMAtom>& QMMMData, string calcTyp,
       call << "Chrgfield = QMMM()" << '\n';
       for (int i=0;i<Natoms;i++)
       {
-        if (QMMMData[i].MMregion)
+        if (QMMMData[i].MMRegion)
         {
           //Check PBC (minimum image convention)
           Coord distCent; //Distance from QM COM

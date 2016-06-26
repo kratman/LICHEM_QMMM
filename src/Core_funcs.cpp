@@ -185,11 +185,11 @@ vector<int> TraceBoundary(vector<QMMMAtom>& QMMMData, int atID)
   for (unsigned int i=0;i<QMMMData[atID].bonds.size();i++)
   {
     int bondID = QMMMData[atID].bonds[i];
-    if (QMMMData[bondID].BAregion)
+    if (QMMMData[bondID].BARegion)
     {
       boundAtoms.push_back(bondID);
     }
-    if (QMMMData[bondID].PBregion and (bondID != atID))
+    if (QMMMData[bondID].PBRegion and (bondID != atID))
     {
       //Two PBs are connected and this system will fail
       bondError = 1;
@@ -218,12 +218,12 @@ vector<int> TraceBoundary(vector<QMMMAtom>& QMMMData, int atID)
         }
         if (!isThere)
         {
-          if (QMMMData[bondID].BAregion)
+          if (QMMMData[bondID].BARegion)
           {
             moreFound = 1; //Keep going
             tmp.push_back(bondID);
           }
-          if (QMMMData[bondID].PBregion and (bondID != atID))
+          if (QMMMData[bondID].PBRegion and (bondID != atID))
           {
             //Two PBs are connected and this system will fail
             bondError = 1;
@@ -427,7 +427,7 @@ Coord FindQMCOM(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     #pragma omp for nowait schedule(dynamic) reduction(+:totM)
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
       {
         totM += QMMMData[i].m;
       }
@@ -435,7 +435,7 @@ Coord FindQMCOM(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     #pragma omp for nowait schedule(dynamic) reduction(+:avgX)
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
       {
         avgX += QMMMData[i].m*QMMMData[i].P[bead].x;
       }
@@ -443,7 +443,7 @@ Coord FindQMCOM(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     #pragma omp for nowait schedule(dynamic) reduction(+:avgY)
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
       {
         avgY += QMMMData[i].m*QMMMData[i].P[bead].y;
       }
@@ -451,7 +451,7 @@ Coord FindQMCOM(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     #pragma omp for nowait schedule(dynamic) reduction(+:avgZ)
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
       {
         avgZ += QMMMData[i].m*QMMMData[i].P[bead].z;
       }

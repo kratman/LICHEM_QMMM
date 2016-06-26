@@ -34,8 +34,8 @@ void FindTINKERClasses(vector<QMMMAtom>& QMMMData)
     exit(0);
   }
   //Find the parameter file
-  bool FileFound = 0; //Bool to break loops
-  while ((!inFile.eof()) and (!FileFound))
+  bool fileFound = 0; //Bool to break loops
+  while ((!inFile.eof()) and (!fileFound))
   {
     //Detect the name of the force field file
     inFile >> dummy;
@@ -43,13 +43,13 @@ void FindTINKERClasses(vector<QMMMAtom>& QMMMData)
     if (dummy == "parameters")
     {
       inFile >> dummy;
-      FileFound = 1;
+      fileFound = 1;
     }
   }
   //Open the parameters
   inFile.close();
   inFile.open(dummy.c_str(),ios_base::in);
-  if (!FileFound)
+  if (!fileFound)
   {
     //Exit if parameter file is not found
     cout << "Error: Cannot find TINKER parameter file.";
@@ -72,19 +72,19 @@ void FindTINKERClasses(vector<QMMMAtom>& QMMMData)
   while (!inFile.eof())
   {
     getline(inFile,dummy);
-    stringstream FullLine(dummy);
-    FullLine >> dummy;
+    stringstream fullLine(dummy);
+    fullLine >> dummy;
     LICHEMLowerText(dummy);
     if (dummy == "atom")
     {
-      int AtType,AtClass;
-      FullLine >> AtType;
-      FullLine >> AtClass;
+      int atType,atClass;
+      fullLine >> atType;
+      fullLine >> atClass;
       for (int i=0;i<Natoms;i++)
       {
-        if (QMMMData[i].numTyp == AtType)
+        if (QMMMData[i].numTyp == atType)
         {
-          QMMMData[i].numClass = AtClass;
+          QMMMData[i].numClass = atClass;
           ct += 1;
         }
       }
@@ -208,7 +208,7 @@ void TINKERInduced(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
-      if (QMMMData[i].MMregion or QMMMData[i].BAregion)
+      if (QMMMData[i].MMRegion or QMMMData[i].BARegion)
       {
         if (ct == 0)
         {
@@ -239,32 +239,32 @@ void TINKERInduced(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   for (int i=0;i<Natoms;i++)
   {
     //Add nuclear charges
-    if (QMMMData[i].QMregion)
+    if (QMMMData[i].QMRegion)
     {
       //Write new multipole definition for the atom ID
       WriteTINKMPole(QMMMData,outFile,i,bead);
       outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
       outFile << '\n';
     }
-    if (QMMMData[i].PBregion)
+    if (QMMMData[i].PBRegion)
     {
       //Modify the charge to force charge balance with the boundaries
       double qi = QMMMData[i].MP[bead].q; //Save a copy
-      vector<int> Boundaries;
-      Boundaries = TraceBoundary(QMMMData,i);
-      double qnew = qi;
-      for (unsigned int j=0;j<Boundaries.size();j++)
+      vector<int> boundaries;
+      boundaries = TraceBoundary(QMMMData,i);
+      double qNew = qi;
+      for (unsigned int j=0;j<boundaries.size();j++)
       {
         //Subtract boundary atom charge
-        qnew -= QMMMData[Boundaries[j]].MP[bead].q;
+        qNew -= QMMMData[boundaries[j]].MP[bead].q;
       }
-      QMMMData[i].MP[bead].q = qnew; //Save modified charge
+      QMMMData[i].MP[bead].q = qNew; //Save modified charge
       WriteTINKMPole(QMMMData,outFile,i,bead);
       QMMMData[i].MP[bead].q = qi; //Return to unmodified charge
       outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
       outFile << '\n';
     }
-    if (QMMMData[i].BAregion)
+    if (QMMMData[i].BARegion)
     {
       outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
       outFile << '\n';
@@ -284,22 +284,22 @@ void TINKERInduced(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   getline(inFile,dummy); //Clear number of atoms
   while (inFile.good())
   {
-    int AtNum; //Identifies which atom was polarized
+    int atNum; //Identifies which atom was polarized
     //Parse file line by line
     getline(inFile,dummy);
     stringstream line(dummy);
     //Save dipoles for later
-    line >> AtNum >> dummy; //Collect atom number and clear junk
+    line >> atNum >> dummy; //Collect atom number and clear junk
     if (line.good())
     {
-      AtNum -= 1; //Fixes array indexing
-      line >> QMMMData[AtNum].MP[bead].IDx;
-      line >> QMMMData[AtNum].MP[bead].IDy;
-      line >> QMMMData[AtNum].MP[bead].IDz;
+      atNum -= 1; //Fixes array indexing
+      line >> QMMMData[atNum].MP[bead].IDx;
+      line >> QMMMData[atNum].MP[bead].IDy;
+      line >> QMMMData[atNum].MP[bead].IDz;
       //Change units from Debye to a.u.
-      QMMMData[AtNum].MP[bead].IDx *= debye2au;
-      QMMMData[AtNum].MP[bead].IDy *= debye2au;
-      QMMMData[AtNum].MP[bead].IDz *= debye2au;
+      QMMMData[atNum].MP[bead].IDx *= debye2au;
+      QMMMData[atNum].MP[bead].IDy *= debye2au;
+      QMMMData[atNum].MP[bead].IDz *= debye2au;
     }
   }
   inFile.close();
@@ -324,8 +324,8 @@ double TINKERPolEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
   string dummy; //Generic string
-  double Epol = 0; //Polarization energy
-  double Esolv = 0; //Solvation energy
+  double EPol = 0; //Polarization energy
+  double ESolv = 0; //Solvation energy
   double E = 0; //Total energy for error checking
   int ct; //Generic counter
   //Create TINKER xyz file
@@ -432,7 +432,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
-      if (QMMMData[i].MMregion or QMMMData[i].BAregion)
+      if (QMMMData[i].MMRegion or QMMMData[i].BARegion)
       {
         if (ct == 0)
         {
@@ -463,32 +463,32 @@ double TINKERPolEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   for (int i=0;i<Natoms;i++)
   {
     //Add nuclear charges
-    if (QMMMData[i].QMregion)
+    if (QMMMData[i].QMRegion)
     {
       //Write new multipole definition for the atom ID
       WriteTINKMPole(QMMMData,outFile,i,bead);
       outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
       outFile << '\n';
     }
-    if (QMMMData[i].PBregion)
+    if (QMMMData[i].PBRegion)
     {
       //Modify the charge to force charge balance with the boundaries
       double qi = QMMMData[i].MP[bead].q; //Save a copy
-      vector<int> Boundaries;
-      Boundaries = TraceBoundary(QMMMData,i);
-      double qnew = qi;
-      for (unsigned int j=0;j<Boundaries.size();j++)
+      vector<int> boundaries;
+      boundaries = TraceBoundary(QMMMData,i);
+      double qNew = qi;
+      for (unsigned int j=0;j<boundaries.size();j++)
       {
         //Subtract boundary atom charge
-        qnew -= QMMMData[Boundaries[j]].MP[bead].q;
+        qNew -= QMMMData[boundaries[j]].MP[bead].q;
       }
-      QMMMData[i].MP[bead].q = qnew; //Save modified charge
+      QMMMData[i].MP[bead].q = qNew; //Save modified charge
       WriteTINKMPole(QMMMData,outFile,i,bead);
       QMMMData[i].MP[bead].q = qi; //Return to unmodified charge
       outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
       outFile << '\n';
     }
-    if (QMMMData[i].BAregion)
+    if (QMMMData[i].BARegion)
     {
       outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
       outFile << '\n';
@@ -506,7 +506,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call.str("");
   call << "LICHM_" << bead << ".log";
   inFile.open(call.str().c_str(),ios_base::in);
-  bool Efound = 0;
+  bool EFound = 0;
   while (!inFile.eof())
   {
     inFile >> dummy;
@@ -516,23 +516,23 @@ double TINKERPolEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
       if (dummy == "Energy")
       {
         inFile >> dummy >> E;
-        Efound = 1;
+        EFound = 1;
       }
     }
     if (dummy == "Polarization")
     {
-      inFile >> Epol;
+      inFile >> EPol;
     }
     if (dummy == "Implicit")
     {
       inFile >> dummy;
       if (dummy == "Solvation")
       {
-        inFile >> Esolv;
+        inFile >> ESolv;
       }
     }
   }
-  if (!Efound)
+  if (!EFound)
   {
     //Warn user if no energy was found
     cerr << "Warning: No MM energy found after a calculation!!!";
@@ -540,8 +540,8 @@ double TINKERPolEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
     cerr.flush(); //Print warning immediately
-    Epol = 0; //Prevents errors when polarization is off
-    Esolv = 0; //Prevents errors when implicit solvation is off
+    EPol = 0; //Prevents errors when polarization is off
+    ESolv = 0; //Prevents errors when implicit solvation is off
   }
   inFile.close();
   //Clean up files
@@ -553,10 +553,10 @@ double TINKERPolEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << " LICHM_" << bead << ".err";
   globalSys = system(call.str().c_str());
   //Return polarization and solvation energy in kcal/mol
-  return Epol+Esolv;
+  return EPol+ESolv;
 };
 
-double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
+double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
                     QMMMSettings& QMMMOpts, int bead)
 {
   //Function for calculating the MM forces on a set of QM atoms
@@ -619,7 +619,7 @@ double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
   for (int i=0;i<Natoms;i++)
   {
     //Add active atoms
-    if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+    if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
     {
       if (ct == 0)
       {
@@ -651,7 +651,7 @@ double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
   for (int i=0;i<Natoms;i++)
   {
     //Add group 1 atoms
-    if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+    if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
     {
       if (ct == 0)
       {
@@ -683,7 +683,7 @@ double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (QMMMData[i].QMregion or QMMMData[i].PBregion or QMMMData[i].BAregion)
+      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion or QMMMData[i].BARegion)
       {
         //New charges are needed for QM and PB atoms
         outFile << "charge " << (-1*(QMMMData[i].id+1)) << " ";
@@ -697,7 +697,7 @@ double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (QMMMData[i].QMregion or QMMMData[i].PBregion or QMMMData[i].BAregion)
+      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion or QMMMData[i].BARegion)
       {
         double qi = 0;
         //remove charge
@@ -758,16 +758,16 @@ double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
   call << "LICHM_" << bead << ".grad";
   globalSys = system(call.str().c_str());
   //Collect MM forces
-  fstream MMgrad; //QMMM output
+  fstream MMGrad; //QMMM output
   //Open files
   call.str("");
   call << "LICHM_" << bead << ".grad";
-  MMgrad.open(call.str().c_str(),ios_base::in);
+  MMGrad.open(call.str().c_str(),ios_base::in);
   //Read derivatives
-  bool GradDone = 0;
-  while ((!MMgrad.eof()) and (!GradDone))
+  bool gradDone = 0;
+  while ((!MMGrad.eof()) and (!gradDone))
   {
-    getline(MMgrad,dummy);
+    getline(MMGrad,dummy);
     stringstream line(dummy);
     line >> dummy;
     if (dummy == "Type")
@@ -775,28 +775,28 @@ double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
       line >> dummy >> dummy;
       if (dummy == "dE/dX")
       {
-        GradDone = 1; //Not grad school, that lasts forever
-        getline(MMgrad,dummy);
+        gradDone = 1; //Not grad school, that lasts forever
+        getline(MMGrad,dummy);
         for (int i=0;i<(Nqm+Npseudo);i++)
         {
-          double Fx = 0;
-          double Fy = 0;
-          double Fz = 0;
+          double fX = 0;
+          double fY = 0;
+          double fZ = 0;
           //Convoluted, but "easy"
-          getline(MMgrad,dummy);
+          getline(MMGrad,dummy);
           stringstream line(dummy);
           line >> dummy >> dummy; //Clear junk
-          line >> Fx;
-          line >> Fy;
-          line >> Fz;
+          line >> fX;
+          line >> fY;
+          line >> fZ;
           //Change from gradient to force
-          Fx *= -1;
-          Fy *= -1;
-          Fz *= -1;
+          fX *= -1;
+          fY *= -1;
+          fZ *= -1;
           //Switch to eV/A and save forces
-          Forces(3*i) += Fx*kcal2eV;
-          Forces(3*i+1) += Fy*kcal2eV;
-          Forces(3*i+2) += Fz*kcal2eV;
+          forces(3*i) += fX*kcal2eV;
+          forces(3*i+1) += fY*kcal2eV;
+          forces(3*i+2) += fZ*kcal2eV;
         }
       }
     }
@@ -810,7 +810,7 @@ double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
       }
     }
   }
-  MMgrad.close();
+  MMGrad.close();
   //Clean up files
   call.str("");
   call << "rm -f";
@@ -824,7 +824,7 @@ double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
   return Emm;
 };
 
-double TINKERMMForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
+double TINKERMMForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
                       QMMMSettings& QMMMOpts, int bead)
 {
   //Function to calculate the forces on MM atoms
@@ -897,7 +897,7 @@ double TINKERMMForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add inactive atoms
-      if (QMMMData[i].QMregion or QMMMData[i].PBregion or QMMMData[i].frozen)
+      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion or QMMMData[i].frozen)
       {
         if (ct == 0)
         {
@@ -930,31 +930,31 @@ double TINKERMMForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (QMMMData[i].QMregion)
+      if (QMMMData[i].QMRegion)
       {
         WriteTINKMPole(QMMMData,outFile,i,bead);
         outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
-      if (QMMMData[i].PBregion)
+      if (QMMMData[i].PBRegion)
       {
         //Modify the charge to force charge balance with the boundaries
         double qi = QMMMData[i].MP[bead].q; //Save a copy
-        vector<int> Boundaries;
-        Boundaries = TraceBoundary(QMMMData,i);
-        double qnew = qi;
-        for (unsigned int j=0;j<Boundaries.size();j++)
+        vector<int> boundaries;
+        boundaries = TraceBoundary(QMMMData,i);
+        double qNew = qi;
+        for (unsigned int j=0;j<boundaries.size();j++)
         {
           //Subtract boundary atom charge
-          qnew -= QMMMData[Boundaries[j]].MP[bead].q;
+          qNew -= QMMMData[boundaries[j]].MP[bead].q;
         }
-        QMMMData[i].MP[bead].q = qnew; //Save modified charge
+        QMMMData[i].MP[bead].q = qNew; //Save modified charge
         WriteTINKMPole(QMMMData,outFile,i,bead);
         QMMMData[i].MP[bead].q = qi; //Return to unmodified charge
         outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
-      if (QMMMData[i].BAregion)
+      if (QMMMData[i].BARegion)
       {
         outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
@@ -1008,16 +1008,16 @@ double TINKERMMForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
   call << "LICHM_" << bead << ".grad";
   globalSys = system(call.str().c_str());
   //Collect MM forces
-  fstream MMgrad; //QMMM output
+  fstream MMGrad; //QMMM output
   //Open files
   call.str("");
   call << "LICHM_" << bead << ".grad";
-  MMgrad.open(call.str().c_str(),ios_base::in);
+  MMGrad.open(call.str().c_str(),ios_base::in);
   //Read derivatives
-  bool GradDone = 0;
-  while ((!MMgrad.eof()) and (!GradDone))
+  bool gradDone = 0;
+  while ((!MMGrad.eof()) and (!gradDone))
   {
-    getline(MMgrad,dummy);
+    getline(MMGrad,dummy);
     stringstream line(dummy);
     line >> dummy;
     if (dummy == "Type")
@@ -1025,32 +1025,32 @@ double TINKERMMForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
       line >> dummy >> dummy;
       if (dummy == "dE/dX")
       {
-        GradDone = 1; //Not grad school, that lasts forever
-        getline(MMgrad,dummy);
+        gradDone = 1; //Not grad school, that lasts forever
+        getline(MMGrad,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          double Fx = 0;
-          double Fy = 0;
-          double Fz = 0;
+          double fX = 0;
+          double fY = 0;
+          double fZ = 0;
           //Convoluted, but "easy"
-          getline(MMgrad,dummy);
+          getline(MMGrad,dummy);
           stringstream line(dummy);
           line >> dummy >> dummy; //Clear junk
-          line >> Fx;
-          line >> Fy;
-          line >> Fz;
+          line >> fX;
+          line >> fY;
+          line >> fZ;
           //Change from gradient to force
-          Fx *= -1;
-          Fy *= -1;
-          Fz *= -1;
+          fX *= -1;
+          fY *= -1;
+          fZ *= -1;
           //Switch to eV/A and change sign
-          if ((!QMMMData[i].QMregion) or (!QMMMData[i].PBregion) or
+          if ((!QMMMData[i].QMRegion) or (!QMMMData[i].PBRegion) or
              (!QMMMData[i].frozen))
           {
             //Only add MM forces to the array
-            Forces(3*i) += Fx*kcal2eV;
-            Forces(3*i+1) += Fy*kcal2eV;
-            Forces(3*i+2) += Fz*kcal2eV;
+            forces(3*i) += fX*kcal2eV;
+            forces(3*i+1) += fY*kcal2eV;
+            forces(3*i+2) += fZ*kcal2eV;
           }
         }
       }
@@ -1065,7 +1065,7 @@ double TINKERMMForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
       }
     }
   }
-  MMgrad.close();
+  MMGrad.close();
   //Clean up files
   call.str("");
   call << "rm -f";
@@ -1078,7 +1078,7 @@ double TINKERMMForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
   return Emm;
 };
 
-double TINKERPolForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
+double TINKERPolForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
                        QMMMSettings& QMMMOpts, int bead)
 {
   //Function for calculating the MM forces on a set of QM atoms
@@ -1153,7 +1153,7 @@ double TINKERPolForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
   for (int i=0;i<Natoms;i++)
   {
     //Add active atoms
-    if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+    if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
     {
       if (ct == 0)
       {
@@ -1185,31 +1185,31 @@ double TINKERPolForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (QMMMData[i].QMregion)
+      if (QMMMData[i].QMRegion)
       {
         WriteTINKMPole(QMMMData,outFile,i,bead);
         outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
-      if (QMMMData[i].PBregion)
+      if (QMMMData[i].PBRegion)
       {
         //Modify the charge to force charge balance with the boundaries
         double qi = QMMMData[i].MP[bead].q; //Save a copy
-        vector<int> Boundaries;
-        Boundaries = TraceBoundary(QMMMData,i);
-        double qnew = qi;
-        for (unsigned int j=0;j<Boundaries.size();j++)
+        vector<int> boundaries;
+        boundaries = TraceBoundary(QMMMData,i);
+        double qNew = qi;
+        for (unsigned int j=0;j<boundaries.size();j++)
         {
           //Subtract boundary atom charge
-          qnew -= QMMMData[Boundaries[j]].MP[bead].q;
+          qNew -= QMMMData[boundaries[j]].MP[bead].q;
         }
-        QMMMData[i].MP[bead].q = qnew; //Save modified charge
+        QMMMData[i].MP[bead].q = qNew; //Save modified charge
         WriteTINKMPole(QMMMData,outFile,i,bead);
         QMMMData[i].MP[bead].q = qi; //Return to unmodified charge
         outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
-      if (QMMMData[i].BAregion)
+      if (QMMMData[i].BARegion)
       {
         outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
@@ -1264,16 +1264,16 @@ double TINKERPolForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
   call << "LICHM_" << bead << ".grad";
   globalSys = system(call.str().c_str());
   //Collect MM forces
-  fstream MMgrad; //QMMM output
+  fstream MMGrad; //QMMM output
   //Open files
   call.str("");
   call << "LICHM_" << bead << ".grad";
-  MMgrad.open(call.str().c_str(),ios_base::in);
+  MMGrad.open(call.str().c_str(),ios_base::in);
   //Read derivatives
-  bool GradDone = 0;
-  while ((!MMgrad.eof()) and (!GradDone))
+  bool gradDone = 0;
+  while ((!MMGrad.eof()) and (!gradDone))
   {
-    getline(MMgrad,dummy);
+    getline(MMGrad,dummy);
     stringstream line(dummy);
     line >> dummy;
     if (dummy == "Type")
@@ -1281,28 +1281,28 @@ double TINKERPolForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
       line >> dummy >> dummy;
       if (dummy == "dE/dX")
       {
-        GradDone = 1; //Not grad school, that lasts forever
-        getline(MMgrad,dummy);
+        gradDone = 1; //Not grad school, that lasts forever
+        getline(MMGrad,dummy);
         for (int i=0;i<(Nqm+Npseudo);i++)
         {
-          double Fx = 0;
-          double Fy = 0;
-          double Fz = 0;
+          double fX = 0;
+          double fY = 0;
+          double fZ = 0;
           //Convoluted, but "easy"
-          getline(MMgrad,dummy);
+          getline(MMGrad,dummy);
           stringstream line(dummy);
           line >> dummy >> dummy; //Clear junk
-          line >> Fx;
-          line >> Fy;
-          line >> Fz;
+          line >> fX;
+          line >> fY;
+          line >> fZ;
           //Change from gradient to force
-          Fx *= -1;
-          Fy *= -1;
-          Fz *= -1;
+          fX *= -1;
+          fY *= -1;
+          fZ *= -1;
           //Switch to eV/A and change sign
-          Forces(3*i) += Fx*kcal2eV;
-          Forces(3*i+1) += Fy*kcal2eV;
-          Forces(3*i+2) += Fz*kcal2eV;
+          forces(3*i) += fX*kcal2eV;
+          forces(3*i+1) += fY*kcal2eV;
+          forces(3*i+2) += fZ*kcal2eV;
         }
       }
     }
@@ -1316,7 +1316,7 @@ double TINKERPolForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
       }
     }
   }
-  MMgrad.close();
+  MMGrad.close();
   //Clean up files
   call.str("");
   call << "rm -f";
@@ -1330,7 +1330,8 @@ double TINKERPolForces(vector<QMMMAtom>& QMMMData, VectorXd& Forces,
   return Emm;
 };
 
-double TINKEREnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
+double TINKEREnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
+                    int bead)
 {
   //Runs TINKER MM energy calculations
   fstream outFile,inFile; //Generic file streams
@@ -1405,7 +1406,7 @@ double TINKEREnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
-      if (QMMMData[i].MMregion or QMMMData[i].BAregion)
+      if (QMMMData[i].MMRegion or QMMMData[i].BARegion)
       {
         if (ct == 0)
         {
@@ -1438,7 +1439,7 @@ double TINKEREnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (QMMMData[i].QMregion or QMMMData[i].PBregion or QMMMData[i].BAregion)
+      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion or QMMMData[i].BARegion)
       {
         //New charges are only needed for QM atoms
         outFile << "charge " << (-1*(QMMMData[i].id+1)) << " ";
@@ -1451,7 +1452,7 @@ double TINKEREnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead
     for (int i=0;i<Natoms;i++)
     {
       //Add multipoles
-      if (QMMMData[i].QMregion or QMMMData[i].PBregion or QMMMData[i].BAregion)
+      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion or QMMMData[i].BARegion)
       {
         double qi = 0;
         //remove charge
@@ -1517,7 +1518,7 @@ double TINKEREnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead
   call << "LICHM_" << bead << ".log";
   inFile.open(call.str().c_str(),ios_base::in);
   //Read MM potential energy
-  bool Efound = 0;
+  bool EFound = 0;
   while (!inFile.eof())
   {
     inFile >> dummy;
@@ -1527,11 +1528,11 @@ double TINKEREnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead
       if (dummy == "Energy")
       {
         inFile >> dummy >> E;
-        Efound = 1;
+        EFound = 1;
       }
     }
   }
-  if (!Efound)
+  if (!EFound)
   {
     //Warn user if no energy was found
     cerr << "Warning: No MM energy found after a calculation!!!";
@@ -1565,7 +1566,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
                        int bead)
 {
   //Function for calculating the MM forces on a set of QM atoms
-  fstream outFile,inFile,MMlog; //Generic file streams
+  fstream outFile,inFile,MMLog; //Generic file streams
   string dummy; //Generic string
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy settings from cout
@@ -1626,7 +1627,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   for (int i=0;i<Natoms;i++)
   {
     //Add active atoms
-    if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+    if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
     {
       if (ct == 0)
       {
@@ -1658,7 +1659,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   for (int i=0;i<Natoms;i++)
   {
     //Add group 1 atoms
-    if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+    if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
     {
       if (ct == 0)
       {
@@ -1690,7 +1691,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (QMMMData[i].QMregion or QMMMData[i].PBregion or QMMMData[i].BAregion)
+      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion or QMMMData[i].BARegion)
       {
         //New charges are needed for QM and PB atoms
         outFile << "charge " << (-1*(QMMMData[i].id+1)) << " ";
@@ -1704,7 +1705,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (QMMMData[i].QMregion or QMMMData[i].PBregion or QMMMData[i].BAregion)
+      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion or QMMMData[i].BARegion)
       {
         double qi = 0;
         //remove charge
@@ -1767,50 +1768,50 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   //Collect MM forces
   call.str("");
   call << "LICHM_" << bead << ".hes";
-  MMlog.open(call.str().c_str(),ios_base::in);
+  MMLog.open(call.str().c_str(),ios_base::in);
   //Read derivatives
-  bool HessDone = 0;
-  if (MMlog.good() and CheckFile(call.str()))
+  bool hessDone = 0;
+  if (MMLog.good() and CheckFile(call.str()))
   {
-    HessDone = 1;
+    hessDone = 1;
     //Clear junk
-    getline(MMlog,dummy);
-    getline(MMlog,dummy);
-    getline(MMlog,dummy);
+    getline(MMLog,dummy);
+    getline(MMLog,dummy);
+    getline(MMLog,dummy);
     //Read diagonal elements
     ct = 0;
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
       {
         //Read QM and PB diagonal elements
-        MMlog >> MMHess(ct,ct);
+        MMLog >> MMHess(ct,ct);
         ct += 1;
-        MMlog >> MMHess(ct,ct);
+        MMLog >> MMHess(ct,ct);
         ct += 1;
-        MMlog >> MMHess(ct,ct);
+        MMLog >> MMHess(ct,ct);
         ct += 1;
       }
       else
       {
         //Read zeros
-        MMlog >> dummy;
-        MMlog >> dummy;
-        MMlog >> dummy;
+        MMLog >> dummy;
+        MMLog >> dummy;
+        MMLog >> dummy;
       }
     }
     //Read off-diagonal elements
     for (int i=0;i<Ndof;i++)
     {
       //Clear junk
-      getline(MMlog,dummy);
-      getline(MMlog,dummy);
-      getline(MMlog,dummy);
+      getline(MMLog,dummy);
+      getline(MMLog,dummy);
+      getline(MMLog,dummy);
       //Read elements
       for (int j=(i+1);j<Ndof;j++)
       {
         //Read value
-        MMlog >> MMHess(i,j);
+        MMLog >> MMHess(i,j);
         //Apply symmetry
         MMHess(j,i) = MMHess(i,j);
       }
@@ -1819,7 +1820,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   //Change units
   MMHess *= (kcal2eV*bohrRad*bohrRad/har2eV); //Switch to a.u.
   //Check for errors
-  if (!HessDone)
+  if (!hessDone)
   {
     //Calculation did not finish
     cerr << "Error: No force constants recovered!!!";
@@ -1929,7 +1930,7 @@ double TINKEROpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
-      if (QMMMData[i].MMregion or QMMMData[i].BAregion)
+      if (QMMMData[i].MMRegion or QMMMData[i].BARegion)
       {
         if (!QMMMData[i].frozen)
         {
@@ -1965,26 +1966,26 @@ double TINKEROpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (QMMMData[i].QMregion)
+      if (QMMMData[i].QMRegion)
       {
         //New charges are only needed for QM atoms
         outFile << "charge " << (-1*(QMMMData[i].id+1)) << " ";
         outFile << QMMMData[i].MP[bead].q;
         outFile << '\n';
       }
-      if (QMMMData[i].PBregion)
+      if (QMMMData[i].PBRegion)
       {
         //Modify the charge to force charge balance with the boundaries
-        vector<int> Boundaries;
-        Boundaries = TraceBoundary(QMMMData,i);
-        double qnew = QMMMData[i].MP[bead].q;
-        for (unsigned int j=0;j<Boundaries.size();j++)
+        vector<int> boundaries;
+        boundaries = TraceBoundary(QMMMData,i);
+        double qNew = QMMMData[i].MP[bead].q;
+        for (unsigned int j=0;j<boundaries.size();j++)
         {
           //Subtract boundary atom charge
-          qnew -= QMMMData[Boundaries[j]].MP[bead].q;
+          qNew -= QMMMData[boundaries[j]].MP[bead].q;
         }
         outFile << "charge " << (-1*(QMMMData[i].id+1)) << " ";
-        outFile << qnew;
+        outFile << qNew;
         outFile << '\n';
       }
     }
@@ -1994,32 +1995,32 @@ double TINKEROpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (QMMMData[i].QMregion)
+      if (QMMMData[i].QMRegion)
       {
         //Write new multipole definition for the atom ID
         WriteTINKMPole(QMMMData,outFile,i,bead);
         outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
-      if (QMMMData[i].PBregion)
+      if (QMMMData[i].PBRegion)
       {
         //Modify the charge to force charge balance with the boundaries
         double qi = QMMMData[i].MP[bead].q; //Save a copy
-        vector<int> Boundaries;
-        Boundaries = TraceBoundary(QMMMData,i);
-        double qnew = qi;
-        for (unsigned int j=0;j<Boundaries.size();j++)
+        vector<int> boundaries;
+        boundaries = TraceBoundary(QMMMData,i);
+        double qNew = qi;
+        for (unsigned int j=0;j<boundaries.size();j++)
         {
           //Subtract boundary atom charge
-          qnew -= QMMMData[Boundaries[j]].MP[bead].q;
+          qNew -= QMMMData[boundaries[j]].MP[bead].q;
         }
-        QMMMData[i].MP[bead].q = qnew; //Save modified charge
+        QMMMData[i].MP[bead].q = qNew; //Save modified charge
         WriteTINKMPole(QMMMData,outFile,i,bead);
         QMMMData[i].MP[bead].q = qi; //Return to unmodified charge
         outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';
       }
-      if (QMMMData[i].BAregion)
+      if (QMMMData[i].BARegion)
       {
         outFile << "polarize -" << (QMMMData[i].id+1) << " 0.0 0.0";
         outFile << '\n';

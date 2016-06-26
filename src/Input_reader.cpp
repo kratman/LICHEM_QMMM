@@ -259,10 +259,10 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       tmp.P.push_back(tmp2); //Set up zeroth replica
       //Set ID and regions
       tmp.id = i;
-      tmp.QMregion = 0;
-      tmp.MMregion = 1;
-      tmp.PBregion = 0;
-      tmp.BAregion = 0;
+      tmp.QMRegion = 0;
+      tmp.MMRegion = 1;
+      tmp.PBRegion = 0;
+      tmp.BARegion = 0;
       tmp.frozen = 0;
       //Set electrostatic field
       MPole tmp3; //Initialize charges and multipoles
@@ -363,12 +363,6 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       {
         //Optimize with the LICHEM steepest descent method
         SteepSim = 1;
-      }
-      if ((dummy == "quickmin") or (dummy == "quick") or
-         (dummy == "dv"))
-      {
-        //Optimize with damped Verlet (QuickMin)
-        QuickSim = 1;
       }
       if ((dummy == "dfp") or (dummy == "bfgs"))
       {
@@ -747,10 +741,10 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       {
         int atomID;
         regionFile >> atomID;
-        QMMMData[atomID].QMregion = 1;
-        QMMMData[atomID].PBregion = 0;
-        QMMMData[atomID].BAregion = 0;
-        QMMMData[atomID].MMregion = 0;
+        QMMMData[atomID].QMRegion = 1;
+        QMMMData[atomID].PBRegion = 0;
+        QMMMData[atomID].BARegion = 0;
+        QMMMData[atomID].MMRegion = 0;
       }
     }
     else if (keyword == "pseudobond_atoms:")
@@ -761,10 +755,10 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       {
         int atomID;
         regionFile >> atomID;
-        QMMMData[atomID].QMregion = 0;
-        QMMMData[atomID].PBregion = 1;
-        QMMMData[atomID].BAregion = 0;
-        QMMMData[atomID].MMregion = 0;
+        QMMMData[atomID].QMRegion = 0;
+        QMMMData[atomID].PBRegion = 1;
+        QMMMData[atomID].BARegion = 0;
+        QMMMData[atomID].MMRegion = 0;
       }
     }
     else if (keyword == "boundary_atoms:")
@@ -775,10 +769,10 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       {
         int atomID;
         regionFile >> atomID;
-        QMMMData[atomID].QMregion = 0;
-        QMMMData[atomID].PBregion = 0;
-        QMMMData[atomID].BAregion = 1;
-        QMMMData[atomID].MMregion = 0;
+        QMMMData[atomID].QMRegion = 0;
+        QMMMData[atomID].PBRegion = 0;
+        QMMMData[atomID].BARegion = 1;
+        QMMMData[atomID].MMRegion = 0;
       }
     }
     else if (keyword == "frozen_atoms:")
@@ -813,10 +807,10 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     //Redundant, but safe
     for (int i=0;i<Natoms;i++)
     {
-      QMMMData[i].QMregion = 1;
-      QMMMData[i].MMregion = 0;
-      QMMMData[i].PBregion = 0;
-      QMMMData[i].BAregion = 0;
+      QMMMData[i].QMRegion = 1;
+      QMMMData[i].MMRegion = 0;
+      QMMMData[i].PBRegion = 0;
+      QMMMData[i].BARegion = 0;
     }
     //Adjust optimization settings
     QMMMOpts.MMOptTol = QMMMOpts.QMOptTol; //Prevents early termination
@@ -830,10 +824,10 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     //Redundant, but safe
     for (int i=0;i<Natoms;i++)
     {
-      QMMMData[i].QMregion = 0;
-      QMMMData[i].MMregion = 1;
-      QMMMData[i].PBregion = 0;
-      QMMMData[i].BAregion = 0;
+      QMMMData[i].QMRegion = 0;
+      QMMMData[i].MMRegion = 1;
+      QMMMData[i].PBRegion = 0;
+      QMMMData[i].BARegion = 0;
     }
   }
   Nmm = Natoms-Nqm-Npseudo-Nbound; //Set number of MM atoms
@@ -1329,7 +1323,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
     cout << " Equilibration MC steps: " << QMMMOpts.NEq << '\n';
     cout << " Production MC steps: " << QMMMOpts.NSteps << '\n';
   }
-  if (OptSim or SteepSim or QuickSim or DFPSim)
+  if (OptSim or SteepSim or DFPSim)
   {
     //Print optimization input for error checking
     cout << '\n';
@@ -1362,10 +1356,6 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
       if (SteepSim)
       {
         cout << "LICHEM steepest descent" << '\n';
-      }
-      if (QuickSim)
-      {
-        cout << "LICHEM damped Verlet" << '\n';
       }
       if (DFPSim)
       {
@@ -1607,7 +1597,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
     cout << " steps" << '\n';
   }
   //Print convergence criteria for optimizations
-  if (OptSim or SteepSim or QuickSim or DFPSim or NEBSim)
+  if (OptSim or SteepSim or DFPSim or NEBSim)
   {
     cout << '\n';
     cout << "Optimization settings:" << '\n';
@@ -1646,7 +1636,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
       }
     }
     cout << '\n';
-    if (SteepSim or QuickSim or DFPSim or NEBSim)
+    if (SteepSim or DFPSim or NEBSim)
     {
       cout << '\n';
       cout << "QM convergence criteria:" << '\n';

@@ -310,7 +310,7 @@ int main(int argc, char* argv[])
   else if (OptSim)
   {
     //NB: Currently only Gaussian works with this option
-    VectorXd Forces; //Dummy array needed for convergence tests
+    VectorXd forces; //Dummy array needed for convergence tests
     int optCt = 0; //Counter for optimization steps
     //Print initial structure
     Print_traj(QMMMData,outFile,QMMMOpts);
@@ -424,7 +424,7 @@ int main(int argc, char* argv[])
       Print_traj(QMMMData,outFile,QMMMOpts);
       //Check convergence
       optCt += 1;
-      optDone = OptConverged(QMMMData,OldQMMMData,Forces,optCt,QMMMOpts,0,0);
+      optDone = OptConverged(QMMMData,OldQMMMData,forces,optCt,QMMMOpts,0,0);
     }
     cout << '\n';
     cout << "Optimization complete.";
@@ -436,7 +436,7 @@ int main(int argc, char* argv[])
   //Steepest descent optimization
   else if (SteepSim)
   {
-    VectorXd Forces; //Dummy array needed for convergence tests
+    VectorXd forces; //Dummy array needed for convergence tests
     int optCt = 0; //Counter for optimization steps
     //Print initial structure
     Print_traj(QMMMData,outFile,QMMMOpts);
@@ -527,110 +527,7 @@ int main(int argc, char* argv[])
       Print_traj(QMMMData,outFile,QMMMOpts);
       //Check convergence
       optCt += 1;
-      optDone = OptConverged(QMMMData,OldQMMMData,Forces,optCt,QMMMOpts,0,0);
-    }
-    cout << '\n';
-    cout << "Optimization complete.";
-    cout << '\n' << '\n';
-    cout.flush();
-  }
-  //End of section
-
-  //Damped Verlet (QuickMin) optimization
-  else if (QuickSim)
-  {
-    VectorXd Forces; //Dummy array needed for convergence tests
-    int optCt = 0; //Counter for optimization steps
-    //Print initial structure
-    Print_traj(QMMMData,outFile,QMMMOpts);
-    cout << "Damped Verlet optimization:" << '\n';
-    cout.flush(); //Print progress
-    //Calculate initial energy
-    sumE = 0; //Clear old energies
-    //Calculate QM energy
-    if (Gaussian)
-    {
-      int tStart = (unsigned)time(0);
-      sumE += GaussianEnergy(QMMMData,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tStart;
-    }
-    if (PSI4)
-    {
-      int tStart = (unsigned)time(0);
-      sumE += PSI4Energy(QMMMData,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tStart;
-      //Delete annoying useless files
-      globalSys = system("rm -f psi.* timer.* ");
-    }
-    if (NWChem)
-    {
-      int tStart = (unsigned)time(0);
-      sumE += NWChemEnergy(QMMMData,QMMMOpts,0);
-      QMTime += (unsigned)time(0)-tStart;
-    }
-    //Calculate MM energy
-    if (TINKER)
-    {
-      int tStart = (unsigned)time(0);
-      sumE += TINKEREnergy(QMMMData,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tStart;
-    }
-    if (AMBER)
-    {
-      int tStart = (unsigned)time(0);
-      sumE += AMBEREnergy(QMMMData,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tStart;
-    }
-    if (LAMMPS)
-    {
-      int tStart = (unsigned)time(0);
-      sumE += LAMMPSEnergy(QMMMData,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tStart;
-    }
-    cout << " | Opt. step: ";
-    cout << optCt << " | Energy: ";
-    cout << LICHEMFormFloat(sumE,16) << " eV";
-    cout << '\n';
-    cout.flush(); //Print progress
-    //Run optimization
-    bool optDone = 0;
-    while (!optDone)
-    {
-      //Copy structure
-      OldQMMMData = QMMMData;
-      //Run MM optimization
-      if (TINKER)
-      {
-        int tStart = (unsigned)time(0);
-        sumE = TINKEROpt(QMMMData,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tStart;
-      }
-      if (AMBER)
-      {
-        int tStart = (unsigned)time(0);
-        sumE = AMBEROpt(QMMMData,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tStart;
-      }
-      if (LAMMPS)
-      {
-        int tStart = (unsigned)time(0);
-        sumE = LAMMPSOpt(QMMMData,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tStart;
-      }
-      if (QMMM)
-      {
-        cout << "    MM optimization complete.";
-        cout << '\n';
-        cout.flush();
-      }
-      cout << '\n';
-      //Run QM optimization
-      LICHEMQuickMin(QMMMData,QMMMOpts,0);
-      //Print Optimized geometry
-      Print_traj(QMMMData,outFile,QMMMOpts);
-      //Check convergence
-      optCt += 1;
-      optDone = OptConverged(QMMMData,OldQMMMData,Forces,optCt,QMMMOpts,0,0);
+      optDone = OptConverged(QMMMData,OldQMMMData,forces,optCt,QMMMOpts,0,0);
     }
     cout << '\n';
     cout << "Optimization complete.";
@@ -642,7 +539,7 @@ int main(int argc, char* argv[])
   //DFP minimization
   else if (DFPSim)
   {
-    VectorXd Forces; //Dummy array needed for convergence tests
+    VectorXd forces; //Dummy array needed for convergence tests
     int optCt = 0; //Counter for optimization steps
     //Change optimization tolerance for the first step
     double savedQMOptTol = QMMMOpts.QMOptTol; //Save value from input
@@ -747,7 +644,7 @@ int main(int argc, char* argv[])
       Print_traj(QMMMData,outFile,QMMMOpts);
       //Check convergence
       optCt += 1;
-      optDone = OptConverged(QMMMData,OldQMMMData,Forces,optCt,QMMMOpts,0,0);
+      optDone = OptConverged(QMMMData,OldQMMMData,forces,optCt,QMMMOpts,0,0);
       if (optCt == 1)
       {
         //Avoid terminating restarts on the loose tolerance step
@@ -1011,7 +908,7 @@ int main(int argc, char* argv[])
     //Initialize force arrays
     for (int p=0;p<QMMMOpts.NBeads;p++)
     {
-      //Zero forces makes the first move an energy calculation
+      //Zero force vectors make the first move an energy calculation
       VectorXd tmp(3*Natoms);
       tmp.setZero();
       allForces.push_back(tmp);
@@ -1229,7 +1126,7 @@ int main(int argc, char* argv[])
       for (int i=0;i<Natoms;i++)
       {
         //Only include QM and PB regions
-        if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+        if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
         {
           //Save current replica
           geom1(ct,0) = QMMMData[i].P[p].x;

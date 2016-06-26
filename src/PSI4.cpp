@@ -78,7 +78,7 @@ void PSI4Charges(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
         getline(inFile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
           {
             getline(inFile,dummy);
             stringstream line(dummy);
@@ -163,7 +163,7 @@ double PSI4Energy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
         getline(inFile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
           {
             getline(inFile,dummy);
             stringstream line(dummy);
@@ -303,7 +303,7 @@ double PSI4Forces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
         getline(inFile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
           {
             getline(inFile,dummy);
             stringstream line(dummy);
@@ -451,7 +451,7 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
         getline(inFile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
           {
             getline(inFile,dummy);
             stringstream line(dummy);
@@ -595,7 +595,7 @@ double PSI4Opt(vector<QMMMAtom>& QMMMData,
         getline(inFile,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMregion or QMMMData[i].PBregion)
+          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
           {
             getline(inFile,dummy);
             stringstream line(dummy);

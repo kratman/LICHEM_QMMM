@@ -163,8 +163,6 @@ void LICHEMNEB(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void LICHEMPrintSettings(vector<QMMMAtom>&,QMMMSettings&);
 
-void LICHEMQuickMin(vector<QMMMAtom>&,QMMMSettings&,int);
-
 void LICHEMSteepest(vector<QMMMAtom>&,QMMMSettings&,int);
 
 void LICHEMUpperText(string&);
