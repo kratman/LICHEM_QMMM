@@ -24,8 +24,15 @@
 */
 
 //Tangent functions
-VectorXd CINEBTangent(VectorXd& Distp1, VectorXd& Distm1,
-                      QMMMSettings& QMMMOpts, int Bead)
+void CheckNEBTangent(VectorXd& tangent)
+{
+  //Check if the tangent is reasonable
+  
+  return;
+};
+
+VectorXd CINEBTangent(VectorXd& distp1, VectorXd& distm1,
+                      QMMMSettings& QMMMOpts, int bead)
 {
   //Calculate climbing image nudged elastic band tangents
   
@@ -35,8 +42,8 @@ VectorXd CINEBTangent(VectorXd& Distp1, VectorXd& Distm1,
   return QMTangent;
 };
 
-VectorXd NEBTangent(VectorXd& Distp1, VectorXd& Distm1,
-                    QMMMSettings& QMMMOpts, int Bead)
+VectorXd NEBTangent(VectorXd& distp1, VectorXd& distm1,
+                    QMMMSettings& QMMMOpts, int bead)
 {
   //Calculate nudged elastic band tangents
   
@@ -47,18 +54,18 @@ VectorXd NEBTangent(VectorXd& Distp1, VectorXd& Distm1,
 };
 
 //Convergence test functions
-bool PathConverged(vector<QMMMAtom>& Struct, vector<QMMMAtom>& OldStruct,
-                   MatrixXd& ForceStats, int stepct, QMMMSettings& QMMMOpts,
-                   bool QMregion)
+bool PathConverged(vector<QMMMAtom>& QMMMData, vector<QMMMAtom>& oldQMMMData,
+                   MatrixXd& forceStats, int stepCt, QMMMSettings& QMMMOpts,
+                   bool QMRegion)
 {
   //Check convergence of QMMM optimizations
-  bool PathDone = 1;
+  bool pathDone = 1;
   
-  return PathDone;
+  return pathDone;
 };
 
 //Path optimization routines
-void LICHEMNEB(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int optct)
+void LICHEMNEB(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int optCt)
 {
   //Cartesian NEB optimizer which runs sequentially
   
@@ -66,19 +73,11 @@ void LICHEMNEB(vector<QMMMAtom>& Struct, QMMMSettings& QMMMOpts, int optct)
 };
 
 //Path ensemble samping routines
-bool FBNEBMCMove(vector<QMMMAtom>& Struct, vector<VectorXd>& AllForces,
+bool FBNEBMCMove(vector<QMMMAtom>& QMMMData, vector<VectorXd>& allForces,
                  QMMMSettings& QMMMOpts, VectorXd& Emc)
 {
   //Function to try a force-bias Monte Carlo move
-
-  return 0;
-};
-
-void EnsembleNEB(vector<QMMMAtom>& Struct, fstream& traj,
-                 QMMMSettings& QMMMOpts)
-{
-  //Cartesian Ensemble SD/NEB optimizer which runs sequentially
   
-  return;
+  return 0;
 };
 
