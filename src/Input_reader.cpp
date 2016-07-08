@@ -259,6 +259,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       tmp.P.push_back(tmp2); //Set up zeroth replica
       //Set ID and regions
       tmp.id = i;
+      tmp.NEBActive = 1;
       tmp.QMRegion = 0;
       tmp.MMRegion = 1;
       tmp.PBRegion = 0;

@@ -613,7 +613,7 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int matSize)
 VectorXd KabschDisplacement(MatrixXd& A, MatrixXd& B, int matSize)
 {
   //Returns the distance between two superimposed structures
-  VectorXd Dist(3*matSize);
+  VectorXd dist(3*matSize);
   //Rotate structures
   KabschRotation(A,B,matSize);
   //Calculate displacement
@@ -621,13 +621,13 @@ VectorXd KabschDisplacement(MatrixXd& A, MatrixXd& B, int matSize)
   for (int i=0;i<(3*matSize);i++)
   {
     //Find the correct location in the arrays
-    int Direc = i%3; //Find the remainder: x=0,y=1,z=2
-    int atID = (i-Direc)/3; //Find array index
+    int direc = i%3; //Find the remainder: x=0,y=1,z=2
+    int atID = (i-direc)/3; //Find array index
     //Calculate displacement
-    Dist(i) = A(atID,Direc)-B(atID,Direc);
+    dist(i) = A(atID,direc)-B(atID,direc);
   }
   //Return array
-  return Dist;
+  return dist;
 };
 
 //Physical property analysis functions

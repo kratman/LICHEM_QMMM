@@ -68,6 +68,8 @@ VectorXd CINEBTangent(VectorXd&,VectorXd&,QMMMSettings&,int);
 
 bool CheckFile(const string&);
 
+void CheckNEBTangent(VectorXd&);
+
 Coord CoordDist2(Coord&,Coord&);
 
 bool Dihedraled(vector<QMMMAtom>&,int,int);

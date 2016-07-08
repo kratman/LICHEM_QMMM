@@ -54,6 +54,7 @@ class QMMMAtom
     //Temporary storage
     double Ep; //Path-integral energies
     //Regions
+    bool NEBActive; //Included in NEB tangent calculations
     bool QMRegion; //QM, MM, pseudo-bond, or boundary-atom
     bool MMRegion; //QM, MM, pseudo-bond, or boundary-atom
     bool PBRegion; //QM, MM, pseudo-bond, or boundary-atom

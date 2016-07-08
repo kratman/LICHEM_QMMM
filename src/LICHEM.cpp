@@ -1141,6 +1141,26 @@ int main(int argc, char* argv[])
       }
       //Calculate displacement
       disp = KabschDisplacement(geom1,geom2,(Nqm+Npseudo));
+      //Remove inactive atoms
+      ct = 0; //Reset counter for the number of atoms
+      for (int i=0;i<Natoms;i++)
+      {
+        //Only include QM and PB regions
+        if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+        {
+          //Only include active atoms in the tangent
+          if (!QMMMData[i].NEBActive)
+          {
+            //Delete distance components
+            disp(ct) = 0;
+            disp(ct+1) = 0;
+            disp(ct+2) = 0;
+          }
+          //Advance counter
+          ct += 3;
+        }
+      }
+      //Update reaction coordinate
       reactCoord(p+1) = reactCoord(p); //Start from previous bead
       reactCoord(p+1) += disp.norm(); //Add magnitude of the displacement
     }
