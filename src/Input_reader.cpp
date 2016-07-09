@@ -517,6 +517,33 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
         LAMMPS = 1;
       }
     }
+    else if (keyword == "neb_atoms:")
+    {
+      //Read the list of atoms to include in NEB tangents
+      int numActive;
+      regionFile >> numActive;
+      //Temporarily mark active atoms as inactive
+      for (int i=0;i<numActive;i++)
+      {
+        //Change flag
+        int atomID;
+        regionFile >> atomID;
+        QMMMData[atomID].NEBActive = 0;
+      }
+      //Switch active and inactive groups
+      #pragma omp parallel for schedule(dynamic)
+      for (int i=0;i<Natoms;i++)
+      {
+        if (QMMMData[i].NEBActive)
+        {
+          QMMMData[i].NEBActive = 0;
+        }
+        else
+        {
+          QMMMData[i].NEBActive = 1;
+        }
+      }
+    }
     else if (keyword == "opt_stepsize:")
     {
       //Read the optimization stepsize
@@ -1648,7 +1675,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
       cout << " RMS force: " << (10*QMMMOpts.QMOptTol);
       cout << " eV/\u212B" << '\n';
     }
-    else if (Nmm > 0)
+    if (Nmm > 0)
     {
       cout << '\n';
       cout << "MM convergence criteria:" << '\n';

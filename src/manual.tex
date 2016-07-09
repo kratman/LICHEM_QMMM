@@ -418,7 +418,7 @@ provided.
 
 \section{Region input files}
 
-The region file contains QM/MM regions (QM atoms, pseudo-bond atoms, boundary
+The region file contains QM/MM regions (QM atoms, pseudobond atoms, boundary
 atoms, and frozen atoms) as well as input keywords needed to define the
 type of calculations that will be performed.
 Blank templates of region files are provided in the documentation
@@ -603,12 +603,18 @@ Boundary\_atoms: Nbound [list of ids] \\
 
 Frozen\_atoms: Ninact [list of ids] \\
 
-Definitions of the QM, pseudo-bond atoms, and boundary atoms can be found in
+NEB\_atoms: Nneb [list of ids] \\
+
+Definitions of the QM, pseudobond atoms, and boundary atoms can be found in
 Chapter \ref{chap:Theory}.
 Frozen atoms are MM atoms that should remain stationary during optimizations,
 dynamics, or Monte Carlo simulations.
 Frozen atoms are useful for optimizing small regions of large periodic
-systems. \\
+systems.
+NEB atoms are the atoms included in the definition of the nudged-elastic band
+tangents.
+If no NEB atoms are defined, all QM pseudobond atoms are used to define the
+tangents. \\
 
 Note that in pure QM and pure MM simulations, \{Nqm,Npseudo,Nbound\} can all
 be set to zero.
@@ -1639,7 +1645,7 @@ These two energies are then added together to get the total energy.
 This approach splits $\hat V_{qmmm}$ between the MM calculation
 ($\hat V_{mm}$) and the QM calculation ($\hat H_{qm}$).
 
-\subsection{Pseudo-bond method}
+\subsection{Pseudobond method}
 
 \begin{figure}[hbt]
  \centering
@@ -1692,7 +1698,7 @@ This approach splits $\hat V_{qmmm}$ between the MM calculation
 The calculations are more complicated when there are bonds between the QM and
 MM regions.
 Covalent bonds require two additional regions of the QM/MM system,
-a pseudo-bond (PB) region and a boundary atom (BA) region.
+a pseudobond (PB) region and a boundary atom (BA) region.
 Pseudo-atoms are shared by the QM and MM regions, and handle the bulk of the
 covalent interactions.
 The severed bonds from the MM region are treated by adding a pseudopotential
@@ -1713,7 +1719,7 @@ their force field charges, and the MM bonding interactions are added for the
 pseudo-atoms.
 The treatment of different interaction types are given in Table
 \ref{tab:IntTable} for single-point energy calculations.
-In the pseudo-bond approach, only some of the bonded interactions are
+In the pseudobond approach, only some of the bonded interactions are
 calculated for the QM/MM interface.
 Further details on which bonded interactions are included can be found in the
 literature. \\
