@@ -84,8 +84,8 @@ void ExtractGlobalPoles(int& argc, char**& argv);
 
 void ExtractTINKpoles(vector<QMMMAtom>&,int);
 
-bool FBNEBMCMove(vector<QMMMAtom>&,vector<VectorXd>&,QMMMSettings&,
-                 VectorXd&);
+int FBNEBMCMove(vector<QMMMAtom>&,vector<VectorXd>&,QMMMSettings&,
+                VectorXd&);
 
 void FetchQuotes(vector<string>&);
 
