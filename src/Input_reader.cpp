@@ -1580,8 +1580,8 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
   {
     cout << " MM threads: " << Ncpus << '\n';
   }
-  //Print PIMC settings
-  if (PIMCSim)
+  //Print Monte Carlo settings
+  if (PIMCSim or FBNEBSim)
   {
     cout << '\n';
     cout << "Monte Carlo settings:" << '\n';
@@ -1592,24 +1592,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
       cout << " Pressure: " << QMMMOpts.press;
       cout << " atm" << '\n';
     }
-    cout << " Acceptance ratio: ";
-    cout << LICHEMFormFloat(QMMMOpts.accRatio,4);
-    cout << '\n';
-    cout << " Equilibration steps: " << QMMMOpts.NEq;
-    cout << '\n';
-    cout << " Production MC steps: " << QMMMOpts.NSteps;
-    cout << '\n';
-    cout << " Sample every " << QMMMOpts.NPrint;
-    cout << " steps" << '\n';
-  }
-  //Print FBNEB settings
-  if (FBNEBSim)
-  {
-    cout << '\n';
-    cout << "Monte Carlo settings:" << '\n';
-    cout << " Temperature: " << QMMMOpts.temp;
-    cout << " K" << '\n';
-    if (QMMMOpts.NBeads > 1)
+    if (FBNEBSim and (QMMMOpts.NBeads > 1))
     {
       cout << " Spring constant: " << QMMMOpts.kSpring;
       cout << " eV/\u212B\u00B2" << '\n';
@@ -1617,7 +1600,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
     cout << " Acceptance ratio: ";
     cout << LICHEMFormFloat(QMMMOpts.accRatio,4);
     cout << '\n';
-    cout << " Equilibration steps: " << QMMMOpts.NEq;
+    cout << " Equilibration MC steps: " << QMMMOpts.NEq;
     cout << '\n';
     cout << " Production MC steps: " << QMMMOpts.NSteps;
     cout << '\n';

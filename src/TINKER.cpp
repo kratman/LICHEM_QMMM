@@ -1044,10 +1044,10 @@ double TINKERMMForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
           fY *= -1;
           fZ *= -1;
           //Switch to eV/A and change sign
-          if ((!QMMMData[i].QMRegion) or (!QMMMData[i].PBRegion) or
+          if ((QMMMData[i].MMRegion or QMMMData[i].BARegion) and
              (!QMMMData[i].frozen))
           {
-            //Only add MM forces to the array
+            //Only update MM and BA forces in the array
             forces(3*i) += fX*kcal2eV;
             forces(3*i+1) += fY*kcal2eV;
             forces(3*i+2) += fZ*kcal2eV;

@@ -880,7 +880,7 @@ int main(int argc, char* argv[])
     cout << '\n';
     cout << " | Acceptance ratio: ";
     cout << LICHEMFormFloat((Nacc/(Nrej+Nacc)),6);
-    cout << " | Optimum step size: ";
+    cout << " | Optimized step size: ";
     cout << LICHEMFormFloat(mcStep,6);
     cout << " \u212B";
     cout << '\n';
@@ -897,7 +897,7 @@ int main(int argc, char* argv[])
     int ct = 0; //Secondary counter
     double Nacc = 0; //Number of accepted moves
     double Nrej = 0; //Number of rejected moves
-    bool acc; //Flag for accepting a step
+    int acc; //Number of steps accepted along the path
     vector<VectorXd> allForces; //Stores forces between MC steps
     VectorXd sumE(QMMMOpts.NBeads); //Average energy array
     VectorXd sumE2(QMMMOpts.NBeads); //Average squared energy array
@@ -973,17 +973,11 @@ int main(int argc, char* argv[])
         Nrej = 0;
       }
       //Continue simulation
-      ct += 1;
+      ct += 1; //Equilibration counts cycles instead of steps
       acc = FBNEBMCMove(QMMMData,allForces,QMMMOpts,Emc);
-      if (acc)
-      {
-        Nct += 1;
-        Nacc += 1;
-      }
-      else
-      {
-        Nrej += 1;
-      }
+      Nct += acc; //Equilibration counts acceptances instead of steps
+      Nacc += acc;
+      Nrej += QMMMOpts.NBeads-acc;
     }
     QMMMOpts.NPrint = savedNPrint; //Restore user defined sample rate
     cout << " Equilibration complete." << '\n';
@@ -996,11 +990,12 @@ int main(int argc, char* argv[])
     cout.flush();
     //Print starting conditions
     Print_traj(QMMMData,outFile,QMMMOpts);
-    cout << " | Step: " << setw(simCharLen) << 0;
-    cout << " | Energies:" << '\n';
+    cout << " | Steps: " << setw(simCharLen) << 0;
+    cout << " | Accepted: " << setw(simCharLen) << 0;
+    cout << '\n';
     for (int p=0;p<QMMMOpts.NBeads;p++)
     {
-      cout << "   Bead: ";
+      cout << "    Bead: ";
       cout << setw(3) << p << " | Energy: ";
       cout << LICHEMFormFloat(Emc(p),16) << " eV" << '\n';
     }
@@ -1017,24 +1012,18 @@ int main(int argc, char* argv[])
         sumE2(p) += Emc(p)*Emc(p);
       }
       //Update counters
-      Nct += 1;
-      if (acc)
-      {
-        Nacc += 1;
-      }
-      else
-      {
-        Nrej += 1;
-      }
+      Nct += QMMMOpts.NBeads;
+      Nacc += acc;
+      Nrej += QMMMOpts.NBeads;
       //Print output
-      if (((Nct%QMMMOpts.NPrint) == 0) or (Nacc == QMMMOpts.NSteps))
+      if ((((Nct/QMMMOpts.NBeads)%QMMMOpts.NPrint) == 0) or
+         (Nacc == QMMMOpts.NSteps))
       {
         //Print progress
         Print_traj(QMMMData,outFile,QMMMOpts);
-        cout << " | Step: " << setw(simCharLen) << Nct;
+        cout << " | Steps: " << setw(simCharLen) << Nct;
         cout << " | Accepted: " << setw(simCharLen) << Nacc;
         cout << '\n';
-        cout << " | Energies:" << '\n';
         for (int p=0;p<QMMMOpts.NBeads;p++)
         {
           cout << "    Bead: ";
@@ -1044,25 +1033,25 @@ int main(int argc, char* argv[])
         cout.flush(); //Print results
       }
     }
-    if ((Nct%QMMMOpts.NPrint) != 0)
+    if (((Nct/QMMMOpts.NBeads)%QMMMOpts.NPrint) != 0)
     {
       //Print final geometry if it was not already written
       Print_traj(QMMMData,outFile,QMMMOpts);
     }
     //Calculate statistics
-    sumE /= Nct;
-    sumE2 /= Nct;
+    sumE /= (Nct/QMMMOpts.NBeads); //Take average
+    sumE2 /= (Nct/QMMMOpts.NBeads); //Take average
     for (int p=0;p<QMMMOpts.NBeads;p++)
     {
-      //Variance
-      sumE2(p) = sumE2(p)-sumE(p)*sumE(p);
+      //Standard deviation
+      sumE2(p) = sqrt(sumE2(p)-sumE(p)*sumE(p));
     }
     //Print simulation details and statistics
     cout << '\n';
     cout << "Monte Carlo statistics:" << '\n';
     cout << " | Acceptance ratio: ";
     cout << LICHEMFormFloat((Nacc/Nct),6);
-    cout << " | Optimum step size: ";
+    cout << " | Optimized step size: ";
     cout << LICHEMFormFloat(mcStep,6);
     cout << " \u212B";
     cout << '\n';
