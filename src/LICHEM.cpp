@@ -1039,8 +1039,11 @@ int main(int argc, char* argv[])
       Print_traj(QMMMData,outFile,QMMMOpts);
     }
     //Calculate statistics
-    sumE /= (Nct/QMMMOpts.NBeads); //Take average
-    sumE2 /= (Nct/QMMMOpts.NBeads); //Take average
+    double scaleBy = 0.0; //Avoid integer division
+    scaleBy += QMMMOpts.NBeads; //Adjust for the number of replicas
+    scaleBy /= Nct; //Adjust for the total number of samples
+    sumE *= scaleBy; //Scale the sum to calculate the average
+    sumE2 *= scaleBy; //Scale the sum to calculate the average
     for (int p=0;p<QMMMOpts.NBeads;p++)
     {
       //Standard deviation
@@ -1476,13 +1479,13 @@ int main(int argc, char* argv[])
   endTime = (unsigned)time(0); //Time the program completes
   double totalHours = (double(endTime)-double(startTime));
   double totalQM = double(QMTime);
-  if (PIMCSim and (QMMMOpts.NBeads > 1))
+  if ((QMMMOpts.NBeads > 1) and (PIMCSim or FBNEBSim))
   {
     //Average over the number of running simulations
     totalQM /= Nthreads;
   }
   double totalMM = double(MMTime);
-  if (PIMCSim and (QMMMOpts.NBeads > 1))
+  if ((QMMMOpts.NBeads > 1) and (PIMCSim or FBNEBSim))
   {
     //Average over the number of running simulations
     totalMM /= Nthreads;

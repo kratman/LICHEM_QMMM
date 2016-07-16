@@ -59,7 +59,7 @@ double Get_PI_Epot(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
   //Calculate energy
   #pragma omp parallel for schedule(dynamic) num_threads(mcThreads) \
           reduction(+:E,QMTime,MMTime)
-  for (int i=0;i<QMMMOpts.NBeads;i++)
+  for (int p=0;p<QMMMOpts.NBeads;p++)
   {
     //Run the wrappers for all beads
     double Es = 0.0;
@@ -72,13 +72,13 @@ double Get_PI_Epot(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
     if (Gaussian)
     {
       t_qm_start = (unsigned)time(0);
-      Es += GaussianEnergy(QMMMData,QMMMOpts,i);
+      Es += GaussianEnergy(QMMMData,QMMMOpts,p);
       times_qm += (unsigned)time(0)-t_qm_start;
     }
     if (PSI4)
     {
       t_qm_start = (unsigned)time(0);
-      Es += PSI4Energy(QMMMData,QMMMOpts,i);
+      Es += PSI4Energy(QMMMData,QMMMOpts,p);
       times_qm += (unsigned)time(0)-t_qm_start;
       //Delete annoying useless files
       globalSys = system("rm -f psi.* timer.*");
@@ -86,26 +86,26 @@ double Get_PI_Epot(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
     if (NWChem)
     {
       t_qm_start = (unsigned)time(0);
-      Es += NWChemEnergy(QMMMData,QMMMOpts,i);
+      Es += NWChemEnergy(QMMMData,QMMMOpts,p);
       times_qm += (unsigned)time(0)-t_qm_start;
     }
     //Calculate MM energy
     if (TINKER)
     {
       t_mm_start = (unsigned)time(0);
-      Es += TINKEREnergy(QMMMData,QMMMOpts,i);
+      Es += TINKEREnergy(QMMMData,QMMMOpts,p);
       times_mm += (unsigned)time(0)-t_mm_start;
     }
     if (AMBER)
     {
       t_mm_start = (unsigned)time(0);
-      Es += AMBEREnergy(QMMMData,QMMMOpts,i);
+      Es += AMBEREnergy(QMMMData,QMMMOpts,p);
       times_mm += (unsigned)time(0)-t_mm_start;
     }
     if (LAMMPS)
     {
       t_mm_start = (unsigned)time(0);
-      Es += LAMMPSEnergy(QMMMData,QMMMOpts,i);
+      Es += LAMMPSEnergy(QMMMData,QMMMOpts,p);
       times_mm += (unsigned)time(0)-t_mm_start;
     }
     //Add temp variables to the totals
