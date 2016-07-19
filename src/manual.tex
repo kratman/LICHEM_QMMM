@@ -46,9 +46,9 @@ LICHEM is in development with four guiding principles: \\
 \begin{quote}
  \normalfont{
  1) {\textbf{LICHEM should primarily be an interface.}}
- In order to make the code function with a variety of continuously updated
- software packages, LICHEM should not require modifications to other software
- packages or tools. \\
+ In order to allow the code to communicate with a variety of (continuously
+ updated) software packages, LICHEM should not require modifications to other
+ software packages or tools. \\
  2) {\textbf{LICHEM should be a single executable.}}
  Since LICHEM is an interface, there is no need for a large collection of
  binaries.
@@ -56,7 +56,7 @@ LICHEM is in development with four guiding principles: \\
  Furthermore, LICHEM can be statically linked to ease distribution of the
  software. \\
  3) {\textbf{LICHEM should be easy to read and modify.}}
- Most scientists  are not experts in computer programming.
+ Most scientists are not experts in computer programming.
  In order to allow for rapid collaborative development of LICHEM, the source
  code needs to be easy to read.
  To that end, the code should be simple, well commented, and avoid linking to
@@ -82,7 +82,7 @@ the code readable on smaller portable devices such as tablets and netbooks.
 Also for readability purposes, tabulars should not be used to indent the code.
 Tabulars can appear to be different sizes in some text editors. \\
 
-When updating the documentation, there should be a newline after each
+When updating the \LaTeX\ documentation, there should be a newline after each
 sentence.
 This makes the documentation files very long, but it makes tracking/merging
 changes safer and easier.
@@ -108,9 +108,9 @@ wrapper: \\
 
 Int=UltraFine SCF=(YQC,Big,Direct) \\
 
-Ultra-fine integrals and quadratic convergence (YQC) are certainly overkill
-for most QM calculations, however, these options assure that difficult cases
-will converge.
+Ultra-fine integrals and quadratic convergence (YQC) are almost certainly
+overkill for most QM calculations, however, these options assure that
+difficult cases will converge.
 Additionally, the "Direct", YQC, and "Big" options are helpful for
 larger systems, but they are not disabled for small systems.
 Most of the wrappers should be developed with the assumption that the QM/MM
@@ -120,8 +120,7 @@ requiring the user to be an expert with the QM and MM software. \\
 
 LICHEM should be tested with extremely difficult systems.
 During the earliest stages of the development, test systems with highly
-distorted structures were employed to make sure that crashing the software
-was rare. \\
+distorted structures were employed to make sure that crashes were rare. \\
 
 A simple way to avoid modifying the QM and MM packages is to search for
 iterative or perturbative approximations for the QM/MM equations.
@@ -138,8 +137,6 @@ In multi-replica simulations, the number of CPUs given as a command line
 argument is used to divide the OpenMP threads between the replicas.
 As more MPI enabled packages are included in the wrappers, the parallelization
 paradigm will be adjusted.
-The current OpenMP thread settings can be found in the ReadLICHEMInput()
-routine.
 
 \section{Installation}
 
