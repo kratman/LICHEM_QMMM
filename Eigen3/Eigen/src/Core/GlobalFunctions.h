@@ -78,6 +78,7 @@ namespace Eigen
   EIGEN_ARRAY_DECLARE_GLOBAL_UNARY(abs2,scalar_abs2_op,squared absolute value,\sa ArrayBase::abs2 DOXCOMMA MatrixBase::cwiseAbs2)
   EIGEN_ARRAY_DECLARE_GLOBAL_UNARY(arg,scalar_arg_op,complex argument,\sa ArrayBase::arg)
   EIGEN_ARRAY_DECLARE_GLOBAL_UNARY(sqrt,scalar_sqrt_op,square root,\sa ArrayBase::sqrt DOXCOMMA MatrixBase::cwiseSqrt)
+  EIGEN_ARRAY_DECLARE_GLOBAL_UNARY(rsqrt,scalar_rsqrt_op,reciprocal square root,\sa ArrayBase::rsqrt)
   EIGEN_ARRAY_DECLARE_GLOBAL_UNARY(square,scalar_square_op,square (power 2),\sa Eigen::abs2 DOXCOMMA Eigen::pow DOXCOMMA ArrayBase::square)
   EIGEN_ARRAY_DECLARE_GLOBAL_UNARY(cube,scalar_cube_op,cube (power 3),\sa Eigen::pow DOXCOMMA ArrayBase::cube)
   EIGEN_ARRAY_DECLARE_GLOBAL_UNARY(round,scalar_round_op,nearest integer,\sa Eigen::floor DOXCOMMA Eigen::ceil DOXCOMMA ArrayBase::round)
@@ -102,8 +103,7 @@ namespace Eigen
   pow(const Eigen::ArrayBase<Derived>& x, const ScalarExponent& exponent);
 #else
   template<typename Derived,typename ScalarExponent>
-  inline typename internal::enable_if<   !(internal::is_same<typename Derived::Scalar,ScalarExponent>::value)
-                                      && ScalarBinaryOpTraits<typename Derived::Scalar,ScalarExponent,internal::scalar_pow_op<typename Derived::Scalar,ScalarExponent> >::Defined,
+  inline typename internal::enable_if<   !(internal::is_same<typename Derived::Scalar,ScalarExponent>::value) && EIGEN_SCALAR_BINARY_SUPPORTED(pow,typename Derived::Scalar,ScalarExponent),
           const EIGEN_EXPR_BINARYOP_SCALAR_RETURN_TYPE(Derived,ScalarExponent,pow) >::type
   pow(const Eigen::ArrayBase<Derived>& x, const ScalarExponent& exponent) {
     return x.derived().pow(exponent);
@@ -156,8 +156,7 @@ namespace Eigen
   pow(const Scalar& x,const Eigen::ArrayBase<Derived>& x);
 #else
   template<typename Scalar, typename Derived>
-  inline typename internal::enable_if<   !(internal::is_same<typename Derived::Scalar,Scalar>::value)
-                                      && ScalarBinaryOpTraits<Scalar,typename Derived::Scalar,internal::scalar_pow_op<Scalar,typename Derived::Scalar> >::Defined,
+  inline typename internal::enable_if<   !(internal::is_same<typename Derived::Scalar,Scalar>::value) && EIGEN_SCALAR_BINARY_SUPPORTED(pow,Scalar,typename Derived::Scalar),
           const EIGEN_SCALAR_BINARYOP_EXPR_RETURN_TYPE(Scalar,Derived,pow) >::type
   pow(const Scalar& x, const Eigen::ArrayBase<Derived>& exponents)
   {
