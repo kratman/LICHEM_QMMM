@@ -20,7 +20,7 @@
 namespace LICHEMOpts
 {
   //Compile options
-  const bool JOKES = 1; //Print humorous comments
+  const bool JOKES = 0; //Print humorous comments
 
   //Monte Carlo options
   const bool isotrop = 1; //Force isotropic expansion in NPT Monte Carlo

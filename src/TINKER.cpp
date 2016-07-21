@@ -700,7 +700,7 @@ double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
       if (QMMMData[i].QMRegion or QMMMData[i].PBRegion or QMMMData[i].BARegion)
       {
         double qi = 0;
-        //remove charge
+        //Remove charge
         qi = QMMMData[i].MP[bead].q;
         QMMMData[i].MP[bead].q = 0;
         WriteTINKMPole(QMMMData,outFile,i,bead);
@@ -1455,7 +1455,7 @@ double TINKEREnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
       if (QMMMData[i].QMRegion or QMMMData[i].PBRegion or QMMMData[i].BARegion)
       {
         double qi = 0;
-        //remove charge
+        //Remove charge
         qi = QMMMData[i].MP[bead].q;
         QMMMData[i].MP[bead].q = 0;
         //Write new multipole definition for the atom ID
@@ -1708,7 +1708,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
       if (QMMMData[i].QMRegion or QMMMData[i].PBRegion or QMMMData[i].BARegion)
       {
         double qi = 0;
-        //remove charge
+        //Remove charge
         qi = QMMMData[i].MP[bead].q;
         QMMMData[i].MP[bead].q = 0;
         WriteTINKMPole(QMMMData,outFile,i,bead);
