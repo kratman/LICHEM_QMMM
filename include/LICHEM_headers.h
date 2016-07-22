@@ -44,14 +44,6 @@ using namespace LICHEMLepton;
 PeriodicTable chemTable;
 
 //Function declarations (alphabetical)
-double AMBERForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
-
-double AMBEREnergy(vector<QMMMAtom>&,QMMMSettings&,int);
-
-MatrixXd AMBERHessian(vector<QMMMAtom>&,QMMMSettings&,int);
-
-double AMBEROpt(vector<QMMMAtom>&,QMMMSettings&,int);
-
 bool Angled(vector<QMMMAtom>&,int,int);
 
 double Bohring(double);
@@ -98,6 +90,8 @@ void FindTINKERClasses(vector<QMMMAtom>&);
 void GaussianCharges(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double GaussianEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
+
+double GaussianExternOpt(vector<QMMMAtom>&,QMMMSettings&,int);
 
 double GaussianForces(vector<QMMMAtom>&,VectorXd&,QMMMSettings&,int);
 
@@ -257,7 +251,6 @@ void WriteTINKMPole(vector<QMMMAtom>&,fstream&,int,int);
 void WriteQMConnect(int&,char**&);
 
 //Function definitions (alphabetical)
-#include "AMBER2LICHEM.cpp"
 #include "Analysis.cpp"
 #include "Basis.cpp"
 #include "Basis_sets.cpp"
@@ -276,7 +269,6 @@ void WriteQMConnect(int&,char**&);
 #include "TINK2LICHEM.cpp"
 
 //Wrapper definitions (alphabetical)
-#include "AMBER.cpp"
 #include "GauExternal.cpp"
 #include "Gaussian.cpp"
 #include "LAMMPS.cpp"

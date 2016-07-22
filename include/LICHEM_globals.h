@@ -47,7 +47,6 @@ namespace LICHEMGlobal
   bool Gaussian = 0; //Wrapper flag
   bool TINKER = 0; //Wrapper flag
   bool LAMMPS = 0; //Wrapper flag
-  bool AMBER = 0; //Wrapper flag
   bool PBCon = 0; //Flag for the boundary conditions
   bool QMMM = 0; //Flag for the type of wrapper
   bool MMonly = 0; //Flag for the type of wrapper

@@ -519,7 +519,7 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
 double PSI4Opt(vector<QMMMAtom>& QMMMData,
                QMMMSettings& QMMMOpts, int bead)
 {
-  //Runs PSI4 for energy calculations
+  //Runs PSI4 for pure QM optimizations
   fstream inFile; //Generic file stream
   string dummy; //Generic string
   stringstream call; //Stream for system calls and reading/writing files

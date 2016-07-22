@@ -121,12 +121,6 @@ bool OptConverged(vector<QMMMAtom>& QMMMData, vector<QMMMAtom>& oldQMMMData,
       sumE += TINKEREnergy(QMMMData,QMMMOpts,bead);
       MMTime += (unsigned)time(0)-tStart;
     }
-    if (AMBER)
-    {
-      int tStart = (unsigned)time(0);
-      sumE += AMBEREnergy(QMMMData,QMMMOpts,bead);
-      MMTime += (unsigned)time(0)-tStart;
-    }
     if (LAMMPS)
     {
       int tStart = (unsigned)time(0);
@@ -242,12 +236,6 @@ void LICHEMSteepest(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
         //Forces from MM polarization
         E += TINKERPolForces(QMMMData,forces,QMMMOpts,bead);
       }
-      MMTime += (unsigned)time(0)-tStart;
-    }
-    if (AMBER)
-    {
-      int tStart = (unsigned)time(0);
-      E += AMBERForces(QMMMData,forces,QMMMOpts,bead);
       MMTime += (unsigned)time(0)-tStart;
     }
     if (LAMMPS)
@@ -390,12 +378,6 @@ void LICHEMDFP(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     }
     MMTime += (unsigned)time(0)-tStart;
   }
-  if (AMBER)
-  {
-    int tStart = (unsigned)time(0);
-    E += AMBERForces(QMMMData,forces,QMMMOpts,bead);
-    MMTime += (unsigned)time(0)-tStart;
-  }
   if (LAMMPS)
   {
     int tStart = (unsigned)time(0);
@@ -484,12 +466,6 @@ void LICHEMDFP(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
         //Forces from MM polarization
         E += TINKERPolForces(QMMMData,forces,QMMMOpts,bead);
       }
-      MMTime += (unsigned)time(0)-tStart;
-    }
-    if (AMBER)
-    {
-      int tStart = (unsigned)time(0);
-      E += AMBERForces(QMMMData,forces,QMMMOpts,bead);
       MMTime += (unsigned)time(0)-tStart;
     }
     if (LAMMPS)

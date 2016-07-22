@@ -508,10 +508,6 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       {
         TINKER = 1;
       }
-      if (dummy == "amber")
-      {
-        AMBER = 1;
-      }
       if (dummy == "lammps")
       {
         LAMMPS = 1;
@@ -1125,7 +1121,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout.flush(); //Print warning
   }
   //Wrapper errors
-  if ((!TINKER) and (!AMBER) and (!LAMMPS) and (!QMonly))
+  if ((!TINKER) and (!LAMMPS) and (!QMonly))
   {
     //Check the MM wrappers
     cout << " Error: No valid MM wrapper selected.";
@@ -1145,15 +1141,28 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout << '\n';
     doQuit = 1;
   }
+  if (Gaussian and QMMM)
+  {
+    //Avoid options that conflict with NWChem capabilities
+    if (OptSim)
+    {
+      //The NWChem optimizer cannot incorporate MM forces
+      cout << " Error: QMMM Gaussian optimizations can only be performed";
+      cout << '\n';
+      cout << " with steepest descent or Davidon-Fletcher-Powell.";
+      cout << '\n';
+      doQuit = 1;
+    }
+  }
   if (PSI4 and QMMM)
   {
     //Avoid options that conflict with PSI4 capabilities
     if (OptSim)
     {
       //The PSI4 optimizer cannot incorporate MM forces
-      cout << " Error: QMMM PSI4 optimizations can only be performed with";
+      cout << " Error: QMMM PSI4 optimizations can only be performed";
       cout << '\n';
-      cout << " the steepest descent, damped Verlet, or DFP.";
+      cout << " with steepest descent or Davidon-Fletcher-Powell.";
       cout << '\n';
       doQuit = 1;
     }
@@ -1173,9 +1182,9 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     if (OptSim)
     {
       //The NWChem optimizer cannot incorporate MM forces
-      cout << " Error: QMMM NWChem optimizations can only be performed with";
+      cout << " Error: QMMM NWChem optimizations can only be performed";
       cout << '\n';
-      cout << " the steepest descent, damped Verlet, or DFP.";
+      cout << " with steepest descent or Davidon-Fletcher-Powell.";
       cout << '\n';
       doQuit = 1;
     }
@@ -1474,10 +1483,6 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
     if (TINKER)
     {
       cout << "TINKER" << '\n';
-    }
-    if (AMBER)
-    {
-      cout << "AMBER" << '\n';
     }
     if (LAMMPS)
     {

@@ -163,12 +163,6 @@ int main(int argc, char* argv[])
         Emm += TINKEREnergy(QMMMData,QMMMOpts,p);
         MMTime += (unsigned)time(0)-tStart;
       }
-      if (AMBER)
-      {
-        int tStart = (unsigned)time(0);
-        Emm += AMBEREnergy(QMMMData,QMMMOpts,p);
-        MMTime += (unsigned)time(0)-tStart;
-      }
       if (LAMMPS)
       {
         int tStart = (unsigned)time(0);
@@ -253,12 +247,6 @@ int main(int argc, char* argv[])
       {
         int tStart = (unsigned)time(0);
         QMMMHess += TINKERHessian(QMMMData,QMMMOpts,p);
-        MMTime += (unsigned)time(0)-tStart;
-      }
-      if (AMBER)
-      {
-        int tStart = (unsigned)time(0);
-        QMMMHess += AMBERHessian(QMMMData,QMMMOpts,p);
         MMTime += (unsigned)time(0)-tStart;
       }
       if (LAMMPS)
@@ -346,12 +334,6 @@ int main(int argc, char* argv[])
       sumE += TINKEREnergy(QMMMData,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tStart;
     }
-    if (AMBER)
-    {
-      int tStart = (unsigned)time(0);
-      sumE += AMBEREnergy(QMMMData,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tStart;
-    }
     if (LAMMPS)
     {
       int tStart = (unsigned)time(0);
@@ -378,12 +360,6 @@ int main(int argc, char* argv[])
       {
         int tStart = (unsigned)time(0);
         sumE = TINKEROpt(QMMMData,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tStart;
-      }
-      if (AMBER)
-      {
-        int tStart = (unsigned)time(0);
-        sumE = AMBEROpt(QMMMData,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tStart;
       }
       if (LAMMPS)
@@ -472,12 +448,6 @@ int main(int argc, char* argv[])
       sumE += TINKEREnergy(QMMMData,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tStart;
     }
-    if (AMBER)
-    {
-      int tStart = (unsigned)time(0);
-      sumE += AMBEREnergy(QMMMData,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tStart;
-    }
     if (LAMMPS)
     {
       int tStart = (unsigned)time(0);
@@ -500,12 +470,6 @@ int main(int argc, char* argv[])
       {
         int tStart = (unsigned)time(0);
         sumE = TINKEROpt(QMMMData,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tStart;
-      }
-      if (AMBER)
-      {
-        int tStart = (unsigned)time(0);
-        sumE = AMBEROpt(QMMMData,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tStart;
       }
       if (LAMMPS)
@@ -586,12 +550,6 @@ int main(int argc, char* argv[])
       sumE += TINKEREnergy(QMMMData,QMMMOpts,0);
       MMTime += (unsigned)time(0)-tStart;
     }
-    if (AMBER)
-    {
-      int tStart = (unsigned)time(0);
-      sumE += AMBEREnergy(QMMMData,QMMMOpts,0);
-      MMTime += (unsigned)time(0)-tStart;
-    }
     if (LAMMPS)
     {
       int tStart = (unsigned)time(0);
@@ -614,12 +572,6 @@ int main(int argc, char* argv[])
       {
         int tStart = (unsigned)time(0);
         sumE = TINKEROpt(QMMMData,QMMMOpts,0);
-        MMTime += (unsigned)time(0)-tStart;
-      }
-      if (AMBER)
-      {
-        int tStart = (unsigned)time(0);
-        sumE = AMBEROpt(QMMMData,QMMMOpts,0);
         MMTime += (unsigned)time(0)-tStart;
       }
       if (LAMMPS)
@@ -1190,12 +1142,6 @@ int main(int argc, char* argv[])
         sumE += TINKEREnergy(QMMMData,QMMMOpts,p);
         MMTime += (unsigned)time(0)-tStart;
       }
-      if (AMBER)
-      {
-        int tStart = (unsigned)time(0);
-        sumE += AMBEREnergy(QMMMData,QMMMOpts,p);
-        MMTime += (unsigned)time(0)-tStart;
-      }
       if (LAMMPS)
       {
         int tStart = (unsigned)time(0);
@@ -1272,12 +1218,6 @@ int main(int argc, char* argv[])
         {
           int tStart = (unsigned)time(0);
           sumE = TINKEROpt(QMMMData,QMMMOpts,p);
-          MMTime += (unsigned)time(0)-tStart;
-        }
-        if (AMBER)
-        {
-          int tStart = (unsigned)time(0);
-          sumE = AMBEROpt(QMMMData,QMMMOpts,p);
           MMTime += (unsigned)time(0)-tStart;
         }
         if (LAMMPS)
@@ -1376,12 +1316,6 @@ int main(int argc, char* argv[])
       {
         int tStart = (unsigned)time(0);
         QMMMHess += TINKERHessian(QMMMData,QMMMOpts,QMMMOpts.TSBead);
-        MMTime += (unsigned)time(0)-tStart;
-      }
-      if (AMBER)
-      {
-        int tStart = (unsigned)time(0);
-        QMMMHess += AMBERHessian(QMMMData,QMMMOpts,QMMMOpts.TSBead);
         MMTime += (unsigned)time(0)-tStart;
       }
       if (LAMMPS)

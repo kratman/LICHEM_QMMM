@@ -129,10 +129,6 @@ void ExternalGaussian(int& argc, char**& argv)
       Emm += TINKERPolForces(QMMMData,forces,QMMMOpts,bead);
     }
   }
-  if (AMBER)
-  {
-    Emm = AMBERForces(QMMMData,forces,QMMMOpts,bead);
-  }
   if (LAMMPS)
   {
     Emm = LAMMPSForces(QMMMData,forces,QMMMOpts,bead);
@@ -192,5 +188,178 @@ void ExternalGaussian(int& argc, char**& argv)
   cout.flush();
   exit(0);
   return;
+};
+
+double GaussianExternOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
+                         int bead)
+{
+  //Runs Gaussian optimizations with GauExternal
+  fstream inFile,QMlog; //Generic file streams
+  string dummy; //Generic string
+  stringstream call; //Stream for system calls and reading/writing files
+  call.copyfmt(cout); //Copy print settings
+  double E = 0.0; //QM energy
+  int extCPUs = 1; //Number of CPUs for GauExternal
+  if (AMOEBA and TINKER)
+  {
+    RotateTINKCharges(QMMMData,bead);
+  }
+  //Write a new XYZ
+  //NB: GauExternal needs different input than the rest of the wrappers
+  call.str("");
+  call << "LICHMExt_" << bead << ".xyz";
+  inFile.open(call.str().c_str(),ios_base::out);
+  inFile << Natoms << '\n' << '\n';
+  for (int i=0;i<Natoms;i++)
+  {
+    //Print XYZ coordinates
+    inFile << QMMMData[i].QMTyp << " ";
+    inFile << LICHEMFormFloat(QMMMData[i].P[bead].x,16) << " ";
+    inFile << LICHEMFormFloat(QMMMData[i].P[bead].y,16) << " ";
+    inFile << LICHEMFormFloat(QMMMData[i].P[bead].z,16) << '\n';
+  }
+  inFile.flush();
+  inFile.close();
+  //Write Gaussian input
+  call.str("");
+  call << "LICHMExt_" << bead << ".com";
+  inFile.open(call.str().c_str(),ios_base::out);
+  call.str("");
+  call << "%chk=LICHMExt_" << bead << ".chk";
+  call << '\n';
+  call << "%Mem=" << QMMMOpts.RAM;
+  if (QMMMOpts.memMB)
+  {
+    call << "MB";
+  }
+  else
+  {
+    call << "GB";
+  }
+  call << '\n';
+  call << "%NprocShared=";
+  if (Ncpus <= 2)
+  {
+    call << 1;
+  }
+  else
+  {
+    call << 2;
+    extCPUs = Ncpus-2;
+  }
+  call << '\n';
+  call << "#P " << "external=\"lichem -GauExtern ";
+  call << "LICHMExt_" << bead;  //Just the stub
+  call << " -n " << extCPUs;
+  call << " -c " << conFilename;
+  call << " -r " << regFilename;
+  call << " -b " << bead;
+  call << "\"" << '\n';
+  call << "Symmetry=None Opt=(";
+  call << "MaxCycles=" << QMMMOpts.maxOptSteps;
+  call << ",MaxStep=" << int(round((QMMMOpts.maxStep/(0.01*bohrRad))));
+  call << ")" << '\n';
+  call << '\n'; //Blank line
+  call << "QMMM" << '\n' << '\n'; //Dummy title
+  call << QMMMOpts.charge << " " << QMMMOpts.spin << '\n';
+  //Add atoms
+  for (int i=0;i<Natoms;i++)
+  {
+    if (QMMMData[i].QMRegion)
+    {
+      call << QMMMData[i].QMTyp;
+      call << " " << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
+      call << " " << LICHEMFormFloat(QMMMData[i].P[bead].y,16);
+      call << " " << LICHEMFormFloat(QMMMData[i].P[bead].z,16);
+      call << '\n';
+    }
+    if (QMMMData[i].PBRegion)
+    {
+      call << "F";
+      call << " " << LICHEMFormFloat(QMMMData[i].P[bead].x,16);
+      call << " " << LICHEMFormFloat(QMMMData[i].P[bead].y,16);
+      call << " " << LICHEMFormFloat(QMMMData[i].P[bead].z,16);
+      call << '\n';
+    }
+  }
+  call << '\n'; //Blank line needed
+  //Write Gaussian input
+  inFile << call.str();
+  inFile.close();
+  //Run Optimization
+  call.str("");
+  call << "g09 ";
+  call << "LICHMExt_" << bead;
+  globalSys = system(call.str().c_str());
+  //Read new structure
+  call.str("");
+  call << "LICHMExt_";
+  call << bead << ".log";
+  QMlog.open(call.str().c_str(),ios_base::in);
+  bool optFinished = 0;
+  while (!QMlog.eof())
+  {
+    //This loop will find the last geometry even if the calculation
+    //did not complete
+    getline(QMlog,dummy);
+    stringstream line(dummy);
+    line >> dummy;
+    if (dummy == "Center")
+    {
+      line >> dummy >> dummy;
+      line >> dummy;
+      if (dummy == "Coordinates")
+      {
+        //Clear junk
+        getline(QMlog,dummy);
+        getline(QMlog,dummy);
+        for (int i=0;i<Natoms;i++)
+        {
+          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+          {
+            //Get new coordinates
+            getline(QMlog,dummy);
+            stringstream line(dummy);
+            line >> dummy >> dummy;
+            line >> dummy;
+            line >> QMMMData[i].P[bead].x;
+            line >> QMMMData[i].P[bead].y;
+            line >> QMMMData[i].P[bead].z;
+          }
+        }
+      }
+    }
+    if (dummy == "--")
+    {
+      line >> dummy;
+      if (dummy == "Stationary")
+      {
+        optFinished = 1;
+      }
+    }
+  }
+  QMlog.close();
+  //Clean up files
+  call.str("");
+  call << "rm -f LICHMExt_";
+  call << bead << ".*";
+  globalSys = system(call.str().c_str());
+  //Print warnings and errors
+  if (!optFinished)
+  {
+    cerr << "Warning: Optimization did not converge!!!";
+    cerr << '\n';
+    cerr << "An older geometry will be recovered...";
+    cerr << '\n';
+    E = hugeNum; //Large number to reject step
+    cerr.flush(); //Print warning immediately
+    //Delete checkpoint
+    call.str("");
+    call << "rm -f LICHM_" << bead << ".chk";
+    globalSys = system(call.str().c_str());
+  }
+  //Calculate new point-charges and return
+  GaussianCharges(QMMMData,QMMMOpts,bead);
+  return E;
 };
 

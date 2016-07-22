@@ -9,7 +9,7 @@
 #                                                                             #
 ###############################################################################
 
- Functions to convert AMBER files to LICHEM format
+ Functions to convert LAMMPS files to LICHEM format
 
  Reference for LAMMPS:
  Plimpton, Steve, J. Comp. Phys., 1, 117, 1, (1995)

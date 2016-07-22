@@ -551,9 +551,9 @@ void LICHEM2TINK(int& argc, char**& argv)
       //Collect positions
       double x,y,z;
       posFile >> dummy >> x >> y >> z;
-      //Collect atom type
-      string atType; //MM type (TINKER,AMBER)
-      int atNum; //Number type (TINKER)
+      //Collect atom types
+      string atType; //MM character atom type
+      int atNum; //MM numerical atom type
       conFile >> dummy >> atType >> atNum;
       //Collect bonds
       int NBonds;

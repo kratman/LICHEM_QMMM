@@ -82,8 +82,6 @@ def CleanFiles():
   cleanCmd += " tinker.key"
   #Remove LAMMPS files
   cleanCmd += ""
-  #Remove AMBER files
-  cleanCmd += ""
   #Remove Gaussian files
   cleanCmd += " *.chk"
   #Remove PSI4 files
@@ -295,16 +293,6 @@ if (len(sys.argv) < 4):
     MMbin = ClrSet.TFail+"N/A"+ClrSet.Reset
   line += MMbin
   line += '\n'
-  line += " AMBER: "
-  cmd = "which pmemd"
-  try:
-    #Find path
-    MMbin = subprocess.check_output(cmd,shell=True)
-    MMbin = ClrSet.TPass+MMbin.decode('utf-8').strip()+ClrSet.Reset
-  except:
-    MMbin = ClrSet.TFail+"N/A"+ClrSet.Reset
-  line += MMbin
-  line += '\n'
   print(line)
   if (allTests == 0):
     #Quit
@@ -398,16 +386,6 @@ if (allTests == 0):
   if (MMPack == "lammps"):
     MMPack = "LAMMPS"
     cmd = "which lammps"
-    try:
-      #Find path
-      MMbin = subprocess.check_output(cmd,shell=True)
-      MMbin = MMbin.decode('utf-8').strip()
-    except:
-      MMbin = "N/A"
-    badMM = 0
-  if (MMPack == "amber"):
-    MMPack = "AMBER"
-    cmd = "which pmemd" #Check
     try:
       #Find path
       MMbin = subprocess.check_output(cmd,shell=True)
@@ -535,16 +513,6 @@ if (allTests == 1):
     #Skip tests that will fail
     if (forceAll == 1):
       MMTests.append("LAMMPS")
-  #Safely add AMBER
-  cmd = "which pmemd"
-  try:
-    #Run AMBER tests
-    packBin = subprocess.check_output(cmd,shell=True)
-    MMTests.append("AMBER")
-  except:
-    #Skip tests that will fail
-    if (forceAll == 1):
-      MMTests.append("AMBER")
 else:
   #Add only the specified packages
   QMTests.append(QMPack)

@@ -33,7 +33,7 @@ Available QM wrappers: Gaussian, NWChem, PSI4
 
 Available MM wrappers: TINKER
 
-MM wrappers in development: AMBER, LAMMPS, OpenMM
+MM wrappers in development: LAMMPS
 ```
 
 ### Citing LICHEM

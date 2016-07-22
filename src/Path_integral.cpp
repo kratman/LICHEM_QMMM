@@ -96,12 +96,6 @@ double Get_PI_Epot(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
       Es += TINKEREnergy(QMMMData,QMMMOpts,p);
       times_mm += (unsigned)time(0)-t_mm_start;
     }
-    if (AMBER)
-    {
-      t_mm_start = (unsigned)time(0);
-      Es += AMBEREnergy(QMMMData,QMMMOpts,p);
-      times_mm += (unsigned)time(0)-t_mm_start;
-    }
     if (LAMMPS)
     {
       t_mm_start = (unsigned)time(0);

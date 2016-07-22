@@ -290,21 +290,21 @@ section.
 
 \begin{table}[hbt]
  \centering
- \begin{tabular}{|c|c c c|}
+ \begin{tabular}{|c|c c|}
  \hline
-  & TINKER & AMBER & LAMMPS \\ \hline
- MM energy &  Yes & No & No \\
- QM/MM energy & Yes & No & No \\ \hline
- MM opt. & Yes & No & No \\
- QM/MM opt. & Yes & No & No \\ \hline
- MM SD/DFP & No & No & No \\
- QM/MM SD/DFP & Yes & No & No \\ \hline
- MM MC & Yes & No & No \\
- QM/MM MC & Yes & No & No \\ \hline
- MM PIMC & Yes & No & No \\
- QM/MM PIMC & Yes & No & No \\ \hline
- MM RP & No & No & No \\
- QM/MM RP & Yes & No & No \\ \hline
+  & TINKER & LAMMPS \\ \hline
+ MM energy &  Yes & No \\
+ QM/MM energy & Yes & No \\ \hline
+ MM opt. & Yes & No \\
+ QM/MM opt. & Yes & No \\ \hline
+ MM SD/DFP & No & No \\
+ QM/MM SD/DFP & Yes & No \\ \hline
+ MM MC & Yes & No \\
+ QM/MM MC & Yes & No \\ \hline
+ MM PIMC & Yes & No \\
+ QM/MM PIMC & Yes & No \\ \hline
+ MM RP & No & No \\
+ QM/MM RP & Yes & No \\ \hline
  \end{tabular}
  \caption{
  MM wrapper capabilities for single-point energy, geometry optimization,
@@ -323,8 +323,8 @@ This procedure is less efficient than linking to the packages directly,
 however, reading and writing input/output files is often negligible compared
 to the computational cost of the QM calculation.
 Currently, calculations can be performed using Gaussian \cite{Frisch2009},
-PSI4 \cite{Turney2012}, TINKER \cite{Ponder2015}, AMBER \cite{Case2015}, and
-LAMMPS \cite{Plimpton1995}.
+PSI4 \cite{Turney2012}, NWChem \cite{}, TINKER \cite{Ponder2015},
+and LAMMPS \cite{Plimpton1995}.
 Additional wrappers can be added to LICHEM with relatively little effort.
 
 \subsection{Types of calculations}
@@ -488,7 +488,7 @@ Force tolerances are generated automatically based on this value.
 Default: 1e-2 \\
 
 MM\_type: Name of the MM wrapper.
-Current wrappers: TINKER or AMBER or LAMMPS.
+Current wrappers: TINKER or LAMMPS.
 Default: N/A \\
 
 Opt\_stepsize: Initial scale factor for the geometry optimizers.
@@ -635,9 +635,7 @@ Geometry optimizations can be performed with a couple different algorithms.
 
 Native wrapper optimizers: Perform a geometry optimization with the QM or
 MM optimizers.
-This option is available for QM, MM, and QM/MM optimizations.
-QM/MM optimizations with the native optimizers are only possible with the
-Gaussian external interface.
+This option is available for pure QM and MM optimizations.
 Synonyms: Optimize, opt \\
 
 Steepest descent: LICHEM has steepest descent optimizer \cite{} for the QM
@@ -753,10 +751,6 @@ the multipoles in the global reference frame. \\
 user:\$ lichem -GlobalPoles -n Ncpus -x xyzfile.xyz -r regions.inp
  -c connect.inp \\
 
-{\textbf{AMBER:}} \\
-
-{\color{red}Still in development} \\
-
 {\textbf{LAMMPS:}} \\
 
 {\color{red}Still in development}
@@ -789,10 +783,6 @@ Any keyword defined in tinker.key will be passed into the TINKER key file used
 by the wrapper.
 For obvious reasons, the user must also provide the force field parameter
 files defined in the tinker.key file.
-
-\subsection{AMBER}
-
-{\color{red}Still in development}
 
 \subsection{LAMMPS}
 

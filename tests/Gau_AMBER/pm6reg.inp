@@ -1,8 +1,0 @@
-Potential_type: QM
-QM_type: Gaussian
-QM_method: SemiEmp
-QM_basis: PM6
-QM_memory: 256 MB
-QM_charge: 0
-QM_spin: 1
-Calculation_type: SP
