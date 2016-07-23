@@ -77,26 +77,6 @@ class QMMMAtom
     vector<GEMDen> GEM; //GEM frozen density
 };
 
-class QMMMElec
-{
-  //Data type for electronic information (eFF model)
-  public:
-    //Constructor
-    QMMMElec();
-    //Destructor
-    ~QMMMElec();
-    //Temporary storage
-    double Ep; //Path-integral energies
-    //Particle properties
-    string typ; //Lepton type
-    double m; //mass (amu)
-    double q; //Charge (au)
-    //Coordinates
-    vector<int> spin; //Spin
-    vector<Coord> P; //Bead XYZ coordinates
-    vector<double> rad; //Radius (Ang)
-};
-
 //LICHEM simulation data
 class QMMMSettings
 {

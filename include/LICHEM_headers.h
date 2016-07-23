@@ -32,8 +32,6 @@ using namespace LICHEMOpts;
 using namespace LICHEMConst;
 #include "LICHEM_globals.h"
 using namespace LICHEMGlobal;
-#include "LICHEM_Lepton.h"
-using namespace LICHEMLepton;
 
 //LICHEM headers and libraries
 #include "LICHEM_base_classes.h"
@@ -65,10 +63,6 @@ void CheckNEBTangent(VectorXd&);
 Coord CoordDist2(Coord&,Coord&);
 
 bool Dihedraled(vector<QMMMAtom>&,int,int);
-
-double EFFCorr(QMMMElec&,QMMMElec&,int);
-
-double EFFEnergy(QMMMAtom&,QMMMElec&,int);
 
 void ExternalGaussian(int&,char**&);
 
@@ -103,8 +97,6 @@ double GEMBuffC7(double,double,Coord&,Coord&,double);
 
 double GEMC6(double,Coord&,Coord&,double);
 
-double Get_EeFF(vector<QMMMAtom>&,vector<QMMMElec>&,QMMMSettings&);
-
 double Get_PI_Espring(vector<QMMMAtom>&,QMMMSettings&);
 
 double Get_PI_Epot(vector<QMMMAtom>&,QMMMSettings&);
@@ -120,8 +112,6 @@ double HermOverlap(HermGau&,HermGau&);
 VectorXd KabschDisplacement(MatrixXd&,MatrixXd&,int);
 
 void KabschRotation(MatrixXd&,MatrixXd&,int);
-
-double KineticE_eFF(vector<QMMMElec>&,QMMMSettings&);
 
 double LAMMPSEnergy(vector<QMMMAtom>&,QMMMSettings&,int);
 
@@ -272,7 +262,6 @@ void WriteQMConnect(int&,char**&);
 #include "GauExternal.cpp"
 #include "Gaussian.cpp"
 #include "LAMMPS.cpp"
-#include "Lepton_eng.cpp"
 #include "NWChem.cpp"
 #include "PSI4.cpp"
 #include "TINKER.cpp"

@@ -38,7 +38,6 @@ int main(int argc, char* argv[])
   fstream xyzFile,connectFile,regionFile,outFile; //Input and output files
   vector<QMMMAtom> QMMMData; //Atom list
   vector<QMMMAtom> OldQMMMData; //A copy of the atoms list
-  vector<QMMMElec> Elecs; //Semi-classical electrons (eFF model)
   QMMMSettings QMMMOpts; //QM and MM wrapper settings
   int randNum; //Random integer
   //End of section

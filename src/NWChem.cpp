@@ -49,7 +49,7 @@ void NWChemCharges(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << "LICHM_" << bead << ".log";
   inFile.open(call.str().c_str(),ios_base::in);
   bool QMFinished = 0;
-  while (!inFile.eof())
+  while ((!inFile.eof()) and inFile.good())
   {
     stringstream line;
     getline(inFile,dummy);
@@ -153,7 +153,7 @@ double NWChemEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << "LICHM_" << bead << ".log";
   inFile.open(call.str().c_str(),ios_base::in);
   bool QMFinished = 0;
-  while (!inFile.eof())
+  while ((!inFile.eof()) and inFile.good())
   {
     stringstream line;
     getline(inFile,dummy);
@@ -279,7 +279,7 @@ double NWChemForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   inFile.open(call.str().c_str(),ios_base::in);
   bool QMFinished = 0;
   bool gradDone = 0;
-  while (!inFile.eof())
+  while ((!inFile.eof()) and inFile.good())
   {
     stringstream line;
     getline(inFile,dummy);
@@ -502,7 +502,7 @@ double NWChemOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
   call << "LICHM_" << bead << ".log";
   inFile.open(call.str().c_str(),ios_base::in);
   bool QMFinished = 0;
-  while (!inFile.eof())
+  while ((!inFile.eof()) and inFile.good())
   {
     stringstream line;
     getline(inFile,dummy);

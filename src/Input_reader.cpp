@@ -1552,24 +1552,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
   cout << " OpenMP threads: " << Nthreads << '\n';
   if (QMonly or QMMM)
   {
-    if (OptSim and Gaussian)
-    {
-      //Print modified threading for GauExternal
-      if (Ncpus <= 2)
-      {
-        cout << " Opt. threads: 1" << '\n';
-        cout << " QM threads: 1" << '\n';
-      }
-      else
-      {
-        cout << " Opt. threads: 2" << '\n';
-        cout << " QM threads: " << (Ncpus-2) << '\n';
-      }
-    }
-    else
-    {
-      cout << " QM threads: " << Ncpus << '\n';
-    }
+    cout << " QM threads: " << Ncpus << '\n';
     cout << " QM memory: " << QMMMOpts.RAM << " ";
     if (QMMMOpts.memMB)
     {

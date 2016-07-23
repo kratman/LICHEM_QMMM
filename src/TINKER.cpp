@@ -69,7 +69,7 @@ void FindTINKERClasses(vector<QMMMAtom>& QMMMData)
   }
   //Find parameters for all atoms
   ct = 0; //Generic counter
-  while (!inFile.eof())
+  while ((!inFile.eof()) and inFile.good())
   {
     getline(inFile,dummy);
     stringstream fullLine(dummy);
@@ -507,7 +507,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << "LICHM_" << bead << ".log";
   inFile.open(call.str().c_str(),ios_base::in);
   bool EFound = 0;
-  while (!inFile.eof())
+  while ((!inFile.eof()) and inFile.good())
   {
     inFile >> dummy;
     if (dummy == "Total")
@@ -765,7 +765,7 @@ double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   MMGrad.open(call.str().c_str(),ios_base::in);
   //Read derivatives
   bool gradDone = 0;
-  while ((!MMGrad.eof()) and (!gradDone))
+  while ((!MMGrad.eof()) and MMGrad.good() and (!gradDone))
   {
     getline(MMGrad,dummy);
     stringstream line(dummy);
@@ -1015,7 +1015,7 @@ double TINKERMMForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   MMGrad.open(call.str().c_str(),ios_base::in);
   //Read derivatives
   bool gradDone = 0;
-  while ((!MMGrad.eof()) and (!gradDone))
+  while ((!MMGrad.eof()) and MMGrad.good() and (!gradDone))
   {
     getline(MMGrad,dummy);
     stringstream line(dummy);
@@ -1029,28 +1029,28 @@ double TINKERMMForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
         getline(MMGrad,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          double fX = 0;
-          double fY = 0;
-          double fZ = 0;
-          //Convoluted, but "easy"
-          getline(MMGrad,dummy);
-          stringstream line(dummy);
-          line >> dummy >> dummy; //Clear junk
-          line >> fX;
-          line >> fY;
-          line >> fZ;
-          //Change from gradient to force
-          fX *= -1;
-          fY *= -1;
-          fZ *= -1;
-          //Switch to eV/A and change sign
           if ((QMMMData[i].MMRegion or QMMMData[i].BARegion) and
              (!QMMMData[i].frozen))
           {
             //Only update MM and BA forces in the array
-            forces(3*i) += fX*kcal2eV;
-            forces(3*i+1) += fY*kcal2eV;
-            forces(3*i+2) += fZ*kcal2eV;
+            double fX = 0;
+            double fY = 0;
+            double fZ = 0;
+            //Convoluted, but "easy"
+            getline(MMGrad,dummy);
+            stringstream line(dummy);
+            line >> dummy >> dummy; //Clear junk
+            line >> fX;
+            line >> fY;
+            line >> fZ;
+            //Change from gradient to force
+            fX *= -1;
+            fY *= -1;
+            fZ *= -1;
+            //Switch to eV/A and save the forces
+            forces(3*i) = fX*kcal2eV;
+            forces(3*i+1) = fY*kcal2eV;
+            forces(3*i+2) = fZ*kcal2eV;
           }
         }
       }
@@ -1271,7 +1271,7 @@ double TINKERPolForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   MMGrad.open(call.str().c_str(),ios_base::in);
   //Read derivatives
   bool gradDone = 0;
-  while ((!MMGrad.eof()) and (!gradDone))
+  while ((!MMGrad.eof()) and MMGrad.good() and (!gradDone))
   {
     getline(MMGrad,dummy);
     stringstream line(dummy);
@@ -1519,7 +1519,7 @@ double TINKEREnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   inFile.open(call.str().c_str(),ios_base::in);
   //Read MM potential energy
   bool EFound = 0;
-  while (!inFile.eof())
+  while ((!inFile.eof()) and inFile.good())
   {
     inFile >> dummy;
     if (dummy == "Total")

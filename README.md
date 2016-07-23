@@ -67,10 +67,6 @@ user:$ mkdir LICHEM
 user:$ git clone https://github.com/kratman/LICHEM_QMMM.git ./LICHEM/
 ```
 
-The LICHEM binary will eventually be included with the source code,
-however, modified or git source code can be compiled with the Makefile
-provided with LICHEM.
-
 On Ubuntu boxes, the Makefile should function without modifications. However,
 it may be necessary to install additional LaTeX packages. On OSX machines,
 the SEDI, TEX, BIB, and CXXFLAGS variables will need to be modified.
@@ -119,13 +115,13 @@ issues section.
 
 Jokes and Easter eggs can be included by changing
 ```
- const bool Jokes = 0; //Print humorous comments
+ const bool JOKES = 0; //Print humorous comments
 ```
 in LICHEM_options.h to
 ```
- const bool Jokes = 1; //Print humorous comments
+ const bool JOKES = 1; //Print humorous comments
 ```
-and then compiling the code.
+before compiling the code.
 
 ### Testing
 
@@ -155,11 +151,10 @@ section.
 
 The development of LICHEM was supported by funding from the NIH (Grant No.
 R01GM108583) and Wayne State University. LICHEM is maintained by the Cisneros
-research group at Wayne State University.
+research group at University of North Texas.
 
 Developers:
 <ul>
-  <li>Cisneros group, Wayne State University
-  <li>Piquemal group, UPMC University
+  <li>Cisneros group, University of North Texas
 </ul>
 

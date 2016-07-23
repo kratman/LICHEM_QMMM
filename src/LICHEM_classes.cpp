@@ -234,19 +234,6 @@ QMMMAtom::~QMMMAtom()
   return;
 };
 
-//QMMMElec class function definitions
-QMMMElec::QMMMElec()
-{
-  //Generic constructor
-  return;
-};
-
-QMMMElec::~QMMMElec()
-{
-  //Generic destructor
-  return;
-};
-
 //QMMMSettings class function definitions
 QMMMSettings::QMMMSettings()
 {

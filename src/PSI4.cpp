@@ -65,7 +65,7 @@ void PSI4Charges(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
   call.str("");
   call << "LICHM_" << bead << ".out";
   inFile.open(call.str().c_str(),ios_base::in);
-  while (!inFile.eof())
+  while ((!inFile.eof()) and inFile.good())
   {
     getline(inFile,dummy);
     stringstream line(dummy);
@@ -150,7 +150,7 @@ double PSI4Energy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
   call << "LICHM_" << bead << ".out";
   inFile.open(call.str().c_str(),ios_base::in);
   bool QMFinished = 0;
-  while (!inFile.eof())
+  while ((!inFile.eof()) and inFile.good())
   {
     getline(inFile,dummy);
     stringstream line(dummy);
@@ -192,7 +192,7 @@ double PSI4Energy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
   call.str("");
   call << "LICHM_" << bead << ".log";
   inFile.open(call.str().c_str(),ios_base::in);
-  while (!inFile.eof())
+  while ((!inFile.eof()) and inFile.good())
   {
     getline(inFile,dummy);
     stringstream line(dummy);
@@ -290,7 +290,7 @@ double PSI4Forces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   call.str("");
   call << "LICHM_" << bead << ".out";
   inFile.open(call.str().c_str(),ios_base::in);
-  while (!inFile.eof())
+  while ((!inFile.eof()) and inFile.good())
   {
     getline(inFile,dummy);
     stringstream line(dummy);
@@ -360,7 +360,7 @@ double PSI4Forces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   call.str("");
   call << "LICHM_" << bead << ".log";
   inFile.open(call.str().c_str(),ios_base::in);
-  while (!inFile.eof())
+  while ((!inFile.eof()) and inFile.good())
   {
     getline(inFile,dummy);
     stringstream line(dummy);
@@ -438,7 +438,7 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << "LICHM_" << bead << ".out";
   inFile.open(call.str().c_str(),ios_base::in);
   bool hessDone = 0;
-  while (!inFile.eof())
+  while ((!inFile.eof()) and inFile.good())
   {
     getline(inFile,dummy);
     stringstream line(dummy);
@@ -557,7 +557,7 @@ double PSI4Opt(vector<QMMMAtom>& QMMMData,
   inFile.open(call.str().c_str(),ios_base::in);
   bool QMFinished = 0;
   bool optFinished = 0;
-  while (!inFile.eof())
+  while ((!inFile.eof()) and inFile.good())
   {
     getline(inFile,dummy);
     stringstream line(dummy);
@@ -624,7 +624,7 @@ double PSI4Opt(vector<QMMMAtom>& QMMMData,
   call.str("");
   call << "LICHM_" << bead << ".log";
   inFile.open(call.str().c_str(),ios_base::in);
-  while (!inFile.eof())
+  while ((!inFile.eof()) and inFile.good())
   {
     getline(inFile,dummy);
     stringstream line(dummy);
