@@ -116,7 +116,7 @@ void ExternalGaussian(int& argc, char**& argv)
   //Calculate the QMMM forces
   VectorXd forces(Ndof); //Forces for QM and PB
   forces.setZero();
-  fstream MMgrad,QMlog; //QMMM output
+  fstream MMgrad,QMLog; //QMMM output
   //QM forces
   Eqm = GaussianForces(QMMMData,forces,QMMMOpts,bead);
   //MM forces
@@ -194,7 +194,7 @@ double GaussianExternOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
                          int bead)
 {
   //Runs Gaussian optimizations with GauExternal
-  fstream inFile,QMlog; //Generic file streams
+  fstream inFile,QMLog; //Generic file streams
   string dummy; //Generic string
   stringstream call; //Stream for system calls and reading/writing files
   call.copyfmt(cout); //Copy print settings
@@ -295,13 +295,13 @@ double GaussianExternOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call.str("");
   call << "LICHMExt_";
   call << bead << ".log";
-  QMlog.open(call.str().c_str(),ios_base::in);
+  QMLog.open(call.str().c_str(),ios_base::in);
   bool optFinished = 0;
-  while (!QMlog.eof())
+  while (!QMLog.eof() and QMLog.good())
   {
     //This loop will find the last geometry even if the calculation
     //did not complete
-    getline(QMlog,dummy);
+    getline(QMLog,dummy);
     stringstream line(dummy);
     line >> dummy;
     if (dummy == "Center")
@@ -311,14 +311,14 @@ double GaussianExternOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
       if (dummy == "Coordinates")
       {
         //Clear junk
-        getline(QMlog,dummy);
-        getline(QMlog,dummy);
+        getline(QMLog,dummy);
+        getline(QMLog,dummy);
         for (int i=0;i<Natoms;i++)
         {
           if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
           {
             //Get new coordinates
-            getline(QMlog,dummy);
+            getline(QMLog,dummy);
             stringstream line(dummy);
             line >> dummy >> dummy;
             line >> dummy;
@@ -338,7 +338,7 @@ double GaussianExternOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
       }
     }
   }
-  QMlog.close();
+  QMLog.close();
   //Clean up files
   call.str("");
   call << "rm -f LICHMExt_";
