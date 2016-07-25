@@ -18,32 +18,6 @@
 #define LICHEM_HERMITE_HEADERS
 
 //Gaussian basis set classes
-class GauDen1s
-{
-  //Simple 1s Gaussian class
-  private:
-    //Properties
-    double mag_; //Magnitude/population (prefactor)
-    double wid_; //Width in a.u.
-    double q_; //Nuclear charge
-    double x_; //X position
-    double y_; //Y position
-    double z_; //Z position
-  public:
-    //Constructor
-    GauDen1s(double,double,double,double,double,double);
-    //Destructor
-    ~GauDen1s();
-    //Point-charge interactions
-    double chrgNuc(double,Coord,double); //Nuclei-charge electrostatic term
-    double nucNuc(GauDen1s,double); //Nuclei-nuclei electrostatic term
-    //Electron density integrals
-    double twoOver(GauDen1s); //Density-density overlap
-    double oneCoulPC(double,Coord,double); //Density-charge (MM)
-    double oneCoulNuc(GauDen1s,double); //Density-nucleus
-    double twoCoul(GauDen1s,double); //Density-density Coulomb repulsion
-};
-
 class HermGau
 {
   //Class for Hermite Gaussians

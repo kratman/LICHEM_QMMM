@@ -22,7 +22,6 @@ namespace LICHEMConst
 {
   //Global exact constants
   const double pi = 4*atan(1); //Pi
-  const double sqrt2 = pow(2,0.5); //Square root of 2
   const double hugeNum = 1e50; //Large number to reject step
   const double fs2s = 1e-12; //Convert fs to s
   const double m2Ang = 1.0e10; //Angstroms to meters
@@ -32,7 +31,6 @@ namespace LICHEMConst
   const double epsZero = 8.54187817e-12; //Electric constant
   const double hbar = 6.58211928e-16; //Reduced Planck Constant (eV)
   const double kBoltz = 8.6173324e-5; //Boltzmann constant (eV)
-  const double kSI = 1.3806488e-23; //Boltzmann constant (SI)
   const double amu2kg = 1.660538921e-27; //Atomic mass units to kg
   const double SI2eV = 1/(1.602176565e-19); //Convert SI to eV
   const double elecMassSI = 9.10938291e-31; //Mass of an electron (kg)
