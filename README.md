@@ -105,8 +105,7 @@ added for incomplete or untested features.
 
 Relatively minor updates (documentation, output printing, bug fixes, comments,
 etc) are released ASAP. Updates from the private development branch are
-generally merged into the public repository as a single commit around
-midnight.
+generally merged into the public repository as a single commit.
 
 Further development details can be found in the doc directory, or the GitHub
 issues section.
