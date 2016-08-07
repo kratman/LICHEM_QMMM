@@ -855,7 +855,8 @@ int main(int argc, char* argv[])
     VectorXd Emc(QMMMOpts.NBeads); //Current MC energy
     sumE.setZero();
     sumE2.setZero();
-    Emc.setZero();
+    Emc.setIdentity(); //Initial energies should not be zero
+    Emc *= hugeNum; //Forces the first step to be accepted
     //Initialize force arrays
     for (int p=0;p<QMMMOpts.NBeads;p++)
     {
@@ -877,7 +878,6 @@ int main(int argc, char* argv[])
       //Prevent the print rate from breaking the tuning
       QMMMOpts.NPrint = 100; //Minimum value
     }
-    QMMMOpts.EOld = hugeNum; //Forces the first step to be accepted
     Nct = 0; //Reset counter to zero
     while (Nct < QMMMOpts.NEq)
     {
