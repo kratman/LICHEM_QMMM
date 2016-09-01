@@ -20,7 +20,8 @@ struct traits<CwiseNullaryOp<NullaryOp, PlainObjectType> > : traits<PlainObjectT
     Flags = traits<PlainObjectType>::Flags & RowMajorBit
   };
 };
-}
+
+} // namespace internal
 
 /** \class CwiseNullaryOp
   * \ingroup Core_Module
@@ -37,7 +38,15 @@ struct traits<CwiseNullaryOp<NullaryOp, PlainObjectType> > : traits<PlainObjectT
   * However, if you want to write a function returning such an expression, you
   * will need to use this class.
   *
-  * \sa class CwiseUnaryOp, class CwiseBinaryOp, DenseBase::NullaryExpr()
+  * See DenseBase::NullaryExpr(Index,const CustomNullaryOp&) for an example binding
+  * C++11 random number generators.
+  *
+  * A nullary expression can also be used to implement custom sophisticated matrix manipulations
+  * that cannot be covered by the existing set of natively supported matrix manipulations.
+  * See this \ref TopicCustomizing_NullaryExpr "page" for some examples and additional explanations
+  * on the behavior of CwiseNullaryOp.
+  *
+  * \sa class CwiseUnaryOp, class CwiseBinaryOp, DenseBase::NullaryExpr
   */
 template<typename NullaryOp, typename PlainObjectType>
 class CwiseNullaryOp : public internal::dense_xpr_base< CwiseNullaryOp<NullaryOp, PlainObjectType> >::type, internal::no_assignment_operator
@@ -61,30 +70,6 @@ class CwiseNullaryOp : public internal::dense_xpr_base< CwiseNullaryOp<NullaryOp
     EIGEN_STRONG_INLINE Index rows() const { return m_rows.value(); }
     EIGEN_DEVICE_FUNC
     EIGEN_STRONG_INLINE Index cols() const { return m_cols.value(); }
-
-    EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE const Scalar coeff(Index rowId, Index colId) const
-    {
-      return m_functor(rowId, colId);
-    }
-
-    template<int LoadMode>
-    EIGEN_STRONG_INLINE PacketScalar packet(Index rowId, Index colId) const
-    {
-      return m_functor.packetOp(rowId, colId);
-    }
-
-    EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE const Scalar coeff(Index index) const
-    {
-      return m_functor(index);
-    }
-
-    template<int LoadMode>
-    EIGEN_STRONG_INLINE PacketScalar packet(Index index) const
-    {
-      return m_functor.packetOp(index);
-    }
 
     /** \returns the functor representing the nullary operation */
     EIGEN_DEVICE_FUNC
