@@ -265,7 +265,7 @@ void outer_product_selector_run(Dst& dst, const Lhs &lhs, const Rhs &rhs, const 
   // FIXME not very good if rhs is real and lhs complex while alpha is real too
   const Index cols = dst.cols();
   for (Index j=0; j<cols; ++j)
-    func(dst.col(j), rhsEval.coeff(0,j) * actual_lhs);
+    func(dst.col(j), rhsEval.coeff(Index(0),j) * actual_lhs);
 }
 
 // Row major result
@@ -278,7 +278,7 @@ void outer_product_selector_run(Dst& dst, const Lhs &lhs, const Rhs &rhs, const 
   // FIXME not very good if lhs is real and rhs complex while alpha is real too
   const Index rows = dst.rows();
   for (Index i=0; i<rows; ++i)
-    func(dst.row(i), lhsEval.coeff(i,0) * actual_rhs);
+    func(dst.row(i), lhsEval.coeff(i,Index(0)) * actual_rhs);
 }
 
 template<typename Lhs, typename Rhs>
@@ -437,6 +437,18 @@ struct product_evaluator<Product<Lhs, Rhs, LazyProduct>, ProductTag, DenseShape,
     EIGEN_INTERNAL_CHECK_COST_VALUE(NumTraits<Scalar>::MulCost);
     EIGEN_INTERNAL_CHECK_COST_VALUE(NumTraits<Scalar>::AddCost);
     EIGEN_INTERNAL_CHECK_COST_VALUE(CoeffReadCost);
+#if 0
+    std::cerr << "LhsOuterStrideBytes=  " << LhsOuterStrideBytes << "\n";
+    std::cerr << "RhsOuterStrideBytes=  " << RhsOuterStrideBytes << "\n";
+    std::cerr << "LhsAlignment=         " << LhsAlignment << "\n";
+    std::cerr << "RhsAlignment=         " << RhsAlignment << "\n";
+    std::cerr << "CanVectorizeLhs=      " << CanVectorizeLhs << "\n";
+    std::cerr << "CanVectorizeRhs=      " << CanVectorizeRhs << "\n";
+    std::cerr << "CanVectorizeInner=    " << CanVectorizeInner << "\n";
+    std::cerr << "EvalToRowMajor=       " << EvalToRowMajor << "\n";
+    std::cerr << "Alignment=            " << Alignment << "\n";
+    std::cerr << "Flags=                " << Flags << "\n";
+#endif
   }
 
   // Everything below here is taken from CoeffBasedProduct.h
@@ -503,8 +515,8 @@ struct product_evaluator<Product<Lhs, Rhs, LazyProduct>, ProductTag, DenseShape,
     LhsOuterStrideBytes = int(LhsNestedCleaned::OuterStrideAtCompileTime) * int(sizeof(typename LhsNestedCleaned::Scalar)),
     RhsOuterStrideBytes = int(RhsNestedCleaned::OuterStrideAtCompileTime) * int(sizeof(typename RhsNestedCleaned::Scalar)),
 
-    Alignment = bool(CanVectorizeLhs) ? (LhsOuterStrideBytes<0 || (int(LhsOuterStrideBytes) % EIGEN_PLAIN_ENUM_MAX(1,LhsAlignment))!=0 ? 0 : LhsAlignment)
-              : bool(CanVectorizeRhs) ? (RhsOuterStrideBytes<0 || (int(RhsOuterStrideBytes) % EIGEN_PLAIN_ENUM_MAX(1,RhsAlignment))!=0 ? 0 : RhsAlignment)
+    Alignment = bool(CanVectorizeLhs) ? (LhsOuterStrideBytes<=0 || (int(LhsOuterStrideBytes) % EIGEN_PLAIN_ENUM_MAX(1,LhsAlignment))!=0 ? 0 : LhsAlignment)
+              : bool(CanVectorizeRhs) ? (RhsOuterStrideBytes<=0 || (int(RhsOuterStrideBytes) % EIGEN_PLAIN_ENUM_MAX(1,RhsAlignment))!=0 ? 0 : RhsAlignment)
               : 0,
 
     /* CanVectorizeInner deserves special explanation. It does not affect the product flags. It is not used outside
