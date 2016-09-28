@@ -112,6 +112,7 @@ void NWChemCharges(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << "LICHM_" << bead << ".b*" << " ";
   call << "LICHM_" << bead << ".c*" << " ";
   call << "LICHM_" << bead << ".d*" << " ";
+  call << "LICHM_" << bead << ".e*" << " ";
   call << "LICHM_" << bead << ".f*" << " ";
   call << "LICHM_" << bead << ".g*" << " ";
   call << "LICHM_" << bead << ".h*" << " ";
@@ -235,6 +236,7 @@ double NWChemEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << "LICHM_" << bead << ".b*" << " ";
   call << "LICHM_" << bead << ".c*" << " ";
   call << "LICHM_" << bead << ".d*" << " ";
+  call << "LICHM_" << bead << ".e*" << " ";
   call << "LICHM_" << bead << ".f*" << " ";
   call << "LICHM_" << bead << ".g*" << " ";
   call << "LICHM_" << bead << ".h*" << " ";
@@ -379,6 +381,7 @@ double NWChemForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   call << "LICHM_" << bead << ".b*" << " ";
   call << "LICHM_" << bead << ".c*" << " ";
   call << "LICHM_" << bead << ".d*" << " ";
+  call << "LICHM_" << bead << ".e*" << " ";
   call << "LICHM_" << bead << ".f*" << " ";
   call << "LICHM_" << bead << ".g*" << " ";
   call << "LICHM_" << bead << ".h*" << " ";
@@ -461,6 +464,7 @@ MatrixXd NWChemHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << "LICHM_" << bead << ".b*" << " ";
   call << "LICHM_" << bead << ".c*" << " ";
   call << "LICHM_" << bead << ".d*" << " ";
+  call << "LICHM_" << bead << ".e*" << " ";
   call << "LICHM_" << bead << ".f*" << " ";
   call << "LICHM_" << bead << ".g*" << " ";
   call << "LICHM_" << bead << ".h*" << " ";
@@ -565,6 +569,7 @@ double NWChemOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
   call << "LICHM_" << bead << ".b*" << " ";
   call << "LICHM_" << bead << ".c*" << " ";
   call << "LICHM_" << bead << ".d*" << " ";
+  call << "LICHM_" << bead << ".e*" << " ";
   call << "LICHM_" << bead << ".f*" << " ";
   call << "LICHM_" << bead << ".g*" << " ";
   call << "LICHM_" << bead << ".h*" << " ";
