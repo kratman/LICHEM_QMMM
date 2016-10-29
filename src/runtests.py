@@ -552,6 +552,9 @@ for qmTest in QMTests:
     #Change directory
     os.chdir(dirPath)
 
+    #Remove files from aborted tests
+    CleanFiles()
+
     #Start printing results
     line = QMPack+"/"+MMPack
     line += " results:"
