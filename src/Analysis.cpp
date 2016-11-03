@@ -826,15 +826,19 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& QMMMData, MatrixXd& QMMMHess,
       QMMMFreqs(i) = 0;
     }
   }
-  //Write all normal modes
-  if ((!QMMM) and QMMMOpts.printNormModes)
+  //Write normal modes
+  if (QMMMOpts.printNormModes)
   {
-    WriteModes(QMMMData,0,QMMMFreqs,QMMMNormModes,QMMMOpts,bead);
-  }
-  //Write modes for imaginary frequencies
-  else if (QMMM)
-  {
-    WriteModes(QMMMData,1,QMMMFreqs,QMMMNormModes,QMMMOpts,bead);
+    if (!QMMM)
+    {
+      //Write all normal modes
+      WriteModes(QMMMData,0,QMMMFreqs,QMMMNormModes,QMMMOpts,bead);
+    }
+    else
+    {
+      //Write modes for imaginary frequencies
+      WriteModes(QMMMData,1,QMMMFreqs,QMMMNormModes,QMMMOpts,bead);
+    }
   }
   //Return frequencies
   remCt = transRotCt;
