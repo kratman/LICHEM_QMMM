@@ -48,7 +48,9 @@ template<> struct is_arithmetic<__m256d> { enum { value = true }; };
 #define _EIGEN_DECLARE_CONST_Packet8i(NAME,X) \
   const Packet8i p8i_##NAME = pset1<Packet8i>(X)
 
-
+// Use the packet_traits defined in AVX512/PacketMath.h instead if we're going
+// to leverage AVX512 instructions.
+#ifndef EIGEN_VECTORIZE_AVX512
 template<> struct packet_traits<float>  : default_packet_traits
 {
   typedef Packet8f type;
@@ -93,6 +95,7 @@ template<> struct packet_traits<double> : default_packet_traits
     HasCeil = 1
   };
 };
+#endif
 
 template<> struct scalar_div_cost<float,true> { enum { value = 14 }; };
 template<> struct scalar_div_cost<double,true> { enum { value = 16 }; };
@@ -304,9 +307,11 @@ template<> EIGEN_STRONG_INLINE void pstore1<Packet8i>(int* to, const int& a)
   pstore(to, pa);
 }
 
+#ifndef EIGEN_VECTORIZE_AVX512
 template<> EIGEN_STRONG_INLINE void prefetch<float>(const float*   addr) { _mm_prefetch((const char*)(addr), _MM_HINT_T0); }
 template<> EIGEN_STRONG_INLINE void prefetch<double>(const double* addr) { _mm_prefetch((const char*)(addr), _MM_HINT_T0); }
 template<> EIGEN_STRONG_INLINE void prefetch<int>(const int*       addr) { _mm_prefetch((const char*)(addr), _MM_HINT_T0); }
+#endif
 
 template<> EIGEN_STRONG_INLINE float  pfirst<Packet8f>(const Packet8f& a) {
   return _mm_cvtss_f32(_mm256_castps256_ps128(a));
@@ -400,7 +405,7 @@ template<> EIGEN_STRONG_INLINE double predux<Packet4d>(const Packet4d& a)
   return pfirst(_mm256_hadd_pd(tmp0,tmp0));
 }
 
-template<> EIGEN_STRONG_INLINE Packet4f predux4<Packet8f>(const Packet8f& a)
+template<> EIGEN_STRONG_INLINE Packet4f predux_downto4<Packet8f>(const Packet8f& a)
 {
   return _mm_add_ps(_mm256_castps256_ps128(a),_mm256_extractf128_ps(a,1));
 }
