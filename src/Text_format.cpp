@@ -16,6 +16,11 @@
 
 */
 
+/*!
+  \ingroup Misc
+*/
+///@{
+
 //Number formatting functions
 template<typename T>
 string LICHEMFormFloat(T inpVal, int wid)
@@ -349,4 +354,7 @@ void LICHEMFixSciNot(string& origText)
   }
   return;
 };
+
+//End of file group
+///@}
 

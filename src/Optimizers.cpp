@@ -18,6 +18,11 @@
 
 */
 
+/*!
+  \ingroup Optimizers
+*/
+///@{
+
 //Convergence test functions
 bool OptConverged(vector<QMMMAtom>& QMMMData, vector<QMMMAtom>& oldQMMMData,
                   VectorXd& forces, int stepCt, QMMMSettings& QMMMOpts,
@@ -593,4 +598,7 @@ void LICHEMDFP(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
   //Finish and return
   return;
 };
+
+//End of file group
+///@}
 

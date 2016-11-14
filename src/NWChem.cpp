@@ -16,8 +16,10 @@
 
 */
 
-//QM utility functions
-
+/*!
+  \ingroup NWChem
+*/
+///@{
 
 //QM wrapper functions
 void NWChemCharges(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
@@ -584,4 +586,7 @@ double NWChemOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
   E *= har2eV;
   return E;
 };
+
+//End of file group
+///@}
 

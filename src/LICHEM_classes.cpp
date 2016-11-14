@@ -13,6 +13,11 @@
 
 */
 
+/*!
+  \ingroup Classes
+*/
+///@{
+
 //Coord class function definitions
 Coord::Coord()
 {
@@ -965,4 +970,7 @@ double PeriodicTable::getAtMass(string atName)
   }
   return mass;
 };
+
+//End of file group
+///@}
 

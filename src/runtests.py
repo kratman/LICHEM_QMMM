@@ -1,3 +1,6 @@
+## ingroup tests tests
+##@{
+
 ###################################################
 #                                                 #
 #   LICHEM: Layered Interacting CHEmical Models   #
@@ -18,7 +21,7 @@
 #    user:$ ./runtests Ncpus QMPackage MMPackage dry
 ####
 
-#Modules
+### Modules ###
 import subprocess
 import time
 import sys
@@ -37,7 +40,7 @@ failCt = 0 #Number of tests failed
 updateResults = 0 #Flag to print energies to update tests
 forceAll = 0 #Flag to force it to do tests even if they will fail
 
-#Classes
+## Text coloring options for linux terminals
 class ClrSet:
   #Unicode colors
   Norm = '\033[0m'
@@ -51,7 +54,10 @@ class ClrSet:
   TPass = Bold+Green #Highlight passed tests
   Reset = Norm #Reset to defaults
 
-#Functions
+## Routine to run LICHEM as a system call
+#  \param xName XYZ file name
+#  \param rName Regions file name
+#  \param cName Connectivity file name
 def RunLICHEM(xName,rName,cName):
   #Submit LICHEM jobs
   cmd = "lichem -n "
@@ -72,6 +78,7 @@ def RunLICHEM(xName,rName,cName):
   subprocess.call(cmd,shell=True) #Run calculations
   return
 
+## Routine to remove LICHEM input/output
 def CleanFiles():
   #Delete junk files
   cleanCmd = "rm -f"
@@ -92,6 +99,9 @@ def CleanFiles():
   subprocess.call(cleanCmd,shell=True)
   return
 
+## Routine to extract energies from LICHEM output
+# \param txtLabel Text pattern to extract from the output file
+# \param itemNum Column to text to interpret as the energy
 def RecoverEnergy(txtLabel,itemNum):
   #Recover the energy from LICHEM output
   cmd = ""
@@ -113,6 +123,7 @@ def RecoverEnergy(txtLabel,itemNum):
     finalEnergy = 0.0
   return finalEnergy,savedResult
 
+## Routine to extract vibrational frequencies from LICHEM output
 def RecoverFreqs():
   #Recover a list of frequencies
   cmd = ""
@@ -132,6 +143,10 @@ def RecoverFreqs():
     freqList = []
   return freqList
 
+## Routine to color the test name and pass/fail output
+# \param tName The name of the test to print
+# \param testPass Flag to check if the test passed or failed
+# \param txtLn String to prepend to the output text
 def AddPass(tName,testPass,txtLn):
   #Add a colored pass or fail message
   global passCt
@@ -161,6 +176,8 @@ def AddPass(tName,testPass,txtLn):
     failCt += 1
   return txtLn
 
+## Routine to append the run time to the output string
+# \param txtLn String to prepend to the output text
 def AddRunTime(txtLn):
   #Collect the LICHEM run time and add it to a string
   cmd = ""
@@ -176,6 +193,10 @@ def AddRunTime(txtLn):
   txtLn += runTime
   return txtLn
 
+## Routine to append the energy to the output string
+# \param devOpt Flag to check if this is a development test
+# \param txtLn String to prepend to the output text
+# \param enVal Floating point energy value
 def AddEnergy(devOpt,txtLn,enVal):
   if (devOpt == 1):
     txtLn += ", "
@@ -856,3 +877,4 @@ print(line)
 #Quit
 exit(0)
 
+##@}

@@ -15,6 +15,11 @@
 
 */
 
+/*!
+  \ingroup MonteCarlo
+*/
+///@{
+
 //Path integral Monte Carlo functions
 double Get_PI_Espring(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
 {
@@ -476,4 +481,7 @@ bool MCMove(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, double& Emc)
   //Return decision
   return acc;
 };
+
+//End file group
+///@}
 

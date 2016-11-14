@@ -16,6 +16,11 @@
 
 */
 
+/*!
+  \ingroup Misc
+*/
+///@{
+
 //Basis set definitions
 vector<HermGau> HermBasis(string Typ, string basName)
 {
@@ -36,4 +41,7 @@ vector<HermGau> HermBasis(string Typ, string basName)
   //Return basis set if it was found in the database
   return newBasis;
 };
+
+//End of file group
+///@}
 

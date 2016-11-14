@@ -17,7 +17,7 @@
 #ifndef LICHEM_HERMITE_HEADERS
 #define LICHEM_HERMITE_HEADERS
 
-//Gaussian basis set classes
+//! Data structure for storing Hermite Gaussian basis set information
 class HermGau
 {
   //Class for Hermite Gaussians

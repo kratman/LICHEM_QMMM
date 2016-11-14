@@ -13,6 +13,11 @@
 
 */
 
+/*!
+  \ingroup Misc
+*/
+///@{
+
 //Various input and error checking functions
 void ReadArgs(int& argc, char**& argv, fstream& xyzFile,
               fstream& connectFile, fstream& regionFile, fstream& outFile)
@@ -1690,4 +1695,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
   cout.flush(); //Flush for output being redirected to a file
   return;
 };
+
+//End of file group
+///@}
 

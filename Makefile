@@ -31,6 +31,9 @@ SEDI=-i
 TEX=pdflatex
 BIB=bibtex
 
+### Settings for doxygen ###
+DOXY=doxygen
+
 ### Advanced compiler settings for developers ###
 
 DEVFLAGS=-g -Wall -std=c++14
@@ -139,6 +142,12 @@ manual:
 	rm -f manual.log manual.out manual.toc; \
 	rm -f doclog.txt
 
+doxygen:	
+	@echo ""; \
+	echo "### Compiling the documentation ###"; \
+	echo "$(DOXY) ./src/doxygen.cfg"; \
+        $(DOXY) ./src/doxygen.cfg
+
 title:	
 	@echo ""; \
 	echo "###################################################"; \
@@ -180,5 +189,6 @@ delbin:
  	fi; \
         echo ""; \
 	echo "Removing binary and manual..."; \
-	rm -rf lichem ./doc/LICHEM_manual.pdf ./tests/runtests ./bin
+	rm -rf lichem ./doc/LICHEM_manual.pdf ./tests/runtests ./bin; \
+	rm -rf doc/doxygen
 

@@ -18,6 +18,8 @@
 #define LICHEM_BASE_CLASSES
 
 //Custom classes
+
+//! Data structure for storing periodic table data
 class PeriodicTable
 {
   //Class for storing periodic table data
@@ -43,6 +45,7 @@ class PeriodicTable
     double getAtMass(string); //Atomic mass
 };
 
+//! Data structure for storing coordinates and vectors
 class Coord
 {
   public:
@@ -58,6 +61,7 @@ class Coord
     double vecMag(); //Return the squared vector magnitude
 };
 
+//! Data structure for storing Cartesian multipoles
 class MPole
 {
   //Cartesian multipoles
@@ -91,6 +95,7 @@ class MPole
     double Qzz;
 };
 
+//! Data structure for storing spherical harmonic multipoles
 class RedMPole
 {
   //Reduced multipole from sph. harm. and diagonalization
@@ -114,6 +119,7 @@ class RedMPole
     Vector3d vecZ; //Z direction in quadrupole frame
 };
 
+//! Data structure for storing octahedral multipoles
 class OctCharges
 {
   //A grid of point-charges which replaces multipoles

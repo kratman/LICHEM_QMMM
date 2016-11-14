@@ -20,6 +20,11 @@
 
 */
 
+/*!
+  \ingroup Multipoles
+*/
+///@{
+
 //TINKER routines
 void ExtractTINKpoles(vector<QMMMAtom>& QMMMData, int bead)
 {
@@ -1390,4 +1395,7 @@ OctCharges SphHarm2Charges(RedMPole pole)
   //Return
   return PCGrid;
 };
+
+//End of file group
+///@}
 

@@ -22,6 +22,11 @@
 
 */
 
+/*!
+  \ingroup Misc
+*/
+///@{
+
 //BASIS file creation functions
 void LICHEM2BASIS(int& argc,char**& argv)
 {
@@ -301,4 +306,7 @@ void LICHEM2BASIS(int& argc,char**& argv)
   exit(0);
   return;
 };
+
+//End of file group
+///@}
 

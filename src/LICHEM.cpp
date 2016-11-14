@@ -19,6 +19,11 @@
 //Primary LICHEM header
 #include "LICHEM_headers.h"
 
+/*!
+  \ingroup Main
+*/
+///@{
+
 int main(int argc, char* argv[])
 {
   //Misc. initialization
@@ -1478,4 +1483,7 @@ int main(int argc, char* argv[])
   //Quit
   return retValue;
 };
+
+//End of file group
+///@}
 

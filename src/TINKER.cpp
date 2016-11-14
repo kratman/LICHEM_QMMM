@@ -16,6 +16,11 @@
 
 */
 
+/*!
+  \ingroup TINKER
+*/
+///@{
+
 //MM utility functions
 void FindTINKERClasses(vector<QMMMAtom>& QMMMData)
 {
@@ -2108,4 +2113,7 @@ double TINKEROpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
   E *= kcal2eV;
   return E;
 };
+
+//End of file group
+///@}
 

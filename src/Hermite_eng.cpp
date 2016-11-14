@@ -17,6 +17,11 @@
 
 */
 
+/*!
+  \ingroup FrznDen
+*/
+///@{
+
 //Definitions for the HermGau class
 HermGau::HermGau(double ci, double a, int ix, int iy, int iz,
                  double xi, double yi, double zi)
@@ -685,4 +690,7 @@ double HermOverlap(HermGau& Gi, HermGau& Gj)
   //Return overlap
   return Sij;
 };
+
+//End of file group
+///@}
 

@@ -16,6 +16,10 @@
 
 */
 
+/*!
+  \ingroup TINKER
+*/
+///@{
 
 //Parsers
 void TINK2LICHEM(int& argc, char**& argv)
@@ -591,4 +595,7 @@ void LICHEM2TINK(int& argc, char**& argv)
   exit(0); //Quit
   return;
 };
+
+//End of file group
+///@}
 

@@ -16,5 +16,14 @@
 
 */
 
+/*!
+  \ingroup LAMMPS LAMMPS
+*/
+///@{
+
 //Parsers
+
+
+//End of file group
+///@}
 

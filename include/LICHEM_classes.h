@@ -17,7 +17,7 @@
 #ifndef LICHEM_STRUCTURES
 #define LICHEM_STRUCTURES
 
-//GEM electron density
+//! Data structure for GEM electron density
 class GEMDen
 {
   //Class for GEM diffuse charge density
@@ -42,7 +42,7 @@ class GEMDen
     MPole GEMDM(); //Function to generate multipoles from density
 };
 
-//LICHEM particle data structures
+//! LICHEM particle data structure
 class QMMMAtom
 {
   //Data type for atomic information
@@ -77,7 +77,7 @@ class QMMMAtom
     vector<GEMDen> GEM; //GEM frozen density
 };
 
-//LICHEM simulation data
+//! LICHEM simulation data
 class QMMMSettings
 {
   //Settings for the simulation and wrappers

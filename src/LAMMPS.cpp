@@ -16,6 +16,11 @@
 
 */
 
+/*!
+  \ingroup LAMMPS
+*/
+///@{
+
 //MM utility functions
 void LAMMPSTopology(vector<QMMMAtom>& QMMMData, stringstream& topology,
                     int bead)
@@ -398,4 +403,7 @@ double LAMMPSOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << bead << ".txt";
   return E;
 };
+
+//End of file group
+///@}
 

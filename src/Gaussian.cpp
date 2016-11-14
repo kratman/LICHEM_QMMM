@@ -17,8 +17,10 @@
 
 */
 
-//QM utility functions
-
+/*!
+  \ingroup Gaussian
+*/
+///@{
 
 //QM wrapper functions
 void GaussianCharges(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
@@ -800,4 +802,7 @@ double GaussianOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   //Return
   return E;
 };
+
+//End of file group
+///@}
 

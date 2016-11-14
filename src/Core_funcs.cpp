@@ -13,6 +13,11 @@
 
 */
 
+/*!
+  \ingroup Misc
+*/
+///@{
+
 //Core utility functions
 void PrintFancyTitle()
 {
@@ -592,4 +597,7 @@ void FetchQuotes(vector<string>& Quotes)
   }
   return;
 };
+
+//End of file group
+///@}
 

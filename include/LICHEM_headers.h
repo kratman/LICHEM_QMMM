@@ -17,6 +17,81 @@
 #ifndef LICHEM_HEADERS
 #define LICHEM_HEADERS
 
+/*!
+  \defgroup AMBER AMBER
+  \brief Wrapper functions for AMBER calculations
+*/
+
+/*!
+  \defgroup  Analysis Analysis
+  \brief Routines for analyzing structures and trajectories
+*/
+
+/*!
+  \defgroup Classes Classes
+  \brief Class definitions
+*/
+
+/*!
+  \defgroup FrznDen FrzDen
+  \brief Routines for manipulating frozen electron density
+*/
+
+/*!
+  \defgroup Gaussian Gaussian
+  \brief Wrapper functions for Gaussian calculations
+*/
+
+/*!
+  \defgroup LAMMPS LAMMPS
+  \brief Wrapper functions for LAMMPS calculations
+*/
+
+/*!
+  \defgroup Main Main
+  \brief LICHEM
+*/
+
+/*!
+  \defgroup Misc Misc
+  \brief Misc. utility functions
+*/
+
+/*!
+  \defgroup MonteCarlo MonteCarlo
+  \brief Path-integral Monte Carlo routines
+*/
+
+/*!
+  \defgroup Multipoles Multipoles
+  \brief Routines for manipulating atomic multipole moments
+*/
+
+/*!
+  \defgroup NWChem NWChem
+  \brief Wrapper functions for NWChem calculations
+*/
+
+/*!
+  \defgroup Optimizers Optimizers
+  \brief Optimization routines
+*/
+
+/*!
+  \defgroup PSI4 PSI4
+  \brief Wrapper functions for psi4 calculations
+*/
+
+/*!
+  \defgroup tests tests
+  \brief LICHEM semi-automated test suite
+*/
+
+/*!
+  \defgroup TINKER TINKER
+  \brief Wrapper functions for TINKER calculations
+*/
+
 //C++ libraries
 #include "LICHEM_clibs.h"
 using namespace std;

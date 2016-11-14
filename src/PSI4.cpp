@@ -16,8 +16,10 @@
 
 */
 
-//QM utility functions
-
+/*!
+  \ingroup PSI4
+*/
+///@{
 
 //QM wrapper functions
 void PSI4Charges(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
@@ -675,4 +677,7 @@ double PSI4Opt(vector<QMMMAtom>& QMMMData,
   E *= har2eV;
   return E;
 };
+
+//End of file group
+///@}
 

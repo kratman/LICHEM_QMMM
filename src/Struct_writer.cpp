@@ -13,6 +13,11 @@
 
 */
 
+/*!
+  \ingroup Misc
+*/
+///@{
+
 //QM input writers
 void WriteGauInput(vector<QMMMAtom>& QMMMData, string calcTyp,
                    QMMMSettings& QMMMOpts, int bead)
@@ -1065,4 +1070,7 @@ void WriteQMConnect(int& argc,char**& argv)
   exit(0);
   return;
 };
+
+//End of file group
+///@}
 
