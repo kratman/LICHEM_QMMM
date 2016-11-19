@@ -175,6 +175,7 @@ double LRECFunction(Coord& dist, QMMMSettings& QMMMOpts)
     scrqA += scrqB+1;
     //Set the scale factor
     scrq -= pow(scrqA,QMMMOpts.LRECPow);
+    return scrq;
   }
   //Charge is not within the cutoff
   return 0;
