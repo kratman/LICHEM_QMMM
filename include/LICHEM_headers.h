@@ -18,11 +18,6 @@
 #define LICHEM_HEADERS
 
 /*!
-  \defgroup AMBER AMBER
-  \brief Wrapper functions for AMBER calculations
-*/
-
-/*!
   \defgroup  Analysis Analysis
   \brief Routines for analyzing structures and trajectories
 */

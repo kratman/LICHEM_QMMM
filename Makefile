@@ -37,7 +37,6 @@ DOXY=doxygen
 ### Advanced compiler settings for developers ###
 
 DEVFLAGS=-g -Wall -std=c++14
-GPUFLAGS=-fopenacc
 
 #####################################################
 
@@ -46,8 +45,6 @@ GPUFLAGS=-fopenacc
 install:	title binary testexe manual compdone
 
 Dev:	title devbin devtest manual stats compdone
-
-GPUDev:	title gpubin devtest manual stats compdone
 
 clean:	title delbin compdone
 
@@ -59,7 +56,6 @@ clean:	title delbin compdone
 
 FLAGSBIN=$(CXXFLAGS) $(LDFLAGS) -I./src/ -I./include/
 FLAGSDEV=$(CXXFLAGS) $(DEVFLAGS) $(LDFLAGS) -I./src/ -I./include/
-FLAGSGPU=$(CXXFLAGS) $(DEVFLAGS) $(GPUFLAGS) $(LDFLAGS) -I./src/ -I./include/
 
 #####################################################
 
@@ -77,12 +73,6 @@ devbin:
 	echo "### Compiling the LICHEM development binary ###"; \
 	mkdir -p bin
 	$(CXX) ./src/LICHEM.cpp -o ./bin/lichem $(FLAGSDEV)
-
-gpubin:	
-	@echo ""; \
-	echo "### Compiling the LICHEM GPU binary ###"; \
-	mkdir -p bin
-	$(CXX) ./src/LICHEM.cpp -o ./bin/lichem $(FLAGSGPU)
 
 testexe:	
 	@echo ""; \

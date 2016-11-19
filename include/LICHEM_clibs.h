@@ -25,13 +25,6 @@
 #else
  #pragma message("OpenMP is disabled.")
 #endif
-#ifdef _OPENACC
- //Use OpenMP
- #pragma message("OpenACC is enabled.")
- #include <openacc.h>
-#else
- #pragma message("OpenACC is disabled.")
-#endif
 
 //General header files
 #include <cstdlib>
