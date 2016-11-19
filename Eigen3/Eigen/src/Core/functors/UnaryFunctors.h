@@ -678,13 +678,7 @@ struct functor_traits<scalar_ceil_op<Scalar> >
 template<typename Scalar> struct scalar_isnan_op {
   EIGEN_EMPTY_STRUCT_CTOR(scalar_isnan_op)
   typedef bool result_type;
-  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE result_type operator() (const Scalar& a) const {
-#if defined(__SYCL_DEVICE_ONLY__)
-    return numext::isnan(a);
-#else  
-    return (numext::isnan)(a);
-#endif
-  }
+  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE result_type operator() (const Scalar& a) const { return (numext::isnan)(a); }
 };
 template<typename Scalar>
 struct functor_traits<scalar_isnan_op<Scalar> >
@@ -702,13 +696,7 @@ struct functor_traits<scalar_isnan_op<Scalar> >
 template<typename Scalar> struct scalar_isinf_op {
   EIGEN_EMPTY_STRUCT_CTOR(scalar_isinf_op)
   typedef bool result_type;
-  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE result_type operator() (const Scalar& a) const {
-#if defined(__SYCL_DEVICE_ONLY__)
-    return numext::isinf(a);
-#else
-    return (numext::isinf)(a);
-#endif
-  }
+  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE result_type operator() (const Scalar& a) const { return (numext::isinf)(a); }
 };
 template<typename Scalar>
 struct functor_traits<scalar_isinf_op<Scalar> >
@@ -726,13 +714,7 @@ struct functor_traits<scalar_isinf_op<Scalar> >
 template<typename Scalar> struct scalar_isfinite_op {
   EIGEN_EMPTY_STRUCT_CTOR(scalar_isfinite_op)
   typedef bool result_type;
-  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE result_type operator() (const Scalar& a) const {
-#if defined(__SYCL_DEVICE_ONLY__)
-    return numext::isfinite(a);
-#else
-    return (numext::isfinite)(a);
-#endif
-  }
+  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE result_type operator() (const Scalar& a) const { return (numext::isfinite)(a); }
 };
 template<typename Scalar>
 struct functor_traits<scalar_isfinite_op<Scalar> >

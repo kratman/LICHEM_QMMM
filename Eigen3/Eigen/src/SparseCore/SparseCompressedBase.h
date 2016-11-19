@@ -224,11 +224,11 @@ class SparseCompressedBase<Derived>::ReverseInnerIterator
       }
       else
       {
-        m_start = mat.outerIndexPtr()[outer];
+        m_start.value() = mat.outerIndexPtr()[outer];
         if(mat.isCompressed())
           m_id = mat.outerIndexPtr()[outer+1];
         else
-          m_id = m_start + mat.innerNonZeroPtr()[outer];
+          m_id = m_start.value() + mat.innerNonZeroPtr()[outer];
       }
     }
 
@@ -254,15 +254,14 @@ class SparseCompressedBase<Derived>::ReverseInnerIterator
     inline Index row() const { return IsRowMajor ? m_outer.value() : index(); }
     inline Index col() const { return IsRowMajor ? index() : m_outer.value(); }
 
-    inline operator bool() const { return (m_id > m_start); }
+    inline operator bool() const { return (m_id > m_start.value()); }
 
   protected:
     const Scalar* m_values;
     const StorageIndex* m_indices;
-    typedef internal::variable_if_dynamic<Index,Derived::IsVectorAtCompileTime?0:Dynamic> OuterType;
-    const OuterType m_outer;
+    const internal::variable_if_dynamic<Index,Derived::IsVectorAtCompileTime?0:Dynamic> m_outer;
     Index m_id;
-    Index m_start;
+    const internal::variable_if_dynamic<Index,Derived::IsVectorAtCompileTime?0:Dynamic> m_start;
 };
 
 namespace internal {

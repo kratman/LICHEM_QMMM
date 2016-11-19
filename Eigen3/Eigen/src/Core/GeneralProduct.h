@@ -264,7 +264,7 @@ template<> struct gemv_dense_selector<OnTheRight,ColMajor,true>
     if (!evalToDest)
     {
       if(!alphaIsCompatible)
-        dest.matrix() += actualAlpha * MappedDest(actualDestPtr, dest.size());
+        dest += actualAlpha * MappedDest(actualDestPtr, dest.size());
       else
         dest = MappedDest(actualDestPtr, dest.size());
     }
