@@ -111,8 +111,8 @@ void PathLinInterpolate(int& argc, char**& argv)
   string reactFilename, tsFilename, prodFilename; //File names
   fstream reactFile, tsFile, prodFile, pathFile; //File streams
   int Nbeads = 3; //Default to react, ts, and prod
-  bool includeTS = 0; //Flag to use the TS structure
-  bool doQuit = 0; //Quit with an error
+  bool includeTS = false; //Flag to use the TS structure
+  bool doQuit = false; //Quit with an error
   reactFilename = "N/A";
   tsFilename = "N/A";
   prodFilename = "N/A";
@@ -137,7 +137,7 @@ void PathLinInterpolate(int& argc, char**& argv)
       {
         cout << "Error: Could not open reactant file!!!";
         cout << '\n';
-        doQuit = 1;
+        doQuit = true;
       }
       reactFilename = file.str();
       reactFile.open(argv[i+1],ios_base::in);
@@ -146,14 +146,14 @@ void PathLinInterpolate(int& argc, char**& argv)
     //Check transition state file
     if (dummy == "-t")
     {
-      includeTS = 1; //Do a 3 point interpolation
+      includeTS = true; //Do a 3 point interpolation
       stringstream file;
       file << argv[i+1];
       if (!CheckFile(file.str()))
       {
         cout << "Error: Could not open transition state file!!!";
         cout << '\n';
-        doQuit = 1;
+        doQuit = true;
       }
       tsFilename = file.str();
       tsFile.open(argv[i+1],ios_base::in);
@@ -168,7 +168,7 @@ void PathLinInterpolate(int& argc, char**& argv)
       {
         cout << "Error: Could not open product file!!!";
         cout << '\n';
-        doQuit = 1;
+        doQuit = true;
       }
       prodFilename = file.str();
       prodFile.open(argv[i+1],ios_base::in);
@@ -182,21 +182,21 @@ void PathLinInterpolate(int& argc, char**& argv)
     //Missing flag
     cout << "Error: Missing reactant file!!!";
     cout << '\n' << '\n';
-    doQuit = 1;
+    doQuit = true;
   }
-  if ((!CheckFile(tsFilename)) and (includeTS))
+  if ((!CheckFile(tsFilename)) && (includeTS))
   {
     //Missing flag
     cout << "Error: Missing transition state file!!!";
     cout << '\n' << '\n';
-    doQuit = 1;
+    doQuit = true;
   }
   if (!CheckFile(prodFilename))
   {
     //Missing flag
     cout << "Error: Missing product file!!!";
     cout << '\n' << '\n';
-    doQuit = 1;
+    doQuit = true;
   }
   if (doQuit)
   {
@@ -383,7 +383,7 @@ void SplitPathTraj(int& argc, char**& argv)
   int ct; //Generic counter
   int Nbeads = 1; //Default to a single bead
   int frameID = 0; //The trajectory frame that will be separated
-  bool doQuit = 0; //Quit with an error
+  bool doQuit = false; //Quit with an error
   pathFilename = "N/A";
   //Read settings
   cout << "Reading LICHEM input:";
@@ -413,7 +413,7 @@ void SplitPathTraj(int& argc, char**& argv)
       {
         cout << "Error: Could not open trajectory file!!!";
         cout << '\n';
-        doQuit = 1;
+        doQuit = true;
       }
       pathFilename = file.str();
       pathFile.open(argv[i+1],ios_base::in);
@@ -431,7 +431,7 @@ void SplitPathTraj(int& argc, char**& argv)
     //Missing flag
     cout << "Error: Missing trajectory file!!!";
     cout << '\n' << '\n';
-    doQuit = 1;
+    doQuit = true;
   }
   if (doQuit)
   {
@@ -724,7 +724,7 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& QMMMData, MatrixXd& QMMMHess,
   for (int i=0;i<Natoms;i++)
   {
     //Locate QM and PB atoms
-    if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+    if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
     {
       //Switch to a.u. and save mass
       double massVal = QMMMData[i].m/elecMass;
@@ -769,39 +769,39 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& QMMMData, MatrixXd& QMMMHess,
   #pragma omp parallel for reduction(+:transRotCt)
   for (int i=0;i<Ndof;i++)
   {
-    bool isTransRot = 0;
+    bool isTransRot = false;
     double dotTest; //Saves overlap
     //Locate translations
     dotTest = abs(transX.dot(QMMMNormModes.col(i)));
     if (dotTest > projTol)
     {
-      isTransRot = 1;
+      isTransRot = true;
     }
     dotTest = abs(transY.dot(QMMMNormModes.col(i)));
     if (dotTest > projTol)
     {
-      isTransRot = 1;
+      isTransRot = true;
     }
     dotTest = abs(transZ.dot(QMMMNormModes.col(i)));
     if (dotTest > projTol)
     {
-      isTransRot = 1;
+      isTransRot = true;
     }
     //Locate rotations
     dotTest = abs(rotX.dot(QMMMNormModes.col(i)));
     if (dotTest > projTol)
     {
-      isTransRot = 1;
+      isTransRot = true;
     }
     dotTest = abs(rotY.dot(QMMMNormModes.col(i)));
     if (dotTest > projTol)
     {
-      isTransRot = 1;
+      isTransRot = true;
     }
     dotTest = abs(rotZ.dot(QMMMNormModes.col(i)));
     if (dotTest > projTol)
     {
-      isTransRot = 1;
+      isTransRot = true;
     }
     //Locate small frequencies
     double smallFreq; //Temporary storage
@@ -809,10 +809,10 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& QMMMData, MatrixXd& QMMMHess,
     smallFreq *= smallFreq; //Square tolerance
     if (abs(QMMMFreqs(i)) < smallFreq)
     {
-      isTransRot = 1;
+      isTransRot = true;
     }
     //Adjust frequencies
-    if (isTransRot and (!QMMM))
+    if (isTransRot && (!QMMM))
     {
       //Remove frequency
       QMMMFreqs(i);
@@ -904,7 +904,7 @@ void WriteModes(vector<QMMMAtom>& QMMMData, bool imagOnly, VectorXd& freqs,
   for (int i=0;i<Ndof;i++)
   {
     //Check print options
-    if (((!imagOnly) or (freqs(i) < 0)) and (freqs(i) != 0))
+    if (((!imagOnly) || (freqs(i) < 0)) && (freqs(i) != 0))
     {
       //Print normal mode
       call.str("");
@@ -921,7 +921,7 @@ void WriteModes(vector<QMMMAtom>& QMMMData, bool imagOnly, VectorXd& freqs,
         modeFile << (Nqm+Npseudo) << '\n' << '\n';
         for (int k=0;k<Natoms;k++)
         {
-          if (QMMMData[k].QMRegion or QMMMData[k].PBRegion)
+          if (QMMMData[k].QMRegion || QMMMData[k].PBRegion)
           {
             //Write element
             modeFile << QMMMData[k].QMTyp << " ";

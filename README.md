@@ -122,10 +122,12 @@ in LICHEM_options.h to
 ```
 before compiling the code.
 
-### Testing
+### Black-box testing
 
 Test calculations can be performed with the runtests script in the tests
-directory.
+directory. While the tests do not cover all of the LICHEM functionality,
+the test suite can detect installation errors. If tests are consistently
+failing, please post details on the GitHub issues section.
 
 Tests can be performed for pairs of QM and MM wrappers.
 ```
@@ -143,17 +145,44 @@ calculations.
 user:$ ./runtests Ncpus QMPackage MMPackage Dry
 ```
 
-If tests are consistently failing, please post details on the GitHub issues
-section.
+### White-box testing
+
+Tools for performing static code analysis can be found in the
+tests/Code_analysis directory. These tools can help developers detect coding
+errors and style issues.
+
+A copy of Google's cpplint tool can be run with the RunLint script.
+```
+user:$ ./RunLint
+```
+The script produces a file named LintTest.log containing some stylistic
+deviations from the Google style guide. LICHEM does not conform to the
+Google style guide, but the analysis can be useful to developers.
+
+A configuration file for cppcheck is also included in the tool kit.
+```
+user:$ cppcheck-gui lichem.cfg
+```
+
+In addition to using cpplint and cppcheck, the Makefile can be used to check
+for code issues at compile-time.
+```
+user:$ make checksyntax
+  or
+user:$ make Dev
+```
+The two commands above check for compiler warnings using the c++14 standard.
 
 ### Development
 
 The development of LICHEM was supported by funding from the NIH (Grant No.
-R01GM108583) and Wayne State University. LICHEM is maintained by the Cisneros
-research group at University of North Texas.
+R01GM108583) and Wayne State University. LICHEM is currently maintained by
+both Eric G. Kratz and the Cisneros research group at University of North
+Texas.
 
 Developers:
 <ul>
+  <li>Eric G. Kratz
   <li>Cisneros group, University of North Texas
 </ul>
 

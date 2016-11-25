@@ -131,7 +131,7 @@ void LICHEM2BASIS(int& argc,char**& argv)
       }
     }
     //Check for read errors
-    if ((!foundWrapper) or (!foundBasis) or (!foundQM))
+    if ((!foundWrapper) || (!foundBasis) || (!foundQM))
     {
       cout << "Error: Missing data in region file!!!";
       cout << '\n';
@@ -169,7 +169,7 @@ void LICHEM2BASIS(int& argc,char**& argv)
       atomList.push_back(inQMregion);
     }
     //Write BASIS file
-    if ((wrapperName == "gaussian") or (wrapperName == "g09"))
+    if ((wrapperName == "gaussian") || (wrapperName == "g09"))
     {
       //Write Gaussian BASIS file for GEN input
       int ct; //Generic counter

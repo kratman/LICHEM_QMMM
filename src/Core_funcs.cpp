@@ -68,10 +68,10 @@ bool CheckFile(const string& file)
   if (stat(file.c_str(),&buffer) != -1)
   {
     //Yep...
-    return 1;
+    return true;
   }
   //Nope...
-  return 0;
+  return false;
 };
 
 int FindMaxThreads()
@@ -102,15 +102,15 @@ Coord CoordDist2(Coord& a, Coord& b)
   //Check PBC
   if (PBCon)
   {
-    bool check = 1; //Continue checking PBC
+    bool check = true; //Continue checking PBC
     while (check)
     {
       //Overkill, bit it checks if atoms are wrapped multiple times
-      check = 0; //Stop if there are no changes
+      check = false; //Stop if there are no changes
       if (abs(dx) > (0.5*Lx))
       {
         //Update X displacement
-        check = 1; //The displacement was updated
+        check = true; //The displacement was updated
         if (dx > 0)
         {
           dx -= Lx;
@@ -123,7 +123,7 @@ Coord CoordDist2(Coord& a, Coord& b)
       if (abs(dy) > (0.5*Ly))
       {
         //Update Y displacement
-        check = 1; //The displacement was updated
+        check = true; //The displacement was updated
         if (dy > 0)
         {
           dy -= Ly;
@@ -136,7 +136,7 @@ Coord CoordDist2(Coord& a, Coord& b)
       if (abs(dz) > (0.5*Lz))
       {
         //Update Z displacement
-        check = 1; //The displacement was updated
+        check = true; //The displacement was updated
         if (dz > 0)
         {
           dz -= Lz;
@@ -185,7 +185,7 @@ double LRECFunction(Coord& dist, QMMMSettings& QMMMOpts)
 vector<int> TraceBoundary(vector<QMMMAtom>& QMMMData, int atID)
 {
   //Function to find all boundary atoms connected to a pseudobond atom
-  bool bondError = 0; //Checks if the molecular structure "breaks" the math
+  bool bondError = false; //Checks if the molecular structure "breaks" the math
   vector<int> boundAtoms; //Final list of atoms
   //Add atoms bonded to atom "AtID"
   for (unsigned int i=0;i<QMMMData[atID].bonds.size();i++)
@@ -195,15 +195,15 @@ vector<int> TraceBoundary(vector<QMMMAtom>& QMMMData, int atID)
     {
       boundAtoms.push_back(bondID);
     }
-    if (QMMMData[bondID].PBRegion and (bondID != atID))
+    if (QMMMData[bondID].PBRegion && (bondID != atID))
     {
       //Two PBs are connected and this system will fail
-      bondError = 1;
+      bondError = true;
     }
   }
   //Check find other boundary atoms bonded to the initial set
   bool moreFound = 1; //More boundary atoms were found
-  while (moreFound and (!bondError))
+  while (moreFound && (!bondError))
   {
     moreFound = 0; //Break the loop
     vector<int> tmp;
@@ -214,12 +214,12 @@ vector<int> TraceBoundary(vector<QMMMAtom>& QMMMData, int atID)
       {
         int bondID = QMMMData[BAID].bonds[j];
         //Check if it is on the list
-        bool isThere = 0;
+        bool isThere = false;
         for (unsigned int k=0;k<boundAtoms.size();k++)
         {
           if (bondID == boundAtoms[k])
           {
-            isThere = 1;
+            isThere = true;
           }
         }
         if (!isThere)
@@ -229,10 +229,10 @@ vector<int> TraceBoundary(vector<QMMMAtom>& QMMMData, int atID)
             moreFound = 1; //Keep going
             tmp.push_back(bondID);
           }
-          if (QMMMData[bondID].PBRegion and (bondID != atID))
+          if (QMMMData[bondID].PBRegion && (bondID != atID))
           {
             //Two PBs are connected and this system will fail
-            bondError = 1;
+            bondError = true;
           }
         }
       }
@@ -240,13 +240,13 @@ vector<int> TraceBoundary(vector<QMMMAtom>& QMMMData, int atID)
     //Add them to the list
     for (unsigned int i=0;i<tmp.size();i++)
     {
-      bool isThere = 0;
+      bool isThere = false;
       for (unsigned int j=0;j<boundAtoms.size();j++)
       {
         //Avoid adding the atom twice
         if (tmp[i] == boundAtoms[j])
         {
-          isThere = 1;
+          isThere = true;
         }
       }
       if (!isThere)
@@ -273,12 +273,12 @@ vector<int> TraceBoundary(vector<QMMMAtom>& QMMMData, int atID)
 bool Bonded(vector<QMMMAtom>& QMMMData, int atom1, int atom2)
 {
   //Function to check if two atoms are 1-2 connected
-  bool isBound = 0;
+  bool isBound = false;
   for (unsigned int i=0;i<QMMMData[atom2].bonds.size();i++)
   {
     if (atom1 == QMMMData[atom2].bonds[i])
     {
-      isBound = 1;
+      isBound = true;
     }
   }
   return isBound;
@@ -287,7 +287,7 @@ bool Bonded(vector<QMMMAtom>& QMMMData, int atom1, int atom2)
 bool Angled(vector<QMMMAtom>& QMMMData, int atom1, int atom3)
 {
   //Function to check if two atoms are 1-3 connected
-  bool isBound = 0;
+  bool isBound = false;
   for (unsigned int i=0;i<QMMMData[atom1].bonds.size();i++)
   {
     int atom2 = QMMMData[atom1].bonds[i];
@@ -295,7 +295,7 @@ bool Angled(vector<QMMMAtom>& QMMMData, int atom1, int atom3)
     {
       if (atom3 == QMMMData[atom2].bonds[j])
       {
-        isBound = 1;
+        isBound = true;
       }
     }
   }
@@ -305,7 +305,7 @@ bool Angled(vector<QMMMAtom>& QMMMData, int atom1, int atom3)
 bool Dihedraled(vector<QMMMAtom>& QMMMData, int atom1, int atom4)
 {
   //Function to check if two atoms are 1-4 connected
-  bool isBound = 0;
+  bool isBound = false;
   for (unsigned int i=0;i<QMMMData[atom1].bonds.size();i++)
   {
     int atom2 = QMMMData[atom1].bonds[i];
@@ -316,7 +316,7 @@ bool Dihedraled(vector<QMMMAtom>& QMMMData, int atom1, int atom4)
       {
         if (atom4 == QMMMData[atom3].bonds[k])
         {
-          isBound = 1;
+          isBound = true;
         }
       }
     }
@@ -433,7 +433,7 @@ Coord FindQMCOM(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     #pragma omp for nowait schedule(dynamic) reduction(+:totM)
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
       {
         totM += QMMMData[i].m;
       }
@@ -441,7 +441,7 @@ Coord FindQMCOM(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     #pragma omp for nowait schedule(dynamic) reduction(+:avgX)
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
       {
         avgX += QMMMData[i].m*QMMMData[i].P[bead].x;
       }
@@ -449,7 +449,7 @@ Coord FindQMCOM(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     #pragma omp for nowait schedule(dynamic) reduction(+:avgY)
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
       {
         avgY += QMMMData[i].m*QMMMData[i].P[bead].y;
       }
@@ -457,7 +457,7 @@ Coord FindQMCOM(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     #pragma omp for nowait schedule(dynamic) reduction(+:avgZ)
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
       {
         avgZ += QMMMData[i].m*QMMMData[i].P[bead].z;
       }
