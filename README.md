@@ -38,12 +38,18 @@ MM wrappers in development: LAMMPS
 
 ### Citing LICHEM
 
-If you use LICHEM in your research, please cite the following paper:
+If you use LICHEM in your research, please cite the following papers:
 
 ```
 Kratz, E.G.; Walker, A.R.; Lagardere, L; Lipparini, F; Piquemal, J.-P.; and
 Cisneros, G.A.; "LICHEM: A QM/MM Program for Simulations with Multipolar and
 Polarizable Force Fields", J. Comput. Chem., 37, 11, 1019, (2016)
+```
+
+```
+Kratz, E.G.; Duke, R.E.; and Cisneros, G.A.; "Long-Range Electrostatic
+Corrections in Multipolar/Polarizable QM/MM Simulations", Theor. Chem. Acc.,
+135, 7, 1, (2016)
 ```
 
 ### Installation
@@ -168,7 +174,9 @@ In addition to using cpplint and cppcheck, the Makefile can be used to check
 for code issues at compile-time.
 ```
 user:$ make checksyntax
+
   or
+
 user:$ make Dev
 ```
 The two commands above check for compiler warnings using the c++14 standard.
