@@ -150,7 +150,7 @@ MPole GEMDen::GEMDM()
   for (unsigned int i=0;i<dens_.size();i++)
   {
     //Check for a monopole
-    if ((dens_[i].xPow() == 0) and (dens_[i].yPow() == 0) and
+    if ((dens_[i].xPow() == 0) && (dens_[i].yPow() == 0) &&
        (dens_[i].zPow() == 0))
     {
       //Update monopole
@@ -161,56 +161,56 @@ MPole GEMDen::GEMDM()
       dmpole.Qzz += dens_[i].coeff()/(2*dens_[i].getAlpha());
     }
     //Check for a dipole
-    if ((dens_[i].xPow() == 1) and (dens_[i].yPow() == 0) and
+    if ((dens_[i].xPow() == 1) && (dens_[i].yPow() == 0) &&
        (dens_[i].zPow() == 0))
     {
       //Update x dipole
       dmpole.Dx += dens_[i].coeff();
     }
-    if ((dens_[i].xPow() == 0) and (dens_[i].yPow() == 1) and
+    if ((dens_[i].xPow() == 0) && (dens_[i].yPow() == 1) &&
        (dens_[i].zPow() == 0))
     {
       //Update y dipole
       dmpole.Dy += dens_[i].coeff();
     }
-    if ((dens_[i].xPow() == 0) and (dens_[i].yPow() == 0) and
+    if ((dens_[i].xPow() == 0) && (dens_[i].yPow() == 0) &&
        (dens_[i].zPow() == 1))
     {
       //Update z dipole
       dmpole.Dz += dens_[i].coeff();
     }
     //Check for a quadrupole
-    if ((dens_[i].xPow() == 2) and (dens_[i].yPow() == 0) and
+    if ((dens_[i].xPow() == 2) && (dens_[i].yPow() == 0) &&
        (dens_[i].zPow() == 0))
     {
       //Update xx quadrupole
       dmpole.Qxx += 2*dens_[i].coeff();
     }
-    if ((dens_[i].xPow() == 1) and (dens_[i].yPow() == 1) and
+    if ((dens_[i].xPow() == 1) && (dens_[i].yPow() == 1) &&
        (dens_[i].zPow() == 0))
     {
       //Update xy quadrupole
       dmpole.Qxy += dens_[i].coeff();
     }
-    if ((dens_[i].xPow() == 1) and (dens_[i].yPow() == 0) and
+    if ((dens_[i].xPow() == 1) && (dens_[i].yPow() == 0) &&
        (dens_[i].zPow() == 1))
     {
       //Update xz quadrupole
       dmpole.Qxz += dens_[i].coeff();
     }
-    if ((dens_[i].xPow() == 0) and (dens_[i].yPow() == 2) and
+    if ((dens_[i].xPow() == 0) && (dens_[i].yPow() == 2) &&
        (dens_[i].zPow() == 0))
     {
       //Update xx quadrupole
       dmpole.Qyy += 2*dens_[i].coeff();
     }
-    if ((dens_[i].xPow() == 0) and (dens_[i].yPow() == 1) and
+    if ((dens_[i].xPow() == 0) && (dens_[i].yPow() == 1) &&
        (dens_[i].zPow() == 1))
     {
       //Update yz quadrupole
       dmpole.Qyz += dens_[i].coeff();
     }
-    if ((dens_[i].xPow() == 0) and (dens_[i].yPow() == 0) and
+    if ((dens_[i].xPow() == 0) && (dens_[i].yPow() == 0) &&
        (dens_[i].zPow() == 2))
     {
       //Update yz quadrupole

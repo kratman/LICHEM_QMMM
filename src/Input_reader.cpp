@@ -98,7 +98,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzFile,
   {
     //Check for help or missing arguments
     dummy = string(argv[1]);
-    if ((dummy != "-h") and (dummy != "--help"))
+    if ((dummy != "-h") && (dummy != "--help"))
     {
       //Escape if there are missing arguments
       cout << '\n';
@@ -116,7 +116,7 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzFile,
   {
     //Read file names and CPUs
     dummy = string(argv[i]);
-    if ((dummy == "-h") or (dummy == "--help"))
+    if ((dummy == "-h") || (dummy == "--help"))
     {
       //Print helpful information and exit
       cout << '\n';
@@ -172,8 +172,8 @@ void ReadArgs(int& argc, char**& argv, fstream& xyzFile,
     if (dummy[0] == '-')
     {
       bool badArgs = 0; //Bad argument found
-      if ((dummy != "-n") and (dummy != "-x") and
-      (dummy != "-c") and (dummy != "-r") and
+      if ((dummy != "-n") && (dummy != "-x") &&
+      (dummy != "-c") && (dummy != "-r") &&
       (dummy != "-o"))
       {
         badArgs = 1;
@@ -316,13 +316,13 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     }
   }
   //Read simulation keywords
-  while (regionFile.good() and (!regionFile.eof()))
+  while (regionFile.good() && (!regionFile.eof()))
   {
     string keyword;
     regionFile >> keyword;
     LICHEMLowerText(keyword);
     //Check for comments
-    if ((keyword[0] == '#') or (keyword[0] == '!'))
+    if ((keyword[0] == '#') || (keyword[0] == '!'))
     {
       //Skip comment
     }
@@ -348,29 +348,29 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       regionFile >> dummy;
       LICHEMLowerText(dummy);
       //Single-point calculations
-      if ((dummy == "single-point") or (dummy == "sp") or
+      if ((dummy == "single-point") || (dummy == "sp") ||
          (dummy == "energy"))
       {
         //Read energy minimization options
         SinglePoint = 1;
       }
-      if ((dummy == "freq") or (dummy == "frequency"))
+      if ((dummy == "freq") || (dummy == "frequency"))
       {
         //Read energy minimization options
         FreqCalc = 1;
       }
       //Optimizations
-      if ((dummy == "opt") or (dummy == "optimize"))
+      if ((dummy == "opt") || (dummy == "optimize"))
       {
         //Optimize with native QM and MM optimizers
         OptSim = 1;
       }
-      if ((dummy == "steep") or (dummy == "sd"))
+      if ((dummy == "steep") || (dummy == "sd"))
       {
         //Optimize with the LICHEM steepest descent method
         SteepSim = 1;
       }
-      if ((dummy == "dfp") or (dummy == "bfgs"))
+      if ((dummy == "dfp") || (dummy == "bfgs"))
       {
         //Optimize with the DFP optimizer
         DFPSim = 1;
@@ -385,7 +385,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
         }
       }
       //Reaction pathways
-      if ((dummy == "neb") or (dummy == "ci-neb") or (dummy == "cineb"))
+      if ((dummy == "neb") || (dummy == "ci-neb") || (dummy == "cineb"))
       {
         //Optimize a path with climbing image NEB
         NEBSim = 1;
@@ -407,7 +407,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       //Check the type of force field
       regionFile >> dummy;
       LICHEMLowerText(dummy);
-      if ((dummy == "charges") or (dummy == "charge") or
+      if ((dummy == "charges") || (dummy == "charge") ||
          (dummy == "point-charge"))
       {
         //Point-charge force fields
@@ -459,7 +459,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       //Check for inactive NEB end-points
       regionFile >> dummy;
       LICHEMLowerText(dummy);
-      if ((dummy == "yes") or (dummy == "true"))
+      if ((dummy == "yes") || (dummy == "true"))
       {
         QMMMOpts.frznEnds = 1;
       }
@@ -469,7 +469,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       //Check for inactive NEB end-points
       regionFile >> dummy;
       LICHEMLowerText(dummy);
-      if ((dummy == "no") or (dummy == "false"))
+      if ((dummy == "no") || (dummy == "false"))
       {
         QMMMOpts.startPathChk = 0;
       }
@@ -555,7 +555,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       //Check for periodic boundaries
       regionFile >> dummy;
       LICHEMLowerText(dummy);
-      if ((dummy == "yes") or (dummy == "true"))
+      if ((dummy == "yes") || (dummy == "true"))
       {
         PBCon = 1;
       }
@@ -593,7 +593,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       //Check for inactive NEB end-points
       regionFile >> dummy;
       LICHEMLowerText(dummy);
-      if ((dummy == "yes") or (dummy == "true"))
+      if ((dummy == "yes") || (dummy == "true"))
       {
         QMMMOpts.printNormModes = 1;
       }
@@ -643,8 +643,8 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       QMMMOpts.func = dummy; //Save name with correct case
       //Check for special methods
       LICHEMLowerText(dummy);
-      if ((dummy == "semiempirical") or (dummy == "se-scf") or
-         (dummy == "semi-empirical") or (dummy == "sescf") or
+      if ((dummy == "semiempirical") || (dummy == "se-scf") ||
+         (dummy == "semi-empirical") || (dummy == "sescf") ||
          (dummy == "semiemp"))
       {
         //Flag the method as a semi-empirical Hamiltonian
@@ -674,7 +674,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       {
         NWChem = 1;
       }
-      if ((dummy == "gaussian") or (dummy == "g09"))
+      if ((dummy == "gaussian") || (dummy == "g09"))
       {
         Gaussian = 1;
       }
@@ -684,7 +684,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       //Read distance units for QM calculations
       regionFile >> dummy;
       LICHEMLowerText(dummy);
-      if ((dummy == "bohr") or (dummy == "a.u."))
+      if ((dummy == "bohr") || (dummy == "a.u."))
       {
         //Change distance units to a.u.
         QMMMOpts.unitsQM = "Bohr";
@@ -712,7 +712,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       //Check for inactive NEB end-points
       regionFile >> dummy;
       LICHEMLowerText(dummy);
-      if ((dummy == "yes") or (dummy == "true"))
+      if ((dummy == "yes") || (dummy == "true"))
       {
         QMMMOpts.NEBFreq = 1;
       }
@@ -722,7 +722,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       //Check for MM Ewald summation
       regionFile >> dummy;
       LICHEMLowerText(dummy);
-      if ((dummy == "yes") or (dummy == "true"))
+      if ((dummy == "yes") || (dummy == "true"))
       {
         //Turn on Ewald or PME
         QMMMOpts.useEwald = 1;
@@ -733,7 +733,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       //Turn on long-range corrections
       regionFile >> dummy;
       LICHEMLowerText(dummy);
-      if ((dummy == "yes") or (dummy == "true"))
+      if ((dummy == "yes") || (dummy == "true"))
       {
         //Turn on long-range corrections
         QMMMOpts.useLREC = 1;
@@ -744,7 +744,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       //Check for the MM optimization cutoff
       regionFile >> dummy;
       LICHEMLowerText(dummy);
-      if ((dummy == "yes") or (dummy == "true"))
+      if ((dummy == "yes") || (dummy == "true"))
       {
         //Turn on the optimization cutoff
         QMMMOpts.useMMCut = 1;
@@ -755,7 +755,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       //Check for MM implicit solvation
       regionFile >> dummy;
       LICHEMLowerText(dummy);
-      if ((dummy == "yes") or (dummy == "true"))
+      if ((dummy == "yes") || (dummy == "true"))
       {
         //Turn on the implicit solvent
         QMMMOpts.useImpSolv = 1;
@@ -816,7 +816,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
       }
     }
     //Check for bad keywords
-    else if (regionFile.good() and (!regionFile.eof()))
+    else if (regionFile.good() && (!regionFile.eof()))
     {
       //Inform the user about the bad keyword
       cout << "Error: Unrecognized keyword: ";
@@ -926,7 +926,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     }
   }
   //Read initial structures for all beads or create new ones
-  if (CheckFile("BeadStartStruct.xyz") and (!GauExternal))
+  if (CheckFile("BeadStartStruct.xyz") && (!GauExternal))
   {
     //Print output
     cout << "Reading restart information...";
@@ -970,7 +970,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     exit(0);
   }
   //Collect additonal TINKER input
-  if (TINKER and (!GauExternal))
+  if (TINKER && (!GauExternal))
   {
     //NB: Classes are not used in the QMMM
     FindTINKERClasses(QMMMData); //Finds errors
@@ -1003,7 +1003,7 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
     //Set a better more realistic number of threads for OpenMP
     #ifdef _OPENMP
       //OpenMP settings
-      double Procs = double(FindMaxThreads());
+      double Procs = ((double)FindMaxThreads());
       Nthreads = FindMaxThreads();
       omp_set_num_threads(Nthreads);
       //Sanity check
@@ -1013,10 +1013,10 @@ void ReadLICHEMInput(fstream& xyzFile, fstream& connectFile,
         Ncpus = Nthreads;
       }
       //Modify threads for certain multi-replica simulations
-      if ((QMMMOpts.NBeads > 1) and (PIMCSim or FBNEBSim))
+      if ((QMMMOpts.NBeads > 1) && (PIMCSim || FBNEBSim))
       {
         //Divide threads between the beads
-        Nthreads = int(floor(Procs/Ncpus));
+        Nthreads = ((int)floor(Procs/Ncpus));
         //Set number of threads for wrappers
         omp_set_num_threads(Nthreads);
       }
@@ -1051,7 +1051,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     }
   }
   //Check LREC settings
-  if (QMMMOpts.useLREC or PBCon)
+  if (QMMMOpts.useLREC || PBCon)
   {
     //Check LREC cutoff
     if (PBCon)
@@ -1067,7 +1067,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
         minLen = Lz;
       }
       //Check cutoff
-      if (QMMMOpts.useLREC and (QMMMOpts.LRECCut > (0.5*minLen)))
+      if (QMMMOpts.useLREC && (QMMMOpts.LRECCut > (0.5*minLen)))
       {
         //Needed to make the minimum image convention safe
         QMMMOpts.LRECCut = 0.5*minLen;
@@ -1077,7 +1077,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
         cout << '\n' << '\n';
       }
     }
-    if (QMMMOpts.useLREC and (QMMMOpts.LRECCut <= 0.10))
+    if (QMMMOpts.useLREC && (QMMMOpts.LRECCut <= 0.10))
     {
       //Adjust cutoff to avoid divide by zero errors
       QMMMOpts.LRECCut = 0.10; //Minimum value, effectively zero
@@ -1095,14 +1095,14 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     }
   }
   //Check Ewald and implicit solvation settings
-  if (QMMMOpts.useEwald and (!PBCon))
+  if (QMMMOpts.useEwald && (!PBCon))
   {
     //Check Ewald settings
     cout << " Error: Ewald summation cannot be used without PBC.";
     cout << '\n';
     doQuit = 1;
   }
-  if (QMMMOpts.useImpSolv and PBCon)
+  if (QMMMOpts.useImpSolv && PBCon)
   {
     //Check Ewald settings
     cout << " Error: Implicit solvation models cannot be used with PBC.";
@@ -1126,7 +1126,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout.flush(); //Print warning
   }
   //Wrapper errors
-  if ((!TINKER) and (!LAMMPS) and (!QMonly))
+  if ((!TINKER) && (!LAMMPS) && (!QMonly))
   {
     //Check the MM wrappers
     cout << " Error: No valid MM wrapper selected.";
@@ -1136,7 +1136,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout << '\n';
     doQuit = 1;
   }
-  if ((!Gaussian) and (!PSI4) and (!NWChem) and (!MMonly))
+  if ((!Gaussian) && (!PSI4) && (!NWChem) && (!MMonly))
   {
     //Check the QM wrappers
     cout << " Error: No valid QM wrapper selected.";
@@ -1146,7 +1146,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     cout << '\n';
     doQuit = 1;
   }
-  if (Gaussian and QMMM)
+  if (Gaussian && QMMM)
   {
     //Avoid options that conflict with NWChem capabilities
     if (OptSim)
@@ -1159,7 +1159,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       doQuit = 1;
     }
   }
-  if (PSI4 and QMMM)
+  if (PSI4 && QMMM)
   {
     //Avoid options that conflict with PSI4 capabilities
     if (OptSim)
@@ -1171,7 +1171,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       cout << '\n';
       doQuit = 1;
     }
-    if ((Npseudo != 0) or (Nbound != 0))
+    if ((Npseudo != 0) || (Nbound != 0))
     {
       //PSI4 does not currently have pseudopotentials
       cout << " Error: The PSI4 wrapper can only use QM and MM atoms.";
@@ -1181,7 +1181,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       doQuit = 1;
     }
   }
-  if (NWChem and QMMM)
+  if (NWChem && QMMM)
   {
     //Avoid options that conflict with NWChem capabilities
     if (OptSim)
@@ -1194,7 +1194,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
       doQuit = 1;
     }
   }
-  if (LAMMPS and AMOEBA)
+  if (LAMMPS && AMOEBA)
   {
     //Avoid options that conflict with LAMMPS capabilities
     cout << " Error: LAMMPS calculations cannot be performed with";
@@ -1204,7 +1204,7 @@ void LICHEMErrorChecker(QMMMSettings& QMMMOpts)
     doQuit = 1;
   }
   //Simulation errors
-  if ((QMMMOpts.ensemble == "NPT") and (!PBCon))
+  if ((QMMMOpts.ensemble == "NPT") && (!PBCon))
   {
     //Check the PBC options
     cout << " Error: NPT simulation without PBC.";
@@ -1264,14 +1264,14 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
   }
   cout << '\n';
   cout << "Atoms: " << Natoms << '\n';
-  if (QMonly or QMMM)
+  if (QMonly || QMMM)
   {
     //QM regions
     cout << " QM atoms: " << Nqm << '\n';
     cout << "  Charge: " << QMMMOpts.charge << '\n';
     cout << "  Spin: " << QMMMOpts.spin << '\n';
   }
-  if (MMonly or QMMM)
+  if (MMonly || QMMM)
   {
     //MM regions
     cout << " MM atoms: " << Nmm << '\n';
@@ -1365,7 +1365,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
     cout << " Equilibration MC steps: " << QMMMOpts.NEq << '\n';
     cout << " Production MC steps: " << QMMMOpts.NSteps << '\n';
   }
-  if (OptSim or SteepSim or DFPSim)
+  if (OptSim || SteepSim || DFPSim)
   {
     //Print optimization input for error checking
     cout << '\n';
@@ -1383,7 +1383,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
       cout << "Pure MM";
     }
     cout << " energy minimization" << '\n';
-    if (QMMM or QMonly)
+    if (QMMM || QMonly)
     {
       cout << " QM";
       if (QMMM)
@@ -1457,7 +1457,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
       cout << " multi-point frequencies" << '\n';
     }
   }
-  if (QMonly or QMMM)
+  if (QMonly || QMMM)
   {
     //Print QM wrapper input for error checking
     cout << " QM wrapper: ";
@@ -1481,7 +1481,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
     }
     cout << QMMMOpts.basis << '\n';
   }
-  if (MMonly or QMMM)
+  if (MMonly || QMMM)
   {
     //Print MM wrapper input for error checking
     cout << " MM wrapper: ";
@@ -1511,7 +1511,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
       }
     }
     //Print PBC information
-    if (PBCon or QMMMOpts.useLREC or QMMMOpts.useImpSolv)
+    if (PBCon || QMMMOpts.useLREC || QMMMOpts.useImpSolv)
     {
       cout << '\n';
       cout << "Simulation box settings:" << '\n';
@@ -1555,7 +1555,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
   //Print parallelization settings
   cout << "Parallelization and memory settings:" << '\n';
   cout << " OpenMP threads: " << Nthreads << '\n';
-  if (QMonly or QMMM)
+  if (QMonly || QMMM)
   {
     cout << " QM threads: " << Ncpus << '\n';
     cout << " QM memory: " << QMMMOpts.RAM << " ";
@@ -1569,12 +1569,12 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
     }
     cout << '\n';
   }
-  if (MMonly or QMMM)
+  if (MMonly || QMMM)
   {
     cout << " MM threads: " << Ncpus << '\n';
   }
   //Print Monte Carlo settings
-  if (PIMCSim or FBNEBSim)
+  if (PIMCSim || FBNEBSim)
   {
     cout << '\n';
     cout << "Monte Carlo settings:" << '\n';
@@ -1585,7 +1585,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
       cout << " Pressure: " << QMMMOpts.press;
       cout << " atm" << '\n';
     }
-    if (FBNEBSim and (QMMMOpts.NBeads > 1))
+    if (FBNEBSim && (QMMMOpts.NBeads > 1))
     {
       cout << " Spring constant: " << QMMMOpts.kSpring;
       cout << " eV/\u212B\u00B2" << '\n';
@@ -1601,7 +1601,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
     cout << " steps" << '\n';
   }
   //Print convergence criteria for optimizations
-  if (OptSim or SteepSim or DFPSim or NEBSim)
+  if (OptSim || SteepSim || DFPSim || NEBSim)
   {
     cout << '\n';
     cout << "Optimization settings:" << '\n';
@@ -1615,7 +1615,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
     cout << LICHEMFormFloat(QMMMOpts.maxStep,6);
     cout << " \u212B" << '\n';
     cout << " Max. steps: " << QMMMOpts.maxOptSteps;
-    if (QMMMOpts.useMMCut and (Nmm > 0))
+    if (QMMMOpts.useMMCut && (Nmm > 0))
     {
       //Print MM cutoff settings
       cout << '\n';
@@ -1640,7 +1640,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
       }
     }
     cout << '\n';
-    if (SteepSim or DFPSim or NEBSim)
+    if (SteepSim || DFPSim || NEBSim)
     {
       cout << '\n';
       cout << "QM convergence criteria:" << '\n';
@@ -1663,7 +1663,7 @@ void LICHEMPrintSettings(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
     }
   }
   //Print frequency analysis settings
-  if (FreqCalc or QMMMOpts.NEBFreq)
+  if (FreqCalc || QMMMOpts.NEBFreq)
   {
     cout << '\n';
     cout << "Frequency settings:" << '\n';

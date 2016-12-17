@@ -582,7 +582,7 @@ void WriteChargeFile(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   }
   //Find the center of mass
   Coord QMCOM; //QM region center of mass
-  if (PBCon or QMMMOpts.useLREC)
+  if (PBCon || QMMMOpts.useLREC)
   {
     QMCOM = FindQMCOM(QMMMData,QMMMOpts,bead);
   }
@@ -596,7 +596,7 @@ void WriteChargeFile(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     }
   }
   //Write charge file
-  if (Gaussian or NWChem)
+  if (Gaussian || NWChem)
   {
     //Save file
     call.str("");
@@ -611,7 +611,7 @@ void WriteChargeFile(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
         double xShft = 0;
         double yShft = 0;
         double zShft = 0;
-        if (PBCon or QMMMOpts.useLREC)
+        if (PBCon || QMMMOpts.useLREC)
         {
           //Initialize displacements
           double dx,dy,dz; //Starting displacements
@@ -635,7 +635,7 @@ void WriteChargeFile(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
           //Use the long-range correction
           scrq = LRECFunction(distCent,QMMMOpts);
         }
-        if ((scrq > 0) or firstCharge)
+        if ((scrq > 0) || firstCharge)
         {
           if (CHRG)
           {
@@ -765,7 +765,7 @@ void WriteChargeFile(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
         double xShft = 0;
         double yShft = 0;
         double zShft = 0;
-        if (PBCon or QMMMOpts.useLREC)
+        if (PBCon || QMMMOpts.useLREC)
         {
           //Initialize displacements
           double dx,dy,dz; //Starting displacements

@@ -75,7 +75,7 @@ double LAMMPSEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     call << (QMMMData[i].id+1);
     call << " 1 "; //Dummy molecule ID
     call << QMMMData[i].numTyp << " ";
-    if (QMMMData[i].QMRegion or QMMMData[i].PBRegion or QMMMData[i].BARegion)
+    if (QMMMData[i].QMRegion || QMMMData[i].PBRegion || QMMMData[i].BARegion)
     {
       //Add zero charge
       call << 0.0;
@@ -139,7 +139,7 @@ double LAMMPSEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     ct = 0;
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
       {
         call << (QMMMData[i].id+1); //LAMMPS id
         ct += 1;
@@ -165,7 +165,7 @@ double LAMMPSEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     ct = 0;
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].MMRegion or QMMMData[i].BARegion)
+      if (QMMMData[i].MMRegion || QMMMData[i].BARegion)
       {
         call << (QMMMData[i].id+1); //LAMMPS id
         ct += 1;
@@ -314,7 +314,7 @@ double LAMMPSOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     ct = 0;
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
       {
         call << (QMMMData[i].id+1); //LAMMPS id
         ct += 1;
@@ -340,7 +340,7 @@ double LAMMPSOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     ct = 0;
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].MMRegion or QMMMData[i].BARegion)
+      if (QMMMData[i].MMRegion || QMMMData[i].BARegion)
       {
         call << (QMMMData[i].id+1); //LAMMPS id
         ct += 1;

@@ -51,7 +51,7 @@ void NWChemCharges(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << "LICHM_" << bead << ".log";
   inFile.open(call.str().c_str(),ios_base::in);
   bool QMFinished = 0;
-  while ((!inFile.eof()) and inFile.good())
+  while ((!inFile.eof()) && inFile.good())
   {
     stringstream line;
     getline(inFile,dummy);
@@ -79,7 +79,7 @@ void NWChemCharges(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     getline(inFile,dummy);
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
       {
         //Read charges
         stringstream line;
@@ -156,7 +156,7 @@ double NWChemEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << "LICHM_" << bead << ".log";
   inFile.open(call.str().c_str(),ios_base::in);
   bool QMFinished = 0;
-  while ((!inFile.eof()) and inFile.good())
+  while ((!inFile.eof()) && inFile.good())
   {
     stringstream line;
     getline(inFile,dummy);
@@ -184,7 +184,7 @@ double NWChemEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     getline(inFile,dummy);
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
       {
         //Read charges
         stringstream line;
@@ -283,7 +283,7 @@ double NWChemForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   inFile.open(call.str().c_str(),ios_base::in);
   bool QMFinished = 0;
   bool gradDone = 0;
-  while ((!inFile.eof()) and inFile.good())
+  while ((!inFile.eof()) && inFile.good())
   {
     stringstream line;
     getline(inFile,dummy);
@@ -343,7 +343,7 @@ double NWChemForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
     getline(inFile,dummy);
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
       {
         stringstream line;
         getline(inFile,dummy);
@@ -508,7 +508,7 @@ double NWChemOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
   call << "LICHM_" << bead << ".log";
   inFile.open(call.str().c_str(),ios_base::in);
   bool QMFinished = 0;
-  while ((!inFile.eof()) and inFile.good())
+  while ((!inFile.eof()) && inFile.good())
   {
     stringstream line;
     getline(inFile,dummy);
@@ -536,7 +536,7 @@ double NWChemOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     getline(inFile,dummy);
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
       {
         //Read charges
         stringstream line;

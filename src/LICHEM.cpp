@@ -152,7 +152,7 @@ int main(int argc, char* argv[])
         Eqm += NWChemEnergy(QMMMData,QMMMOpts,p);
         QMTime += (unsigned)time(0)-tStart;
       }
-      if (QMMM or QMonly)
+      if (QMMM || QMonly)
       {
         //Print QM partial energy
         cout << "  QM energy: " << LICHEMFormFloat(Eqm,16) << " eV";
@@ -174,7 +174,7 @@ int main(int argc, char* argv[])
         MMTime += (unsigned)time(0)-tStart;
       }
       //Print the rest of the energies
-      if (QMMM or MMonly)
+      if (QMMM || MMonly)
       {
         //Print MM partial energy
         cout << "  MM energy: " << LICHEMFormFloat(Emm,16) << " eV";
@@ -972,7 +972,7 @@ int main(int argc, char* argv[])
       Nacc += acc;
       Nrej += QMMMOpts.NBeads;
       //Print output
-      if ((((Nct/QMMMOpts.NBeads)%QMMMOpts.NPrint) == 0) or
+      if ((((Nct/QMMMOpts.NBeads)%QMMMOpts.NPrint) == 0) ||
          (Nacc == QMMMOpts.NSteps))
       {
         //Print progress
@@ -1074,7 +1074,7 @@ int main(int argc, char* argv[])
       for (int i=0;i<Natoms;i++)
       {
         //Only include QM and PB regions
-        if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+        if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
         {
           //Save current replica
           geom1(ct,0) = QMMMData[i].P[p].x;
@@ -1094,7 +1094,7 @@ int main(int argc, char* argv[])
       for (int i=0;i<Natoms;i++)
       {
         //Only include QM and PB regions
-        if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+        if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
         {
           //Only include active atoms in the tangent
           if (!QMMMData[i].NEBActive)
@@ -1178,10 +1178,10 @@ int main(int argc, char* argv[])
         QMMMOpts.ETrans = sumE;
       }
       //Copy checkpoint data to speed up first step
-      if ((p != (QMMMOpts.NBeads-1)) and QMMMOpts.startPathChk)
+      if ((p != (QMMMOpts.NBeads-1)) && QMMMOpts.startPathChk)
       {
         stringstream call;
-        if (Gaussian and (QMMMOpts.func != "SemiEmp"))
+        if (Gaussian && (QMMMOpts.func != "SemiEmp"))
         {
           call.str("");
           call << "cp LICHM_" << p << ".chk ";
@@ -1394,7 +1394,7 @@ int main(int argc, char* argv[])
     call << "rm -f psi*";
     globalSys = system(call.str().c_str());
   }
-  if (SinglePoint or FreqCalc)
+  if (SinglePoint || FreqCalc)
   {
     //Clear worthless output xyz file
     stringstream call; //Stream for system calls and reading/writing files
@@ -1415,15 +1415,15 @@ int main(int argc, char* argv[])
 
   //Print usage statistics
   endTime = (unsigned)time(0); //Time the program completes
-  double totalHours = (double(endTime)-double(startTime));
-  double totalQM = double(QMTime);
-  if ((QMMMOpts.NBeads > 1) and (PIMCSim or FBNEBSim))
+  double totalHours = (double)endTime-(double)startTime;
+  double totalQM = (double)QMTime;
+  if ((QMMMOpts.NBeads > 1) && (PIMCSim || FBNEBSim))
   {
     //Average over the number of running simulations
     totalQM /= Nthreads;
   }
-  double totalMM = double(MMTime);
-  if ((QMMMOpts.NBeads > 1) and (PIMCSim or FBNEBSim))
+  double totalMM = (double)MMTime;
+  if ((QMMMOpts.NBeads > 1) && (PIMCSim || FBNEBSim))
   {
     //Average over the number of running simulations
     totalMM /= Nthreads;

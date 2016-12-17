@@ -53,11 +53,11 @@ bool OptConverged(vector<QMMMAtom>& QMMMData, vector<QMMMAtom>& oldQMMMData,
     {
       //Calculate QM-QM distance matrix
       double RMSTemp = 0; //Store a local sum
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
       {
         for (int j=0;j<i;j++)
         {
-          if (QMMMData[j].QMRegion or QMMMData[j].PBRegion)
+          if (QMMMData[j].QMRegion || QMMMData[j].PBRegion)
           {
             double RNew = 0;
             double ROld = 0;
@@ -85,7 +85,7 @@ bool OptConverged(vector<QMMMAtom>& QMMMData, vector<QMMMAtom>& oldQMMMData,
     cout << " eV/\u212B | RMS force: " << LICHEMFormFloat(RMSForce,12);
     cout << " eV/\u212B" << '\n';
     //Check convergence criteria
-    if ((RMSDiff <= QMMMOpts.QMOptTol) and (RMSForce <= RMSFTol) and
+    if ((RMSDiff <= QMMMOpts.QMOptTol) && (RMSForce <= RMSFTol) &&
        (maxForce <= maxFTol))
     {
       optDone = 1;
@@ -165,7 +165,7 @@ bool OptConverged(vector<QMMMAtom>& QMMMData, vector<QMMMAtom>& oldQMMMData,
     if (RMSDiff <= QMMMOpts.MMOptTol)
     {
       optDone = 1;
-      if (QMMM and (stepCt > 1))
+      if (QMMM && (stepCt > 1))
       {
         cout << "    QMMM relaxation satisfactory.";
         cout << '\n';
@@ -204,7 +204,7 @@ void LICHEMSteepest(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   //Run optimization
   double stepScale = QMMMOpts.stepScale;
   stepScale *= 0.70; //Take a smaller first step
-  while ((!optDone) and (stepCt < QMMMOpts.maxOptSteps))
+  while ((!optDone) && (stepCt < QMMMOpts.maxOptSteps))
   {
     double E = 0;
     //Create blank force array
@@ -236,7 +236,7 @@ void LICHEMSteepest(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     {
       int tStart = (unsigned)time(0);
       E += TINKERForces(QMMMData,forces,QMMMOpts,bead);
-      if (AMOEBA or QMMMOpts.useImpSolv)
+      if (AMOEBA || QMMMOpts.useImpSolv)
       {
         //Forces from MM polarization
         E += TINKERPolForces(QMMMData,forces,QMMMOpts,bead);
@@ -283,7 +283,7 @@ void LICHEMSteepest(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Move QM atoms
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
       {
         QMMMData[i].P[bead].x += stepSize*forces(ct);
         QMMMData[i].P[bead].y += stepSize*forces(ct+1);
@@ -376,7 +376,7 @@ void LICHEMDFP(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
   {
     int tStart = (unsigned)time(0);
     E += TINKERForces(QMMMData,forces,QMMMOpts,bead);
-    if (AMOEBA or QMMMOpts.useImpSolv)
+    if (AMOEBA || QMMMOpts.useImpSolv)
     {
       //Forces from MM polarization
       E += TINKERPolForces(QMMMData,forces,QMMMOpts,bead);
@@ -403,7 +403,7 @@ void LICHEMDFP(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
   EOld = E; //Save energy
   stepScale = QMMMOpts.stepScale;
   stepScale *= sdScale; //Take a very small first step
-  while ((!optDone) and (stepCt < QMMMOpts.maxOptSteps))
+  while ((!optDone) && (stepCt < QMMMOpts.maxOptSteps))
   {
     E = 0; // Reinitialize energy
     //Copy old structure and old forces
@@ -429,7 +429,7 @@ void LICHEMDFP(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     for (int i=0;i<Natoms;i++)
     {
       //Move QM atoms
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
       {
         QMMMData[i].P[bead].x += optVec(ct);
         QMMMData[i].P[bead].y += optVec(ct+1);
@@ -466,7 +466,7 @@ void LICHEMDFP(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     {
       int tStart = (unsigned)time(0);
       E += TINKERForces(QMMMData,forces,QMMMOpts,bead);
-      if (AMOEBA or QMMMOpts.useImpSolv)
+      if (AMOEBA || QMMMOpts.useImpSolv)
       {
         //Forces from MM polarization
         E += TINKERPolForces(QMMMData,forces,QMMMOpts,bead);
@@ -487,7 +487,7 @@ void LICHEMDFP(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     normForce /= sqrt(Ndof); //Make the norm an RMS value
     double localMaxForce; //Maximum value in the force array
     localMaxForce = abs(forces.maxCoeff());
-    if (((vecDotForces < 0) or (localMaxForce >= 1.0)) and
+    if (((vecDotForces < 0) || (localMaxForce >= 1.0)) &&
        (normForce > RMSFTol))
     {
       //Optimizer is going the wrong direction and is not converged
@@ -495,13 +495,13 @@ void LICHEMDFP(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     }
     //Update Hessian
     gradDiff -= forces;
-    if (((stepCt%30) == 0) or (stepCt < 15))
+    if (((stepCt%30) == 0) || (stepCt < 15))
     {
       //Build a new Hessian after 30 steps
       cout << "    Performing a steepest descent step...";
       cout << '\n';
       //Shrink step size
-      if ((stepCt < 15) and (E < EOld))
+      if ((stepCt < 15) && (E < EOld))
       {
         //Reduce step size
         stepScale = sdScale*QMMMOpts.stepScale; //Small step

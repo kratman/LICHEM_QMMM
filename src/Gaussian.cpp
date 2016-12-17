@@ -56,7 +56,7 @@ void GaussianCharges(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << "Int=UltraFine SCF=(YQC,Big,Direct)" << '\n';
   if (QMMM)
   {
-    if ((Npseudo > 0) and (QMMMOpts.func != "SemiEmp"))
+    if ((Npseudo > 0) && (QMMMOpts.func != "SemiEmp"))
     {
       //Read pseudo potential
       call << "Pseudo=Read ";
@@ -87,7 +87,7 @@ void GaussianCharges(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call.str("");
   call << "LICHM_" << bead << ".log";
   QMLog.open(call.str().c_str(),ios_base::in);
-  while ((!QMLog.eof()) and QMLog.good())
+  while ((!QMLog.eof()) && QMLog.good())
   {
     getline(QMLog,dummy);
     stringstream line(dummy);
@@ -101,7 +101,7 @@ void GaussianCharges(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
         getline(QMLog,dummy); //Clear junk
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+          if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
           {
             //Count through all atoms in the QM calculations
             getline(QMLog,dummy);
@@ -121,7 +121,7 @@ void GaussianCharges(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
         getline(QMLog,dummy); //Clear junk
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+          if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
           {
             //Count through all atoms in the QM calculations
             getline(QMLog,dummy);
@@ -192,7 +192,7 @@ double GaussianEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << '\n';
   if (QMMM)
   {
-    if ((Npseudo > 0) and (QMMMOpts.func != "SemiEmp"))
+    if ((Npseudo > 0) && (QMMMOpts.func != "SemiEmp"))
     {
       //Read pseudo potential
       call << "Pseudo=Read ";
@@ -220,7 +220,7 @@ double GaussianEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << "LICHM_" << bead << ".log";
   QMLog.open(call.str().c_str(),ios_base::in);
   bool QMFinished = 0;
-  while ((!QMLog.eof()) and QMLog.good())
+  while ((!QMLog.eof()) && QMLog.good())
   {
     stringstream line;
     getline(QMLog,dummy);
@@ -261,7 +261,7 @@ double GaussianEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
         getline(QMLog,dummy); //Clear junk
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+          if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
           {
             //Count through all atoms in the QM calculations
             getline(QMLog,dummy);
@@ -281,7 +281,7 @@ double GaussianEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
         getline(QMLog,dummy); //Clear junk
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+          if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
           {
             //Count through all atoms in the QM calculations
             getline(QMLog,dummy);
@@ -375,7 +375,7 @@ double GaussianForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   call << '\n';
   if (QMMM)
   {
-    if ((Npseudo > 0) and (QMMMOpts.func != "SemiEmp"))
+    if ((Npseudo > 0) && (QMMMOpts.func != "SemiEmp"))
     {
       //Read pseudo potential
       call << "Pseudo=Read ";
@@ -402,7 +402,7 @@ double GaussianForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   call << "LICHM_" << bead << ".log";
   QMLog.open(call.str().c_str(),ios_base::in);
   bool gradDone = 0;
-  while ((!QMLog.eof()) and QMLog.good() and (!gradDone))
+  while ((!QMLog.eof()) && QMLog.good() && (!gradDone))
   {
     //Parse file line by line
     getline(QMLog,dummy);
@@ -469,7 +469,7 @@ double GaussianForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
         getline(QMLog,dummy); //Clear junk
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+          if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
           {
             //Count through all atoms in the QM calculations
             getline(QMLog,dummy);
@@ -489,7 +489,7 @@ double GaussianForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
         getline(QMLog,dummy); //Clear junk
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+          if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
           {
             //Count through all atoms in the QM calculations
             getline(QMLog,dummy);
@@ -572,7 +572,7 @@ MatrixXd GaussianHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << '\n';
   if (QMMM)
   {
-    if ((Npseudo > 0) and (QMMMOpts.func != "SemiEmp"))
+    if ((Npseudo > 0) && (QMMMOpts.func != "SemiEmp"))
     {
       //Read pseudo potential
       call << "Pseudo=Read ";
@@ -624,7 +624,7 @@ MatrixXd GaussianHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   QMLog.open(call.str().c_str(),ios_base::in);
   //Extract Hessian
   bool hessDone = 0;
-  while ((!QMLog.eof()) and QMLog.good() and (!hessDone))
+  while ((!QMLog.eof()) && QMLog.good() && (!hessDone))
   {
     //Parse checkpoint file line by line
     getline(QMLog,dummy);
@@ -734,7 +734,7 @@ double GaussianOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << "LICHM_" << bead << ".log";
   QMLog.open(call.str().c_str(),ios_base::in);
   bool optFinished = 0;
-  while ((!QMLog.eof()) and QMLog.good())
+  while ((!QMLog.eof()) && QMLog.good())
   {
     //This loop will find the last geometry even if the calculation
     //did not complete
@@ -752,7 +752,7 @@ double GaussianOpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
         getline(QMLog,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+          if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
           {
             //Get new coordinates
             getline(QMLog,dummy);
