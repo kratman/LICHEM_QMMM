@@ -9,7 +9,7 @@
 ### Standard compiler settings ###
 
 CXX=g++
-CXXFLAGS=-static -O3 -fopenmp
+CXXFLAGS=-static -Ofast -fopenmp
 
 ### Libarary settings ###
 
