@@ -187,7 +187,7 @@ void TINK2LICHEM(int& argc, char**& argv)
   {
     for (int i=0;i<Natoms;i++)
     {
-      if ((!actives[i]) and (!froz[i]))
+      if ((!actives[i]) && (!froz[i]))
       {
         if (someFroz)
         {
@@ -198,15 +198,15 @@ void TINK2LICHEM(int& argc, char**& argv)
           froz[i] = 1;
         }
       }
-      if (actives[i] and (!froz[i]))
+      if (actives[i] && (!froz[i]))
       {
         froz[i] = 0;
       }
-      if ((!actives[i]) and froz[i])
+      if ((!actives[i]) && froz[i])
       {
         froz[i] = 1;
       }
-      if (actives[i] and froz[i])
+      if (actives[i] && froz[i])
       {
         froz[i] = 0;
         cout << '\n';
