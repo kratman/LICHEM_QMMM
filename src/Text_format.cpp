@@ -343,7 +343,7 @@ void LICHEMFixSciNot(string& origText)
   for (unsigned int i=0;i<origText.length();i++)
   {
     //Check and change case
-    if ((origText[i] == 'D') or (origText[i] == 'd'))
+    if ((origText[i] == 'D') || (origText[i] == 'd'))
     {
       origText[i] = 'e';
     }

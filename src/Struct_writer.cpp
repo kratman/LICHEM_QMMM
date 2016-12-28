@@ -49,7 +49,7 @@ void WriteGauInput(vector<QMMMAtom>& QMMMData, string calcTyp,
   Coord QMCOM;
   if (!useChargeFile)
   {
-    if (PBCon or QMMMOpts.useLREC)
+    if (PBCon || QMMMOpts.useLREC)
     {
       QMCOM = FindQMCOM(QMMMData,QMMMOpts,bead);
     }
@@ -107,7 +107,7 @@ void WriteGauInput(vector<QMMMAtom>& QMMMData, string calcTyp,
   }
   call << '\n'; //Blank line needed
   //Add the MM field
-  if (QMMM and useChargeFile)
+  if (QMMM && useChargeFile)
   {
     inFile.open(chrgfilename.c_str(),ios_base::in);
     if (inFile.good())
@@ -134,7 +134,7 @@ void WriteGauInput(vector<QMMMAtom>& QMMMData, string calcTyp,
           double xShft = 0;
           double yShft = 0;
           double zShft = 0;
-          if (PBCon or QMMMOpts.useLREC)
+          if (PBCon || QMMMOpts.useLREC)
           {
             //Initialize displacements
             double dx,dy,dz; //Starting displacements
@@ -158,7 +158,7 @@ void WriteGauInput(vector<QMMMAtom>& QMMMData, string calcTyp,
             //Use the long-range correction
             scrq = LRECFunction(distCent,QMMMOpts);
           }
-          if ((scrq > 0) or firstCharge)
+          if ((scrq > 0) || firstCharge)
           {
             //Add charges
             firstCharge = 0; //Skips writing the remaining zeros
@@ -195,7 +195,7 @@ void WriteGauInput(vector<QMMMAtom>& QMMMData, string calcTyp,
           double xShft = 0;
           double yShft = 0;
           double zShft = 0;
-          if (PBCon or QMMMOpts.useLREC)
+          if (PBCon || QMMMOpts.useLREC)
           {
             //Initialize displacements
             double dx,dy,dz; //Starting displacements
@@ -219,7 +219,7 @@ void WriteGauInput(vector<QMMMAtom>& QMMMData, string calcTyp,
             //Use the long-range correction
             scrq = LRECFunction(distCent,QMMMOpts);
           }
-          if ((scrq > 0) or firstCharge)
+          if ((scrq > 0) || firstCharge)
           {
             firstCharge = 0; //Skips writing the remaining zeros
             call << " ";
@@ -333,7 +333,7 @@ void WriteNWChemInput(vector<QMMMAtom>& QMMMData, string calcTyp,
   Coord QMCOM;
   if (!useChargeFile)
   {
-    if (PBCon or QMMMOpts.useLREC)
+    if (PBCon || QMMMOpts.useLREC)
     {
       QMCOM = FindQMCOM(QMMMData,QMMMOpts,bead);
     }
@@ -421,7 +421,7 @@ void WriteNWChemInput(vector<QMMMAtom>& QMMMData, string calcTyp,
     outFile << '\n';
     outFile << "end" << '\n';
   }
-  if (QMMM and useChargeFile and (Nmm > 0))
+  if (QMMM && useChargeFile && (Nmm > 0))
   {
     inFile.open(chrgfilename.c_str(),ios_base::in);
     if (inFile.good())
@@ -440,7 +440,7 @@ void WriteNWChemInput(vector<QMMMAtom>& QMMMData, string calcTyp,
       outFile << "set bq mmchrg" << '\n';
     }
   }
-  else if (QMMM and (Nmm > 0))
+  else if (QMMM && (Nmm > 0))
   {
     if (CHRG)
     {
@@ -455,7 +455,7 @@ void WriteNWChemInput(vector<QMMMAtom>& QMMMData, string calcTyp,
           double xShft = 0;
           double yShft = 0;
           double zShft = 0;
-          if (PBCon or QMMMOpts.useLREC)
+          if (PBCon || QMMMOpts.useLREC)
           {
             //Initialize displacements
             double dx,dy,dz; //Starting displacements
@@ -479,7 +479,7 @@ void WriteNWChemInput(vector<QMMMAtom>& QMMMData, string calcTyp,
             //Use the long-range correction
             scrq = LRECFunction(distCent,QMMMOpts);
           }
-          if ((scrq > 0) or firstCharge)
+          if ((scrq > 0) || firstCharge)
           {
             //Add charges
             firstCharge = 0; //Skips writing the remaining zeros
@@ -516,7 +516,7 @@ void WriteNWChemInput(vector<QMMMAtom>& QMMMData, string calcTyp,
           double xShft = 0;
           double yShft = 0;
           double zShft = 0;
-          if (PBCon or QMMMOpts.useLREC)
+          if (PBCon || QMMMOpts.useLREC)
           {
             //Initialize displacements
             double dx,dy,dz; //Starting displacements
@@ -540,7 +540,7 @@ void WriteNWChemInput(vector<QMMMAtom>& QMMMData, string calcTyp,
             //Use the long-range correction
             scrq = LRECFunction(distCent,QMMMOpts);
           }
-          if ((scrq > 0) or firstCharge)
+          if ((scrq > 0) || firstCharge)
           {
             //Add multipoles
             firstCharge = 0; //Skips writing the remaining zeros
@@ -692,7 +692,7 @@ void WritePSI4Input(vector<QMMMAtom>& QMMMData, string calcTyp,
   Coord QMCOM;
   if (!useChargeFile)
   {
-    if (PBCon or QMMMOpts.useLREC)
+    if (PBCon || QMMMOpts.useLREC)
     {
       QMCOM = FindQMCOM(QMMMData,QMMMOpts,bead);
     }
@@ -779,7 +779,7 @@ void WritePSI4Input(vector<QMMMAtom>& QMMMData, string calcTyp,
   call << " no_com" << '\n';
   call << "}" << '\n' << '\n';
   //Set up MM field
-  if (QMMM and useChargeFile and (Nmm > 0))
+  if (QMMM && useChargeFile && (Nmm > 0))
   {
     inFile.open(chrgfilename.c_str(),ios_base::in);
     if (inFile.good())
@@ -796,7 +796,7 @@ void WritePSI4Input(vector<QMMMAtom>& QMMMData, string calcTyp,
       call << '\n' << '\n';
     }
   }
-  else if (QMMM and (Nmm > 0))
+  else if (QMMM && (Nmm > 0))
   {
     if (CHRG)
     {
@@ -810,7 +810,7 @@ void WritePSI4Input(vector<QMMMAtom>& QMMMData, string calcTyp,
           double xShft = 0;
           double yShft = 0;
           double zShft = 0;
-          if (PBCon or QMMMOpts.useLREC)
+          if (PBCon || QMMMOpts.useLREC)
           {
             //Initialize displacements
             double dx,dy,dz; //Starting displacements
@@ -866,7 +866,7 @@ void WritePSI4Input(vector<QMMMAtom>& QMMMData, string calcTyp,
           double xShft = 0;
           double yShft = 0;
           double zShft = 0;
-          if (PBCon or QMMMOpts.useLREC)
+          if (PBCon || QMMMOpts.useLREC)
           {
             //Initialize displacements
             double dx,dy,dz; //Starting displacements
@@ -974,7 +974,7 @@ void WritePSI4Input(vector<QMMMAtom>& QMMMData, string calcTyp,
       {
         //Read a block of psithon code
         inFile.open("FIELD",ios_base::in);
-        while ((!inFile.eof()) and inFile.good())
+        while ((!inFile.eof()) && inFile.good())
         {
           getline(inFile,dummy);
           call << dummy << '\n';
