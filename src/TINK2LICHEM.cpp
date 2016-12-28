@@ -63,7 +63,7 @@ void TINK2LICHEM(int& argc, char**& argv)
       //Flag for PBC
       dummy = string(argv[i+1]);
       LICHEMLowerText(dummy);
-      if ((dummy == "yes") or (dummy == "true"))
+      if ((dummy == "yes") || (dummy == "true"))
       {
         PBCon = 1;
       }
@@ -183,7 +183,7 @@ void TINK2LICHEM(int& argc, char**& argv)
     cout.flush();
     exit(0);
   }
-  if (someAct or someFroz)
+  if (someAct || someFroz)
   {
     for (int i=0;i<Natoms;i++)
     {
@@ -268,7 +268,7 @@ void TINK2LICHEM(int& argc, char**& argv)
   {
     regFile << i;
     ct += 1;
-    if ((ct == 10) or (i == Nqm-1))
+    if ((ct == 10) || (i == (Nqm-1)))
     {
       regFile << '\n';
       ct = 0;
@@ -285,7 +285,7 @@ void TINK2LICHEM(int& argc, char**& argv)
   {
     regFile << i+Nqm;
     ct += 1;
-    if ((ct == 10) or (i == Npseudo-1))
+    if ((ct == 10) || (i == (Npseudo-1)))
     {
       regFile << '\n';
       ct = 0;
@@ -302,7 +302,7 @@ void TINK2LICHEM(int& argc, char**& argv)
   {
     regFile << i+Nqm+Npseudo;
     ct += 1;
-    if ((ct == 10) or (i == Nbound-1))
+    if ((ct == 10) || (i == (Nbound-1)))
     {
       regFile << '\n';
       ct = 0;
@@ -537,7 +537,7 @@ void LICHEM2TINK(int& argc, char**& argv)
   }
   cout << '\n' << '\n'; //Terminate output
   //Error check
-  if ((!CheckFile(xyzFilename)) or (!CheckFile(conFilename)))
+  if ((!CheckFile(xyzFilename)) || (!CheckFile(conFilename)))
   {
     cout << "Error: Missing files!!!";
     cout << '\n' << '\n';
