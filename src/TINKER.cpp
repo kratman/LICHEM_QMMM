@@ -40,7 +40,7 @@ void FindTINKERClasses(vector<QMMMAtom>& QMMMData)
   }
   //Find the parameter file
   bool fileFound = 0; //Bool to break loops
-  while ((!inFile.eof()) and (!fileFound))
+  while ((!inFile.eof()) && (!fileFound))
   {
     //Detect the name of the force field file
     inFile >> dummy;
@@ -74,7 +74,7 @@ void FindTINKERClasses(vector<QMMMAtom>& QMMMData)
   }
   //Find parameters for all atoms
   ct = 0; //Generic counter
-  while ((!inFile.eof()) and inFile.good())
+  while ((!inFile.eof()) && inFile.good())
   {
     getline(inFile,dummy);
     stringstream fullLine(dummy);
@@ -178,7 +178,7 @@ void TINKERInduced(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   if (QMMMOpts.useLREC)
   {
     //Apply cutoff
-    if (QMMMOpts.useEwald and PBCon)
+    if (QMMMOpts.useEwald && PBCon)
     {
       //Use Ewald or PME
       outFile << "ewald" << '\n';
@@ -213,7 +213,7 @@ void TINKERInduced(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
-      if (QMMMData[i].MMRegion or QMMMData[i].BARegion)
+      if (QMMMData[i].MMRegion || QMMMData[i].BARegion)
       {
         if (ct == 0)
         {
@@ -393,7 +393,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   if (QMMMOpts.useLREC)
   {
     //Apply cutoff
-    if (QMMMOpts.useEwald and PBCon)
+    if (QMMMOpts.useEwald && PBCon)
     {
       //Use Ewald or PME
       outFile << "ewald" << '\n';
@@ -437,7 +437,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
-      if (QMMMData[i].MMRegion or QMMMData[i].BARegion)
+      if (QMMMData[i].MMRegion || QMMMData[i].BARegion)
       {
         if (ct == 0)
         {
@@ -512,7 +512,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << "LICHM_" << bead << ".log";
   inFile.open(call.str().c_str(),ios_base::in);
   bool EFound = 0;
-  while ((!inFile.eof()) and inFile.good())
+  while ((!inFile.eof()) && inFile.good())
   {
     inFile >> dummy;
     if (dummy == "Total")
@@ -594,7 +594,7 @@ double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   if (QMMMOpts.useLREC)
   {
     //Apply cutoff
-    if (QMMMOpts.useEwald and PBCon)
+    if (QMMMOpts.useEwald && PBCon)
     {
       //Use Ewald or PME
       outFile << "ewald" << '\n';
@@ -624,7 +624,7 @@ double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   for (int i=0;i<Natoms;i++)
   {
     //Add active atoms
-    if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+    if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
     {
       if (ct == 0)
       {
@@ -656,7 +656,7 @@ double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   for (int i=0;i<Natoms;i++)
   {
     //Add group 1 atoms
-    if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+    if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
     {
       if (ct == 0)
       {
@@ -688,7 +688,7 @@ double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion or QMMMData[i].BARegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion || QMMMData[i].BARegion)
       {
         //New charges are needed for QM and PB atoms
         outFile << "charge " << (-1*(QMMMData[i].id+1)) << " ";
@@ -702,7 +702,7 @@ double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion or QMMMData[i].BARegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion || QMMMData[i].BARegion)
       {
         double qi = 0;
         //Remove charge
@@ -770,7 +770,7 @@ double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   MMGrad.open(call.str().c_str(),ios_base::in);
   //Read derivatives
   bool gradDone = 0;
-  while ((!MMGrad.eof()) and MMGrad.good() and (!gradDone))
+  while ((!MMGrad.eof()) && MMGrad.good() && (!gradDone))
   {
     getline(MMGrad,dummy);
     stringstream line(dummy);
@@ -863,7 +863,7 @@ double TINKERMMForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   if (QMMMOpts.useLREC)
   {
     //Apply cutoff
-    if (QMMMOpts.useEwald and PBCon)
+    if (QMMMOpts.useEwald && PBCon)
     {
       //Use Ewald or PME
       outFile << "ewald" << '\n';
@@ -902,7 +902,7 @@ double TINKERMMForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
     for (int i=0;i<Natoms;i++)
     {
       //Add inactive atoms
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion or QMMMData[i].frozen)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion || QMMMData[i].frozen)
       {
         if (ct == 0)
         {
@@ -1020,7 +1020,7 @@ double TINKERMMForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   MMGrad.open(call.str().c_str(),ios_base::in);
   //Read derivatives
   bool gradDone = 0;
-  while ((!MMGrad.eof()) and MMGrad.good() and (!gradDone))
+  while ((!MMGrad.eof()) && MMGrad.good() && (!gradDone))
   {
     getline(MMGrad,dummy);
     stringstream line(dummy);
@@ -1034,7 +1034,7 @@ double TINKERMMForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
         getline(MMGrad,dummy);
         for (int i=0;i<Natoms;i++)
         {
-          if ((QMMMData[i].MMRegion or QMMMData[i].BARegion) and
+          if ((QMMMData[i].MMRegion || QMMMData[i].BARegion) &&
              (!QMMMData[i].frozen))
           {
             //Only update MM and BA forces in the array
@@ -1116,7 +1116,7 @@ double TINKERPolForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   if (QMMMOpts.useLREC)
   {
     //Apply cutoff
-    if (QMMMOpts.useEwald and PBCon)
+    if (QMMMOpts.useEwald && PBCon)
     {
       //Use Ewald or PME
       outFile << "ewald" << '\n';
@@ -1158,7 +1158,7 @@ double TINKERPolForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   for (int i=0;i<Natoms;i++)
   {
     //Add active atoms
-    if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+    if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
     {
       if (ct == 0)
       {
@@ -1276,7 +1276,7 @@ double TINKERPolForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   MMGrad.open(call.str().c_str(),ios_base::in);
   //Read derivatives
   bool gradDone = 0;
-  while ((!MMGrad.eof()) and MMGrad.good() and (!gradDone))
+  while ((!MMGrad.eof()) && MMGrad.good() && (!gradDone))
   {
     getline(MMGrad,dummy);
     stringstream line(dummy);
@@ -1369,7 +1369,7 @@ double TINKEREnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   if (QMMMOpts.useLREC)
   {
     //Apply cutoff
-    if (QMMMOpts.useEwald and PBCon)
+    if (QMMMOpts.useEwald && PBCon)
     {
       //Use Ewald or PME
       outFile << "ewald" << '\n';
@@ -1411,7 +1411,7 @@ double TINKEREnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
-      if (QMMMData[i].MMRegion or QMMMData[i].BARegion)
+      if (QMMMData[i].MMRegion || QMMMData[i].BARegion)
       {
         if (ct == 0)
         {
@@ -1444,7 +1444,7 @@ double TINKEREnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion or QMMMData[i].BARegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion || QMMMData[i].BARegion)
       {
         //New charges are only needed for QM atoms
         outFile << "charge " << (-1*(QMMMData[i].id+1)) << " ";
@@ -1452,12 +1452,12 @@ double TINKEREnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
       }
     }
   }
-  if (AMOEBA or GEM)
+  if (AMOEBA || GEM)
   {
     for (int i=0;i<Natoms;i++)
     {
       //Add multipoles
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion or QMMMData[i].BARegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion || QMMMData[i].BARegion)
       {
         double qi = 0;
         //Remove charge
@@ -1524,7 +1524,7 @@ double TINKEREnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   inFile.open(call.str().c_str(),ios_base::in);
   //Read MM potential energy
   bool EFound = 0;
-  while ((!inFile.eof()) and inFile.good())
+  while ((!inFile.eof()) && inFile.good())
   {
     inFile >> dummy;
     if (dummy == "Total")
@@ -1557,7 +1557,7 @@ double TINKEREnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << " LICHM_" << bead << ".err";
   globalSys = system(call.str().c_str());
   //Calculate polarization energy
-  if ((AMOEBA or GEM or QMMMOpts.useImpSolv) and QMMM)
+  if ((AMOEBA || GEM || QMMMOpts.useImpSolv) && QMMM)
   {
     //Correct polarization energy for QMMM simulations
     E += TINKERPolEnergy(QMMMData,QMMMOpts,bead);
@@ -1602,7 +1602,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   if (QMMMOpts.useLREC)
   {
     //Apply cutoff
-    if (QMMMOpts.useEwald and PBCon)
+    if (QMMMOpts.useEwald && PBCon)
     {
       //Use Ewald or PME
       outFile << "ewald" << '\n';
@@ -1632,7 +1632,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   for (int i=0;i<Natoms;i++)
   {
     //Add active atoms
-    if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+    if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
     {
       if (ct == 0)
       {
@@ -1664,7 +1664,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   for (int i=0;i<Natoms;i++)
   {
     //Add group 1 atoms
-    if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+    if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
     {
       if (ct == 0)
       {
@@ -1696,7 +1696,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion or QMMMData[i].BARegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion || QMMMData[i].BARegion)
       {
         //New charges are needed for QM and PB atoms
         outFile << "charge " << (-1*(QMMMData[i].id+1)) << " ";
@@ -1710,7 +1710,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     for (int i=0;i<Natoms;i++)
     {
       //Add nuclear charges
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion or QMMMData[i].BARegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion || QMMMData[i].BARegion)
       {
         double qi = 0;
         //Remove charge
@@ -1776,7 +1776,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   MMLog.open(call.str().c_str(),ios_base::in);
   //Read derivatives
   bool hessDone = 0;
-  if (MMLog.good() and CheckFile(call.str()))
+  if (MMLog.good() && CheckFile(call.str()))
   {
     hessDone = 1;
     //Clear junk
@@ -1787,7 +1787,7 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
     ct = 0;
     for (int i=0;i<Natoms;i++)
     {
-      if (QMMMData[i].QMRegion or QMMMData[i].PBRegion)
+      if (QMMMData[i].QMRegion || QMMMData[i].PBRegion)
       {
         //Read QM and PB diagonal elements
         MMLog >> MMHess(ct,ct);
@@ -1878,7 +1878,7 @@ double TINKEROpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
   if (QMMMOpts.useMMCut)
   {
     //Apply cutoff
-    if (QMMMOpts.useEwald and PBCon)
+    if (QMMMOpts.useEwald && PBCon)
     {
       //Use Ewald and truncate vdW forces
       outFile << "cutoff " << LICHEMFormFloat(QMMMOpts.MMOptCut,12);
@@ -1897,7 +1897,7 @@ double TINKEROpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
   else if (QMMMOpts.useLREC)
   {
     //Apply cutoff
-    if (QMMMOpts.useEwald and PBCon)
+    if (QMMMOpts.useEwald && PBCon)
     {
       //Use Ewald or PME
       outFile << "ewald" << '\n';
@@ -1930,12 +1930,12 @@ double TINKEROpt(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
     outFile << "gamma 90.0" << '\n';
   }
   ct = 0; //Generic counter
-  if (QMMM or (Nfreeze > 0))
+  if (QMMM || (Nfreeze > 0))
   {
     for (int i=0;i<Natoms;i++)
     {
       //Add active atoms
-      if (QMMMData[i].MMRegion or QMMMData[i].BARegion)
+      if (QMMMData[i].MMRegion || QMMMData[i].BARegion)
       {
         if (!QMMMData[i].frozen)
         {
