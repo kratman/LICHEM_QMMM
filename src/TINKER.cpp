@@ -39,7 +39,7 @@ void FindTINKERClasses(vector<QMMMAtom>& QMMMData)
     exit(0);
   }
   //Find the parameter file
-  bool fileFound = 0; //Bool to break loops
+  bool fileFound = false; //Bool to break loops
   while ((!inFile.eof()) && (!fileFound))
   {
     //Detect the name of the force field file
@@ -48,7 +48,7 @@ void FindTINKERClasses(vector<QMMMAtom>& QMMMData)
     if (dummy == "parameters")
     {
       inFile >> dummy;
-      fileFound = 1;
+      fileFound = true;
     }
   }
   //Open the parameters
@@ -511,7 +511,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call.str("");
   call << "LICHM_" << bead << ".log";
   inFile.open(call.str().c_str(),ios_base::in);
-  bool EFound = 0;
+  bool EFound = false;
   while ((!inFile.eof()) && inFile.good())
   {
     inFile >> dummy;
@@ -521,7 +521,7 @@ double TINKERPolEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
       if (dummy == "Energy")
       {
         inFile >> dummy >> E;
-        EFound = 1;
+        EFound = true;
       }
     }
     if (dummy == "Polarization")
@@ -540,7 +540,8 @@ double TINKERPolEnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   if (!EFound)
   {
     //Warn user if no energy was found
-    cerr << "Warning: No MM energy found after a calculation!!!";
+    cerr << "Warning: No MM polarization energy found after";
+    cerr << " a calculation!!!";
     cerr << '\n';
     cerr << " LICHEM will attempt to continue...";
     cerr << '\n';
@@ -769,7 +770,7 @@ double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   call << "LICHM_" << bead << ".grad";
   MMGrad.open(call.str().c_str(),ios_base::in);
   //Read derivatives
-  bool gradDone = 0;
+  bool gradDone = false;
   while ((!MMGrad.eof()) && MMGrad.good() && (!gradDone))
   {
     getline(MMGrad,dummy);
@@ -780,7 +781,7 @@ double TINKERForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
       line >> dummy >> dummy;
       if (dummy == "dE/dX")
       {
-        gradDone = 1; //Not grad school, that lasts forever
+        gradDone = true; //Not grad school, that lasts forever
         getline(MMGrad,dummy);
         for (int i=0;i<(Nqm+Npseudo);i++)
         {
@@ -1019,7 +1020,7 @@ double TINKERMMForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   call << "LICHM_" << bead << ".grad";
   MMGrad.open(call.str().c_str(),ios_base::in);
   //Read derivatives
-  bool gradDone = 0;
+  bool gradDone = false;
   while ((!MMGrad.eof()) && MMGrad.good() && (!gradDone))
   {
     getline(MMGrad,dummy);
@@ -1030,7 +1031,7 @@ double TINKERMMForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
       line >> dummy >> dummy;
       if (dummy == "dE/dX")
       {
-        gradDone = 1; //Not grad school, that lasts forever
+        gradDone = true; //Not grad school, that lasts forever
         getline(MMGrad,dummy);
         for (int i=0;i<Natoms;i++)
         {
@@ -1275,7 +1276,7 @@ double TINKERPolForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   call << "LICHM_" << bead << ".grad";
   MMGrad.open(call.str().c_str(),ios_base::in);
   //Read derivatives
-  bool gradDone = 0;
+  bool gradDone = false;
   while ((!MMGrad.eof()) && MMGrad.good() && (!gradDone))
   {
     getline(MMGrad,dummy);
@@ -1286,7 +1287,7 @@ double TINKERPolForces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
       line >> dummy >> dummy;
       if (dummy == "dE/dX")
       {
-        gradDone = 1; //Not grad school, that lasts forever
+        gradDone = true; //Not grad school, that lasts forever
         getline(MMGrad,dummy);
         for (int i=0;i<(Nqm+Npseudo);i++)
         {
@@ -1523,7 +1524,7 @@ double TINKEREnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << "LICHM_" << bead << ".log";
   inFile.open(call.str().c_str(),ios_base::in);
   //Read MM potential energy
-  bool EFound = 0;
+  bool EFound = false;
   while ((!inFile.eof()) && inFile.good())
   {
     inFile >> dummy;
@@ -1533,7 +1534,7 @@ double TINKEREnergy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
       if (dummy == "Energy")
       {
         inFile >> dummy >> E;
-        EFound = 1;
+        EFound = true;
       }
     }
   }
@@ -1775,10 +1776,10 @@ MatrixXd TINKERHessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   call << "LICHM_" << bead << ".hes";
   MMLog.open(call.str().c_str(),ios_base::in);
   //Read derivatives
-  bool hessDone = 0;
+  bool hessDone = false;
   if (MMLog.good() && CheckFile(call.str()))
   {
-    hessDone = 1;
+    hessDone = true;
     //Clear junk
     getline(MMLog,dummy);
     getline(MMLog,dummy);
