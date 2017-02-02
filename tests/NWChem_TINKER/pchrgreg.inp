@@ -2,7 +2,7 @@ Potential_type: QMMM
 QM_type: NWChem
 QM_method: PBE0
 QM_basis: 6-31G*
-QM_memory: 256 MB
+QM_memory: 512 MB
 QM_charge: 0
 QM_spin: 1
 MM_type: TINKER
