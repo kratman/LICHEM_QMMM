@@ -80,8 +80,8 @@
 //  2015   14      1900
 //  "15"   15      1900
 
-/// \internal EIGEN_COMP_MSVC_STRICT set to 1 if the compiler is really Microsoft Visual C++ and not ,e.g., ICC
-#if EIGEN_COMP_MSVC && !(EIGEN_COMP_ICC)
+/// \internal EIGEN_COMP_MSVC_STRICT set to 1 if the compiler is really Microsoft Visual C++ and not ,e.g., ICC or clang-cl
+#if EIGEN_COMP_MSVC && !(EIGEN_COMP_ICC || EIGEN_COMP_LLVM || EIGEN_COMP_CLANG)
   #define EIGEN_COMP_MSVC_STRICT _MSC_VER
 #else
   #define EIGEN_COMP_MSVC_STRICT 0
@@ -347,6 +347,14 @@
 // We use it to determine 'cxx_rvalue_references'
 #ifndef __has_feature
 # define __has_feature(x) 0
+#endif
+
+// Some old compilers do not support template specializations like:
+// template<typename T,int N> void foo(const T x[N]);
+#if !( EIGEN_COMP_CLANG && ((EIGEN_COMP_CLANG<309) || defined(__apple_build_version__)) || EIGEN_COMP_GNUC_STRICT && EIGEN_COMP_GNUC<49)
+#define EIGEN_HAS_STATIC_ARRAY_TEMPLATE 1
+#else
+#define EIGEN_HAS_STATIC_ARRAY_TEMPLATE 0
 #endif
 
 // Upperbound on the C++ version to use.
