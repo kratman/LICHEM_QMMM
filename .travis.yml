@@ -34,7 +34,7 @@ before_install:
   - if [ ${TRAVIS_OS_NAME} == osx ]; then if [ ${CC} == clang ]; then sed -i "" 's/CC=/CC=clan/g' Makefile; fi; fi
   - if [ ${TRAVIS_OS_NAME} == osx ]; then sed -i "" 's/-static//g' Makefile; fi
   - if [ ${TRAVIS_OS_NAME} == osx ]; then sed -i "" 's/-fopenmp//g' Makefile; fi
-  - if [ ${TRAVIS_OS_NAME} == osx ]; then sed -i "" 's/SEDI=-i/SEDI=-i \"\" -e/g' Makefile; fi
+  - if [ ${TRAVIS_OS_NAME} == osx ]; then sed -i "" 's/SEDI=-i/SEDI=-i \"\"/g' Makefile; fi
 
 #Run tests
 script:

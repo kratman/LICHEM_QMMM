@@ -81,7 +81,7 @@ testexe:
 	echo "!!$(PYPATH)" > ./tests/runtests
 	cat ./src/runtests.py >> ./tests/runtests
 	@sed $(SEDI) 's/\#.*//g' ./tests/runtests; \
-	sed $(SEDI) 's/\s*$$//g' ./tests/runtests; \
+	sed $(SEDI) 's/[[:space:]]*$$//g' ./tests/runtests; \
 	sed $(SEDI) '/^$$/d' ./tests/runtests; \
 	sed $(SEDI) 's/\!\!/\#\!/g' ./tests/runtests; \
 	chmod a+x ./tests/runtests
@@ -93,7 +93,7 @@ devtest:
 	echo "!!$(PYPATH)" > ./tests/runtests
 	cat ./src/runtests.py >> ./tests/runtests
 	@sed $(SEDI) 's/\#.*//g' ./tests/runtests; \
-	sed $(SEDI) 's/\s*$$//g' ./tests/runtests; \
+	sed $(SEDI) 's/[[:space:]]*$$//g' ./tests/runtests; \
 	sed $(SEDI) '/^$$/d' ./tests/runtests; \
 	sed $(SEDI) 's/\!\!/\#\!/g' ./tests/runtests; \
 	sed $(SEDI) 's/updateResults = 0/updateResults = 1/g' ./tests/runtests; \
