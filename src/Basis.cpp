@@ -25,9 +25,13 @@
 /*!
   \ingroup Misc
 */
-///@{
+//! \{
 
 //BASIS file creation functions
+
+//! \brief Creates a Gaussian or NWChem basis set file.
+//! \param argc - Number of arguments passed to LICHEM
+//! \param argv - All arguments passed to LICHEM
 void LICHEM2BASIS(int& argc,char**& argv)
 {
   //Writes a BASIS file based on a LICHEM regions file
@@ -308,5 +312,5 @@ void LICHEM2BASIS(int& argc,char**& argv)
 };
 
 //End of file group
-///@}
+//! \}
 

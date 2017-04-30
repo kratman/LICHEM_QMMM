@@ -19,9 +19,15 @@
 /*!
   \ingroup Misc
 */
-///@{
+//! \{
 
 //Basis set definitions
+
+//! \brief Generates Hermite basis functions for an atom in the system.
+//! \param Typ - Element or atom type name
+//! \param basName - Name of the basis set
+//! \return newBasis - Array of basis functions for the atom
+//! \todo Finish this function and write atom type definitions
 vector<HermGau> HermBasis(string Typ, string basName)
 {
   //Function to set specific Hermite basis sets
@@ -43,5 +49,5 @@ vector<HermGau> HermBasis(string Typ, string basName)
 };
 
 //End of file group
-///@}
+//! \}
 

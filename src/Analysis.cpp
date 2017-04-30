@@ -20,14 +20,14 @@
 /*!
   \ingroup Analysis
 */
-///@{
+//! \{
 
 //Trajectory analysis functions
 
-//! \brief Prints the current structure to a trajectory file
-//! \param QMMMData All QMMM atomic data for the simulation
-//! \param traj File stream for all trajectory output
-//! \param QMMMOpts Simulation settings
+//! \brief Prints the current structure to a trajectory file.
+//! \param QMMMData - All QMMM atomic data for the simulation
+//! \param traj - File stream for all trajectory output
+//! \param QMMMOpts - Simulation settings
 void Print_traj(vector<QMMMAtom>& QMMMData, fstream& traj,
                 QMMMSettings& QMMMOpts)
 {
@@ -53,9 +53,9 @@ void Print_traj(vector<QMMMAtom>& QMMMData, fstream& traj,
   return;
 };
 
-//! \brief Splits a multireplica trajectory into individual frames
-//! \param QMMMData Simulation trajectory data
-//! \param QMMMOpts Simulation settings
+//! \brief Splits a multireplica trajectory into individual frames.
+//! \param QMMMData - Simulation trajectory data
+//! \param QMMMOpts - Simulation settings
 void BurstTraj(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
 {
   //Function to split reaction path and path-integral trajectory frames
@@ -99,9 +99,9 @@ void BurstTraj(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
 
 //Trajectory manipulation functions
 
-//! \brief Reads reactant, TS, and product data to create a path
-//! \param argc Initial number of arguments passed to LICHEM
-//! \param argv Initial argument values passed to LICHEM
+//! \brief Reads reactant, TS, and product data to create a path.
+//! \param argc - Initial number of arguments passed to LICHEM
+//! \param argv - Initial argument values passed to LICHEM
 void PathLinInterpolate(int& argc, char**& argv)
 {
   //Linearly interpolate a path from reactant and product geometries
@@ -370,9 +370,9 @@ void PathLinInterpolate(int& argc, char**& argv)
   return;
 };
 
-//! \brief Reads a multireplica trajectory file and separates the replicas
-//! \param argc Initial number of arguments passed to LICHEM
-//! \param argv Initial argument values passed to LICHEM
+//! \brief Reads a multireplica trajectory file and separates the replicas.
+//! \param argc - Initial number of arguments passed to LICHEM
+//! \param argv - Initial argument values passed to LICHEM
 void SplitPathTraj(int& argc, char**& argv)
 {
   //Function to separate a reaction path frame into a trajectory
@@ -515,10 +515,10 @@ void SplitPathTraj(int& argc, char**& argv)
   return;
 };
 
-//! \brief Translates and rotates two structures for maximum overlap
-//! \param A Matrix of coordinates for structure A
-//! \param B Matrix of coordinates for structure B
-//! \param matSize Number of atoms in structure A/B
+//! \brief Translates and rotates two structures for maximum overlap.
+//! \param A - Matrix of coordinates for structure A
+//! \param B - Matrix of coordinates for structure B
+//! \param matSize - Number of atoms in structure A/B
 void KabschRotation(MatrixXd& A, MatrixXd& B, int matSize)
 {
   //Function to translate/rotate two structures for maximum overlap
@@ -634,10 +634,11 @@ void KabschRotation(MatrixXd& A, MatrixXd& B, int matSize)
   return;
 };
 
-//! \brief Calculates the displacement between two structures
-//! \param A Matrix of coordinates for structure A
-//! \param B Matrix of coordinates for structure B
-//! \param matSize Number of atoms in structure A/B
+//! \brief Calculates the displacement between two structures.
+//! \param A - Matrix of coordinates for structure A
+//! \param B - Matrix of coordinates for structure B
+//! \param matSize - Number of atoms in structure A/B
+//! \return dist - Total distance between the two structures
 VectorXd KabschDisplacement(MatrixXd& A, MatrixXd& B, int matSize)
 {
   //Returns the distance between two superimposed structures
@@ -660,9 +661,10 @@ VectorXd KabschDisplacement(MatrixXd& A, MatrixXd& B, int matSize)
 
 //Physical property analysis functions
 
-//! \brief Calculates the density of a periodic structure
-//! \param QMMMData Simulation trajectory data
-//! \param QMMMOpts Simulation settings
+//! \brief Calculates the density of a periodic structure.
+//! \param QMMMData - Simulation trajectory data
+//! \param QMMMOpts - Simulation settings
+//! \return rho - Density of the simulation box
 double LICHEMDensity(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
 {
   //Function to calculate the density for periodic calculations
@@ -683,12 +685,13 @@ double LICHEMDensity(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts)
   return rho;
 };
 
-//! \brief Calculates the frequencies of the QM atoms in the system
-//! \param QMMMData Simulation trajectory data
-//! \param QMMMHess Input Hessian matrix
-//! \param QMMMOpts Simulation settings
-//! \param bead Replica used to calculate the frequencies
-//! \param remCt The number of low frequency modes removed in the analysis
+//! \brief Calculates the frequencies of the QM atoms in the system.
+//! \param QMMMData - Simulation trajectory data
+//! \param QMMMHess - Input Hessian matrix
+//! \param QMMMOpts - Simulation settings
+//! \param bead - Replica used to calculate the frequencies
+//! \param remCt - The number of low frequency modes removed in the analysis
+//! \return QMMMFreqs - Array containing the harmonic frequencies
 VectorXd LICHEMFreq(vector<QMMMAtom>& QMMMData, MatrixXd& QMMMHess,
                     QMMMSettings& QMMMOpts, int bead, int& remCt)
 {
@@ -883,13 +886,13 @@ VectorXd LICHEMFreq(vector<QMMMAtom>& QMMMData, MatrixXd& QMMMHess,
   return QMMMFreqs;
 };
 
-//! \brief Prints trajectory files for animating the normal modes
-//! \param QMMMData Simulation trajectory data
-//! \param imagOnly Flag to print only the imaginary frequencies
-//! \param freqs Input harmonic frequencies
-//! \param normModes Input normal modes
-//! \param QMMMOpts Simulation settings
-//! \param bead Replica used in the animation
+//! \brief Prints trajectory files for animating the normal modes.
+//! \param QMMMData - Simulation trajectory data
+//! \param imagOnly - Flag to print only the imaginary frequencies
+//! \param freqs - Input harmonic frequencies
+//! \param normModes - Input normal modes
+//! \param QMMMOpts - Simulation settings
+//! \param bead - Replica used in the animation
 void WriteModes(vector<QMMMAtom>& QMMMData, bool imagOnly, VectorXd& freqs,
                 MatrixXd& normModes, QMMMSettings& QMMMOpts, int bead)
 {
@@ -948,5 +951,5 @@ void WriteModes(vector<QMMMAtom>& QMMMData, bool imagOnly, VectorXd& freqs,
 };
 
 //End of file group
-///@}
+//! \}
 
