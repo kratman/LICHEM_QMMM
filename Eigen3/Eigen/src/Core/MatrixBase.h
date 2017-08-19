@@ -160,19 +160,10 @@ template<typename Derived> class MatrixBase
     EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
     Derived& operator-=(const MatrixBase<OtherDerived>& other);
 
-#ifdef __CUDACC__
     template<typename OtherDerived>
     EIGEN_DEVICE_FUNC
-    const Product<Derived,OtherDerived,LazyProduct>
-    operator*(const MatrixBase<OtherDerived> &other) const
-    { return this->lazyProduct(other); }
-#else
-
-    template<typename OtherDerived>
     const Product<Derived,OtherDerived>
     operator*(const MatrixBase<OtherDerived> &other) const;
-
-#endif
 
     template<typename OtherDerived>
     EIGEN_DEVICE_FUNC
@@ -305,7 +296,7 @@ template<typename Derived> class MatrixBase
     EIGEN_DEVICE_FUNC inline bool operator!=(const MatrixBase<OtherDerived>& other) const
     { return cwiseNotEqual(other).any(); }
 
-    NoAlias<Derived,Eigen::MatrixBase > noalias();
+    NoAlias<Derived,Eigen::MatrixBase > EIGEN_DEVICE_FUNC noalias();
 
     // TODO forceAlignedAccess is temporarily disabled
     // Need to find a nicer workaround.
@@ -437,8 +428,10 @@ template<typename Derived> class MatrixBase
 ///////// Jacobi module /////////
 
     template<typename OtherScalar>
+    EIGEN_DEVICE_FUNC
     void applyOnTheLeft(Index p, Index q, const JacobiRotation<OtherScalar>& j);
     template<typename OtherScalar>
+    EIGEN_DEVICE_FUNC
     void applyOnTheRight(Index p, Index q, const JacobiRotation<OtherScalar>& j);
 
 ///////// SparseCore module /////////

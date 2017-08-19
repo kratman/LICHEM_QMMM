@@ -411,12 +411,15 @@ void SplitPathTraj(int& argc, char**& argv)
       file << argv[i+1];
       if (!CheckFile(file.str()))
       {
-        cout << "Error: Could not open trajectory file!!!";
-        cout << '\n';
+        cout << '\n' << '\n';
+        cout << "Error: Could not open trajectory file:";
         doQuit = true;
       }
-      pathFilename = file.str();
-      pathFile.open(argv[i+1],ios_base::in);
+      else
+      {
+        pathFilename = file.str();
+        pathFile.open(argv[i+1],ios_base::in);
+      }
       cout << " " << argv[i+1];
     }
   }

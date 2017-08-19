@@ -51,7 +51,7 @@ void PSI4Charges(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
   WritePSI4Input(QMMMData,call.str(),QMMMOpts,bead);
   //Call PSI4
   call.str("");
-  call << "psi4 -n " << Ncpus << "-i ";
+  call << "psi4 -n " << Ncpus << " -i ";
   call << "LICHM_" << bead << ".dat -o ";
   call << "LICHM_" << bead << ".out > ";
   call << "LICHM_" << bead << ".log";
@@ -135,7 +135,7 @@ double PSI4Energy(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts, int bead)
   WritePSI4Input(QMMMData,call.str(),QMMMOpts,bead);
   //Call PSI4
   call.str("");
-  call << "psi4 -n " << Ncpus << "-i ";
+  call << "psi4 -n " << Ncpus << " -i ";
   call << "LICHM_" << bead << ".dat -o ";
   call << "LICHM_" << bead << ".out > ";
   call << "LICHM_" << bead << ".log";
@@ -276,7 +276,7 @@ double PSI4Forces(vector<QMMMAtom>& QMMMData, VectorXd& forces,
   WritePSI4Input(QMMMData,call.str(),QMMMOpts,bead);
   //Call PSI4
   call.str("");
-  call << "psi4 -n " << Ncpus << "-i ";
+  call << "psi4 -n " << Ncpus << " -i ";
   call << "LICHM_" << bead << ".dat -o ";
   call << "LICHM_" << bead << ".out > ";
   call << "LICHM_" << bead << ".log";
@@ -423,7 +423,7 @@ MatrixXd PSI4Hessian(vector<QMMMAtom>& QMMMData, QMMMSettings& QMMMOpts,
   WritePSI4Input(QMMMData,call.str(),QMMMOpts,bead);
   //Call PSI4
   call.str("");
-  call << "psi4 -n " << Ncpus << "-i ";
+  call << "psi4 -n " << Ncpus << " -i ";
   call << "LICHM_" << bead << ".dat -o ";
   call << "LICHM_" << bead << ".out > ";
   call << "LICHM_" << bead << ".log";
@@ -541,7 +541,7 @@ double PSI4Opt(vector<QMMMAtom>& QMMMData,
   WritePSI4Input(QMMMData,call.str(),QMMMOpts,bead);
   //Call PSI4
   call.str("");
-  call << "psi4 -n " << Ncpus << "-i ";
+  call << "psi4 -n " << Ncpus << " -i ";
   call << "LICHM_" << bead << ".dat -o ";
   call << "LICHM_" << bead << ".out > ";
   call << "LICHM_" << bead << ".log";
